@@ -97,6 +97,10 @@ export default defineConfig(({ mode }) => {
                         target: UNLEASH_API,
                         changeOrigin: true,
                     },
+                    [`^${UNLEASH_BASE_PATH}feedback/`]: {
+                        target: UNLEASH_API,
+                        changeOrigin: true,
+                    },
                 },
                 fs: {
                     allow: ['..'],

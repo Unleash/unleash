@@ -56,6 +56,127 @@ afterAll(async () => {
         await db.destroy();
     }
 });
+
+test('unknown environment-less feature events invalidate conservatively', async () => {
+    const [event] = await db
+        .rawDatabase('events')
+        .insert({
+            type: 'future-configuration-event',
+            feature_name: 'polling-feature',
+            project: 'default',
+            created_by: testAudit.username,
+        })
+        .returning('id');
+    for (const environment of [undefined, 'development', 'production']) {
+        expect(await eventStore.getMaxRevisionId(0, environment)).toBe(
+            event.id,
+        );
+    }
+    expect(await eventStore.getRevisionRange(0, event.id)).toEqual([
+        expect.objectContaining({ type: 'future-configuration-event' }),
+    ]);
+});
+
+test.each([
+    'feature-potentially-stale-on',
+    'feature-completed',
+    'feature-uncompleted',
+    'feature-stale-on',
+    'feature-stale-off',
+] as const)('configuration filter ignores %s but retains audit history', async (type) => {
+    await eventStore.store({
+        type: FEATURE_CREATED,
+        featureName: 'polling-feature',
+        project: 'default',
+        createdBy: 'test',
+        createdByUserId: testAudit.id,
+        ip: testAudit.ip,
+    });
+    const baseline = await eventStore.getMaxRevisionId();
+    await eventStore.store({
+        type,
+        featureName: 'polling-feature',
+        project: 'default',
+        createdBy: 'test',
+        createdByUserId: testAudit.id,
+        ip: testAudit.ip,
+    });
+    const events = await eventStore.getAll();
+    const metadataEvent = events.find((event) => event.type === type)!;
+    expect(metadataEvent.id).toBeGreaterThan(baseline);
+    for (const environment of [undefined, 'development', 'production']) {
+        expect(await eventStore.getMaxRevisionId(baseline, environment)).toBe(
+            baseline,
+        );
+    }
+    expect(
+        await eventStore.getRevisionRange(baseline, metadataEvent.id),
+    ).toEqual([]);
+    expect(
+        (
+            await eventStore.getDeltaRevisionState('development')
+        ).projectRevisions.get('default'),
+    ).toBe(baseline);
+
+    await eventStore.store({
+        type: FEATURE_UPDATED,
+        featureName: 'polling-feature',
+        project: 'default',
+        createdBy: testAudit.username,
+        createdByUserId: testAudit.id,
+        ip: testAudit.ip,
+        data: { enabled: true },
+    });
+    const configurationRevision = await eventStore.getMaxRevisionId();
+    expect(configurationRevision).toBeGreaterThan(metadataEvent.id);
+    expect(
+        await eventStore.getRevisionRange(baseline, configurationRevision),
+    ).toEqual([
+        expect.objectContaining({
+            type: FEATURE_UPDATED,
+            id: configurationRevision,
+        }),
+    ]);
+});
+
+test.each([
+    'feature-created',
+    'feature-updated',
+    'feature-metadata-updated',
+    'feature-strategy-add',
+    'feature-strategy-update',
+    'feature-strategy-remove',
+    'feature-environment-enabled',
+    'feature-environment-disabled',
+    'feature-variants-updated',
+    'feature-environment-variants-updated',
+    'feature-archived',
+    'feature-revived',
+    'feature-deleted',
+    'feature-project-change',
+    'feature-dependency-added',
+    'feature-dependency-removed',
+    'feature-dependencies-removed',
+    'feature-tagged',
+    'feature-untagged',
+    'feature-import',
+    'features-imported',
+    'segment-updated',
+] as const)('polling retains invalidation for %s', async (type) => {
+    await eventStore.store({
+        type,
+        featureName: type === 'segment-updated' ? undefined : 'polling-feature',
+        project: 'default',
+        createdBy: 'test',
+        createdByUserId: testAudit.id,
+        ip: testAudit.ip,
+    });
+    expect(await eventStore.getMaxRevisionId()).toBeGreaterThan(0);
+    expect(await eventStore.getMaxRevisionId()).toBe(
+        Math.max(...(await eventStore.getAll()).map((event) => event.id)),
+    );
+});
+
 test('Should include id and createdAt when saving', async () => {
     vi.useFakeTimers();
     const event1 = {
@@ -230,7 +351,12 @@ test('Should delete all stored events', async () => {
 });
 
 test('Should get all events of type', async () => {
-    const data = { name: 'someName', project: 'test-project' };
+    const data = {
+        name: 'someName',
+        project: 'test-project',
+        type: 'release',
+        createdAt: new Date(),
+    };
     await Promise.all(
         [0, 1, 2, 3, 4, 5].map(async (id) => {
             const event =

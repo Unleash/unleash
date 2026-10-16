@@ -1,6 +1,5 @@
 import { IconButton, Link, styled } from '@mui/material';
 import OpenInNew from '@mui/icons-material/OpenInNew';
-import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import {
     isRegexOperator,
     isStringOperator,
@@ -28,6 +27,7 @@ import {
 import type { IConstraint } from 'interfaces/strategy';
 import {
     type EditableConstraint as EditableConstraintType,
+    isCidrConstraint,
     isDateConstraint,
     isMultiValueConstraint,
     isNumberConstraint,
@@ -37,10 +37,14 @@ import {
 } from './useEditableConstraint/editable-constraint-type.ts';
 import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator.ts';
 import { createContextFieldOptions } from './createContextFieldOptions.ts';
+import { ContextFieldSelect } from './ContextFieldSelect.tsx';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
 import { AddRegexValueChip } from './AddRegexValueChip.tsx';
 import { ToggleConstraintInverted } from './ToggleConstraintInverted.tsx';
 import { AddRegexValueEditor } from './AddRegexValueEditor/AddRegexValueEditor.tsx';
+import { CidrSdkRequirements } from './CidrSdkRequirements.tsx';
+import { CidrTargetRange, formatTargetRange } from './CidrTargetRange.tsx';
+import { getTargetRange } from './useEditableConstraint/ip-address.ts';
 
 const invertedDisabledMessages: Partial<Record<Operator, string>> = {
     REGEX: 'The REGEX operator does not support inversion',
@@ -58,10 +62,8 @@ const getInvertedDisabledText = (
 };
 
 const Container = styled('article')(({ theme }) => ({
-    '--padding': theme.spacing(2),
+    '--padding': theme.spacing(2, 0),
     backgroundColor: theme.palette.background.paper,
-    borderRadius: theme.shape.borderRadiusLarge,
-    border: `1px solid ${theme.palette.divider}`,
 }));
 
 const TopRow = styled('div')(({ theme }) => ({
@@ -96,26 +98,6 @@ const ConstraintDetails = styled('div')(({ theme }) => ({
 const LegalValuesContainer = styled('div')(({ theme }) => ({
     padding: 'var(--padding)',
     borderTop: `1px dashed ${theme.palette.divider}`,
-}));
-
-const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
-    fieldset: { border: 'none', borderRadius: 0 },
-    maxWidth: '25ch',
-    minWidth: '7ch',
-    ':focus-within .MuiSelect-select': {
-        background: 'none',
-    },
-    ':focus-within fieldset': { borderBottomStyle: 'solid' },
-    '.MuiInputLabel-root + &': {
-        // mui adds a margin top to 'standard' selects with labels
-        margin: 0,
-    },
-    '&::before': {
-        borderColor: theme.palette.divider,
-    },
-    '&&:hover::before': {
-        borderColor: theme.palette.primary.main,
-    },
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
@@ -185,6 +167,17 @@ const TopRowInput: FC<{
                 validator={validator}
                 editingOpen={editingOpen}
                 setEditingOpen={setEditingOpen}
+            />
+        );
+    }
+    if (isCidrConstraint(localConstraint)) {
+        return (
+            <AddValuesChip
+                validator={validator}
+                helpText='IP addresses or CIDR ranges, for example 192.168.1.1 or 10.0.0.0/8'
+                ref={addValuesButtonRef}
+                onAddValues={addValues}
+                ValuePreview={CidrTargetRange}
             />
         );
     }
@@ -364,25 +357,29 @@ export const EditableConstraint: FC<Props> = ({
         context,
     );
 
+    const valueTitle = isCidrConstraint(localConstraint)
+        ? (value: string) => {
+              const range = getTargetRange(value);
+              return range
+                  ? `Target range: ${formatTargetRange(range)}`
+                  : undefined;
+          }
+        : undefined;
+
     return (
         <Container>
             <TopRow>
                 <ConstraintDetails>
                     <ConstraintOptions>
-                        <StyledSelect
-                            visuallyHideLabel
-                            id='context-field-select'
-                            name='contextName'
-                            label='Context Field'
-                            options={contextFieldOptions}
+                        <ContextFieldSelect
                             value={contextName || ''}
+                            options={contextFieldOptions}
                             onChange={(contextField) =>
                                 updateConstraint({
                                     type: 'set context field',
                                     payload: contextField,
                                 })
                             }
-                            variant='standard'
                         />
 
                         <OperatorOptions>
@@ -423,6 +420,7 @@ export const EditableConstraint: FC<Props> = ({
                                   : undefined
                         }
                         removeValue={removeValue}
+                        getValueTitle={valueTitle}
                         getExternalFocusTarget={() =>
                             addValuesButtonRef.current ??
                             deleteButtonRef.current
@@ -454,6 +452,7 @@ export const EditableConstraint: FC<Props> = ({
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
+            {isCidrConstraint(localConstraint) ? <CidrSdkRequirements /> : null}
             <InlineEdit
                 localConstraint={localConstraint}
                 legalValueData={legalValueData}

@@ -88,7 +88,6 @@ export const StrategySetupCards = ({
                     onAction={() =>
                         configureStrategy({
                             strategyName: MANUAL_STRATEGY,
-                            strategyDisplayName: MANUAL_STRATEGY_LABEL,
                         })
                     }
                 />
@@ -106,9 +105,6 @@ export const StrategySetupCards = ({
                 onSelect={(strategy) =>
                     configureStrategy({
                         strategyName: strategy.name,
-                        strategyDisplayName:
-                            strategy.displayName ||
-                            formatStrategyName(strategy.name),
                     })
                 }
             />

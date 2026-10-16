@@ -1,5 +1,7 @@
 import { useCallback } from 'react';
 import useAPI from '../useApi/useApi.js';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import { formatIntegrationApiPath } from 'component/integrations/integrationPaths';
 import type { AddonSchema } from 'openapi';
 
 const useAddonsApi = () => {
@@ -7,10 +9,11 @@ const useAddonsApi = () => {
         propagateErrors: true,
     });
 
-    const URI = 'api/admin/addons';
+    const projectId = useOptionalPathParam('projectId');
+    const uri = formatIntegrationApiPath(projectId);
 
     const createAddon = async (addonConfig: Omit<AddonSchema, 'id'>) => {
-        const path = URI;
+        const path = uri;
         const req = createRequest(path, {
             method: 'POST',
             body: JSON.stringify(addonConfig),
@@ -20,7 +23,7 @@ const useAddonsApi = () => {
     };
 
     const removeAddon = async (id: number) => {
-        const path = `${URI}/${id}`;
+        const path = `${formatIntegrationApiPath()}/${id}`;
         const req = createRequest(path, {
             method: 'DELETE',
         });
@@ -30,7 +33,7 @@ const useAddonsApi = () => {
 
     const updateAddon = useCallback(
         async (addonConfig: AddonSchema) => {
-            const path = `${URI}/${addonConfig.id}`;
+            const path = `${uri}/${addonConfig.id}`;
             const req = createRequest(path, {
                 method: 'PUT',
                 body: JSON.stringify(addonConfig),
@@ -38,7 +41,7 @@ const useAddonsApi = () => {
 
             return makeRequest(req.caller, req.id);
         },
-        [createRequest, makeRequest],
+        [createRequest, makeRequest, uri],
     );
 
     return {

@@ -5,7 +5,7 @@ import Add from '@mui/icons-material/Add';
 import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useTracking } from 'hooks/useTracking';
-import { apiTokenCreatedTracking } from 'component/common/ApiTokenTable/apiTokenTracking';
+import { createApiTokenTracking } from 'component/common/ApiTokenTable/apiTokenTracking';
 interface ICreateApiTokenButton {
     path: string;
     permission: string | string[];
@@ -31,7 +31,7 @@ export const CreateApiTokenButton = ({
     const navigate = useNavigate();
     const { tokens, loading } = useApiTokens();
     const { uiConfig } = useUiConfig();
-    const trackApiTokenCreated = useTracking(apiTokenCreatedTracking);
+    const trackCreateApiToken = useTracking(createApiTokenTracking);
 
     const { limitReached, limitMessage } = useApiTokenLimit(
         uiConfig.resourceLimits.apiTokens,
@@ -42,7 +42,7 @@ export const CreateApiTokenButton = ({
         <ResponsiveButton
             Icon={Add}
             onClick={() => {
-                trackApiTokenCreated('opened');
+                trackCreateApiToken('opened');
                 navigate(path);
             }}
             data-testid={CREATE_API_TOKEN_BUTTON}

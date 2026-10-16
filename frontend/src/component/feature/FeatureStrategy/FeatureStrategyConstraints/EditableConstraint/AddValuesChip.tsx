@@ -1,6 +1,12 @@
 import Add from '@mui/icons-material/Add';
 import { styled } from '@mui/material';
-import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import {
+    type FC,
+    forwardRef,
+    useImperativeHandle,
+    useRef,
+    useState,
+} from 'react';
 import { parseParameterStrings } from 'utils/parseParameter';
 import { ValueChip } from './ValueList.tsx';
 import { AddValuesPopover, type OnAddActions } from './AddValuesPopover.tsx';
@@ -21,10 +27,11 @@ interface AddValuesProps {
     onAddValues: (newValues: string[]) => void;
     helpText?: string;
     validator: (...values: string[]) => ConstraintValidatorOutput;
+    ValuePreview?: FC<{ value: string }>;
 }
 
 export const AddValuesChip = forwardRef<HTMLDivElement, AddValuesProps>(
-    ({ onAddValues, helpText, validator }, ref) => {
+    ({ onAddValues, helpText, validator, ValuePreview }, ref) => {
         const [open, setOpen] = useState(false);
         const positioningRef = useRef<HTMLDivElement>(null);
         useImperativeHandle(
@@ -71,6 +78,7 @@ export const AddValuesChip = forwardRef<HTMLDivElement, AddValuesProps>(
                 <AddValuesPopover
                     onAdd={handleAdd}
                     helpText={helpText}
+                    ValuePreview={ValuePreview}
                     open={open}
                     anchorEl={positioningRef.current}
                     onClose={() => setOpen(false)}

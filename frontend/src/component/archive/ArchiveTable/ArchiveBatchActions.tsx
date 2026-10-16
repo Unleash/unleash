@@ -62,7 +62,7 @@ export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
                 setOpen={setDeleteModalOpen}
                 refetch={() => {
                     onConfirm?.();
-                    trackEvent('batch_operations', {
+                    trackEvent('batch-operations', {
                         props: {
                             eventType: 'features deleted',
                         },
@@ -76,7 +76,7 @@ export const ArchiveBatchActions: FC<IArchiveBatchActionsProps> = ({
                 setOpen={setReviveModalOpen}
                 refetch={() => {
                     onConfirm?.();
-                    trackEvent('batch_operations', {
+                    trackEvent('batch-operations', {
                         props: {
                             eventType: 'features revived',
                         },

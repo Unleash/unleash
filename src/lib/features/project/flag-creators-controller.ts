@@ -44,7 +44,7 @@ export default class FlagCreatorsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Users'],
-                    release: { alpha: true },
+                    release: { beta: '8.2.0', stable: '9.0.0' },
                     operationId: 'getFlagCreators',
                     summary:
                         'List users who have created flags in accessible projects.',

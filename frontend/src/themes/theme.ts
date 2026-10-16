@@ -7,7 +7,7 @@ import {
     iconButtonSizes,
     subtleOutlinedButton,
 } from './controls.js';
-import { focusable } from 'themes/themeStyles';
+import { focusable, switchFocusOutlineOffset } from 'themes/themeStyles';
 
 export const baseTheme = {
     breakpoints: {
@@ -29,28 +29,38 @@ export const baseTheme = {
             fontSize: `${14 / 16}rem`,
             lineHeight: 1.75,
         },
+        display: {
+            fontSize: `${30 / 16}rem`,
+            lineHeight: 36 / 30,
+            fontWeight: '700',
+        },
         h1: {
-            fontSize: '1.5rem',
-            lineHeight: 1.875,
+            fontSize: `${22 / 16}rem`,
+            lineHeight: 28 / 22,
             fontWeight: '700',
         },
         h2: {
-            fontSize: `${20 / 16}rem`,
+            fontSize: `${18 / 16}rem`,
+            lineHeight: 24 / 18,
             fontWeight: '700',
         },
         h3: {
-            fontSize: `${15 / 16}rem`,
-            fontWeight: '700',
-        },
-        h4: {
-            fontSize: `${15 / 16}rem`,
+            fontSize: `${14 / 16}rem`,
+            lineHeight: 20 / 14,
             fontWeight: '700',
         },
         caption: {
             fontSize: `${12 / 16}rem`,
+            lineHeight: 16 / 12,
+        },
+        overline: {
+            fontSize: `${12 / 16}rem`,
+            lineHeight: 16 / 12,
+            fontWeight: '700',
+            textTransform: 'uppercase',
         },
         body1: {
-            fontSize: `${15 / 16}rem`,
+            fontSize: `${14 / 16}rem`,
         },
         body2: {
             fontSize: `${14 / 16}rem`,
@@ -61,7 +71,7 @@ export const baseTheme = {
         largeHeader: '2rem',
         mediumHeader: '1.5rem',
         mainHeader: '1.25rem',
-        bodySize: `${15 / 16}rem`,
+        bodySize: `${14 / 16}rem`,
         smallBody: `${14 / 16}rem`,
         smallerBody: `${12 / 16}rem`,
     },
@@ -594,6 +604,9 @@ export const lightTheme = createTheme({
                             color: theme.palette.action.disabled,
                         },
                 }),
+                switchBase: {
+                    '&.Mui-focusVisible': switchFocusOutlineOffset,
+                },
             },
         },
 

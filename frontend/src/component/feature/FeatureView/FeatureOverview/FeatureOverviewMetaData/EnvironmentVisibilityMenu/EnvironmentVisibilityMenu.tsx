@@ -15,11 +15,10 @@ type EnvironmentVisibilityMenuProps = {
 const buttonId = 'environment-visibility-button';
 const menuId = 'environment-visibility-menu';
 
-const StyledContainer = styled('div')(({ theme }) => ({
+const StyledContainer = styled('div')({
     display: 'flex',
-    justifyContent: 'center',
-    paddingTop: theme.spacing(4),
-}));
+    justifyContent: 'flex-start',
+});
 
 export const EnvironmentVisibilityMenu: FC<EnvironmentVisibilityMenuProps> = ({
     environments,

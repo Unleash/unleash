@@ -1,6 +1,11 @@
 import { useNavigate } from 'react-router';
-import { useEventTracker } from 'hooks/useEventTracker.ts';
+import { useTracking } from 'hooks/useTracking.ts';
 import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrategyCreate.tsx';
+import {
+    createStrategyTracking,
+    strategyTypeProps,
+} from '../strategyActionsTracking.ts';
+import { useEnvironmentDefaultStrategy } from './useEnvironmentDefaultStrategy.ts';
 
 interface IConfigureStrategyContext {
     projectId: string;
@@ -9,10 +14,8 @@ interface IConfigureStrategyContext {
     onClose: () => void;
 }
 
-export interface IConfigureStrategyOptions {
+interface IConfigureStrategyOptions {
     strategyName: string;
-    strategyDisplayName?: string;
-    isDefault?: boolean;
 }
 
 export const useConfigureStrategy = ({
@@ -22,18 +25,21 @@ export const useConfigureStrategy = ({
     onClose,
 }: IConfigureStrategyContext) => {
     const navigate = useNavigate();
-    const { trackEvent } = useEventTracker();
+    const trackCreateStrategy = useTracking(createStrategyTracking);
+    const { defaultStrategy } = useEnvironmentDefaultStrategy(
+        projectId,
+        environmentId,
+    );
 
-    return ({
-        strategyName,
-        strategyDisplayName,
-        isDefault,
-    }: IConfigureStrategyOptions) => {
-        trackEvent('strategy-add', {
-            props: {
-                buttonTitle: strategyDisplayName || strategyName,
-            },
-        });
+    return ({ strategyName }: IConfigureStrategyOptions) => {
+        // this needs to happen before navigating, to capture correct path
+        trackCreateStrategy(
+            'opened',
+            strategyTypeProps({
+                selectedStrategyName: strategyName,
+                defaultStrategyName: defaultStrategy.name,
+            }),
+        );
 
         navigate(
             formatCreateStrategyPath(
@@ -41,7 +47,6 @@ export const useConfigureStrategy = ({
                 featureId,
                 environmentId,
                 strategyName,
-                isDefault,
             ),
         );
         onClose();

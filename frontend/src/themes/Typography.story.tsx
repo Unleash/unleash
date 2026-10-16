@@ -8,6 +8,7 @@ export const meta: StoryMeta = {
 };
 
 type Variant =
+    | 'display'
     | 'h1'
     | 'h2'
     | 'h3'
@@ -18,6 +19,7 @@ type Variant =
     | 'button';
 
 const VARIANTS: Variant[] = [
+    'display',
     'h1',
     'h2',
     'h3',
@@ -146,7 +148,10 @@ export const BaseVariants: Story = () => {
                                 <span>{String(fontWeight)}</span>
                             </MetaLine>
                         </Meta>
-                        <Typography variant={variant} component='div'>
+                        <Typography
+                            component='div'
+                            style={{ fontSize, lineHeight, fontWeight }}
+                        >
                             {SAMPLE}
                         </Typography>
                     </Row>

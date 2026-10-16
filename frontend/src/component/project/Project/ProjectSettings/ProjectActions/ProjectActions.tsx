@@ -32,7 +32,7 @@ export const ProjectActions = () => {
 
     if (!isEnterprise()) {
         return (
-            <PageContent header={<PageHeader title='Actions' />}>
+            <PageContent header={<PageHeader title='Actions' variant='h2' />}>
                 <PremiumFeature feature='actions' />
             </PageContent>
         );
@@ -42,6 +42,7 @@ export const ProjectActions = () => {
         <PageContent
             header={
                 <PageHeader
+                    variant='h2'
                     title='Actions'
                     actions={
                         <ResponsiveButton

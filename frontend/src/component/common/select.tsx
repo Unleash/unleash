@@ -2,7 +2,6 @@ import type React from 'react';
 import { useId } from 'react';
 import {
     FormControl,
-    InputLabel,
     MenuItem,
     Select,
     type SelectChangeEvent,
@@ -29,10 +28,9 @@ export interface ISelectMenuProps {
     formControlStyles?: React.CSSProperties;
 }
 
-const SelectMenuControl: React.FC<ISelectMenuProps> = ({
+const SelectMenuControl: React.FC<Omit<ISelectMenuProps, 'label'>> = ({
     name,
     value = '',
-    label = '',
     options,
     onChange,
     id,
@@ -65,17 +63,11 @@ const SelectMenuControl: React.FC<ISelectMenuProps> = ({
             classes={classes}
             style={formControlStyles}
         >
-            {label ? (
-                <InputLabel id={labelId} htmlFor={controlId}>
-                    {label}
-                </InputLabel>
-            ) : null}
             <Select
                 name={name}
                 disabled={disabled}
                 onChange={onChange}
                 className={className}
-                label={label || undefined}
                 id={controlId}
                 labelId={labelId}
                 value={value}
@@ -89,7 +81,7 @@ const SelectMenuControl: React.FC<ISelectMenuProps> = ({
 
 const SelectMenu: React.FC<ISelectMenuProps> = ({ label = '', ...props }) => {
     if (!label) {
-        return <SelectMenuControl label={label} {...props} />;
+        return <SelectMenuControl {...props} />;
     }
 
     return (

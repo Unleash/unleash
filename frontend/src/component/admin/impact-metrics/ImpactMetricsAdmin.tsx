@@ -178,7 +178,7 @@ const ImpactMetricsPage = () => {
     };
 
     return (
-        <PageContent header={<PageHeader titleElement='Impact Metrics' />}>
+        <PageContent header={<PageHeader heading='Impact Metrics' />}>
             <Layout>
                 <Card>
                     <IconHeader>

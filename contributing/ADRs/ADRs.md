@@ -49,4 +49,5 @@ We have created a set of ADRs to help guide the development of the front end:
 * [Preferred folder structure](/contributing/ADRs/front-end/preferred-folder-structure)
 * [Preferred form architecture](/contributing/ADRs/front-end/preferred-form-architecture)
 * [OpenAPI SDK generator](/contributing/ADRs/front-end/sdk-generator)
+* [Tracking user journeys and actions](/contributing/ADRs/front-end/tracking)
 * [Use of conditionals in JSX (refactor of &lt;ConditionallyRender /&gt;)](/contributing/ADRs/front-end/jsx-conditionals)

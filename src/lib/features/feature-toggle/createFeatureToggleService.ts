@@ -62,7 +62,7 @@ import {
     createFeatureLinkService,
 } from '../feature-links/createFeatureLinkService.js';
 import { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
-import { createConstraintsReadModel } from '../constraints/createConstraintsReadModel.js';
+import { ConstraintValidator } from '../constraints/constraint-validator.js';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -136,7 +136,7 @@ export const createFeatureToggleService = (
 
     const resourceLimitsService = new ResourceLimitsService(config);
 
-    const constraintsReadModel = createConstraintsReadModel(contextFieldStore);
+    const constraintValidator = new ConstraintValidator(contextFieldStore);
 
     const featureToggleService = new FeatureToggleService(
         {
@@ -161,7 +161,7 @@ export const createFeatureToggleService = (
             featureLinksReadModel,
             featureLinkService,
             resourceLimitsService,
-            constraintsReadModel,
+            constraintValidator,
         },
     );
     return featureToggleService;
@@ -206,7 +206,7 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
     const { featureLinkService } = createFakeFeatureLinkService(config);
     // not using fake as validation is checked in tests.
     // TODO: think if this should be refactored
-    const constraintsReadModel = createConstraintsReadModel(contextFieldStore);
+    const constraintValidator = new ConstraintValidator(contextFieldStore);
 
     const resourceLimitsService = new ResourceLimitsService(config);
 
@@ -237,7 +237,7 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
             featureLinksReadModel,
             featureLinkService,
             resourceLimitsService,
-            constraintsReadModel,
+            constraintValidator,
         },
     );
     return {

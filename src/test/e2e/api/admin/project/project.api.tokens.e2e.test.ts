@@ -7,7 +7,7 @@ import getLogger from '../../../../fixtures/no-logger.js';
 import { ApiTokenType } from '../../../../../lib/types/model.js';
 import { DEFAULT_ENV, SYSTEM_USER_ID } from '../../../../../lib/server-impl.js';
 
-describe('when secure token storage is disabled', () => {
+describe('project API tokens and legacy token compatibility', () => {
     let app: IUnleashTest;
     let db: ITestDb;
 
@@ -19,7 +19,6 @@ describe('when secure token storage is disabled', () => {
                 experimental: {
                     flags: {
                         strictSchemaValidation: true,
-                        secureTokenStorage: false,
                     },
                 },
             },
@@ -29,6 +28,7 @@ describe('when secure token storage is disabled', () => {
 
     afterEach(async () => {
         await db.stores.apiTokenStore.deleteAll();
+        await db.rawDatabase('api_tokens_v2').delete();
     });
 
     afterAll(async () => {
@@ -108,6 +108,8 @@ describe('when secure token storage is disabled', () => {
             .set('Content-Type', 'application/json');
         expect(status).toBe(201);
         expect(body.tokenName).toBe(`default-${type}`);
+        expect(body.secret).toMatch(/^default:development\.v2_/);
+        expect(await db.stores.apiTokenStore.getAll()).toEqual([]);
     });
 
     test('Deletes existing tokens', async () => {
@@ -167,7 +169,7 @@ describe('when secure token storage is disabled', () => {
     });
 });
 
-describe('when secure token storage is enabled', () => {
+describe('secure project API tokens', () => {
     let app: IUnleashTest;
     let db: ITestDb;
 
@@ -179,7 +181,6 @@ describe('when secure token storage is enabled', () => {
                 experimental: {
                     flags: {
                         strictSchemaValidation: true,
-                        secureTokenStorage: true,
                     },
                 },
             },

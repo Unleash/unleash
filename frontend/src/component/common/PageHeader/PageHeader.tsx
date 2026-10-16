@@ -45,7 +45,8 @@ const StyledHeader = styled('div')(({ theme }) => ({
 }));
 
 const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.mainHeader,
+    // Line-height is kept fixed so the header row has a stable height — it aligns
+    // with the action buttons and avoids layout shift between loading/loaded states.
     lineHeight: theme.spacing(5),
     fontWeight: theme.typography.fontWeightBold,
 }));
@@ -58,34 +59,50 @@ const StyledHeaderActions = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-interface IPageHeaderProps {
-    title?: string;
-    titleElement?: ReactNode;
+type PageHeaderTitleProps =
+    | {
+          /**
+           * Displayed as the heading, set as the browser tab title, and
+           * announced to screen readers as a navigation.
+           */
+          title: string;
+          heading?: never;
+      }
+    | {
+          /**
+           * Displayed as the heading only. For headers that aren't the page's
+           * main title (e.g. sidebars, sections within a page).
+           */
+          heading: ReactNode;
+          title?: never;
+      };
+
+interface IPageHeaderBaseProps {
     subtitle?: string;
     variant?: TypographyProps['variant'];
     loading?: boolean;
     actions?: ReactNode;
     className?: string;
-    secondary?: boolean;
     children?: React.ReactNode;
 }
 
-const PageHeaderComponent: FC<IPageHeaderProps> & {
+type PageHeaderProps = IPageHeaderBaseProps & PageHeaderTitleProps;
+
+const PageHeaderComponent: FC<PageHeaderProps> & {
     Divider: typeof PageHeaderDivider;
 } = ({
     title,
-    titleElement,
+    heading,
     actions,
     subtitle,
     variant,
     loading,
     className = '',
-    secondary,
     children,
 }) => {
     const headerClasses = classnames({ skeleton: loading });
 
-    usePageTitle(secondary ? '' : title);
+    usePageTitle(title);
 
     return (
         <StyledHeaderContainer>
@@ -95,10 +112,10 @@ const PageHeaderComponent: FC<IPageHeaderProps> & {
                     data-loading
                 >
                     <StyledHeaderTitle
-                        variant={variant || secondary ? 'h2' : 'h1'}
+                        variant={variant ?? 'h1'}
                         className={classnames(className)}
                     >
-                        {titleElement || title}
+                        {title ?? heading}
                     </StyledHeaderTitle>
                     {subtitle && <small>{subtitle}</small>}
                 </StyledHeader>

@@ -2,7 +2,7 @@ import { act, fireEvent, screen } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { beforeEach, expect, test, vi } from 'vitest';
 import { render } from 'utils/testRenderer';
-import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { testServerSetup } from 'utils/testServer';
 import {
     IntroProvider,
     ONBOARDING_INTRO_FINISHED_SPLASH_ID,
@@ -45,9 +45,6 @@ const Consumer = () => {
 };
 
 test('remembers the intro as finished for returning users', async () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { onboardingIntroTour: true },
-    });
     const splashCalls: string[] = [];
     server.use(
         http.post('/api/admin/splash/:id', ({ params }) => {
@@ -71,9 +68,6 @@ test('remembers the intro as finished for returning users', async () => {
 });
 
 test('runs onExited after the dialog leave transition completes', async () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { onboardingIntroTour: true },
-    });
     const onExited = vi.fn();
     const Opener = () => {
         const { open } = useIntro();
@@ -102,9 +96,6 @@ test('runs onExited after the dialog leave transition completes', async () => {
 });
 
 test('drops the pending onExited when open() is called again without one', async () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { onboardingIntroTour: true },
-    });
     const onExited = vi.fn();
     const Opener = () => {
         const { open } = useIntro();

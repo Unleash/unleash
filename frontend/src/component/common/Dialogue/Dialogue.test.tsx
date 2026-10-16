@@ -46,17 +46,21 @@ test('tracks opening and dismissing as one journey', () => {
     const rows = renderDialogue({
         open: true,
         title: 'New dialogue created',
-        tracking: { event: 'project-access', type: 'removed' },
+        tracking: { event: 'project-access', type: 'remove-access' },
         onClose: () => {},
     });
 
     fireEvent.click(screen.getByRole('button', { name: 'No, take me back' }));
 
     expect(rows).toEqual([
-        { event: 'project-access', eventType: 'removed', action: 'opened' },
         {
             event: 'project-access',
-            eventType: 'removed',
+            eventType: 'remove-access',
+            action: 'opened',
+        },
+        {
+            event: 'project-access',
+            eventType: 'remove-access',
             action: 'dismissed',
             method: 'cancel-button',
         },
@@ -67,7 +71,7 @@ test('escape is dismissed once even when both close paths are wired', () => {
     const rows = renderDialogue({
         open: true,
         title: 'New dialogue created',
-        tracking: { event: 'project-access', type: 'removed' },
+        tracking: { event: 'project-access', type: 'remove-access' },
         setOpen: () => {},
         onClose: () => {},
     });
@@ -75,10 +79,14 @@ test('escape is dismissed once even when both close paths are wired', () => {
     fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' });
 
     expect(rows).toEqual([
-        { event: 'project-access', eventType: 'removed', action: 'opened' },
         {
             event: 'project-access',
-            eventType: 'removed',
+            eventType: 'remove-access',
+            action: 'opened',
+        },
+        {
+            event: 'project-access',
+            eventType: 'remove-access',
             action: 'dismissed',
             method: 'escape',
         },
@@ -102,7 +110,7 @@ test('a confirm that runs the request is tracked as one journey while the button
     const rows = renderDialogue({
         open: true,
         title: 'New dialogue created',
-        tracking: { event: 'project-access', type: 'removed' },
+        tracking: { event: 'project-access', type: 'remove-access' },
         onSubmit: () =>
             new Promise<void>((resolve) => {
                 finishRequest = resolve;
@@ -116,9 +124,21 @@ test('a confirm that runs the request is tracked as one journey while the button
     finishRequest();
     await waitFor(() => expect(confirm).toBeEnabled());
     expect(rows).toEqual([
-        { event: 'project-access', eventType: 'removed', action: 'opened' },
-        { event: 'project-access', eventType: 'removed', action: 'submitted' },
-        { event: 'project-access', eventType: 'removed', action: 'succeeded' },
+        {
+            event: 'project-access',
+            eventType: 'remove-access',
+            action: 'opened',
+        },
+        {
+            event: 'project-access',
+            eventType: 'remove-access',
+            action: 'submitted',
+        },
+        {
+            event: 'project-access',
+            eventType: 'remove-access',
+            action: 'succeeded',
+        },
     ]);
 });
 
@@ -128,7 +148,7 @@ test('a rejected confirm is recorded as failed and handed to the caller', async 
     const rows = renderDialogue({
         open: true,
         title: 'New dialogue created',
-        tracking: { event: 'project-access', type: 'removed' },
+        tracking: { event: 'project-access', type: 'remove-access' },
         onSubmit: () => Promise.reject(failure),
         onError: (error) => errors.push(error),
     });

@@ -149,7 +149,7 @@ interface IFeedbackComponent {
     closeFeedback: () => void;
 }
 
-const feedbackTracking: Tracking = { event: 'feedback' };
+const feedbackTracking: Tracking = { event: 'feedback', type: 'send-feedback' };
 
 export const FeedbackComponent = ({
     feedbackData,

@@ -5,7 +5,7 @@ import {
     FeatureStrategyRemoveDialogue,
     SuggestFeatureStrategyRemoveDialogue,
 } from './DialogStrategyRemove.tsx';
-import { strategyDeletedTracking } from 'component/feature/FeatureStrategy/strategyActionsTracking';
+import { deleteStrategyTracking } from 'component/feature/FeatureStrategy/strategyActionsTracking';
 
 const _strategyId = 'c81e3a1d-e91c-4083-bd0f-75bb8a9e32a2';
 const projectId = 'default';
@@ -28,7 +28,7 @@ describe('Use in scheduled change requests', () => {
             render(
                 <SuggestFeatureStrategyRemoveDialogue
                     onRemove={async () => {}}
-                    tracking={strategyDeletedTracking}
+                    tracking={deleteStrategyTracking}
                     onClose={() => {}}
                     isOpen={true}
                     scheduledChangeRequestsForStrategy={{
@@ -41,7 +41,7 @@ describe('Use in scheduled change requests', () => {
             render(
                 <FeatureStrategyRemoveDialogue
                     onRemove={async () => {}}
-                    tracking={strategyDeletedTracking}
+                    tracking={deleteStrategyTracking}
                     onClose={() => {}}
                     isOpen={true}
                     scheduledChangeRequestsForStrategy={{
@@ -85,7 +85,7 @@ describe('Use in scheduled change requests', () => {
         render(
             <SuggestFeatureStrategyRemoveDialogue
                 onRemove={async () => {}}
-                tracking={strategyDeletedTracking}
+                tracking={deleteStrategyTracking}
                 onClose={() => {}}
                 isOpen={true}
                 scheduledChangeRequestsForStrategy={{
@@ -114,7 +114,7 @@ describe('Use in scheduled change requests', () => {
         render(
             <SuggestFeatureStrategyRemoveDialogue
                 onRemove={async () => {}}
-                tracking={strategyDeletedTracking}
+                tracking={deleteStrategyTracking}
                 onClose={() => {}}
                 isOpen={true}
                 scheduledChangeRequestsForStrategy={{

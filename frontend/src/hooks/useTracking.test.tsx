@@ -28,21 +28,21 @@ const renderTracking = (initial: Tracking | undefined) => {
     return { rows, ...hook };
 };
 
-const roleChanged: Tracking = {
+const editRole: Tracking = {
     event: 'project-access',
-    type: 'role-changed',
+    type: 'edit-role',
     props: { targetType: 'group' },
 };
 
 test('stamps the declaration onto every row of the journey', () => {
-    const { rows, result } = renderTracking(roleChanged);
+    const { rows, result } = renderTracking(editRole);
 
     result.current('opened', { rolesCount: 2 });
 
     expect(rows).toEqual([
         {
             event: 'project-access',
-            eventType: 'role-changed',
+            eventType: 'edit-role',
             action: 'opened',
             targetType: 'group',
             rolesCount: 2,
@@ -51,7 +51,7 @@ test('stamps the declaration onto every row of the journey', () => {
 });
 
 test('a successful mutation is tracked as submitted then succeeded', async () => {
-    const { rows, result } = renderTracking(roleChanged);
+    const { rows, result } = renderTracking(editRole);
 
     const value = await result.current.mutation(async () => 'saved');
 
@@ -60,7 +60,7 @@ test('a successful mutation is tracked as submitted then succeeded', async () =>
 });
 
 test('a failed mutation is tracked with the request status and rethrown', async () => {
-    const { rows, result } = renderTracking(roleChanged);
+    const { rows, result } = renderTracking(editRole);
     const error = Object.assign(new Error('forbidden'), { statusCode: 403 });
 
     await expect(
@@ -74,7 +74,7 @@ test('a failed mutation is tracked with the request status and rethrown', async 
 });
 
 test('a validation failure counts as a submitted attempt', () => {
-    const { rows, result } = renderTracking(roleChanged);
+    const { rows, result } = renderTracking(editRole);
 
     result.current.validationFailed();
 
@@ -93,12 +93,14 @@ test('emits nothing without a declaration but still runs the mutation', async ()
 });
 
 test('later renders reuse the same tracker with the latest declaration', () => {
-    const { rows, result, rerender } = renderTracking(roleChanged);
+    const { rows, result, rerender } = renderTracking(editRole);
     const tracker = result.current;
 
-    rerender({ event: 'feedback' });
+    rerender({ event: 'feedback', type: 'send-feedback' });
     result.current('dismissed');
 
     expect(result.current).toBe(tracker);
-    expect(rows).toEqual([{ event: 'feedback', action: 'dismissed' }]);
+    expect(rows).toEqual([
+        { event: 'feedback', eventType: 'send-feedback', action: 'dismissed' },
+    ]);
 });

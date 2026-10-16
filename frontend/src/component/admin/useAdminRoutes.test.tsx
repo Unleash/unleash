@@ -39,3 +39,16 @@ test('/admin/instance-name is visible on cloud when the feature flag is enabled'
 
     expect(await screen.findByText('/admin/instance-name')).toBeInTheDocument();
 });
+
+test('/admin/license is hidden on cloud', async () => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: { UNLEASH_CLOUD: true, enableLicense: true },
+        versionInfo: { current: { enterprise: 'x.y.z' } },
+    });
+    testServerRoute(server, '/api/instance/status', {});
+
+    render(<AdminRoutesProbe />);
+    await settleProviders();
+
+    expect(screen.queryByText('/admin/license')).not.toBeInTheDocument();
+});

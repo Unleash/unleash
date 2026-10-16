@@ -5,6 +5,7 @@ import {
     FEATURE_REVIVED,
 } from '../../events/index.js';
 import type {
+    IAuditUser,
     IEnvironment,
     IUnleashConfig,
     StageName,
@@ -13,6 +14,7 @@ import { createFakeFeatureLifecycleService } from './createFeatureLifecycle.js';
 import EventEmitter from 'events';
 import noLoggerProvider from '../../../test/fixtures/no-logger.js';
 import { STAGE_ENTERED } from '../../metric-events.js';
+import { NotFoundError } from '../../error/index.js';
 
 test('can insert and read lifecycle stages', async () => {
     const eventBus = new EventEmitter();
@@ -101,4 +103,34 @@ test('can insert and read lifecycle stages', async () => {
     expect(initialLifecycle).toEqual([
         { stage: 'initial', enteredStageAt: expect.any(Date) },
     ]);
+});
+
+test('a feature can only be completed and uncompleted through its own project', async () => {
+    const { featureLifecycleService, featuresReadModel } =
+        createFakeFeatureLifecycleService({
+            flagResolver: { isEnabled: () => true },
+            eventBus: new EventEmitter(),
+            getLogger: noLoggerProvider,
+        } as unknown as IUnleashConfig);
+    featuresReadModel.setFeatureExistsInProject(false);
+
+    await expect(
+        featureLifecycleService.featureCompleted(
+            'testFeature',
+            'anotherProject',
+            { status: 'kept' },
+            {} as IAuditUser,
+        ),
+    ).rejects.toThrow(NotFoundError);
+    await expect(
+        featureLifecycleService.featureUncompleted(
+            'testFeature',
+            'anotherProject',
+            {} as IAuditUser,
+        ),
+    ).rejects.toThrow(NotFoundError);
+
+    const lifecycle =
+        await featureLifecycleService.getFeatureLifecycle('testFeature');
+    expect(lifecycle).toEqual([]);
 });

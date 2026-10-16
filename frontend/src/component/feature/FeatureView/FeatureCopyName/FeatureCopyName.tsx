@@ -1,24 +1,25 @@
-import { useState, type FC } from 'react';
+import { useRef, useState, type FC } from 'react';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import { useKeyboardCopy } from 'hooks/useKeyboardCopy';
 import { useTracking } from 'hooks/useTracking';
-import { flagNameCopiedTracking } from 'component/feature/flagActionsTracking';
+import { copyFlagNameTracking } from 'component/feature/flagActionsTracking';
 import { IconButton, Tooltip } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import FileCopyOutlined from '@mui/icons-material/FileCopyOutlined';
 
 export const FeatureCopyName: FC<{ name: string }> = ({ name }) => {
+    const buttonRef = useRef<HTMLButtonElement>(null);
     const [isFeatureNameCopied, setIsFeatureNameCopied] = useState(false);
     const { setToastData } = useToast();
-    const trackFlagNameCopied = useTracking(flagNameCopiedTracking);
+    const trackCopyFlagName = useTracking(copyFlagNameTracking);
 
     const handleCopyToClipboard = (method: 'button' | 'keyboard-shortcut') => {
         try {
             if (copy(name)) {
-                trackFlagNameCopied('succeeded', { method });
+                trackCopyFlagName('succeeded', { method });
             } else {
-                trackFlagNameCopied('failed', {
+                trackCopyFlagName('failed', {
                     method,
                     failedOn: 'clipboard',
                 });
@@ -39,8 +40,9 @@ export const FeatureCopyName: FC<{ name: string }> = ({ name }) => {
         }
     };
 
-    const shortcutDescription = useKeyboardCopy(() =>
-        handleCopyToClipboard('keyboard-shortcut'),
+    const shortcutDescription = useKeyboardCopy(
+        () => handleCopyToClipboard('keyboard-shortcut'),
+        [buttonRef],
     );
 
     return (
@@ -53,6 +55,7 @@ export const FeatureCopyName: FC<{ name: string }> = ({ name }) => {
             arrow
         >
             <IconButton
+                ref={buttonRef}
                 size='medium'
                 onClick={() => handleCopyToClipboard('button')}
             >

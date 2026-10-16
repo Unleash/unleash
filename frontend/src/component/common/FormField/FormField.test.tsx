@@ -1,17 +1,9 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { expect, test } from 'vitest';
-import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { FormField } from './FormField.tsx';
 
-const server = testServerSetup();
-const setTopLabel = (topLabelInputs: boolean) =>
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { topLabelInputs },
-    });
-
 test('associates the static label with the control', async () => {
-    setTopLabel(true);
     render(
         <FormField label='Email'>
             <input />
@@ -24,7 +16,6 @@ test('associates the static label with the control', async () => {
 });
 
 test('renders the description and wires it via aria-describedby', async () => {
-    setTopLabel(true);
     render(
         <FormField label='API token' description='Paste your API token'>
             <input />
@@ -39,7 +30,6 @@ test('renders the description and wires it via aria-describedby', async () => {
 });
 
 test("merges the description with the control's own aria-describedby", async () => {
-    setTopLabel(true);
     render(
         <FormField label='Email' description='We never share it'>
             <input aria-describedby='external-help' />
@@ -56,7 +46,6 @@ test("merges the description with the control's own aria-describedby", async () 
 });
 
 test('sets no aria-describedby when there is neither', async () => {
-    setTopLabel(true);
     render(
         <FormField label='Email'>
             <input />
@@ -70,22 +59,7 @@ test('sets no aria-describedby when there is neither', async () => {
     );
 });
 
-test('restores the floating label on the control when the flag is off', async () => {
-    setTopLabel(false);
-    render(
-        <FormField label='Email'>
-            <input />
-        </FormField>,
-    );
-
-    const input = await screen.findByRole('textbox');
-
-    expect(input).toHaveAttribute('label', 'Email');
-    expect(screen.queryByText('Email')).not.toBeInTheDocument();
-});
-
 test("uses the control's own id rather than overwriting it", async () => {
-    setTopLabel(true);
     render(
         <FormField label='Change request title'>
             <input id='group-name' />
@@ -96,29 +70,7 @@ test("uses the control's own id rather than overwriting it", async () => {
     expect(input).toHaveAttribute('id', 'group-name');
 });
 
-test('renders a description element unchanged when the flag is off', async () => {
-    setTopLabel(false);
-    render(
-        <FormField
-            label='Project Id'
-            description={
-                <p data-testid='original' style={{ color: 'red' }}>
-                    You can't change this later
-                </p>
-            }
-        >
-            <input />
-        </FormField>,
-    );
-
-    const rendered = await screen.findByTestId('original');
-    expect(rendered).toContainHTML(
-        `<p data-testid="original" style="color: red;">You can't change this later</p>`,
-    );
-});
-
-test('restyles the description text but keeps its data-testid when the flag is on', async () => {
-    setTopLabel(true);
+test('restyles the description text but keeps its data-testid', async () => {
     render(
         <FormField
             label='Project Id'

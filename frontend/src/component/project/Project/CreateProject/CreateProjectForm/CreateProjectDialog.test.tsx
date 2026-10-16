@@ -11,7 +11,6 @@ const setupApi = (existingProjectsCount: number) => {
     testServerRoute(server, '/api/admin/ui-config', {
         resourceLimits: { projects: 1 },
         versionInfo: { current: { enterprise: 'version' } },
-        flags: { newModalDesign: true },
     });
     testServerRoute(server, '/api/admin/projects', {
         projects: [...Array(existingProjectsCount).keys()].map((_, index) => ({
@@ -27,7 +26,7 @@ const getNameInput = async () => {
     return within(wrapper).getByRole('textbox');
 };
 
-test('new project modal posts the expected payload', async () => {
+test('project modal posts the expected payload', async () => {
     setupApi(0);
     const { requests } = testServerRoute(
         server,
@@ -57,7 +56,7 @@ test('new project modal posts the expected payload', async () => {
     });
 });
 
-test('new project modal disables Create when limit reached', async () => {
+test('project modal disables Create when limit reached', async () => {
     setupApi(1);
 
     render(<CreateProjectDialog open={true} onClose={() => {}} />, {
@@ -69,4 +68,32 @@ test('new project modal disables Create when limit reached', async () => {
 
     const submit = await screen.findByTestId('PROJECT_FORM_CREATE_BUTTON');
     expect(submit).toHaveAttribute('aria-disabled', 'true');
+});
+
+test('Enabled new project button when limits, version and permission allow for it', async () => {
+    setupApi(0);
+    render(<CreateProjectDialog open={true} onClose={() => {}} />, {
+        permissions: [{ permission: CREATE_PROJECT }],
+    });
+
+    await waitFor(async () => {
+        const button = await screen.findByRole('button', {
+            name: 'Create project',
+        });
+        expect(button).not.toBeDisabled();
+    });
+});
+
+test('Project limit reached', async () => {
+    setupApi(1);
+    render(<CreateProjectDialog open={true} onClose={() => {}} />, {
+        permissions: [{ permission: CREATE_PROJECT }],
+    });
+
+    await screen.findByText('You have reached the limit for projects');
+
+    const button = await screen.findByRole('button', {
+        name: 'Create project',
+    });
+    expect(button).toHaveAttribute('aria-disabled', 'true');
 });

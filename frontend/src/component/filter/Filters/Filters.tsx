@@ -119,6 +119,7 @@ const RenderFilter: FC<RenderFilterProps> = ({
         return (
             <FilterDateItem
                 key={filter.label}
+                filterKey={filter.filterKey}
                 initMode={initMode}
                 label={label}
                 name={filter.label}
@@ -143,6 +144,7 @@ const RenderFilter: FC<RenderFilterProps> = ({
         <FilterItem
             initMode={initMode}
             key={filter.label}
+            filterKey={filter.filterKey}
             label={label}
             name={filter.label}
             state={state}

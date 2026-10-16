@@ -5,15 +5,15 @@ const StyledTab = styled(Button)<{ selected: boolean }>(
     ({ theme, selected }) => ({
         '&.MuiButton-root': {
             cursor: 'pointer',
-            height: theme.spacing(6.5),
+            height: theme.spacing(4.5),
             border: 0,
             backgroundColor: selected
                 ? theme.palette.background.paper
                 : 'transparent',
-            borderLeft: `${theme.spacing(1)} solid ${
+            borderLeft: `${theme.spacing(0.5)} solid ${
                 selected ? theme.palette.background.alternative : 'transparent'
             }`,
-            borderRadius: theme.shape.borderRadiusMedium,
+            borderRadius: theme.shape.borderRadius,
             justifyContent: 'start',
             transition: 'background-color 0.2s ease',
             color: theme.palette.text.primary,

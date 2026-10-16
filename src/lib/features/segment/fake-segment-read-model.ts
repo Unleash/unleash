@@ -6,7 +6,7 @@ import type {
 import type { ISegmentReadModel } from './segment-read-model-type.js';
 
 export class FakeSegmentReadModel implements ISegmentReadModel {
-    constructor(private segments: ISegment[] = []) {}
+    constructor(public segments: ISegment[] = []) {}
     async getAll(_ids?: number[]): Promise<ISegment[]> {
         return this.segments;
     }

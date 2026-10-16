@@ -41,7 +41,7 @@ const StyledUserDistributionContainer = styled(Box)(({ theme }) => ({
 const StyledUserCount = styled(Typography)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
     fontWeight: 'bold',
-    fontSize: theme.fontSizes.extraLargeHeader,
+    fontSize: theme.typography.display.fontSize,
     margin: 0,
     padding: 0,
 }));

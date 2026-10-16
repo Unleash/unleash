@@ -4,6 +4,8 @@ import type {
     PersonalDashboardSchemaProjectsItem,
 } from 'openapi';
 import { useEffect } from 'react';
+import { useTracking } from 'hooks/useTracking';
+import { toggleDashboardSectionTracking } from './personalDashboardTracking.ts';
 
 type StateProps = {
     projects?: PersonalDashboardSchemaProjectsItem[];
@@ -33,6 +35,8 @@ export const useDashboardState = (props?: StateProps) => {
 
     const updateState = (newState: Partial<State>) =>
         setState({ ...defaultState, ...state, ...newState });
+
+    const trackToggleSection = useTracking(toggleDashboardSectionTracking);
 
     useEffect(() => {
         const updates: Partial<State> = {};
@@ -88,8 +92,11 @@ export const useDashboardState = (props?: StateProps) => {
             }
         };
         const property = getProperty();
-        updateState({
-            [property]: !(state[property] ?? true),
+        const expanded = !(state[property] ?? true);
+        updateState({ [property]: expanded });
+        trackToggleSection('succeeded', {
+            section,
+            newState: expanded ? 'expanded' : 'collapsed',
         });
     };
 

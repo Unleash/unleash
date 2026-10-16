@@ -66,6 +66,9 @@ describe('groups', () => {
 
         cy.get("[data-testid='UG_SAVE_BTN_ID']").click();
 
+        // Prevents the test ending with the navigation, and page reset hanging
+        // before the next test
+        cy.location('pathname').should('match', /^\/admin\/groups\/\d+$/);
         cy.contains('hello-world-my edited description');
     });
 

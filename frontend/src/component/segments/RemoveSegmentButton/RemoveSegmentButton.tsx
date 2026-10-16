@@ -36,7 +36,7 @@ export const RemoveSegmentButton = ({ segment }: IRemoveSegmentButtonProps) => {
     const { addChange } = useChangeRequestApi();
     const tracking: Tracking = {
         event: 'segments',
-        type: 'deleted',
+        type: 'delete-segment',
         props: {
             ...segmentTrackingProps(segment),
             viaChangeRequest: Boolean(changeRequestEnv && segment.project),

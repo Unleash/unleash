@@ -19,7 +19,7 @@ import {
     PROJECT_DEFAULT_STRATEGY_WRITE,
     UPDATE_PROJECT,
 } from '@server/types/permissions';
-import { StrategyFormBody } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBody.tsx';
+import { StrategyFormBodySelector } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBodySelector.tsx';
 import { createStrategyPayload } from 'component/feature/FeatureStrategy/featureStrategy.utils';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
@@ -82,7 +82,7 @@ const EditDefaultStrategy = () => {
         try {
             await updateDefaultStrategy(projectId, environmentId, payload);
 
-            trackEvent('default_strategy', {
+            trackEvent('default-strategy', {
                 props: {
                     action: 'edit',
                     hasTitle: Boolean(payload.title),
@@ -118,7 +118,7 @@ const EditDefaultStrategy = () => {
                 )
             }
         >
-            <StrategyFormBody
+            <StrategyFormBodySelector
                 strategy={strategy}
                 setStrategy={setStrategy}
                 strategyDefinition={strategyDefinition}
@@ -126,6 +126,16 @@ const EditDefaultStrategy = () => {
                 groupIdTooltip='Defaults to the feature flag name if not set.'
                 onSubmit={onSubmit}
             >
+                <Button
+                    type='button'
+                    onClick={() =>
+                        navigate(
+                            `/projects/${projectId}/settings/default-strategy`,
+                        )
+                    }
+                >
+                    Cancel
+                </Button>
                 <PermissionButton
                     permission={[
                         PROJECT_DEFAULT_STRATEGY_WRITE,
@@ -145,17 +155,7 @@ const EditDefaultStrategy = () => {
                 >
                     Save strategy
                 </PermissionButton>
-                <Button
-                    type='button'
-                    onClick={() =>
-                        navigate(
-                            `/projects/${projectId}/settings/default-strategy`,
-                        )
-                    }
-                >
-                    Cancel
-                </Button>
-            </StrategyFormBody>
+            </StrategyFormBodySelector>
         </FormTemplate>
     );
 };

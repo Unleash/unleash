@@ -1,35 +1,32 @@
+import { Strategy as SdkStrategy } from 'unleash-client';
 import { playgroundStrategyEvaluation } from '../../../../openapi/spec/playground-strategy-schema.js';
 import type { StrategyEvaluationResult } from '../client.js';
-import type { Constraint } from '../constraint.js';
-import type { Context } from '../context.js';
-import { type SegmentForEvaluation, Strategy } from './strategy.js';
+import { type StrategyEvaluationInput, StrategyExplainer } from './strategy.js';
 
-export default class UnknownStrategy extends Strategy {
+/**
+ * Used for strategies the playground cannot evaluate offline: custom
+ * strategies and applicationHostname. Constraints and segments are still
+ * explained; the strategy itself reports 'unknown'.
+ */
+export class UnknownStrategyExplainer extends StrategyExplainer {
     constructor() {
-        super('unknown');
+        super(new SdkStrategy('unknown'));
     }
 
-    isEnabled(): boolean {
-        return false;
-    }
-
-    isEnabledWithConstraints(
-        _parameters: unknown,
-        context: Context,
-        constraints: Iterable<Constraint>,
-        segments: SegmentForEvaluation[],
-    ): StrategyEvaluationResult {
-        const constraintResults = this.checkConstraints(context, constraints);
-        const segmentResults = this.checkSegments(context, segments);
-
-        const overallResult =
-            constraintResults.result && segmentResults.result
-                ? playgroundStrategyEvaluation.unknownResult
-                : false;
+    explain({
+        context,
+        constraints,
+        segments,
+    }: StrategyEvaluationInput): StrategyEvaluationResult {
+        const constraintResults = this.explainConstraints(context, constraints);
+        const segmentResults = this.explainSegments(context, segments);
 
         return {
             result: {
-                enabled: overallResult,
+                enabled:
+                    constraintResults.result && segmentResults.result
+                        ? playgroundStrategyEvaluation.unknownResult
+                        : false,
                 evaluationStatus: 'incomplete',
             },
             constraints: constraintResults.constraints,

@@ -1,6 +1,11 @@
 import type { Tracking } from 'utils/trackingEvents';
 
-export const projectDeletedTracking: Tracking = {
+export const deleteProjectTracking: Tracking = {
     event: 'project-settings',
-    type: 'project-deleted',
+    type: 'delete-project',
+};
+
+export const selectProjectTabTracking: Tracking = {
+    event: 'project-navigation',
+    type: 'select-tab',
 };

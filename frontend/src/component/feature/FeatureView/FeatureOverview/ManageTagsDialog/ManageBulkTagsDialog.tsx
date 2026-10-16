@@ -15,6 +15,8 @@ import type { ITagType } from 'interfaces/tags';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import type { TagSchema } from 'openapi';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 type Payload = {
     addedTags: TagSchema[];
@@ -107,6 +109,7 @@ export const ManageBulkTagsDialog: FC<IManageBulkTagsDialogProps> = ({
     const [indeterminateTags, setIndeterminateTags] = useState<TagOption[]>([]);
     const { tags, refetch: refetchTags } = useTags(tagType.name);
     const { createTag } = useTagApi();
+    const { setToastApiError } = useToast();
     const tagsOptions = tags.map(({ value }) => ({ title: value }));
     const [payload, dispatch] = useReducer(payloadReducer, {
         addedTags: [],
@@ -171,14 +174,22 @@ export const ManageBulkTagsDialog: FC<IManageBulkTagsDialogProps> = ({
         createTag({
             value,
             type,
-        }).then(async () => {
-            refetchTags();
-            setSelectedTags((prev) => [...prev, { title: value }]);
-            dispatch({
-                type: 'add',
-                payload: { value, type },
+        })
+            .then(async () => {
+                refetchTags();
+                setSelectedTags((prev) =>
+                    prev.some(({ title }) => title === value)
+                        ? prev
+                        : [...prev, { title: value }],
+                );
+                dispatch({
+                    type: 'add',
+                    payload: { value, type },
+                });
+            })
+            .catch((error: unknown) => {
+                setToastApiError(formatUnknownError(error));
             });
-        });
 
     const handleInputChange: AutocompleteProps<
         TagOption,
@@ -186,30 +197,26 @@ export const ManageBulkTagsDialog: FC<IManageBulkTagsDialogProps> = ({
         false,
         false
     >['onChange'] = (_event, newValue, reason, selected) => {
-        if (reason === 'selectOption') {
-            newValue.forEach((value) => {
-                if (
-                    typeof value !== 'string' &&
-                    typeof value.inputValue === 'string' &&
-                    value.inputValue &&
-                    value.title.startsWith('Create new value')
-                ) {
-                    createNewTagOnTheFly(value.inputValue, tagType.name);
-                }
+        if (reason === 'selectOption' && selected?.option) {
+            const option = selected.option;
+            if (option.inputValue) {
+                // The "Create new value" option's title is its label, not the value.
+                // Drop it from the selection
+                setSelectedTags(newValue.filter((value) => value !== option));
+                createNewTagOnTheFly(option.inputValue, tagType.name);
+                return;
+            }
 
-                setSelectedTags(newValue as TagOption[]);
-                setIndeterminateTags((prev: TagOption[]) =>
-                    prev.filter(({ title }) => title !== value.title),
-                );
-                if (selected?.option) {
-                    dispatch({
-                        type: 'add',
-                        payload: {
-                            value: selected.option.title,
-                            type: tagType.name,
-                        },
-                    });
-                }
+            setSelectedTags(newValue);
+            setIndeterminateTags((prev) =>
+                prev.filter(({ title }) => title !== option.title),
+            );
+            dispatch({
+                type: 'add',
+                payload: {
+                    value: option.title,
+                    type: tagType.name,
+                },
             });
         } else if (reason === 'clear') {
             setSelectedTags([]);

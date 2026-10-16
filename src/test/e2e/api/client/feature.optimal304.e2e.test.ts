@@ -9,6 +9,8 @@ import { CHANGE_REQUEST_CREATED } from '../../../../lib/events/index.js';
 import { CLIENT, DEFAULT_ENV } from '../../../../lib/server-impl.js';
 import { ApiTokenType } from '../../../../lib/types/model.js';
 import { RoleName, TEST_AUDIT_USER } from '../../../../lib/types/index.js';
+import { createClientFeatureToggleDelta } from '../../../../lib/features/client-feature-toggles/delta/createClientFeatureToggleDelta.js';
+import { UPDATE_REVISION } from '../../../../lib/features/feature-toggle/configuration-revision-service.js';
 
 const validTokens = [
     {
@@ -167,6 +169,249 @@ describe('feature 304 api client', () => {
         expect(res.headers.etag).not.toBe(oldEtag);
         expect(res.body.meta.etag).not.toBe(oldEtag);
         expect(res.body.features.map((f: any) => f.name)).toContain('new');
+    });
+
+    test.each([
+        ['development', devTokenSecret],
+        ['production', prodTokenSecret],
+        ['project-scoped', devDefaultProjectTokenSecret],
+        ['all-environments', allEnvsTokenSecret],
+    ])('potentially-stale transition preserves polling configuration (%s)', async (scope, token) => {
+        const name = `potentially-stale-${scope}`;
+        await app.createFeature(name);
+        // Age the flag, then run the actual scheduled service.
+        await db
+            .rawDatabase('features')
+            .where({ name })
+            .update({
+                created_at: new Date('2000-01-01T00:00:00Z'),
+                lifetime_days: 1,
+                potentially_stale: false,
+            });
+        await app.services.configurationRevisionService.updateMaxRevisionId();
+        const before = await app.request
+            .get('/api/client/features')
+            .set('Authorization', token)
+            .expect(200);
+
+        await app.services.featureToggleService.updatePotentiallyStaleFeatures();
+        expect(
+            await db.stores.featureToggleStore.isPotentiallyStale(name),
+        ).toBe(true);
+        expect(await db.stores.eventStore.getEvents()).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    featureName: name,
+                    type: 'feature-potentially-stale-on',
+                }),
+            ]),
+        );
+        await app.services.configurationRevisionService.updateMaxRevisionId();
+        // Bypass the HTTP payload cache to verify configuration is unchanged.
+        expect(
+            await app.services.clientFeatureToggleService.getClientFeatures(
+                before.body.query,
+            ),
+        ).toEqual(before.body.features);
+        await app.request
+            .get('/api/client/features')
+            .set('Authorization', token)
+            .set('If-None-Match', before.headers.etag)
+            .expect(304);
+    });
+
+    test('potentially-stale filtering preserves delta hydration and subsequent configuration updates', async () => {
+        const name = 'metadata-delta-regression';
+        await app.createFeature(name);
+        await db
+            .rawDatabase('features')
+            .where({ name })
+            .update({
+                created_at: new Date('2000-01-01T00:00:00Z'),
+                lifetime_days: 1,
+                potentially_stale: false,
+            });
+        const originalIsEnabled = app.config.flagResolver.isEnabled.bind(
+            app.config.flagResolver,
+        );
+        const flags = vi
+            .spyOn(app.config.flagResolver, 'isEnabled')
+            .mockImplementation(
+                (flag) => flag === 'deltaApi' || originalIsEnabled(flag),
+            );
+        const delta = createClientFeatureToggleDelta(
+            db.rawDatabase,
+            app.config,
+        );
+        delta.resetDelta();
+        const revisions = app.services.configurationRevisionService;
+        const query = { environment: 'development', project: ['default'] };
+        const notification = vi.fn();
+        try {
+            await revisions.updateMaxRevisionId(false);
+            const initial = await delta.getDelta(undefined, query);
+            const hydration = initial!.events.find(
+                (event) => event.type === 'hydration',
+            )!;
+            const cursor = hydration.eventId;
+            expect(hydration.features).toEqual(
+                expect.arrayContaining([expect.objectContaining({ name })]),
+            );
+            revisions.on(UPDATE_REVISION, notification);
+
+            await app.services.featureToggleService.updatePotentiallyStaleFeatures();
+            expect(
+                await db.stores.featureToggleStore.isPotentiallyStale(name),
+            ).toBe(true);
+            await revisions.updateMaxRevisionId();
+            expect(notification).not.toHaveBeenCalled();
+            // Force processing too: ignored audit events must not enter deltas.
+            await delta.onUpdateRevisionEvent();
+            expect(await delta.getDelta(cursor, query)).toBeUndefined();
+            expect(await delta.getDelta(undefined, query)).toEqual(initial);
+
+            await app.enableFeature(name, 'development');
+            await revisions.updateMaxRevisionId(false);
+            await delta.onUpdateRevisionEvent();
+            const catchUp = await delta.getDelta(cursor, query);
+            expect(catchUp!.events).toEqual([
+                expect.objectContaining({
+                    type: 'feature-updated',
+                    feature: expect.objectContaining({
+                        name,
+                        enabled: true,
+                    }),
+                }),
+            ]);
+            const nextCursor = catchUp!.events[0].eventId;
+            await app.archiveFeature(name);
+            await revisions.updateMaxRevisionId(false);
+            await delta.onUpdateRevisionEvent();
+            expect((await delta.getDelta(nextCursor, query))!.events).toEqual([
+                expect.objectContaining({
+                    type: 'feature-removed',
+                    featureName: name,
+                }),
+            ]);
+        } finally {
+            revisions.off(UPDATE_REVISION, notification);
+            delta.resetDelta();
+            flags.mockRestore();
+        }
+    });
+
+    test('impressionData changes with metadata edits invalidate polling', async () => {
+        const changes = { impressionData: true };
+        const name = 'impression-data-polling';
+        await app.createFeature(name);
+        await app.services.configurationRevisionService.updateMaxRevisionId();
+        const before = await app.request
+            .get('/api/client/features')
+            .set('Authorization', devDefaultProjectTokenSecret)
+            .expect(200);
+        await app.services.featureToggleService.updateFeatureToggle(
+            'default',
+            { name, lifetimeDays: 100, ...changes },
+            name,
+            TEST_AUDIT_USER,
+        );
+        await app.services.configurationRevisionService.updateMaxRevisionId();
+        const after = await app.request
+            .get('/api/client/features')
+            .set('Authorization', devDefaultProjectTokenSecret)
+            .set('If-None-Match', before.headers.etag)
+            .expect(200);
+        expect(after.headers.etag).not.toBe(before.headers.etag);
+        expect(after.body.features).not.toEqual(before.body.features);
+        expect(
+            after.body.features.find(
+                (feature: { name: string }) => feature.name === name,
+            ),
+        ).toMatchObject(changes);
+    });
+
+    test.each([
+        true,
+        false,
+    ])('stale=%s does not invalidate polling', async (stale) => {
+        const name = `stale-polling-${stale}`;
+        await app.createFeature(name);
+        await app.services.featureToggleService.updateStale(
+            name,
+            !stale,
+            TEST_AUDIT_USER,
+        );
+        await app.services.configurationRevisionService.updateMaxRevisionId();
+        const before = await app.request
+            .get('/api/client/features')
+            .set('Authorization', devTokenSecret)
+            .expect(200);
+
+        await app.services.featureToggleService.updateStale(
+            name,
+            stale,
+            TEST_AUDIT_USER,
+        );
+        expect((await db.stores.featureToggleStore.get(name))!.stale).toBe(
+            stale,
+        );
+        const features =
+            await app.services.clientFeatureToggleService.getClientFeatures(
+                before.body.query,
+            );
+        expect(
+            features.map(({ stale: _stale, ...feature }) => feature),
+        ).toEqual(
+            before.body.features.map(
+                ({ stale: _stale, ...feature }: { stale?: boolean }) => feature,
+            ),
+        );
+        await app.services.configurationRevisionService.updateMaxRevisionId();
+        await app.request
+            .get('/api/client/features')
+            .set('Authorization', devTokenSecret)
+            .set('If-None-Match', before.headers.etag)
+            .expect(304);
+    });
+
+    test.each([
+        'feature-completed',
+        'feature-uncompleted',
+    ] as const)('%s preserves polling configuration', async (type) => {
+        const name = `metadata-${type}`;
+        const complete = () =>
+            app.services.featureLifecycleService.featureCompleted(
+                name,
+                'default',
+                { status: 'kept' },
+                TEST_AUDIT_USER,
+            );
+        await app.createFeature(name);
+        if (type === 'feature-uncompleted') await complete();
+        await app.services.configurationRevisionService.updateMaxRevisionId();
+        const before = await app.request
+            .get('/api/client/features')
+            .set('Authorization', devTokenSecret)
+            .expect(200);
+
+        if (type === 'feature-completed') await complete();
+        else
+            await app.services.featureLifecycleService.featureUncompleted(
+                name,
+                'default',
+                TEST_AUDIT_USER,
+            );
+        await app.services.configurationRevisionService.updateMaxRevisionId();
+        expect(
+            await app.services.clientFeatureToggleService.getClientFeatures(
+                before.body.query,
+            ),
+        ).toEqual(before.body.features);
+        await app.request
+            .get('/api/client/features')
+            .set('Authorization', devTokenSecret)
+            .set('If-None-Match', before.headers.etag)
+            .expect(304);
     });
 
     test('all-env token has its own etag and caches correctly', async () => {

@@ -9,6 +9,7 @@ import { getVariantValue, type Variant } from 'utils/variants';
 import { FlightRecorderContext } from 'contexts/FlightRecorderContext';
 import { isLocalhostDomain } from 'utils/env';
 import { usePageViewTracking } from './usePageViewTracking';
+import { createBrowserContextEnricher } from './browserContext';
 
 // A low flushAt keeps the keepalive flush on close() well under the browser's 64 KB limit.
 const BATCH = { flushAt: 100 };
@@ -38,6 +39,7 @@ export const FlightRecorderProvider: FC<{
                 clientKey: '',
                 batch: BATCH,
                 hashContextFields: ['email'],
+                enrichContext: createBrowserContextEnricher(),
                 // deliveryFailed is retried and routine in browsers
                 // (flaky wifi, adblockers) — warn only on real losses
                 onError: (info) => {

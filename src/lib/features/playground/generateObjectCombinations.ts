@@ -9,7 +9,10 @@ export const splitByComma = <T extends Record<string, unknown>>(
                 const nested = splitByComma(value as any);
                 return { ...acc, ...nested };
             } else if (typeof value === 'string') {
-                return { ...acc, [key]: value.split(',') };
+                return {
+                    ...acc,
+                    [key]: value.split(',').map((part) => part.trim()),
+                };
             } else {
                 return { ...acc, [key]: [value] };
             }

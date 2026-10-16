@@ -30,12 +30,12 @@ const HeaderRow = styled('div')(({ theme }) => ({
 const ModalHeader = styled('h3')(({ theme }) => ({
     fontSize: theme.typography.h2.fontSize,
     margin: 0,
-    fontWeight: theme.typography.h4.fontWeight,
+    fontWeight: theme.typography.fontWeightBold,
 }));
 
 const RowHeader = styled('h4')(({ theme }) => ({
     margin: 0,
-    fontWeight: theme.typography.h4.fontWeight,
+    fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.spacing(1.75),
 }));
 

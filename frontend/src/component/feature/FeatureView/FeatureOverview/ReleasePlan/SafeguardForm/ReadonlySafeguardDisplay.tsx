@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import type { ISafeguard } from 'interfaces/safeguard';
 import { createStyledIcon } from '../shared/SharedFormComponents.tsx';
 import type { SafeguardType } from './SafeguardForm.tsx';
+import { safeguardTriggerWindowLabels } from './safeguardTriggerWindow.ts';
 
 const StyledDisplayContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -59,6 +60,8 @@ export const ReadonlySafeguardDisplay = ({
         safeguard.triggerCondition?.operator === '>'
             ? 'More than'
             : 'Less than';
+    const triggerWindow =
+        safeguardTriggerWindowLabels[safeguard.impactMetric.timeRange];
 
     return (
         <StyledDisplayContainer>
@@ -81,7 +84,7 @@ export const ReadonlySafeguardDisplay = ({
                     {operator} {safeguard.triggerCondition?.threshold}
                 </StyledValue>
                 <StyledLabel>over</StyledLabel>
-                <StyledValue>{safeguard.impactMetric.timeRange}</StyledValue>
+                <StyledValue>{triggerWindow}</StyledValue>
             </StyledContentGroup>
             {badge}
         </StyledDisplayContainer>

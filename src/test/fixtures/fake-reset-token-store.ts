@@ -81,7 +81,7 @@ export default class FakeResetTokenStore implements IResetTokenStore {
 
     async getActiveTokens(): Promise<IResetToken[]> {
         const now = new Date();
-        return this.data.filter((t) => t.expiresAt > now);
+        return this.data.filter((t) => !t.usedAt && t.expiresAt > now);
     }
 
     async getAll(): Promise<IResetToken[]> {
@@ -89,13 +89,28 @@ export default class FakeResetTokenStore implements IResetTokenStore {
     }
 
     async useToken(token: IResetQuery): Promise<boolean> {
-        if (await this.exists(token.token)) {
-            const d = this.data.find(
-                (t) => t.usedAt === null && t.token === token.token,
-            );
-            d!!.usedAt = new Date();
-            return true;
+        const now = new Date();
+        const match = this.data.find(
+            (t) =>
+                t.token === token.token &&
+                t.userId === token.userId &&
+                !t.usedAt &&
+                t.expiresAt > now,
+        );
+        if (match != null) {
+            match.usedAt = new Date();
         }
-        return false;
+        return match != null;
+    }
+
+    async consumeToken(token: string): Promise<number | undefined> {
+        const now = new Date();
+        const match = this.data.find(
+            (t) => t.token === token && !t.usedAt && t.expiresAt > now,
+        );
+        if (match != null) {
+            match.usedAt = new Date();
+        }
+        return match?.userId;
     }
 }

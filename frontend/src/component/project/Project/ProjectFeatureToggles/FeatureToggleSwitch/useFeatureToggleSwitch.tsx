@@ -13,9 +13,9 @@ import {
 import { EnableEnvironmentDialog } from './EnableEnvironmentDialog/EnableEnvironmentDialog.tsx';
 import {
     enableStrategiesDialogTracking,
-    environmentToggleTracking,
-    prodGuardDialogTracking,
-} from './environmentToggleTracking';
+    toggleEnvironmentTracking,
+    confirmProdGuardTracking,
+} from './toggleEnvironmentTracking';
 import type {
     OnFeatureToggleSwitchArgs,
     UseFeatureToggleSwitchType,
@@ -41,7 +41,7 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
     const { toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
         useFeatureApi();
     const { setToastData, setToastApiError } = useToast();
-    const trackEnvironmentToggle = useTracking(environmentToggleTracking);
+    const trackToggleEnvironment = useTracking(toggleEnvironmentTracking);
     const [prodGuardModalState, setProdGuardModalState] = useState<
         ComponentProps<typeof FeatureStrategyProdGuard>
     >({
@@ -102,7 +102,7 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                     label: `${!newState ? 'Disable' : 'Enable'} Environment`,
                     loading: false,
                     tracking: {
-                        ...prodGuardDialogTracking,
+                        ...confirmProdGuardTracking,
                         props: trackingProps,
                     },
                     onClose: () => {
@@ -192,7 +192,7 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                 }
 
                 try {
-                    await trackEnvironmentToggle.mutation(
+                    await trackToggleEnvironment.mutation(
                         () =>
                             toggleFeatureEnvironmentOn(
                                 config.projectId,
@@ -220,7 +220,7 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                 }
 
                 try {
-                    await trackEnvironmentToggle.mutation(
+                    await trackToggleEnvironment.mutation(
                         () =>
                             toggleFeatureEnvironmentOff(
                                 config.projectId,
@@ -248,7 +248,7 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                 handleToggleEnvironmentOn,
             ]);
         },
-        [setProdGuardModalState, trackEnvironmentToggle],
+        [setProdGuardModalState, trackToggleEnvironment],
     );
 
     const featureSelected = enableEnvironmentDialogState.featureId.length !== 0;
@@ -267,7 +267,7 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
             <ChangeRequestDialogue
                 isOpen={changeRequestDialogDetails.isOpen}
                 tracking={{
-                    ...environmentToggleTracking,
+                    ...toggleEnvironmentTracking,
                     props: changeRequestTrackingProps,
                 }}
                 onClose={() => {

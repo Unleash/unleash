@@ -5,10 +5,10 @@ import { MarkCompletedDialogue } from 'component/feature/FeatureView/FeatureOver
 import { ArchivedFeatureDeleteConfirm } from '../../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm.tsx';
 import { ArchivedFeatureReviveConfirm } from '../../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureReviveConfirm/ArchivedFeatureReviveConfirm.tsx';
 import {
-    flagArchivedTracking,
-    flagDeletedTracking,
-    flagRevivedTracking,
-    flagStaleToggledTracking,
+    archiveFlagTracking,
+    deleteFlagTracking,
+    reviveFlagTracking,
+    toggleFlagStaleTracking,
 } from 'component/feature/flagActionsTracking';
 export const useRowActions = (
     onChange: () => void,
@@ -47,15 +47,7 @@ export const useRowActions = (
     });
 
     const staleProps = {
-        name: featureStaleDialogState.featureId,
         newState: featureStaleDialogState.stale ? 'active' : 'stale',
-    };
-    const archiveProps = { name: featureArchiveState };
-    const deleteProps = {
-        name: showFeatureDeleteDialogue.featureId,
-    };
-    const reviveProps = {
-        name: showFeatureReviveDialogue.featureId,
     };
 
     const rowActionsDialogs = (
@@ -68,7 +60,7 @@ export const useRowActions = (
                     onChange();
                 }}
                 tracking={{
-                    ...flagStaleToggledTracking,
+                    ...toggleFlagStaleTracking,
                     props: staleProps,
                 }}
                 featureId={featureStaleDialogState.featureId || ''}
@@ -81,10 +73,7 @@ export const useRowActions = (
                     onChange();
                     onArchiveConfirm?.();
                 }}
-                tracking={{
-                    ...flagArchivedTracking,
-                    props: archiveProps,
-                }}
+                tracking={archiveFlagTracking}
                 onClose={() => {
                     setFeatureArchiveState(undefined);
                 }}
@@ -102,6 +91,7 @@ export const useRowActions = (
                 projectId={projectId}
                 featureId={showMarkCompletedDialogue.featureId}
                 onComplete={onChange}
+                openedFrom='project-list'
             />
             <ArchivedFeatureDeleteConfirm
                 deletedFeatures={[showFeatureDeleteDialogue.featureId]}
@@ -113,7 +103,7 @@ export const useRowActions = (
                         open,
                     }));
                 }}
-                tracking={{ ...flagDeletedTracking, props: deleteProps }}
+                tracking={deleteFlagTracking}
                 refetch={onChange}
             />
             <ArchivedFeatureReviveConfirm
@@ -126,7 +116,7 @@ export const useRowActions = (
                         open,
                     }));
                 }}
-                tracking={{ ...flagRevivedTracking, props: reviveProps }}
+                tracking={reviveFlagTracking}
                 refetch={() => {
                     setShowFeatureReviveDialogue((prev) => ({
                         ...prev,

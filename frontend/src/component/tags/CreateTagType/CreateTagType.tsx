@@ -9,6 +9,8 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
+import { useTracking } from 'hooks/useTracking';
+import { createTagTypeTracking } from '../tagsTracking.ts';
 
 const CreateTagType = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -27,6 +29,7 @@ const CreateTagType = () => {
         clearErrors,
     } = useTagTypeForm();
     const { createTag, loading } = useTagTypesApi();
+    const trackCreateTagType = useTracking(createTagTypeTracking);
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
@@ -35,7 +38,7 @@ const CreateTagType = () => {
         if (validName) {
             const payload = getTagPayload();
             try {
-                await createTag(payload);
+                await trackCreateTagType.mutation(() => createTag(payload));
                 navigate('/tag-types');
                 setToastData({
                     text: 'Tag type created',
@@ -44,6 +47,8 @@ const CreateTagType = () => {
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
+        } else {
+            trackCreateTagType.validationFailed();
         }
     };
 

@@ -14,6 +14,7 @@ import { useEffect, useMemo, useState, type FC } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useNumericStringInput } from 'hooks/useNumericStringInput';
 import { MiniMetricsChartWithTooltip } from './MiniMetricsChartWithTooltip.tsx';
+import { safeguardTriggerWindowLabels } from './safeguardTriggerWindow.ts';
 import {
     useImpactMetricsOptions,
     type ImpactMetric,
@@ -691,17 +692,13 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
 
                         <StyledTopRow>
                             <StyledLabel>over</StyledLabel>
-                            {/* Every range has an alert observation window equal to its step. Backend implies the step from the range */}
                             <RangeSelector
                                 value={timeRange}
                                 onChange={handleTimeRangeChange}
                                 label=''
-                                options={[
-                                    { key: 'hour', label: 'Last minute' },
-                                    { key: 'day', label: 'Last 15 minutes' },
-                                    { key: 'week', label: 'Last 3 hours' },
-                                    { key: 'month', label: 'Last day' },
-                                ]}
+                                options={Object.entries(
+                                    safeguardTriggerWindowLabels,
+                                ).map(([key, label]) => ({ key, label }))}
                             />
                         </StyledTopRow>
                     </StyledTopRow>

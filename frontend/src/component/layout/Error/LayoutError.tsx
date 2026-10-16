@@ -26,7 +26,7 @@ export const LayoutError: FC<IErrorProps> = ({ error }) => {
     useEffect(() => {
         const { message, stack = 'unknown' } = error;
 
-        trackEvent('unknown_ui_error', {
+        trackEvent('unknown-ui-error', {
             props: {
                 location: window?.location?.href || 'unknown',
                 message,

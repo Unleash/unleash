@@ -25,7 +25,7 @@ minimumReleaseAge: 10080
 minimumReleaseAgeIgnoreMissingTime: false
 minimumReleaseAgeExclude:
   - 'unleash-client'
-  - '@fern-api/search-widget@0.5.2'
+  - '@fern-api/search-widget@0.6.0'
   - '@unleash/proxy-client-react'
   - '@unleash/sdk-flight-recorder'
   # Renovate security update: esbuild@0.28.1
@@ -64,12 +64,16 @@ minimumReleaseAgeExclude:
   - fast-uri@3.1.4 || 3.1.5
   # Security update: brace-expansion@1.1.18 || 2.1.4 || 5.0.9
   - brace-expansion@1.1.18 || 2.1.4 || 5.0.9
-  # Renovate security update: ip-address@10.2.1 || 10.3.1
-  - ip-address@10.2.1 || 10.3.1
+  # Renovate security update: ip-address@10.2.1 || 10.3.1 || 10.5.1 || 10.7.1
+  - ip-address@10.2.1 || 10.3.1 || 10.5.1 || 10.7.1
   # Renovate security update: js-yaml@4.3.1
   - js-yaml@4.3.1
-  # Renovate security update: nodemailer@9.1.1
-  - nodemailer@9.1.1
+  # Renovate security update: nodemailer@10.0.2
+  - nodemailer@10.0.2
+  # Client specification with the dependent-feature cases the playground
+  # tests rely on, published 2026-09-29. Remove once the release is older
+  # than 7 days (2026-10-06).
+  - '@unleash/client-specification@6.2.1'
 
 patchedDependencies:
   # Fixes a bug in getAutoSortingFn where `.slice(10)` skips the first 10 rows
@@ -79,7 +83,7 @@ patchedDependencies:
   # See: https://github.com/TanStack/table/issues/4908
   '@tanstack/table-core@8.21.3': patches/@tanstack__table-core@8.21.3.patch
 overrides:
-  "@codemirror/state": "6.7.2"
+  "@codemirror/state": "6.7.6"
   "@types/express-session>@types/express": "4.17.25"
   "@types/react": "^19.0.0"
   "@wesleytodd/openapi>path-to-regexp": "6.3.0"
@@ -89,15 +93,15 @@ overrides:
   es5-ext: "0.10.64"
   esbuild: "0.28.2"
   axios: "1.20.0"
-  body-parser: "1.20.6"
-  browserslist: "4.28.8"
-  "brace-expansion@^1.1.7": "1.1.18"
-  "brace-expansion@^2.0.1": "2.1.4"
-  "brace-expansion@^5.0.0": "5.0.9"
-  fast-uri: "3.1.7"
+  body-parser: "1.20.8"
+  browserslist: "4.29.3"
+  "brace-expansion@^1.1.7": "1.1.21"
+  "brace-expansion@^2.0.1": "2.1.7"
+  "brace-expansion@^5.0.0": "5.0.12"
+  fast-uri: "3.1.8"
   form-data: "4.0.6"
   glob: "^10.5.0"
-  ip-address: "10.3.1"
+  ip-address: "10.7.2"
   ip: "^2.0.1"
   json-schema: "^0.4.0"
   json5: "^2.2.2"
@@ -105,10 +109,10 @@ overrides:
   js-yaml: "4.3.2"
   linkify-it: "5.0.2"
   lodash: ">=4.18.0"
-  markdown-it: "14.2.0"
+  markdown-it: "14.3.2"
   "minimatch@3.1.2": "10.2.6"
   node-forge: "^1.0.0"
-  nwsapi: "2.2.27"
+  nwsapi: "2.2.28"
   prompt: "link:./node_modules/.cache/null"
   qs: "6.16.0"
   react: "^19.0.0"
@@ -116,9 +120,9 @@ overrides:
   "router>path-to-regexp": "1.9.0"
   semver: "7.7.4"
   set-value: "^4.0.1"
-  shell-quote: "1.9.0"
+  shell-quote: "1.10.0"
   ssh2: "^1.4.0"
-  systeminformation: "5.31.7"
+  systeminformation: "5.33.14"
   tough-cookie: "4.1.4"
-  vite: "8.2.2"
+  vite: "8.3.1"
   ws: "8.21.3"

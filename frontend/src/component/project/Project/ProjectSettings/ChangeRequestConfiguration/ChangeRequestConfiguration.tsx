@@ -28,7 +28,8 @@ export const ChangeRequestConfiguration = () => {
             <PageContent
                 header={
                     <PageHeader
-                        titleElement='Change request configuration'
+                        variant='h2'
+                        heading='Change request configuration'
                         actions={<ChangeRequestProcessHelp />}
                     />
                 }
@@ -42,7 +43,12 @@ export const ChangeRequestConfiguration = () => {
     if (!hasAccess([UPDATE_PROJECT, PROJECT_CHANGE_REQUEST_READ], projectId)) {
         return (
             <PageContent
-                header={<PageHeader title='Change request configuration' />}
+                header={
+                    <PageHeader
+                        title='Change request configuration'
+                        variant='h2'
+                    />
+                }
             >
                 <Alert severity='error'>
                     You need project owner permissions or a custom role with

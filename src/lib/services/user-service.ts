@@ -426,6 +426,32 @@ export class UserService {
         );
     }
 
+    async deleteInactiveUsers(
+        numberOfDaysToBeInactive: number,
+        auditUser: IAuditUser,
+    ): Promise<void> {
+        const usersDeleted = await this.store.deleteInactiveUsers(
+            numberOfDaysToBeInactive,
+            auditUser.id,
+        );
+        // Note: after deletion we can't get the role for the user. This is a simplification
+        const viewerRole = await this.accessService.getPredefinedRole(
+            RoleName.VIEWER,
+        );
+        const userIds = usersDeleted.map((user) => user.id);
+        await this.accessService.bulkWipeUserPermissions(userIds);
+        await this.sessionService.deleteSessionsForUsers(userIds);
+        if (usersDeleted.length > 0) {
+            const deletions = usersDeleted.map((user) => {
+                return new UserDeletedEvent({
+                    deletedUser: { ...user, rootRole: viewerRole.id },
+                    auditUser,
+                });
+            });
+            await this.eventService.storeEventsOrThrow([...deletions]);
+        }
+    }
+
     async deleteScimUsers(auditUser: IAuditUser): Promise<void> {
         const users = await this.store.deleteScimUsers();
         // Note: after deletion we can't get the role for the user. This is a simplification
@@ -694,17 +720,14 @@ export class UserService {
      */
     async resetPassword(token: string, password: string): Promise<void> {
         this.validatePassword(password);
-        const user = await this.getUserForToken(token);
+        // Consume before changing the password so concurrent requests cannot
+        // both pass validation and both write a new password (TOCTOU).
+        const userId = await this.resetTokenService.consumeToken(token);
 
         await this.changePasswordWithPreviouslyUsedPasswordCheck(
-            user.id,
+            userId,
             password,
         );
-
-        await this.resetTokenService.useAccessToken({
-            userId: user.id,
-            token,
-        });
     }
 
     async createResetPasswordEmail(

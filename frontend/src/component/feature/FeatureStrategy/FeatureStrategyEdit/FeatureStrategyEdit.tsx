@@ -31,13 +31,11 @@ import {
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
+import { editStrategyTracking as createEditStrategyTracking } from '../strategyActionsTracking.ts';
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
-import {
-    getChangeRequestConflictCreatedData,
-    getChangeRequestConflictCreatedDataFromScheduleData,
-} from './change-request-conflict-data.ts';
+import { changeRequestsUpdatingStrategy } from './changeRequestsUpdatingStrategy.ts';
 import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 import { summarizeStrategy } from '../summarizeStrategy.ts';
@@ -113,36 +111,20 @@ export const FeatureStrategyEdit = () => {
         }
     }, [feature]);
 
-    const { trackEvent } = useEventTracker();
-    const { changeRequests: scheduledChangeRequestThatUseStrategy } =
+    const viaChangeRequest = isChangeRequestConfigured(environmentId);
+    const editStrategyTracking = createEditStrategyTracking({
+        strategyScope,
+        viaChangeRequest,
+    });
+    const trackEditStrategy = useTracking(editStrategyTracking);
+    const { changeRequests: scheduledChangeRequestsThatUseStrategy } =
         useScheduledChangeRequestsWithStrategy(projectId, strategyId);
-
-    const pendingCrsUsingThisStrategy = getChangeRequestConflictCreatedData(
-        pendingChangeRequests,
-        featureId,
-        strategyId,
-        uiConfig,
-    );
-
-    const scheduledCrsUsingThisStrategy =
-        getChangeRequestConflictCreatedDataFromScheduleData(
-            scheduledChangeRequestThatUseStrategy,
-            uiConfig,
-        );
-
-    const emitConflictsCreatedEvents = (): void =>
-        [
-            ...pendingCrsUsingThisStrategy,
-            ...scheduledCrsUsingThisStrategy,
-        ].forEach((data) => {
-            trackEvent('change_request', {
-                props: {
-                    ...data,
-                    action: 'edit-strategy',
-                    eventType: 'conflict-created',
-                },
-            });
-        });
+    const conflictingChangeRequestCount =
+        changeRequestsUpdatingStrategy(
+            pendingChangeRequests,
+            featureId,
+            strategyId,
+        ).length + (scheduledChangeRequestsThatUseStrategy?.length ?? 0);
 
     useEffect(() => {
         const environmentConfig: IFeatureEnvironment | undefined =
@@ -251,52 +233,21 @@ export const FeatureStrategyEdit = () => {
     };
 
     const onSubmit = async () => {
-        if (strategyScope === 'milestone') {
-            trackEvent('edit-milestone-strategy', {
-                props: {
-                    eventType: 'form submitted',
-                },
-            });
-        }
-
-        const viaChangeRequest = isChangeRequestConfigured(environmentId);
-
-        const flagStrategyProps = {
-            eventType: 'strategy-updated',
-            viaChangeRequest,
-            previous: summarizeStrategy(previousStrategyState),
-            current: summarizeStrategy(strategy),
-        };
-
-        trackEvent('flag-strategy', {
-            props: {
-                ...flagStrategyProps,
-                action: 'submitted',
-            },
-        });
-
         try {
-            if (viaChangeRequest) {
-                await onStrategyRequestEdit(payload);
-            } else {
-                await onStrategyEdit(payload);
-            }
-            trackEvent('flag-strategy', {
-                props: {
-                    ...flagStrategyProps,
-                    action: 'succeeded',
+            await trackEditStrategy.mutation(
+                () =>
+                    viaChangeRequest
+                        ? onStrategyRequestEdit(payload)
+                        : onStrategyEdit(payload),
+                {
+                    previous: summarizeStrategy(previousStrategyState),
+                    current: summarizeStrategy(strategy),
+                    conflictingChangeRequestCount,
                 },
-            });
-            emitConflictsCreatedEvents();
+            );
             refetchFeature();
             navigate(formatFeaturePath(projectId, featureId));
         } catch (error: unknown) {
-            trackEvent('flag-strategy', {
-                props: {
-                    ...flagStrategyProps,
-                    action: 'failed',
-                },
-            });
             setToastApiError(formatUnknownError(error));
         }
     };
@@ -336,7 +287,8 @@ export const FeatureStrategyEdit = () => {
                 loading={loading}
                 permission={UPDATE_FEATURE_STRATEGY}
                 errors={errors}
-                changeRequestsEnabled={isChangeRequestConfigured(environmentId)}
+                changeRequestsEnabled={viaChangeRequest}
+                tracking={editStrategyTracking}
             />
             {staleDataNotification}
         </FormTemplate>

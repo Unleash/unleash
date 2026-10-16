@@ -64,7 +64,7 @@ export const UpgradeTrialDialog = ({
 
     useEffect(() => {
         if (dialogOpen) {
-            trackEvent('upgrade_trial_dialog', {
+            trackEvent('upgrade-trial-dialog', {
                 props: {
                     eventType: 'open',
                     userType: isAdmin ? 'admin' : 'non-admin',
@@ -74,7 +74,7 @@ export const UpgradeTrialDialog = ({
     }, [dialogOpen, isAdmin, trackEvent]);
 
     const onClickUpgrade = () => {
-        trackEvent('upgrade_trial_dialog', {
+        trackEvent('upgrade-trial-dialog', {
             props: {
                 eventType: 'upgrade_click',
                 userType: isAdmin ? 'admin' : 'non-admin',
@@ -85,7 +85,7 @@ export const UpgradeTrialDialog = ({
     };
 
     const onClose = () => {
-        trackEvent('upgrade_trial_dialog', {
+        trackEvent('upgrade-trial-dialog', {
             props: {
                 eventType: 'close',
                 userType: isAdmin ? 'admin' : 'non-admin',

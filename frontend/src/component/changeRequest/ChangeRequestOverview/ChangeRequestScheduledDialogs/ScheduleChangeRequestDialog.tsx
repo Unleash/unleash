@@ -6,6 +6,7 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { DateTimePicker } from 'component/common/DateTimePicker/DateTimePicker';
 import { FormFieldControlAligner } from 'component/common/FormField/FormField';
 import { getBrowserTimezone } from '../ChangeRequestReviewStatus/utils.ts';
+import type { Tracking } from 'utils/trackingEvents';
 
 export interface ScheduleChangeRequestDialogProps {
     title: string;
@@ -17,6 +18,7 @@ export interface ScheduleChangeRequestDialogProps {
     environment: string;
     disabled?: boolean;
     scheduledAt?: string;
+    tracking: Tracking;
 }
 
 const StyledContainer = styled(Box)(({ theme }) => ({
@@ -43,6 +45,7 @@ export const ScheduleChangeRequestDialog: FC<
     environment,
     disabled,
     scheduledAt,
+    tracking,
 }) => {
     const [selectedDate, setSelectedDate] = useState(
         scheduledAt ? new Date(scheduledAt) : new Date(),
@@ -59,7 +62,7 @@ export const ScheduleChangeRequestDialog: FC<
             secondaryButtonText='Cancel'
             open={open}
             onClose={() => onClose()}
-            onClick={() => onConfirm(selectedDate)}
+            tracking={tracking}
             permissionButton={
                 <PermissionButton
                     variant='contained'

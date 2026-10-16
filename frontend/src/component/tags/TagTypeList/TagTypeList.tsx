@@ -37,11 +37,59 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { AddTagTypeButton } from './AddTagTypeButton/AddTagTypeButton.tsx';
 import { Search } from 'component/common/Search/Search';
+import { useTracking } from 'hooks/useTracking';
+import {
+    deleteTagTypeTracking,
+    searchTagTypesTracking,
+    tagsTableTracking,
+} from '../tagsTracking.ts';
+import { useTrackedSorting } from 'hooks/useTrackedSorting';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 type TagTypeRow = {
     name: string;
     description: string;
     color?: string;
+    usedInProjects?: number;
+    valueCount?: number;
+};
+
+type TagTypeToDelete = Pick<
+    TagTypeRow,
+    'name' | 'usedInProjects' | 'valueCount'
+>;
+
+// Only users with the root Viewer role are subject to private-project
+// filtering, and Viewer can't delete tag types. Edge case: a Viewer whose
+// group grants a custom root role with DELETE_TAG_TYPE still gets filtered,
+// so usedInProjects may undercount for them.
+const describeDeletionImpact = ({
+    valueCount,
+    usedInProjects,
+}: Pick<TagTypeRow, 'usedInProjects' | 'valueCount'>) => {
+    if (!valueCount) {
+        return null;
+    }
+    const usage = usedInProjects ? (
+        <>
+            They are assigned to flags in{' '}
+            <strong>
+                {usedInProjects} {usedInProjects === 1 ? 'project' : 'projects'}
+            </strong>
+            , including archived flags.
+        </>
+    ) : (
+        'None of them are assigned to flags.'
+    );
+    return (
+        <>
+            This will delete{' '}
+            <strong>
+                {valueCount} {valueCount === 1 ? 'tag value' : 'tag values'}
+            </strong>
+            . {usage} This can't be undone.
+        </>
+    );
 };
 
 const StyledColorDot = styled('div')<{ $color: string }>(
@@ -60,15 +108,15 @@ const StyledColorDot = styled('div')<{ $color: string }>(
 );
 
 export const TagTypeList = () => {
-    const [deletion, setDeletion] = useState<{
-        open: boolean;
-        name?: string;
-    }>({ open: false });
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [tagTypeToDelete, setTagTypeToDelete] = useState<TagTypeToDelete>();
     const [globalFilter, setGlobalFilter] = useState('');
     const navigate = useNavigate();
     const { deleteTagType } = useTagTypesApi();
     const { tagTypes, refetch, loading } = useTagTypes();
     const { setToastData, setToastApiError } = useToast();
+    const trackSearchTagTypes = useTracking(searchTagTypesTracking);
+    const tagManagementViaUi = useUiFlag('tagManagementViaUi');
 
     const data = useMemo<TagTypeRow[]>(() => {
         if (loading) {
@@ -78,11 +126,15 @@ export const TagTypeList = () => {
             });
         }
 
-        return tagTypes.map(({ name, description, color }) => ({
-            name,
-            description: description ?? '',
-            color: color ?? undefined,
-        }));
+        return tagTypes.map(
+            ({ name, description, color, usedInProjects, valueCount }) => ({
+                name,
+                description: description ?? '',
+                color: color ?? undefined,
+                usedInProjects,
+                valueCount,
+            }),
+        );
     }, [tagTypes, loading]);
 
     const columns = useMemo<ColumnDef<TagTypeRow, unknown>[]>(
@@ -131,6 +183,26 @@ export const TagTypeList = () => {
                 meta: { width: '90%' },
             },
             {
+                id: 'usedInProjects',
+                header: 'Used in',
+                accessorKey: 'usedInProjects',
+                cell: ({ row: { original } }) =>
+                    original.usedInProjects === undefined
+                        ? null
+                        : `${original.usedInProjects} ${original.usedInProjects === 1 ? 'project' : 'projects'}`,
+                sortUndefined: 'last',
+                enableGlobalFilter: false,
+                meta: { align: 'center' },
+            },
+            {
+                id: 'valueCount',
+                header: 'Tag values',
+                accessorKey: 'valueCount',
+                sortUndefined: 'last',
+                enableGlobalFilter: false,
+                meta: { align: 'center' },
+            },
+            {
                 id: 'Actions',
                 header: 'Actions',
                 cell: ({ row: { original } }) => (
@@ -150,12 +222,14 @@ export const TagTypeList = () => {
                         <PermissionIconButton
                             permission={DELETE_TAG_TYPE}
                             tooltipProps={{ title: 'Delete tag type' }}
-                            onClick={() =>
-                                setDeletion({
-                                    open: true,
+                            onClick={() => {
+                                setTagTypeToDelete({
                                     name: original.name,
-                                })
-                            }
+                                    usedInProjects: original.usedInProjects,
+                                    valueCount: original.valueCount,
+                                });
+                                setDeleteDialogOpen(true);
+                            }}
                         >
                             <Delete />
                         </PermissionIconButton>
@@ -174,20 +248,26 @@ export const TagTypeList = () => {
         [navigate],
     );
 
-    const initialState = useMemo(
+    const { sorting, onSortingChange } = useTrackedSorting(
+        [{ id: 'name', desc: false }],
+        tagsTableTracking,
+    );
+
+    const columnVisibility = useMemo(
         () => ({
-            sorting: [{ id: 'name', desc: false }],
-            columnVisibility: { description: false },
+            description: false,
+            usedInProjects: Boolean(tagManagementViaUi),
+            valueCount: Boolean(tagManagementViaUi),
         }),
-        [],
+        [tagManagementViaUi],
     );
 
     const table = useReactTable({
         columns,
         data,
-        initialState,
-        state: { globalFilter },
+        state: { globalFilter, columnVisibility, sorting },
         onGlobalFilterChange: setGlobalFilter,
+        onSortingChange,
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
@@ -196,19 +276,15 @@ export const TagTypeList = () => {
     });
 
     const deleteTag = async () => {
-        try {
-            if (deletion.name) {
-                await deleteTagType(deletion.name);
-                refetch();
-                setDeletion({ open: false });
-                setToastData({
-                    type: 'success',
-                    show: true,
-                    text: 'Tag type deleted',
-                });
-            }
-        } catch (error) {
-            setToastApiError(formatUnknownError(error));
+        if (tagTypeToDelete) {
+            await deleteTagType(tagTypeToDelete.name);
+            refetch();
+            setDeleteDialogOpen(false);
+            setToastData({
+                type: 'success',
+                show: true,
+                text: 'Tag type deleted',
+            });
         }
     };
 
@@ -224,7 +300,12 @@ export const TagTypeList = () => {
                         <>
                             <Search
                                 initialValue={globalFilter}
-                                onChange={(value) => setGlobalFilter(value)}
+                                onChange={(value) => {
+                                    setGlobalFilter(value);
+                                    trackSearchTagTypes('succeeded', {
+                                        queryLength: value.length,
+                                    });
+                                }}
                             />
                             <PageHeader.Divider />
                             <AddTagTypeButton />
@@ -240,7 +321,12 @@ export const TagTypeList = () => {
                         {rows.map((row) => (
                             <TableRow hover key={row.id}>
                                 {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>
+                                    <TableCell
+                                        key={cell.id}
+                                        align={
+                                            cell.column.columnDef.meta?.align
+                                        }
+                                    >
                                         {flexRender(
                                             cell.column.columnDef.cell,
                                             cell.getContext(),
@@ -274,12 +360,18 @@ export const TagTypeList = () => {
             />
             <Dialogue
                 title='Really delete Tag type?'
-                open={deletion.open}
-                onClick={deleteTag}
+                open={deleteDialogOpen}
+                onSubmit={deleteTag}
+                onError={(error) => setToastApiError(formatUnknownError(error))}
+                tracking={deleteTagTypeTracking}
                 onClose={() => {
-                    setDeletion({ open: false });
+                    setDeleteDialogOpen(false);
                 }}
-            />
+            >
+                {tagTypeToDelete
+                    ? describeDeletionImpact(tagTypeToDelete)
+                    : null}
+            </Dialogue>
         </PageContent>
     );
 };

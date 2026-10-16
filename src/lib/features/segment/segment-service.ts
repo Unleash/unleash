@@ -19,7 +19,11 @@ import type {
     ISegmentService,
     StrategiesUsingSegment,
 } from './segment-service-interface.js';
-import { NotFoundError, PermissionError } from '../../error/index.js';
+import {
+    InvalidOperationError,
+    NotFoundError,
+    PermissionError,
+} from '../../error/index.js';
 import type { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model.js';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import type EventService from '../events/event-service.js';
@@ -27,7 +31,7 @@ import type { IChangeRequestSegmentUsageReadModel } from '../change-request-segm
 import type { UpsertSegmentSchema } from '../../openapi/index.js';
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error.js';
 import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
-import type { IConstraintsReadModel } from '../constraints/constraints-read-model-type.js';
+import type { IConstraintValidator } from '../constraints/constraint-validator-type.js';
 
 export class SegmentService implements ISegmentService {
     private segmentStore: ISegmentStore;
@@ -48,7 +52,7 @@ export class SegmentService implements ISegmentService {
 
     private resourceLimitsService: ResourceLimitsService;
 
-    private constraintsReadModel: IConstraintsReadModel;
+    private constraintValidator: IConstraintValidator;
 
     constructor(
         {
@@ -61,7 +65,7 @@ export class SegmentService implements ISegmentService {
         eventService: EventService,
         privateProjectChecker: IPrivateProjectChecker,
         resourceLimitsService: ResourceLimitsService,
-        constraintsReadModel: IConstraintsReadModel,
+        constraintValidator: IConstraintValidator,
     ) {
         this.segmentStore = segmentStore;
         this.featureStrategiesStore = featureStrategiesStore;
@@ -72,7 +76,7 @@ export class SegmentService implements ISegmentService {
         this.privateProjectChecker = privateProjectChecker;
         this.flagResolver = config.flagResolver;
         this.resourceLimitsService = resourceLimitsService;
-        this.constraintsReadModel = constraintsReadModel;
+        this.constraintValidator = constraintValidator;
         this.config = config;
     }
 
@@ -200,7 +204,7 @@ export class SegmentService implements ISegmentService {
         await this.validateSegmentLimit();
 
         const input = await segmentSchema.validateAsync(data);
-        await this.constraintsReadModel.validateConstraints(input.constraints);
+        await this.constraintValidator.validateConstraints(input.constraints);
         this.validateSegmentValuesLimit(input);
         await this.validateName(input.name);
         const segment = await this.segmentStore.create(input, auditUser);
@@ -233,7 +237,7 @@ export class SegmentService implements ISegmentService {
         auditUser: IAuditUser,
     ): Promise<void> {
         const input = await segmentSchema.validateAsync(data);
-        await this.constraintsReadModel.validateConstraints(input.constraints);
+        await this.constraintValidator.validateConstraints(input.constraints);
         this.validateSegmentValuesLimit(input);
         const preData = await this.segmentStore.get(id);
         if (preData === undefined) {
@@ -341,6 +345,26 @@ export class SegmentService implements ISegmentService {
                 this.addToStrategy(segmentId, strategyId),
             ),
         );
+    }
+
+    async validateStrategyBelongsToProjectAndEnvironment({
+        strategyId,
+        projectId,
+        environment,
+    }: {
+        strategyId: string;
+        projectId: string;
+        environment: string;
+    }): Promise<void> {
+        const strategy = await this.featureStrategiesStore.get(strategyId);
+        if (
+            strategy?.projectId !== projectId ||
+            strategy.environment !== environment
+        ) {
+            throw new InvalidOperationError(
+                `Strategy ${strategyId} does not belong to project ${projectId} and environment ${environment}`,
+            );
+        }
     }
 
     // Used by unleash-enterprise.

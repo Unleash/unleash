@@ -20,6 +20,7 @@ import {
 } from '../../../../lib/types/index.js';
 import { addDays } from 'date-fns';
 import type { PermissionRef } from '../../../../lib/services/access-service.js';
+import { parseApiTokenV2Identifier } from '../../../../lib/authentication/authorization-token.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -168,7 +169,9 @@ test.each([
 
     expect(status).toBe(201);
     // clean up
-    await stores.apiTokenStore.delete(body.secret);
+    await stores.apiTokenV2Store.delete(
+        parseApiTokenV2Identifier(body.secret)!.selector,
+    );
 });
 
 describe('Fine grained API token permissions', () => {
@@ -190,7 +193,9 @@ describe('Fine grained API token permissions', () => {
                 .expect(201);
 
             // clean up
-            await stores.apiTokenStore.delete(body.secret);
+            await stores.apiTokenV2Store.delete(
+                parseApiTokenV2Identifier(body.secret)!.selector,
+            );
         });
         test('should NOT be allowed to create frontend tokens', async () => {
             await setupUser(

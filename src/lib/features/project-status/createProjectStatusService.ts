@@ -14,10 +14,10 @@ import {
 } from './project-lifecycle-read-model/createProjectLifecycleSummaryReadModel.js';
 import { ProjectStaleFlagsReadModel } from './project-stale-flags-read-model/project-stale-flags-read-model.js';
 import { FakeProjectStaleFlagsReadModel } from './project-stale-flags-read-model/fake-project-stale-flags-read-model.js';
-import FeatureTypeStore from '../../db/feature-type-store.js';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
 import FakeFeatureToggleStore from '../feature-toggle/fakes/fake-feature-toggle-store.js';
-import FakeFeatureTypeStore from '../../../test/fixtures/fake-feature-type-store.js';
+import { ProjectHealthFeaturesReadModel } from '../../domain/project-health/features-read-model.js';
+import { FakeProjectHealthFeaturesReadModel } from '../../domain/project-health/fake-features-read-model.js';
 
 export const createProjectStatusService = (
     db: Db,
@@ -41,12 +41,15 @@ export const createProjectStatusService = (
         createProjectLifecycleSummaryReadModel(db, config);
     const projectStaleFlagsReadModel = new ProjectStaleFlagsReadModel(db);
 
-    const featureTypeStore = new FeatureTypeStore(db, config.getLogger);
     const featureToggleStore = new FeatureToggleStore(
         db,
         config.eventBus,
         config.getLogger,
         config.flagResolver,
+    );
+
+    const projectHealthFeatureReadModel = new ProjectHealthFeaturesReadModel(
+        db,
     );
 
     return new ProjectStatusService(
@@ -55,11 +58,11 @@ export const createProjectStatusService = (
             projectStore,
             apiTokenStore,
             segmentStore,
-            featureTypeStore,
             featureToggleStore,
         },
         projectLifecycleSummaryReadModel,
         projectStaleFlagsReadModel,
+        projectHealthFeatureReadModel,
     );
 };
 
@@ -68,7 +71,6 @@ export const createFakeProjectStatusService = () => {
     const projectStore = new FakeProjectStore();
     const apiTokenStore = new FakeApiTokenStore();
     const segmentStore = new FakeSegmentStore();
-    const featureTypeStore = new FakeFeatureTypeStore();
     const featureToggleStore = new FakeFeatureToggleStore();
     const projectStatusService = new ProjectStatusService(
         {
@@ -76,11 +78,11 @@ export const createFakeProjectStatusService = () => {
             projectStore,
             apiTokenStore,
             segmentStore,
-            featureTypeStore,
             featureToggleStore,
         },
         createFakeProjectLifecycleSummaryReadModel(),
         new FakeProjectStaleFlagsReadModel(),
+        new FakeProjectHealthFeaturesReadModel(),
     );
 
     return {

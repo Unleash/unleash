@@ -38,8 +38,12 @@ jobs:
     if: needs.changes.outputs.frontend == 'true'
     uses: ./.github/workflows/build_frontend_prs.yml
 
+  frontend-e2e:
+    uses: ./.github/workflows/e2e.frontend.yaml
+    secrets: inherit
+
   build:
-    needs: [backend, frontend]
+    needs: [backend, frontend, frontend-e2e]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -51,5 +55,9 @@ jobs:
           fi
           if [[ "${{ needs.frontend.result }}" == "failure" || "${{ needs.frontend.result }}" == "cancelled" ]]; then
             echo "Frontend build failed"
+            exit 1
+          fi
+          if [[ "${{ needs.frontend-e2e.result }}" != "success" ]]; then
+            echo "Frontend E2E failed"
             exit 1
           fi

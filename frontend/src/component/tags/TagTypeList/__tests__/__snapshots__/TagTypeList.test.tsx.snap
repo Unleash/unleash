@@ -24,7 +24,7 @@ exports[`renders an empty list correctly 1`] = `
               data-loading="true"
             >
               <h1
-                class="MuiTypography-root MuiTypography-h1 mui-1el6hlj-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-h1 mui-1s30bhd-MuiTypography-root"
               >
                 Tag types (5)
               </h1>
@@ -50,7 +50,7 @@ exports[`renders an empty list correctly 1`] = `
                     />
                   </svg>
                   <div
-                    class="MuiInputBase-root MuiInputBase-colorPrimary mui-12wn7bb-MuiInputBase-root"
+                    class="MuiInputBase-root MuiInputBase-colorPrimary mui-1bp4sgz-MuiInputBase-root"
                   >
                     <input
                       aria-label="Search (Ctrl+Shift+K)"
@@ -73,7 +73,7 @@ exports[`renders an empty list correctly 1`] = `
               />
               <button
                 aria-labelledby="useId-0"
-                class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeLarge MuiButton-colorPrimary MuiButton-disableElevation mui-1oby3tl-MuiButtonBase-root-MuiButton-root"
+                class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeLarge MuiButton-colorPrimary MuiButton-disableElevation mui-1t4t7wt-MuiButtonBase-root-MuiButton-root"
                 tabindex="0"
                 type="button"
               >
@@ -214,7 +214,7 @@ exports[`renders an empty list correctly 1`] = `
                     >
                       <span
                         aria-label=""
-                        class="MuiBox-root mui-gzore8 skeleton"
+                        class="MuiBox-root mui-1ixwf2p skeleton"
                         data-loading="true"
                         data-mui-internal-clone-element="true"
                       >
@@ -224,7 +224,7 @@ exports[`renders an empty list correctly 1`] = `
                       </span>
                       <span
                         aria-label=""
-                        class="MuiBox-root mui-gzore8 skeleton"
+                        class="MuiBox-root mui-1ixwf2p skeleton"
                         data-loading="true"
                         data-mui-internal-clone-element="true"
                       >
@@ -235,7 +235,7 @@ exports[`renders an empty list correctly 1`] = `
                 </div>
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
               >
                 <div
                   class="MuiBox-root mui-1bvc4cc skeleton"
@@ -249,7 +249,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <button
                       aria-labelledby="useId-1"
-                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-v6ysme-MuiButtonBase-root-MuiIconButton-root"
+                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
                     >
@@ -274,7 +274,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <button
                       aria-labelledby="useId-2"
-                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-v6ysme-MuiButtonBase-root-MuiIconButton-root"
+                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
                     >
@@ -331,7 +331,7 @@ exports[`renders an empty list correctly 1`] = `
                     >
                       <span
                         aria-label=""
-                        class="MuiBox-root mui-gzore8 skeleton"
+                        class="MuiBox-root mui-1ixwf2p skeleton"
                         data-loading="true"
                         data-mui-internal-clone-element="true"
                       >
@@ -341,7 +341,7 @@ exports[`renders an empty list correctly 1`] = `
                       </span>
                       <span
                         aria-label=""
-                        class="MuiBox-root mui-gzore8 skeleton"
+                        class="MuiBox-root mui-1ixwf2p skeleton"
                         data-loading="true"
                         data-mui-internal-clone-element="true"
                       >
@@ -352,7 +352,7 @@ exports[`renders an empty list correctly 1`] = `
                 </div>
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
               >
                 <div
                   class="MuiBox-root mui-1bvc4cc skeleton"
@@ -366,7 +366,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <button
                       aria-labelledby="useId-3"
-                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-v6ysme-MuiButtonBase-root-MuiIconButton-root"
+                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
                     >
@@ -391,7 +391,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <button
                       aria-labelledby="useId-4"
-                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-v6ysme-MuiButtonBase-root-MuiIconButton-root"
+                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
                     >
@@ -448,7 +448,7 @@ exports[`renders an empty list correctly 1`] = `
                     >
                       <span
                         aria-label=""
-                        class="MuiBox-root mui-gzore8 skeleton"
+                        class="MuiBox-root mui-1ixwf2p skeleton"
                         data-loading="true"
                         data-mui-internal-clone-element="true"
                       >
@@ -458,7 +458,7 @@ exports[`renders an empty list correctly 1`] = `
                       </span>
                       <span
                         aria-label=""
-                        class="MuiBox-root mui-gzore8 skeleton"
+                        class="MuiBox-root mui-1ixwf2p skeleton"
                         data-loading="true"
                         data-mui-internal-clone-element="true"
                       >
@@ -469,7 +469,7 @@ exports[`renders an empty list correctly 1`] = `
                 </div>
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
               >
                 <div
                   class="MuiBox-root mui-1bvc4cc skeleton"
@@ -483,7 +483,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <button
                       aria-labelledby="useId-5"
-                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-v6ysme-MuiButtonBase-root-MuiIconButton-root"
+                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
                     >
@@ -508,7 +508,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <button
                       aria-labelledby="useId-6"
-                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-v6ysme-MuiButtonBase-root-MuiIconButton-root"
+                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
                     >
@@ -565,7 +565,7 @@ exports[`renders an empty list correctly 1`] = `
                     >
                       <span
                         aria-label=""
-                        class="MuiBox-root mui-gzore8 skeleton"
+                        class="MuiBox-root mui-1ixwf2p skeleton"
                         data-loading="true"
                         data-mui-internal-clone-element="true"
                       >
@@ -575,7 +575,7 @@ exports[`renders an empty list correctly 1`] = `
                       </span>
                       <span
                         aria-label=""
-                        class="MuiBox-root mui-gzore8 skeleton"
+                        class="MuiBox-root mui-1ixwf2p skeleton"
                         data-loading="true"
                         data-mui-internal-clone-element="true"
                       >
@@ -586,7 +586,7 @@ exports[`renders an empty list correctly 1`] = `
                 </div>
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
               >
                 <div
                   class="MuiBox-root mui-1bvc4cc skeleton"
@@ -600,7 +600,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <button
                       aria-labelledby="useId-7"
-                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-v6ysme-MuiButtonBase-root-MuiIconButton-root"
+                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
                     >
@@ -625,7 +625,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <button
                       aria-labelledby="useId-8"
-                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-v6ysme-MuiButtonBase-root-MuiIconButton-root"
+                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
                     >
@@ -682,7 +682,7 @@ exports[`renders an empty list correctly 1`] = `
                     >
                       <span
                         aria-label=""
-                        class="MuiBox-root mui-gzore8 skeleton"
+                        class="MuiBox-root mui-1ixwf2p skeleton"
                         data-loading="true"
                         data-mui-internal-clone-element="true"
                       >
@@ -692,7 +692,7 @@ exports[`renders an empty list correctly 1`] = `
                       </span>
                       <span
                         aria-label=""
-                        class="MuiBox-root mui-gzore8 skeleton"
+                        class="MuiBox-root mui-1ixwf2p skeleton"
                         data-loading="true"
                         data-mui-internal-clone-element="true"
                       >
@@ -703,7 +703,7 @@ exports[`renders an empty list correctly 1`] = `
                 </div>
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body MuiTableCell-sizeMedium mui-fdtqkd-MuiTableCell-root"
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
               >
                 <div
                   class="MuiBox-root mui-1bvc4cc skeleton"
@@ -717,7 +717,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <button
                       aria-labelledby="useId-9"
-                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-v6ysme-MuiButtonBase-root-MuiIconButton-root"
+                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
                     >
@@ -742,7 +742,7 @@ exports[`renders an empty list correctly 1`] = `
                   >
                     <button
                       aria-labelledby="useId-10"
-                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-v6ysme-MuiButtonBase-root-MuiIconButton-root"
+                      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
                     >

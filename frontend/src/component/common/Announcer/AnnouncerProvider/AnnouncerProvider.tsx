@@ -2,6 +2,7 @@ import {
     type ReactElement,
     type ReactNode,
     useCallback,
+    useEffect,
     useMemo,
     useRef,
     useState,
@@ -25,16 +26,31 @@ export const AnnouncerProvider = ({
 }: IAnnouncerProviderProps): ReactElement => {
     const [announcements, setAnnouncements] = useState<IAnnouncement[]>([]);
     const nextId = useRef(0);
+    const timeoutIds = useRef(new Set<ReturnType<typeof setTimeout>>());
+
+    // this clears the timeouts when the component unmounts
+    // surfaced by flaky e2e tests
+    useEffect(
+        () => () => {
+            for (const timeoutId of timeoutIds.current) {
+                clearTimeout(timeoutId);
+            }
+            timeoutIds.current.clear();
+        },
+        [],
+    );
 
     const announce = useCallback((message: string) => {
         const id = nextId.current++;
         setAnnouncements((prev) => [...prev, { id, message }]);
 
-        setTimeout(() => {
+        const timeoutId = setTimeout(() => {
+            timeoutIds.current.delete(timeoutId);
             setAnnouncements((prev) =>
                 prev.filter((announcement) => announcement.id !== id),
             );
         }, ANNOUNCEMENT_LIFETIME_MS);
+        timeoutIds.current.add(timeoutId);
     }, []);
 
     const value = useMemo(() => ({ announce }), [announce]);

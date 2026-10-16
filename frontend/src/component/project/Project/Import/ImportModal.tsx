@@ -15,7 +15,7 @@ import {
 import { ValidationStage } from './validate/ValidationStage.tsx';
 import { ImportStage } from './import/ImportStage.tsx';
 import { ImportOptions } from './configure/ImportOptions.tsx';
-import { importCompletedTracking } from 'component/project/Project/Import/importTracking';
+import { importFlagsTracking } from 'component/project/Project/Import/importTracking';
 
 const ModalContentContainer = styled('div')(({ theme }) => ({
     minHeight: '100vh',
@@ -56,15 +56,21 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
     const [environment, setEnvironment] = useState('');
     const [importPayload, setImportPayload] = useState('');
     const [activeTab, setActiveTab] = useState<ImportMode>('file');
+    // Dropping a file switches the tab to 'code', so activeTab alone can't tell file from code.
+    const [importSource, setImportSource] = useState<ImportMode>('file');
 
-    const trackImportCompleted = useTracking(importCompletedTracking);
+    const importTracking = {
+        ...importFlagsTracking,
+        props: { importSource },
+    };
+    const trackImportFlags = useTracking(importTracking);
 
     const close = () => {
         setOpen(false);
     };
 
     const cancel = () => {
-        trackImportCompleted('dismissed', { method: 'cancel-button' });
+        trackImportFlags('dismissed', { method: 'cancel-button' });
         close();
     };
 
@@ -79,6 +85,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
         setEnvironment('');
         setImportPayload('');
         setActiveTab('file');
+        setImportSource('file');
     };
 
     return (
@@ -86,7 +93,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
             open={open}
             onClose={close}
             label='Import flags'
-            tracking={importCompletedTracking}
+            tracking={importTracking}
         >
             <ModalContentContainer>
                 <TimelineContainer>
@@ -115,7 +122,10 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                                     activeTab={activeTab}
                                     setActiveTab={setActiveTab}
                                     importPayload={importPayload}
-                                    setImportPayload={setImportPayload}
+                                    setImportPayload={(payload, source) => {
+                                        setImportPayload(payload);
+                                        setImportSource(source);
+                                    }}
                                 />
                             }
                             actions={
@@ -138,6 +148,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                             onBack={() => setImportStage('configure')}
                             onSubmit={() => setImportStage('import')}
                             onClose={cancel}
+                            tracking={importTracking}
                         />
                     }
                 />
@@ -149,6 +160,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                             environment={environment}
                             payload={importPayload}
                             onClose={close}
+                            tracking={importTracking}
                         />
                     }
                 />

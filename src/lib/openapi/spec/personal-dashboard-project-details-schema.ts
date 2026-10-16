@@ -1,5 +1,4 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { projectSchema } from './project-schema.js';
 import { onboardingStatusSchema } from './onboarding-status-schema.js';
 
 export const personalDashboardProjectDetailsSchema = {
@@ -139,7 +138,74 @@ export const personalDashboardProjectDetailsSchema = {
                 },
             },
         },
-        owners: projectSchema.properties.owners,
+        owners: {
+            description:
+                'The users and/or groups that have the "owner" role in this project. If no such users or groups exist, the list will contain the "system" owner instead.',
+            oneOf: [
+                {
+                    type: 'array',
+                    minItems: 1,
+                    items: {
+                        anyOf: [
+                            {
+                                type: 'object',
+                                required: ['ownerType', 'name'],
+                                properties: {
+                                    ownerType: {
+                                        type: 'string',
+                                        enum: ['user'],
+                                    },
+                                    name: {
+                                        type: 'string',
+                                        example: 'User Name',
+                                    },
+                                    imageUrl: {
+                                        type: 'string',
+                                        nullable: true,
+                                        example:
+                                            'https://example.com/image.jpg',
+                                    },
+                                    email: {
+                                        type: 'string',
+                                        nullable: true,
+                                        example: 'user@example.com',
+                                    },
+                                },
+                            },
+                            {
+                                type: 'object',
+                                required: ['ownerType', 'name'],
+                                properties: {
+                                    ownerType: {
+                                        type: 'string',
+                                        enum: ['group'],
+                                    },
+                                    name: {
+                                        type: 'string',
+                                        example: 'Group Name',
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                },
+                {
+                    type: 'array',
+                    minItems: 1,
+                    maxItems: 1,
+                    items: {
+                        type: 'object',
+                        required: ['ownerType'],
+                        properties: {
+                            ownerType: {
+                                type: 'string',
+                                enum: ['system'],
+                            },
+                        },
+                    },
+                },
+            ],
+        },
         roles: {
             type: 'array',
             description: 'The list of roles that the user has in this project.',

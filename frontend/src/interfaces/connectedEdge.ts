@@ -31,6 +31,11 @@ export type ConnectedEdge = {
     upstreamMetricsP99LatencyMs: string;
     upstreamEdgeAverageLatencyMs: string;
     upstreamEdgeP99LatencyMs: string;
+    enricherRequestCount?: number | string | null;
+    enricherAverageLatencyMs?: string | null;
+    enricherP99LatencyMs?: string | null;
+    enricherErrors?: number | string | null;
+    enricherTimeouts?: number | string | null;
     apiKeyRevisionIds?: EdgeApiKeyRevisionId[];
 };
 

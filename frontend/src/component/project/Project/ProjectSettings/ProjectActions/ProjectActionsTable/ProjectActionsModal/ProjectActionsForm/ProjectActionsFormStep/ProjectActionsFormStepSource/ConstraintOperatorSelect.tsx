@@ -2,7 +2,6 @@ import {
     Select,
     MenuItem,
     FormControl,
-    InputLabel,
     type SelectChangeEvent,
     styled,
 } from '@mui/material';
@@ -18,7 +17,7 @@ import {
     numOperators,
     inOperators,
 } from 'constants/operators';
-import { type ReactNode, useId, useState } from 'react';
+import { useId, useState } from 'react';
 import { formatOperatorDescription } from 'utils/formatOperatorDescription';
 
 interface IConstraintOperatorSelectProps {
@@ -82,7 +81,6 @@ const StyledOptionContainer = styled('div')(({ theme }) => ({
 }));
 
 interface OperatorSelectControlProps extends IConstraintOperatorSelectProps {
-    label?: ReactNode;
     id?: string;
 }
 
@@ -90,7 +88,6 @@ const OperatorSelectControl = ({
     options,
     value,
     onChange,
-    label,
     id,
 }: OperatorSelectControlProps) => {
     const [open, setOpen] = useState(false);
@@ -115,16 +112,10 @@ const OperatorSelectControl = ({
 
     return (
         <StyledFormInput variant='outlined' size='large' fullWidth>
-            {label ? (
-                <InputLabel htmlFor={controlId} id={labelId}>
-                    {label}
-                </InputLabel>
-            ) : null}
             <Select
                 id={controlId}
                 labelId={labelId}
                 name='operator'
-                label={label}
                 value={value}
                 open={open}
                 onOpen={() => setOpen(true)}

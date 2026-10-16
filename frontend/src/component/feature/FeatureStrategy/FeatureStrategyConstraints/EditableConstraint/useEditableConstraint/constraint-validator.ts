@@ -2,6 +2,7 @@ import { isValid, parseISO } from 'date-fns';
 import { RE2JS } from 're2js';
 import semver from 'semver';
 import {
+    isCidrOperator,
     isDateOperator,
     isInOperator,
     isNumOperator,
@@ -11,6 +12,7 @@ import {
     type Operator,
 } from 'constants/operators.js';
 import type { UiFlags } from 'interfaces/uiConfig';
+import { isIpOrCidr } from './ip-address.ts';
 
 export type ConstraintValidationResult = [boolean, string];
 export type ConstraintValidatorFlags = Pick<UiFlags, 'semverBuildMetadata'>;
@@ -106,6 +108,14 @@ const regexValidator = (value: string): ConstraintValidationResult => {
     return [true, ''];
 };
 
+const cidrValidator = (...values: string[]): ConstraintValidationResult => {
+    if (!values.every(isIpOrCidr)) {
+        return [false, 'Value must be IP address or CIDR range.'];
+    }
+
+    return [true, ''];
+};
+
 export const constraintValidator = (
     operator: Operator,
     flags: ConstraintValidatorFlags = {},
@@ -122,6 +132,9 @@ export const constraintValidator = (
     }
     if (isRegexOperator(operator)) {
         return regexValidator;
+    }
+    if (isCidrOperator(operator)) {
+        return cidrValidator;
     }
     if (isStringOperator(operator) || isInOperator(operator)) {
         return stringListValidator;

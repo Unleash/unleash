@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 import { alpha } from '@mui/material';
-import { focusable } from 'themes/themeStyles';
+import { focusable, switchFocusOutlineOffset } from 'themes/themeStyles';
 import { colors } from './colors.js';
 import {
     buttonSizes,
@@ -542,6 +542,9 @@ export const darkTheme = createTheme({
                         color: '#423F6E',
                     },
                 }),
+                switchBase: {
+                    '&.Mui-focusVisible': switchFocusOutlineOffset,
+                },
             },
         },
 

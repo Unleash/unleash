@@ -13,8 +13,10 @@ import {
     dateOperators,
     numOperators,
     regexOperators,
+    cidrOperators,
     inOperators,
     isRegexOperator,
+    isCidrOperator,
     SEMVER_GTE,
     SEMVER_LTE,
 } from 'constants/operators';
@@ -107,6 +109,7 @@ export const ConstraintOperatorSelect = ({
     const isSemverGteOperatorsEnabled = useUiFlag(
         'semverGteConstraintOperators',
     );
+    const isIpOperatorEnabled = useUiFlag('ipConstraintOperator');
 
     const operators = options
         .filter(
@@ -116,11 +119,13 @@ export const ConstraintOperatorSelect = ({
             (operator) =>
                 isSemverGteOperatorsEnabled ||
                 (operator !== SEMVER_GTE && operator !== SEMVER_LTE),
-        );
+        )
+        .filter((operator) => isIpOperatorEnabled || !isCidrOperator(operator));
 
     return (
         <FormControl variant='standard' size='large' hiddenLabel>
             <ScreenReaderOnly>
+                {/* biome-ignore lint: raw-copied from legacy, will be addressed with the design update */}
                 <InputLabel id={labelId} htmlFor={selectId}>
                     Operator
                 </InputLabel>
@@ -166,4 +171,5 @@ const operatorGroups = [
     dateOperators,
     semVerOperators,
     regexOperators,
+    cidrOperators,
 ];

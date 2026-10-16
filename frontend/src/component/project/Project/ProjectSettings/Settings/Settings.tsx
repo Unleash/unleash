@@ -24,7 +24,7 @@ export const Settings = () => {
     if (isOss()) {
         return (
             <PageContent
-                header={<PageHeader title='General settings' />}
+                header={<PageHeader title='General settings' variant='h2' />}
                 sx={{ justifyContent: 'center' }}
             >
                 <PremiumFeature feature='project-settings' />
@@ -34,7 +34,9 @@ export const Settings = () => {
 
     if (!hasAccess([UPDATE_PROJECT, PROJECT_SETTINGS_READ], projectId)) {
         return (
-            <PageContent header={<PageHeader title='General settings' />}>
+            <PageContent
+                header={<PageHeader title='General settings' variant='h2' />}
+            >
                 <Alert severity='error'>
                     You need project owner permissions or a custom role with
                     "project setting access permission" to access this section.

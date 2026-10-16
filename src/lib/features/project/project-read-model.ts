@@ -3,6 +3,7 @@ import type { Knex } from 'knex';
 import type { Db } from '../../db/db.js';
 import type {
     IProjectReadModel,
+    ProjectCore,
     ProjectForInsights,
     ProjectForUi,
 } from './project-read-model-type.js';
@@ -29,6 +30,16 @@ const mapProjectForUi = (row): ProjectForUi => {
         mode: row.project_mode || 'open',
         lastReportedFlagUsage: row.last_usage,
         lastUpdatedAt: row.last_updated,
+    };
+};
+
+const mapProjectCore = (row): ProjectCore => {
+    return {
+        id: row.id,
+        name: row.name,
+        description: row.description,
+        createdAt: row.created_at,
+        archivedAt: row.archived_at,
     };
 };
 
@@ -235,6 +246,32 @@ export class ProjectReadModel implements IProjectReadModel {
                 memberCount: memberMap.get(projectWithCount.id) || 0,
             };
         });
+    }
+
+    async getProjectsCore(query?: IProjectQuery): Promise<ProjectCore[]> {
+        const projectTimer = this.timer('getProjectsCore');
+        let projects = this.db(TABLE).orderBy('name', 'asc');
+
+        if (query?.archived === true) {
+            projects = projects.whereNot('archived_at', null);
+        } else {
+            projects = projects.where('archived_at', null);
+        }
+
+        if (query?.id) {
+            projects = projects.where('id', query.id);
+        }
+
+        const rows = await projects.select(
+            'id',
+            'name',
+            'description',
+            'created_at',
+            'archived_at',
+        );
+        projectTimer();
+
+        return rows.map(mapProjectCore);
     }
 
     private async getMembersCount(): Promise<IProjectMembersCount[]> {

@@ -31,6 +31,7 @@ export interface IResetTokenStore extends Store<IResetToken, string> {
     getActiveTokens(): Promise<IResetToken[]>;
     insert(newToken: IResetTokenCreate): Promise<IResetToken>;
     useToken(token: IResetQuery): Promise<boolean>;
+    consumeToken(token: string): Promise<number | undefined>;
     deleteFromQuery(query: IResetTokenQuery): Promise<void>;
     deleteExpired(): Promise<void>;
     expireExistingTokensForUser(userId: number): Promise<void>;

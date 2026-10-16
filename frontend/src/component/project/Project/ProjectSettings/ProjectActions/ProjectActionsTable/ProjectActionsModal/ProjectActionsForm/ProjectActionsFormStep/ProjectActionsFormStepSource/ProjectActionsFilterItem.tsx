@@ -32,11 +32,9 @@ const StyledFilter = styled('div')({
     width: '100%',
 });
 
-const StyledFilterHeader = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'topLabel',
-})<{ topLabel: boolean }>(({ theme, topLabel }) => ({
+const StyledFilterHeader = styled('div')(({ theme }) => ({
     display: 'flex',
-    alignItems: topLabel ? 'flex-end' : 'center',
+    alignItems: 'flex-end',
     gap: theme.spacing(1),
     [theme.breakpoints.down('sm')]: {
         flexDirection: 'column',
@@ -113,7 +111,6 @@ export const ProjectActionsFilterItem = ({
 }: IProjectActionsFilterItemProps) => {
     const { parameter, inverted, operator, caseInsensitive, value, values } =
         filter;
-    const topLabelInputs = useUiFlag('topLabelInputs');
 
     const header = (
         <>
@@ -220,7 +217,7 @@ export const ProjectActionsFilterItem = ({
     return (
         <ProjectActionsFormItem index={index} header={header}>
             <StyledFilter>
-                <StyledFilterHeader topLabel={topLabelInputs}>
+                <StyledFilterHeader>
                     <StyledInputContainer>
                         <AutocompleteField
                             freeSolo

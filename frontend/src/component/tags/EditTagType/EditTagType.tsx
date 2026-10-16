@@ -11,6 +11,10 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { GO_BACK } from 'constants/navigate';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { TagValuesTable } from './TagValuesTable/TagValuesTable.tsx';
+import { useTracking } from 'hooks/useTracking';
+import { editTagTypeTracking } from '../tagsTracking.ts';
 
 const EditTagType = () => {
     const { setToastData, setToastApiError } = useToast();
@@ -18,6 +22,7 @@ const EditTagType = () => {
     const navigate = useNavigate();
     const name = useRequiredPathParam('name');
     const { tagType } = useTagType(name);
+    const tagManagementViaUi = useUiFlag('tagManagementViaUi');
     const {
         tagName,
         tagDesc,
@@ -30,13 +35,16 @@ const EditTagType = () => {
         clearErrors,
     } = useTagTypeForm(tagType?.name, tagType?.description, tagType?.color);
     const { updateTagType, loading } = useTagTypesApi();
+    const trackEditTagType = useTracking(editTagTypeTracking);
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
         clearErrors();
         const payload = getTagPayload();
         try {
-            await updateTagType(tagName, payload);
+            await trackEditTagType.mutation(() =>
+                updateTagType(tagName, payload),
+            );
             navigate('/tag-types');
             setToastData({
                 text: 'Tag type updated',
@@ -60,6 +68,24 @@ const EditTagType = () => {
         navigate(GO_BACK);
     };
 
+    const form = (
+        <TagForm
+            errors={errors}
+            handleSubmit={handleSubmit}
+            handleCancel={handleCancel}
+            tagName={tagName}
+            tagDesc={tagDesc}
+            color={color}
+            setTagName={setTagName}
+            setTagDesc={setTagDesc}
+            setColor={setColor}
+            mode='Edit'
+            clearErrors={clearErrors}
+        >
+            <UpdateButton permission={UPDATE_TAG_TYPE} />
+        </TagForm>
+    );
+
     return (
         <FormTemplate
             loading={loading}
@@ -69,21 +95,14 @@ const EditTagType = () => {
             documentationLinkLabel='Tags documentation'
             formatApiCode={formatApiCode}
         >
-            <TagForm
-                errors={errors}
-                handleSubmit={handleSubmit}
-                handleCancel={handleCancel}
-                tagName={tagName}
-                tagDesc={tagDesc}
-                color={color}
-                setTagName={setTagName}
-                setTagDesc={setTagDesc}
-                setColor={setColor}
-                mode='Edit'
-                clearErrors={clearErrors}
-            >
-                <UpdateButton permission={UPDATE_TAG_TYPE} />
-            </TagForm>
+            {tagManagementViaUi ? (
+                <>
+                    <div>{form}</div>
+                    <TagValuesTable tagType={name} />
+                </>
+            ) : (
+                form
+            )}
         </FormTemplate>
     );
 };

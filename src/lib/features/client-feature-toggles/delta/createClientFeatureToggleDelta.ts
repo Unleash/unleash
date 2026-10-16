@@ -1,3 +1,4 @@
+import { createDeltaHydrationReader } from './createDeltaHydrationReader.js';
 import { ClientFeatureToggleDelta } from './client-feature-toggle-delta.js';
 import { EventStore } from '../../events/event-store.js';
 import ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service.js';
@@ -29,6 +30,7 @@ export const createClientFeatureToggleDelta = (
         configurationRevisionService,
         flagResolver,
         config,
+        createDeltaHydrationReader(db, config),
     );
 
     return clientFeatureToggleDelta;

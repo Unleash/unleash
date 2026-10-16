@@ -1,11 +1,6 @@
 import { createContext } from 'react';
 import type { CustomEvents, ReservedEventName } from 'utils/trackingEvents';
 
-// What sinks that only accept flat key-value pairs (Plausible, LogRocket) can carry.
-export type ScalarProps = Record<string, string | number | boolean>;
-
-// The flight recorder takes arbitrary JSON. Nested values are dropped on the way to
-// the scalar-only sinks, which is fine: these events aren't Plausible goals.
 type TrackedValue =
     | string
     | number

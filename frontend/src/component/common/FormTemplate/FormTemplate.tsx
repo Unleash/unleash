@@ -56,18 +56,21 @@ interface ICreateProps {
 const StyledContainer = styled('section', {
     shouldForwardProp: (prop) =>
         !['modal', 'compact'].includes(prop.toString()),
-})<{ modal?: boolean; compact?: boolean }>(({ theme, modal, compact }) => ({
-    minHeight: modal ? '100vh' : compact ? 'unset' : '80vh',
-    borderRadius: modal ? 0 : theme.spacing(2),
-    width: '100%',
-    display: 'flex',
-    margin: '0 auto',
-    overflow: modal || compact ? 'unset' : 'hidden',
-    [theme.breakpoints.down(1100)]: {
-        flexDirection: 'column',
-        minHeight: 0,
-    },
-}));
+})<{ modal?: boolean; compact?: boolean }>(({ theme, modal, compact }) => {
+    const narrowWidthMinHeight = modal || compact ? undefined : 0;
+    return {
+        minHeight: modal ? '100vh' : compact ? 'unset' : '80vh',
+        borderRadius: modal ? 0 : theme.spacing(2),
+        width: '100%',
+        display: 'flex',
+        margin: '0 auto',
+        overflow: modal || compact ? 'unset' : 'hidden',
+        [theme.breakpoints.down(1100)]: {
+            flexDirection: 'column',
+            minHeight: narrowWidthMinHeight,
+        },
+    };
+});
 
 const StyledMobileGuidanceWrapper = styled('div', {
     shouldForwardProp: (prop) => !['guidanceHeight'].includes(prop.toString()),
@@ -149,8 +152,8 @@ const StyledFooter = styled('div')(({ theme }) => ({
 }));
 
 const StyledTitle = styled('h1')(({ theme }) => ({
-    marginBottom: theme.fontSizes.mainHeader,
-    fontWeight: 'normal',
+    ...theme.typography.h1,
+    marginBottom: theme.spacing(2.5),
 }));
 
 const StyledMobileGuidanceContainer = styled('div')(() => ({

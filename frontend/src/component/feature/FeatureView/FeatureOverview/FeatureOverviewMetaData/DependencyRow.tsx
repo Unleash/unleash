@@ -60,7 +60,7 @@ const useDeleteDependency = (project: string, featureId: string) => {
         try {
             if (isChangeRequestConfiguredInAnyEnv()) {
                 await handleAddChange();
-                trackEvent('dependent_features', {
+                trackEvent('dependent-features', {
                     props: {
                         eventType: 'delete dependency added to change request',
                     },
@@ -72,7 +72,7 @@ const useDeleteDependency = (project: string, featureId: string) => {
                 await refetchChangeRequests();
             } else {
                 await removeDependencies(featureId);
-                trackEvent('dependent_features', {
+                trackEvent('dependent-features', {
                     props: {
                         eventType: 'dependency removed',
                     },

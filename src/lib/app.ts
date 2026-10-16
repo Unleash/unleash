@@ -24,6 +24,7 @@ import noAuthentication, {
 } from './middleware/no-authentication.js';
 import secureHeaders from './middleware/secure-headers.js';
 import { sessionContextMiddleware } from './middleware/session-context.js';
+import { sessionTimeoutMiddleware } from './middleware/session-timeout-middleware.js';
 
 import { loadIndexHTML, findPublicFolder } from './util/index.js';
 import patMiddleware from './middleware/pat-middleware.js';
@@ -108,10 +109,15 @@ export default async function getApp(
             express.json({ strict: false }),
         ),
     );
+
+    app.use(secureHeaders(config));
+
     if (unleashSession) {
         app.use(unleashSession);
+
+        app.use(`${baseUriPath}/api`, sessionTimeoutMiddleware(config));
     }
-    app.use(secureHeaders(config));
+
     app.use(express.urlencoded({ extended: true }));
     app.use(favicon(path.join(publicFolder, 'favicon.ico')));
     app.use(baseUriPath, favicon(path.join(publicFolder, 'favicon.ico')));

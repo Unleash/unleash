@@ -1,5 +1,6 @@
 import type { Components, Theme } from '@mui/material/styles';
-import { focusOutline } from './themeStyles';
+import { focusOutline, switchBaseIconFocusOutlineOffset } from './themeStyles';
+import { IS_DEV } from 'constants/env';
 
 /**
  * Design system v2 — shared sizing and behavior for controls
@@ -254,6 +255,24 @@ export const controlOverrides: Components<Theme> = {
         },
     },
 
+    MuiRadio: {
+        styleOverrides: {
+            root: {
+                '&.Mui-focusVisible': switchBaseIconFocusOutlineOffset,
+            },
+        },
+    },
+    MuiCheckbox: {
+        styleOverrides: {
+            root: ({ theme }) => ({
+                '&.Mui-focusVisible': {
+                    ...switchBaseIconFocusOutlineOffset,
+                    borderRadius: theme.spacing(2),
+                },
+            }),
+        },
+    },
+
     // Unsized fields keep today's visual weight (old `small` ≈ new `large`).
     MuiTextField: {
         defaultProps: {
@@ -325,6 +344,14 @@ export const controlOverrides: Components<Theme> = {
                     },
                 };
             },
+        },
+    },
+
+    // The dev toolbar lives outside any Modal's DOM, so Modal's focus trap otherwise steals focus back from it.
+    // Applies to Dialog/Popover/Menu/Drawer as well - they all render Modal internally.
+    MuiModal: {
+        defaultProps: {
+            disableEnforceFocus: IS_DEV,
         },
     },
 };

@@ -12,7 +12,7 @@ import { getLocalizedDateString } from 'component/common/util';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import useLoading from 'hooks/useLoading';
-import { withTableState } from 'utils/withTableState';
+import { useTableState } from 'hooks/useTableState';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import type { IRole } from 'interfaces/role';
 import type { UserAccessLogEntrySchema } from 'openapi';
@@ -213,9 +213,10 @@ export const UserAccessLog = () => {
     );
 
     const table = useReactTable(
-        withTableState(tableState, setTableState, {
-            columns,
-            data,
+        useTableState({
+            tableState,
+            setTableState,
+            options: { columns, data },
         }),
     );
 

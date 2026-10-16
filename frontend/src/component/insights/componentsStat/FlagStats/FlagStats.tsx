@@ -30,7 +30,7 @@ const StyledRingContent = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'center',
     fontWeight: 'bold',
-    fontSize: theme.fontSizes.extraLargeHeader,
+    fontSize: theme.typography.display.fontSize,
     border: `10px solid ${theme.palette.background.paper}`,
 }));
 

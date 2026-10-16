@@ -19,7 +19,7 @@ exports[`should render DrawerMenu 1`] = `
             title="API details"
           >
             <h2
-              class="mui-wc53hr"
+              class="mui-rbwvza"
             >
               Unleash  7.3.0
             </h2>
@@ -43,7 +43,7 @@ exports[`should render DrawerMenu 1`] = `
                 title="Unleash SDK"
               >
                 <h2
-                  class="mui-wc53hr"
+                  class="mui-rbwvza"
                 >
                   Server SDKs
                 </h2>
@@ -234,7 +234,7 @@ exports[`should render DrawerMenu 1`] = `
                 title="Unleash SDK"
               >
                 <h2
-                  class="mui-wc53hr"
+                  class="mui-rbwvza"
                 >
                   Frontend SDKs
                 </h2>
@@ -382,7 +382,7 @@ exports[`should render DrawerMenu 1`] = `
             >
               <section>
                 <h2
-                  class="mui-wc53hr"
+                  class="mui-rbwvza"
                 >
                   About
                 </h2>
@@ -520,7 +520,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
             title="API details"
           >
             <h2
-              class="mui-wc53hr"
+              class="mui-rbwvza"
             >
               Unleash  7.3.0
             </h2>
@@ -544,7 +544,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                 title="Unleash SDK"
               >
                 <h2
-                  class="mui-wc53hr"
+                  class="mui-rbwvza"
                 >
                   Server SDKs
                 </h2>
@@ -735,7 +735,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                 title="Unleash SDK"
               >
                 <h2
-                  class="mui-wc53hr"
+                  class="mui-rbwvza"
                 >
                   Frontend SDKs
                 </h2>
@@ -883,7 +883,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
             >
               <section>
                 <h2
-                  class="mui-wc53hr"
+                  class="mui-rbwvza"
                 >
                   About
                 </h2>

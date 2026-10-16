@@ -1,7 +1,7 @@
 import { useInactiveUsers } from 'hooks/api/getters/useInactiveUsers/useInactiveUsers';
 
 export const InactiveUsersCount = () => {
-    const { inactiveUsers } = useInactiveUsers();
+    const { totalInactiveUsers } = useInactiveUsers();
 
-    return <>{inactiveUsers.length}</>;
+    return <>{totalInactiveUsers}</>;
 };

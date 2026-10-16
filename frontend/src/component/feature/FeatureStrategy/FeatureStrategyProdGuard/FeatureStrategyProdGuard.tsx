@@ -7,7 +7,7 @@ import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import type { Tracking } from 'utils/trackingEvents';
 import { useTracking } from 'hooks/useTracking';
-import { prodGuardHiddenTracking } from './prodGuardTracking';
+import { toggleProdGuardTracking } from './prodGuardTracking';
 
 interface IFeatureStrategyProdGuardProps {
     open: boolean;
@@ -33,12 +33,12 @@ export const FeatureStrategyProdGuard = ({
     const { value: settings, setValue: setSettings } =
         getFeatureStrategyProdGuardSettings();
     const [hide, setHide] = useState(settings.hide);
-    const trackProdGuardHidden = useTracking(prodGuardHiddenTracking);
+    const trackToggleProdGuard = useTracking(toggleProdGuardTracking);
 
     const toggleHideSetting = () => {
         setSettings((prev) => ({ hide: !prev.hide }));
         setHide((prev) => !prev);
-        trackProdGuardHidden('succeeded', { hidden: !hide });
+        trackToggleProdGuard('succeeded', { hidden: !hide });
     };
 
     return (

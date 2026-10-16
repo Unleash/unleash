@@ -17,7 +17,7 @@ const ENVIRONMENT_DEFAULT_STRATEGY = {
     parameters: { rollout: '50' },
 };
 
-const setupApi = ({ enterprise = false } = {}) => {
+const setupApi = ({ enterprise = false, changeRequests = false } = {}) => {
     testServerRoute(server, '/api/admin/ui-config', {
         versionInfo: {
             current: enterprise ? { enterprise: '1.0.0' } : { oss: '1.0.0' },
@@ -32,6 +32,18 @@ const setupApi = ({ enterprise = false } = {}) => {
             },
         ],
     });
+    testServerRoute(
+        server,
+        `/api/admin/projects/${projectId}/change-requests/config`,
+        changeRequests
+            ? [{ environment: environmentId, changeRequestEnabled: true }]
+            : [],
+    );
+    testServerRoute(
+        server,
+        `/api/admin/projects/${projectId}/change-requests/pending`,
+        [],
+    );
     testServerRoute(
         server,
         `/api/admin/projects/${projectId}/features/${featureId}`,
@@ -77,14 +89,14 @@ describe('setting up a strategy from the setup cards', () => {
     });
 
     it('applies the project default to the environment', async () => {
-        const { requests } = strategiesPostRoute();
+        const { requests: createdStrategies } = strategiesPostRoute();
         const { dialogDismissals } = renderCards();
 
         await screen.findByText(ENVIRONMENT_DEFAULT_STRATEGY.title);
         fireEvent.click(screen.getByRole('button', { name: 'Apply default' }));
 
-        await waitFor(() => expect(requests).toHaveLength(1));
-        expect(requests[0]).toMatchObject({
+        await waitFor(() => expect(createdStrategies).toHaveLength(1));
+        expect(createdStrategies[0]).toMatchObject({
             name: 'flexibleRollout',
             title: '50% of all users',
             parameters: { rollout: '50' },
@@ -92,8 +104,53 @@ describe('setting up a strategy from the setup cards', () => {
         await waitFor(() => expect(dialogDismissals).toHaveLength(1));
     });
 
+    it('adds the project default to a draft in a change-request environment', async () => {
+        // Change requests are enterprise-only
+        setupApi({ enterprise: true, changeRequests: true });
+        const { requests: draftChanges } = testServerRoute(
+            server,
+            `/api/admin/projects/${projectId}/environments/${environmentId}/change-requests`,
+            {},
+            'post',
+        );
+        const { dialogDismissals } = renderCards();
+
+        await screen.findByText(ENVIRONMENT_DEFAULT_STRATEGY.title);
+        fireEvent.click(screen.getByRole('button', { name: 'Apply default' }));
+
+        await waitFor(() => expect(draftChanges).toHaveLength(1));
+        expect(draftChanges[0]).toMatchObject({
+            action: 'addStrategy',
+            feature: featureId,
+            payload: { name: 'flexibleRollout', title: '50% of all users' },
+        });
+        await waitFor(() => expect(dialogDismissals).toHaveLength(1));
+    });
+
+    it('falls back to a 100% gradual rollout when the environment has no default', async () => {
+        testServerRoute(server, `/api/admin/projects/${projectId}/overview`, {
+            featureTypeCounts: [],
+            environments: [{ environment: environmentId }],
+        });
+        const { requests: createdStrategies } = strategiesPostRoute();
+        renderCards();
+
+        const apply = screen.getByRole('button', { name: 'Apply default' });
+        // The fallback badge shows before loading finishes, so wait on the button instead.
+        await waitFor(() => expect(apply).toBeEnabled());
+        expect(screen.getByText('100% of all users')).toBeInTheDocument();
+        fireEvent.click(apply);
+
+        await waitFor(() => expect(createdStrategies).toHaveLength(1));
+        expect(createdStrategies[0]).toMatchObject({
+            name: 'flexibleRollout',
+            title: '100% of all users',
+            parameters: {},
+        });
+    });
+
     it('keeps the dialog open when applying the default fails', async () => {
-        const { requests } = testServerRoute(
+        const { requests: createdStrategies } = testServerRoute(
             server,
             `/api/admin/projects/${projectId}/features/${featureId}/environments/${environmentId}/strategies`,
             { message: 'Nope' },
@@ -106,7 +163,7 @@ describe('setting up a strategy from the setup cards', () => {
         const apply = screen.getByRole('button', { name: 'Apply default' });
         fireEvent.click(apply);
 
-        await waitFor(() => expect(requests).toHaveLength(1));
+        await waitFor(() => expect(createdStrategies).toHaveLength(1));
         await waitFor(() => expect(apply).toBeEnabled());
         expect(dialogDismissals).toHaveLength(0);
     });

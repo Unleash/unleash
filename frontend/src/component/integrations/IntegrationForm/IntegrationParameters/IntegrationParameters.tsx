@@ -5,13 +5,17 @@ import {
 } from './IntegrationParameter/IntegrationParameter.tsx';
 import type { AddonTypeSchema } from 'openapi';
 import { styled } from '@mui/material';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { isKvpParam } from './IntegrationParameter/KvpParameterUtils.ts';
 
 interface IIntegrationParametersProps {
     provider?: AddonTypeSchema;
     parametersErrors: IIntegrationParameterProps['parametersErrors'];
     editMode: boolean;
     setParameterValue: IIntegrationParameterProps['setParameterValue'];
+    setStructuredParameter: IIntegrationParameterProps['setStructuredParameter'];
     config: IIntegrationParameterProps['config'];
+    projects: IIntegrationParameterProps['projects'];
 }
 
 const StyledParagraph = styled('p')(({ theme }) => ({
@@ -23,8 +27,11 @@ export const IntegrationParameters = ({
     config,
     parametersErrors,
     setParameterValue,
+    setStructuredParameter,
     editMode,
+    projects,
 }: IIntegrationParametersProps) => {
+    const kvpEditorEnabled = useUiFlag('integrationParamKvpEditor');
     if (!provider) return null;
     return (
         <React.Fragment>
@@ -35,15 +42,21 @@ export const IntegrationParameters = ({
                     when saving.
                 </StyledParagraph>
             ) : null}
-            {provider.parameters?.map((parameter) => (
-                <IntegrationParameter
-                    key={parameter.name}
-                    definition={parameter}
-                    parametersErrors={parametersErrors}
-                    config={config}
-                    setParameterValue={setParameterValue}
-                />
-            ))}
+            {provider.parameters
+                ?.filter(
+                    (parameter) => kvpEditorEnabled || !isKvpParam(parameter),
+                )
+                .map((parameter) => (
+                    <IntegrationParameter
+                        key={parameter.name}
+                        definition={parameter}
+                        parametersErrors={parametersErrors}
+                        config={config}
+                        setParameterValue={setParameterValue}
+                        setStructuredParameter={setStructuredParameter}
+                        projects={projects}
+                    />
+                ))}
         </React.Fragment>
     );
 };

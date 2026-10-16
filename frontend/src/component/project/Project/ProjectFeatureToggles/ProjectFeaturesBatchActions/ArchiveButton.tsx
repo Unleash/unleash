@@ -44,7 +44,7 @@ export const ArchiveButton: FC<IArchiveButtonProps> = ({
     const onArchive = async () => {
         setIsDialogOpen(false);
         onConfirm?.();
-        trackEvent('batch_operations', {
+        trackEvent('batch-operations', {
             props: {
                 eventType: 'features archived',
             },

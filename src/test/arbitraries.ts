@@ -3,6 +3,7 @@ import fc, { type Arbitrary } from 'fast-check';
 import {
     DATE_OPERATORS,
     NUM_OPERATORS,
+    IN_CIDR,
     REGEX,
     SEMVER_OPERATORS,
     STRING_OPERATORS,
@@ -55,6 +56,15 @@ const semverString = (): Arbitrary<string> =>
         .tuple(fc.nat({ max: 999 }), fc.nat({ max: 999 }), fc.nat({ max: 999 }))
         .map(([major, minor, patch]) => `${major}.${minor}.${patch}`);
 
+const ipOrCidr = (): Arbitrary<string> =>
+    fc.oneof(
+        fc.ipV4(),
+        fc.ipV6(),
+        fc
+            .tuple(fc.ipV4(), fc.nat({ max: 32 }))
+            .map(([ip, bits]) => `${ip}/${bits}`),
+    );
+
 const regexString = (): Arbitrary<string> =>
     fc.constantFrom('.*', 'a', '[a-z]+', '^test$');
 
@@ -93,7 +103,14 @@ export const strategyConstraint = (): Arbitrary<ConstraintSchema> =>
         }),
         fc.record({
             contextName: urlFriendlyString(),
-            operator: fc.constant(REGEX as ConstraintOperator),
+            operator: fc.constant(IN_CIDR),
+            caseInsensitive: fc.boolean(),
+            inverted: fc.boolean(),
+            values: fc.array(ipOrCidr(), { minLength: 1 }),
+        }),
+        fc.record({
+            contextName: urlFriendlyString(),
+            operator: fc.constant(REGEX),
             caseInsensitive: fc.boolean(),
             inverted: fc.constant(false),
             values: emptyValues(),

@@ -1,6 +1,5 @@
 import { Autocomplete, TextField, type AutocompleteProps } from '@mui/material';
 import type { ReactNode } from 'react';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { FormField } from '../FormField/FormField';
 
 export interface AutocompleteFieldProps<
@@ -37,8 +36,6 @@ export function AutocompleteField<
     size,
     ...props
 }: AutocompleteFieldProps<Value, Multiple, DisableClearable, FreeSolo>) {
-    const topLabelInputs = useUiFlag('topLabelInputs');
-
     return (
         <FormField label={label} description={description}>
             <Autocomplete
@@ -70,7 +67,6 @@ export function AutocompleteField<
                             size={size}
                             required={required}
                             error={error}
-                            label={topLabelInputs ? undefined : label}
                             placeholder={placeholder}
                             helperText={helperText}
                             slotProps={slotProps}

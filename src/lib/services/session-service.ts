@@ -43,6 +43,10 @@ export default class SessionService {
         return this.sessionStore.deleteSessionsForUser(userId);
     }
 
+    async deleteSessionsForUsers(userIds: number[]): Promise<void> {
+        return this.sessionStore.deleteSessionsForUsers(userIds);
+    }
+
     /**
      * Deletes all sessions for a user except the one identified by `keepSid`.
      * Used to log the user out everywhere else (e.g. after a password change)

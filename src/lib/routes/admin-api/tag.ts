@@ -5,7 +5,12 @@ import type TagService from '../../services/tag-service.js';
 
 import Controller from '../controller.js';
 
-import { NONE, UPDATE_FEATURE } from '../../types/permissions.js';
+import {
+    DELETE_TAG_TYPE,
+    NONE,
+    UPDATE_FEATURE,
+    UPDATE_TAG_TYPE,
+} from '../../types/permissions.js';
 import { extractUsername } from '../../util/extract-user.js';
 import type { IAuthRequest } from '../unleash-types.js';
 import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
@@ -25,12 +30,14 @@ import {
     getStandardResponses,
 } from '../../openapi/util/standard-responses.js';
 import type { IFlagResolver } from '../../types/index.js';
-import type { CreateTagSchema } from '../../openapi/index.js';
+import type { WithTransactional } from '../../db/transaction.js';
+import type { CreateTagSchema, RenameTagSchema } from '../../openapi/index.js';
+import { requireFeatureEnabled } from '../../middleware/conditional-middleware.js';
 
 const version = 1;
 
 class TagController extends Controller {
-    private tagService: TagService;
+    private tagService: WithTransactional<TagService>;
 
     private openApiService: OpenApiService;
 
@@ -39,12 +46,12 @@ class TagController extends Controller {
     constructor(
         config: IUnleashConfig,
         {
-            tagService,
+            transactionalTagService,
             openApiService,
-        }: Pick<IUnleashServices, 'tagService' | 'openApiService'>,
+        }: Pick<IUnleashServices, 'transactionalTagService' | 'openApiService'>,
     ) {
         super(config);
-        this.tagService = tagService;
+        this.tagService = transactionalTagService;
         this.openApiService = openApiService;
         this.flagResolver = config.flagResolver;
 
@@ -131,11 +138,39 @@ class TagController extends Controller {
             ],
         });
         this.route({
+            method: 'post',
+            path: '/:type/:value/rename',
+            handler: this.renameTag,
+            // Stricter than delete: renaming into an existing value merges the
+            // tags, which assigns a tag to flags the caller may not be allowed
+            // to edit. Deleting can only remove a tag from them.
+            permission: UPDATE_TAG_TYPE,
+            middleware: [
+                requireFeatureEnabled(
+                    config.flagResolver,
+                    'tagManagementViaUi',
+                ),
+                openApiService.validPath({
+                    tags: ['Tags'],
+                    release: { alpha: true },
+                    operationId: 'renameTag',
+                    summary: 'Rename a tag.',
+                    description:
+                        'Change the value of a tag. Every feature flag that has the tag gets the new value. If a tag with the new value already exists, the two are merged.',
+                    requestBody: createRequestSchema('renameTagSchema'),
+                    responses: {
+                        200: createResponseSchema('tagWithVersionSchema'),
+                        ...getStandardResponses(400, 401, 403, 404, 415),
+                    },
+                }),
+            ],
+        });
+        this.route({
             method: 'delete',
             path: '/:type/:value',
             handler: this.deleteTag,
             acceptAnyContentType: true,
-            permission: UPDATE_FEATURE,
+            permission: [UPDATE_FEATURE, DELETE_TAG_TYPE],
             middleware: [
                 openApiService.validPath({
                     tags: ['Tags'],
@@ -196,9 +231,23 @@ class TagController extends Controller {
         const _userName = extractUsername(req);
         const tag = await this.tagService.createTag(req.body, req.audit);
         res.status(201)
-            .header('location', `tags/${tag.type}/${tag.value}`)
+            .header(
+                'location',
+                `tags/${encodeURIComponent(tag.type)}/${encodeURIComponent(tag.value)}`,
+            )
             .json({ version, tag })
             .end();
+    }
+
+    async renameTag(
+        req: IAuthRequest<TagSchema, unknown, RenameTagSchema>,
+        res: Response<TagWithVersionSchema>,
+    ): Promise<void> {
+        const { type, value } = req.params;
+        const tag = await this.tagService.transactional((service) =>
+            service.renameTag({ type, value }, req.body.value, req.audit),
+        );
+        res.status(200).json({ version, tag }).end();
     }
 
     async deleteTag(

@@ -21,7 +21,7 @@ const renderModal = () => {
                 open={true}
                 onClose={() => {}}
                 label='Edit action'
-                tracking={{ event: 'project-actions', type: 'edited' }}
+                tracking={{ event: 'project-actions', type: 'edit-action' }}
             >
                 <div>body</div>
             </DynamicSidebarModal>
@@ -37,10 +37,14 @@ test('tracks opening and the close icon as one journey', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Close' }));
 
     expect(rows).toEqual([
-        { event: 'project-actions', eventType: 'edited', action: 'opened' },
         {
             event: 'project-actions',
-            eventType: 'edited',
+            eventType: 'edit-action',
+            action: 'opened',
+        },
+        {
+            event: 'project-actions',
+            eventType: 'edit-action',
             action: 'dismissed',
             method: 'close-icon',
         },
@@ -53,10 +57,14 @@ test('escape is a dismissal through the modal itself', () => {
     fireEvent.keyDown(screen.getByTestId(SIDEBAR_MODAL_ID), { key: 'Escape' });
 
     expect(rows).toEqual([
-        { event: 'project-actions', eventType: 'edited', action: 'opened' },
         {
             event: 'project-actions',
-            eventType: 'edited',
+            eventType: 'edit-action',
+            action: 'opened',
+        },
+        {
+            event: 'project-actions',
+            eventType: 'edit-action',
             action: 'dismissed',
             method: 'escape',
         },

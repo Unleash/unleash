@@ -4,11 +4,9 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { isTrialInstance } from 'utils/instanceTrial';
+import { IS_DEV } from 'constants/env';
 
 const HubSpotChatRunner = lazy(() => import('./HubSpotChatRunner.tsx'));
-
-const HUBSPOT_DEV_OVERRIDE =
-    import.meta.env.DEV && import.meta.env.MODE !== 'test';
 
 export const HubSpotChatLoader: FC = () => {
     const { uiConfig, isEnterprise } = useUiConfig();
@@ -23,7 +21,7 @@ export const HubSpotChatLoader: FC = () => {
     const shouldLoad =
         isEnabled &&
         isEnterprisePayg &&
-        (isTrial || HUBSPOT_DEV_OVERRIDE) &&
+        (isTrial || IS_DEV) &&
         portalId &&
         user?.id;
 

@@ -1,4 +1,5 @@
 import { type FC, useMemo, useState } from 'react';
+import type { TypographyProps } from '@mui/material';
 import {
     type ColumnDef,
     flexRender,
@@ -39,9 +40,9 @@ import {
     type ContextFieldTrackingProps,
 } from 'component/context/contextFieldTrackingProps';
 
-const contextFieldDeletedTracking: Tracking = {
+const deleteContextFieldTracking: Tracking = {
     event: 'context-fields',
-    type: 'deleted',
+    type: 'delete-context-field',
 };
 
 type ContextRow = {
@@ -52,7 +53,9 @@ type ContextRow = {
     usedInFeatures?: number;
 };
 
-const ContextList: FC = () => {
+const ContextList: FC<{ variant?: TypographyProps['variant'] }> = ({
+    variant,
+}) => {
     const projectId = useOptionalPathParam('projectId');
     const [showDelDialogue, setShowDelDialogue] = useState(false);
     // Props are snapshotted with the name so a background refetch cannot desync the
@@ -67,12 +70,11 @@ const ContextList: FC = () => {
     const { removeContext, loading: removingContext } =
         useContextsApi(projectId);
     const { setToastData, setToastApiError } = useToast();
-    const trackContextFieldDeleted = useTracking(contextFieldDeletedTracking);
+    const trackDeleteContextField = useTracking(deleteContextFieldTracking);
 
     const trackingPropsFor = (name: string | undefined) => {
         const field = context.find((context) => context.name === name);
         return contextFieldTrackingProps({
-            name: name ?? '',
             legalValues: field?.legalValues ?? [],
             description: field?.description,
             stickiness: field?.stickiness ?? false,
@@ -200,7 +202,7 @@ const ContextList: FC = () => {
             setToastApiError(formatUnknownError(new Error()));
         } else {
             try {
-                await trackContextFieldDeleted.mutation(
+                await trackDeleteContextField.mutation(
                     () => removeContext(deleteTarget.name),
                     deleteTarget.props,
                 );
@@ -238,6 +240,7 @@ const ContextList: FC = () => {
             isLoading={loading}
             header={
                 <PageHeader
+                    variant={variant}
                     title={`Context fields (${rows.length})`}
                     actions={
                         <>
@@ -302,7 +305,7 @@ const ContextList: FC = () => {
                 title='Really delete context field'
                 disabledPrimaryButton={removingContext}
                 tracking={{
-                    ...contextFieldDeletedTracking,
+                    ...deleteContextFieldTracking,
                     props: deleteTarget?.props,
                 }}
             />

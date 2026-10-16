@@ -10,4 +10,6 @@
 export interface RemoteMcpSettingsSchema {
     /** Whether the remote MCP server is currently enabled. */
     enabled: boolean;
+    /** Experimental: Whether the instance has opted in to sharing remote MCP usage feedback with Unleash. */
+    feedbackOptIn?: boolean;
 }

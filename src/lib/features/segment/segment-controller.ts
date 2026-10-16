@@ -364,6 +364,10 @@ export class SegmentsController extends Controller {
             return;
         }
 
+        await this.segmentService.validateStrategyBelongsToProjectAndEnvironment(
+            { strategyId, projectId, environment: environmentId },
+        );
+
         if (segmentIds.length > this.config.strategySegmentsLimit) {
             throw new BadDataError(
                 `Strategies may not have more than ${this.config.strategySegmentsLimit} segments`,

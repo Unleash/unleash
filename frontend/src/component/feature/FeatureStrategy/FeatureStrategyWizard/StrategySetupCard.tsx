@@ -9,6 +9,7 @@ const StyledCard = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     padding: theme.spacing(2),
     backgroundColor: theme.palette.background.elevation1,
+    border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
 }));
 

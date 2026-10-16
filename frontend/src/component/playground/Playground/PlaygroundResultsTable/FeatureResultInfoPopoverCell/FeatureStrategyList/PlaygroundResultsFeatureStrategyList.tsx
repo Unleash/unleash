@@ -6,6 +6,7 @@ import type { FC } from 'react';
 interface PlaygroundResultFeatureStrategyListProps {
     feature: PlaygroundFeatureSchema;
     input?: PlaygroundRequestSchema;
+    className?: string;
 }
 
 const UnevaluatedUnsatisfiedInfo: FC<{ feature: PlaygroundFeatureSchema }> = ({
@@ -43,6 +44,7 @@ const UnevaluatedUnsatisfiedInfo: FC<{ feature: PlaygroundFeatureSchema }> = ({
 export const PlaygroundResultFeatureStrategyList = ({
     feature,
     input,
+    className,
 }: PlaygroundResultFeatureStrategyListProps) => {
     const enabledStrategies = feature.strategies?.data?.filter(
         (strategy) => !strategy.disabled,
@@ -69,6 +71,7 @@ export const PlaygroundResultFeatureStrategyList = ({
                 strategies={enabledStrategies || []}
                 input={input}
                 titlePrefix={showDisabledStrategies ? 'Enabled' : undefined}
+                className={className}
             />
             {showDisabledStrategies ? (
                 <PlaygroundResultStrategyLists
@@ -78,6 +81,7 @@ export const PlaygroundResultFeatureStrategyList = ({
                     infoText={
                         'Disabled strategies are not evaluated for the overall result.'
                     }
+                    className={className}
                 />
             ) : null}
         </>

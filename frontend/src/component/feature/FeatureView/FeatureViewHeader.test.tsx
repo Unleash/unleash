@@ -78,8 +78,7 @@ test('tracks marking a flag as stale after the update succeeds', async () => {
     await waitFor(() =>
         expect(trackEvent).toHaveBeenCalledWith('flag-actions', {
             props: {
-                eventType: 'stale-toggled',
-                name: 'my-flag',
+                eventType: 'toggle-flag-stale',
                 newState: 'stale',
                 action: 'succeeded',
             },
@@ -103,8 +102,7 @@ test("reports newState: 'active' when flipping a stale flag back to active", asy
     await waitFor(() =>
         expect(trackEvent).toHaveBeenCalledWith('flag-actions', {
             props: {
-                eventType: 'stale-toggled',
-                name: 'my-flag',
+                eventType: 'toggle-flag-stale',
                 newState: 'active',
                 action: 'succeeded',
             },
@@ -130,8 +128,7 @@ test('reports the status a rejected stale change failed on', async () => {
     await waitFor(() =>
         expect(trackEvent).toHaveBeenCalledWith('flag-actions', {
             props: {
-                eventType: 'stale-toggled',
-                name: 'my-flag',
+                eventType: 'toggle-flag-stale',
                 newState: 'stale',
                 action: 'failed',
                 failedOn: 'request',
@@ -163,8 +160,7 @@ test('tracks archiving a flag after the archive succeeds', async () => {
     await waitFor(() =>
         expect(trackEvent).toHaveBeenCalledWith('flag-actions', {
             props: {
-                eventType: 'archived',
-                name: 'my-flag',
+                eventType: 'archive-flag',
                 archiveVia: 'direct',
                 action: 'succeeded',
             },
@@ -172,8 +168,7 @@ test('tracks archiving a flag after the archive succeeds', async () => {
     );
     expect(trackEvent).toHaveBeenCalledWith('flag-actions', {
         props: {
-            eventType: 'archived',
-            name: 'my-flag',
+            eventType: 'archive-flag',
             archiveVia: 'direct',
             action: 'submitted',
         },

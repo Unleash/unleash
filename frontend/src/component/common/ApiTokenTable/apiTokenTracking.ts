@@ -1,8 +1,8 @@
 import type { Tracking } from 'utils/trackingEvents';
 
-export const apiTokenCreatedTracking: Tracking = {
+export const createApiTokenTracking: Tracking = {
     event: 'api-tokens',
-    type: 'api-token-created',
+    type: 'create-api-token',
 };
 
 const projectScope = (projects: string[] = []) => {
@@ -19,17 +19,17 @@ export const apiTokenCreationProps = (newToken: {
     projectScope: projectScope(newToken.projects),
 });
 
-export const apiTokenCopiedTracking = (
+export const copyApiTokenTracking = (
     token: { type: string },
     method: 'confirm-dialog' | 'token-list',
 ): Tracking => ({
     event: 'api-tokens',
-    type: 'api-token-copied',
+    type: 'copy-api-token',
     props: { tokenType: token.type.toLowerCase(), method },
 });
 
-export const apiTokenDeletedTracking = (token: { type: string }): Tracking => ({
+export const deleteApiTokenTracking = (token: { type: string }): Tracking => ({
     event: 'api-tokens',
-    type: 'api-token-deleted',
+    type: 'delete-api-token',
     props: { tokenType: token.type.toLowerCase() },
 });

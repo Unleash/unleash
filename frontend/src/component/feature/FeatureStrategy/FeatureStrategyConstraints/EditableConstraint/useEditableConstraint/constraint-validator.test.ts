@@ -111,6 +111,28 @@ describe('constraintValidator', () => {
         });
     });
 
+    describe('CIDR operator', () => {
+        const validate = constraintValidator('IN_CIDR');
+
+        test('accepts IP addresses and CIDR ranges', () => {
+            expect(
+                validate('192.168.1.1', '10.0.0.0/8', '::1', '2001:db8::/32'),
+            ).toEqual([true, '']);
+        });
+
+        test('rejects values that are not IP addresses or CIDR ranges', () => {
+            expect(validate('not an ip')).toEqual([
+                false,
+                'Value must be IP address or CIDR range.',
+            ]);
+        });
+
+        test('rejects a batch where any value is invalid', () => {
+            const [valid] = validate('192.168.1.1', 'not an ip');
+            expect(valid).toBe(false);
+        });
+    });
+
     describe('string list operator (default)', () => {
         const validate = constraintValidator('IN');
 

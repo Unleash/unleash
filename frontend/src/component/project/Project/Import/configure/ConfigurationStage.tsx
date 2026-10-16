@@ -63,7 +63,7 @@ export const ImportArea: FC<{
     activeTab: ImportMode;
     setActiveTab: (mode: ImportMode) => void;
     importPayload: string;
-    setImportPayload: (payload: string) => void;
+    setImportPayload: (payload: string, source: ImportMode) => void;
 }> = ({ activeTab, setActiveTab, importPayload, setImportPayload }) => {
     const [dragActive, setDragActive] = useState(false);
     const { setToastData } = useToast();
@@ -74,7 +74,7 @@ export const ImportArea: FC<{
             show={
                 <StyledFileDropZone
                     onSuccess={(data) => {
-                        setImportPayload(data);
+                        setImportPayload(data, 'file');
                         setActiveTab('code');
                         setToastData({
                             type: 'success',
@@ -82,7 +82,7 @@ export const ImportArea: FC<{
                         });
                     }}
                     onError={(error) => {
-                        setImportPayload('');
+                        setImportPayload('', 'file');
                         setToastData({
                             type: 'error',
                             text: error,
@@ -112,7 +112,9 @@ export const ImportArea: FC<{
                 <Input
                     label='Exported feature flags'
                     fullWidth
-                    onChange={(event) => setImportPayload(event.target.value)}
+                    onChange={(event) =>
+                        setImportPayload(event.target.value, 'code')
+                    }
                     value={importPayload}
                     data-testid={CODE_TEXT_FIELD}
                     multiline

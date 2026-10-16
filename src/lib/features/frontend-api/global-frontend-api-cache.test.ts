@@ -5,16 +5,18 @@ import {
 import noLogger from '../../../test/fixtures/no-logger.js';
 import { FakeSegmentReadModel } from '../segment/fake-segment-read-model.js';
 import FakeClientFeatureToggleReadModel from './fake-client-feature-toggle-read-model.js';
-import EventEmitter from 'events';
+import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
 import type {
     IApiUser,
     IFeatureToggleClient,
     IFlagResolver,
     ISegment,
 } from '../../types/index.js';
-import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service.js';
+import ConfigurationRevisionService, {
+    UPDATE_REVISION,
+} from '../feature-toggle/configuration-revision-service.js';
 
-import { vi } from 'vitest';
+import { onTestFinished, vi } from 'vitest';
 
 const state = async (
     cache: GlobalFrontendApiCache,
@@ -40,9 +42,9 @@ const defaultFeature: IFeatureToggleClient = {
 };
 const defaultSegment = { name: 'segment', id: 1 } as ISegment;
 
-const alwaysOnFlagResolver = {
+const alwaysOffFlagResolver = {
     isEnabled() {
-        return true;
+        return false;
     },
 } as unknown as IFlagResolver;
 
@@ -52,14 +54,19 @@ const createCache = (
 ) => {
     const config = {
         getLogger: noLogger,
-        flagResolver: alwaysOnFlagResolver,
+        flagResolver: alwaysOffFlagResolver,
         eventBus: <any>{ emit: vi.fn() },
     };
     const segmentReadModel = new FakeSegmentReadModel([segment as ISegment]);
     const clientFeatureToggleReadModel = new FakeClientFeatureToggleReadModel(
         features,
     );
-    const configurationRevisionService = new EventEmitter();
+    const configurationRevisionService =
+        ConfigurationRevisionService.getInstance(
+            { eventStore: new FakeEventStore() },
+            config,
+        );
+    onTestFinished(() => configurationRevisionService.destroy());
     const cache = new GlobalFrontendApiCache(
         config,
         segmentReadModel,

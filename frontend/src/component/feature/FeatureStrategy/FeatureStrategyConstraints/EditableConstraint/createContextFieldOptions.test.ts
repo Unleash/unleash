@@ -30,15 +30,15 @@ it('groups options by project and global', () => {
         {
             groupHeader: 'Project context fields',
             options: [
-                { key: 'c', label: 'c' },
-                { key: 'd', label: 'd' },
+                { value: 'c', label: 'c' },
+                { value: 'd', label: 'd' },
             ],
         },
         {
             groupHeader: 'Global context fields',
             options: [
-                { key: 'a', label: 'a' },
-                { key: 'b', label: 'b' },
+                { value: 'a', label: 'a' },
+                { value: 'b', label: 'b' },
             ],
         },
     ]);
@@ -61,7 +61,7 @@ it('does not include empty groups', () => {
     expect(onlyGlobalOptions).toEqual([
         {
             groupHeader: 'Global context fields',
-            options: [{ key: 'a', label: 'a' }],
+            options: [{ value: 'a', label: 'a' }],
         },
     ]);
 
@@ -73,7 +73,7 @@ it('does not include empty groups', () => {
     expect(onlyProjectOptions).toEqual([
         {
             groupHeader: 'Project context fields',
-            options: [{ key: 'a', label: 'a' }],
+            options: [{ value: 'a', label: 'a' }],
         },
     ]);
 });
@@ -94,11 +94,11 @@ it('puts deleted context fields in its own group', () => {
     expect(options).toEqual([
         {
             groupHeader: 'Global context fields',
-            options: [{ key: 'b', label: 'b' }],
+            options: [{ value: 'b', label: 'b' }],
         },
         {
             groupHeader: 'Deleted context fields',
-            options: [{ key: 'a', label: 'a' }],
+            options: [{ value: 'a', label: 'a' }],
         },
     ]);
 });

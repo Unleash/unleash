@@ -4,6 +4,7 @@ import {
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper.js';
 import getLogger from '../../../fixtures/no-logger.js';
+import Addon from '../../../../lib/addons/addon.js';
 const MASKED_VALUE = '*****';
 
 let app: IUnleashTest;
@@ -236,8 +237,256 @@ test('updating an addon returns the new addon configuration', async () => {
         .put(`/api/admin/addons/${body.id}`)
         .send(updatedConfig)
         .expect((res) => {
-            expect(res.body).toMatchObject(updatedConfig);
+            expect(res.body).toMatchObject({
+                ...updatedConfig,
+                parameters: { url: MASKED_VALUE },
+            });
         });
+});
+
+describe('array and objectarray parameters', () => {
+    class ArrayAddon extends Addon {
+        async handleEvent(): Promise<void> {}
+    }
+
+    const param = (name: string, type: string) => ({
+        name,
+        displayName: name,
+        type,
+        required: false,
+        sensitive: false,
+    });
+
+    beforeAll(() => {
+        app.services.addonService.registerProvider(
+            new ArrayAddon(
+                {
+                    name: 'array-addon',
+                    displayName: 'ARRAY addon',
+                    description: '',
+                    documentationUrl: 'https://www.example.com',
+                    parameters: [
+                        param('text', 'text'),
+                        param('arritems', 'array'),
+                        param('objarritems', 'objectarray'),
+                    ],
+                },
+                {
+                    ...app.config,
+                    unleashUrl: app.config.server.unleashUrl,
+                    integrationEventsService:
+                        app.services.integrationEventsService,
+                },
+            ),
+        );
+    });
+
+    afterAll(() => {
+        delete app.services.addonService.addonProviders['array-addon']; // Prevent this addon from being present in other tests
+    });
+
+    const config = (parameters: object) => ({
+        provider: 'array-addon',
+        enabled: true,
+        parameters,
+        events: ['feature-created'],
+    });
+
+    test('a complex object array is stored and returned as is', async () => {
+        const objarritems = [
+            { thing: 'one thing', project: 'project1' },
+            { thing: 'other thing', project: 'project2' },
+        ];
+
+        const { body } = await app.request
+            .post('/api/admin/addons')
+            .send(config({ objarritems }))
+            .expect(201);
+
+        await app.request
+            .get(`/api/admin/addons/${body.id}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.parameters.objarritems).toStrictEqual(
+                    objarritems,
+                );
+            });
+    });
+
+    test('a string array is stored and returned as is', async () => {
+        const arritems = ['thing1', 'thing2'];
+
+        const { body } = await app.request
+            .post('/api/admin/addons')
+            .send(config({ arritems }))
+            .expect(201);
+
+        await app.request
+            .get(`/api/admin/addons/${body.id}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.parameters.arritems).toStrictEqual(arritems);
+            });
+    });
+});
+
+describe('key-value pair parameters', () => {
+    class KvpAddon extends Addon {
+        async handleEvent(): Promise<void> {}
+    }
+
+    const param = (name: string, type: string) => ({
+        name,
+        displayName: name,
+        type,
+        required: false,
+        sensitive: false,
+    });
+
+    beforeAll(() => {
+        app.services.addonService.registerProvider(
+            new KvpAddon(
+                {
+                    name: 'kvp-addon',
+                    displayName: 'KVP addon',
+                    description: '',
+                    documentationUrl: 'https://www.example.com',
+                    parameters: [
+                        param('text', 'text'),
+                        param('kvps', 'keyvaluepairs'),
+                    ],
+                },
+                {
+                    ...app.config,
+                    unleashUrl: app.config.server.unleashUrl,
+                    integrationEventsService:
+                        app.services.integrationEventsService,
+                },
+            ),
+        );
+    });
+
+    afterAll(() => {
+        delete app.services.addonService.addonProviders['kvp-addon']; // Prevent this addon from being present in other tests
+    });
+
+    const config = (parameters: object) => ({
+        provider: 'kvp-addon',
+        enabled: true,
+        parameters,
+        events: ['feature-created'],
+    });
+
+    test('an object of string values is stored and returned as is', async () => {
+        const kvps = { assignment_group: 'platform', category: '' };
+
+        const { body } = await app.request
+            .post('/api/admin/addons')
+            .send(config({ kvps }))
+            .expect(201);
+
+        await app.request
+            .get(`/api/admin/addons/${body.id}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.parameters.kvps).toStrictEqual(kvps);
+            });
+    });
+
+    test('an object of key-value pairs can be updated', async () => {
+        const { body } = await app.request
+            .post('/api/admin/addons')
+            .send(config({ kvps: { a: 'b' } }))
+            .expect(201);
+
+        await app.request
+            .put(`/api/admin/addons/${body.id}`)
+            .send(config({ kvps: { c: 'd' } }))
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.parameters.kvps).toStrictEqual({ c: 'd' });
+            });
+    });
+
+    test.each([
+        ['nested objects', { a: { b: 'c' } }],
+        ['numbers', { a: 1 }],
+        ['arrays', { a: ['b'] }],
+        ['null object', null],
+        ['null values', { a: null }],
+    ])('rejects key-value pairs containing %s', async (_, kvps) => {
+        await app.request
+            .post('/api/admin/addons')
+            .send(config({ kvps }))
+            .expect(400);
+    });
+
+    test('trims whitespace around keys', async () => {
+        const { body } = await app.request
+            .post('/api/admin/addons')
+            .send(config({ kvps: { ' a  ': ' b ' } }))
+            .expect(201);
+
+        expect(body.parameters.kvps).toStrictEqual({ a: ' b ' });
+    });
+
+    test('does not store empty or whitespace-only keys', async () => {
+        const { body } = await app.request
+            .post('/api/admin/addons')
+            .send(config({ kvps: { '  ': 'a', b: 'c', '': 'd' } }))
+            .expect(201);
+
+        expect(body.parameters.kvps).toStrictEqual({ b: 'c' });
+    });
+
+    test('stores an empty object as is', async () => {
+        const { body } = await app.request
+            .post('/api/admin/addons')
+            .send(config({ kvps: {} }))
+            .expect(201);
+
+        expect(body.parameters.kvps).toStrictEqual({});
+    });
+
+    test('rejects keys that collide once trimmed', async () => {
+        await app.request
+            .post('/api/admin/addons')
+            .send(config({ kvps: { a: 'b', ' a ': 'c' } }))
+            .expect(400);
+    });
+
+    test('rejects key-value pairs for parameters of other types', async () => {
+        await app.request
+            .post('/api/admin/addons')
+            .send(config({ text: { a: 'b' } }))
+            .expect(400);
+    });
+
+    test('rejects key-value pairs for parameters of other types on update', async () => {
+        const { body } = await app.request
+            .post('/api/admin/addons')
+            .send(config({ text: 'a' }))
+            .expect(201);
+
+        await app.request
+            .put(`/api/admin/addons/${body.id}`)
+            .send(config({ text: { a: 'b' } }))
+            .expect(400);
+    });
+
+    test('rejects key-value pairs for parameters the provider does not define', async () => {
+        await app.request
+            .post('/api/admin/addons')
+            .send(config({ undefinedParam: { a: 'b' } }))
+            .expect(400);
+    });
+
+    test('rejects non-object values for key-value pair parameters', async () => {
+        await app.request
+            .post('/api/admin/addons')
+            .send(config({ kvps: 'a=b' }))
+            .expect(400);
+    });
 });
 
 describe('missing descriptions', () => {

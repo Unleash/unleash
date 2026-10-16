@@ -12,7 +12,15 @@ import produce from 'immer';
 import { trim } from 'component/common/util';
 import type { AddonSchema, AddonTypeSchema } from 'openapi';
 import { IntegrationParameters } from './IntegrationParameters/IntegrationParameters.tsx';
+import {
+    kvpsToEditableForm,
+    kvpsToStorageForm,
+    getKvpsForParam,
+    isKvpParam,
+    validateKeys,
+} from './IntegrationParameters/IntegrationParameter/KvpParameterUtils.ts';
 import { IntegrationInstall } from './IntegrationInstall/IntegrationInstall.tsx';
+import { IntegrationServerInstall } from './IntegrationServerInstall/IntegrationServerInstall.tsx';
 import cloneDeep from 'lodash.clonedeep';
 import { useNavigate } from 'react-router';
 import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
@@ -28,8 +36,12 @@ import {
     CREATE_ADDON,
     UPDATE_ADDON,
 } from '../../providers/AccessProvider/permissions.ts';
+import { UPDATE_PROJECT_ADDON } from '@server/types/permissions.ts';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
-import { formatIntegrationListPath } from '../integrationPaths.ts';
+import {
+    formatIntegrationApiPath,
+    formatIntegrationListPath,
+} from '../integrationPaths.ts';
 import {
     StyledForm,
     StyledAlerts,
@@ -37,8 +49,6 @@ import {
     StyledContainer,
     StyledButtonContainer,
     StyledButtonSection,
-    StyledTitle,
-    StyledHelpText,
     StyledRaisedSection,
 } from './IntegrationForm.styles';
 import { GO_BACK } from 'constants/navigate';
@@ -56,12 +66,12 @@ const StyledHeader = styled('div')(({ theme }) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    marginBottom: theme.fontSizes.mainHeader,
+    marginBottom: theme.spacing(2.5),
 }));
 
-const StyledHeaderTitle = styled('h1')({
-    fontWeight: 'normal',
-});
+const StyledHeaderTitle = styled('h1')(({ theme }) => ({
+    ...theme.typography.h1,
+}));
 
 type IntegrationFormProps = {
     provider?: AddonTypeSchema;
@@ -71,6 +81,34 @@ type IntegrationFormProps = {
     deprecated?: boolean;
     modal?: boolean;
 };
+
+const eventsFor = (
+    provider: AddonTypeSchema | undefined,
+    stored: string[],
+): string[] => (provider?.fixedEvents ? (provider.events ?? []) : stored);
+
+const environmentsFor = (
+    provider: AddonTypeSchema | undefined,
+    stored?: string[],
+): string[] | undefined => (provider?.environmentIndependent ? [] : stored);
+
+const toFormValues =
+    (provider?: AddonTypeSchema) =>
+    <T extends Pick<AddonSchema, 'parameters' | 'events' | 'environments'>>(
+        values: T,
+    ): T => ({
+        ...values,
+        events: eventsFor(provider, values.events),
+        environments: environmentsFor(provider, values.environments),
+        parameters: kvpsToEditableForm(provider?.parameters)(values.parameters),
+    });
+
+const toApiValues =
+    (providerParams: AddonTypeSchema['parameters']) =>
+    <T extends Pick<AddonSchema, 'parameters'>>(values: T): T => ({
+        ...values,
+        parameters: kvpsToStorageForm(providerParams)(values.parameters),
+    });
 
 export const IntegrationForm: FC<IntegrationFormProps> = ({
     editMode,
@@ -101,7 +139,11 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
         }))
         .sort((a, b) => a.label.localeCompare(b.label));
     const { uiConfig } = useUiConfig();
-    const [formValues, setFormValues] = useState(initialValues);
+    const [formValues, setFormValues] = useState(() =>
+        toFormValues(provider)(initialValues),
+    );
+    const fixedEvents = Boolean(provider?.fixedEvents);
+    const environmentIndependent = Boolean(provider?.environmentIndependent);
     const [errors, setErrors] = useState<{
         containsErrors: boolean;
         parameters: Record<string, string>;
@@ -117,8 +159,12 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
     const [eventsModalOpen, setEventsModalOpen] = useState(false);
     const { isAdmin } = useContext(AccessContext);
 
+    const selectedProjects = projectId
+        ? [projectId]
+        : (formValues.projects ?? []);
+
     const submitText = editMode ? 'Update' : 'Create';
-    const url = `${uiConfig.unleashUrl}/api/admin/addons${
+    const url = `${uiConfig.unleashUrl}/${formatIntegrationApiPath(projectId)}${
         editMode ? `/${(formValues as AddonSchema).id}` : ``
     }`;
 
@@ -126,23 +172,28 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
         return `curl --location --request ${editMode ? 'PUT' : 'POST'} '${url}' \\
         --header 'Authorization: INSERT_API_KEY' \\
         --header 'Content-Type: application/json' \\
-        --data-raw '${JSON.stringify(formValues, undefined, 2)}'`;
+        --data-raw '${JSON.stringify(toApiValues(provider?.parameters)(formValues), undefined, 2)}'`;
     };
 
     useEffect(() => {
         if (!provider) {
             fetch();
         }
-    }, [fetch, provider]); // empty array => fetch only first time
+    }, [fetch, provider]);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: addon is a new object every render; reset only when a different addon loads
     useEffect(() => {
-        setFormValues({ ...initialValues });
-        /* eslint-disable-next-line */
+        setFormValues(toFormValues(provider)(initialValues));
     }, [initialValues.description, initialValues.provider]);
 
     useEffect(() => {
         if (provider && !formValues.provider) {
-            setFormValues({ ...initialValues, provider: provider.name });
+            setFormValues(
+                toFormValues(provider)({
+                    ...initialValues,
+                    provider: provider.name,
+                }),
+            );
         }
     }, [provider, initialValues, formValues.provider]);
 
@@ -176,6 +227,18 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                 }),
             );
         };
+
+    const setStructuredParameter = (param: string) => (value: unknown) => {
+        setFormValues(
+            produce((draft) => {
+                if (value === undefined) {
+                    delete draft.parameters[param];
+                } else {
+                    draft.parameters[param] = value;
+                }
+            }),
+        );
+    };
 
     const setEventValues = (events: string[]) => {
         setFormValues(
@@ -232,12 +295,26 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
         }
 
         provider.parameters?.forEach((parameterConfig) => {
+            const setError = (message: string) => {
+                updatedErrors.parameters[parameterConfig.name] = message;
+                updatedErrors.containsErrors = true;
+            };
+
+            if (isKvpParam(parameterConfig)) {
+                const kvps = getKvpsForParam(
+                    formValues.parameters,
+                    parameterConfig.name,
+                );
+                if (validateKeys(kvps).some(Boolean)) {
+                    setError('Some key-value pairs are invalid.');
+                }
+                return;
+            }
+
             let value = formValues.parameters[parameterConfig.name];
             value = typeof value === 'string' ? trim(value) : value;
             if (parameterConfig.required && !value) {
-                updatedErrors.parameters[parameterConfig.name] =
-                    'This field is required';
-                updatedErrors.containsErrors = true;
+                setError('This field is required');
             }
         });
 
@@ -248,9 +325,18 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
 
         try {
             if (editMode) {
-                await updateAddon(formValues as AddonSchema);
+                await updateAddon(
+                    toApiValues(provider?.parameters)(
+                        formValues,
+                    ) as AddonSchema,
+                );
             } else {
-                await createAddon(formValues as Omit<AddonSchema, 'id'>);
+                await createAddon(
+                    toApiValues(provider?.parameters)(formValues) as Omit<
+                        AddonSchema,
+                        'id'
+                    >,
+                );
             }
 
             fetch();
@@ -277,6 +363,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
         description,
         documentationUrl = 'https://docs.getunleash.io/integrate',
         installation,
+        serverInstallation,
         alerts,
     } = provider ? provider : ({} as Partial<AddonTypeSchema>);
 
@@ -296,7 +383,12 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                             type='submit'
                             color='primary'
                             variant='contained'
-                            permission={editMode ? UPDATE_ADDON : CREATE_ADDON}
+                            permission={
+                                editMode
+                                    ? [UPDATE_ADDON, UPDATE_PROJECT_ADDON]
+                                    : [CREATE_ADDON, UPDATE_PROJECT_ADDON]
+                            }
+                            projectId={projectId}
                             onClick={onSubmit}
                             disabled={deprecated}
                         >
@@ -365,20 +457,28 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                                 />
                             )}
                         />
+                        {serverInstallation ? (
+                            <IntegrationServerInstall
+                                path={serverInstallation.path}
+                                title={serverInstallation.title}
+                                helpText={serverInstallation.helpText}
+                                parameters={formValues.parameters}
+                                definitions={provider?.parameters}
+                                projectId={projectId}
+                            />
+                        ) : null}
                         <IntegrationParameters
                             provider={provider}
                             config={formValues as AddonSchema}
                             parametersErrors={errors.parameters}
                             editMode={editMode}
                             setParameterValue={setParameterValue}
+                            setStructuredParameter={setStructuredParameter}
+                            projects={selectedProjects}
                         />
                     </StyledRaisedSection>
                     <FormGroup title='Configuration'>
                         <div>
-                            <StyledTitle>Description</StyledTitle>
-                            <StyledHelpText>
-                                What is your integration description?
-                            </StyledHelpText>
                             <StyledInput
                                 size='large'
                                 minRows={1}
@@ -393,17 +493,22 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                             />
                         </div>
 
-                        <div>
-                            <IntegrationMultiSelector
-                                options={selectableEvents || []}
-                                selectedItems={formValues.events}
-                                onChange={setEventValues}
-                                entityName='event'
-                                error={errors.events}
-                                description='Select which events you want your integration to be notified about.'
-                                required
-                            />
-                        </div>
+                        <ConditionallyRender
+                            condition={!fixedEvents}
+                            show={
+                                <div>
+                                    <IntegrationMultiSelector
+                                        options={selectableEvents || []}
+                                        selectedItems={formValues.events}
+                                        onChange={setEventValues}
+                                        entityName='event'
+                                        error={errors.events}
+                                        description='Select which events you want your integration to be notified about.'
+                                        required
+                                    />
+                                </div>
+                            }
+                        />
                         <ConditionallyRender
                             condition={!projectId}
                             show={
@@ -421,16 +526,23 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                                 </div>
                             }
                         />
-                        <div>
-                            <IntegrationMultiSelector
-                                options={selectableEnvironments}
-                                selectedItems={formValues.environments || []}
-                                onChange={setEnvironments}
-                                entityName='environment'
-                                description='Selecting environment(s) will filter events, so that your integration only receives events related to those specific environments. Global events that are not specific to an environment will still be received.'
-                                note='If no environments are selected, the integration will receive events from all environments.'
-                            />
-                        </div>
+                        <ConditionallyRender
+                            condition={!environmentIndependent}
+                            show={
+                                <div>
+                                    <IntegrationMultiSelector
+                                        options={selectableEnvironments}
+                                        selectedItems={
+                                            formValues.environments || []
+                                        }
+                                        onChange={setEnvironments}
+                                        entityName='environment'
+                                        description='Selecting environment(s) will filter events, so that your integration only receives events related to those specific environments. Global events that are not specific to an environment will still be received.'
+                                        note='If no environments are selected, the integration will receive events from all environments.'
+                                    />
+                                </div>
+                            }
+                        />
                     </FormGroup>
                     <ConditionallyRender
                         condition={editMode}

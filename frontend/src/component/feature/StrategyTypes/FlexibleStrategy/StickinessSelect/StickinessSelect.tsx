@@ -5,7 +5,6 @@ import {
     Select,
     type SelectChangeEvent,
     FormControl,
-    InputLabel,
 } from '@mui/material';
 import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { SELECT_ITEM_ID } from 'utils/testIds';
@@ -64,7 +63,6 @@ const StyledFormControl = styled(FormControl)(({ theme }) => ({
 }));
 
 type StickinessSelectControlProps = {
-    label?: ReactNode;
     id?: string;
     value: string | undefined;
     onChange: (event: SelectChangeEvent<string>) => void;
@@ -72,7 +70,6 @@ type StickinessSelectControlProps = {
 };
 
 const StickinessSelectControl = ({
-    label,
     id: injectedId,
     value,
     onChange,
@@ -99,18 +96,11 @@ const StickinessSelectControl = ({
 
     return (
         <StyledFormControl variant='outlined' size='large'>
-            {/* TODO: remove floating-label branch when cleaning up 'topLabelInputs' flag */}
-            {label ? (
-                <InputLabel id={labelId} htmlFor={id}>
-                    {label}
-                </InputLabel>
-            ) : null}
             <Select
                 {...props}
                 id={id}
                 labelId={labelId}
                 name='stickiness'
-                label={label ?? undefined}
                 value={value || ''}
                 data-testid={dataTestId}
                 onChange={onChange}

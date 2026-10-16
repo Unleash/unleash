@@ -1,233 +1,11 @@
-import {
-    type ClientInitOptions,
-    mapFeaturesForClient,
-    mapSegmentsForClient,
-    offlineUnleashClient,
-} from './offline-unleash-client.js';
-import {
-    Unleash as UnleashClientNode,
-    InMemStorageProvider as InMemStorageProviderNode,
-} from 'unleash-client';
-import { once } from 'events';
+import { offlineUnleashClient } from './offline-unleash-client.js';
 import { playgroundStrategyEvaluation } from '../../openapi/spec/playground-strategy-schema.js';
-import { DEFAULT_ENV } from '../../server-impl.js';
-
-export const offlineUnleashClientNode = async ({
-    features,
-    context,
-    logError,
-    segments,
-}: ClientInitOptions): Promise<UnleashClientNode> => {
-    const client = new UnleashClientNode({
-        ...context,
-        appName: context.appName,
-        disableMetrics: true,
-        refreshInterval: 0,
-        skipInstanceCountWarning: true,
-        url: 'not-needed',
-        storageProvider: new InMemStorageProviderNode(),
-        bootstrap: {
-            data: mapFeaturesForClient(features),
-            segments: mapSegmentsForClient(segments || []),
-        },
-    });
-
-    client.on('error', logError);
-    client.start();
-
-    await once(client, 'ready');
-
-    return client;
-};
 
 describe('offline client', () => {
-    it('considers enabled variants with a default strategy to be on', async () => {
-        const name = 'toggle-name';
-        const client = await offlineUnleashClient({
-            features: [
-                {
-                    name,
-                    project: 'default',
-                    enabled: true,
-                    strategies: [{ name: 'default' }],
-                    variants: [],
-                    type: '',
-                    stale: false,
-                },
-            ],
-            context: { appName: 'other-app', environment: DEFAULT_ENV },
-            logError: console.log,
-        });
-
-        expect(client.isEnabled(name).result).toBeTruthy();
-    });
-
-    it('constrains on appName', async () => {
-        const enabledFeature = 'toggle-name';
-        const disabledFeature = 'other-toggle';
-        const appName = 'app-name';
-        const client = await offlineUnleashClient({
-            features: [
-                {
-                    name: enabledFeature,
-                    enabled: true,
-                    project: 'default',
-                    strategies: [
-                        {
-                            name: 'default',
-                            constraints: [
-                                {
-                                    contextName: 'appName',
-                                    operator: 'IN',
-                                    values: [appName],
-                                },
-                            ],
-                        },
-                    ],
-                    variants: [],
-                    type: '',
-                    stale: false,
-                },
-                {
-                    name: disabledFeature,
-                    enabled: true,
-                    project: 'default',
-                    strategies: [
-                        {
-                            name: 'default',
-                            constraints: [
-                                {
-                                    contextName: 'appName',
-                                    operator: 'IN',
-                                    values: ['otherApp'],
-                                },
-                            ],
-                        },
-                    ],
-                    variants: [],
-                    type: '',
-                    stale: false,
-                },
-            ],
-            context: { appName, environment: DEFAULT_ENV },
-            logError: console.log,
-        });
-
-        expect(client.isEnabled(enabledFeature).result).toBeTruthy();
-        expect(client.isEnabled(disabledFeature).result).toBeFalsy();
-    });
-
-    it('regex constrains on appName', async () => {
-        const enabledFeature = 'toggle-name';
-        const notMatchingRegexFeature = 'not-matching-regex-toggle';
-        const matchIgnoreCaseFeature = 'match-ignore-case-toggle';
-        const invertedRegexFeature = 'inverted-regex-toggle';
-        const appName = 'test';
-        const client = await offlineUnleashClient({
-            features: [
-                {
-                    name: enabledFeature,
-                    enabled: true,
-                    project: 'default',
-                    strategies: [
-                        {
-                            name: 'default',
-                            constraints: [
-                                {
-                                    contextName: 'appName',
-                                    operator: 'REGEX',
-                                    value: 'test',
-                                    inverted: false,
-                                    caseInsensitive: false,
-                                },
-                            ],
-                        },
-                    ],
-                    variants: [],
-                    type: '',
-                    stale: false,
-                },
-                {
-                    name: notMatchingRegexFeature,
-                    enabled: true,
-                    project: 'default',
-                    strategies: [
-                        {
-                            name: 'default',
-                            constraints: [
-                                {
-                                    contextName: 'appName',
-                                    operator: 'REGEX',
-                                    value: 'match-some-other-app-name',
-                                    inverted: false,
-                                    caseInsensitive: false,
-                                },
-                            ],
-                        },
-                    ],
-                    variants: [],
-                    type: '',
-                    stale: false,
-                },
-                {
-                    name: matchIgnoreCaseFeature,
-                    enabled: true,
-                    project: 'default',
-                    strategies: [
-                        {
-                            name: 'default',
-                            constraints: [
-                                {
-                                    contextName: 'appName',
-                                    operator: 'REGEX',
-                                    value: 'TEST',
-                                    inverted: false,
-                                    caseInsensitive: true,
-                                },
-                            ],
-                        },
-                    ],
-                    variants: [],
-                    type: '',
-                    stale: false,
-                },
-                {
-                    name: invertedRegexFeature,
-                    enabled: true,
-                    project: 'default',
-                    strategies: [
-                        {
-                            name: 'default',
-                            constraints: [
-                                {
-                                    contextName: 'appName',
-                                    operator: 'REGEX',
-                                    value: 'TEST',
-                                    inverted: true,
-                                    caseInsensitive: true,
-                                },
-                            ],
-                        },
-                    ],
-                    variants: [],
-                    type: '',
-                    stale: false,
-                },
-            ],
-            context: { appName, environment: DEFAULT_ENV },
-            logError: console.log,
-        });
-
-        expect(client.isEnabled(enabledFeature).result).toBeTruthy();
-        expect(client.isEnabled(notMatchingRegexFeature).result).toBeFalsy();
-        expect(client.isEnabled(matchIgnoreCaseFeature).result).toBeTruthy();
-        expect(client.isEnabled(invertedRegexFeature).result).toBeFalsy();
-    });
-
     it('considers disabled features with a default strategy to be enabled', async () => {
         const name = 'toggle-name';
         const context = { appName: 'client-test' };
-        const client = await offlineUnleashClient({
+        const client = offlineUnleashClient({
             features: [
                 {
                     strategies: [
@@ -244,7 +22,6 @@ describe('offline client', () => {
                 },
             ],
             context,
-            logError: console.log,
         });
 
         const result = client.isEnabled(name, context);
@@ -252,188 +29,11 @@ describe('offline client', () => {
         expect(result.result).toBe(true);
     });
 
-    it('considers disabled variants with a default strategy and variants to be on', async () => {
-        const name = 'toggle-name';
-        const client = await offlineUnleashClient({
-            features: [
-                {
-                    strategies: [
-                        {
-                            name: 'default',
-                        },
-                    ],
-                    project: 'default',
-                    stale: false,
-                    enabled: false,
-                    name,
-                    type: 'experiment',
-                    variants: [
-                        {
-                            name: 'a',
-                            weight: 500,
-                            weightType: 'variable',
-                            stickiness: 'default',
-                            overrides: [],
-                        },
-                        {
-                            name: 'b',
-                            weight: 500,
-                            weightType: 'variable',
-                            stickiness: 'default',
-                            overrides: [],
-                        },
-                    ],
-                },
-            ],
-            context: { appName: 'client-test' },
-            logError: console.log,
-        });
-
-        expect(client.isEnabled(name).result).toBe(true);
-    });
-
-    it("returns variant {name: 'disabled', enabled: false } if the toggle isn't enabled", async () => {
-        const name = 'toggle-name';
-        const client = await offlineUnleashClient({
-            features: [
-                {
-                    strategies: [],
-                    stale: false,
-                    enabled: false,
-                    name,
-                    project: 'default',
-                    type: 'experiment',
-                    variants: [
-                        {
-                            name: 'a',
-                            weight: 500,
-                            weightType: 'variable',
-                            stickiness: 'default',
-                            overrides: [],
-                        },
-                        {
-                            name: 'b',
-                            weight: 500,
-                            weightType: 'variable',
-                            stickiness: 'default',
-                            overrides: [],
-                        },
-                    ],
-                },
-            ],
-            context: { appName: 'client-test' },
-            logError: console.log,
-        });
-
-        expect(client.isEnabled(name).result).toBeFalsy();
-        expect(client.getVariant(name).name).toEqual('disabled');
-        expect(client.getVariant(name).enabled).toBeFalsy();
-    });
-
-    it('returns the disabled variant if there are no variants', async () => {
-        const name = 'toggle-name';
-        const client = await offlineUnleashClient({
-            features: [
-                {
-                    strategies: [
-                        {
-                            name: 'default',
-                            constraints: [],
-                        },
-                    ],
-                    project: 'default',
-                    stale: false,
-                    enabled: true,
-                    name,
-                    type: 'experiment',
-                    variants: [],
-                },
-            ],
-            context: { appName: 'client-test' },
-            logError: console.log,
-        });
-
-        expect(client.getVariant(name, {}).name).toEqual('disabled');
-        expect(client.getVariant(name, {}).enabled).toBeFalsy();
-        expect(client.isEnabled(name, {}).result).toBeTruthy();
-    });
-
-    it('returns strategy variant over feature variant', async () => {
-        const name = 'toggle-name';
-        const client = await offlineUnleashClient({
-            features: [
-                {
-                    strategies: [
-                        {
-                            name: 'default',
-                            constraints: [
-                                {
-                                    values: ['my-app-name'],
-                                    inverted: false,
-                                    operator: 'IN' as const,
-                                    contextName: 'appName',
-                                    caseInsensitive: false,
-                                },
-                            ],
-                            variants: [
-                                {
-                                    name: 'ignoreNonMatchingStrategyVariant',
-                                    weightType: 'variable',
-                                    weight: 1000,
-                                    stickiness: 'default',
-                                },
-                            ],
-                        },
-                        {
-                            name: 'default',
-                            constraints: [
-                                {
-                                    values: ['client-test'],
-                                    inverted: false,
-                                    operator: 'IN' as const,
-                                    contextName: 'appName',
-                                    caseInsensitive: false,
-                                },
-                            ],
-                            variants: [
-                                {
-                                    name: 'strategyVariant',
-                                    weightType: 'variable',
-                                    weight: 1000,
-                                    stickiness: 'default',
-                                },
-                            ],
-                        },
-                    ],
-                    project: 'default',
-                    stale: false,
-                    enabled: true,
-                    name,
-                    type: 'experiment',
-                    variants: [
-                        {
-                            name: 'ignoreFeatureStrategyVariant',
-                            weightType: 'variable',
-                            weight: 1000,
-                            stickiness: 'default',
-                        },
-                    ],
-                },
-            ],
-            context: { appName: 'client-test' },
-            logError: console.log,
-        });
-
-        expect(client.getVariant(name, {}).name).toEqual('strategyVariant');
-        expect(client.getVariant(name, {}).enabled).toBeTruthy();
-        expect(client.isEnabled(name, {}).result).toBeTruthy();
-    });
-
     it(`returns '${playgroundStrategyEvaluation.unknownResult}' if it can't evaluate a feature`, async () => {
         const name = 'toggle-name';
         const context = { appName: 'client-test' };
 
-        const client = await offlineUnleashClient({
+        const client = offlineUnleashClient({
             features: [
                 {
                     strategies: [
@@ -451,7 +51,6 @@ describe('offline client', () => {
                 },
             ],
             context,
-            logError: console.log,
         });
 
         const result = client.isEnabled(name, context);
@@ -470,7 +69,7 @@ describe('offline client', () => {
         const name = 'toggle-name';
         const context = { appName: 'client-test' };
 
-        const client = await offlineUnleashClient({
+        const client = offlineUnleashClient({
             features: [
                 {
                     strategies: [
@@ -488,7 +87,6 @@ describe('offline client', () => {
                 },
             ],
             context,
-            logError: console.log,
         });
 
         const result = client.isEnabled(name, context);
@@ -551,7 +149,7 @@ describe('offline client', () => {
 
         const context = { appName: 'client-test' };
 
-        const client = await offlineUnleashClient({
+        const client = offlineUnleashClient({
             features: [
                 {
                     // @ts-expect-error: hostnames is incompatible with index signature | undefined is not assignable to type string
@@ -602,7 +200,6 @@ describe('offline client', () => {
                 },
             ],
             context,
-            logError: console.log,
         });
 
         const evaluatedStrategies = client

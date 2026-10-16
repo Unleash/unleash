@@ -1,67 +1,19 @@
-import { hoursToMilliseconds } from 'date-fns';
-import type {
-    IFeatureToggleStore,
-    IProject,
-    IProjectHealthReport,
-} from '../../types/index.js';
-import type {
-    IFeatureType,
-    IFeatureTypeStore,
-} from '../../types/stores/feature-type-store.js';
+import type { IFeatureToggleStore, IProject } from '../../types/index.js';
+import type { IProjectHealthFeaturesReadModel } from './features-read-model.js';
 
-type IPartialFeatures = Array<{
-    stale?: boolean;
-    createdAt?: Date;
-    type?: string;
-}>;
-
-const getPotentiallyStaleCount = (
-    features: IPartialFeatures,
-    featureTypes: IFeatureType[],
-) => {
-    const today = Date.now();
-
-    return features.filter((feature) => {
-        const diff = feature.createdAt
-            ? today - feature.createdAt.valueOf()
-            : 0;
-        const featureTypeExpectedLifetime = featureTypes.find(
-            (t) => t.id === feature.type,
-        )?.lifetimeDays;
-
-        return (
-            !feature.stale &&
-            featureTypeExpectedLifetime !== null &&
-            featureTypeExpectedLifetime !== undefined &&
-            diff >= featureTypeExpectedLifetime * hoursToMilliseconds(24)
-        );
-    }).length;
-};
-
-export const calculateProjectHealth = (
-    features: IPartialFeatures,
-    featureTypes: IFeatureType[],
-): Pick<
-    IProjectHealthReport,
-    'staleCount' | 'potentiallyStaleCount' | 'activeCount'
-> => ({
-    potentiallyStaleCount: getPotentiallyStaleCount(features, featureTypes),
-    activeCount: features.filter((f) => !f.stale).length,
-    staleCount: features.filter((f) => f.stale).length,
-});
-
-export const calculateHealthRating = (
-    features: IPartialFeatures,
-    featureTypes: IFeatureType[],
-): number => {
-    const { potentiallyStaleCount, activeCount, staleCount } =
-        calculateProjectHealth(features, featureTypes);
-    const toggleCount = activeCount + staleCount;
-
+export const calculateHealthRating = ({
+    totalCount,
+    staleCount,
+    potentiallyStaleCount,
+}: {
+    totalCount: number;
+    staleCount: number;
+    potentiallyStaleCount: number;
+}): number => {
     const startPercentage = 100;
-    const stalePercentage = (staleCount / toggleCount) * 100 || 0;
+    const stalePercentage = (staleCount / totalCount) * 100 || 0;
     const potentiallyStalePercentage =
-        (potentiallyStaleCount / toggleCount) * 100 || 0;
+        (potentiallyStaleCount / totalCount) * 100 || 0;
     const rating = Math.round(
         startPercentage - stalePercentage - potentiallyStalePercentage,
     );
@@ -71,16 +23,21 @@ export const calculateHealthRating = (
 
 export const calculateProjectHealthRating =
     (
-        featureTypeStore: IFeatureTypeStore,
+        featuresReadModel: IProjectHealthFeaturesReadModel,
         featureToggleStore: IFeatureToggleStore,
     ) =>
     async ({ id }: Pick<IProject, 'id'>): Promise<number> => {
-        const featureTypes = await featureTypeStore.getAll();
-
-        const toggles = await featureToggleStore.getAll({
+        const features = await featureToggleStore.getAll({
             project: id,
             archived: false,
         });
 
-        return calculateHealthRating(toggles, featureTypes);
+        const potentiallyStaleCount =
+            await featuresReadModel.getPotentiallyStaleCount(id);
+
+        return calculateHealthRating({
+            totalCount: features.length,
+            staleCount: features.filter((flag) => flag.stale).length,
+            potentiallyStaleCount,
+        });
     };

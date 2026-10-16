@@ -37,8 +37,7 @@ import useProjectOverview, {
 import { UpgradeMoreEnvironments } from './UpgradeMoreEnvironments.tsx';
 import { useTracking } from 'hooks/useTracking';
 import {
-    environmentHiddenTracking,
-    environmentMadeVisibleTracking,
+    toggleEnvironmentVisibilityTracking,
     environmentTrackingProps,
 } from './projectEnvironmentTracking.ts';
 
@@ -71,8 +70,9 @@ const ProjectEnvironmentList = () => {
     const { project, refetch: refetchProject } = useProjectOverview(projectId);
     const { removeEnvironmentFromProject, addEnvironmentToProject } =
         useProjectApi();
-    const trackMadeVisible = useTracking(environmentMadeVisibleTracking);
-    const trackHidden = useTracking(environmentHiddenTracking);
+    const trackToggleEnvironmentVisibility = useTracking(
+        toggleEnvironmentVisibilityTracking,
+    );
 
     // local state
     const [selectedEnvironment, setSelectedEnvironment] =
@@ -129,9 +129,9 @@ const ProjectEnvironmentList = () => {
             });
         } else {
             try {
-                await trackMadeVisible.mutation(
+                await trackToggleEnvironmentVisibility.mutation(
                     () => addEnvironmentToProject(projectId, env.name),
-                    environmentTrackingProps(env),
+                    environmentTrackingProps(env, 'visible'),
                 );
                 refetch();
                 setToastData({
@@ -147,13 +147,13 @@ const ProjectEnvironmentList = () => {
     const onHideConfirm = async () => {
         if (selectedEnvironment) {
             try {
-                await trackHidden.mutation(
+                await trackToggleEnvironmentVisibility.mutation(
                     () =>
                         removeEnvironmentFromProject(
                             projectId,
                             selectedEnvironment.name,
                         ),
-                    environmentTrackingProps(selectedEnvironment),
+                    environmentTrackingProps(selectedEnvironment, 'hidden'),
                 );
                 refetch();
                 setToastData({
@@ -255,6 +255,7 @@ const ProjectEnvironmentList = () => {
 
     const header = (
         <PageHeader
+            variant='h2'
             title={`Environments (${rows.length})`}
             actions={
                 <>
@@ -347,9 +348,10 @@ const ProjectEnvironmentList = () => {
                     tracking={
                         selectedEnvironment
                             ? {
-                                  ...environmentHiddenTracking,
+                                  ...toggleEnvironmentVisibilityTracking,
                                   props: environmentTrackingProps(
                                       selectedEnvironment,
+                                      'hidden',
                                   ),
                               }
                             : undefined

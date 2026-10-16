@@ -27,8 +27,8 @@ import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import { useTracking } from 'hooks/useTracking';
 import {
-    flagClonedTracking,
-    flagNameCopiedTracking,
+    cloneFlagTracking,
+    copyFlagNameTracking,
 } from 'component/feature/flagActionsTracking';
 
 const StyledBoxCell = styled(Box)(({ theme }) => ({
@@ -62,8 +62,8 @@ export const ActionsCell: FC<IActionsCellProps> = ({
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [isFeatureNameCopied, setIsFeatureNameCopied] = useState(false);
     const { setToastData } = useToast();
-    const trackFlagCloned = useTracking(flagClonedTracking);
-    const trackFlagNameCopied = useTracking(flagNameCopiedTracking);
+    const trackCloneFlag = useTracking(cloneFlagTracking);
+    const trackCopyFlagName = useTracking(copyFlagNameTracking);
     const {
         original: { name: featureId, stale },
     } = row;
@@ -82,9 +82,9 @@ export const ActionsCell: FC<IActionsCellProps> = ({
     const handleCopyToClipboard = () => {
         try {
             if (copy(featureId)) {
-                trackFlagNameCopied('succeeded', { method: 'kebab-menu' });
+                trackCopyFlagName('succeeded', { method: 'kebab-menu' });
             } else {
-                trackFlagNameCopied('failed', {
+                trackCopyFlagName('failed', {
                     method: 'kebab-menu',
                     failedOn: 'clipboard',
                 });
@@ -148,7 +148,7 @@ export const ActionsCell: FC<IActionsCellProps> = ({
                     nativeButton={false}
                     to={`/projects/${projectId}/features/${featureId}/copy`}
                     onClick={() => {
-                        trackFlagCloned('opened');
+                        trackCloneFlag('opened');
                     }}
                 >
                     <ListItemIcon>

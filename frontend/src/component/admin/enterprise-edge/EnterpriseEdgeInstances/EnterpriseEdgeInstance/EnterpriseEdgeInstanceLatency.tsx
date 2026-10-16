@@ -96,6 +96,30 @@ export const EnterpriseEdgeInstanceLatency = ({
                     <td>{instance.frontendApiAverageLatencyMs}</td>
                     <td>{instance.frontendApiP99LatencyMs}</td>
                 </tr>
+                {instance.enricherRequestCount != null && (
+                    <>
+                        <StyledSectionHeader>
+                            <td colSpan={3}>Context enricher</td>
+                        </StyledSectionHeader>
+                        <tr>
+                            <td>Enrichment</td>
+                            <td>{instance.enricherAverageLatencyMs}</td>
+                            <td>{instance.enricherP99LatencyMs}</td>
+                        </tr>
+                        <tr>
+                            <td>Requests</td>
+                            <td colSpan={2}>{instance.enricherRequestCount}</td>
+                        </tr>
+                        <tr>
+                            <td>Errors</td>
+                            <td colSpan={2}>{instance.enricherErrors}</td>
+                        </tr>
+                        <tr>
+                            <td>Timeouts</td>
+                            <td colSpan={2}>{instance.enricherTimeouts}</td>
+                        </tr>
+                    </>
+                )}
             </tbody>
         </StyledTable>
     );

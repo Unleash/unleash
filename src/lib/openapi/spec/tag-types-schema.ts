@@ -1,4 +1,4 @@
-import { tagTypeSchema } from './tag-type-schema.js';
+import { tagTypeWithUsageSchema } from './tag-type-with-usage-schema.js';
 import type { FromSchema } from 'json-schema-to-ts';
 
 export const tagTypesSchema = {
@@ -19,13 +19,13 @@ export const tagTypesSchema = {
             type: 'array',
             description: 'The list of tag types.',
             items: {
-                $ref: '#/components/schemas/tagTypeSchema',
+                $ref: '#/components/schemas/tagTypeWithUsageSchema',
             },
         },
     },
     components: {
         schemas: {
-            tagTypeSchema,
+            tagTypeWithUsageSchema,
         },
     },
 } as const;

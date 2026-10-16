@@ -347,6 +347,32 @@ test('should return 403 when user lacks permission to update strategy segments',
     expect(hasPermissionSpy).toHaveBeenCalledTimes(1);
 });
 
+test('should return 403 when strategy does not belong to the given project', async () => {
+    const strategyProject = 'default';
+    const anotherProject = 'another-project';
+    const flag = mockFeatureFlag();
+    await app.request
+        .post(`/api/admin/projects/${strategyProject}/features`)
+        .send({ name: flag.name })
+        .expect(201);
+    const { body: strategy } = await app.request
+        .post(
+            `/api/admin/projects/${strategyProject}/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`,
+        )
+        .send(flag.strategies[0])
+        .expect(200);
+
+    await app.request
+        .post(`${SEGMENTS_BASE_PATH}/strategies`)
+        .send({
+            strategyId: strategy.id,
+            segmentIds: [],
+            projectId: anotherProject,
+            environmentId: DEFAULT_ENV,
+        })
+        .expect(403);
+});
+
 test('should create segments', async () => {
     await app.createSegment({
         name: 'a',

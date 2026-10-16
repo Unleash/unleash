@@ -28,6 +28,8 @@ import type { FeatureLifecycleCompletedSchema } from '../../openapi/index.js';
 import type { IClientMetricsEnv } from '../metrics/client-metrics/client-metrics-store-v2-type.js';
 import groupBy from 'lodash.groupby';
 import { STAGE_ENTERED } from '../../metric-events.js';
+import type { IFeaturesReadModel } from '../feature-toggle/types/features-read-model-type.js';
+import { NotFoundError } from '../../error/index.js';
 
 export class FeatureLifecycleService {
     private eventStore: IEventStore;
@@ -37,6 +39,8 @@ export class FeatureLifecycleService {
     private environmentStore: IEnvironmentStore;
 
     private featureEnvironmentStore: IFeatureEnvironmentStore;
+
+    private featuresReadModel: IFeaturesReadModel;
 
     private flagResolver: IFlagResolver;
 
@@ -52,11 +56,13 @@ export class FeatureLifecycleService {
             featureLifecycleStore,
             environmentStore,
             featureEnvironmentStore,
+            featuresReadModel,
         }: {
             eventStore: IEventStore;
             environmentStore: IEnvironmentStore;
             featureLifecycleStore: IFeatureLifecycleStore;
             featureEnvironmentStore: IFeatureEnvironmentStore;
+            featuresReadModel: IFeaturesReadModel;
         },
         {
             eventService,
@@ -73,6 +79,7 @@ export class FeatureLifecycleService {
         this.featureLifecycleStore = featureLifecycleStore;
         this.environmentStore = environmentStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
+        this.featuresReadModel = featuresReadModel;
         this.flagResolver = flagResolver;
         this.eventBus = eventBus;
         this.eventService = eventService;
@@ -317,6 +324,7 @@ export class FeatureLifecycleService {
         status: FeatureLifecycleCompletedSchema,
         auditUser: IAuditUser,
     ) {
+        await this.validateFeatureBelongsToProject(feature, projectId);
         const result = await this.featureLifecycleStore.insert([
             {
                 feature,
@@ -341,6 +349,7 @@ export class FeatureLifecycleService {
         projectId: string,
         auditUser: IAuditUser,
     ) {
+        await this.validateFeatureBelongsToProject(feature, projectId);
         await this.featureLifecycleStore.deleteStage({
             feature,
             stage: 'completed',
@@ -352,6 +361,22 @@ export class FeatureLifecycleService {
                 auditUser,
             }),
         );
+    }
+
+    private async validateFeatureBelongsToProject(
+        featureName: string,
+        projectId: string,
+    ): Promise<void> {
+        const featureExistsInProject =
+            await this.featuresReadModel.featureExistsInProject(
+                featureName,
+                projectId,
+            );
+        if (!featureExistsInProject) {
+            throw new NotFoundError(
+                `Could not find feature with name ${featureName} in project ${projectId}`,
+            );
+        }
     }
 
     private async featureArchived(feature: string) {

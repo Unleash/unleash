@@ -1,0 +1,174 @@
+import {
+    MenuItem,
+    InputLabel,
+    type SelectChangeEvent,
+    styled,
+    Select,
+    FormControl,
+} from '@mui/material';
+import {
+    type Operator,
+    stringOperators,
+    semVerOperators,
+    dateOperators,
+    numOperators,
+    regexOperators,
+    cidrOperators,
+    inOperators,
+    isRegexOperator,
+    isCidrOperator,
+    SEMVER_GTE,
+    SEMVER_LTE,
+} from 'constants/operators';
+import { useId } from 'react';
+import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
+import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
+import { formatOperatorDescription } from 'utils/formatOperatorDescription';
+import { useUiFlag } from 'hooks/useUiFlag';
+
+interface IConstraintOperatorSelectProps {
+    options: Operator[];
+    value: Operator;
+    onChange: (value: Operator) => void;
+    inverted?: boolean;
+}
+
+const StyledSelect = styled(Select)(({ theme }) => ({
+    borderRadius: theme.shape.borderRadius,
+    padding: theme.spacing(0.25, 0),
+    fontSize: theme.fontSizes.smallerBody,
+    background: theme.palette.primary.container,
+    border: `1px solid ${theme.palette.primary.containerBorder}`,
+    color: theme.palette.primary.onContainer,
+    fontWeight: theme.typography.fontWeightBold,
+    fieldset: {
+        border: 'none',
+    },
+    transition: 'all 0.03s ease',
+    '&:is(:hover, :focus-within)': {
+        outline: `1px solid ${theme.palette.primary.main}`,
+    },
+    '&::before,&::after': {
+        border: 'none',
+    },
+    '.MuiInput-input': {
+        paddingBlock: theme.spacing(0.25),
+    },
+    ':focus-within .MuiSelect-select': {
+        background: 'none',
+    },
+}));
+
+const StyledMenuItem = styled(MenuItem, {
+    shouldForwardProp: (prop) => prop !== 'separator',
+})<{ separator: boolean }>(({ theme, separator }) =>
+    separator
+        ? {
+              position: 'relative',
+              overflow: 'visible',
+              marginTop: theme.spacing(2),
+              '&:before': {
+                  content: '""',
+                  display: 'block',
+                  position: 'absolute',
+                  top: theme.spacing(-1),
+                  left: 0,
+                  right: 0,
+                  borderTop: '1px solid',
+                  borderTopColor: theme.palette.divider,
+              },
+          }
+        : {},
+);
+
+const StyledValue = styled('span')(({ theme }) => ({
+    paddingInline: theme.spacing(1),
+}));
+
+export const ConstraintOperatorSelect = ({
+    options,
+    value,
+    onChange,
+    inverted,
+}: IConstraintOperatorSelectProps) => {
+    const selectId = useId();
+    const labelId = useId();
+    const onSelectChange = (event: SelectChangeEvent<unknown>) => {
+        onChange(event.target.value as Operator);
+    };
+
+    const renderValue = () => {
+        return (
+            <StyledValue>
+                {formatOperatorDescription(value, inverted)}
+            </StyledValue>
+        );
+    };
+
+    const isRegexOperatorEnabled = useUiFlag('regexConstraintOperator');
+    const isSemverGteOperatorsEnabled = useUiFlag(
+        'semverGteConstraintOperators',
+    );
+    const isIpOperatorEnabled = useUiFlag('ipConstraintOperator');
+
+    const operators = options
+        .filter(
+            (operator) => isRegexOperatorEnabled || !isRegexOperator(operator),
+        )
+        .filter(
+            (operator) =>
+                isSemverGteOperatorsEnabled ||
+                (operator !== SEMVER_GTE && operator !== SEMVER_LTE),
+        )
+        .filter((operator) => isIpOperatorEnabled || !isCidrOperator(operator));
+
+    return (
+        <FormControl variant='standard' size='large' hiddenLabel>
+            <ScreenReaderOnly>
+                <InputLabel id={labelId} htmlFor={selectId}>
+                    Operator
+                </InputLabel>
+            </ScreenReaderOnly>
+            <StyledSelect
+                id={selectId}
+                labelId={labelId}
+                name='operator'
+                disableUnderline
+                value={value}
+                onChange={onSelectChange}
+                renderValue={renderValue}
+                IconComponent={KeyboardArrowDownOutlined}
+            >
+                {operators.map((operator) => (
+                    <StyledMenuItem
+                        key={operator}
+                        value={operator}
+                        separator={needSeparatorAbove(operators, operator)}
+                    >
+                        {formatOperatorDescription(operator, inverted)}
+                    </StyledMenuItem>
+                ))}
+            </StyledSelect>
+        </FormControl>
+    );
+};
+
+const needSeparatorAbove = (options: Operator[], option: Operator): boolean => {
+    if (option === options[0]) {
+        return false;
+    }
+
+    return operatorGroups.some((group) => {
+        return group[0] === option;
+    });
+};
+
+const operatorGroups = [
+    inOperators,
+    stringOperators,
+    numOperators,
+    dateOperators,
+    semVerOperators,
+    regexOperators,
+    cidrOperators,
+];

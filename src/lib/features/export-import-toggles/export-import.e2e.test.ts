@@ -119,7 +119,7 @@ const addLink = async (
     link: { url: string; title: string },
 ) => {
     await app.services.transactionalFeatureLinkService.createLink(
-        DEFAULT_ENV,
+        DEFAULT_PROJECT,
         { ...link, featureName: feature },
         TEST_AUDIT_USER,
     );

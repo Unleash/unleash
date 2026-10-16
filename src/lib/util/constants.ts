@@ -37,6 +37,7 @@ export const SEMVER_LT = 'SEMVER_LT';
 export const SEMVER_GTE = 'SEMVER_GTE';
 export const SEMVER_LTE = 'SEMVER_LTE';
 export const REGEX = 'REGEX';
+export const IN_CIDR = 'IN_CIDR';
 
 export const ALL_OPERATORS = [
     NOT_IN,
@@ -57,6 +58,7 @@ export const ALL_OPERATORS = [
     SEMVER_GTE,
     SEMVER_LTE,
     REGEX,
+    IN_CIDR,
 ] as const;
 
 export const STRING_OPERATORS = [

@@ -1,31 +1,31 @@
 import type { Tracking } from 'utils/trackingEvents';
 
-export const flagArchivedTracking: Tracking = {
+export const archiveFlagTracking: Tracking = {
     event: 'flag-actions',
-    type: 'archived',
+    type: 'archive-flag',
 };
 
-export const flagClonedTracking: Tracking = {
+export const cloneFlagTracking: Tracking = {
     event: 'flag-actions',
-    type: 'cloned',
+    type: 'clone-flag',
 };
 
-export const flagNameCopiedTracking: Tracking = {
+export const copyFlagNameTracking: Tracking = {
     event: 'flag-actions',
-    type: 'name-copied',
+    type: 'copy-flag-name',
 };
 
-export const flagStaleToggledTracking: Tracking = {
+export const toggleFlagStaleTracking: Tracking = {
     event: 'flag-actions',
-    type: 'stale-toggled',
+    type: 'toggle-flag-stale',
 };
 
-export const flagDeletedTracking: Tracking = {
+export const deleteFlagTracking: Tracking = {
     event: 'flag-actions',
-    type: 'deleted',
+    type: 'delete-flag',
 };
 
-export const flagRevivedTracking: Tracking = {
+export const reviveFlagTracking: Tracking = {
     event: 'flag-actions',
-    type: 'revived',
+    type: 'revive-flag',
 };

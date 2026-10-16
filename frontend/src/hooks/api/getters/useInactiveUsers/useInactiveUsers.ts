@@ -14,20 +14,27 @@ export interface IInactiveUser {
 }
 export interface IUseInactiveUsersOutput {
     inactiveUsers: IInactiveUser[];
+    totalInactiveUsers: number;
     refetchInactiveUsers: () => void;
     loading: boolean;
     error?: Error;
 }
 
-export const useInactiveUsers = (): IUseInactiveUsersOutput => {
+export const useInactiveUsers = (
+    limit: number = 50,
+    offset: number = 0,
+): IUseInactiveUsersOutput => {
     const { data, error, mutate } = useSWR(
-        formatApiPath(`api/admin/user-admin/inactive`),
+        formatApiPath(
+            `api/admin/user-admin/inactive?limit=${limit}&offset=${offset}`,
+        ),
         fetcher,
     );
 
     return useMemo(
         () => ({
             inactiveUsers: data?.inactiveUsers ?? [],
+            totalInactiveUsers: data?.totalInactiveUsers ?? 0,
             error,
             refetchInactiveUsers: () => mutate(),
             loading: !error && !data,

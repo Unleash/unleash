@@ -1,5 +1,6 @@
 import type { IProjectReadModel } from '../../types/index.js';
 import type {
+    ProjectCore,
     ProjectForUi,
     ProjectForInsights,
 } from './project-read-model-type.js';
@@ -12,6 +13,9 @@ export class FakeProjectReadModel implements IProjectReadModel {
         return Promise.resolve([]);
     }
     getProjectsForInsights(): Promise<ProjectForInsights[]> {
+        return Promise.resolve([]);
+    }
+    getProjectsCore(): Promise<ProjectCore[]> {
         return Promise.resolve([]);
     }
     getProjectsByUser(): Promise<string[]> {

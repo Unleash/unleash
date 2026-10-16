@@ -135,6 +135,7 @@ import {
     createFakeDependentFeaturesService,
     createFakeAccessService,
     corsOriginMiddleware,
+    auditAccessMiddleware,
     impactRegister,
     EXTERNAL_SOURCE_SETTING_KEY,
     type ExternalImpactMetricsSource,
@@ -211,7 +212,7 @@ import {
 import {
     getDefaultStrategy,
     getProjectDefaultStrategy,
-} from './features/playground/feature-evaluator/helpers.js';
+} from './features/feature-toggle/default-strategy.js';
 import { getDbConfig } from '../test/e2e/helpers/database-config.js';
 import { testDbPrefix } from '../test/e2e/helpers/database-init.js';
 import type { RequestHandler } from 'express';
@@ -330,7 +331,7 @@ export async function createApp(
                 logger.error('Failure when executing shutdown hook', e);
             }
         }
-        services.schedulerService.stop();
+        await services.schedulerService.stop();
         services.addonService.destroy();
         await db.destroy();
     };
@@ -591,6 +592,7 @@ export {
     getDefaultStrategy,
     corsOriginMiddleware,
     createRateLimitMiddleware,
+    auditAccessMiddleware,
     ApiTokenType,
     impactRegister,
     EXTERNAL_SOURCE_SETTING_KEY,
@@ -666,6 +668,7 @@ export * from './openapi/index.js';
 export * from './types/index.js';
 export * from './error/index.js';
 export * from './util/index.js';
+export * from './sessions/index.js';
 export * from './services/index.js';
 export {
     AuthorizationTokenKind,

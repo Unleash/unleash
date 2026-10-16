@@ -580,6 +580,12 @@ export function registerPrometheusMetrics(
         .set(config.rateLimiting.passwordResetMaxPerMinute);
     rateLimits
         .labels({
+            endpoint: '/feedback',
+            method: 'POST',
+        })
+        .set(config.rateLimiting.feedbackMaxPerMinute);
+    rateLimits
+        .labels({
             endpoint: '/api/signal-endpoint/:name',
             method: 'POST',
         })

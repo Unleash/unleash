@@ -5,6 +5,7 @@ import {
     ClientFeatureToggleDelta,
     filterEventsByQuery,
 } from './client-feature-toggle-delta.js';
+import { getReferencedSegmentIds } from './visible-revision.js';
 import { DeltaCache } from './delta-cache.js';
 import {
     FEATURE_ARCHIVED,
@@ -25,6 +26,37 @@ const createDeltaConfig = () =>
         eventBus: new EventEmitter(),
         getLogger: () => createLogger(),
     }) as any;
+
+type DeltaDependencies = ConstructorParameters<typeof ClientFeatureToggleDelta>;
+
+const createDeltaWithTestSnapshot = (
+    readModel: DeltaDependencies[0],
+    segments: DeltaDependencies[1],
+    events: DeltaDependencies[2],
+    revisions: DeltaDependencies[3],
+    flags: DeltaDependencies[4],
+    config: DeltaDependencies[5],
+) =>
+    new ClientFeatureToggleDelta(
+        readModel,
+        segments,
+        events,
+        revisions,
+        flags,
+        config,
+        async (environment) => {
+            const features = await readModel.getAll({ environment });
+            const revisionState = await events.getDeltaRevisionState(
+                environment,
+                getReferencedSegmentIds(features),
+            );
+            return {
+                features,
+                revisionState,
+                segments: await segments.getAllForClientIds(),
+            };
+        },
+    );
 
 describe('filterEventsByQuery', () => {
     const mockEvents: DeltaEvent[] = [
@@ -211,7 +243,7 @@ describe('DeltaCache hydration ordering', () => {
 describe('ClientFeatureToggleDelta bootstrap behavior', () => {
     test('segment-created alone does not advance visible revision for an environment where it is unused', async () => {
         let currentRevisionId = 1;
-        const delta = new ClientFeatureToggleDelta(
+        const delta = createDeltaWithTestSnapshot(
             {
                 getAll: async ({
                     environment,
@@ -358,7 +390,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
                 getMaxRevisionId: async () => currentRevisionId,
             }) as any;
 
-        const liveDelta = new ClientFeatureToggleDelta(
+        const liveDelta = createDeltaWithTestSnapshot(
             createReadModel(),
             createSegmentModel(),
             createEventStore(),
@@ -385,7 +417,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
         } as any);
         expect(liveResult).toBeUndefined();
 
-        const freshDelta = new ClientFeatureToggleDelta(
+        const freshDelta = createDeltaWithTestSnapshot(
             createReadModel(),
             createSegmentModel(),
             createEventStore(),
@@ -433,7 +465,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
                         : [],
             }) as any;
 
-        const unreferencedSegment = new ClientFeatureToggleDelta(
+        const unreferencedSegment = createDeltaWithTestSnapshot(
             {
                 getAll: async () => [
                     {
@@ -468,7 +500,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
         } as any);
         expect(unusedResult).toBeUndefined();
 
-        const usedDelta = new ClientFeatureToggleDelta(
+        const usedDelta = createDeltaWithTestSnapshot(
             {
                 getAll: async () => [
                     {
@@ -518,7 +550,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
         let currentRevisionId = 1;
         let featureReferencesSegment = true;
 
-        const delta = new ClientFeatureToggleDelta(
+        const delta = createDeltaWithTestSnapshot(
             {
                 getAll: async () => [
                     {
@@ -690,7 +722,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
                     : [],
         } as any;
 
-        const delta = new ClientFeatureToggleDelta(
+        const delta = createDeltaWithTestSnapshot(
             readModel,
             segmentReadModel,
             eventStore,
@@ -761,7 +793,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
 
     test('materializes delta_environment_revision_id on first hydration request', async () => {
         const environment = 'metric-materialization-test';
-        const delta = new ClientFeatureToggleDelta(
+        const delta = createDeltaWithTestSnapshot(
             {
                 getAll: async () => [
                     {
@@ -805,7 +837,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
 
     test('returns the same wildcard hydration revision for identical environment state across pods', async () => {
         const createDelta = (globalRevisionId: number) =>
-            new ClientFeatureToggleDelta(
+            createDeltaWithTestSnapshot(
                 {
                     getAll: async ({
                         environment,
@@ -867,7 +899,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
     });
 
     test('returns an empty hydration event on initial request for an empty environment', async () => {
-        const delta = new ClientFeatureToggleDelta(
+        const delta = createDeltaWithTestSnapshot(
             {
                 getAll: async () => [],
             } as any,
@@ -913,7 +945,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
     });
 
     test('returns no delta when client explicitly requests revision 0 for an empty environment', async () => {
-        const delta = new ClientFeatureToggleDelta(
+        const delta = createDeltaWithTestSnapshot(
             {
                 getAll: async () => [],
             } as any,
@@ -951,7 +983,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
 
     test('does not emit a no-op delta for an unrelated environment change', async () => {
         let currentRevisionId = 1;
-        const delta = new ClientFeatureToggleDelta(
+        const delta = createDeltaWithTestSnapshot(
             {
                 getAll: async ({
                     environment,
@@ -1033,7 +1065,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
 
     test('applies global events without environment to all initialized environments', async () => {
         let currentRevisionId = 1;
-        const delta = new ClientFeatureToggleDelta(
+        const delta = createDeltaWithTestSnapshot(
             {
                 getAll: async ({
                     environment,
@@ -1158,7 +1190,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
 
     test('feature project move emits feature-removed for old project and feature-updated for new project', async () => {
         let currentRevisionId = 1;
-        const delta = new ClientFeatureToggleDelta(
+        const delta = createDeltaWithTestSnapshot(
             {
                 getAll: async ({
                     environment,
@@ -1296,7 +1328,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
             info: () => undefined,
             warn: () => undefined,
         };
-        const delta = new ClientFeatureToggleDelta(
+        const delta = createDeltaWithTestSnapshot(
             {
                 getAll: async ({
                     environment,
@@ -1392,7 +1424,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
 
     test('bulk events pick the max revision id for the envelope', async () => {
         let currentRevisionId = 1;
-        const delta = new ClientFeatureToggleDelta(
+        const delta = createDeltaWithTestSnapshot(
             {
                 getAll: async ({
                     environment,
@@ -1518,7 +1550,7 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
     test('returns delta events in revision order even when cached by event type', async () => {
         let currentRevisionId = 24;
 
-        const delta = new ClientFeatureToggleDelta(
+        const delta = createDeltaWithTestSnapshot(
             {
                 getAll: async ({
                     toggleNames = [],

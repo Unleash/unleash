@@ -2,7 +2,6 @@ import type { Tracking } from 'utils/trackingEvents';
 import type { ILegalValue } from 'interfaces/context';
 
 export type ContextFieldTrackingProps = {
-    name: string;
     legalValuesCount: number;
     hasDescription: boolean;
     customStickiness: boolean;
@@ -10,17 +9,14 @@ export type ContextFieldTrackingProps = {
 
 // Shared by create and edit so the shapes stay comparable across the lifecycle.
 export const contextFieldTrackingProps = ({
-    name,
     legalValues,
     description,
     stickiness,
 }: {
-    name: string;
     legalValues: ILegalValue[];
     description?: string;
     stickiness: boolean;
 }): ContextFieldTrackingProps => ({
-    name,
     legalValuesCount: legalValues.length,
     hasDescription: Boolean(description?.trim()),
     customStickiness: stickiness,
@@ -50,12 +46,12 @@ export const contextFieldChangedProps = ({
     stickinessChanged: Boolean(stickiness) !== Boolean(initial.stickiness),
 });
 
-export const contextFieldCreatedTracking: Tracking = {
+export const createContextFieldTracking: Tracking = {
     event: 'context-fields',
-    type: 'created',
+    type: 'create-context-field',
 };
 
-export const contextFieldEditedTracking: Tracking = {
+export const editContextFieldTracking: Tracking = {
     event: 'context-fields',
-    type: 'edited',
+    type: 'edit-context-field',
 };

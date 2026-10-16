@@ -26,7 +26,6 @@ export const FEATURE_TAG_IMPORT = 'feature-tag-import' as const;
 export const FEATURE_STRATEGY_UPDATE = 'feature-strategy-update' as const;
 export const FEATURE_STRATEGY_ADD = 'feature-strategy-add' as const;
 export const FEATURE_STRATEGY_REMOVE = 'feature-strategy-remove' as const;
-export const DROP_FEATURE_TAGS = 'drop-feature-tags' as const;
 export const FEATURE_UNTAGGED = 'feature-untagged' as const;
 export const FEATURE_STALE_ON = 'feature-stale-on' as const;
 export const FEATURE_COMPLETED = 'feature-completed' as const;
@@ -82,6 +81,7 @@ export const PROJECT_GROUP_ADDED = 'project-group-added' as const;
 export const DROP_PROJECTS = 'drop-projects' as const;
 export const TAG_CREATED = 'tag-created' as const;
 export const TAG_DELETED = 'tag-deleted' as const;
+export const TAG_UPDATED = 'tag-updated' as const;
 export const TAG_IMPORT = 'tag-import' as const;
 export const DROP_TAGS = 'drop-tags' as const;
 export const TAG_TYPE_CREATED = 'tag-type-created' as const;
@@ -274,7 +274,6 @@ export const IEventTypes = [
     FEATURE_LINK_REMOVED,
     FEATURE_LINK_UPDATED,
     STRATEGY_ORDER_CHANGED,
-    DROP_FEATURE_TAGS,
     FEATURE_UNTAGGED,
     FEATURE_STALE_ON,
     FEATURE_STALE_OFF,
@@ -313,6 +312,7 @@ export const IEventTypes = [
     DROP_PROJECTS,
     TAG_CREATED,
     TAG_DELETED,
+    TAG_UPDATED,
     TAG_IMPORT,
     DROP_TAGS,
     TAG_TYPE_CREATED,

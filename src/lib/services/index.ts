@@ -24,6 +24,8 @@ import { FeatureToggleService } from '../features/feature-toggle/feature-toggle-
 import EnvironmentService from '../features/project-environments/environment-service.js';
 import FeatureTagService from './feature-tag-service.js';
 import ProjectHealthService from './project-health-service.js';
+import { ProjectHealthFeaturesReadModel } from '../domain/project-health/features-read-model.js';
+import { FakeProjectHealthFeaturesReadModel } from '../domain/project-health/fake-features-read-model.js';
 import UserSplashService from './user-splash-service.js';
 import { SegmentService } from '../features/segment/segment-service.js';
 import { OpenApiService } from './openapi-service.js';
@@ -115,6 +117,7 @@ import {
     createFakeTagTypeService,
     createTagTypeService,
 } from '../features/tag-type/createTagTypeService.js';
+import { createFakeTagService, createTagService } from './createTagService.js';
 import {
     createFakeInstanceStatsService,
     createInstanceStatsService,
@@ -175,14 +178,17 @@ import type {
 import type { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType.js';
 import { UnknownFlagsService } from '../features/metrics/unknown-flags/unknown-flags-service.js';
 import type FeatureLinkService from '../features/feature-links/feature-link-service.js';
+import {
+    createFakePayloadSchemaService,
+    createPayloadSchemaService,
+} from '../features/payload-schema/createPayloadSchemaService.js';
+import type { PayloadSchemaService } from '../features/payload-schema/payload-schema-service.js';
 import { createUserService } from '../features/users/createUserService.js';
 import { UiConfigService } from '../ui-config/ui-config-service.js';
 import { ResourceLimitsService } from '../features/resource-limits/resource-limits-service.js';
-import {
-    createConstraintsReadModel,
-    createFakeConstraintsReadModel,
-} from '../features/constraints/createConstraintsReadModel.js';
-import type { IConstraintsReadModel } from '../features/constraints/constraints-read-model-type.js';
+import { ConstraintValidator } from '../features/constraints/constraint-validator.js';
+import { FakeConstraintValidator } from '../features/constraints/fake-constraint-validator.js';
+import type { IConstraintValidator } from '../features/constraints/constraint-validator-type.js';
 import {
     createFakeReleasePlanMilestoneStrategyService,
     createReleasePlanMilestoneStrategyService,
@@ -266,7 +272,12 @@ export const createServices = (
     );
     const resetTokenService = new ResetTokenService(stores, config);
     const strategyService = new StrategyService(stores, config, eventService);
-    const tagService = new TagService(stores, config, eventService);
+    const transactionalTagService = db
+        ? withTransactional(createTagService(config), db)
+        : withFakeTransactional(
+              createFakeTagService(config, stores, eventService),
+          );
+    const tagService = transactionalTagService;
     const transactionalTagTypeService = db
         ? withTransactional(createTagTypeService(config), db)
         : withFakeTransactional(createFakeTagTypeService(config));
@@ -312,9 +323,9 @@ export const createServices = (
         ? createChangeRequestSegmentUsageReadModel(db)
         : createFakeChangeRequestSegmentUsageReadModel();
 
-    const constraintsReadModel = db
-        ? createConstraintsReadModel(stores.contextFieldStore)
-        : createFakeConstraintsReadModel();
+    const constraintValidator = db
+        ? new ConstraintValidator(stores.contextFieldStore)
+        : new FakeConstraintValidator();
 
     const segmentService = new SegmentService(
         stores,
@@ -324,7 +335,7 @@ export const createServices = (
         eventService,
         privateProjectChecker,
         resourceLimitsService,
-        constraintsReadModel,
+        constraintValidator,
     );
 
     const clientInstanceService = new ClientInstanceService(
@@ -369,10 +380,14 @@ export const createServices = (
         ? createProjectStatusService(db, config)
         : createFakeProjectStatusService().projectStatusService;
 
+    const projectHealthFeatureReadModel = db
+        ? new ProjectHealthFeaturesReadModel(db)
+        : new FakeProjectHealthFeaturesReadModel();
     const projectHealthService = new ProjectHealthService(
         stores,
         config,
         projectService,
+        projectHealthFeatureReadModel,
     );
 
     const exportImportService = db
@@ -389,6 +404,10 @@ export const createServices = (
           );
 
     const featureLinkService = transactionalFeatureLinkService;
+
+    const payloadSchemaService = db
+        ? createPayloadSchemaService(db)
+        : createFakePayloadSchemaService();
 
     const featureToggleService = db
         ? withTransactional((db) => createFeatureToggleService(db, config), db)
@@ -415,7 +434,7 @@ export const createServices = (
     const clientSpecService = new ClientSpecService(config);
     const playgroundService = db
         ? createPlaygroundService(db, config)
-        : createFakePlaygroundService(config);
+        : createFakePlaygroundService(config).playgroundService;
 
     const configurationRevisionService =
         ConfigurationRevisionService.getInstance(stores, config);
@@ -441,10 +460,20 @@ export const createServices = (
 
     const edgeService = db
         ? withTransactional(
-              (db) => createTransactionalEdgeService(db, config),
+              (db) =>
+                  createTransactionalEdgeService(db, config, {
+                      apiTokenService,
+                      apiTokenV2Service,
+                  }),
               db,
           )
-        : withFakeTransactional(createFakeEdgeService(config));
+        : withFakeTransactional(
+              createFakeEdgeService(config, {
+                  apiTokenService,
+                  apiTokenV2Service,
+                  transactionalApiTokenV2Service,
+              }),
+          );
 
     const patService = db
         ? createPatService(db, config)
@@ -528,6 +557,7 @@ export const createServices = (
         tagTypeService,
         transactionalTagTypeService,
         tagService,
+        transactionalTagService,
         clientInstanceService,
         clientMetricsServiceV2,
         contextService,
@@ -587,10 +617,11 @@ export const createServices = (
         featureLifecycleReadModel,
         transactionalFeatureLinkService,
         featureLinkService,
+        payloadSchemaService,
         unknownFlagsService,
         uiConfigService,
         resourceLimitsService,
-        constraintsReadModel,
+        constraintValidator,
     };
 };
 
@@ -690,6 +721,7 @@ export interface IUnleashServices {
     settingService: SettingService;
     strategyService: StrategyService;
     tagService: TagService;
+    transactionalTagService: WithTransactional<TagService>;
     tagTypeService: TagTypeService;
     transactionalTagTypeService: WithTransactional<TagTypeService>;
     userFeedbackService: UserFeedbackService;
@@ -731,8 +763,9 @@ export interface IUnleashServices {
     featureLifecycleReadModel: IFeatureLifecycleReadModel;
     transactionalFeatureLinkService: WithTransactional<FeatureLinkService>;
     featureLinkService: FeatureLinkService;
+    payloadSchemaService: PayloadSchemaService;
     unknownFlagsService: UnknownFlagsService;
     uiConfigService: UiConfigService;
     resourceLimitsService: ResourceLimitsService;
-    constraintsReadModel: IConstraintsReadModel;
+    constraintValidator: IConstraintValidator;
 }

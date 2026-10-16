@@ -7,7 +7,7 @@ import useToast from 'hooks/useToast';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useTracking } from 'hooks/useTracking';
-import { apiTokenDeletedTracking } from 'component/common/ApiTokenTable/apiTokenTracking';
+import { deleteApiTokenTracking } from 'component/common/ApiTokenTable/apiTokenTracking';
 
 const StyledUl = styled('ul')({
     marginBottom: 0,
@@ -29,7 +29,7 @@ export const RemoveApiTokenButton = ({
     const [open, setOpen] = useState(false);
     const [removing, setRemoving] = useState(false);
     const { setToastData, setToastApiError } = useToast();
-    const tracking = apiTokenDeletedTracking(token);
+    const tracking = deleteApiTokenTracking(token);
     const trackRemove = useTracking(tracking);
 
     const onRemoveToken = async () => {

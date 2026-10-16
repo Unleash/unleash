@@ -3,7 +3,6 @@ import {
     Paper,
     styled,
     IconButton,
-    useTheme,
     type AutocompleteChangeReason,
     type FilterOptionsState,
     Checkbox,
@@ -32,6 +31,8 @@ import { caseInsensitiveSearch } from 'utils/search.js';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi.js';
+import { useTracking } from 'hooks/useTracking';
+import { editApproversTracking } from 'component/changeRequest/changeRequestTracking';
 import { FormFieldControlAligner } from 'component/common/FormField/FormField';
 
 export const StyledSpan = styled('span')(({ theme }) => ({
@@ -46,7 +47,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     flexDirection: 'row',
     width: '100%',
     alignItems: 'flex-start',
-    '& > :first-child': { width: '100%' },
+    '& > :first-child': { flex: 1, minWidth: 0 },
     justifyContent: 'space-between',
     marginBottom: theme.spacing(2),
     marginRight: theme.spacing(-2),
@@ -159,7 +160,6 @@ export const ChangeRequestAddRequestedApprovers: FC<{
     saveClicked: (reviewers: AvailableReviewerSchema[]) => void;
     existingReviewers: Pick<ReviewerSchema, 'id'>[];
 }> = ({ changeRequest, saveClicked, existingReviewers }) => {
-    const theme = useTheme();
     const [reviewers, setReviewers] = useState<AvailableReviewerSchema[]>([]);
     const allReviewers = [...existingReviewers, ...reviewers];
     const { reviewers: fetchedReviewers, loading: isLoading } =
@@ -201,7 +201,6 @@ export const ChangeRequestAddRequestedApprovers: FC<{
         <StyledBox sx={{ mb: 4 }}>
             <AutocompleteVirtual
                 label={`Reviewers (${reviewers.length})`}
-                sx={{ ml: 'auto', width: theme.spacing(40) }}
                 size='large'
                 limitTags={3}
                 openOnFocus
@@ -257,6 +256,7 @@ export const ChangeRequestRequestedApprovers: FC<{
     const { reviewers: requestedReviewers, refetchReviewers } =
         useRequestedApprovers(changeRequest.project, changeRequest.id);
     const { updateRequestedApprovers } = useChangeRequestApi();
+    const trackEditApprovers = useTracking(editApproversTracking);
     const canShowAddReviewers =
         (changeRequest.state === 'Draft' ||
             changeRequest.state === 'In review') &&
@@ -312,14 +312,16 @@ export const ChangeRequestRequestedApprovers: FC<{
         selectedReviewers: AvailableReviewerSchema[],
     ) => {
         if (selectedReviewers.length > 0) {
-            const tosend = [
+            const requestedApproverIds = [
                 ...reviewers.map((reviewer) => reviewer.id),
                 ...selectedReviewers.map((reviewer) => reviewer.id),
             ];
-            await updateRequestedApprovers(
-                changeRequest.project,
-                changeRequest.id,
-                tosend,
+            await trackEditApprovers.mutation(() =>
+                updateRequestedApprovers(
+                    changeRequest.project,
+                    changeRequest.id,
+                    requestedApproverIds,
+                ),
             );
         }
         refetchReviewers();

@@ -12,6 +12,7 @@ import {
     isNumOperator,
     isSemVerOperator,
     isRegexOperator,
+    isCidrOperator,
 } from 'constants/operators';
 import type { IConstraint } from 'interfaces/strategy';
 
@@ -80,6 +81,11 @@ export const isRegexConstraint = (
     constraint: EditableConstraint,
 ): constraint is EditableRegexConstraint =>
     isRegexOperator(constraint.operator);
+
+export const isCidrConstraint = (
+    constraint: EditableConstraint,
+): constraint is EditableMultiValueConstraint =>
+    isCidrOperator(constraint.operator);
 
 export const invertedToggleDisabled = (
     constraint: Pick<EditableConstraint, 'operator'>,

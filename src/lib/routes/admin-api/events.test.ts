@@ -47,7 +47,12 @@ test('should get events list via admin', async () => {
     const { request, base, eventService } = await getSetup();
     eventService.storeEvent(
         new FeatureCreatedEvent({
-            data: { name: 'test', project: 'default' },
+            data: {
+                name: 'test',
+                project: 'default',
+                type: 'release',
+                createdAt: new Date(),
+            },
             featureName: 'test',
             project: 'default',
             auditUser: TEST_AUDIT_USER,
@@ -66,7 +71,12 @@ test('should anonymise events list via admin', async () => {
     const { request, base, eventService } = await getSetup(true);
     eventService.storeEvent(
         new FeatureCreatedEvent({
-            data: { name: 'test', project: 'default' },
+            data: {
+                name: 'test',
+                project: 'default',
+                type: 'release',
+                createdAt: new Date(),
+            },
             featureName: 'test',
             project: 'default',
             auditUser: TEST_AUDIT_USER,

@@ -20,6 +20,7 @@ import version from '../util/version.js';
 import type { ResourceLimitsService } from '../features/resource-limits/resource-limits-service.js';
 import { ImpactMetricsAvailabilityResolver } from '../features/metrics/impact/impact-metrics-availability.js';
 import { hashValue } from '../util/anonymise.js';
+import { resolveKeepAliveIntervalSeconds } from '../sessions/session-limits.js';
 
 export class UiConfigService {
     private config: IUnleashConfig;
@@ -109,8 +110,12 @@ export class UiConfigService {
         // unsalted because the sessionID is high-entropy.
         const analyticsSessionId = sessionId ? hashValue(sessionId) : undefined;
 
+        const emailContext = user.email
+            ? { email: user.email, hashedEmail: hashValue(user.email) }
+            : {};
+
         const expFlags = this.config.flagResolver.getAll({
-            email: user.email,
+            ...emailContext,
             ...(analyticsSessionId ? { sessionId: analyticsSessionId } : {}),
         });
 
@@ -121,7 +126,7 @@ export class UiConfigService {
 
         const unleashContext = {
             ...this.flagResolver.getStaticContext(),
-            ...(user.email ? { email: user.email } : {}),
+            ...emailContext,
             userId: user.id,
             ...(analyticsSessionId ? { sessionId: analyticsSessionId } : {}),
         };
@@ -146,6 +151,11 @@ export class UiConfigService {
             maintenanceMode,
             feedbackUriPath: this.config.feedbackUriPath,
             maxSessionsCount,
+            sessionKeepAliveIntervalSeconds: this.config.flagResolver.isEnabled(
+                'sessionTimeouts',
+            )
+                ? resolveKeepAliveIntervalSeconds(this.config.session)
+                : 0,
             unleashContext: unleashContext,
             storiesPageEnabled: this.config.server.enableStoriesPage,
         };

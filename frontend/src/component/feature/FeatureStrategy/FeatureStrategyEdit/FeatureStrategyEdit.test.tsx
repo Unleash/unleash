@@ -69,7 +69,6 @@ beforeEach(() => {
     setupSegmentsEndpoint();
     setupStrategyEndpoint();
     setupFeaturesEndpoint(featureName, variantName);
-    setupUiConfigEndpoint();
     setupContextEndpoint(['default']);
 });
 
@@ -126,92 +125,106 @@ describe('NewFeatureStrategyEdit', () => {
     `);
     });
 
-    it.skip('should change general settings', async () => {
-        const { expectedGroupId, expectedSliderValue } = setupComponent();
-
-        await waitFor(() => {
-            expect(screen.getByText('Gradual rollout')).toBeInTheDocument();
+    describe('singlePageStrategyForm off (legacy tabbed form)', () => {
+        beforeEach(() => {
+            setupUiConfigEndpoint();
         });
 
-        const slider = await screen.findByRole('slider', { name: /rollout/i });
-        const groupIdInput = await screen.findByLabelText('groupId');
+        it.skip('should change general settings', async () => {
+            const { expectedGroupId, expectedSliderValue } = setupComponent();
 
-        expect(slider).toHaveValue('50');
-        expect(groupIdInput).toHaveValue(featureName);
-        const defaultStickiness = await screen.findByText('default');
-        fireEvent.click(defaultStickiness);
-        const randomStickiness = await screen.findByText('random');
-        fireEvent.click(randomStickiness);
+            await waitFor(() => {
+                expect(screen.getByText('Gradual rollout')).toBeInTheDocument();
+            });
 
-        fireEvent.change(slider, { target: { value: expectedSliderValue } });
-        fireEvent.change(groupIdInput, { target: { value: expectedGroupId } });
+            const slider = await screen.findByRole('slider', {
+                name: /rollout/i,
+            });
+            const groupIdInput = await screen.findByLabelText('groupId');
 
-        expect(slider).toHaveValue(expectedSliderValue);
-        expect(groupIdInput).toHaveValue(expectedGroupId);
+            expect(slider).toHaveValue('50');
+            expect(groupIdInput).toHaveValue(featureName);
+            const defaultStickiness = await screen.findByText('default');
+            fireEvent.click(defaultStickiness);
+            const randomStickiness = await screen.findByText('random');
+            fireEvent.click(randomStickiness);
 
-        await waitFor(() => {
-            const codeSnippet = document.querySelector('pre')?.innerHTML;
-            const count = (codeSnippet!.match(/random/g) || []).length;
-            // strategy stickiness and variant stickiness
-            expect(count).toBe(2);
-        });
-    });
+            fireEvent.change(slider, {
+                target: { value: expectedSliderValue },
+            });
+            fireEvent.change(groupIdInput, {
+                target: { value: expectedGroupId },
+            });
 
-    it('should auto-correct missing strategy params without overwriting existing params', async () => {
-        setupFeaturesEndpointWithBrokenStrategy(featureName);
+            expect(slider).toHaveValue(expectedSliderValue);
+            expect(groupIdInput).toHaveValue(expectedGroupId);
 
-        render(
-            <Routes>
-                <Route
-                    path={
-                        '/projects/:projectId/features/:featureId/strategies/edit'
-                    }
-                    element={<FeatureStrategyEdit />}
-                />
-            </Routes>,
-            {
-                route: `/projects/${project}/features/${featureName}/strategies/edit?environmentId=development&strategyId=1`,
-                permissions: [
-                    {
-                        permission: UPDATE_FEATURE_STRATEGY,
-                        project,
-                        environment: 'development',
-                    },
-                ],
-            },
-        );
-
-        await waitFor(() => {
-            expect(screen.getByText('Gradual rollout')).toBeInTheDocument();
+            await waitFor(() => {
+                const codeSnippet = document.querySelector('pre')?.innerHTML;
+                const count = (codeSnippet!.match(/random/g) || []).length;
+                // strategy stickiness and variant stickiness
+                expect(count).toBe(2);
+            });
         });
 
-        const slider = await screen.findByRole('slider', { name: /rollout/i });
-        expect(slider).toHaveValue('66');
+        it('should auto-correct missing strategy params without overwriting existing params', async () => {
+            setupFeaturesEndpointWithBrokenStrategy(featureName);
 
-        const groupIdInput = await screen.findByLabelText('groupId');
-        expect(groupIdInput).toHaveValue(featureName);
+            render(
+                <Routes>
+                    <Route
+                        path={
+                            '/projects/:projectId/features/:featureId/strategies/edit'
+                        }
+                        element={<FeatureStrategyEdit />}
+                    />
+                </Routes>,
+                {
+                    route: `/projects/${project}/features/${featureName}/strategies/edit?environmentId=development&strategyId=1`,
+                    permissions: [
+                        {
+                            permission: UPDATE_FEATURE_STRATEGY,
+                            project,
+                            environment: 'development',
+                        },
+                    ],
+                },
+            );
 
-        const stickinessSelect = screen.getByTestId(
-            FLEXIBLE_STRATEGY_STICKINESS_ID,
-        );
-        expect(
-            within(stickinessSelect).getByText('Default'),
-        ).toBeInTheDocument();
-    });
+            await waitFor(() => {
+                expect(screen.getByText('Gradual rollout')).toBeInTheDocument();
+            });
 
-    it('should not change variant names', async () => {
-        const { expectedVariantName } = setupComponent();
+            const slider = await screen.findByRole('slider', {
+                name: /rollout/i,
+            });
+            expect(slider).toHaveValue('66');
 
-        await waitFor(() => {
-            expect(screen.getByText('Gradual rollout')).toBeInTheDocument();
+            const groupIdInput = await screen.findByLabelText('groupId');
+            expect(groupIdInput).toHaveValue(featureName);
+
+            const stickinessSelect = screen.getByTestId(
+                FLEXIBLE_STRATEGY_STICKINESS_ID,
+            );
+            expect(
+                within(stickinessSelect).getByText('Default'),
+            ).toBeInTheDocument();
         });
 
-        const variantsEl = screen.getByText('Variants');
-        fireEvent.click(variantsEl);
+        it('should not change variant names', async () => {
+            const { expectedVariantName } = setupComponent();
 
-        expect(screen.getByText(expectedVariantName)).toBeInTheDocument();
+            await waitFor(() => {
+                expect(screen.getByText('Gradual rollout')).toBeInTheDocument();
+            });
 
-        const inputElement = screen.getAllByRole('textbox')[0];
-        expect(inputElement).toBeDisabled();
+            const variantsEl = screen.getByText('Variants');
+            fireEvent.click(variantsEl);
+
+            expect(screen.getByText(expectedVariantName)).toBeInTheDocument();
+
+            const inputElement = screen.getAllByRole('textbox')[0];
+            expect(inputElement).toBeDisabled();
+        });
     });
 });

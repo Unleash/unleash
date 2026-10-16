@@ -22,7 +22,11 @@ export class InactiveUsersStore implements IInactiveUsersStore {
                 action,
             });
     }
-    async getInactiveUsers(daysInactive: number): Promise<IInactiveUserRow[]> {
+    async getInactiveUsers(
+        daysInactive: number,
+        offset: number = 0,
+        limit: number = 50,
+    ): Promise<IInactiveUserRow[]> {
         const stopTimer = this.timer('get_inactive_users');
         const inactiveUsers = await this.db<IInactiveUserRow>(TABLE)
             .select(
@@ -33,6 +37,7 @@ export class InactiveUsersStore implements IInactiveUsersStore {
                 'users.seen_at AS seen_at',
                 'pat.seen_at AS pat_seen_at',
                 'users.created_at AS created_at',
+                this.db.raw('COUNT(*) OVER()::int AS total_inactive_users'),
             )
             .leftJoin(
                 'personal_access_tokens AS pat',
@@ -47,7 +52,9 @@ export class InactiveUsersStore implements IInactiveUsersStore {
         AND (users.created_at IS NULL OR users.created_at < now() - INTERVAL '?? days')
         AND (pat.seen_at IS NULL OR pat.seen_at < now() - INTERVAL '?? days')`,
                 [daysInactive, daysInactive, daysInactive],
-            );
+            )
+            .offset(offset)
+            .limit(limit);
         stopTimer();
         return inactiveUsers;
     }

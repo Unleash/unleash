@@ -41,7 +41,7 @@ export interface ProjectSchema {
     /** The number of features this project has */
     featureCount?: number;
     /**
-     * Use `technicalDebt` instead.
+     * An indicator of the project's health on a scale from 0 to 100
      * @deprecated
      */
     health?: number;
@@ -64,7 +64,10 @@ export interface ProjectSchema {
     /** The name of this project */
     name: string;
     onboardingStatus?: OnboardingStatusSchema;
-    /** The users and/or groups that have the "owner" role in this project. If no such users or groups exist, the list will contain the "system" owner instead. */
+    /**
+     * The users and/or groups that have the "owner" role in this project. If no such users or groups exist, the list will contain the "system" owner instead.
+     * @deprecated
+     */
     owners?: ProjectSchemaOwners;
     /**
      * The number of potentially stale features this project has
@@ -78,6 +81,7 @@ export interface ProjectSchema {
     staleFeatureCount?: number;
     /**
      * An indicator of the [project's technical debt](https://docs.getunleash.io/concepts/technical-debt#project-status) on a scale from 0 to 100
+     * @deprecated
      * @minimum 0
      * @maximum 100
      */

@@ -21,7 +21,13 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useFeatureToggleSwitch } from '../ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch.tsx';
 import useLoading from 'hooks/useLoading';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
-import { withTableState } from 'utils/withTableState';
+import { useTableState } from 'hooks/useTableState';
+import {
+    toggleColumnTracking,
+    flagsListProps,
+    flagsListTableTracking,
+} from 'component/feature/FeatureToggleList/flagsListTracking';
+import { useTracking } from 'hooks/useTracking';
 import type { FeatureSearchResponseSchema } from 'openapi';
 import {
     ArchivedFeatureToggleCell,
@@ -49,7 +55,10 @@ import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { useEventTracker } from 'hooks/useEventTracker';
 import { ImportModal } from '../Import/ImportModal.tsx';
 import { ProjectCleanupReminder } from './ProjectCleanupReminder/ProjectCleanupReminder.tsx';
-import { formatEnvironmentColumnId } from './formatEnvironmentColumnId.ts';
+import {
+    formatEnvironmentColumnId,
+    trackedColumnName,
+} from 'utils/formatEnvironmentColumnId';
 import { ProjectFeaturesColumnsMenu } from './ProjectFeaturesColumnsMenu/ProjectFeaturesColumnsMenu.tsx';
 import { ProjectFeatureTogglesHeader } from './ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader.tsx';
 import { ProjectFlagsSearch } from './ProjectFlagsSearch/ProjectFlagsSearch.tsx';
@@ -122,6 +131,15 @@ export const ProjectFeatureToggles = ({
         lastSeenAt: tableState.lastSeenAt,
         favorite: tableState.favorite,
     };
+    const listProps = flagsListProps({
+        filterState,
+        query: tableState.query,
+        total,
+    });
+    const trackToggleColumn = useTracking({
+        ...toggleColumnTracking,
+        props: listProps,
+    });
 
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const onFavorite = useCallback(
@@ -435,14 +453,19 @@ export const ProjectFeatureToggles = ({
     const defaultColumnVisibility = useDefaultColumnVisibility(allColumnIds);
 
     const table = useReactTable(
-        withTableState(tableState, setTableState, {
-            columns,
-            data,
-            enableRowSelection: true,
-            state: {
-                columnVisibility: defaultColumnVisibility,
+        useTableState({
+            tableState,
+            setTableState,
+            options: {
+                columns,
+                data,
+                enableRowSelection: true,
+                state: {
+                    columnVisibility: defaultColumnVisibility,
+                },
+                getRowId,
             },
-            getRowId,
+            tracking: { ...flagsListTableTracking, props: listProps },
         }),
     );
 
@@ -466,8 +489,12 @@ export const ProjectFeatureToggles = ({
                         !columnId.includes(','),
                 ),
             });
+            trackToggleColumn('succeeded', {
+                column: trackedColumnName(columnId),
+                newState: isVisible ? 'hidden' : 'shown',
+            });
         },
-        [columnVisibility, setTableState],
+        [columnVisibility, setTableState, trackToggleColumn],
     );
 
     const selectedData = useSelectedData(features, rowSelection);
@@ -543,6 +570,7 @@ export const ProjectFeatureToggles = ({
                                 />
                             </FilterRow>
                             <FavoriteIconHeader
+                                scope='project'
                                 isActive={tableState.favoritesFirst}
                                 onClick={() =>
                                     setTableState({

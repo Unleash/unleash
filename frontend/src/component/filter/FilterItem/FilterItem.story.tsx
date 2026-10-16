@@ -272,6 +272,7 @@ const Demo = ({
             <Box>
                 <FilterItem
                     initMode='manual'
+                    filterKey='createdBy'
                     name='Created by'
                     label='Created by'
                     options={options}

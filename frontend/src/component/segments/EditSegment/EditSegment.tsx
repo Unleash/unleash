@@ -31,7 +31,7 @@ import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-repla
 import { useTracking } from 'hooks/useTracking';
 import {
     segmentChangedProps,
-    segmentEditedTracking,
+    editSegmentTracking,
     segmentTrackingProps,
 } from 'component/segments/segmentTrackingProps';
 
@@ -61,7 +61,7 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
     const navigate = useNavigate();
     const { updateSegment, loading } = useSegmentsApi();
     const { refetchSegments } = useSegments();
-    const trackSegmentEdited = useTracking(segmentEditedTracking);
+    const trackEditSegment = useTracking(editSegmentTracking);
 
     const {
         name,
@@ -111,8 +111,6 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
             const trackingProps = {
                 viaChangeRequest: Boolean(changeRequestEnv),
                 ...segmentTrackingProps({
-                    name,
-                    id: segment.id,
                     constraints,
                     description,
                 }),
@@ -128,7 +126,7 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
                 }),
             };
             try {
-                await trackSegmentEdited.mutation(
+                await trackEditSegment.mutation(
                     () =>
                         changeRequestEnv
                             ? addChange(

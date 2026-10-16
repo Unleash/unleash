@@ -1,11 +1,11 @@
 import type { IUnleashContextDefinition } from 'interfaces/context.ts';
 import type { EditableConstraint } from './useEditableConstraint/editable-constraint-type';
-import type { SelectOptionGroup } from 'component/common/GeneralSelect/GeneralSelect';
+import type { SelectOptionGroup } from 'component/common/SelectPopover/SelectPopover.tsx';
 
 export const createContextFieldOptions = (
     localConstraint: EditableConstraint,
     context: IUnleashContextDefinition[],
-) => {
+): SelectOptionGroup<string>[] => {
     const existingContextFieldNames = context.map((context) => context.name);
     const contextFieldHasBeenDeleted = !existingContextFieldNames.includes(
         localConstraint.contextName,
@@ -30,7 +30,7 @@ export const createContextFieldOptions = (
         opts
             .toSorted((a, b) => a.name.localeCompare(b.name))
             .map((option) => ({
-                key: option.name,
+                value: option.name,
                 label: option.name,
             }));
 
@@ -47,5 +47,5 @@ export const createContextFieldOptions = (
             groupHeader: 'Deleted context fields',
             options: optList([{ name: localConstraint.contextName }]),
         },
-    ].filter(Boolean) as SelectOptionGroup[];
+    ].filter(Boolean) as SelectOptionGroup<string>[];
 };

@@ -7,6 +7,7 @@ import {
     AddonConfigCreatedEvent,
     AddonConfigDeletedEvent,
     AddonConfigUpdatedEvent,
+    type IFlagResolver,
 } from '../types/index.js';
 import { addonSchema } from './addon-schema.js';
 import NameExistsError from '../error/name-exists-error.js';
@@ -24,7 +25,7 @@ import {
     type IUnleashStores,
     SYSTEM_USER_AUDIT,
 } from '../types/index.js';
-import type { IAddonDefinition } from '../types/model.js';
+import type { IAddonDefinition, IAddonOverview } from '../types/model.js';
 import { minutesToMilliseconds } from 'date-fns';
 import type EventService from '../features/events/event-service.js';
 import { omitKeys } from '../util/index.js';
@@ -35,6 +36,10 @@ import { validateUrl } from '../addons/validate-url.js';
 const MASKED_VALUE = '*****';
 
 const WILDCARD_OPTION = '*';
+
+const KVP_TYPE = 'keyvaluepairs';
+const ARRAY_TYPE = 'array';
+const OBJECT_ARRAY_TYPE = 'objectarray';
 
 interface ISensitiveParams {
     [key: string]: string[];
@@ -53,6 +58,8 @@ export default class AddonService {
     addonProviders: IAddonProviders;
 
     sensitiveParams: ISensitiveParams;
+
+    flagResolver: IFlagResolver;
 
     fetchAddonConfigs: (() => Promise<IAddon[]>) &
         memoizee.Memoized<() => Promise<IAddon[]>>;
@@ -97,6 +104,7 @@ export default class AddonService {
         this.eventHandlers = new Map();
         this.allowPrivateUrls = allowPrivateUrlInIntegration ?? false;
         this.allowList = allowListIntegration ?? [];
+        this.flagResolver = flagResolver;
 
         this.addonProviders =
             addons ||
@@ -181,6 +189,7 @@ export default class AddonService {
                         addon.environments.includes(event.environment),
                 )
                 .filter((addon) => addonProviders[addon.provider])
+                .filter((addon) => this.isProviderEnabled(addon.provider))
                 .map((addon) =>
                     addonProviders[addon.provider].handleEvent(
                         event,
@@ -205,6 +214,20 @@ export default class AddonService {
         }
 
         return addonConfigs.map((a) => this.filterSensitiveFields(a));
+    }
+
+    private validateAddonBelongsToProject(
+        addon: IAddon,
+        project: string | undefined,
+    ): void {
+        const { projects } = addon;
+
+        if (!project) return;
+        if (projects?.length === 1 && projects[0] === project) return;
+
+        throw new NotFoundError(
+            `Could not find integration ${addon.id} in project ${project}`,
+        );
     }
 
     filterSensitiveFields(addonConfig: IAddon): IAddon {
@@ -236,6 +259,24 @@ export default class AddonService {
         return Object.values(addonProviders).map((p) => p.definition);
     }
 
+    async getAddonsOverview(projectId?: string): Promise<IAddonOverview> {
+        const addons = await this.getAddons(projectId);
+
+        return {
+            addons: addons.filter((addon) =>
+                this.isProviderEnabled(addon.provider),
+            ),
+            providers: this.getProviderDefinitions().filter((provider) =>
+                this.isProviderEnabled(provider.name),
+            ),
+        };
+    }
+
+    private isProviderEnabled(provider: string): boolean {
+        const flag = this.addonProviders[provider]?.flag;
+        return !flag || this.flagResolver.isEnabled(flag);
+    }
+
     async addTagTypes(providerName: string): Promise<void> {
         const provider = this.addonProviders[providerName];
         if (provider) {
@@ -258,11 +299,29 @@ export default class AddonService {
         return Promise.resolve();
     }
 
-    async createAddon(data: IAddonDto, auditUser: IAuditUser): Promise<IAddon> {
+    private async prepareAddonConfig(
+        data: IAddonDto,
+        project?: string,
+    ): Promise<IAddonDto> {
         const addonConfig = await addonSchema.validateAsync(data);
+        if (project) {
+            addonConfig.projects = [project];
+        }
         await this.validateKnownProvider(addonConfig);
+        this.validateProviderEnabled(addonConfig);
         await this.validateRequiredParameters(addonConfig);
+        this.validateParameterTypes(addonConfig);
+        addonConfig.parameters = this.trimKvpKeys(addonConfig);
         await this.validateUrlParameter(addonConfig);
+        return addonConfig;
+    }
+
+    async createAddon(
+        data: IAddonDto,
+        auditUser: IAuditUser,
+        project?: string,
+    ): Promise<IAddon> {
+        const addonConfig = await this.prepareAddonConfig(data, project);
         const addon = this.addonProviders[addonConfig.provider];
         if (addon.definition.deprecated) {
             throw new BadDataError(addon.definition.deprecated);
@@ -282,22 +341,21 @@ export default class AddonService {
             }),
         );
 
-        return createdAddon;
+        return this.filterSensitiveFields(createdAddon);
     }
 
     async updateAddon(
         id: number,
         data: IAddonDto,
         auditUser: IAuditUser,
+        project?: string,
     ): Promise<IAddon> {
         const existingConfig = await this.addonStore.get(id);
         if (existingConfig === undefined) {
             throw new NotFoundError();
         } // because getting an early 404 here makes more sense
-        const addonConfig = await addonSchema.validateAsync(data);
-        await this.validateKnownProvider(addonConfig);
-        await this.validateRequiredParameters(addonConfig);
-        await this.validateUrlParameter(addonConfig);
+        this.validateAddonBelongsToProject(existingConfig, project);
+        const addonConfig = await this.prepareAddonConfig(data, project);
         if (this.sensitiveParams[addonConfig.provider].length > 0) {
             addonConfig.parameters = Object.keys(addonConfig.parameters).reduce(
                 (params, key) => {
@@ -321,15 +379,20 @@ export default class AddonService {
             }),
         );
         this.logger.info(`User ${auditUser} updated addon ${id}`);
-        return result;
+        return this.filterSensitiveFields(result);
     }
 
-    async removeAddon(id: number, auditUser: IAuditUser): Promise<void> {
+    async removeAddon(
+        id: number,
+        auditUser: IAuditUser,
+        project?: string,
+    ): Promise<void> {
         const existingConfig = await this.addonStore.get(id);
         if (existingConfig === undefined) {
             /// No config, no need to delete
             return;
         }
+        this.validateAddonBelongsToProject(existingConfig, project);
         await this.addonStore.delete(id);
         await this.eventService.storeEvent(
             new AddonConfigDeletedEvent({
@@ -362,6 +425,15 @@ export default class AddonService {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    validateProviderEnabled({ provider }: Pick<IAddonDto, 'provider'>): void {
+        if (!this.isProviderEnabled(provider)) {
+            const { displayName } = this.addonProviders[provider].definition;
+            throw new BadDataError(
+                `The ${displayName} integration is disabled because the controlling feature flag is turned off.`,
+            );
+        }
+    }
+
     async validateRequiredParameters({
         provider,
         parameters,
@@ -387,6 +459,101 @@ export default class AddonService {
         }
         return true;
     }
+
+    private getProviderParamNamesOfType = (provider, type: string) =>
+        this.addonProviders[provider].definition.parameters
+            ?.filter((p) => p.type === type)
+            .map((p) => p.name);
+
+    private getProviderParamTypes = (provider): Map<string, string> =>
+        new Map(
+            this.addonProviders[provider].definition.parameters?.map((p) => [
+                p.name,
+                p.type,
+            ]),
+        );
+
+    validateParameterTypes({ provider, parameters }): void {
+        const paramTypes = this.getProviderParamTypes(provider);
+
+        for (const [name, value] of Object.entries(parameters)) {
+            const isArray = Array.isArray(value);
+            const isObject =
+                typeof value === 'object' && value !== null && !isArray;
+
+            switch (paramTypes.get(name)) {
+                case KVP_TYPE:
+                    if (!isObject) {
+                        throw new BadDataError(
+                            `Parameter "${name}" must be an object of key-value pairs.`,
+                        );
+                    }
+                    break;
+                case ARRAY_TYPE:
+                    if (!isArray || value.some((i) => typeof i !== 'string')) {
+                        throw new BadDataError(
+                            `Parameter "${name}" must be an array of strings.`,
+                        );
+                    }
+                    break;
+                case OBJECT_ARRAY_TYPE:
+                    if (
+                        !isArray ||
+                        value.some(
+                            (i) =>
+                                typeof i !== 'object' ||
+                                i === null ||
+                                Array.isArray(i),
+                        )
+                    ) {
+                        throw new BadDataError(
+                            `Parameter "${name}" must be an array of objects.`,
+                        );
+                    }
+                    break;
+                default:
+                    if (isObject || isArray) {
+                        throw new BadDataError(
+                            `Parameter "${name}" does not accept objects or arrays.`,
+                        );
+                    }
+            }
+        }
+    }
+
+    trimKvpKeys({ provider, parameters }): Record<string, unknown> {
+        const kvpParamNames = this.getProviderParamNamesOfType(
+            provider,
+            KVP_TYPE,
+        );
+        if (!kvpParamNames) return parameters;
+
+        const cleaned = { ...parameters };
+        for (const name of kvpParamNames) {
+            const inputParam = parameters[name];
+            if (!inputParam) continue;
+
+            const trimmed = Object.fromEntries(
+                Object.entries(inputParam).map(([key, value]) => [
+                    key.trim(),
+                    value,
+                ]),
+            );
+
+            // If the key count after trimming is different, there must have been dupes.
+            if (
+                Object.keys(trimmed).length !== Object.keys(inputParam).length
+            ) {
+                throw new BadDataError(
+                    `Parameter "${name}" has keys that are duplicates once surrounding whitespace is removed.`,
+                );
+            }
+            cleaned[name] = trimmed;
+        }
+
+        return cleaned;
+    }
+
     async validateUrlParameter({ parameters }): Promise<void> {
         if (parameters?.url && parameters.url !== MASKED_VALUE) {
             await validateUrl(parameters.url, {

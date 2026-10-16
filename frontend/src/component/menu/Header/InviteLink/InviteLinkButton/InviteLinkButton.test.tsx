@@ -4,15 +4,11 @@ import { screen } from '@testing-library/react';
 import InviteLinkButton from './InviteLinkButton.tsx';
 import { AccessProviderMock } from 'component/providers/AccessProvider/AccessProviderMock';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { testServerSetup } from 'utils/testServer';
 
-const server = testServerSetup();
+testServerSetup();
 
-const setupApi = () => {
-    testServerRoute(server, '/api/admin/ui-config', {});
-};
-test('Do not show button to non admins', async () => {
-    setupApi();
+test('does not show the invite control to non-admins', () => {
     render(
         <AccessProviderMock permissions={[]}>
             <InviteLinkButton />
@@ -22,9 +18,13 @@ test('Do not show button to non admins', async () => {
     expect(screen.queryByLabelText('Invite users')).not.toBeInTheDocument();
 });
 
-test('Show button to non admins', async () => {
-    setupApi();
+test('links directly to the users page for admins', async () => {
     render(<InviteLinkButton />, { permissions: [{ permission: ADMIN }] });
 
-    await screen.findByLabelText('Invite users');
+    const inviteLink = await screen.findByRole('link', {
+        name: 'Invite users',
+    });
+
+    expect(inviteLink).toHaveAttribute('href', '/admin/users');
+    expect(inviteLink).toHaveTextContent('Invite');
 });

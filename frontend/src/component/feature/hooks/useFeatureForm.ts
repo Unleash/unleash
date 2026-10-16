@@ -5,6 +5,32 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import type { ITag } from 'interfaces/tags';
 import type { CreateFeatureSchema, CreateFeatureSchemaType } from 'openapi';
+import { differenceInCalendarDays, parseISO } from 'date-fns';
+
+export type CreateFeaturePayload = CreateFeatureSchema & {
+    lifetimeDays?: number;
+};
+
+export type Lifetime =
+    | { type: 'preset'; days: number }
+    | { type: 'custom'; endsAt: string }
+    | { type: 'permanent' };
+
+const lifetimeDaysOf = (lifetime: Lifetime | undefined) => {
+    switch (lifetime?.type) {
+        case 'preset':
+            return lifetime.days;
+        case 'custom':
+            return differenceInCalendarDays(
+                parseISO(lifetime.endsAt),
+                new Date(),
+            );
+        case 'permanent':
+            return 0;
+        default:
+            return undefined;
+    }
+};
 
 export type FeatureFormInitialData = Partial<{
     name: string;
@@ -13,6 +39,7 @@ export type FeatureFormInitialData = Partial<{
     description: string;
     impressionData: boolean;
     tags: Set<ITag>;
+    lifetime: Lifetime;
 }>;
 
 const useFeatureForm = ({
@@ -22,6 +49,7 @@ const useFeatureForm = ({
     description: initialDescription = '',
     impressionData: initialImpressionData = false,
     tags: initialTags = new Set(),
+    lifetime: initialLifetime,
 }: FeatureFormInitialData) => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
@@ -35,7 +63,10 @@ const useFeatureForm = ({
     const [impressionData, setImpressionData] = useState<boolean>(
         initialImpressionData,
     );
-    const [errors, setErrors] = useState({});
+    const [lifetime, setLifetime] = useState<Lifetime | undefined>(
+        initialLifetime,
+    );
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
     useEffect(() => {
         setType(initialType);
@@ -54,13 +85,14 @@ const useFeatureForm = ({
         setImpressionData(initialImpressionData);
     }, [initialImpressionData]);
 
-    const getTogglePayload = (): CreateFeatureSchema => {
+    const getTogglePayload = (): CreateFeaturePayload => {
         const tagsPayload = tags.size > 0 ? { tags: Array.from(tags) } : {};
         return {
             type,
             name,
             description,
             impressionData,
+            lifetimeDays: lifetimeDaysOf(lifetime),
             ...tagsPayload,
         };
     };
@@ -96,6 +128,8 @@ const useFeatureForm = ({
         setDescription,
         impressionData,
         setImpressionData,
+        lifetime,
+        setLifetime,
         getTogglePayload,
         validateToggleName,
         clearErrors,

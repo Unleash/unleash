@@ -24,7 +24,6 @@ type Edition = 'oss' | 'enterprise';
 const setupMocks = ({
     edition = 'enterprise' as Edition,
     initialSplash = {} as Record<string, boolean>,
-    flagEnabled = true,
     projects = [] as ProjectSpec[],
     projectsFail = false,
     defaultStatus = 'onboarding-started' as ProjectStatus | 'missing' | 'error',
@@ -42,7 +41,7 @@ const setupMocks = ({
     server.use(
         http.get('*/api/admin/ui-config', () =>
             HttpResponse.json({
-                flags: { floatingOnboardingChecklist: flagEnabled },
+                flags: {},
                 versionInfo:
                     edition === 'enterprise'
                         ? { current: { enterprise: '5.0.0' } }
@@ -97,26 +96,6 @@ const setupMocks = ({
 const adminOpts = { permissions: [{ permission: ADMIN }] };
 
 describe('visibility gate', () => {
-    test('stays hidden when the checklist feature is disabled', async () => {
-        const mocks = setupMocks({
-            flagEnabled: false,
-            projects: ['onboarding-started'],
-            defaultStatus: 'onboarding-started',
-        });
-
-        const { container } = render(
-            <FloatingOnboardingChecklistVisibilityGate />,
-            adminOpts,
-        );
-
-        await waitFor(() => {
-            expect(container.textContent).toBe('');
-        });
-        expect(mocks.state.projectsFetches).toBe(0);
-        expect(mocks.state.overviewFetches).toBe(0);
-        expect(mocks.postedKeys).toEqual([]);
-    });
-
     test('shows the checklist immediately when the user is already known to be eligible', async () => {
         const mocks = setupMocks({
             initialSplash: {

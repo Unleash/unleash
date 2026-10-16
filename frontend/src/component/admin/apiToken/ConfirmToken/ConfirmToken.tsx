@@ -4,7 +4,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { UserToken } from './UserToken/UserToken.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TokenType } from 'interfaces/token';
-import { apiTokenCopiedTracking } from 'component/common/ApiTokenTable/apiTokenTracking';
+import { copyApiTokenTracking } from 'component/common/ApiTokenTable/apiTokenTracking';
 
 interface IConfirmUserLink {
     open: boolean;
@@ -40,10 +40,7 @@ export const ConfirmToken = ({
             </Typography>
             <UserToken
                 token={token}
-                copyTracking={apiTokenCopiedTracking(
-                    { type },
-                    'confirm-dialog',
-                )}
+                copyTracking={copyApiTokenTracking({ type }, 'confirm-dialog')}
             />
             <ConditionallyRender
                 condition={secure}

@@ -1,4 +1,5 @@
-import { Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Route, Routes, useLocation } from 'react-router';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeedbackNPS } from 'component/feedback/FeedbackNPS/FeedbackNPS';
@@ -13,6 +14,7 @@ import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { SplashOverlay } from 'component/splash/SplashOverlay/SplashOverlay';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useSessionKeepAlive } from 'hooks/useSessionKeepAlive';
 
 import { MaintenanceBanner } from './maintenance/MaintenanceBanner.tsx';
 import { styled } from '@mui/material';
@@ -30,6 +32,10 @@ import { SkipNavLink } from './common/SkipNavLink/SkipNavLink.tsx';
 import { IntroProvider } from './onboarding/intro/IntroProvider.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { UxTweakWidgets } from './uxtweak/UxTweakWidgets.tsx';
+
+const FeedbackModule = lazy(
+    () => import('./feedbackModule/delivery/FeedbackModule.tsx'),
+);
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -57,9 +63,11 @@ export const App = () => {
 
     const isLoggedIn = Boolean(user?.id);
     const uxTweakSurveysEnabled = useUiFlag('uxTweakSurveys');
+    const displaySurveyEnabled = useUiFlag('feedbackModuleDisplaySurvey');
 
     const location = useLocation();
     useLastViewedPage(location);
+    useSessionKeepAlive(isLoggedIn);
 
     return (
         <SWRProvider>
@@ -124,6 +132,16 @@ export const App = () => {
 
                                         {isLoggedIn && uxTweakSurveysEnabled ? (
                                             <UxTweakWidgets />
+                                        ) : null}
+
+                                        {isLoggedIn && displaySurveyEnabled ? (
+                                            <ErrorBoundary
+                                                fallbackRender={() => null}
+                                            >
+                                                <Suspense fallback={null}>
+                                                    <FeedbackModule />
+                                                </Suspense>
+                                            </ErrorBoundary>
                                         ) : null}
 
                                         <SplashOverlay />

@@ -50,7 +50,7 @@ export const useManageDependency = (
                     },
                 },
             ]);
-            trackEvent('dependent_features', {
+            trackEvent('dependent-features', {
                 props: {
                     eventType: 'dependency added',
                 },
@@ -76,7 +76,7 @@ export const useManageDependency = (
                         ? 'deleteDependency'
                         : 'addDependency';
                 await handleAddChange(actionType);
-                trackEvent('dependent_features', {
+                trackEvent('dependent-features', {
                     props: {
                         eventType:
                             actionType === 'addDependency'
@@ -86,7 +86,7 @@ export const useManageDependency = (
                 });
             } else if (parent === REMOVE_DEPENDENCY_OPTION.key) {
                 await removeDependencies(featureId);
-                trackEvent('dependent_features', {
+                trackEvent('dependent-features', {
                     props: {
                         eventType: 'dependency removed',
                     },
@@ -101,7 +101,7 @@ export const useManageDependency = (
                             ? parentValue.variants
                             : [],
                 });
-                trackEvent('dependent_features', {
+                trackEvent('dependent-features', {
                     props: {
                         eventType: 'dependency added',
                     },

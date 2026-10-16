@@ -24,7 +24,7 @@ export const IntegrationHowToSection: FC<IIntegrationHowToSectionProps> = ({
     return (
         <StyledHowDoesItWorkSection>
             <Typography
-                variant='h4'
+                variant='h3'
                 component='h3'
                 sx={(theme) => ({
                     display: 'flex',

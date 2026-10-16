@@ -19,7 +19,6 @@ import {
     API_TOKEN_UPDATED,
     DEFAULT_STRATEGY_UPDATED,
     DROP_ENVIRONMENTS,
-    DROP_FEATURE_TAGS,
     DROP_FEATURES,
     DROP_PROJECTS,
     DROP_STRATEGIES,
@@ -112,6 +111,7 @@ import {
     TAG_TYPE_DELETED,
     TAG_TYPE_IMPORT,
     TAG_TYPE_UPDATED,
+    TAG_UPDATED,
     USER_CREATED,
     USER_DELETED,
     USER_PREFERENCE_UPDATED,
@@ -1460,6 +1460,21 @@ export class TagDeletedEvent extends BaseEvent {
     }
 }
 
+export class TagUpdatedEvent extends BaseEvent {
+    readonly data: any;
+    readonly preData: any;
+
+    constructor(eventData: {
+        auditUser: IAuditUser;
+        data: any;
+        preData: any;
+    }) {
+        super(TAG_UPDATED, eventData.auditUser);
+        this.data = eventData.data;
+        this.preData = eventData.preData;
+    }
+}
+
 export class PatCreatedEvent extends BaseEvent {
     readonly data: any;
 
@@ -1567,17 +1582,6 @@ export class DropEnvironmentsEvent extends BaseEvent {
     }) {
         super(DROP_ENVIRONMENTS, eventData.auditUser);
         this.data = { name: 'all-environments' };
-    }
-}
-
-export class DropFeatureTagsEvent extends BaseEvent {
-    readonly data: any;
-
-    constructor(eventData: {
-        auditUser: IAuditUser;
-    }) {
-        super(DROP_FEATURE_TAGS, eventData.auditUser);
-        this.data = { name: 'all-feature-tags' };
     }
 }
 

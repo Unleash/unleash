@@ -43,7 +43,8 @@ import {
     MultiPillDropdown,
     nameInputSlotProps,
     SinglePillDropdown,
-} from 'component/common/DialogFormTemplate/NewDialogFormTemplate';
+} from 'component/common/DialogFormTemplate/DialogFormTemplate.tsx';
+import { dialogHeaderHeight } from 'themes/themeStyles';
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
 } from '../../hooks/useProjectForm.ts';
@@ -67,16 +68,13 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
         backgroundColor: 'transparent',
     },
     padding: 0,
-    '& .MuiPaper-root > section': {
-        overflowX: 'hidden',
-    },
 }));
 
-const StyledNewSidebarHeader = styled(Box)(({ theme }) => ({
+const StyledSidebarHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    height: theme.spacing(8),
+    height: dialogHeaderHeight(theme),
     margin: theme.spacing(-4, -4, 0, -4),
     padding: theme.spacing(0, 2),
     borderBottom: `1px solid ${theme.palette.divider}`,
@@ -86,23 +84,23 @@ const StyledNewSidebarHeader = styled(Box)(({ theme }) => ({
     },
 }));
 
-const StyledNewSidebarCloseButton = styled(IconButton)(({ theme }) => ({
+const StyledSidebarCloseButton = styled(IconButton)(({ theme }) => ({
     color: theme.palette.common.white,
 }));
 
-const StyledNewSidebarLinkContainer = styled(Box)(({ theme }) => ({
+const StyledSidebarLinkContainer = styled(Box)(({ theme }) => ({
     margin: theme.spacing(3, 0),
     display: 'flex',
     alignItems: 'center',
     width: '100%',
 }));
 
-const StyledNewSidebarLinkIcon = styled(MenuBookIcon)(({ theme }) => ({
+const StyledSidebarLinkIcon = styled(MenuBookIcon)(({ theme }) => ({
     marginRight: theme.spacing(1),
     color: theme.palette.primary.contrastText,
 }));
 
-const StyledNewSidebarLink = styled(Link)(({ theme }) => ({
+const StyledSidebarLink = styled(Link)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
     display: 'block',
     '&:hover': {
@@ -122,7 +120,7 @@ const TitleBar = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     padding: theme.spacing(0, 4),
     borderBottom: `1px solid ${theme.palette.divider}`,
-    height: theme.spacing(8),
+    height: dialogHeaderHeight(theme),
     fontWeight: theme.fontWeight.bold,
 }));
 
@@ -407,7 +405,7 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
             navigate(`/projects/${createdProject.id}`);
             setToastData({ text: 'Project created', type: 'success' });
             if (projectStickiness !== DEFAULT_PROJECT_STICKINESS) {
-                trackEvent('project_stickiness_set');
+                trackEvent('project-stickiness-set');
             }
             trackEvent('project-mode', {
                 props: { mode: projectMode, action: 'added' },
@@ -458,25 +456,25 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
 
     const sidebar: ReactNode = (
         <>
-            <StyledNewSidebarHeader>
-                <StyledNewSidebarCloseButton
+            <StyledSidebarHeader>
+                <StyledSidebarCloseButton
                     onClick={onClose}
                     size='small'
                     aria-label='Close'
                 >
                     <CloseIcon />
-                </StyledNewSidebarCloseButton>
-            </StyledNewSidebarHeader>
-            <StyledNewSidebarLinkContainer>
-                <StyledNewSidebarLinkIcon />
-                <StyledNewSidebarLink
+                </StyledSidebarCloseButton>
+            </StyledSidebarHeader>
+            <StyledSidebarLinkContainer>
+                <StyledSidebarLinkIcon />
+                <StyledSidebarLink
                     href='https://docs.getunleash.io/reference/projects'
                     rel='noopener noreferrer'
                     target='_blank'
                 >
                     Projects documentation
-                </StyledNewSidebarLink>
-            </StyledNewSidebarLinkContainer>
+                </StyledSidebarLink>
+            </StyledSidebarLinkContainer>
             <ApiCommandBlock
                 command={formatApiCode()}
                 onCopy={copyApiCommand}

@@ -7,7 +7,12 @@ import {
 import type { IInactiveUsersStore } from './types/inactive-users-store-type.js';
 import type { Logger } from '../../logger.js';
 import type { InactiveUserSchema } from '../../openapi/index.js';
-import type { UserService } from '../../services/index.js';
+import type { IUnleashServices, UserService } from '../../services/index.js';
+
+export interface InactiveUsers {
+    totalInactiveUsers: number;
+    inactiveUsers: InactiveUserSchema[];
+}
 
 export class InactiveUsersService {
     private inactiveUsersStore: IInactiveUsersStore;
@@ -20,22 +25,25 @@ export class InactiveUsersService {
             getLogger,
             userInactivityThresholdInDays,
         }: Pick<IUnleashConfig, 'getLogger' | 'userInactivityThresholdInDays'>,
-        services: {
-            userService: UserService;
-        },
+        { userService }: Pick<IUnleashServices, 'userService'>,
     ) {
         this.logger = getLogger('services/client-feature-toggle-service.ts');
         this.inactiveUsersStore = inactiveUsersStore;
-        this.userService = services.userService;
+        this.userService = userService;
         this.userInactivityThresholdInDays = userInactivityThresholdInDays;
     }
 
-    async getInactiveUsers(): Promise<InactiveUserSchema[]> {
+    async getInactiveUsers(
+        offset: number = 0,
+        limit: number = 50,
+    ): Promise<InactiveUsers> {
         const users = await this.inactiveUsersStore.getInactiveUsers(
             this.userInactivityThresholdInDays,
+            offset,
+            limit,
         );
         if (users.length > 0) {
-            return users.map((user) => {
+            const inactiveUsers = users.map((user) => {
                 return serializeDates({
                     id: user.id,
                     name: user.name,
@@ -46,8 +54,12 @@ export class InactiveUsersService {
                     patSeenAt: user.pat_seen_at,
                 });
             });
+            return {
+                inactiveUsers,
+                totalInactiveUsers: users[0].total_inactive_users,
+            };
         } else {
-            return [];
+            return { inactiveUsers: [], totalInactiveUsers: 0 };
         }
     }
 

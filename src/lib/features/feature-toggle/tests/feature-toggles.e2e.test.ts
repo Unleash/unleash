@@ -93,6 +93,7 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
+                    perFlagLifetime: true,
                 },
             },
         },
@@ -360,6 +361,34 @@ test('Can get features for project', async () => {
                 ),
             ).toBeTruthy();
         });
+});
+
+test('core view omits environments and other derived flag fields', async () => {
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name: 'core-view-flag' })
+        .expect(201);
+
+    const { body } = await app.request
+        .get('/api/admin/projects/default/features?view=core')
+        .expect(200);
+    await app.request
+        .get('/api/admin/projects/default/features?view=core&namePrefix=core')
+        .expect(400);
+
+    const flag = body.features.find(
+        (feature) => feature.name === 'core-view-flag',
+    );
+    expect(flag).toEqual({
+        name: 'core-view-flag',
+        type: 'release',
+        description: null,
+        stale: false,
+        favorite: false,
+        impressionData: false,
+        createdAt: expect.any(String),
+        environments: [],
+    });
 });
 
 test('Can enable/disable environment for feature with strategies', async () => {
@@ -728,12 +757,23 @@ test('Should update feature flag', async () => {
     const name = 'new.flag.update';
     await app.request
         .post(url)
-        .send({ name, description: 'some', type: 'release' })
-        .expect(201);
+        .send({ name, description: 'some', type: 'release', lifetimeDays: 30 })
+        .expect(201)
+        .expect((res) => {
+            expect(res.body.lifetimeDays).toBe(30);
+        });
     await app.request
         .put(`${url}/${name}`)
-        .send({ name, description: 'updated', type: 'kill-switch' })
-        .expect(200);
+        .send({
+            name,
+            description: 'updated',
+            type: 'kill-switch',
+            lifetimeDays: 0,
+        })
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.lifetimeDays).toBe(0);
+        });
 
     const { body: flag } = await app.request.get(`${url}/${name}`);
 
@@ -741,6 +781,60 @@ test('Should update feature flag', async () => {
     expect(flag.description).toBe('updated');
     expect(flag.type).toBe('kill-switch');
     expect(flag.archived).toBeFalsy();
+});
+
+describe('expectedLifetimeEndsAt on the flag payload', () => {
+    const url = '/api/admin/projects/default/features';
+    const createdAt = new Date('2026-01-01T00:00:00.000Z');
+
+    const createAndFetch = async (
+        name: string,
+        flag: { type: string; lifetimeDays?: number },
+    ) => {
+        await app.request
+            .post(url)
+            .send({ name, ...flag })
+            .expect(201);
+        await db
+            .rawDatabase('features')
+            .where({ name })
+            .update({ created_at: createdAt });
+        const { body } = await app.request.get(`${url}/${name}`).expect(200);
+        return body;
+    };
+
+    test("is the creation date plus the flag's lifetime", async () => {
+        const flag = await createAndFetch('lifetime.own', {
+            type: 'release',
+            lifetimeDays: 30,
+        });
+
+        expect(flag).toMatchObject({
+            createdAt: '2026-01-01T00:00:00.000Z',
+            expectedLifetimeEndsAt: '2026-01-31T00:00:00.000Z',
+        });
+        expect(flag).not.toHaveProperty('lifetimeDays');
+    });
+
+    test("is the creation date plus the type's lifetime when the flag has none", async () => {
+        const flag = await createAndFetch('lifetime.from-type', {
+            type: 'release',
+        });
+
+        expect(flag).toMatchObject({
+            createdAt: '2026-01-01T00:00:00.000Z',
+            expectedLifetimeEndsAt: '2026-02-10T00:00:00.000Z', // default lifetime of a release type is 40 days
+        });
+    });
+
+    test('is null for a permanent flag', async () => {
+        const flag = await createAndFetch('lifetime.permanent', {
+            type: 'release',
+            lifetimeDays: 0,
+        });
+
+        expect(flag).toMatchObject({ expectedLifetimeEndsAt: null });
+    });
 });
 
 test('Should not change name of feature flag', async () => {
@@ -1107,6 +1201,42 @@ test('update strategy on feature flag cannot use wrong projectId', async () => {
         .put(
             `/api/admin/projects/invalidId/features/${featureName}/environments/${envName}/strategies/${strategy.id}`,
         )
+        .send({
+            name: 'default',
+            parameters: {
+                userIds: '1234',
+            },
+        })
+        .expect(403);
+});
+
+test('update strategy on feature flag cannot use wrong environment', async () => {
+    const envName = DEFAULT_ENV;
+    const featureName = 'feature.strategy.update.strat.wrong.environment';
+
+    const projectPath = '/api/admin/projects/default';
+    const featurePath = `${projectPath}/features/${featureName}`;
+
+    // create feature flag
+    await app.request
+        .post(`${projectPath}/features`)
+        .send({ name: featureName })
+        .expect(201);
+
+    // add strategy
+    const { body: strategy } = await app.request
+        .post(`${featurePath}/environments/${envName}/strategies`)
+        .send({
+            name: 'default',
+            parameters: {
+                userIds: '',
+            },
+        })
+        .expect(200);
+
+    // update strategy
+    await app.request
+        .put(`${featurePath}/environments/production/strategies/${strategy.id}`)
         .send({
             name: 'default',
             parameters: {

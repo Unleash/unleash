@@ -9,6 +9,11 @@ import {
     FEATURE_LINK_UPDATED,
     FEATURE_LINK_REMOVED,
     FEATURE_PROJECT_CHANGE,
+    FEATURE_POTENTIALLY_STALE_ON,
+    FEATURE_COMPLETED,
+    FEATURE_UNCOMPLETED,
+    FEATURE_STALE_ON,
+    FEATURE_STALE_OFF,
     FEATURES_IMPORTED,
     type IBaseEvent,
     type IEvent,
@@ -209,30 +214,39 @@ export class EventStore implements IEventStore {
      */
     async batchStoreOrThrow(events: IBaseEvent[]): Promise<void> {
         const stopTimer = this.metricTimer('batchStore');
+        const rows = events.map((event) => this.eventToDbRow(event));
         try {
-            await this.db(TABLE).insert(
-                events.map((event) => this.eventToDbRow(event)),
-            );
+            for (let i = 0; i < rows.length; i += 1000) {
+                await this.db(TABLE).insert(rows.slice(i, i + 1000));
+            }
         } finally {
             stopTimer();
         }
     }
+
+    private featureEventAffectsConfiguration = (builder: Knex.QueryBuilder) =>
+        builder
+            .whereNotNull('feature_name')
+            .whereNotIn('type', [
+                FEATURE_FAVORITED,
+                FEATURE_UNFAVORITED,
+                FEATURE_LINK_ADDED,
+                FEATURE_LINK_UPDATED,
+                FEATURE_LINK_REMOVED,
+                FEATURE_POTENTIALLY_STALE_ON,
+                FEATURE_COMPLETED,
+                FEATURE_UNCOMPLETED,
+                FEATURE_STALE_ON,
+                FEATURE_STALE_OFF,
+            ])
+            .whereNot('type', 'LIKE', 'change-%');
 
     private eventTypeIsInteresting =
         (opts?: { additionalTypes?: string[]; environment?: string }) =>
         (builder: Knex.QueryBuilder) =>
             builder
                 .andWhere((inner) => {
-                    inner
-                        .whereNotNull('feature_name')
-                        .whereNotIn('type', [
-                            FEATURE_FAVORITED,
-                            FEATURE_UNFAVORITED,
-                            FEATURE_LINK_ADDED,
-                            FEATURE_LINK_UPDATED,
-                            FEATURE_LINK_REMOVED,
-                        ])
-                        .whereNot('type', 'LIKE', 'change-%');
+                    this.featureEventAffectsConfiguration(inner);
                     if (opts?.environment && opts.environment !== ALL_ENVS) {
                         inner.andWhere((envInner) => {
                             envInner
@@ -250,7 +264,7 @@ export class EventStore implements IEventStore {
                     ...(opts?.additionalTypes ?? []),
                 ]);
 
-    /** This method is used for polling */
+    /** Configuration revision watermark for polling, delta and cache notifications. */
     async getMaxRevisionId(
         largerThan: number = 0,
         environment?: string,
@@ -360,20 +374,8 @@ export class EventStore implements IEventStore {
         }> = await this.db(TABLE)
             .select('project')
             .max({ revisionId: 'id' })
-            .where((builder) => {
-                builder
-                    .whereNotNull('feature_name')
-                    .whereNotIn('type', [
-                        FEATURE_FAVORITED,
-                        FEATURE_UNFAVORITED,
-                        FEATURE_LINK_ADDED,
-                        FEATURE_LINK_UPDATED,
-                        FEATURE_LINK_REMOVED,
-                    ])
-                    .whereNot('type', 'LIKE', 'change-%');
-
-                return applyEnvironmentFilter(builder);
-            })
+            .where(this.featureEventAffectsConfiguration)
+            .modify(applyEnvironmentFilter)
             .whereNotNull('project')
             .groupBy('project');
 

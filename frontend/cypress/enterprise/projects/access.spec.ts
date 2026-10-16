@@ -15,6 +15,7 @@ describe('project-access', () => {
     const baseUrl = Cypress.config().baseUrl;
     const randomId = String(Math.random()).split('.')[1];
     const groupAndProjectName = `group-e2e-${randomId}`;
+    const accessPath = `/projects/${groupAndProjectName}/settings/access`;
     const userName = `user-e2e-${randomId}`;
     const groupIds: any[] = [];
     const userIds: any[] = [];
@@ -85,6 +86,9 @@ describe('project-access', () => {
 
         cy.get(`[data-testid='${PA_ASSIGN_CREATE_ID}']`).click();
         cy.wait('@assignAccess');
+        // Prevents the test ending with the navigation, and page reset hanging
+        // before the next test
+        cy.location('pathname').should('eq', accessPath);
         cy.contains(`1-${userName}`);
     });
 
@@ -104,6 +108,7 @@ describe('project-access', () => {
 
         cy.get(`[data-testid='${PA_ASSIGN_CREATE_ID}']`).click();
         cy.wait('@assignAccess');
+        cy.location('pathname').should('eq', accessPath);
         cy.contains(`1-${groupAndProjectName}`);
     });
 
@@ -127,6 +132,7 @@ describe('project-access', () => {
 
         cy.get(`[data-testid='${PA_ASSIGN_CREATE_ID}']`).click();
         cy.wait('@editAccess');
+        cy.location('pathname').should('eq', accessPath);
         cy.get("td a span:contains('Owner')").should('have.length', 2);
         cy.get("td a span:contains('Member')").should('have.length', 1);
     });
@@ -146,6 +152,7 @@ describe('project-access', () => {
 
         cy.get(`[data-testid='${PA_ASSIGN_CREATE_ID}']`).click();
         cy.wait('@editAccess');
+        cy.location('pathname').should('eq', accessPath);
         cy.get("td a span:contains('Owner')").should('have.length', 2);
         cy.get("td a span:contains('2 roles')").should('have.length', 1);
     });

@@ -177,6 +177,27 @@ describe('Addon.fetchRetry SSRF protection', () => {
         expect(response.status).toBe(500);
     });
 
+    test.each([
+        ['64:ff9b::a9fe:a9fe', 'NAT64 well-known prefix'],
+        ['64:ff9b:1::a9fe:a9fe', 'local-use NAT64 prefix'],
+        ['2001:0:c0a8:1:0:0:80ff:fffe', 'Teredo tunneling prefix'],
+    ])('rejects IPv6 transition address %s (%s)', async (address) => {
+        const addon = createAddon();
+
+        const response = await addon.fetchRetry(
+            'http://evil.example/hook',
+            {
+                validateUrlOptions: {
+                    lookup: async () => [{ address, family: 6 }],
+                },
+            },
+            0,
+        );
+
+        expect(response.ok).toBe(false);
+        expect(response.status).toBe(500);
+    });
+
     test('allows private addresses with explicit SSRF override', async () => {
         const addon = createAddon();
 

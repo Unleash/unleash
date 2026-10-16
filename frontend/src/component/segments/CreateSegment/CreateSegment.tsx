@@ -24,7 +24,7 @@ import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 import { useTracking } from 'hooks/useTracking';
 import { segmentTrackingProps } from 'component/segments/segmentTrackingProps';
-import { segmentCreatedTracking } from 'component/segments/segmentTrackingProps';
+import { createSegmentTracking } from 'component/segments/segmentTrackingProps';
 
 interface ICreateSegmentProps {
     modal?: boolean;
@@ -38,7 +38,7 @@ export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
     const navigate = useNavigate();
     const { createSegment, loading } = useSegmentsApi();
     const { refetchSegments } = useSegments();
-    const trackSegmentCreated = useTracking(segmentCreatedTracking);
+    const trackCreateSegment = useTracking(createSegmentTracking);
 
     const {
         name,
@@ -73,12 +73,11 @@ export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
         e.preventDefault();
         clearErrors();
         const trackingProps = segmentTrackingProps({
-            name,
             constraints,
             description,
         });
         try {
-            await trackSegmentCreated.mutation(
+            await trackCreateSegment.mutation(
                 () => createSegment(getSegmentPayload()),
                 trackingProps,
             );

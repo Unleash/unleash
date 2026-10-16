@@ -4,6 +4,7 @@
  * See `gen:api` script in package.json
  */
 import type { FeatureEnvironmentMetricsSchema } from './featureEnvironmentMetricsSchema.ts';
+import type { FeatureEnvironmentTotalUsageSchema } from './featureEnvironmentTotalUsageSchema.ts';
 
 /**
  * How many applications have seen this feature flag, as well as how this feature was evaluated the last hour
@@ -17,6 +18,8 @@ export interface FeatureUsageSchema {
     maturity: string;
     /** A list of applications seen using this feature */
     seenApplications: string[];
+    /** Total usage per environment, accumulated over the metrics retention period and sorted by environment name. This is an experimental field and may change */
+    totalUsage?: FeatureEnvironmentTotalUsageSchema[];
     /**
      * The version of this schema
      * @minimum 1

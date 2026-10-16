@@ -4,10 +4,9 @@ import { Box, Button, styled, Typography } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import type { IConstraint } from 'interfaces/strategy';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { EditableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/EditableConstraintsList';
+import { EditableConstraintsList } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/EditableConstraintsList.tsx';
 import { Limit } from 'component/common/Limit/Limit';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { RecentlyUsedConstraints } from '../RecentlyUsedConstraints/RecentlyUsedConstraints.tsx';
 import { useWeakMap } from 'hooks/useWeakMap.ts';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
 import { createEmptyConstraint } from 'utils/createEmptyConstraint.ts';
@@ -23,11 +22,31 @@ const StyledContainer = styled('div')({
     flexDirection: 'column',
 });
 
+const StyledRow = styled(Box)({
+    display: 'flex',
+    justifyContent: 'space-between',
+});
+
+const StyledTitle = styled('h3')(({ theme }) => ({
+    margin: 0,
+    fontSize: 'inherit',
+    fontWeight: theme.typography.fontWeightMedium,
+    color: theme.palette.text.secondary,
+}));
+
 const StyledHelpIconBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
+}));
+
+const StyledLimitBox = styled(Box)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    '&:empty': {
+        display: 'none',
+    },
 }));
 
 const useConstraintLimit = (constraintsCount: number) => {
@@ -94,9 +113,9 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
 
     return (
         <StyledContainer>
-            <div>
+            <StyledRow>
                 <StyledHelpIconBox>
-                    <Typography>Constraints</Typography>
+                    <StyledTitle>Constraints</StyledTitle>
                     <HelpIcon
                         htmlTooltip
                         tooltip={
@@ -118,43 +137,34 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                         }
                     />
                 </StyledHelpIconBox>
-                {setConstraints ? (
-                    <EditableConstraintsList
-                        ref={ref}
-                        setConstraints={setConstraints}
-                        constraints={constraints}
-                    />
-                ) : null}
-                <Box
-                    sx={(theme) => ({
-                        marginTop: theme.spacing(2),
-                        marginBottom: theme.spacing(2),
-                    })}
-                >
-                    <Limit
-                        name='constraints in this strategy'
-                        shortName='constraints'
-                        currentValue={constraints.length}
-                        limit={limit}
-                    />
-                </Box>
-
                 <Button
                     type='button'
                     onClick={onAdd}
                     startIcon={<Add />}
                     variant='outlined'
                     color='primary'
+                    size='medium'
                     data-testid='ADD_CONSTRAINT_BUTTON'
                     disabled={Boolean(limitReached)}
                 >
                     Add constraint
                 </Button>
-                <RecentlyUsedConstraints
+            </StyledRow>
+            {setConstraints ? (
+                <EditableConstraintsList
+                    ref={ref}
                     setConstraints={setConstraints}
                     constraints={constraints}
                 />
-            </div>
+            ) : null}
+            <StyledLimitBox>
+                <Limit
+                    name='constraints in this strategy'
+                    shortName='constraints'
+                    currentValue={constraints.length}
+                    limit={limit}
+                />
+            </StyledLimitBox>
         </StyledContainer>
     );
 });

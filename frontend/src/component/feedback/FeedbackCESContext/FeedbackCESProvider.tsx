@@ -41,7 +41,7 @@ export const FeedbackCESProvider = ({ children }: IFeedbackProviderProps) => {
 
     const hideFeedbackCES = useCallback(() => {
         setState(undefined);
-    }, [setState]);
+    }, []);
 
     const value: IFeedbackCESContext = useMemo(
         () => ({

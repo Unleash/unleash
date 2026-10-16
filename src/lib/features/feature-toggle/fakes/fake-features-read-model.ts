@@ -19,6 +19,10 @@ export class FakeFeaturesReadModel implements IFeaturesReadModel {
         this.inProjectValue = featuresInProject;
     }
 
+    setFeatureExistsInProject(featureExistsInProject: boolean): void {
+        this.existsInProjectValue = featureExistsInProject;
+    }
+
     featureExists(): Promise<boolean> {
         return Promise.resolve(this.existsValue);
     }

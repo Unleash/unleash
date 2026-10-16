@@ -8,7 +8,7 @@ import { type FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 type EditorStyle = 'default' | 'sidePanel';
 
-type JSONContent = { text: string } | { json: unknown };
+export type JSONContent = { text: string } | { json: unknown };
 
 type JSONEditorChange = (content: JSONContent) => void;
 

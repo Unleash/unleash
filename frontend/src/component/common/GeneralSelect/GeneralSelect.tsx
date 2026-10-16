@@ -14,7 +14,6 @@ import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutl
 import type { SxProps } from '@mui/system';
 import type { Theme } from '@mui/material/styles';
 import { visuallyHidden } from '@mui/utils';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { FormField, formFieldLabelId } from '../FormField/FormField';
 
 export interface ISelectOption {
@@ -142,8 +141,6 @@ function GeneralSelect<T extends string = string>({
     description,
     ...props
 }: IGeneralSelectProps<T>) {
-    const topLabelInputs = useUiFlag('topLabelInputs');
-
     if (!label || props.visuallyHideLabel) {
         return <GeneralSelectControl label={label} {...props} />;
     }
@@ -152,8 +149,8 @@ function GeneralSelect<T extends string = string>({
         <FormField label={label} description={description}>
             <GeneralSelectControl
                 {...props}
-                fullWidth={props.fullWidth ?? topLabelInputs}
-                autoWidth={props.autoWidth ?? !topLabelInputs}
+                fullWidth={props.fullWidth ?? true}
+                autoWidth={props.autoWidth ?? false}
             />
         </FormField>
     );

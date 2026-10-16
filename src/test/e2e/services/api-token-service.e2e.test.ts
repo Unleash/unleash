@@ -15,6 +15,7 @@ import { createApiTokenService } from '../../../lib/features/api-tokens/createAp
 import type { EdgeService } from '../../../lib/services/index.js';
 import { createTransactionalEdgeService } from '../../../lib/services/edge-service.js';
 import { withTransactional } from '../../../lib/db/transaction.js';
+import { createApiTokenV2Service } from '../../../lib/features/apitokensv2/api-token-v2-service.js';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -46,8 +47,13 @@ beforeAll(async () => {
     await projectService.createProject(project, user, TEST_AUDIT_USER);
 
     apiTokenService = createApiTokenService(db.rawDatabase, config);
+    const apiTokenV2Service = createApiTokenV2Service(config)(db.rawDatabase);
     edgeService = withTransactional(
-        (tx) => createTransactionalEdgeService(tx, config),
+        (tx) =>
+            createTransactionalEdgeService(tx, config, {
+                apiTokenService,
+                apiTokenV2Service,
+            }),
         db.rawDatabase,
     );
     await edgeService.saveClient('enterprise-edge', config.edgeClientSecret!);
@@ -209,8 +215,8 @@ test('Enterprise edge tokens should be filtered', async () => {
             },
         ],
     });
-    const unfilteredList = await apiTokenService.getAllTokens();
-    const filteredList = await apiTokenService.getUserDefinedTokens();
+    const unfilteredList = await stores.apiTokenV2Store.getAllActive();
+    const filteredList = await stores.apiTokenV2Store.getUserDefinedTokens();
     expect(unfilteredList.length).toBe(filteredList.length + 1);
     await edgeService.deleteAllTokens();
 });

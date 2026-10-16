@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useEffect, useState, type JSX } from 'react';
+import { useState, type JSX } from 'react';
 import { useNavigate } from 'react-router';
 import { Button, styled, Box } from '@mui/material';
 import type {
@@ -9,7 +9,6 @@ import type {
 import { FeatureStrategyEnabled } from './FeatureStrategyEnabled/FeatureStrategyEnabled.tsx';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
@@ -24,11 +23,10 @@ import {
 import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit.tsx';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled.tsx';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
+import type { Tracking } from 'utils/trackingEvents';
 import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests.tsx';
-
-import { StrategyFormBody } from './StrategyFormBody.tsx';
+import { StrategyFormBodySelector } from './StrategyFormBodySelector.tsx';
 import type { ParametersSchema } from 'openapi/index.ts';
 
 export interface IFeatureStrategyFormProps<T extends StrategyFormState> {
@@ -45,6 +43,7 @@ export interface IFeatureStrategyFormProps<T extends StrategyFormState> {
     canRenamePreexistingVariants?: boolean;
     Limit?: JSX.Element;
     disabled?: boolean;
+    tracking?: Tracking;
 }
 
 const StyledAlertBox = styled(Box)(({ theme }) => ({
@@ -70,20 +69,13 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
     canRenamePreexistingVariants,
     Limit,
     disabled,
+    tracking,
 }: IFeatureStrategyFormProps<T>) => {
-    const { trackEvent } = useEventTracker();
+    const trackStrategyForm = useTracking(tracking);
     const [showProdGuard, setShowProdGuard] = useState(false);
     const hasValidConstraints = useConstraintsValidation(strategy.constraints);
     const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
     const { strategyDefinition } = useStrategy(strategy.name);
-
-    useEffect(() => {
-        trackEvent('new-strategy-form', {
-            props: {
-                eventType: 'seen',
-            },
-        });
-    }, []);
 
     const foundEnvironment = feature.environments.find(
         (environment) => environment.name === environmentId,
@@ -148,27 +140,21 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
             .every(Boolean);
     };
 
-    const onDefaultCancel = () => {
-        navigate(formatFeaturePath(feature.project, feature.name));
+    const onCancelWithTracking = () => {
+        trackStrategyForm('dismissed', { method: 'cancel-button' });
+
+        if (onCancel) {
+            onCancel();
+        } else {
+            navigate(formatFeaturePath(feature.project, feature.name));
+        }
     };
 
     const onSubmitWithValidation = async () => {
-        if (Array.isArray(strategy.variants) && strategy.variants?.length > 0) {
-            trackEvent('strategy-variants', {
-                props: {
-                    eventType: 'submitted',
-                },
-            });
-        }
         if (!validateAllParameters()) {
+            trackStrategyForm.validationFailed();
             return;
         }
-
-        trackEvent('new-strategy-form', {
-            props: {
-                eventType: 'submitted',
-            },
-        });
 
         if (enableProdGuard && !changeRequestsEnabled) {
             setShowProdGuard(true);
@@ -184,7 +170,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
     ) : null;
 
     return (
-        <StrategyFormBody
+        <StrategyFormBodySelector
             strategy={strategy}
             setStrategy={setStrategy}
             strategyDefinition={strategyDefinition}
@@ -196,26 +182,15 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                     <StyledAlertBox>{changeRequestAlert}</StyledAlertBox>
                 ) : null
             }
-            generalTabExtras={
-                <>
-                    <FeatureStrategyEnabledDisabled
-                        enabled={!strategy?.disabled}
-                        onToggleEnabled={() =>
-                            setStrategy((strategyState) => ({
-                                ...strategyState,
-                                disabled: !strategyState.disabled,
-                            }))
-                        }
+            allowEnableDisable
+            statusContent={
+                changeRequestsEnabled ? null : (
+                    <FeatureStrategyEnabled
+                        projectId={feature.project}
+                        featureId={feature.name}
+                        environmentId={environmentId}
                     />
-
-                    {changeRequestsEnabled ? null : (
-                        <FeatureStrategyEnabled
-                            projectId={feature.project}
-                            featureId={feature.name}
-                            environmentId={environmentId}
-                        />
-                    )}
-                </>
+                )
             }
             onSubmit={onSubmitWithValidation}
             beforeFooter={
@@ -225,6 +200,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                             flex: 1,
                             display: 'flex',
                             alignItems: 'flex-end',
+                            ':empty': { display: 'none' },
                         }}
                     >
                         {Limit}
@@ -236,6 +212,14 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                 </>
             }
         >
+            <Button
+                type='button'
+                color='primary'
+                onClick={onCancelWithTracking}
+                disabled={loading}
+            >
+                Cancel
+            </Button>
             <PermissionButton
                 permission={permission}
                 projectId={feature.project}
@@ -255,14 +239,6 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                     ? changeRequestButtonText
                     : 'Save strategy'}
             </PermissionButton>
-            <Button
-                type='button'
-                color='primary'
-                onClick={onCancel ? onCancel : onDefaultCancel}
-                disabled={loading}
-            >
-                Cancel
-            </Button>
             <FeatureStrategyProdGuard
                 open={showProdGuard}
                 onClose={() => setShowProdGuard(false)}
@@ -270,6 +246,6 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                 loading={loading}
                 label='Save strategy'
             />
-        </StrategyFormBody>
+        </StrategyFormBodySelector>
     );
 };

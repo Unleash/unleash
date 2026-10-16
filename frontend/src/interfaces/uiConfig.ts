@@ -41,6 +41,7 @@ export interface IUiConfig {
     oidcConfiguredThroughEnv?: boolean;
     samlConfiguredThroughEnv?: boolean;
     maxSessionsCount?: number;
+    sessionKeepAliveIntervalSeconds?: number;
     unleashContext?: IMutableContext;
     storiesPageEnabled?: boolean;
 }
@@ -59,14 +60,12 @@ export type UiFlags = {
     notifications?: boolean;
     personalAccessTokensKillSwitch?: boolean;
     demo?: boolean;
-    onboardingIntroTour?: boolean;
     onboardingIntroTourAdvancedTopics?: boolean;
     interactiveDemoKillSwitch?: boolean;
     advancedPlayground?: boolean;
     strategyVariant?: boolean;
     doraMetrics?: boolean;
     dependentFeatures?: boolean;
-    newStrategyConfiguration?: boolean;
     signals?: boolean;
     automatedActions?: boolean;
     releaseTemplatesAutomations?: boolean;
@@ -88,7 +87,6 @@ export type UiFlags = {
     consumptionModelUI?: boolean;
     disableImpactMetrics?: boolean;
     impactViews?: boolean;
-    plausibleMetrics?: boolean;
     oidcPkceSupport?: boolean;
     extendedUsageMetrics?: boolean;
     regexConstraintOperator?: boolean;
@@ -100,21 +98,28 @@ export type UiFlags = {
     multiMetricChart?: boolean;
     logRocketEnabled?: boolean;
     hubspotChatEnabled?: boolean;
-    newModalDesign?: boolean;
-    newProfileDropdown?: boolean;
     learningLab?: Variant;
-    floatingOnboardingChecklist?: boolean;
     flightRecorderFrontend?: Variant;
-    topLabelInputs?: boolean;
     searchDocsWidget?: boolean;
-    usersTabsUI?: boolean;
     exposureBasedAutomation?: boolean;
     semverBuildMetadata?: boolean;
     slackIntegrationProjectLevel?: boolean;
-    flagStatusTooltips?: boolean;
-    simplerStrategySetup?: boolean;
     editableInstanceName?: boolean;
     helpMenuRelocationHint?: boolean;
+    ipConstraintOperator?: boolean;
+    playgroundPerFlag?: boolean;
+    githubIntegration?: boolean;
+    tagManagementViaUi?: boolean;
+    integrationParamKvpEditor?: boolean;
+    perFlagLifetime?: boolean;
+    remoteMcpFeedback?: boolean;
+    sessionTimeouts?: boolean;
+    payloadSchemas?: boolean;
+    singlePageStrategyForm?: boolean;
+    feedbackModule?: boolean;
+    feedbackModuleDisplaySurvey?: boolean;
+    playgroundFeatureEvaluation?: boolean;
+    dashboardV2?: boolean;
 };
 
 export interface IVersionInfo {

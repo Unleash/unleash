@@ -1,9 +1,9 @@
 import { generateObjectCombinations } from './generateObjectCombinations.js';
 
-test('should generate all combinations correctly', () => {
+test('should generate all combinations correctly, ignoring whitespace around commas', () => {
     const obj = {
-        sessionId: '1,2',
-        appName: 'a,b,c',
+        sessionId: '1, 2',
+        appName: 'a ,b, c',
         channels: 'internet',
         nonString: 1,
     };

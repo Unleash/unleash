@@ -1,5 +1,5 @@
 import useAPI from '../useApi/useApi.js';
-import type { TagSchema, TagsBulkAddSchema } from 'openapi';
+import type { RenameTagSchema, TagSchema, TagsBulkAddSchema } from 'openapi';
 
 const useTagApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
@@ -29,9 +29,33 @@ const useTagApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    const tagPath = (type: string, value: string) =>
+        `api/admin/tags/${encodeURIComponent(type)}/${encodeURIComponent(value)}`;
+
+    const deleteTag = async (type: string, value: string) => {
+        const req = createRequest(tagPath(type, value), { method: 'DELETE' });
+
+        return makeRequest(req.caller, req.id);
+    };
+
+    const renameTag = async (
+        type: string,
+        value: string,
+        payload: RenameTagSchema,
+    ) => {
+        const req = createRequest(`${tagPath(type, value)}/rename`, {
+            method: 'POST',
+            body: JSON.stringify(payload),
+        });
+
+        return makeRequest(req.caller, req.id);
+    };
+
     return {
         createTag,
         bulkUpdateTags,
+        deleteTag,
+        renameTag,
         errors,
         loading,
     };

@@ -2,10 +2,9 @@ import { Box, Button, styled } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
-import { FeatureStrategyMenuCardsSection } from '../FeatureStrategyMenu/FeatureStrategyMenuCards/FeatureStrategyMenuCardsSection.tsx';
-import { NewReleaseTemplateButton } from '../FeatureStrategyMenu/FeatureStrategyMenuCards/NewReleaseTemplateButton.tsx';
-import { NoReleaseTemplatesMessage } from '../FeatureStrategyMenu/FeatureStrategyMenuCards/NoReleaseTemplatesMessage.tsx';
-import { ReleaseTemplateCard } from '../FeatureStrategyMenu/FeatureStrategyMenuCards/ReleaseTemplateCard.tsx';
+import { NewReleaseTemplateButton } from './NewReleaseTemplateButton.tsx';
+import { NoReleaseTemplatesMessage } from './NoReleaseTemplatesMessage.tsx';
+import { ReleaseTemplateCard } from './ReleaseTemplateCard.tsx';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -30,6 +29,19 @@ const StyledToolbar = styled(Box)({
     width: '100%',
 });
 
+const StyledCardSection = styled(Box)(({ theme }) => ({
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    [theme.breakpoints.down('md')]: {
+        gridTemplateColumns: 'repeat(2, 1fr)',
+    },
+    [theme.breakpoints.down('sm')]: {
+        gridTemplateColumns: 'repeat(1, 1fr)',
+    },
+    gap: theme.spacing(2),
+    width: '100%',
+}));
+
 const StyledSkeletonContainer = styled(Box)({
     width: '100%',
 });
@@ -44,11 +56,11 @@ const PLACEHOLDER_COUNT = 3;
 
 const TemplatesSkeleton = () => (
     <StyledSkeletonContainer aria-busy='true' aria-label='Loading templates'>
-        <FeatureStrategyMenuCardsSection>
+        <StyledCardSection>
             {Array.from({ length: PLACEHOLDER_COUNT }, (_, index) => (
                 <StyledTemplatePlaceholder key={index} className='skeleton' />
             ))}
-        </FeatureStrategyMenuCardsSection>
+        </StyledCardSection>
     </StyledSkeletonContainer>
 );
 
@@ -85,7 +97,7 @@ export const TemplateScreen = ({
             {loading ? (
                 <TemplatesSkeleton />
             ) : templates.length ? (
-                <FeatureStrategyMenuCardsSection>
+                <StyledCardSection>
                     {templates.map((template) => (
                         <ReleaseTemplateCard
                             key={template.id}
@@ -94,9 +106,9 @@ export const TemplateScreen = ({
                             onReviewReleasePlan={onReviewReleasePlan}
                         />
                     ))}
-                </FeatureStrategyMenuCardsSection>
+                </StyledCardSection>
             ) : (
-                <NoReleaseTemplatesMessage solo />
+                <NoReleaseTemplatesMessage />
             )}
         </StyledContainer>
     );

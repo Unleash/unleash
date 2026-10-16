@@ -9,19 +9,21 @@ import {
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { type FC, useId, useRef, useState } from 'react';
 
+// `>` so these styles hit the popover itself, not the Alert inside it
+// (an Alert is also a Paper). Otherwise it can overwrite the width.
 const StyledPopover = styled(Popover)(({ theme }) => ({
-    '& .MuiPaper-root': {
+    '& > .MuiPaper-root': {
         borderRadius: theme.shape.borderRadiusLarge,
         border: `1px solid ${theme.palette.divider}`,
         padding: theme.spacing(2),
-        width: '250px',
+        width: '320px',
     },
 
     '&.MuiPopover-root': {
         pointerEvents: 'none',
     },
 
-    '& .MuiPopover-paper': {
+    '& > .MuiPopover-paper': {
         pointerEvents: 'all',
     },
 }));
@@ -50,6 +52,7 @@ type AddValuesProps = {
     onClose: () => void;
     helpText?: string;
     htmlInputProps?: InputBaseComponentProps;
+    ValuePreview?: FC<{ value: string }>;
 };
 
 const HelpText = styled('p')(({ theme }) => ({
@@ -69,6 +72,7 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
     onClose,
     helpText,
     htmlInputProps,
+    ValuePreview,
 }) => {
     const [inputValue, setInputValue] = useState(initialValue || '');
     const [error, setError] = useState('');
@@ -147,6 +151,7 @@ export const AddValuesPopover: FC<AddValuesProps> = ({
                         </AddButton>
                     </InputRow>
                     <HelpText id={helpTextId}>{helpText}</HelpText>
+                    {ValuePreview ? <ValuePreview value={inputValue} /> : null}
                 </form>
             </ClickAwayListener>
         </StyledPopover>

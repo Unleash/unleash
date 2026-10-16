@@ -138,7 +138,6 @@ export const SignupDialogComplete: SignupStepContent = ({
     isSubmitting,
     error,
 }) => {
-    const offerTour = useUiFlag('onboardingIntroTour');
     const advancedTopics = useUiFlag('onboardingIntroTourAdvancedTopics');
     const description =
         data.inviteEmails.length === 0
@@ -152,78 +151,67 @@ export const SignupDialogComplete: SignupStepContent = ({
                 <StyledTitle>Welcome to Unleash</StyledTitle>
                 <StyledDescription>{description}</StyledDescription>
             </StyledHeader>
-            {offerTour ? (
-                <StyledDemoSection>
-                    <StyledChoices>
-                        <StyledChoiceCard featured>
-                            <StyledChoiceHeader>
-                                <StyledChoiceTitle
-                                    variant='h3'
-                                    sx={{ color: 'primary.main' }}
-                                >
-                                    Learn the basics
-                                </StyledChoiceTitle>
-                                <StyledDuration>
-                                    {advancedTopics ? '5 min' : '2 min'}
-                                </StyledDuration>
-                            </StyledChoiceHeader>
-                            <StyledIntroList>
-                                <li>Release a feature gradually</li>
-                                <li>Target the right users</li>
-                                <li>Run experiments</li>
-                                {advancedTopics ? (
-                                    <>
-                                        <li>Automate a rollout</li>
-                                        <li>Follow live impact metrics</li>
-                                        <li>Contain an issue automatically</li>
-                                    </>
-                                ) : null}
-                            </StyledIntroList>
-                            <StyledChoiceNote>
-                                A playful sandbox with a live view of every
-                                change. No setup required.
-                            </StyledChoiceNote>
-                            <StyledChoiceButton
-                                variant='contained'
-                                onClick={() => onNext('tour')}
-                                disabled={isSubmitting}
-                                data-testid='SIGNUP_TAKE_TOUR_BUTTON'
+            <StyledDemoSection>
+                <StyledChoices>
+                    <StyledChoiceCard featured>
+                        <StyledChoiceHeader>
+                            <StyledChoiceTitle
+                                variant='h3'
+                                sx={{ color: 'primary.main' }}
                             >
                                 Learn the basics
-                            </StyledChoiceButton>
-                        </StyledChoiceCard>
-                        <StyledChoiceCard>
-                            <StyledChoiceTitle variant='h3'>
-                                Set up a project
                             </StyledChoiceTitle>
-                            <Typography variant='body2' color='textSecondary'>
-                                Go straight to Unleash and start creating real
-                                feature flags.
-                            </Typography>
-                            <StyledChoiceButton
-                                variant='outlined'
-                                onClick={() => onNext('complete')}
-                                disabled={isSubmitting}
-                                data-testid='SIGNUP_SKIP_TOUR_BUTTON'
-                            >
-                                Open Unleash
-                            </StyledChoiceButton>
-                        </StyledChoiceCard>
-                    </StyledChoices>
-                    <StyledReopenHint>
-                        You can reopen Unleash Intro at any time from the Help
-                        menu.
-                    </StyledReopenHint>
-                </StyledDemoSection>
-            ) : (
-                <Button
-                    variant='contained'
-                    onClick={() => onNext('complete')}
-                    disabled={isSubmitting}
-                >
-                    Start using Unleash
-                </Button>
-            )}
+                            <StyledDuration>
+                                {advancedTopics ? '5 min' : '2 min'}
+                            </StyledDuration>
+                        </StyledChoiceHeader>
+                        <StyledIntroList>
+                            <li>Release a feature gradually</li>
+                            <li>Target the right users</li>
+                            <li>Run experiments</li>
+                            {advancedTopics ? (
+                                <>
+                                    <li>Automate a rollout</li>
+                                    <li>Follow live impact metrics</li>
+                                    <li>Contain an issue automatically</li>
+                                </>
+                            ) : null}
+                        </StyledIntroList>
+                        <StyledChoiceNote>
+                            A playful sandbox with a live view of every change.
+                            No setup required.
+                        </StyledChoiceNote>
+                        <StyledChoiceButton
+                            variant='contained'
+                            onClick={() => onNext('tour')}
+                            disabled={isSubmitting}
+                            data-testid='SIGNUP_TAKE_TOUR_BUTTON'
+                        >
+                            Learn the basics
+                        </StyledChoiceButton>
+                    </StyledChoiceCard>
+                    <StyledChoiceCard>
+                        <StyledChoiceTitle variant='h3'>
+                            Set up a project
+                        </StyledChoiceTitle>
+                        <Typography variant='body2' color='textSecondary'>
+                            Go straight to Unleash and start creating real
+                            feature flags.
+                        </Typography>
+                        <StyledChoiceButton
+                            variant='outlined'
+                            onClick={() => onNext('complete')}
+                            disabled={isSubmitting}
+                            data-testid='SIGNUP_SKIP_TOUR_BUTTON'
+                        >
+                            Open Unleash
+                        </StyledChoiceButton>
+                    </StyledChoiceCard>
+                </StyledChoices>
+                <StyledReopenHint>
+                    You can reopen Unleash Intro at any time from the Help menu.
+                </StyledReopenHint>
+            </StyledDemoSection>
             {error && (
                 <Button
                     variant='text'

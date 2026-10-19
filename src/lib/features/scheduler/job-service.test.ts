@@ -91,6 +91,24 @@ test('When the provided function fails we record the failure', async () => {
     expect(jobs.every((j) => j.stage === 'failed')).toBe(true);
 });
 
+test('bucket offset shifts where buckets start', async () => {
+    const hour = 60 * 60 * 1000;
+    // an offset later in the hour than now: the current bucket must then have started in the previous hour
+    const bucketOffsetMs = Math.floor(((Date.now() % hour) + hour) / 2);
+    const service = new JobService(store, config.getLogger);
+    const job = service.singleInstance('offset', async () => {}, 60, {
+        bucketOffsetMs,
+    });
+
+    await job();
+
+    const [{ bucket }] = await store.getAll();
+    const age = Date.now() - bucket.getTime();
+    expect(bucket.getTime() % hour).toBe(bucketOffsetMs);
+    expect(age).toBeGreaterThanOrEqual(0);
+    expect(age).toBeLessThan(hour);
+});
+
 test('backfills missing buckets and resumes from completed jobs', async () => {
     const service = new JobService(store, config.getLogger);
     const currentBucket = await store.getCurrentBucket(5);

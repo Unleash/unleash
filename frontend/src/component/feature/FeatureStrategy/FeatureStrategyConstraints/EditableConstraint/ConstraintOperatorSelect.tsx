@@ -5,6 +5,9 @@ import {
     MenuList,
     Popover,
     styled,
+    ToggleButton,
+    toggleButtonClasses,
+    ToggleButtonGroup,
 } from '@mui/material';
 import {
     type Operator,
@@ -28,6 +31,8 @@ import {
     operatorExplanations,
 } from 'utils/formatOperatorDescription';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
+import { controlHeights } from 'themes/controls';
 
 interface IConstraintOperatorSelectProps {
     contextName: string;
@@ -35,6 +40,8 @@ interface IConstraintOperatorSelectProps {
     value: Operator;
     onChange: (value: Operator) => void;
     inverted?: boolean;
+    onToggleInverted: () => void;
+    invertedDisabledText?: string;
 }
 
 const TriggerButton = styled(Button)(({ theme }) => ({
@@ -59,6 +66,57 @@ const StyledMenuList = styled(MenuList)(({ theme }) => ({
     maxHeight: theme.spacing(40),
     overflowY: 'auto',
     padding: 0,
+}));
+
+const StyledMatchToggle = styled('div')(({ theme }) => ({
+    padding: theme.spacing(0.5, 1.5, 1.5),
+    borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
+const StyledMatchButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
+    width: '100%',
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: `${theme.shape.borderRadius}px`,
+    overflow: 'hidden',
+}));
+
+const StyledMatchButton = styled(ToggleButton)(({ theme }) => ({
+    flex: 1,
+    textAlign: 'center',
+    height: controlHeights.medium,
+    padding: theme.spacing(0, 1.25),
+    fontSize: theme.fontSizes.smallBody,
+    fontWeight: theme.typography.fontWeightMedium,
+    textTransform: 'none',
+    border: 'none',
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.text.primary,
+    '&:hover': {
+        backgroundColor: theme.palette.background.paper,
+    },
+    [`&.${toggleButtonClasses.disabled}`]: {
+        border: 'none',
+    },
+    '&:first-of-type': {
+        borderRadius: `${theme.shape.borderRadius}px 0 0 ${theme.shape.borderRadius}px`,
+    },
+    '&:last-of-type': {
+        borderRadius: `0 ${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0`,
+        boxShadow: `inset 1px 0 0 0 ${theme.palette.divider}`,
+    },
+    [`&.${toggleButtonClasses.selected}, &.${toggleButtonClasses.selected}:hover`]:
+        {
+            fontWeight: theme.typography.fontWeightBold,
+            backgroundColor: theme.palette.primary.container,
+            color: theme.palette.primary.main,
+            boxShadow: `inset 0 0 0 1px ${theme.palette.primary.main}`,
+            zIndex: 1,
+        },
+    '&:focus-visible': {
+        outline: `2px solid ${theme.palette.primary.main}`,
+        outlineOffset: '-2px',
+        zIndex: 1,
+    },
 }));
 
 const StyledRow = styled(MenuItem, {
@@ -127,6 +185,8 @@ export const ConstraintOperatorSelect = ({
     value,
     onChange,
     inverted,
+    onToggleInverted,
+    invertedDisabledText,
 }: IConstraintOperatorSelectProps) => {
     const triggerRef = useRef<HTMLButtonElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -149,6 +209,27 @@ export const ConstraintOperatorSelect = ({
                 (operator !== SEMVER_GTE && operator !== SEMVER_LTE),
         )
         .filter((operator) => isIpOperatorEnabled || !isCidrOperator(operator));
+
+    const invertedDisabled = Boolean(invertedDisabledText);
+
+    const matchToggle = (
+        <StyledMatchToggle>
+            <StyledMatchButtonGroup
+                exclusive
+                value={inverted ? 'does-not-match' : 'matches'}
+                onChange={(_, choice) => {
+                    if (choice) onToggleInverted();
+                }}
+                disabled={invertedDisabled}
+                aria-label='Match type'
+            >
+                <StyledMatchButton value='matches'>matches</StyledMatchButton>
+                <StyledMatchButton value='does-not-match'>
+                    does not match
+                </StyledMatchButton>
+            </StyledMatchButtonGroup>
+        </StyledMatchToggle>
+    );
 
     return (
         <>
@@ -188,6 +269,13 @@ export const ConstraintOperatorSelect = ({
                 }}
             >
                 <StyledHeader component='div'>{contextName}</StyledHeader>
+                {invertedDisabledText ? (
+                    <HtmlTooltip title={invertedDisabledText} arrow>
+                        <span>{matchToggle}</span>
+                    </HtmlTooltip>
+                ) : (
+                    matchToggle
+                )}
                 <StyledMenuList
                     autoFocus
                     autoFocusItem

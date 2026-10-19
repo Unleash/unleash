@@ -18,6 +18,12 @@ const draftQuestions = (count: number): QuestionDraft[] =>
         prompt: `Prompt ${index + 1}`,
     }));
 
+const choiceQuestion = (options: string[]): QuestionDraft => ({
+    ...draftQuestions(1)[0],
+    type: 'multi-choice',
+    options,
+});
+
 const Editable = ({
     initial,
     errors = [],
@@ -133,6 +139,73 @@ describe('SurveyQuestions', () => {
         expect(
             within(card).getByRole('combobox', { name: 'Scale' }),
         ).toHaveTextContent('7 stars');
+    });
+
+    it('asks for options only for multiple choice questions', async () => {
+        render(<Editable initial={draftQuestions(1)} />);
+        const card = questionCard(1);
+
+        await userEvent.click(
+            within(card).getByRole('combobox', { name: 'Type' }),
+        );
+        await userEvent.click(
+            screen.getByRole('option', { name: 'Multiple choice' }),
+        );
+
+        expect(within(card).getByLabelText('Option 1')).toHaveValue('');
+        expect(
+            within(card).queryByRole('combobox', { name: 'Scale' }),
+        ).not.toBeInTheDocument();
+    });
+
+    it('keeps the options entered into a multiple choice question', async () => {
+        render(<Editable initial={[choiceQuestion(['Dev'])]} />);
+        const card = questionCard(1);
+
+        await userEvent.click(
+            within(card).getByRole('button', { name: 'Add option' }),
+        );
+        await userEvent.type(within(card).getByLabelText('Option 2'), 'PM');
+
+        expect(within(card).getByLabelText('Option 1')).toHaveValue('Dev');
+        expect(within(card).getByLabelText('Option 2')).toHaveValue('PM');
+    });
+
+    it('removes the chosen option', async () => {
+        render(<Editable initial={[choiceQuestion(['Dev', 'PM'])]} />);
+        const card = questionCard(1);
+
+        await userEvent.click(
+            within(card).getByRole('button', { name: 'Remove option 1' }),
+        );
+
+        expect(within(card).getByLabelText('Option 1')).toHaveValue('PM');
+        expect(
+            within(card).queryByLabelText('Option 2'),
+        ).not.toBeInTheDocument();
+    });
+
+    it('keeps the last option', () => {
+        render(<Editable initial={[choiceQuestion(['Dev'])]} />);
+
+        expect(
+            within(questionCard(1)).getByRole('button', {
+                name: 'Remove option 1',
+            }),
+        ).toBeDisabled();
+    });
+
+    it('shows the errors of each option', () => {
+        render(
+            <Editable
+                initial={[choiceQuestion(['Dev', ''])]}
+                errors={[{ options: [undefined, 'Enter an option'] }]}
+            />,
+        );
+
+        expect(
+            within(questionCard(1)).getByLabelText('Option 2'),
+        ).toHaveAccessibleDescription('Enter an option');
     });
 
     it('shows the errors of each question', () => {

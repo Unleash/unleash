@@ -11,10 +11,10 @@ import type { IFeatureProjectUserParams } from '../feature-toggle-controller.js'
 
 export interface FeatureConfigurationClient {
     name: string;
-    type: string;
+    type?: string;
     enabled: boolean;
     project: string;
-    stale: boolean;
+    stale?: boolean;
     strategies: IStrategyConfig[];
     variants: IVariant[];
     dependencies?: IDependency[];

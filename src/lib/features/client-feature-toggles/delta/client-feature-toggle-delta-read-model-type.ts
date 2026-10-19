@@ -3,7 +3,6 @@ import type { FeatureConfigurationClient } from '../../feature-toggle/types/feat
 
 export interface FeatureConfigurationDeltaClient
     extends FeatureConfigurationClient {
-    description: string;
     impressionData: boolean;
 }
 

@@ -1,5 +1,5 @@
-import { beforeAll, describe, expect, it } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Route, Routes, useParams } from 'react-router';
 import ToastRenderer from 'component/common/ToastRenderer/ToastRenderer';
@@ -10,18 +10,6 @@ import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { CreateSurvey } from './CreateSurvey.tsx';
 
 const server = testServerSetup();
-
-// workaround: jsdom has no layout,
-// but the survey editor (CodeMirror) measures text ranges.
-beforeAll(() => {
-    Range.prototype.getClientRects = () =>
-        ({
-            length: 0,
-            item: () => null,
-            [Symbol.iterator]: [][Symbol.iterator],
-        }) as unknown as DOMRectList;
-    Range.prototype.getBoundingClientRect = () => new DOMRect();
-});
 
 const flagName = 'survey-onboarding';
 const featuresPath = (projectId: string) =>
@@ -92,6 +80,9 @@ const renderPage = (
         </>,
         { route: '/surveys/create', permissions },
     );
+
+const questionCard = (number: number) =>
+    screen.getByRole('group', { name: `Question ${number}` });
 
 const sentSurvey = (addStrategy: { requests: unknown[] }) => {
     const [strategy] = addStrategy.requests as {
@@ -200,21 +191,55 @@ describe('CreateSurvey', () => {
         expect(createFlag.requests).toHaveLength(0);
     });
 
-    it('rejects a payload that is not a valid survey', async () => {
+    it('sends the survey configured in the form', async () => {
+        const { addStrategy } = setupApi();
+        renderPage();
+
+        const title = await screen.findByLabelText('Title');
+        await userEvent.clear(title);
+        await userEvent.type(title, 'Onboarding');
+        const description = screen.getByLabelText('Description');
+        await userEvent.clear(description);
+        await userEvent.type(description, 'Two quick questions.');
+        await userEvent.click(
+            within(questionCard(1)).getByRole('button', {
+                name: 'Remove question',
+            }),
+        );
+        await submitSurvey();
+
+        await screen.findByText('Survey created');
+        expect(sentSurvey(addStrategy)).toMatchObject({
+            title: 'Onboarding',
+            description: 'Two quick questions.',
+            questions: [{ id: 'role' }, { id: 'comment' }],
+        });
+    });
+
+    it('shows an error from the first submit until it is fixed', async () => {
+        setupApi();
+        renderPage();
+        const title = await screen.findByLabelText('Title');
+        await userEvent.clear(title);
+        expect(screen.queryByText('Enter a title')).not.toBeInTheDocument();
+
+        await submitSurvey();
+        await screen.findByText('Enter a title');
+        await userEvent.type(title, 'Onboarding');
+
+        expect(screen.queryByText('Enter a title')).not.toBeInTheDocument();
+    });
+
+    it('does not create the survey until its questions are complete', async () => {
         const { createFlag } = setupApi();
         renderPage();
 
-        const editor = await waitFor(() => {
-            const element = document.querySelector('.cm-content');
-            if (!element) throw new Error('editor not rendered');
-            return element as HTMLElement;
-        });
-        editor.textContent = JSON.stringify({ title: 'No questions' });
+        await userEvent.clear(
+            await screen.findByRole('textbox', { name: 'Question 1' }),
+        );
         await submitSurvey();
 
-        await screen.findByText(
-            'Not a valid survey. Check the kind, version, title and questions.',
-        );
+        await screen.findByText('Enter a question');
         expect(createFlag.requests).toHaveLength(0);
     });
 

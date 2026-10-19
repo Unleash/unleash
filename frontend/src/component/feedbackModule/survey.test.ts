@@ -2,8 +2,32 @@ import { describe, expect, it } from 'vitest';
 import {
     parseSurveyDefinition,
     parseSurveyPayload,
-    SURVEY_TEMPLATE,
+    SURVEY_KIND,
+    SURVEY_VERSION,
 } from './survey.ts';
+
+const validSurvey = {
+    kind: SURVEY_KIND,
+    version: SURVEY_VERSION,
+    title: 'How was creating your flag?',
+    description: 'Three quick questions.',
+    questions: [
+        {
+            id: 'ease',
+            type: 'rating',
+            prompt: 'How easy was it?',
+            required: true,
+            scale: 5,
+        },
+        {
+            id: 'role',
+            type: 'multi-choice',
+            prompt: 'What is your role?',
+            options: ['Developer', 'PM', 'Other'],
+        },
+        { id: 'comment', type: 'free-text', prompt: 'Anything else?' },
+    ],
+};
 
 const SUBMIT_BASE = 'https://app.unleash-hosted.com/hosted';
 
@@ -20,7 +44,7 @@ const definition = (survey: unknown) =>
     parseSurveyDefinition(JSON.stringify(survey));
 
 const withQuestions = (questions: unknown[]) => ({
-    ...SURVEY_TEMPLATE,
+    ...validSurvey,
     questions,
 });
 
@@ -40,7 +64,7 @@ const ratingQuestion = (scale: number) => ({
 
 describe('parseSurveyDefinition', () => {
     it('parses a survey with every question type', () => {
-        expect(definition(SURVEY_TEMPLATE)).toEqual({
+        expect(definition(validSurvey)).toEqual({
             title: 'How was creating your flag?',
             description: 'Three quick questions.',
             questions: [
@@ -104,9 +128,9 @@ describe('parseSurveyDefinition', () => {
     });
 
     it.each([
-        ['is not marked as a survey', { ...SURVEY_TEMPLATE, kind: 'other' }],
-        ['has an unknown version', { ...SURVEY_TEMPLATE, version: 2 }],
-        ['has no title', { ...SURVEY_TEMPLATE, title: '' }],
+        ['is not marked as a survey', { ...validSurvey, kind: 'other' }],
+        ['has an unknown version', { ...validSurvey, version: 2 }],
+        ['has no title', { ...validSurvey, title: '' }],
         ['has no questions', withQuestions([])],
         ['has more than 10 questions', withQuestions(freeTextQuestions(11))],
         ['has a question that is not an object', withQuestions([null])],
@@ -189,7 +213,7 @@ describe('parseSurveyPayload', () => {
     it('reads the survey with the flag and environment it was created for', () => {
         const survey = parseSurveyPayload(
             'survey-onboarding',
-            payload({ ...SURVEY_TEMPLATE, environmentId: 'production' }),
+            payload({ ...validSurvey, environmentId: 'production' }),
         );
 
         expect(survey).toMatchObject({
@@ -204,7 +228,7 @@ describe('parseSurveyPayload', () => {
         const survey = parseSurveyPayload(
             'survey-x',
             payload({
-                ...SURVEY_TEMPLATE,
+                ...validSurvey,
                 submitBase: 'https://app.unleash-hosted.com/hosted/',
             }),
         );
@@ -214,7 +238,7 @@ describe('parseSurveyPayload', () => {
 
     it('rejects a flag name without the survey- prefix', () => {
         expect(
-            parseSurveyPayload('onboarding', payload(SURVEY_TEMPLATE)),
+            parseSurveyPayload('onboarding', payload(validSurvey)),
         ).toBeNull();
     });
 
@@ -232,7 +256,7 @@ describe('parseSurveyPayload', () => {
         expect(
             parseSurveyPayload(
                 'survey-x',
-                payload({ ...SURVEY_TEMPLATE, environmentId }),
+                payload({ ...validSurvey, environmentId }),
             ),
         ).toBeNull();
     });
@@ -245,7 +269,7 @@ describe('parseSurveyPayload', () => {
         expect(
             parseSurveyPayload(
                 'survey-x',
-                payload({ ...SURVEY_TEMPLATE, submitBase }),
+                payload({ ...validSurvey, submitBase }),
             ),
         ).toBeNull();
     });

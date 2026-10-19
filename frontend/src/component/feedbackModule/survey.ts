@@ -37,29 +37,6 @@ export interface SurveyTransport {
 
 export type Survey = SurveyDefinition & SurveyTransport;
 
-export const SURVEY_TEMPLATE = {
-    kind: SURVEY_KIND,
-    version: SURVEY_VERSION,
-    title: 'How was creating your flag?',
-    description: 'Three quick questions.',
-    questions: [
-        {
-            id: 'ease',
-            type: 'rating',
-            prompt: 'How easy was it?',
-            required: true,
-            scale: DEFAULT_RATING_SCALE,
-        },
-        {
-            id: 'role',
-            type: 'multi-choice',
-            prompt: 'What is your role?',
-            options: ['Developer', 'PM', 'Other'],
-        },
-        { id: 'comment', type: 'free-text', prompt: 'Anything else?' },
-    ],
-};
-
 const isNonEmptyString = (value: unknown): value is string =>
     typeof value === 'string' && value.length > 0;
 

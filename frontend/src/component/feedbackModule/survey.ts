@@ -3,7 +3,7 @@ import { PayloadType } from 'utils/variants';
 export const SURVEY_FLAG_PREFIX = 'survey-';
 export const SURVEY_KIND = 'unleash-survey';
 export const SURVEY_VERSION = 1;
-const DEFAULT_RATING_SCALE = 5;
+export const DEFAULT_RATING_SCALE = 5;
 const MIN_RATING_SCALE = 2;
 const MAX_RATING_SCALE = 10;
 const MAX_QUESTIONS = 10;

@@ -74,20 +74,12 @@ describe('EditableConstraint', () => {
             ).not.toBeInTheDocument();
 
             // Change operator away from REGEX (this clears the value)
-            fireEvent.mouseDown(
-                screen.getByRole('combobox', { name: /operator/i }),
-            );
-            fireEvent.click(
-                await screen.findByRole('option', { name: /is one of/i }),
-            );
+            fireEvent.click(screen.getByRole('button', { name: 'Operator' }));
+            fireEvent.click(await screen.findByText(/is one of/i));
 
             // Change operator back to REGEX
-            fireEvent.mouseDown(
-                screen.getByRole('combobox', { name: /operator/i }),
-            );
-            fireEvent.click(
-                await screen.findByRole('option', { name: /matches regex/i }),
-            );
+            fireEvent.click(screen.getByRole('button', { name: 'Operator' }));
+            fireEvent.click(await screen.findByText(/matches regex/i));
 
             // The editor should open automatically because the value was
             // cleared when the operator changed.
@@ -125,12 +117,10 @@ describe('EditableConstraint', () => {
                 />,
             );
 
-            fireEvent.mouseDown(
-                await screen.findByRole('combobox', { name: /operator/i }),
-            );
             fireEvent.click(
-                await screen.findByRole('option', { name: /is an IP in/i }),
+                await screen.findByRole('button', { name: 'Operator' }),
             );
+            fireEvent.click(await screen.findByText(/is an IP in/i));
 
             await screen.findByText(
                 /IP constraints require these SDK versions/,

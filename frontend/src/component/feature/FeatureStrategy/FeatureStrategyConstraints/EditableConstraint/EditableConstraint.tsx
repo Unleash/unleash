@@ -393,6 +393,7 @@ export const EditableConstraint: FC<Props> = ({
                             />
 
                             <ConstraintOperatorSelect
+                                contextName={contextName || ''}
                                 options={operatorsForContext(contextName)}
                                 value={operator}
                                 onChange={onOperatorChange}

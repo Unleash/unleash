@@ -1,4 +1,5 @@
-import { type FormEvent, useState } from 'react';
+import { type FormEvent, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { useNavigate } from 'react-router';
 import { Button, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
@@ -79,6 +80,7 @@ export const CreateSurvey = () => {
         survey: validateSurveyDraft(draft),
     };
     const shownErrors = showErrors ? errors : NO_ERRORS;
+    const formRef = useRef<HTMLFormElement>(null);
 
     if (!feedbackModuleEnabled) {
         return <NotFound />;
@@ -86,13 +88,22 @@ export const CreateSurvey = () => {
 
     const onSubmit = async (event: FormEvent) => {
         event.preventDefault();
-        setShowErrors(true);
+        // Flushed so the invalid fields are marked in the DOM before focusing.
+        flushSync(() => setShowErrors(true));
         const submitBase = parseSubmitBase(submitUrl);
         if (
             errors.name ||
             submitBase === null ||
             hasSurveyErrors(errors.survey)
         ) {
+            const firstInvalid = formRef.current?.querySelector<HTMLElement>(
+                '[aria-invalid="true"]',
+            );
+            firstInvalid?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+            });
+            firstInvalid?.focus({ preventScroll: true });
             return;
         }
         let result: CreateSurveyResult;
@@ -125,7 +136,7 @@ export const CreateSurvey = () => {
             title='Create survey'
             description='A survey is an experiment flag whose variant payload holds the questions. Enable the flag in an environment to start showing it.'
         >
-            <StyledForm onSubmit={onSubmit}>
+            <StyledForm ref={formRef} onSubmit={onSubmit}>
                 <GeneralSelect
                     label='Project'
                     value={projectId}

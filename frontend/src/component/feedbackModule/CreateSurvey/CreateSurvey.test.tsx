@@ -11,6 +11,9 @@ import { CreateSurvey } from './CreateSurvey.tsx';
 
 const server = testServerSetup();
 
+// scrollIntoView is not implemented in jsdom
+HTMLElement.prototype.scrollIntoView = () => {};
+
 const flagName = 'survey-onboarding';
 const featuresPath = (projectId: string) =>
     `/api/admin/projects/${projectId}/features`;
@@ -241,6 +244,27 @@ describe('CreateSurvey', () => {
 
         await screen.findByText('Enter a question');
         expect(createFlag.requests).toHaveLength(0);
+    });
+
+    it('moves focus to the first invalid field on every failed submit', async () => {
+        setupApi();
+        renderPage();
+        const secondPrompt = await screen.findByRole('textbox', {
+            name: 'Question 2',
+        });
+        await userEvent.clear(secondPrompt);
+        await userEvent.clear(
+            screen.getByRole('textbox', { name: 'Question 3' }),
+        );
+
+        await submitSurvey();
+        await waitFor(() => expect(secondPrompt).toHaveFocus());
+
+        await userEvent.click(screen.getByLabelText('Title'));
+        await userEvent.click(
+            screen.getByRole('button', { name: 'Create survey' }),
+        );
+        await waitFor(() => expect(secondPrompt).toHaveFocus());
     });
 
     it('does not create the survey in a project the user cannot create flags in', async () => {

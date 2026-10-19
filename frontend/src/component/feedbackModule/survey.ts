@@ -66,7 +66,7 @@ const isNonEmptyString = (value: unknown): value is string =>
 const isObject = (value: unknown): value is Record<string, unknown> =>
     typeof value === 'object' && value !== null && !Array.isArray(value);
 
-const parseSubmitBase = (value: unknown): string | null => {
+export const parseSubmitBase = (value: unknown): string | null => {
     if (typeof value !== 'string') {
         return null;
     }

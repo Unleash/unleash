@@ -18,6 +18,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
 import {
+    parseSubmitBase,
     parseSurveyDefinition,
     SURVEY_FLAG_PREFIX,
     SURVEY_TEMPLATE,
@@ -39,20 +40,43 @@ const StyledButtons = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-type Errors = { name?: string; survey?: string };
+type Errors = { name?: string; submitUrl?: string; survey?: string };
 
-const validate = (name: string, surveyJson: string): Errors => {
+type Validation =
+    | { status: 'valid'; submitBase: string }
+    | { status: 'invalid'; errors: Errors };
+
+const validate = (
+    name: string,
+    submitUrl: string,
+    surveyJson: string,
+): Validation => {
     if (!name.startsWith(SURVEY_FLAG_PREFIX) || name === SURVEY_FLAG_PREFIX) {
         return {
-            name: `Must start with "${SURVEY_FLAG_PREFIX}" followed by a name`,
+            status: 'invalid',
+            errors: {
+                name: `Must start with "${SURVEY_FLAG_PREFIX}" followed by a name`,
+            },
+        };
+    }
+    const submitBase = parseSubmitBase(submitUrl);
+    if (submitBase === null) {
+        return {
+            status: 'invalid',
+            errors: {
+                submitUrl: 'Enter a URL starting with http:// or https://',
+            },
         };
     }
     if (!parseSurveyDefinition(surveyJson)) {
         return {
-            survey: 'Not a valid survey. Check the kind, version, title and questions.',
+            status: 'invalid',
+            errors: {
+                survey: 'Not a valid survey. Check the kind, version, title and questions.',
+            },
         };
     }
-    return {};
+    return { status: 'valid', submitBase };
 };
 
 export const CreateSurvey = () => {
@@ -65,6 +89,8 @@ export const CreateSurvey = () => {
 
     const [projectId, setProjectId] = useState('default');
     const [name, setName] = useState(SURVEY_FLAG_PREFIX);
+    const [editedSubmitUrl, setSubmitUrl] = useState<string>();
+    const submitUrl = editedSubmitUrl ?? uiConfig.unleashUrl ?? '';
     const [surveyJson, setSurveyJson] = useState(
         JSON.stringify(SURVEY_TEMPLATE, null, 2),
     );
@@ -76,26 +102,20 @@ export const CreateSurvey = () => {
 
     const onSubmit = async (event: FormEvent) => {
         event.preventDefault();
-        const validationErrors = validate(name, surveyJson);
-        setErrors(validationErrors);
-        if (Object.keys(validationErrors).length > 0) {
+        const validation = validate(name, submitUrl, surveyJson);
+        if (validation.status === 'invalid') {
+            setErrors(validation.errors);
             return;
         }
-        const { unleashUrl } = uiConfig;
-        if (!unleashUrl) {
-            setToastData({
-                type: 'error',
-                text: 'This instance has no Unleash URL configured, so survey responses would have nowhere to go.',
-            });
-            return;
-        }
+        setErrors({});
+        const { submitBase } = validation;
         let result: CreateSurveyResult;
         try {
             result = await createSurvey(
                 projectId,
                 name,
                 surveyJson,
-                unleashUrl,
+                submitBase,
             );
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -136,6 +156,17 @@ export const CreateSurvey = () => {
                     onChange={(event) => setName(event.target.value.trim())}
                     error={Boolean(errors.name)}
                     errorText={errors.name}
+                />
+                <Input
+                    label='Submit URL'
+                    description='The Unleash instance that collects the responses. Defaults to this one.'
+                    value={submitUrl}
+                    onChange={(event) =>
+                        setSubmitUrl(event.target.value.trim())
+                    }
+                    error={Boolean(errors.submitUrl)}
+                    errorText={errors.submitUrl}
+                    fullWidth
                 />
                 <div>
                     <Typography variant='body2' sx={{ mb: 1 }}>

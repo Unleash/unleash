@@ -93,6 +93,13 @@ const renderPage = (
         { route: '/surveys/create', permissions },
     );
 
+const sentSurvey = (addStrategy: { requests: unknown[] }) => {
+    const [strategy] = addStrategy.requests as {
+        variants: { payload: { value: string } }[];
+    }[];
+    return JSON.parse(strategy.variants[0].payload.value);
+};
+
 const submitSurvey = async () => {
     await userEvent.type(
         await screen.findByLabelText('Flag name'),
@@ -143,15 +150,30 @@ describe('CreateSurvey', () => {
         await submitSurvey();
 
         await screen.findByText('Survey created');
-        const [strategy] = addStrategy.requests as {
-            variants: { payload: { value: string } }[];
-        }[];
-        expect(JSON.parse(strategy.variants[0].payload.value)).toMatchObject({
+        expect(sentSurvey(addStrategy)).toMatchObject({
             submitBase: 'https://hosted.example.com/hosted',
         });
     });
 
-    it('does not create a survey when this instance has no URL to send responses to', async () => {
+    it('sends responses to the submit URL entered', async () => {
+        const { addStrategy } = setupApi();
+        renderPage();
+
+        const submitUrl = await screen.findByLabelText('Submit URL');
+        await waitFor(() =>
+            expect(submitUrl).toHaveValue('https://hosted.example.com/hosted'),
+        );
+        await userEvent.clear(submitUrl);
+        await userEvent.type(submitUrl, 'https://other.example.com');
+        await submitSurvey();
+
+        await screen.findByText('Survey created');
+        expect(sentSurvey(addStrategy)).toMatchObject({
+            submitBase: 'https://other.example.com',
+        });
+    });
+
+    it('does not create a survey without a URL to send responses to', async () => {
         const { createFlag } = setupApi();
         testServerRoute(server, '/api/admin/ui-config', {
             flags: { feedbackModule: true },
@@ -161,7 +183,7 @@ describe('CreateSurvey', () => {
         await submitSurvey();
 
         await screen.findByText(
-            'This instance has no Unleash URL configured, so survey responses would have nowhere to go.',
+            'Enter a URL starting with http:// or https://',
         );
         expect(createFlag.requests).toHaveLength(0);
     });

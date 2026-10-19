@@ -158,7 +158,8 @@ describe('validateSurveyDraft', () => {
 
     it.each([
         ['the title', { ...draftWith([draftQuestion()]), title: '' }],
-        ['a question', draftWith([draftQuestion({ prompt: '' })])],
+        ['a question prompt', draftWith([draftQuestion({ prompt: '' })])],
+        ['a question ID', draftWith([draftQuestion({ id: '' })])],
         ['an option', draftWith([choiceQuestion([''])])],
     ])('reports an error in %s', (_, draft) => {
         expect(hasSurveyErrors(validateSurveyDraft(draft))).toBe(true);

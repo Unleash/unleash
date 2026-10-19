@@ -1,5 +1,6 @@
 import {
     DefaultStrategyUpdatedEvent,
+    FeatureEnvironmentEvent,
     type IAuditUser,
     type IEnvironment,
     type IEnvironmentStore,
@@ -243,6 +244,7 @@ export default class EnvironmentService {
             return this.forceRemoveEnvironmentFromProject(
                 link.environmentName,
                 link.projectId,
+                SYSTEM_USER_AUDIT,
             );
         });
         await Promise.all(unlinkTasks.flat());
@@ -267,10 +269,27 @@ export default class EnvironmentService {
     async forceRemoveEnvironmentFromProject(
         environment: string,
         projectId: string,
+        auditUser: IAuditUser,
     ): Promise<void> {
-        await this.featureEnvironmentStore.disconnectFeatures(
-            environment,
-            projectId,
+        const disconnectedFeatures =
+            await this.featureEnvironmentStore.disconnectFeatures(
+                environment,
+                projectId,
+            );
+        const enabledBeforeRemoval = disconnectedFeatures.filter(
+            ({ enabled }) => enabled,
+        );
+        await this.eventService.storeEvents(
+            enabledBeforeRemoval.map(
+                ({ feature_name }) =>
+                    new FeatureEnvironmentEvent({
+                        enabled: false,
+                        project: projectId,
+                        featureName: feature_name,
+                        environment,
+                        auditUser,
+                    }),
+            ),
         );
         await this.featureEnvironmentStore.disconnectProject(
             environment,
@@ -286,7 +305,11 @@ export default class EnvironmentService {
         const _projectEnvs =
             await this.projectStore.getEnvironmentsForProject(projectId);
 
-        await this.forceRemoveEnvironmentFromProject(environment, projectId);
+        await this.forceRemoveEnvironmentFromProject(
+            environment,
+            projectId,
+            auditUser,
+        );
         await this.eventService.storeEvent(
             new ProjectEnvironmentRemoved({
                 project: projectId,

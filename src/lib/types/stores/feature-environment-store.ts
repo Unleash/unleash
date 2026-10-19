@@ -45,7 +45,10 @@ export interface IFeatureEnvironmentStore
         featureName: string,
         environment: string,
     ): Promise<void>;
-    disconnectFeatures(environment: string, project: string): Promise<void>;
+    disconnectFeatures(
+        environment: string,
+        project: string,
+    ): Promise<{ feature_name: string; enabled: boolean }[]>;
     connectFeatures(environment: string, projectId: string): Promise<void>;
 
     connectFeatureToEnvironmentsForProject(

@@ -253,14 +253,27 @@ export default class EnvironmentService {
             ...new Set(projectLinks.map((link) => link.projectId)),
         ];
 
+        const existingLinks =
+            await this.projectStore.getProjectLinksForEnvironments(
+                toEnable.map((env) => env.name),
+            );
+        const isLinked = (projectId: string, environmentName: string) =>
+            existingLinks.some(
+                (link) =>
+                    link.projectId === projectId &&
+                    link.environmentName === environmentName,
+            );
+
         const linkTasks = uniqueProjects.flatMap((project) => {
-            return toEnable.map((enabledEnv) => {
-                return this.addEnvironmentToProject(
-                    enabledEnv.name,
-                    project,
-                    SYSTEM_USER_AUDIT,
-                );
-            });
+            return toEnable
+                .filter((enabledEnv) => !isLinked(project, enabledEnv.name))
+                .map((enabledEnv) => {
+                    return this.addEnvironmentToProject(
+                        enabledEnv.name,
+                        project,
+                        SYSTEM_USER_AUDIT,
+                    );
+                });
         });
 
         await Promise.all(linkTasks);

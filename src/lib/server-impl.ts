@@ -372,8 +372,10 @@ export async function createApp(
         config.environmentEnableOverrides &&
         config.environmentEnableOverrides?.length > 0
     ) {
-        await services.environmentService.overrideEnabledProjects(
-            config.environmentEnableOverrides,
+        const environmentEnableOverrides = config.environmentEnableOverrides;
+        await services.transactionalEnvironmentService.transactional(
+            (service) =>
+                service.overrideEnabledProjects(environmentEnableOverrides),
         );
     }
 

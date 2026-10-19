@@ -11,9 +11,12 @@ import {
     SYSTEM_USER_AUDIT,
 } from '../../types/index.js';
 import NameExistsError from '../../error/name-exists-error.js';
-import type { EventService } from '../../services/index.js';
+import { createServices, type EventService } from '../../services/index.js';
 import { createEventsService } from '../events/createEventsService.js';
-import { test, beforeAll, afterAll, expect } from 'vitest';
+import { create } from '../../server-impl.js';
+import { FeatureEnvironmentStore } from '../../db/feature-environment-store.js';
+import type MetricsMonitor from '../../metrics.js';
+import { test, beforeAll, afterAll, expect, vi } from 'vitest';
 let stores: IUnleashStores;
 let db: ITestDb;
 let service: EnvironmentService;
@@ -333,7 +336,35 @@ test('When given overrides should remap projects to override environments', asyn
         SYSTEM_USER_AUDIT,
     );
 
-    await service.overrideEnabledProjects([enabledEnvName]);
+    const secondEnabledEnvName = 'enabled-too';
+    await db.stores.environmentStore.create({
+        name: secondEnabledEnvName,
+        type: 'production',
+    });
+    await service.toggleEnvironment(secondEnabledEnvName, false);
+
+    const alreadyLinkedProject = 'already-linked';
+    await stores.projectStore.create({
+        name: alreadyLinkedProject,
+        description: '',
+        id: alreadyLinkedProject,
+        mode: 'open' as const,
+    });
+    await service.addEnvironmentToProject(
+        disabledEnvName,
+        alreadyLinkedProject,
+        SYSTEM_USER_AUDIT,
+    );
+    await service.addEnvironmentToProject(
+        enabledEnvName,
+        alreadyLinkedProject,
+        SYSTEM_USER_AUDIT,
+    );
+
+    await service.overrideEnabledProjects([
+        enabledEnvName,
+        secondEnabledEnvName,
+    ]);
 
     const projects = (
         await stores.projectStore.getEnvironmentsForProject('default')
@@ -341,6 +372,67 @@ test('When given overrides should remap projects to override environments', asyn
 
     expect(projects).toContain('enabled');
     expect(projects).not.toContain('default');
+
+    const alreadyLinkedProjectEnvironments = (
+        await stores.projectStore.getEnvironmentsForProject(
+            alreadyLinkedProject,
+        )
+    ).map((e) => e.environment);
+
+    expect(alreadyLinkedProjectEnvironments).toEqual([
+        enabledEnvName,
+        secondEnabledEnvName,
+    ]);
+});
+
+test('Startup rolls back an environment override that fails partway', async () => {
+    const enabledEnvName = 'startup-enabled';
+    const disabledEnvName = 'startup-disabled';
+    await db.stores.environmentStore.create({
+        name: enabledEnvName,
+        type: 'production',
+    });
+    await db.stores.environmentStore.create({
+        name: disabledEnvName,
+        type: 'production',
+    });
+    await service.toggleEnvironment(disabledEnvName, true);
+    await service.toggleEnvironment(enabledEnvName, false);
+    await service.addEnvironmentToProject(
+        disabledEnvName,
+        'default',
+        SYSTEM_USER_AUDIT,
+    );
+    const environmentsBefore = await service.getAll();
+    const projectLinksBefore =
+        await stores.projectStore.getEnvironmentsForProject('default');
+
+    const config = createTestConfig();
+    config.db = { ...config.db, disableMigration: true };
+    process.env.ENABLED_ENVIRONMENTS = enabledEnvName;
+    const connectFeatures = vi
+        .spyOn(FeatureEnvironmentStore.prototype, 'connectFeatures')
+        .mockRejectedValue(new Error('connect failed'));
+    try {
+        await expect(
+            create(config, {
+                createDb: () => db.rawDatabase,
+                createStores: () => stores,
+                createServices,
+                createSessionDb: vi.fn(),
+                createMetricsMonitor: () =>
+                    ({ startMonitoring: vi.fn() }) as unknown as MetricsMonitor,
+            }),
+        ).rejects.toThrow('connect failed');
+    } finally {
+        connectFeatures.mockRestore();
+        delete process.env.ENABLED_ENVIRONMENTS;
+    }
+
+    expect(await service.getAll()).toEqual(environmentsBefore);
+    expect(
+        await stores.projectStore.getEnvironmentsForProject('default'),
+    ).toEqual(projectLinksBefore);
 });
 
 test('Override works correctly when enabling a custom environment and disabling prod and dev', async () => {

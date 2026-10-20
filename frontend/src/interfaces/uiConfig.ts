@@ -103,7 +103,6 @@ export type UiFlags = {
     searchDocsWidget?: boolean;
     exposureBasedAutomation?: boolean;
     semverBuildMetadata?: boolean;
-    slackIntegrationProjectLevel?: boolean;
     helpMenuRelocationHint?: boolean;
     ipConstraintOperator?: boolean;
     playgroundPerFlag?: boolean;

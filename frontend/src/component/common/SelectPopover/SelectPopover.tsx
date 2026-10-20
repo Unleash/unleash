@@ -110,7 +110,7 @@ type OptionsSource<T> =
 
 type BaseProps<T> = {
     onClose: () => void;
-    selected: T[];
+    selected?: T[];
     onChange: (selected: T[]) => void;
     searchPlaceholderText: string;
     listMaxHeight?: CSSProperties['maxHeight'];
@@ -139,7 +139,7 @@ const SelectPanel = <T extends string | number>({
     multiple = false,
 }: PanelProps<T>) => {
     const [searchText, setSearchText] = useState('');
-    const selectedValues = new Set(selected);
+    const selectedValues = new Set(multiple ? selected : selected?.slice(0, 1));
 
     const flatOptions: FlatOption<T>[] = useMemo(() => {
         if (optionGroups) {
@@ -204,7 +204,15 @@ const SelectPanel = <T extends string | number>({
                         aria-hidden
                     />
                 ) : null}
-                <StyledLabel>{option.label}</StyledLabel>
+                <StyledLabel
+                    sx={{
+                        fontWeight: multiple
+                            ? undefined
+                            : (theme) => theme.typography.fontWeightMedium,
+                    }}
+                >
+                    {option.label}
+                </StyledLabel>
                 {option.detail ? (
                     <StyledDetail>{option.detail}</StyledDetail>
                 ) : null}

@@ -352,8 +352,8 @@ export const EditableConstraint: FC<Props> = ({
     }
 
     const contextFieldOptions = createContextFieldOptions(
-        localConstraint,
         context,
+        localConstraint.contextName,
     );
 
     const valueTitle = isCidrConstraint(localConstraint)

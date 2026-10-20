@@ -226,6 +226,11 @@ describe('StrategyFormBody', () => {
         });
         await userEvent.click(addConstraintEl);
 
+        const defaultFieldOption = await screen.findByRole('option', {
+            name: 'appName',
+        });
+        await userEvent.click(defaultFieldOption);
+
         const addValueEl = await screen.findByRole('button', {
             name: 'Add values',
         });

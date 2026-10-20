@@ -1,5 +1,11 @@
 import type React from 'react';
-import { forwardRef, useImperativeHandle, type RefObject } from 'react';
+import {
+    forwardRef,
+    useImperativeHandle,
+    useRef,
+    useState,
+    type RefObject,
+} from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import type { IConstraint } from 'interfaces/strategy';
@@ -10,6 +16,8 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useWeakMap } from 'hooks/useWeakMap.ts';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
 import { createEmptyConstraint } from 'utils/createEmptyConstraint.ts';
+import { SelectPopover } from 'component/common/SelectPopover/SelectPopover.tsx';
+import { createContextFieldOptions } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/createContextFieldOptions.ts';
 
 interface IConstraintAccordionListProps {
     constraints: IConstraint[];
@@ -88,28 +96,27 @@ const useConstraintAccordionList = (
         addConstraint,
     }));
 
-    const onAdd =
-        addConstraint &&
-        (() => {
-            addConstraint(context[0].name);
-        });
-
-    return { onAdd, state, context };
+    return { addConstraint, state, context };
 };
 
 export const FeatureStrategyConstraintAccordionList = forwardRef<
     IConstraintAccordionListRef | undefined,
     IConstraintAccordionListProps
 >(({ constraints, setConstraints }, ref) => {
-    const { onAdd, context } = useConstraintAccordionList(
+    const { addConstraint, context } = useConstraintAccordionList(
         setConstraints,
         ref as RefObject<IConstraintAccordionListRef | null>,
     );
     const { limit, limitReached } = useConstraintLimit(constraints.length);
+    const addConstraintButtonRef = useRef<HTMLButtonElement>(null);
+    const [addConstraintAnchor, setAddConstraintAnchor] =
+        useState<HTMLButtonElement | null>(null);
 
     if (context.length === 0) {
         return null;
     }
+
+    const contextFieldOptions = createContextFieldOptions(context);
 
     return (
         <StyledContainer>
@@ -138,8 +145,11 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                     />
                 </StyledHelpIconBox>
                 <Button
+                    ref={addConstraintButtonRef}
                     type='button'
-                    onClick={onAdd}
+                    onClick={() =>
+                        setAddConstraintAnchor(addConstraintButtonRef.current)
+                    }
                     startIcon={<Add />}
                     variant='outlined'
                     color='primary'
@@ -149,6 +159,19 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                 >
                     Add constraint
                 </Button>
+                <SelectPopover
+                    open={Boolean(addConstraintAnchor)}
+                    anchorEl={addConstraintAnchor}
+                    onClose={() => setAddConstraintAnchor(null)}
+                    optionGroups={contextFieldOptions}
+                    onChange={([contextName]) => {
+                        if (contextName) {
+                            addConstraint(contextName);
+                        }
+                    }}
+                    searchPlaceholderText='Search context fields'
+                    horizontalAlign='right'
+                />
             </StyledRow>
             {setConstraints ? (
                 <EditableConstraintsList

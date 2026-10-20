@@ -1,5 +1,4 @@
 import { expect, it } from 'vitest';
-import { IN } from 'constants/operators';
 import { createContextFieldOptions } from './createContextFieldOptions';
 
 const contextField = (name: string, project?: string) => ({
@@ -12,11 +11,6 @@ const contextField = (name: string, project?: string) => ({
 });
 
 it('groups options by project and global', () => {
-    const localConstraint = {
-        contextName: 'a',
-        operator: IN,
-        values: new Set<string>(),
-    };
     const context = [
         contextField('a'),
         contextField('b'),
@@ -24,7 +18,7 @@ it('groups options by project and global', () => {
         contextField('d', 'project1'),
     ];
 
-    const options = createContextFieldOptions(localConstraint, context);
+    const options = createContextFieldOptions(context, 'a');
 
     expect(options).toEqual([
         {
@@ -45,18 +39,10 @@ it('groups options by project and global', () => {
 });
 
 it('does not include empty groups', () => {
-    const localConstraint = {
-        contextName: 'a',
-        operator: IN,
-        values: new Set<string>(),
-    };
     const onlyGlobalContext = [contextField('a')];
     const onlyProjectContext = [contextField('a', 'project1')];
 
-    const onlyGlobalOptions = createContextFieldOptions(
-        localConstraint,
-        onlyGlobalContext,
-    );
+    const onlyGlobalOptions = createContextFieldOptions(onlyGlobalContext, 'a');
 
     expect(onlyGlobalOptions).toEqual([
         {
@@ -66,8 +52,8 @@ it('does not include empty groups', () => {
     ]);
 
     const onlyProjectOptions = createContextFieldOptions(
-        localConstraint,
         onlyProjectContext,
+        'a',
     );
 
     expect(onlyProjectOptions).toEqual([
@@ -79,17 +65,9 @@ it('does not include empty groups', () => {
 });
 
 it('puts deleted context fields in its own group', () => {
-    const localConstraint = {
-        contextName: 'a',
-        operator: IN,
-        values: new Set<string>(),
-    };
     const onlyGlobalContext = [contextField('b')];
 
-    const options = createContextFieldOptions(
-        localConstraint,
-        onlyGlobalContext,
-    );
+    const options = createContextFieldOptions(onlyGlobalContext, 'a');
 
     expect(options).toEqual([
         {

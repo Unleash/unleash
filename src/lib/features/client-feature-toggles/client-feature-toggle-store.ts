@@ -72,13 +72,17 @@ export default class FeatureToggleClientStore
         const stopTimer = this.timer(`getAllBy${requestType}`);
         let selectColumns = [
             'features.name as name',
-            'features.description as description',
-            'features.type as type',
             'features.project as project',
-            'features.stale as stale',
             'features.impression_data as impression_data',
-            'features.last_seen_at as last_seen_at',
-            'features.created_at as created_at',
+            ...(requestType === 'client'
+                ? []
+                : [
+                      'features.description as description',
+                      'features.type as type',
+                      'features.stale as stale',
+                      'features.last_seen_at as last_seen_at',
+                      'features.created_at as created_at',
+                  ]),
             'fe.variants as variants',
             'fe.last_seen_at as env_last_seen_at',
             'fe.enabled as enabled',

@@ -4,12 +4,10 @@ exports[`should match snapshot from /api/client/features 1`] = `
 {
   "features": [
     {
-      "description": null,
       "enabled": false,
       "impressionData": false,
       "name": "test1",
       "project": "default",
-      "stale": false,
       "strategies": [
         {
           "constraints": [
@@ -32,16 +30,13 @@ exports[`should match snapshot from /api/client/features 1`] = `
           "variants": [],
         },
       ],
-      "type": "release",
       "variants": [],
     },
     {
-      "description": null,
       "enabled": false,
       "impressionData": false,
       "name": "test2",
       "project": "default",
-      "stale": false,
       "strategies": [
         {
           "constraints": [
@@ -58,14 +53,13 @@ exports[`should match snapshot from /api/client/features 1`] = `
           "variants": [],
         },
       ],
-      "type": "release",
       "variants": [],
     },
   ],
   "meta": {
-    "etag": ""76d8bb0e:10:v1"",
+    "etag": Any<String>,
     "queryHash": "76d8bb0e",
-    "revisionId": 10,
+    "revisionId": Any<Number>,
   },
   "query": {
     "environment": "development",

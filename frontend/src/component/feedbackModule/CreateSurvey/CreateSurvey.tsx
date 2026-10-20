@@ -1,6 +1,7 @@
-import { lazy, type FormEvent, Suspense, useState } from 'react';
+import { type FormEvent, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { useNavigate } from 'react-router';
-import { Button, styled, Typography } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Input from 'component/common/Input/Input';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
@@ -17,15 +18,16 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
+import { parseSubmitBase, SURVEY_FLAG_PREFIX } from '../survey.ts';
 import {
-    parseSurveyDefinition,
-    SURVEY_FLAG_PREFIX,
-    SURVEY_TEMPLATE,
-} from '../survey.ts';
-
-const LazyReactJSONEditor = lazy(
-    () => import('component/common/ReactJSONEditor/ReactJSONEditor'),
-);
+    hasSurveyErrors,
+    initialSurveyDraft,
+    type SurveyDraft,
+    type SurveyErrors,
+    toSurveyJson,
+    validateSurveyDraft,
+} from './surveyDraft.ts';
+import { SurveyQuestions } from './SurveyQuestions/SurveyQuestions.tsx';
 
 const StyledForm = styled('form')(({ theme }) => ({
     display: 'flex',
@@ -39,21 +41,23 @@ const StyledButtons = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-type Errors = { name?: string; survey?: string };
+interface FormErrors {
+    name?: string;
+    submitUrl?: string;
+    survey: SurveyErrors;
+}
 
-const validate = (name: string, surveyJson: string): Errors => {
-    if (!name.startsWith(SURVEY_FLAG_PREFIX) || name === SURVEY_FLAG_PREFIX) {
-        return {
-            name: `Must start with "${SURVEY_FLAG_PREFIX}" followed by a name`,
-        };
-    }
-    if (!parseSurveyDefinition(surveyJson)) {
-        return {
-            survey: 'Not a valid survey. Check the kind, version, title and questions.',
-        };
-    }
-    return {};
-};
+const NO_ERRORS: FormErrors = { survey: { questions: [] } };
+
+const validateName = (name: string): string | undefined =>
+    !name.startsWith(SURVEY_FLAG_PREFIX) || name === SURVEY_FLAG_PREFIX
+        ? `Must start with "${SURVEY_FLAG_PREFIX}" followed by a name`
+        : undefined;
+
+const validateSubmitUrl = (submitUrl: string): string | undefined =>
+    parseSubmitBase(submitUrl) === null
+        ? 'Enter a URL starting with http:// or https://'
+        : undefined;
 
 export const CreateSurvey = () => {
     const feedbackModuleEnabled = useUiFlag('feedbackModule');
@@ -65,10 +69,18 @@ export const CreateSurvey = () => {
 
     const [projectId, setProjectId] = useState('default');
     const [name, setName] = useState(SURVEY_FLAG_PREFIX);
-    const [surveyJson, setSurveyJson] = useState(
-        JSON.stringify(SURVEY_TEMPLATE, null, 2),
-    );
-    const [errors, setErrors] = useState<Errors>({});
+    const [editedSubmitUrl, setSubmitUrl] = useState<string>();
+    const submitUrl = editedSubmitUrl ?? uiConfig.unleashUrl ?? '';
+    const [draft, setDraft] = useState<SurveyDraft>(initialSurveyDraft);
+    // Errors appear after the first submit and then follow the edits.
+    const [showErrors, setShowErrors] = useState(false);
+    const errors: FormErrors = {
+        name: validateName(name),
+        submitUrl: validateSubmitUrl(submitUrl),
+        survey: validateSurveyDraft(draft),
+    };
+    const shownErrors = showErrors ? errors : NO_ERRORS;
+    const formRef = useRef<HTMLFormElement>(null);
 
     if (!feedbackModuleEnabled) {
         return <NotFound />;
@@ -76,17 +88,22 @@ export const CreateSurvey = () => {
 
     const onSubmit = async (event: FormEvent) => {
         event.preventDefault();
-        const validationErrors = validate(name, surveyJson);
-        setErrors(validationErrors);
-        if (Object.keys(validationErrors).length > 0) {
-            return;
-        }
-        const { unleashUrl } = uiConfig;
-        if (!unleashUrl) {
-            setToastData({
-                type: 'error',
-                text: 'This instance has no Unleash URL configured, so survey responses would have nowhere to go.',
+        // Flushed so the invalid fields are marked in the DOM before focusing.
+        flushSync(() => setShowErrors(true));
+        const submitBase = parseSubmitBase(submitUrl);
+        if (
+            errors.name ||
+            submitBase === null ||
+            hasSurveyErrors(errors.survey)
+        ) {
+            const firstInvalid = formRef.current?.querySelector<HTMLElement>(
+                '[aria-invalid="true"]',
+            );
+            firstInvalid?.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
             });
+            firstInvalid?.focus({ preventScroll: true });
             return;
         }
         let result: CreateSurveyResult;
@@ -94,8 +111,8 @@ export const CreateSurvey = () => {
             result = await createSurvey(
                 projectId,
                 name,
-                surveyJson,
-                unleashUrl,
+                toSurveyJson(draft),
+                submitBase,
             );
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -119,7 +136,7 @@ export const CreateSurvey = () => {
             title='Create survey'
             description='A survey is an experiment flag whose variant payload holds the questions. Enable the flag in an environment to start showing it.'
         >
-            <StyledForm onSubmit={onSubmit}>
+            <StyledForm ref={formRef} onSubmit={onSubmit}>
                 <GeneralSelect
                     label='Project'
                     value={projectId}
@@ -134,27 +151,46 @@ export const CreateSurvey = () => {
                     label='Flag name'
                     value={name}
                     onChange={(event) => setName(event.target.value.trim())}
-                    error={Boolean(errors.name)}
-                    errorText={errors.name}
+                    error={Boolean(shownErrors.name)}
+                    errorText={shownErrors.name}
                 />
-                <div>
-                    <Typography variant='body2' sx={{ mb: 1 }}>
-                        Survey
-                    </Typography>
-                    <Suspense fallback={null}>
-                        <LazyReactJSONEditor
-                            content={{ text: surveyJson }}
-                            onChange={(content) =>
-                                setSurveyJson(
-                                    'text' in content
-                                        ? content.text
-                                        : JSON.stringify(content.json, null, 2),
-                                )
-                            }
-                            validationError={errors.survey}
-                        />
-                    </Suspense>
-                </div>
+                <Input
+                    label='Submit URL'
+                    description='The Unleash instance that collects the responses. Defaults to this one.'
+                    value={submitUrl}
+                    onChange={(event) =>
+                        setSubmitUrl(event.target.value.trim())
+                    }
+                    error={Boolean(shownErrors.submitUrl)}
+                    errorText={shownErrors.submitUrl}
+                    fullWidth
+                />
+                <Input
+                    label='Title'
+                    value={draft.title}
+                    onChange={(event) =>
+                        setDraft({ ...draft, title: event.target.value })
+                    }
+                    error={Boolean(shownErrors.survey.title)}
+                    errorText={shownErrors.survey.title}
+                    fullWidth
+                />
+                <Input
+                    label='Description'
+                    description='Optional. Shown under the title.'
+                    value={draft.description}
+                    onChange={(event) =>
+                        setDraft({ ...draft, description: event.target.value })
+                    }
+                    multiline
+                    minRows={2}
+                    fullWidth
+                />
+                <SurveyQuestions
+                    questions={draft.questions}
+                    errors={shownErrors.survey.questions}
+                    onChange={(questions) => setDraft({ ...draft, questions })}
+                />
                 <StyledButtons>
                     <Button onClick={() => navigate(GO_BACK)}>Cancel</Button>
                     <PermissionButton

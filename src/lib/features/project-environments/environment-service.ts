@@ -1,5 +1,6 @@
 import {
     DefaultStrategyUpdatedEvent,
+    FeatureEnvironmentEvent,
     type IAuditUser,
     type IEnvironment,
     type IEnvironmentStore,
@@ -243,6 +244,7 @@ export default class EnvironmentService {
             return this.forceRemoveEnvironmentFromProject(
                 link.environmentName,
                 link.projectId,
+                SYSTEM_USER_AUDIT,
             );
         });
         await Promise.all(unlinkTasks.flat());
@@ -251,14 +253,27 @@ export default class EnvironmentService {
             ...new Set(projectLinks.map((link) => link.projectId)),
         ];
 
+        const existingLinks =
+            await this.projectStore.getProjectLinksForEnvironments(
+                toEnable.map((env) => env.name),
+            );
+        const isLinked = (projectId: string, environmentName: string) =>
+            existingLinks.some(
+                (link) =>
+                    link.projectId === projectId &&
+                    link.environmentName === environmentName,
+            );
+
         const linkTasks = uniqueProjects.flatMap((project) => {
-            return toEnable.map((enabledEnv) => {
-                return this.addEnvironmentToProject(
-                    enabledEnv.name,
-                    project,
-                    SYSTEM_USER_AUDIT,
-                );
-            });
+            return toEnable
+                .filter((enabledEnv) => !isLinked(project, enabledEnv.name))
+                .map((enabledEnv) => {
+                    return this.addEnvironmentToProject(
+                        enabledEnv.name,
+                        project,
+                        SYSTEM_USER_AUDIT,
+                    );
+                });
         });
 
         await Promise.all(linkTasks);
@@ -267,10 +282,27 @@ export default class EnvironmentService {
     async forceRemoveEnvironmentFromProject(
         environment: string,
         projectId: string,
+        auditUser: IAuditUser,
     ): Promise<void> {
-        await this.featureEnvironmentStore.disconnectFeatures(
-            environment,
-            projectId,
+        const disconnectedFeatures =
+            await this.featureEnvironmentStore.disconnectFeatures(
+                environment,
+                projectId,
+            );
+        const enabledBeforeRemoval = disconnectedFeatures.filter(
+            ({ enabled }) => enabled,
+        );
+        await this.eventService.storeEvents(
+            enabledBeforeRemoval.map(
+                ({ feature_name }) =>
+                    new FeatureEnvironmentEvent({
+                        enabled: false,
+                        project: projectId,
+                        featureName: feature_name,
+                        environment,
+                        auditUser,
+                    }),
+            ),
         );
         await this.featureEnvironmentStore.disconnectProject(
             environment,
@@ -286,7 +318,11 @@ export default class EnvironmentService {
         const _projectEnvs =
             await this.projectStore.getEnvironmentsForProject(projectId);
 
-        await this.forceRemoveEnvironmentFromProject(environment, projectId);
+        await this.forceRemoveEnvironmentFromProject(
+            environment,
+            projectId,
+            auditUser,
+        );
         await this.eventService.storeEvent(
             new ProjectEnvironmentRemoved({
                 project: projectId,

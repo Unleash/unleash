@@ -50,6 +50,7 @@ export class JobStore
     async acquireBucket(
         key: string,
         bucketLengthInMinutes: number,
+        bucketOffsetMs = 0,
     ): Promise<{ name: string; bucket: Date } | undefined> {
         const endTimer = this.timer('acquireBucket');
 
@@ -58,7 +59,8 @@ export class JobStore
                 name: key,
                 // note: date_floor_round is a custom function defined in the DB
                 bucket: this.db.raw(
-                    `date_floor_round(now(), '${bucketLengthInMinutes} minutes')`,
+                    `date_floor_round(now() - make_interval(secs => ?), '${bucketLengthInMinutes} minutes') + make_interval(secs => ?)`,
+                    [bucketOffsetMs / 1000, bucketOffsetMs / 1000],
                 ),
                 stage: 'started',
                 attempt_count: 1,

@@ -18,17 +18,22 @@ export class JobService {
      * The key identifies the job group: only one job in the group will execute
      * at any given time.
      *
-     * Note: buckets begin at the start of the time span
+     * Note: buckets begin at the start of the time span, shifted by
+     * {@param bucketOffsetMs}. The earliest pod to tick after a bucket starts
+     * wins it, so many instances sharing bucket starts all run right after
+     * them. Give each instance a different offset to spread such load.
      */
     public singleInstance(
         key: string,
         fn: (range?: { from: Date; to: Date }) => Promise<unknown>,
         bucketSizeInMinutes = 5,
+        { bucketOffsetMs = 0 }: { bucketOffsetMs?: number } = {},
     ): () => Promise<unknown> {
         return async () => {
             const acquired = await this.jobStore.acquireBucket(
                 key,
                 bucketSizeInMinutes,
+                bucketOffsetMs,
             );
 
             if (acquired) {

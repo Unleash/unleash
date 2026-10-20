@@ -40,7 +40,6 @@ import { createContextFieldOptions } from './createContextFieldOptions.ts';
 import { ContextFieldSelect } from './ContextFieldSelect.tsx';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
 import { AddRegexValueChip } from './AddRegexValueChip.tsx';
-import { ToggleConstraintInverted } from './ToggleConstraintInverted.tsx';
 import { AddRegexValueEditor } from './AddRegexValueEditor/AddRegexValueEditor.tsx';
 import { CidrSdkRequirements } from './CidrSdkRequirements.tsx';
 import { CidrTargetRange, formatTargetRange } from './CidrTargetRange.tsx';
@@ -383,20 +382,17 @@ export const EditableConstraint: FC<Props> = ({
                         />
 
                         <OperatorOptions>
-                            <ToggleConstraintInverted
-                                inverted={Boolean(localConstraint.inverted)}
-                                onToggleInverted={onToggleInverted}
-                                disabledText={getInvertedDisabledText(
-                                    invertedDisabled,
-                                    operator,
-                                )}
-                            />
-
                             <ConstraintOperatorSelect
+                                contextName={contextName || ''}
                                 options={operatorsForContext(contextName)}
                                 value={operator}
                                 onChange={onOperatorChange}
                                 inverted={localConstraint.inverted}
+                                onToggleInverted={onToggleInverted}
+                                invertedDisabledText={getInvertedDisabledText(
+                                    invertedDisabled,
+                                    operator,
+                                )}
                             />
 
                             {showCaseSensitiveButton ? (

@@ -3,10 +3,10 @@ import { PayloadType } from 'utils/variants';
 export const SURVEY_FLAG_PREFIX = 'survey-';
 export const SURVEY_KIND = 'unleash-survey';
 export const SURVEY_VERSION = 1;
-const DEFAULT_RATING_SCALE = 5;
-const MIN_RATING_SCALE = 2;
-const MAX_RATING_SCALE = 10;
-const MAX_QUESTIONS = 10;
+export const DEFAULT_RATING_SCALE = 5;
+export const MIN_RATING_SCALE = 2;
+export const MAX_RATING_SCALE = 10;
+export const MAX_QUESTIONS = 10;
 
 interface QuestionBase {
     id: string;
@@ -37,36 +37,13 @@ export interface SurveyTransport {
 
 export type Survey = SurveyDefinition & SurveyTransport;
 
-export const SURVEY_TEMPLATE = {
-    kind: SURVEY_KIND,
-    version: SURVEY_VERSION,
-    title: 'How was creating your flag?',
-    description: 'Three quick questions.',
-    questions: [
-        {
-            id: 'ease',
-            type: 'rating',
-            prompt: 'How easy was it?',
-            required: true,
-            scale: DEFAULT_RATING_SCALE,
-        },
-        {
-            id: 'role',
-            type: 'multi-choice',
-            prompt: 'What is your role?',
-            options: ['Developer', 'PM', 'Other'],
-        },
-        { id: 'comment', type: 'free-text', prompt: 'Anything else?' },
-    ],
-};
-
 const isNonEmptyString = (value: unknown): value is string =>
     typeof value === 'string' && value.length > 0;
 
 const isObject = (value: unknown): value is Record<string, unknown> =>
     typeof value === 'object' && value !== null && !Array.isArray(value);
 
-const parseSubmitBase = (value: unknown): string | null => {
+export const parseSubmitBase = (value: unknown): string | null => {
     if (typeof value !== 'string') {
         return null;
     }

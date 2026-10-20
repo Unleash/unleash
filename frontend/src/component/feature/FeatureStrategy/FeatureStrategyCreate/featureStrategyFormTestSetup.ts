@@ -65,6 +65,7 @@ export const setupStrategyEndpoint = () => {
 export const setupFeaturesEndpoint = (
     featureName: string,
     variantName = 'Blue',
+    { rollout = '50', description = '' } = {},
 ) => {
     testServerRoute(
         server,
@@ -80,11 +81,57 @@ export const setupFeaturesEndpoint = (
                             constraints: [],
                             parameters: {
                                 groupId: featureName,
-                                rollout: '50',
+                                rollout,
                                 stickiness: 'default',
                             },
                             name: 'flexibleRollout',
                             variants: [{ name: variantName, weight: 50 }],
+                        },
+                    ],
+                },
+            ],
+            name: featureName,
+            description,
+            project: 'default',
+        },
+    );
+};
+
+export const setupFeaturesEndpointWithMilestoneStrategy = (
+    featureName: string,
+    rollout = '50',
+) => {
+    testServerRoute(
+        server,
+        `/api/admin/projects/default/features/${featureName}`,
+        {
+            environments: [
+                {
+                    name: 'development',
+                    type: 'development',
+                    strategies: [],
+                    releasePlans: [
+                        {
+                            id: 'plan-1',
+                            milestones: [
+                                {
+                                    id: 'milestone-1',
+                                    strategies: [
+                                        {
+                                            id: '1',
+                                            milestoneId: 'milestone-1',
+                                            constraints: [],
+                                            parameters: {
+                                                groupId: featureName,
+                                                rollout,
+                                                stickiness: 'default',
+                                            },
+                                            name: 'flexibleRollout',
+                                            variants: [],
+                                        },
+                                    ],
+                                },
+                            ],
                         },
                     ],
                 },

@@ -16,6 +16,7 @@ import {
     setupFeaturesEndpointWithBrokenStrategy,
     setupContextEndpoint,
     setupFeaturesEndpoint,
+    setupFeaturesEndpointWithMilestoneStrategy,
     setupProjectEndpoint,
     setupSegmentsEndpoint,
     setupStrategyEndpoint,
@@ -123,6 +124,39 @@ describe('NewFeatureStrategyEdit', () => {
         "constraints": []
       }'"
     `);
+    });
+
+    describe('stale data check', () => {
+        beforeEach(() => {
+            setupUiConfigEndpoint();
+        });
+
+        it('shows only the edited strategy in the stale data dialog, not the rest of the flag', async () => {
+            setupComponent();
+            await screen.findByText('Gradual rollout');
+
+            setupFeaturesEndpoint(featureName, variantName, {
+                rollout: '75',
+                description: 'changed elsewhere on the flag',
+            });
+
+            await screen.findByText('Your data is stale');
+            expect(screen.getByText(/rollout: "75"/)).toBeInTheDocument();
+            expect(
+                screen.queryByText(/changed elsewhere on the flag/),
+            ).not.toBeInTheDocument();
+        });
+
+        it('warns about a concurrent edit of a milestone strategy', async () => {
+            setupFeaturesEndpointWithMilestoneStrategy(featureName, '50');
+            setupComponent();
+            await screen.findByText('Gradual rollout');
+
+            setupFeaturesEndpointWithMilestoneStrategy(featureName, '75');
+
+            await screen.findByText('Your data is stale');
+            expect(screen.getByText(/rollout: "75"/)).toBeInTheDocument();
+        });
     });
 
     describe('singlePageStrategyForm off (legacy tabbed form)', () => {

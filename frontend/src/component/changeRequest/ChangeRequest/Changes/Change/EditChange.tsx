@@ -16,7 +16,7 @@ import {
     type IChangeSchema,
     useChangeRequestApi,
 } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { comparisonModerator } from 'component/feature/FeatureStrategy/featureStrategy.utils';
+import { strategyComparisonModerator } from 'component/feature/FeatureStrategy/featureStrategy.utils';
 import type {
     ChangeRequestAddStrategy,
     ChangeRequestEditStrategy,
@@ -91,6 +91,12 @@ export const EditChange = ({
 
     const ref = useRef<IFeatureToggle>(feature);
 
+    const watchNothing = () => undefined;
+    const staleComparison =
+        change.action === 'addStrategy'
+            ? watchNothing
+            : strategyComparisonModerator(environment, change.payload.id);
+
     const { data, staleDataNotification, forceRefreshCache } =
         useCollaborateData<IFeatureToggle>(
             {
@@ -104,7 +110,7 @@ export const EditChange = ({
             {
                 afterSubmitAction: refetchFeature,
             },
-            comparisonModerator,
+            staleComparison,
         );
 
     useEffect(() => {

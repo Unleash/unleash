@@ -1,5 +1,6 @@
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import type {
+    IFeatureStrategy,
     StrategyFormParameters,
     StrategyFormState,
 } from 'interfaces/strategy';
@@ -7,7 +8,6 @@ import type {
     CreateFeatureStrategySchema,
     ParametersSchema,
 } from 'openapi/index.js';
-import { deepOmit, type DeepOmit } from '../../../utils/deepOmit.js';
 
 const isDefined = (
     parameter: [string, string | undefined],
@@ -30,18 +30,24 @@ export const createStrategyPayload = (
     disabled: strategy.disabled ?? false,
 });
 
-export const comparisonModerator = (
-    data: IFeatureToggle,
-): DeepOmit<IFeatureToggle, keyof IFeatureToggle> => {
-    const tempData = { ...data };
-
-    return deepOmit(
-        tempData,
-        'lastSeenAt',
-        'yes',
-        'no',
-        'lifecycle',
-        'collaborators',
-        'releasePlans',
+const environmentStrategies = (
+    feature: IFeatureToggle,
+    environmentId: string,
+): IFeatureStrategy[] => {
+    const environment = feature.environments.find(
+        (env) => env.name === environmentId,
     );
+    if (!environment) {
+        return [];
+    }
+    const milestoneStrategies = (environment.releasePlans ?? []).flatMap(
+        (plan) => plan.milestones.flatMap((milestone) => milestone.strategies),
+    );
+    return [...environment.strategies, ...milestoneStrategies];
 };
+
+export const strategyComparisonModerator =
+    (environmentId: string, strategyId: string) => (feature: IFeatureToggle) =>
+        environmentStrategies(feature, environmentId).find(
+            (strategy) => strategy.id === strategyId,
+        );

@@ -25,7 +25,7 @@ import type {
     IFeatureToggle,
 } from 'interfaces/featureToggle';
 import {
-    comparisonModerator,
+    strategyComparisonModerator,
     createStrategyPayload,
 } from '../featureStrategy.utils';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
@@ -101,7 +101,7 @@ export const FeatureStrategyEdit = () => {
             {
                 afterSubmitAction: refetchFeature,
             },
-            comparisonModerator,
+            strategyComparisonModerator(environmentId, strategyId),
         );
 
     useEffect(() => {

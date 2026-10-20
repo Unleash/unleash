@@ -1,13 +1,19 @@
 import { expect, it } from 'vitest';
+import type { ILegalValue } from 'interfaces/context';
 import { createContextFieldOptions } from './createContextFieldOptions';
 
-const contextField = (name: string, project?: string) => ({
+const contextField = (
+    name: string,
+    project?: string,
+    legalValues?: ILegalValue[],
+) => ({
     name,
     description: '',
     createdAt: '',
     sortOrder: 0,
     stickiness: false,
     project,
+    legalValues,
 });
 
 it('groups options by project and global', () => {
@@ -77,6 +83,27 @@ it('puts deleted context fields in its own group', () => {
         {
             groupHeader: 'Deleted context fields',
             options: [{ value: 'a', label: 'a' }],
+        },
+    ]);
+});
+
+it('shows a legal values count for fields with legal values', () => {
+    const context = [
+        contextField('a', undefined, [{ value: '1' }, { value: '2' }]),
+        contextField('b', undefined, [{ value: '1' }]),
+        contextField('c'),
+    ];
+
+    const options = createContextFieldOptions(context, 'a');
+
+    expect(options).toEqual([
+        {
+            groupHeader: 'Global context fields',
+            options: [
+                { value: 'a', label: 'a', detail: '2 legal values' },
+                { value: 'b', label: 'b', detail: '1 legal value' },
+                { value: 'c', label: 'c' },
+            ],
         },
     ]);
 });

@@ -22,12 +22,17 @@ export const createContextFieldOptions = (
         },
     );
 
-    const optList = (opts: { name: string }[]) =>
+    const optList = (
+        opts: Pick<IUnleashContextDefinition, 'name' | 'legalValues'>[],
+    ) =>
         opts
             .toSorted((a, b) => a.name.localeCompare(b.name))
             .map((option) => ({
                 value: option.name,
                 label: option.name,
+                detail: option.legalValues?.length
+                    ? `${option.legalValues.length} legal value${option.legalValues.length === 1 ? '' : 's'}`
+                    : undefined,
             }));
 
     return [

@@ -26,7 +26,7 @@ jobs:
           ref: v${{ inputs.version }} # tag that should be created by the caller workflow
       - uses: pnpm/action-setup@v5
       - name: Setup to npm
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 22.x
           registry-url: 'https://registry.npmjs.org'

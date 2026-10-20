@@ -393,6 +393,15 @@ export const EditableConstraint: FC<Props> = ({
                                     invertedDisabled,
                                     operator,
                                 )}
+                                showCaseSensitiveButton={
+                                    showCaseSensitiveButton
+                                }
+                                caseInsensitive={Boolean(
+                                    localConstraint.caseInsensitive,
+                                )}
+                                onToggleCaseSensitivity={
+                                    onToggleCaseSensitivity
+                                }
                             />
 
                             {showCaseSensitiveButton ? (

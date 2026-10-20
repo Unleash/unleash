@@ -1,10 +1,12 @@
 import {
     Button,
+    IconButton,
     ListSubheader,
     MenuItem,
     MenuList,
     Popover,
     styled,
+    Switch,
     ToggleButton,
     toggleButtonClasses,
     ToggleButtonGroup,
@@ -23,9 +25,10 @@ import {
     SEMVER_GTE,
     SEMVER_LTE,
 } from 'constants/operators';
-import { type ElementType, useRef, useState } from 'react';
+import { type ElementType, useId, useRef, useState } from 'react';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import Check from '@mui/icons-material/Check';
+import HelpOutlineIcon from '@mui/icons-material/HelpOutlineOutlined';
 import {
     formatOperatorDescription,
     operatorExplanations,
@@ -42,6 +45,9 @@ interface IConstraintOperatorSelectProps {
     inverted?: boolean;
     onToggleInverted: () => void;
     invertedDisabledText?: string;
+    showCaseSensitiveButton?: boolean;
+    caseInsensitive?: boolean;
+    onToggleCaseSensitivity?: () => void;
 }
 
 const TriggerButton = styled(Button)(({ theme }) => ({
@@ -179,6 +185,37 @@ const StyledRowDescription = styled('span')(({ theme }) => ({
     marginLeft: theme.spacing(3.5),
 }));
 
+const StyledCaseSensitivityRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: theme.spacing(1, 1.5),
+    borderTop: `1px solid ${theme.palette.divider}`,
+    opacity: 1,
+    transition: 'opacity 0.1s ease',
+    '&[inert]': {
+        opacity: 0.4,
+    },
+}));
+
+const StyledCaseSensitivityLabelText = styled('span')(({ theme }) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+}));
+
+const StyledCaseSensitivityLabel = styled('label')({
+    cursor: 'pointer',
+    '[inert] &': {
+        cursor: 'default',
+    },
+});
+
+const StyledHelpIconButton = styled(IconButton)(({ theme }) => ({
+    color: theme.palette.text.disabled,
+    cursor: 'help',
+}));
+
 export const ConstraintOperatorSelect = ({
     contextName,
     options,
@@ -187,7 +224,11 @@ export const ConstraintOperatorSelect = ({
     inverted,
     onToggleInverted,
     invertedDisabledText,
+    showCaseSensitiveButton,
+    caseInsensitive,
+    onToggleCaseSensitivity,
 }: IConstraintOperatorSelectProps) => {
+    const caseSensitivitySwitchId = useId();
     const triggerRef = useRef<HTMLButtonElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const open = Boolean(anchorEl);
@@ -310,6 +351,32 @@ export const ConstraintOperatorSelect = ({
                         </StyledRow>
                     ))}
                 </StyledMenuList>
+                <StyledCaseSensitivityRow inert={!showCaseSensitiveButton}>
+                    <StyledCaseSensitivityLabelText>
+                        <StyledCaseSensitivityLabel
+                            htmlFor={caseSensitivitySwitchId}
+                        >
+                            Case sensitive
+                        </StyledCaseSensitivityLabel>
+                        <HtmlTooltip
+                            title="When enabled ada@gmail.com won't match Ada@Gmail.com"
+                            arrow
+                        >
+                            <StyledHelpIconButton
+                                type='button'
+                                size='small'
+                                aria-label='Help: case sensitivity'
+                            >
+                                <HelpOutlineIcon aria-hidden='true' />
+                            </StyledHelpIconButton>
+                        </HtmlTooltip>
+                    </StyledCaseSensitivityLabelText>
+                    <Switch
+                        id={caseSensitivitySwitchId}
+                        checked={!caseInsensitive}
+                        onChange={onToggleCaseSensitivity}
+                    />
+                </StyledCaseSensitivityRow>
             </Popover>
         </>
     );

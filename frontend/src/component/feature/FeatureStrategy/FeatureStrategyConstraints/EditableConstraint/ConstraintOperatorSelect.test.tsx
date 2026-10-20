@@ -114,4 +114,52 @@ describe('ConstraintOperatorSelect', () => {
             'The REGEX operator does not support inversion',
         );
     });
+
+    test('toggles the case sensitivity row inert when the operator does not support it', async () => {
+        setupApi();
+
+        render(
+            <ConstraintOperatorSelect
+                contextName='appName'
+                options={['IN', 'NOT_IN']}
+                value='IN'
+                onChange={vi.fn()}
+                inverted={false}
+                onToggleInverted={vi.fn()}
+                showCaseSensitiveButton={false}
+            />,
+        );
+
+        await openPopover();
+
+        const label = screen.getByText('Case sensitive');
+        expect(label.closest('[inert]')).not.toBeNull();
+    });
+
+    test('renders the case sensitivity row as interactive when the operator supports it', async () => {
+        setupApi();
+        const onToggleCaseSensitivity = vi.fn();
+
+        render(
+            <ConstraintOperatorSelect
+                contextName='appName'
+                options={['IN', 'NOT_IN']}
+                value='IN'
+                onChange={vi.fn()}
+                inverted={false}
+                onToggleInverted={vi.fn()}
+                showCaseSensitiveButton={true}
+                caseInsensitive={false}
+                onToggleCaseSensitivity={onToggleCaseSensitivity}
+            />,
+        );
+
+        await openPopover();
+
+        const label = screen.getByText('Case sensitive');
+        expect(label.closest('[inert]')).toBeNull();
+
+        fireEvent.click(screen.getByRole('switch'));
+        expect(onToggleCaseSensitivity).toHaveBeenCalledTimes(1);
+    });
 });

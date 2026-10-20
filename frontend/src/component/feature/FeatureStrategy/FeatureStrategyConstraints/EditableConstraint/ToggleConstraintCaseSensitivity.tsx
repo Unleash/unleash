@@ -1,39 +1,33 @@
 import { styled } from '@mui/material';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import CaseSensitiveIcon from 'assets/icons/case-sensitive.svg?react';
-import CaseInsensitiveIcon from 'assets/icons/case-insensitive.svg?react';
 import type { FC } from 'react';
 
 const StyledButton = styled('button')(({ theme }) => ({
-    display: 'grid',
-    placeItems: 'center',
-    padding: 0,
-    borderRadius: theme.shape.borderRadius,
-    fontSize: theme.fontSizes.smallerBody,
-    background: theme.palette.primary.container,
-    border: `1px solid ${theme.palette.primary.containerBorder}`,
-    color: theme.palette.primary.onContainer,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '30px',
+    width: '30px',
     fontWeight: theme.typography.fontWeightBold,
+    borderRadius: `${theme.shape.borderRadius}px`,
+    border: 'none',
+    padding: theme.spacing(0),
+    color: theme.palette.text.disabled,
+    background: theme.palette.neutral.container,
+    cursor: 'pointer',
     transition: 'all 0.03s ease',
-    '&:is(:hover, :focus-visible)': {
-        outline: `1px solid ${theme.palette.primary.main}`,
+    '&[aria-pressed="true"]': {
+        color: theme.palette.primary.onContainer,
+        background: theme.palette.primary.container,
     },
 }));
 
-const StyledCaseInsensitiveIcon = styled(CaseInsensitiveIcon)(({ theme }) => ({
-    path: {
-        fill: theme.palette.text.disabled,
-    },
-    rect: {
-        fill: theme.palette.text.secondary,
-    },
-}));
-
-const StyledCaseSensitiveIcon = styled(CaseSensitiveIcon)(({ theme }) => ({
+const StyledCaseSensitiveIcon = styled(CaseSensitiveIcon)({
     path: {
         fill: 'currentColor',
     },
-}));
+});
 
 type Props = {
     caseInsensitive: boolean;
@@ -48,21 +42,15 @@ export const ToggleConstraintCaseSensitivity: FC<Props> = ({
         <HtmlTooltip
             title={`Make match${caseInsensitive ? ' ' : ' not '}case sensitive`}
             arrow
+            describeChild
         >
             <StyledButton
                 type='button'
+                aria-pressed={!caseInsensitive}
                 onClick={onToggleCaseSensitivity}
-                aria-label={
-                    caseInsensitive
-                        ? 'The match is not case sensitive.'
-                        : 'The match is case sensitive.'
-                }
+                aria-label='Case-sensitive'
             >
-                {caseInsensitive ? (
-                    <StyledCaseInsensitiveIcon aria-hidden='true' />
-                ) : (
-                    <StyledCaseSensitiveIcon aria-hidden='true' />
-                )}
+                <StyledCaseSensitiveIcon aria-hidden='true' />
             </StyledButton>
         </HtmlTooltip>
     );

@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useId, useMemo } from 'react';
+import { useId } from 'react';
 import {
     Divider,
     Radio,
@@ -15,7 +15,7 @@ import { FeatureStrategyConstraintAccordionList } from '../../FeatureStrategyCon
 import { useFeatureStrategyConstraints } from '../../FeatureStrategyConstraints/useFeatureStrategyConstraints.ts';
 import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
 import { useAssignableSegments } from 'hooks/api/getters/useSegments/useAssignableSegments.ts';
-import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
+import { useSegmentsMap } from 'hooks/api/getters/useSegments/useSegmentsMap.ts';
 
 export type TargetAudience = 'everyone' | 'subset';
 
@@ -103,12 +103,7 @@ export const FeatureStrategyTargetAudience = <T extends StrategyFormState>({
     onTargetAudienceChange,
 }: FeatureStrategyTargetAudienceProps<T>) => {
     const { segments: assignableSegments = [] } = useAssignableSegments();
-    const { segments: allSegments = [] } = useSegments();
-
-    const segmentMap = useMemo(
-        () => new Map(allSegments.map((s) => [s.id, s])),
-        [allSegments],
-    );
+    const segmentMap = useSegmentsMap();
 
     const resolveSegments = (ids: number[]) =>
         ids

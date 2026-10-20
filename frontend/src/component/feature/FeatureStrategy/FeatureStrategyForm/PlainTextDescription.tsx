@@ -1,4 +1,4 @@
-import { useId, useMemo } from 'react';
+import { useId } from 'react';
 import {
     styled,
     Accordion,
@@ -10,7 +10,7 @@ import {
 import type { IConstraint, StrategyFormState } from 'interfaces/strategy';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import { focusOutline } from 'themes/themeStyles';
-import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
+import { useSegmentsMap } from 'hooks/api/getters/useSegments/useSegmentsMap.ts';
 import { formatConstraintText } from 'utils/formatConstraintText';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 
@@ -96,12 +96,7 @@ const useTargetingDescription = ({
     constraints,
     segments,
 }: Pick<StrategyFormState, 'constraints' | 'segments'>) => {
-    const { segments: allSegments } = useSegments();
-    const segmentsMap = useMemo(
-        () =>
-            new Map(allSegments?.map((segment) => [segment.id, segment.name])),
-        [allSegments],
-    );
+    const segmentsMap = useSegmentsMap();
     const { locationSettings } = useLocationSettings();
 
     if (!constraints?.length && !segments?.length)
@@ -110,7 +105,7 @@ const useTargetingDescription = ({
     const segmentText = !segments?.length
         ? 'users'
         : segments
-              .map((segment) => segmentsMap.get(segment))
+              .map((segment) => segmentsMap.get(segment)?.name)
               .filter(Boolean)
               .join(' + ');
 

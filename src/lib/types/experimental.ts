@@ -87,6 +87,7 @@ export type IFlagKey =
     | 'singlePageStrategyForm'
     | 'feedbackModule'
     | 'feedbackModuleDisplaySurvey'
+    | 'feedbackModuleSubmitResponses'
     | 'playgroundFeatureEvaluation'
     | keyof IFlagKeyOverrides;
 
@@ -390,6 +391,10 @@ const flags: IFlags = {
     ),
     feedbackModuleDisplaySurvey: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FEEDBACK_MODULE_DISPLAY_SURVEY,
+        false,
+    ),
+    feedbackModuleSubmitResponses: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEEDBACK_MODULE_SUBMIT_RESPONSES,
         false,
     ),
     playgroundFeatureEvaluation: parseEnvVarBoolean(

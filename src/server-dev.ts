@@ -69,6 +69,7 @@ process.nextTick(async () => {
                         singlePageStrategyForm: true,
                         feedbackModule: true,
                         feedbackModuleDisplaySurvey: true,
+                        feedbackModuleSubmitResponses: true,
                         playgroundFeatureEvaluation: true,
                         perFlagLifetime: true,
                     },

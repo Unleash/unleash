@@ -201,6 +201,21 @@ describe('NewFeatureStrategyEdit', () => {
             });
         });
 
+        it('closes the stale data dialog on dismiss', async () => {
+            setupComponent();
+            await screen.findByText('Gradual rollout');
+
+            setupFeaturesEndpointWithBrokenStrategy(featureName);
+            await screen.findByText('Your data is stale');
+            fireEvent.click(screen.getByRole('button', { name: 'Dismiss' }));
+
+            await waitFor(() =>
+                expect(
+                    screen.queryByText('Your data is stale'),
+                ).not.toBeInTheDocument(),
+            );
+        });
+
         it('should auto-correct missing strategy params without overwriting existing params', async () => {
             setupFeaturesEndpointWithBrokenStrategy(featureName);
 

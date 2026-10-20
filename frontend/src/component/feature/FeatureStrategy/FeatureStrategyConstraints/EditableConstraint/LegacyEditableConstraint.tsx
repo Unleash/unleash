@@ -16,7 +16,7 @@ import { AddValuesChip } from './AddValuesChip.tsx';
 import { ToggleConstraintCaseSensitivity } from './LegacyToggleConstraintCaseSensitivity.tsx';
 
 import { AddSingleValueChip } from './AddSingleValueChip.tsx';
-import { ConstraintDateInput } from './ConstraintDateInput.tsx';
+import { ConstraintDateInput } from './LegacyConstraintDateInput.tsx';
 import {
     LegalValuesSelector,
     SingleLegalValueSelector,
@@ -41,9 +41,9 @@ import { createContextFieldOptions } from './createContextFieldOptions.ts';
 import type { SelectOptionGroup as GeneralSelectOptionGroup } from 'component/common/GeneralSelect/GeneralSelect';
 import type { SelectOptionGroup } from 'component/common/SelectPopover/SelectPopover.tsx';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
-import { AddRegexValueChip } from './AddRegexValueChip.tsx';
+import { AddRegexValueChip } from './LegacyAddRegexValueChip.tsx';
 import { ToggleConstraintInverted } from './ToggleConstraintInverted.tsx';
-import { AddRegexValueEditor } from './AddRegexValueEditor/AddRegexValueEditor.tsx';
+import { AddRegexValueEditor } from './AddRegexValueEditor/LegacyAddRegexValueEditor.tsx';
 import { CidrSdkRequirements } from './CidrSdkRequirements.tsx';
 import { CidrTargetRange, formatTargetRange } from './CidrTargetRange.tsx';
 import { getTargetRange } from './useEditableConstraint/ip-address.ts';

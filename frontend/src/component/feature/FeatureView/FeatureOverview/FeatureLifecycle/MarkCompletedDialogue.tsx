@@ -46,12 +46,18 @@ export const MarkCompletedDialogue = ({
         variantOptionsCount: variantOptions.length,
     });
 
+    const close = () => {
+        setStatus('kept');
+        setVariant(undefined);
+        setIsOpen(false);
+    };
+
     const onConfirm = async () => {
         await markFeatureCompleted(featureId, projectId, {
             status: status === 'kept-with-variant' ? 'kept' : status,
             statusValue: variant,
         });
-        setIsOpen(false);
+        close();
         onComplete();
     };
 
@@ -60,9 +66,7 @@ export const MarkCompletedDialogue = ({
             open={isOpen}
             title='Mark completed'
             tracking={tracking}
-            onClose={() => {
-                setIsOpen(false);
-            }}
+            onClose={close}
             disabledPrimaryButton={
                 status === 'kept-with-variant' && variant === undefined
             }

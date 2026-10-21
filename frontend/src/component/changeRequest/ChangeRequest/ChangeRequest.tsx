@@ -6,6 +6,7 @@ import { FeatureChange } from './Changes/Change/FeatureChange.tsx';
 import { ChangeActions } from './Changes/Change/ChangeActions.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SegmentChange } from './Changes/Change/SegmentChange.tsx';
+import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 
 interface IChangeRequestProps {
     changeRequest: ChangeRequestType;
@@ -18,6 +19,12 @@ export const ChangeRequest: FC<IChangeRequestProps> = ({
     onRefetch,
     onNavigate,
 }) => {
+    const { user } = useAuthUser();
+    const requester =
+        changeRequest.createdBy.id === user?.id
+            ? 'You'
+            : changeRequest.createdBy.username;
+
     return (
         <Box>
             <ConditionallyRender
@@ -29,7 +36,7 @@ export const ChangeRequest: FC<IChangeRequestProps> = ({
                             color: 'text.secondary',
                         }}
                     >
-                        You request changes for these segments:
+                        {requester} requested changes for these segments:
                     </Typography>
                 }
             />
@@ -58,7 +65,7 @@ export const ChangeRequest: FC<IChangeRequestProps> = ({
                             color: 'text.secondary',
                         }}
                     >
-                        You request changes for these feature flags:
+                        {requester} requested changes for these feature flags:
                     </Typography>
                 }
             />

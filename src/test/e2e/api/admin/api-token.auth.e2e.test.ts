@@ -14,6 +14,7 @@ import {
     type IUnleashStores,
     READ_CLIENT_API_TOKEN,
     READ_FRONTEND_API_TOKEN,
+    READ_PROJECT_API_TOKEN,
     SYSTEM_USER_AUDIT,
     SYSTEM_USER_ID,
     UPDATE_CLIENT_API_TOKEN,
@@ -111,6 +112,50 @@ beforeAll(async () => {
         },
         SYSTEM_USER_ID,
     );
+});
+
+test('project token list only includes token types the user can read', async () => {
+    const clientSecret = 'default:environment.project_client_read_test';
+    const frontendSecret = 'default:environment.project_frontend_read_test';
+    await stores.apiTokenStore.insert(
+        {
+            environment: 'environment',
+            projects: ['default'],
+            tokenName: 'project-client-read-test',
+            secret: clientSecret,
+            type: ApiTokenType.CLIENT,
+        },
+        SYSTEM_USER_ID,
+    );
+    await stores.apiTokenStore.insert(
+        {
+            environment: 'environment',
+            projects: ['default'],
+            tokenName: 'project-frontend-read-test',
+            secret: frontendSecret,
+            type: ApiTokenType.FRONTEND,
+        },
+        SYSTEM_USER_ID,
+    );
+
+    try {
+        await setupUser('project_client_reader@example.com', RoleName.VIEWER, [
+            { name: READ_PROJECT_API_TOKEN },
+            { name: READ_CLIENT_API_TOKEN },
+        ]);
+        await app.login({ email: 'project_client_reader@example.com' });
+
+        const { body } = await app.request
+            .get('/api/admin/projects/default/api-tokens')
+            .expect(200);
+        expect(body.tokens.map(({ secret }) => secret)).toContain(clientSecret);
+        expect(body.tokens.map(({ secret }) => secret)).not.toContain(
+            frontendSecret,
+        );
+    } finally {
+        await stores.apiTokenStore.delete(clientSecret);
+        await stores.apiTokenStore.delete(frontendSecret);
+    }
 });
 
 afterAll(async () => {

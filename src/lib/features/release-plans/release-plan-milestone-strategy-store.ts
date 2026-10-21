@@ -125,13 +125,13 @@ export class ReleasePlanMilestoneStrategyStore
     }: ReleasePlanMilestoneStrategyWriteModel): Promise<ReleasePlanMilestoneStrategy> {
         const row = toRow(strategy);
         await this.db(TABLE).insert(row);
-        segments?.forEach(async (segmentId) => {
+        for (const segmentId of segments ?? []) {
             const segmentRow = {
                 milestone_strategy_id: row.id,
                 segment_id: segmentId,
             };
             await this.db('milestone_strategy_segments').insert(segmentRow);
-        });
+        }
         return fromRow(row);
     }
 

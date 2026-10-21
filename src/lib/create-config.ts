@@ -186,6 +186,11 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
         60,
     );
 
+    const playgroundMaxPerMinute = parseEnvVarNumber(
+        process.env.PLAYGROUND_RATE_LIMIT_PER_MINUTE,
+        30,
+    );
+
     const defaultRateLimitOptions: IRateLimiting = {
         createUserMaxPerMinute,
         simpleLoginMaxPerMinute,
@@ -196,6 +201,7 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
         sdkApiMaxPerMinute,
         adminApiMaxPerMinute,
         feedbackMaxPerMinute,
+        playgroundMaxPerMinute,
     };
     return mergeAll([defaultRateLimitOptions, options.rateLimiting || {}]);
 }

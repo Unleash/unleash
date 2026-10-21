@@ -22,6 +22,7 @@ describe('rate limit policies', () => {
                 tokenAuthenticationMaxPerMinute: 105,
                 sdkApiMaxPerMinute: 106,
                 feedbackMaxPerMinute: 61,
+                playgroundMaxPerMinute: 62,
             },
             metricsRateLimiting: {
                 clientMetricsMaxPerMinute: 101,
@@ -78,6 +79,13 @@ describe('rate limit policies', () => {
                 'afterAuthentication',
             ),
         ).toEqual([{ windowMs: 60_000, limit: 21 }]);
+        expect(
+            matchingOptions(
+                config,
+                request('/api/admin/playground'),
+                'afterAuthentication',
+            ),
+        ).toEqual([{ windowMs: 60_000, limit: 62 }]);
         expect(
             matchingOptions(
                 config,

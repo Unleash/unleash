@@ -283,6 +283,7 @@ export interface IRateLimiting {
     sdkApiMaxPerMinute: number;
     adminApiMaxPerMinute: number;
     feedbackMaxPerMinute: number;
+    playgroundMaxPerMinute: number;
 }
 
 export interface IUnleashConfig {

@@ -1,11 +1,15 @@
 import { useId, useMemo } from 'react';
-import { Autocomplete, TextField, styled } from '@mui/material';
+import { Autocomplete, Button, TextField, styled } from '@mui/material';
 import type { AddonParameterSchema, AddonSchema } from 'openapi';
 import { FormGroup } from 'component/common/FormGroup/FormGroup';
 import { MarkdownHelpText } from '../../IntegrationForm.styles';
 import { useProjectApplications } from 'hooks/api/getters/useProjectApplications/useProjectApplications';
+import { useGithubIntegrationApi } from 'hooks/api/actions/useGithubIntegrationApi/useGithubIntegrationApi';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const APPLICATIONS_PAGE_LIMIT = 100;
+const REPOSITORIES_PARAMETER = 'repositories';
 
 type AppNameRepoMap = Record<string, Record<string, string[]>>;
 
@@ -63,14 +67,17 @@ const useProjectAppNames = (projectId: string) => {
     };
 };
 
-export const knownRepositories = (map: AppNameRepoMap): string[] =>
-    [
-        ...new Set(
-            Object.values(map).flatMap((appNames) =>
-                Object.values(appNames).flat(),
-            ),
-        ),
-    ].sort((a, b) => a.localeCompare(b));
+export const toRepositories = (value: unknown): string[] =>
+    Array.isArray(value)
+        ? [
+              ...new Set(
+                  value.filter(
+                      (repository): repository is string =>
+                          typeof repository === 'string',
+                  ),
+              ),
+          ].sort((a, b) => a.localeCompare(b))
+        : [];
 
 export const normalizeRepositories = (repositories: string[]): string[] => [
     ...new Set(
@@ -155,8 +162,6 @@ const AppNameRow = ({
             <Autocomplete
                 id={inputId}
                 multiple
-                freeSolo
-                autoSelect
                 size='small'
                 options={repositories}
                 value={selected}
@@ -165,9 +170,7 @@ const AppNameRow = ({
                     <TextField
                         {...params}
                         placeholder={
-                            selected.length
-                                ? undefined
-                                : 'Type a repository and press Enter'
+                            selected.length ? undefined : 'Select repositories'
                         }
                     />
                 )}
@@ -235,24 +238,32 @@ const ProjectAppNames = ({
     );
 };
 
+const SyncBar = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    gap: theme.spacing(2),
+}));
+
 export interface IAppNameRepoMapEditorProps {
     definition: AddonParameterSchema;
     projects: string[];
+    repositories: string[];
     value: AppNameRepoMap;
     onChange: (value: AppNameRepoMap) => void;
+    onSyncRepositories: () => void;
+    syncing: boolean;
 }
 
 export const AppNameRepoMapEditor = ({
     definition,
     projects,
+    repositories,
     value: appNameRepoMap,
     onChange,
+    onSyncRepositories,
+    syncing,
 }: IAppNameRepoMapEditorProps) => {
-    const repositories = useMemo(
-        () => knownRepositories(appNameRepoMap),
-        [appNameRepoMap],
-    );
-
     const setRepositories =
         (projectId: string) => (appName: string, selected: string[]) => {
             onChange({
@@ -269,6 +280,20 @@ export const AppNameRepoMapEditor = ({
             <MarkdownHelpText sx={{ mb: 0 }}>
                 {definition.description}
             </MarkdownHelpText>
+            <SyncBar>
+                <Muted>
+                    {repositories.length === 1
+                        ? '1 repository available'
+                        : `${repositories.length} repositories available`}
+                </Muted>
+                <Button
+                    variant='outlined'
+                    onClick={onSyncRepositories}
+                    disabled={syncing}
+                >
+                    {syncing ? 'Syncing repositories…' : 'Sync repositories'}
+                </Button>
+            </SyncBar>
             {projects.length ? (
                 projects.map((projectId) => (
                     <ProjectAppNames
@@ -303,8 +328,17 @@ export const GithubAppNameRepoMap = ({
     projects,
     setStructuredParameter,
 }: IGithubAppNameRepoMapProps) => {
+    const { syncRepositories, loading: syncing } = useGithubIntegrationApi();
+    const { setToastData, setToastApiError } = useToast();
+
     const stored = config.parameters?.[definition.name];
     const value = useMemo(() => toAppNameRepoMap(stored), [stored]);
+
+    const storedRepositories = config.parameters?.[REPOSITORIES_PARAMETER];
+    const repositories = useMemo(
+        () => toRepositories(storedRepositories),
+        [storedRepositories],
+    );
 
     const onChange = (next: AppNameRepoMap) => {
         const mappings = toMappings(next);
@@ -313,12 +347,31 @@ export const GithubAppNameRepoMap = ({
         );
     };
 
+    const onSyncRepositories = async () => {
+        try {
+            const synced = toRepositories(await syncRepositories(config.id));
+            setStructuredParameter(REPOSITORIES_PARAMETER)(synced);
+            setToastData({
+                type: 'success',
+                text:
+                    synced.length === 1
+                        ? 'Synced 1 repository'
+                        : `Synced ${synced.length} repositories`,
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
     return (
         <AppNameRepoMapEditor
             definition={definition}
             projects={projects}
+            repositories={repositories}
             value={value}
             onChange={onChange}
+            onSyncRepositories={onSyncRepositories}
+            syncing={syncing}
         />
     );
 };

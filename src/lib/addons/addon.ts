@@ -126,6 +126,8 @@ export default abstract class Addon {
         });
     }
 
+    async syncParameters(parameters: any): Promise<any> {}
+
     destroy?(): void;
 }
 

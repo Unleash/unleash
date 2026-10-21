@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-    knownRepositories,
     normalizeRepositories,
     toAppNameRepoMap,
     toMappings,
+    toRepositories,
 } from './GithubAppNameRepoMap';
 
 describe('reading the stored mappings', () => {
@@ -89,13 +89,21 @@ describe('entering repositories', () => {
             'b',
         ]);
     });
+});
 
-    it('suggests every repository already mapped, sorted and deduplicated', () => {
-        expect(
-            knownRepositories({
-                default: { web: ['web', 'shared'] },
-                other: { api: ['shared', 'api'] },
-            }),
-        ).toEqual(['api', 'shared', 'web']);
+describe('reading the synced repositories', () => {
+    it('sorts and removes duplicates', () => {
+        expect(toRepositories(['web', 'api', 'web'])).toEqual(['api', 'web']);
+    });
+
+    it('skips entries that are not strings', () => {
+        expect(toRepositories(['web', 1, null, { name: 'api' }])).toEqual([
+            'web',
+        ]);
+    });
+
+    it('treats anything that is not an array as empty', () => {
+        expect(toRepositories(undefined)).toEqual([]);
+        expect(toRepositories('web')).toEqual([]);
     });
 });

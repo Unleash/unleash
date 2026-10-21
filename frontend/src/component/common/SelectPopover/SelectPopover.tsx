@@ -108,38 +108,48 @@ type OptionsSource<T> =
     | { options: SelectOption<T>[]; optionGroups?: never }
     | { optionGroups: SelectOptionGroup<T>[]; options?: never };
 
-type BaseProps<T> = {
+type SelectionProps<T> =
+    | { multiple: true; selected?: T[]; onChange: (selected: T[]) => void }
+    | { multiple?: false; selected?: T; onChange: (selected: T) => void };
+
+type BaseProps = {
     onClose: () => void;
-    selected?: T[];
-    onChange: (selected: T[]) => void;
     searchPlaceholderText: string;
     listMaxHeight?: CSSProperties['maxHeight'];
     renderBelowOptions?: (searchText: string) => ReactNode;
     horizontalAlign?: 'left' | 'right';
-    multiple?: boolean;
 };
 
 type SelectPopoverProps<T> = Pick<PopoverProps, 'open' | 'anchorEl'> &
-    BaseProps<T> &
-    OptionsSource<T>;
+    BaseProps &
+    OptionsSource<T> &
+    SelectionProps<T>;
 
-type PanelProps<T> = Omit<BaseProps<T>, 'horizontalAlign'> &
-    OptionsSource<T> & { closeHintId: string };
+type PanelProps<T> = Omit<BaseProps, 'horizontalAlign'> &
+    OptionsSource<T> &
+    SelectionProps<T> & { closeHintId: string };
 
-const SelectPanel = <T extends string | number>({
-    onClose,
-    options,
-    optionGroups,
+const toSelectedArray = <T,>({
+    multiple,
     selected,
-    onChange,
-    searchPlaceholderText,
-    listMaxHeight,
-    renderBelowOptions,
-    closeHintId,
-    multiple = false,
-}: PanelProps<T>) => {
+}: SelectionProps<T>): T[] => {
+    if (multiple) return selected ?? [];
+    if (selected === undefined) return [];
+    return [selected];
+};
+
+const SelectPanel = <T extends string | number>(props: PanelProps<T>) => {
+    const {
+        onClose,
+        options,
+        optionGroups,
+        searchPlaceholderText,
+        listMaxHeight,
+        renderBelowOptions,
+        closeHintId,
+    } = props;
     const [searchText, setSearchText] = useState('');
-    const selectedValues = new Set(multiple ? selected : selected?.slice(0, 1));
+    const selectedValues = new Set(toSelectedArray(props));
 
     const flatOptions: FlatOption<T>[] = useMemo(() => {
         if (optionGroups) {
@@ -169,12 +179,12 @@ const SelectPanel = <T extends string | number>({
             if (reason !== 'reset') setSearchText(value);
         },
         onChange: (_, newValue, reason, details) => {
-            if (multiple) {
-                onChange(newValue.map((option) => option.value));
+            if (props.multiple) {
+                props.onChange(newValue.map((option) => option.value));
                 return;
             }
             if (reason === 'selectOption' && details?.option) {
-                onChange([details.option.value]);
+                props.onChange(details.option.value);
                 onClose();
             }
         },
@@ -196,7 +206,7 @@ const SelectPanel = <T extends string | number>({
         const { key, ...optionProps } = getOptionProps({ option, index });
         return (
             <StyledRow key={key} {...optionProps}>
-                {multiple ? (
+                {props.multiple ? (
                     <StyledCheckbox
                         checked={selectedValues.has(option.value)}
                         tabIndex={-1}
@@ -204,15 +214,7 @@ const SelectPanel = <T extends string | number>({
                         aria-hidden
                     />
                 ) : null}
-                <StyledLabel
-                    sx={{
-                        fontWeight: multiple
-                            ? undefined
-                            : (theme) => theme.typography.fontWeightMedium,
-                    }}
-                >
-                    {option.label}
-                </StyledLabel>
+                <StyledLabel>{option.label}</StyledLabel>
                 {option.detail ? (
                     <StyledDetail>{option.detail}</StyledDetail>
                 ) : null}
@@ -256,7 +258,7 @@ const SelectPanel = <T extends string | number>({
                 </StyledSearch>
                 <StyledList
                     {...getListboxProps()}
-                    aria-multiselectable={multiple}
+                    aria-multiselectable={props.multiple}
                     sx={{ maxHeight: listMaxHeight }}
                 >
                     {groupedOptions.map((group) => (
@@ -276,7 +278,7 @@ const SelectPanel = <T extends string | number>({
                 </StyledList>
             </div>
             {renderBelowOptions?.(searchText.trim())}
-            {multiple ? (
+            {props.multiple ? (
                 <StyledFooter>
                     <span id={closeHintId}>Esc to close</span>
                     <Button size='small' onClick={onClose}>
@@ -288,26 +290,25 @@ const SelectPanel = <T extends string | number>({
     );
 };
 
-export const SelectPopover = <T extends string | number>({
-    open,
-    anchorEl,
-    horizontalAlign = 'left',
-    multiple = false,
-    ...panelProps
-}: SelectPopoverProps<T>) => {
+export const SelectPopover = <T extends string | number>(
+    props: SelectPopoverProps<T>,
+) => {
+    const { open, anchorEl, horizontalAlign = 'left', onClose } = props;
     const closeHintId = useId();
 
     return (
         <Popover
             open={open}
             anchorEl={anchorEl}
-            onClose={panelProps.onClose}
+            onClose={onClose}
             anchorOrigin={{ vertical: 'bottom', horizontal: horizontalAlign }}
             transformOrigin={{ vertical: 'top', horizontal: horizontalAlign }}
             slotProps={{
                 paper: {
                     role: 'dialog',
-                    'aria-describedby': multiple ? closeHintId : undefined,
+                    'aria-describedby': props.multiple
+                        ? closeHintId
+                        : undefined,
                     sx: {
                         display: 'flex',
                         flexDirection: 'column',
@@ -319,11 +320,7 @@ export const SelectPopover = <T extends string | number>({
                 },
             }}
         >
-            <SelectPanel
-                {...panelProps}
-                multiple={multiple}
-                closeHintId={closeHintId}
-            />
+            <SelectPanel {...props} closeHintId={closeHintId} />
         </Popover>
     );
 };

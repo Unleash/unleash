@@ -48,8 +48,8 @@ export const ContextFieldSelect: FC<ContextFieldSelectProps> = ({
                 anchorEl={anchorEl}
                 onClose={() => setAnchorEl(null)}
                 optionGroups={options}
-                selected={value ? [value] : []}
-                onChange={(selected) => onChange(selected[0] ?? '')}
+                selected={value || undefined}
+                onChange={(selected) => onChange(selected ?? '')}
                 searchPlaceholderText='Search context fields'
             />
         </>

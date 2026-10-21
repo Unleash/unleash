@@ -93,8 +93,8 @@ const SingleFieldPicker = () => {
                         options: [{ value: 'userId', label: 'userId' }],
                     },
                 ]}
-                selected={selected ? [selected] : []}
-                onChange={(newSelected) => setSelected(newSelected[0] ?? '')}
+                selected={selected || undefined}
+                onChange={(newSelected) => setSelected(newSelected ?? '')}
                 searchPlaceholderText='Search context fields'
             />
         </>

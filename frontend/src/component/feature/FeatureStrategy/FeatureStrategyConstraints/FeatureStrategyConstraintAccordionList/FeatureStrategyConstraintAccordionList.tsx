@@ -164,7 +164,7 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                     anchorEl={addConstraintAnchor}
                     onClose={() => setAddConstraintAnchor(null)}
                     optionGroups={contextFieldOptions}
-                    onChange={([contextName]) => {
+                    onChange={(contextName) => {
                         if (contextName) {
                             addConstraint(contextName);
                         }

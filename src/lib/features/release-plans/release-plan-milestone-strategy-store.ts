@@ -125,13 +125,7 @@ export class ReleasePlanMilestoneStrategyStore
     }: ReleasePlanMilestoneStrategyWriteModel): Promise<ReleasePlanMilestoneStrategy> {
         const row = toRow(strategy);
         await this.db(TABLE).insert(row);
-        for (const segmentId of segments ?? []) {
-            const segmentRow = {
-                milestone_strategy_id: row.id,
-                segment_id: segmentId,
-            };
-            await this.db('milestone_strategy_segments').insert(segmentRow);
-        }
+        await this.insertSegments(row.id, segments);
         return fromRow(row);
     }
 
@@ -158,14 +152,23 @@ export class ReleasePlanMilestoneStrategyStore
         await this.db('milestone_strategy_segments')
             .where('milestone_strategy_id', strategyId)
             .delete();
-        for (const segmentId of segments ?? []) {
-            const segmentRow = {
+        await this.insertSegments(strategyId, segments);
+        return { ...releasePlanMilestoneStrategy, segments: segments ?? [] };
+    }
+
+    private async insertSegments(
+        strategyId: string,
+        segments: number[] | undefined,
+    ): Promise<void> {
+        if (!segments?.length) {
+            return;
+        }
+        await this.db('milestone_strategy_segments').insert(
+            segments.map((segmentId) => ({
                 milestone_strategy_id: strategyId,
                 segment_id: segmentId,
-            };
-            await this.db('milestone_strategy_segments').insert(segmentRow);
-        }
-        return { ...releasePlanMilestoneStrategy, segments: segments ?? [] };
+            })),
+        );
     }
 
     async deleteStrategiesForMilestone(milestoneId: string): Promise<void> {

@@ -159,8 +159,7 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
                 <ListItem
                     secondaryAction={
                         <ExtraActions
-                            capabilityId='link'
-                            feature={feature}
+                            tooltipTitle={'Link actions'}
                             onEdit={() => {
                                 setEditLink(link);
                             }}

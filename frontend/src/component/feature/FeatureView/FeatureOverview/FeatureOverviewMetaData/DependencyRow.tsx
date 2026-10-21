@@ -144,8 +144,7 @@ export const DependencyRow = ({ feature }: IDependencyRowProps) => {
                         </QuietLink>
                         {checkAccess(UPDATE_FEATURE_DEPENDENCY, environment) ? (
                             <ExtraActions
-                                capabilityId='dependency'
-                                feature={feature.name}
+                                tooltipTitle={'Dependency actions'}
                                 onEdit={() => setShowDependencyDialogue(true)}
                                 onDelete={deleteDependency}
                             />

@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import {
     IconButton,
     ListItemIcon,
@@ -21,21 +21,19 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
     padding: theme.spacing(1, 1.5),
 }));
 
-interface IDependencyActionsProps {
-    capabilityId: string;
-    feature: string;
+interface IExtraActionsProps {
+    tooltipTitle: string;
     onEdit: () => void;
     onDelete: () => void;
 }
 
 export const ExtraActions = ({
-    capabilityId,
-    feature,
+    tooltipTitle,
     onEdit,
     onDelete,
-}: IDependencyActionsProps) => {
-    const id = `${capabilityId}-${feature}-actions`;
-    const menuId = `${id}-menu`;
+}: IExtraActionsProps) => {
+    const id = useId();
+    const menuId = useId();
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -49,7 +47,7 @@ export const ExtraActions = ({
 
     return (
         <Box>
-            <Tooltip title='Dependency actions' arrow describeChild>
+            <Tooltip title={tooltipTitle} arrow describeChild>
                 <IconButton
                     id={id}
                     size='medium'

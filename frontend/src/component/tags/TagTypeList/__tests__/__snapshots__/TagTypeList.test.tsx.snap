@@ -72,7 +72,7 @@ exports[`renders an empty list correctly 1`] = `
                 role="separator"
               />
               <button
-                aria-labelledby="useId-0"
+                aria-labelledby="_r_1_"
                 class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-sizeLarge MuiButton-colorPrimary MuiButton-disableElevation mui-1t4t7wt-MuiButtonBase-root-MuiButton-root"
                 tabindex="0"
                 type="button"
@@ -245,10 +245,10 @@ exports[`renders an empty list correctly 1`] = `
                     aria-label="Edit tag type"
                     class=""
                     data-mui-internal-clone-element="true"
-                    id="useId-1"
+                    id="_r_6_"
                   >
                     <button
-                      aria-labelledby="useId-1"
+                      aria-labelledby="_r_6_"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
@@ -270,10 +270,10 @@ exports[`renders an empty list correctly 1`] = `
                     aria-label="Delete tag type"
                     class=""
                     data-mui-internal-clone-element="true"
-                    id="useId-2"
+                    id="_r_9_"
                   >
                     <button
-                      aria-labelledby="useId-2"
+                      aria-labelledby="_r_9_"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
@@ -362,10 +362,10 @@ exports[`renders an empty list correctly 1`] = `
                     aria-label="Edit tag type"
                     class=""
                     data-mui-internal-clone-element="true"
-                    id="useId-3"
+                    id="_r_e_"
                   >
                     <button
-                      aria-labelledby="useId-3"
+                      aria-labelledby="_r_e_"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
@@ -387,10 +387,10 @@ exports[`renders an empty list correctly 1`] = `
                     aria-label="Delete tag type"
                     class=""
                     data-mui-internal-clone-element="true"
-                    id="useId-4"
+                    id="_r_h_"
                   >
                     <button
-                      aria-labelledby="useId-4"
+                      aria-labelledby="_r_h_"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
@@ -479,10 +479,10 @@ exports[`renders an empty list correctly 1`] = `
                     aria-label="Edit tag type"
                     class=""
                     data-mui-internal-clone-element="true"
-                    id="useId-5"
+                    id="_r_m_"
                   >
                     <button
-                      aria-labelledby="useId-5"
+                      aria-labelledby="_r_m_"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
@@ -504,10 +504,10 @@ exports[`renders an empty list correctly 1`] = `
                     aria-label="Delete tag type"
                     class=""
                     data-mui-internal-clone-element="true"
-                    id="useId-6"
+                    id="_r_p_"
                   >
                     <button
-                      aria-labelledby="useId-6"
+                      aria-labelledby="_r_p_"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
@@ -596,10 +596,10 @@ exports[`renders an empty list correctly 1`] = `
                     aria-label="Edit tag type"
                     class=""
                     data-mui-internal-clone-element="true"
-                    id="useId-7"
+                    id="_r_u_"
                   >
                     <button
-                      aria-labelledby="useId-7"
+                      aria-labelledby="_r_u_"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
@@ -621,10 +621,10 @@ exports[`renders an empty list correctly 1`] = `
                     aria-label="Delete tag type"
                     class=""
                     data-mui-internal-clone-element="true"
-                    id="useId-8"
+                    id="_r_11_"
                   >
                     <button
-                      aria-labelledby="useId-8"
+                      aria-labelledby="_r_11_"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
@@ -713,10 +713,10 @@ exports[`renders an empty list correctly 1`] = `
                     aria-label="Edit tag type"
                     class=""
                     data-mui-internal-clone-element="true"
-                    id="useId-9"
+                    id="_r_16_"
                   >
                     <button
-                      aria-labelledby="useId-9"
+                      aria-labelledby="_r_16_"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
@@ -738,10 +738,10 @@ exports[`renders an empty list correctly 1`] = `
                     aria-label="Delete tag type"
                     class=""
                     data-mui-internal-clone-element="true"
-                    id="useId-10"
+                    id="_r_19_"
                   >
                     <button
-                      aria-labelledby="useId-10"
+                      aria-labelledby="_r_19_"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"

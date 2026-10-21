@@ -1,8 +1,7 @@
-import { useMemo, type FC } from 'react';
+import { useId, useMemo, type FC } from 'react';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { Tooltip } from '@mui/material';
-import { useId } from 'hooks/useId';
 import { useHasRootAccess } from 'hooks/useHasAccess';
 
 interface IStrategySwitchProps {

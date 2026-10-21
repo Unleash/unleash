@@ -1,4 +1,4 @@
-import { useMemo, type FC, type PropsWithChildren } from 'react';
+import { useId, useMemo, type FC, type PropsWithChildren } from 'react';
 import {
     AccordionSummary,
     type AccordionSummaryProps,
@@ -6,7 +6,6 @@ import {
 } from '@mui/material';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Truncator } from 'component/common/Truncator/Truncator';
-import { useId } from 'hooks/useId';
 import { EnvironmentStrategySuggestion } from './EnvironmentStrategySuggestion/EnvironmentStrategySuggestion.js';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';

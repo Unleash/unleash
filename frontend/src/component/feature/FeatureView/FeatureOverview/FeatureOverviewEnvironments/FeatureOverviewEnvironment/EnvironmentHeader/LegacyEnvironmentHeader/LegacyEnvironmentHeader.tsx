@@ -1,4 +1,4 @@
-import type { FC, PropsWithChildren } from 'react';
+import { useId, type FC, type PropsWithChildren } from 'react';
 import {
     AccordionSummary,
     type AccordionSummaryProps,
@@ -6,7 +6,6 @@ import {
 } from '@mui/material';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Truncator } from 'component/common/Truncator/Truncator';
-import { useId } from 'hooks/useId';
 
 const StyledAccordionSummary = styled(AccordionSummary, {
     shouldForwardProp: (prop) => prop !== 'expandable',

@@ -306,8 +306,8 @@ export const AppNameRepoMapEditor = ({
                 ))
             ) : (
                 <Muted>
-                    Select the projects this integration applies to to map their
-                    applications to repositories.
+                    Select the projects this integration applies to, then choose
+                    the repositories for each of their applications.
                 </Muted>
             )}
         </FormGroup>

@@ -4,6 +4,11 @@ import type {
 } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
 import type { IFeatureSearchOverview } from '../../types/index.js';
 
+export type ContextFieldValue = {
+    contextName: string;
+    value: string;
+};
+
 export interface IFeatureSearchStore {
     searchFeatures(
         params: IFeatureSearchParams,
@@ -12,4 +17,6 @@ export interface IFeatureSearchStore {
         features: IFeatureSearchOverview[];
         total: number;
     }>;
+
+    getContextFieldValues(project: string): Promise<ContextFieldValue[]>;
 }

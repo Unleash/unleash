@@ -161,6 +161,15 @@ const filterFeaturesBySegment = async (segment: string, expectedCode = 200) => {
         .expect(expectedCode);
 };
 
+const filterFeaturesByContextField = async (
+    contextField: string,
+    expectedCode = 200,
+) => {
+    return app.request
+        .get(`/api/admin/search/features?contextField=${contextField}`)
+        .expect(expectedCode);
+};
+
 const filterFeaturesByState = async (state: string, expectedCode = 200) => {
     return app.request
         .get(`/api/admin/search/features?state=${state}`)
@@ -1006,6 +1015,434 @@ test('should filter status and segments independently across environments', asyn
             },
         ],
     });
+});
+
+test('should filter features by context field in strategy constraints', async () => {
+    await app.createFeature('my_feature_a');
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            constraints: [
+                {
+                    contextName: 'appName',
+                    operator: 'IN',
+                    values: ['my-app'],
+                },
+            ],
+        },
+        DEFAULT_ENV,
+        'my_feature_a',
+    );
+
+    await app.createFeature('my_feature_b');
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            constraints: [
+                {
+                    contextName: 'userId',
+                    operator: 'IN',
+                    values: ['1'],
+                },
+            ],
+        },
+        DEFAULT_ENV,
+        'my_feature_b',
+    );
+
+    await app.createFeature('my_feature_c');
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+        },
+        DEFAULT_ENV,
+        'my_feature_c',
+    );
+
+    await app.createFeature('my_feature_d');
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            constraints: [
+                {
+                    contextName: 'appName',
+                    operator: 'IN',
+                    values: ['my-app'],
+                },
+                {
+                    contextName: 'userId',
+                    operator: 'IN',
+                    values: ['1'],
+                },
+            ],
+        },
+        DEFAULT_ENV,
+        'my_feature_d',
+    );
+
+    const { body: include } =
+        await filterFeaturesByContextField('INCLUDE:appName');
+    expect(include).toMatchObject({
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_d' }],
+    });
+
+    const { body: includeWithIsOperator } =
+        await filterFeaturesByContextField('IS:appName');
+    expect(includeWithIsOperator).toMatchObject({
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_d' }],
+    });
+
+    const { body: doNotInclude } = await filterFeaturesByContextField(
+        'DO_NOT_INCLUDE:appName',
+    );
+    expect(doNotInclude).toMatchObject({
+        features: [{ name: 'my_feature_b' }, { name: 'my_feature_c' }],
+    });
+
+    const { body: includeAnyOf } = await filterFeaturesByContextField(
+        'INCLUDE_ANY_OF:appName,userId',
+    );
+    expect(includeAnyOf).toMatchObject({
+        features: [
+            { name: 'my_feature_a' },
+            { name: 'my_feature_b' },
+            { name: 'my_feature_d' },
+        ],
+    });
+
+    const { body: includeAllOf } = await filterFeaturesByContextField(
+        'INCLUDE_ALL_OF:appName,userId',
+    );
+    expect(includeAllOf).toMatchObject({
+        features: [{ name: 'my_feature_d' }],
+    });
+
+    const { body: excludeIfAnyOf } = await filterFeaturesByContextField(
+        'EXCLUDE_IF_ANY_OF:appName,userId',
+    );
+    expect(excludeIfAnyOf).toMatchObject({
+        features: [{ name: 'my_feature_c' }],
+    });
+
+    const { body: excludeAll } = await filterFeaturesByContextField(
+        'EXCLUDE_ALL:appName,userId',
+    );
+    expect(excludeAll).toMatchObject({
+        features: [
+            { name: 'my_feature_a' },
+            { name: 'my_feature_b' },
+            { name: 'my_feature_c' },
+        ],
+    });
+});
+
+test('should filter features by context field in segment constraints', async () => {
+    const { body: segment } = await app.createSegment({
+        name: 'context_field_segment',
+        constraints: [
+            {
+                contextName: 'userId',
+                operator: 'IN',
+                values: ['1'],
+            },
+        ],
+    });
+
+    await app.createFeature('my_feature_a');
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            segments: [segment.id],
+        },
+        DEFAULT_ENV,
+        'my_feature_a',
+    );
+
+    await app.createFeature('my_feature_b');
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+        },
+        DEFAULT_ENV,
+        'my_feature_b',
+    );
+
+    const { body: include } =
+        await filterFeaturesByContextField('INCLUDE:userId');
+    expect(include).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
+    });
+
+    const { body: doNotInclude } = await filterFeaturesByContextField(
+        'DO_NOT_INCLUDE:userId',
+    );
+    expect(doNotInclude).toMatchObject({
+        features: [{ name: 'my_feature_b' }],
+    });
+});
+
+test('should return no features when filtering by an unused context field', async () => {
+    await app.createFeature('my_feature_a');
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            constraints: [
+                {
+                    contextName: 'appName',
+                    operator: 'IN',
+                    values: ['my-app'],
+                },
+            ],
+        },
+        DEFAULT_ENV,
+        'my_feature_a',
+    );
+
+    const { body } = await filterFeaturesByContextField(
+        'INCLUDE:unusedContextField',
+    );
+    expect(body.features).toHaveLength(0);
+    expect(body.total).toBe(0);
+});
+
+test('should filter features by context field value in strategy constraints', async () => {
+    await app.createFeature('my_feature_a');
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            constraints: [
+                {
+                    contextName: 'appName',
+                    operator: 'IN',
+                    values: ['my-app', 'other-app'],
+                },
+            ],
+        },
+        DEFAULT_ENV,
+        'my_feature_a',
+    );
+
+    await app.createFeature('my_feature_b');
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            constraints: [
+                {
+                    contextName: 'appName',
+                    operator: 'IN',
+                    values: ['other-app'],
+                },
+            ],
+        },
+        DEFAULT_ENV,
+        'my_feature_b',
+    );
+
+    await app.createFeature('my_feature_c');
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            constraints: [
+                {
+                    contextName: 'userId',
+                    operator: 'IN',
+                    values: ['123'],
+                },
+            ],
+        },
+        DEFAULT_ENV,
+        'my_feature_c',
+    );
+
+    const { body: fieldOnly } =
+        await filterFeaturesByContextField('INCLUDE:appName');
+    expect(fieldOnly).toMatchObject({
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_b' }],
+    });
+
+    const { body: singleValue } = await filterFeaturesByContextField(
+        'INCLUDE:appName=my-app',
+    );
+    expect(singleValue).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
+    });
+
+    const { body: sharedValue } = await filterFeaturesByContextField(
+        'INCLUDE:appName=other-app',
+    );
+    expect(sharedValue).toMatchObject({
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_b' }],
+    });
+
+    const { body: excludedValue } = await filterFeaturesByContextField(
+        'DO_NOT_INCLUDE:appName=my-app',
+    );
+    expect(excludedValue).toMatchObject({
+        features: [{ name: 'my_feature_b' }, { name: 'my_feature_c' }],
+    });
+
+    const { body: missingValue } =
+        await filterFeaturesByContextField('INCLUDE:userId=456');
+    expect(missingValue.features).toHaveLength(0);
+
+    const { body: anyOf } = await filterFeaturesByContextField(
+        'INCLUDE_ANY_OF:appName=my-app,userId=123',
+    );
+    expect(anyOf).toMatchObject({
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_c' }],
+    });
+
+    const { body: allOf } = await filterFeaturesByContextField(
+        'INCLUDE_ALL_OF:appName=my-app,userId=123',
+    );
+    expect(allOf.features).toHaveLength(0);
+});
+
+test('should decode URL encoded context field values', async () => {
+    await app.createFeature('my_feature_a');
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            constraints: [
+                {
+                    contextName: 'appName',
+                    operator: 'IN',
+                    values: ['hello, world'],
+                },
+            ],
+        },
+        DEFAULT_ENV,
+        'my_feature_a',
+    );
+
+    const { body } = await filterFeaturesByContextField(
+        encodeURIComponent('INCLUDE:appName=hello%2C%20world'),
+    );
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
+    });
+});
+
+test('should filter features by context field value in segment constraints', async () => {
+    const { body: segment } = await app.createSegment({
+        name: 'context_value_segment',
+        constraints: [
+            {
+                contextName: 'userId',
+                operator: 'IN',
+                values: ['1', '2'],
+            },
+        ],
+    });
+
+    await app.createFeature('my_feature_a');
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            segments: [segment.id],
+        },
+        DEFAULT_ENV,
+        'my_feature_a',
+    );
+
+    await app.createFeature('my_feature_b');
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+        },
+        DEFAULT_ENV,
+        'my_feature_b',
+    );
+
+    const { body: include } =
+        await filterFeaturesByContextField('INCLUDE:userId=2');
+    expect(include).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
+    });
+
+    const { body: doNotInclude } = await filterFeaturesByContextField(
+        'DO_NOT_INCLUDE:userId=2',
+    );
+    expect(doNotInclude).toMatchObject({
+        features: [{ name: 'my_feature_b' }],
+    });
+});
+
+test('should list context field values used in project constraints', async () => {
+    await app.createFeature('my_feature_a');
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            constraints: [
+                {
+                    contextName: 'appName',
+                    operator: 'IN',
+                    values: ['my-app'],
+                },
+                {
+                    contextName: 'userId',
+                    operator: 'IN',
+                    values: ['123'],
+                },
+            ],
+        },
+        DEFAULT_ENV,
+        'my_feature_a',
+    );
+
+    const { body: segment } = await app.createSegment({
+        name: 'context_value_segment',
+        constraints: [
+            {
+                contextName: 'appName',
+                operator: 'IN',
+                values: ['web'],
+            },
+        ],
+    });
+
+    await app.createFeature('my_feature_b');
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            segments: [segment.id],
+        },
+        DEFAULT_ENV,
+        'my_feature_b',
+    );
+
+    await app.createFeature('my_feature_c');
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            constraints: [
+                {
+                    contextName: 'appName',
+                    operator: 'IN',
+                    values: ['archived-app'],
+                },
+            ],
+        },
+        DEFAULT_ENV,
+        'my_feature_c',
+    );
+    await app.archiveFeature('my_feature_c');
+
+    const { body } = await app.request
+        .get('/api/admin/search/features/context-field-values?project=default')
+        .expect(200);
+
+    expect(body).toEqual([
+        { contextName: 'appName', value: 'my-app' },
+        { contextName: 'appName', value: 'web' },
+        { contextName: 'userId', value: '123' },
+    ]);
+});
+
+test('should require a project when listing context field values', async () => {
+    await app.request
+        .get('/api/admin/search/features/context-field-values')
+        .expect(400);
 });
 
 test('should search features by state with operators', async () => {

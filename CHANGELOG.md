@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [8.2.1] - 2026-10-22
+
+### Bug Fixes
+
+- Bump Node to 22.23.4 to distrust compromised eMudhra CAs ([#12744](https://github.com/Unleash/unleash/issues/12744))
+
+
 ## [8.2.0] - 2026-09-08
 
 ### Bug Fixes

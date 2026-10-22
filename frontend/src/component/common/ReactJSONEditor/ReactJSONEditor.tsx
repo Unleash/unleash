@@ -2,9 +2,11 @@ import { json, jsonParseLinter } from '@codemirror/lang-json';
 import { linter } from '@codemirror/lint';
 import ErrorIcon from '@mui/icons-material/Error';
 import FormatIndentIncrease from '@mui/icons-material/FormatIndentIncrease';
+import SortByAlpha from '@mui/icons-material/SortByAlpha';
 import { Box, Button, styled, useTheme } from '@mui/material';
 import CodeMirror from '@uiw/react-codemirror';
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { sortJsonKeys } from 'utils/sortJsonKeys';
 
 type EditorStyle = 'default' | 'sidePanel';
 
@@ -74,6 +76,21 @@ const StyledEditorWrapper = styled(Box, {
             paddingLeft: theme.spacing(0.75),
             paddingRight: theme.spacing(0.75),
             textAlign: 'center',
+            fontVariantNumeric: 'tabular-nums',
+        },
+        '& .cm-foldGutter .cm-gutterElement': {
+            paddingLeft: theme.spacing(0.5),
+            paddingRight: theme.spacing(0.5),
+            color: theme.palette.text.secondary,
+            '& span:hover': {
+                color: theme.palette.text.primary,
+            },
+        },
+        '& .cm-foldPlaceholder': {
+            backgroundColor: theme.palette.background.alternative,
+            border: `1px solid ${theme.palette.divider}`,
+            color: theme.palette.text.secondary,
+            borderRadius: theme.shape.borderRadius,
         },
         '& .cm-gutter': {
             minHeight: 'inherit',
@@ -129,12 +146,18 @@ const StyledEditorWrapper = styled(Box, {
     }),
 );
 
-const StyledFormatButton = styled(Button)(({ theme }) => ({
+const StyledEditorActions = styled('div')(({ theme }) => ({
     position: 'absolute',
     top: theme.spacing(0.75),
     right: theme.spacing(0.75),
     zIndex: 1,
+    display: 'flex',
+    gap: theme.spacing(1),
+}));
+
+const StyledActionButton = styled(Button)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
+    whiteSpace: 'nowrap',
     '&:hover': {
         backgroundColor: theme.palette.background.elevation1,
     },
@@ -240,6 +263,24 @@ const ReactJSONEditor: FC<IReactJSONEditorProps> = ({
         onChange?.({ text: formatted });
     }, [onChange, value]);
 
+    const sortJsonKeysAlphabetically = useCallback(() => {
+        let sorted: string;
+
+        try {
+            sorted = JSON.stringify(
+                sortJsonKeys(JSON.parse(value)),
+                undefined,
+                2,
+            );
+        } catch {
+            return;
+        }
+
+        if (sorted !== value) {
+            onChange?.({ text: sorted });
+        }
+    }, [onChange, value]);
+
     const minHeight =
         editorStyle === 'sidePanel' ? undefined : theme.spacing(10);
     const visibleValidationError = validationErrorProp ?? validationError;
@@ -251,14 +292,25 @@ const ReactJSONEditor: FC<IReactJSONEditorProps> = ({
                 hasError={Boolean(visibleValidationError)}
             >
                 {!readOnly ? (
-                    <StyledFormatButton
-                        size='medium'
-                        variant='outlined'
-                        startIcon={<FormatIndentIncrease />}
-                        onClick={formatJson}
-                    >
-                        Format
-                    </StyledFormatButton>
+                    <StyledEditorActions>
+                        <StyledActionButton
+                            size='medium'
+                            variant='outlined'
+                            startIcon={<SortByAlpha />}
+                            onClick={sortJsonKeysAlphabetically}
+                            title='Sort keys alphabetically (useful when diffing payloads)'
+                        >
+                            Sort
+                        </StyledActionButton>
+                        <StyledActionButton
+                            size='medium'
+                            variant='outlined'
+                            startIcon={<FormatIndentIncrease />}
+                            onClick={formatJson}
+                        >
+                            Format
+                        </StyledActionButton>
+                    </StyledEditorActions>
                 ) : null}
                 <CodeMirror
                     value={value}
@@ -271,8 +323,8 @@ const ReactJSONEditor: FC<IReactJSONEditorProps> = ({
                     readOnly={readOnly}
                     editable={!readOnly}
                     basicSetup={{
-                        foldGutter: false,
-                        lineNumbers: false,
+                        foldGutter: true,
+                        lineNumbers: true,
                         highlightActiveLine: false,
                         highlightActiveLineGutter: false,
                     }}

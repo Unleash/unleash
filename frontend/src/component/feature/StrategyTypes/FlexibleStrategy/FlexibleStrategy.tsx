@@ -1,115 +1,36 @@
-import { Box, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import type { StrategyFormParameters } from 'interfaces/strategy';
-import ConditionalRolloutSlider from '../RolloutSlider/ConditionalRolloutSlider.tsx';
-import Input from 'component/common/Input/Input';
-import {
-    FLEXIBLE_STRATEGY_GROUP_ID,
-    FLEXIBLE_STRATEGY_STICKINESS_ID,
-} from 'utils/testIds';
-import {
-    parseParameterNumber,
-    parseParameterString,
-} from 'utils/parseParameter';
-import { StickinessSelect } from './StickinessSelect/StickinessSelect.tsx';
-import type { IFormErrors } from 'hooks/useFormErrors';
-import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import { parseParameterNumber } from 'utils/parseParameter';
+import { RolloutSlider } from 'component/feature/StrategyTypes/RolloutSlider/RolloutSlider';
 
-interface IFlexibleStrategyProps {
+const SliderArea = styled('div')(({ theme }) => ({
+    padding: theme.spacing(4, 3, 3),
+}));
+
+type FlexibleStrategyProps = {
     parameters: StrategyFormParameters;
     updateParameter: (field: string, value: string) => void;
-    errors?: IFormErrors;
-    groupIdTooltip?: React.ReactNode;
-}
-
-const StyledBox = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: theme.palette.background.elevation1,
-    padding: theme.spacing(2),
-    borderRadius: `${theme.shape.borderRadiusMedium}px`,
-}));
-
-const StyledOuterBox = styled(Box)(({ theme }) => ({
-    marginTop: theme.spacing(1),
-    display: 'flex',
-    width: '100%',
-    justifyContent: 'space-between',
-}));
-
-const StyledInnerBox1 = styled(Box)(({ theme }) => ({
-    width: '50%',
-    marginRight: theme.spacing(0.5),
-}));
-
-const StyledInnerBox2 = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    width: '50%',
-    marginLeft: theme.spacing(0.5),
-    marginBlockEnd: theme.spacing(2),
-    '& > div': {
-        flex: 1,
-    },
-}));
+};
 
 export const FlexibleStrategy = ({
-    updateParameter,
     parameters,
-    errors,
-    groupIdTooltip,
-}: IFlexibleStrategyProps) => {
-    const updateRollout = (_e: Event, value: number | number[]) => {
-        updateParameter('rollout', value.toString());
-    };
-
+    updateParameter,
+}: FlexibleStrategyProps) => {
     const rollout =
         parameters.rollout !== undefined
             ? parseParameterNumber(parameters.rollout)
             : 100;
 
-    const stickiness = parseParameterString(parameters.stickiness);
-    const groupId = parseParameterString(parameters.groupId);
-
     return (
-        <StyledBox>
-            <ConditionalRolloutSlider
+        <SliderArea>
+            <RolloutSlider
                 name='Rollout'
                 value={rollout}
-                onChange={updateRollout}
+                step={5}
+                onChange={(_, value) =>
+                    updateParameter('rollout', value.toString())
+                }
             />
-            <StyledOuterBox>
-                <StyledInnerBox1>
-                    <StickinessSelect
-                        label='Stickiness'
-                        value={stickiness}
-                        dataTestId={FLEXIBLE_STRATEGY_STICKINESS_ID}
-                        onChange={(e) =>
-                            updateParameter('stickiness', e.target.value)
-                        }
-                    />
-                </StyledInnerBox1>
-                <StyledInnerBox2>
-                    <Input
-                        label='groupId'
-                        sx={{ width: '100%' }}
-                        id='groupId-input'
-                        value={groupId}
-                        onChange={(e) =>
-                            updateParameter(
-                                'groupId',
-                                parseParameterString(e.target.value),
-                            )
-                        }
-                        data-testid={FLEXIBLE_STRATEGY_GROUP_ID}
-                        error={Boolean(errors?.getFormError('groupId'))}
-                        helperText={errors?.getFormError('groupId')}
-                    />
-                    {groupIdTooltip ? (
-                        <HelpIcon htmlTooltip tooltip={groupIdTooltip} />
-                    ) : null}
-                </StyledInnerBox2>
-            </StyledOuterBox>
-        </StyledBox>
+        </SliderArea>
     );
 };

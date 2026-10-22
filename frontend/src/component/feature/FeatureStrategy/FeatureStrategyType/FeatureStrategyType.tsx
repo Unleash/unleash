@@ -1,8 +1,8 @@
 import type { IStrategy, StrategyFormState } from 'interfaces/strategy';
 import DefaultStrategy from 'component/feature/StrategyTypes/DefaultStrategy/DefaultStrategy';
-import { FlexibleStrategy } from 'component/feature/StrategyTypes/FlexibleStrategy/FlexibleStrategy';
 import GeneralStrategy from 'component/feature/StrategyTypes/GeneralStrategy/GeneralStrategy';
 import type { IFormErrors } from 'hooks/useFormErrors';
+import { FlexibleStrategy } from 'component/feature/StrategyTypes/FlexibleStrategy/FlexibleStrategy';
 
 interface IFeatureStrategyTypeProps<T extends StrategyFormState> {
     strategy: T;
@@ -27,8 +27,6 @@ export const FeatureStrategyType = <T extends StrategyFormState>({
                 <FlexibleStrategy
                     parameters={strategy.parameters ?? {}}
                     updateParameter={updateParameter}
-                    errors={errors}
-                    groupIdTooltip={groupIdTooltip}
                 />
             );
         default:

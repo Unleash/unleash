@@ -23,7 +23,7 @@ import userEvent from '@testing-library/user-event';
 const featureName = 'my-new-feature';
 const project = 'default';
 
-const setupComponent = () => {
+const setupComponent = ({ defaultStrategy = true } = {}) => {
     return {
         wrapper: render(
             <Routes>
@@ -35,7 +35,7 @@ const setupComponent = () => {
                 />
             </Routes>,
             {
-                route: `/projects/${project}/features/${featureName}/strategies/create?environmentId=development&strategyName=flexibleRollout&defaultStrategy=true`,
+                route: `/projects/${project}/features/${featureName}/strategies/create?environmentId=development&strategyName=flexibleRollout&defaultStrategy=${defaultStrategy}`,
                 permissions: [
                     {
                         permission: CREATE_FEATURE_STRATEGY,
@@ -90,6 +90,16 @@ describe('NewFeatureStrategyCreate', () => {
             "name": "flexibleRollout"
           }'"
         `);
+    });
+
+    test('starts a new gradual rollout at 100%', async () => {
+        setupUiConfigEndpoint();
+        setupComponent({ defaultStrategy: false });
+
+        const slider = await screen.findByRole('slider', {
+            name: /rollout/i,
+        });
+        expect(slider).toHaveValue('100');
     });
 
     describe('singlePageStrategyForm off (legacy tabbed form)', () => {

@@ -88,6 +88,8 @@ const accordionSummarySlotProps = (theme: Theme) => ({
 });
 
 const StyledAccordionHeading = styled('h2')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
     fontSize: theme.typography.body2.fontSize,
     fontWeight: theme.typography.fontWeightBold,
 }));
@@ -217,10 +219,10 @@ export const StrategyFormBody = <T extends StrategyFormState>({
         }
     };
 
-    const rolloutHint =
-        strategy.name === 'flexibleRollout'
-            ? `${Math.round(parseParameterNumber(strategy.parameters?.rollout || '100'))}%`
-            : '';
+    const isFlexibleRollout = strategy.name === 'flexibleRollout';
+    const rolloutHint = isFlexibleRollout
+        ? `${Math.round(parseParameterNumber(strategy.parameters?.rollout || '100'))}%`
+        : '';
 
     const updateParameter = (name: string, value: string) => {
         setStrategy(
@@ -294,7 +296,7 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                             slotProps={accordionSummarySlotProps(theme)}
                         >
                             <StyledAccordionHeading>
-                                {strategy.name === 'flexibleRollout'
+                                {isFlexibleRollout
                                     ? 'Rollout percentage'
                                     : strategyDefinition.displayName}
                             </StyledAccordionHeading>
@@ -302,7 +304,9 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                                 {rolloutHint}
                             </StyledAccordionHint>
                         </AccordionSummary>
-                        <AccordionDetails>
+                        <AccordionDetails
+                            sx={isFlexibleRollout ? { padding: 0 } : undefined}
+                        >
                             <FeatureStrategyType
                                 strategy={strategy}
                                 strategyDefinition={strategyDefinition}

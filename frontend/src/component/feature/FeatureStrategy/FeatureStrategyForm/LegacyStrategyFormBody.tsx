@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import type { IStrategy, StrategyFormState } from 'interfaces/strategy';
 import produce from 'immer';
-import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType.tsx';
+import { LegacyFeatureStrategyType } from '../FeatureStrategyType/LegacyFeatureStrategyType.tsx';
 import { FeatureStrategyConstraintAccordionList } from '../FeatureStrategyConstraints/FeatureStrategyConstraintAccordionList/LegacyFeatureStrategyConstraintAccordionList.tsx';
 import { useFeatureStrategyConstraints } from '../FeatureStrategyConstraints/useFeatureStrategyConstraints.ts';
 import { FeatureStrategySegment } from 'component/feature/FeatureStrategy/FeatureStrategySegment/LegacyFeatureStrategySegment.tsx';
@@ -278,7 +278,7 @@ export const LegacyStrategyFormBody = <T extends StrategyFormState>({
                             setTitle={handleTitleChange}
                         />
 
-                        <FeatureStrategyType
+                        <LegacyFeatureStrategyType
                             strategy={strategy}
                             strategyDefinition={strategyDefinition}
                             updateParameter={updateParameter}

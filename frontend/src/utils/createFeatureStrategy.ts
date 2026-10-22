@@ -39,7 +39,7 @@ const createFeatureStrategyParameterValue = (
         parameter.name === 'percentage' ||
         parameter.type === 'percentage'
     ) {
-        return '50';
+        return '100';
     }
 
     if (parameter.name === 'stickiness') {

@@ -1,6 +1,7 @@
 import {
     type CSSProperties,
     type ElementType,
+    type KeyboardEvent,
     type ReactNode,
     useId,
     useMemo,
@@ -42,8 +43,18 @@ const StyledRow = styled('li')(({ theme }) => ({
     padding: theme.spacing(1, 2),
     cursor: 'pointer',
     fontSize: theme.typography.body2.fontSize,
-    [`&.${autocompleteClasses.focused}, &:hover`]: {
+    '&:hover': {
         backgroundColor: theme.palette.action.hover,
+    },
+}));
+
+const StyledPanel = styled('div')(({ theme }) => ({
+    [`&:focus-within .${autocompleteClasses.focused}`]: {
+        backgroundColor: theme.palette.action.hover,
+    },
+    [`&:focus-within .${autocompleteClasses.focusVisible}`]: {
+        outline: `2px solid ${theme.palette.primary.main}`,
+        outlineOffset: '-2px',
     },
 }));
 
@@ -104,6 +115,13 @@ export type SelectOptionGroup<T> = {
 
 type FlatOption<T> = SelectOption<T> & { group?: string };
 
+const NO_VALUE: never[] = [];
+
+const isToggleIntent = (event: KeyboardEvent<HTMLInputElement>) =>
+    event.key === ' ' && // only space can toggle
+    !event.nativeEvent.isComposing && // IMEs (e.g. Japanese input) use space to convert text and cycle candidates; don't touch that
+    event.keyCode !== 229; // IME keycode: https://developer.mozilla.org/en-US/docs/Web/API/Element/keydown_event#keydown_events_with_ime
+
 type OptionsSource<T> =
     | { options: SelectOption<T>[]; optionGroups?: never }
     | { optionGroups: SelectOptionGroup<T>[]; options?: never };
@@ -149,7 +167,23 @@ const SelectPanel = <T extends string | number>(props: PanelProps<T>) => {
         closeHintId,
     } = props;
     const [searchText, setSearchText] = useState('');
+    const [keyboardHighlightedOption, setKeyboardHighlightedOption] =
+        useState<FlatOption<T> | null>(null);
     const selectedValues = new Set(toSelectedArray(props));
+
+    const toggleOption = (option: FlatOption<T>) => {
+        if (props.multiple) {
+            const selected = props.selected ?? [];
+            props.onChange(
+                selectedValues.has(option.value)
+                    ? selected.filter((value) => value !== option.value)
+                    : [...selected, option.value],
+            );
+            return;
+        }
+        props.onChange(option.value);
+        onClose();
+    };
 
     const flatOptions: FlatOption<T>[] = useMemo(() => {
         if (optionGroups) {
@@ -173,21 +207,21 @@ const SelectPanel = <T extends string | number>(props: PanelProps<T>) => {
         multiple: true,
         open: true,
         options: flatOptions,
-        value: flatOptions.filter((option) => selectedValues.has(option.value)),
+        value: NO_VALUE,
         inputValue: searchText,
         onInputChange: (_, value, reason) => {
-            if (reason !== 'reset') setSearchText(value);
-        },
-        onChange: (_, newValue, reason, details) => {
-            if (props.multiple) {
-                props.onChange(newValue.map((option) => option.value));
-                return;
+            if (reason !== 'reset') {
+                setSearchText(value);
+                setKeyboardHighlightedOption(null);
             }
+        },
+        onChange: (_, __, reason, details) => {
             if (reason === 'selectOption' && details?.option) {
-                props.onChange(details.option.value);
-                onClose();
+                toggleOption(details.option);
             }
         },
+        onHighlightChange: (_, option, reason) =>
+            setKeyboardHighlightedOption(reason === 'keyboard' ? option : null),
         onClose: (_, reason) => {
             if (reason === 'escape') onClose();
         },
@@ -202,10 +236,27 @@ const SelectPanel = <T extends string | number>(props: PanelProps<T>) => {
 
     const { ref: inputRef, ...inputProps } = getInputProps();
 
+    const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+        // Intercept `space`: toggle the option if keyboard-highlighted and
+        // appropriate. Otherwise, fall through to standard handling.
+        if (keyboardHighlightedOption && isToggleIntent(event)) {
+            event.preventDefault();
+            toggleOption(keyboardHighlightedOption);
+        }
+    };
+
     const renderRow = (option: FlatOption<T>, index: number) => {
-        const { key, ...optionProps } = getOptionProps({ option, index });
+        const {
+            key,
+            onMouseMove: _hoverHighlight,
+            ...optionProps
+        } = getOptionProps({ option, index });
         return (
-            <StyledRow key={key} {...optionProps}>
+            <StyledRow
+                key={key}
+                {...optionProps}
+                aria-selected={selectedValues.has(option.value)}
+            >
                 {props.multiple ? (
                     <StyledCheckbox
                         checked={selectedValues.has(option.value)}
@@ -224,7 +275,7 @@ const SelectPanel = <T extends string | number>(props: PanelProps<T>) => {
 
     return (
         <>
-            <div {...getRootProps()}>
+            <StyledPanel {...getRootProps()}>
                 <StyledSearch>
                     <TextField
                         size='large'
@@ -232,6 +283,7 @@ const SelectPanel = <T extends string | number>(props: PanelProps<T>) => {
                         autoFocus
                         placeholder={searchPlaceholderText}
                         inputRef={inputRef}
+                        focused={keyboardHighlightedOption ? false : undefined}
                         slotProps={{
                             input: {
                                 startAdornment: (
@@ -245,6 +297,7 @@ const SelectPanel = <T extends string | number>(props: PanelProps<T>) => {
                             },
                             htmlInput: {
                                 ...inputProps,
+                                onKeyDown: handleInputKeyDown,
                                 'aria-label': searchPlaceholderText,
                                 sx: {
                                     '&::placeholder': {
@@ -276,7 +329,7 @@ const SelectPanel = <T extends string | number>(props: PanelProps<T>) => {
                         </StyledGroup>
                     ))}
                 </StyledList>
-            </div>
+            </StyledPanel>
             {renderBelowOptions?.(searchText.trim())}
             {props.multiple ? (
                 <StyledFooter>

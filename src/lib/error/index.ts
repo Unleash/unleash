@@ -26,6 +26,8 @@ import {
 } from './exceeds-limit-error.js';
 import { GenericUnleashError } from './unleash-error.js';
 import NotImplementedError from './not-implemented-error.js';
+import { fromLegacyError } from './from-legacy-error.js';
+import ConflictError from './conflict-error.js';
 export {
     BadDataError,
     BadGatewayError,
@@ -51,4 +53,6 @@ export {
     GatewayTimeoutError,
     GenericUnleashError,
     ExceedsLimitError,
+    fromLegacyError,
+    ConflictError,
 };

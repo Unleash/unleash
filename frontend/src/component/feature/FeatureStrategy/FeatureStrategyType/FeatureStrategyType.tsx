@@ -27,6 +27,8 @@ export const FeatureStrategyType = <T extends StrategyFormState>({
                 <FlexibleStrategy
                     parameters={strategy.parameters ?? {}}
                     updateParameter={updateParameter}
+                    errors={errors}
+                    groupIdTooltip={groupIdTooltip}
                 />
             );
         default:

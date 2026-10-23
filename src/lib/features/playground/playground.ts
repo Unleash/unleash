@@ -106,7 +106,7 @@ export default class PlaygroundController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
-                    release: { alpha: true },
+                    release: { beta: '8.3.0' },
                     operationId: 'evaluateFeature',
                     tags: ['Playground'],
                     responses: {

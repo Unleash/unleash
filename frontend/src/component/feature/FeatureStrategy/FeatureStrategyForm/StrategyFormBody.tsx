@@ -20,7 +20,7 @@ import {
     type TargetAudience,
 } from './FeatureStrategyTargetAudience/FeatureStrategyTargetAudience.tsx';
 import { formatStrategyName } from 'utils/strategyNames';
-import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
+import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
 import type { ParametersSchema } from 'openapi/index.ts';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { parseParameterNumber } from 'utils/parseParameter.ts';
@@ -335,7 +335,7 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                                 </StyledAccordionHint>
                             </AccordionSummary>
                             <AccordionDetails>
-                                <NewStrategyVariants
+                                <StrategyVariants
                                     strategy={strategy}
                                     setStrategy={setStrategy}
                                     canRenamePreexistingVariants={

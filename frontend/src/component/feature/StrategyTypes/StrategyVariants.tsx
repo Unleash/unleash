@@ -32,17 +32,17 @@ const StyledHelpIconBox = styled(Box)(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
-interface NewStrategyVariantsProps<T extends StrategyFormState> {
+interface StrategyVariantsProps<T extends StrategyFormState> {
     setStrategy: React.Dispatch<React.SetStateAction<T>>;
     strategy: T;
     canRenamePreexistingVariants?: boolean;
 }
 
-export const NewStrategyVariants = <T extends StrategyFormState>({
+export const StrategyVariants = <T extends StrategyFormState>({
     strategy,
     setStrategy,
     canRenamePreexistingVariants,
-}: NewStrategyVariantsProps<T>) => {
+}: StrategyVariantsProps<T>) => {
     const { trackEvent } = useEventTracker();
     const initialVariants = (strategy.variants || []).map((variant) => ({
         ...variant,
@@ -60,6 +60,7 @@ export const NewStrategyVariants = <T extends StrategyFormState>({
             ? String(strategy.parameters.stickiness)
             : 'default';
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: keyed on the serialized variants on purpose; variantsEdit is a new array on every edit and setStrategy is a stable setter
     useEffect(() => {
         return () => {
             setStrategy((prev: T) => ({
@@ -71,6 +72,7 @@ export const NewStrategyVariants = <T extends StrategyFormState>({
         };
     }, [JSON.stringify(variantsEdit)]);
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: keyed on stickiness and the serialized variants on purpose; variantsEdit is a new array on every edit and setStrategy is a stable setter
     useEffect(() => {
         setStrategy((prev: T) => ({
             ...prev,

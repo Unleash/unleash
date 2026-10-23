@@ -181,7 +181,6 @@
         "frontend/src/component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm.tsx",
         "frontend/src/component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/FeatureEnvironmentVariants.tsx",
         "frontend/src/component/feature/StrategyTypes/LegacyStrategyVariants.tsx",
-        "frontend/src/component/feature/StrategyTypes/NewStrategyVariants.tsx",
         "frontend/src/component/filter/Filters/Filters.tsx",
         "frontend/src/component/impact-metrics/ImpactMetrics.tsx",
         "frontend/src/component/impact-metrics/MultimetricChart/useChartPlotArea.ts",

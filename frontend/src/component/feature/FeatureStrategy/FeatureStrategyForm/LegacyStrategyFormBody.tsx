@@ -24,7 +24,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import { ConstraintSeparator } from 'component/common/ConstraintsList/ConstraintSeparator/ConstraintSeparator';
 import { useAssignableSegments } from 'hooks/api/getters/useSegments/useAssignableSegments.ts';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
-import { NewStrategyVariants } from 'component/feature/StrategyTypes/NewStrategyVariants';
+import { LegacyStrategyVariants } from 'component/feature/StrategyTypes/LegacyStrategyVariants';
 import type { ParametersSchema } from 'openapi/index.ts';
 
 export interface LegacyStrategyFormBodyProps<T extends StrategyFormState> {
@@ -333,7 +333,7 @@ export const LegacyStrategyFormBody = <T extends StrategyFormState>({
                 )}
 
                 {tab === 2 && showVariants && (
-                    <NewStrategyVariants
+                    <LegacyStrategyVariants
                         strategy={strategy}
                         setStrategy={setStrategy}
                         canRenamePreexistingVariants={

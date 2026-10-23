@@ -5,16 +5,21 @@ import {
     isStringOperator,
     type Operator,
 } from 'constants/operators';
-import { useCallback, useEffect, useRef, useState, type FC } from 'react';
+import {
+    useCallback,
+    useRef,
+    useState,
+    type ComponentProps,
+    type FC,
+} from 'react';
 import { operatorsForContext } from 'utils/operatorsForContext';
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import Delete from '@mui/icons-material/Delete';
 import { ValueList } from './ValueList.tsx';
-import { AddValuesChip } from './AddValuesChip.tsx';
+import { AddValueInline } from './AddValueInline.tsx';
+import { AddValueButton } from './AddValueButton.tsx';
 import { ToggleConstraintCaseSensitivity } from './ToggleConstraintCaseSensitivity.tsx';
-
-import { AddSingleValueChip } from './AddSingleValueChip.tsx';
 import { ConstraintDateInput } from './ConstraintDateInput.tsx';
 import {
     LegalValuesSelector,
@@ -33,17 +38,16 @@ import {
     isNumberConstraint,
     isRegexConstraint,
     isSemVerConstraint,
-    isSingleValueConstraint,
 } from './useEditableConstraint/editable-constraint-type.ts';
 import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator.ts';
 import { createContextFieldOptions } from './createContextFieldOptions.ts';
 import { ContextFieldSelect } from './ContextFieldSelect.tsx';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
-import { AddRegexValueChip } from './AddRegexValueChip.tsx';
 import { AddRegexValueEditor } from './AddRegexValueEditor/AddRegexValueEditor.tsx';
 import { CidrSdkRequirements } from './CidrSdkRequirements.tsx';
 import { CidrTargetRange, formatTargetRange } from './CidrTargetRange.tsx';
 import { getTargetRange } from './useEditableConstraint/ip-address.ts';
+import { parseParameterStrings } from 'utils/parseParameter';
 
 const invertedDisabledMessages: Partial<Record<Operator, string>> = {
     REGEX: 'The REGEX operator does not support inversion',
@@ -118,9 +122,51 @@ const ButtonPlaceholder = styled('div')(({ theme }) => ({
     width: theme.spacing(2),
 }));
 
+type AddValueInlineVariant = Pick<
+    ComponentProps<typeof AddValueInline>,
+    'hasValues' | 'parseInput' | 'helpText' | 'htmlInputProps' | 'ValuePreview'
+>;
+
+const singleValueParseInput = (raw: string) => [raw];
+
+const getAddValueInlineVariant = (
+    localConstraint: EditableConstraintType,
+    hasValues: boolean,
+): AddValueInlineVariant => {
+    if (isSemVerConstraint(localConstraint)) {
+        return {
+            hasValues: false,
+            parseInput: singleValueParseInput,
+            helpText:
+                'A semver value should be of the format X.Y.Z, optionally with a prerelease and/or build suffix, such as 1.2.3-beta.1+build.5',
+        };
+    }
+    if (isCidrConstraint(localConstraint)) {
+        return {
+            hasValues,
+            parseInput: parseParameterStrings,
+            helpText:
+                'IP addresses or CIDR ranges, for example 192.168.1.1 or 10.0.0.0/8',
+            ValuePreview: CidrTargetRange,
+        };
+    }
+    if (isNumberConstraint(localConstraint)) {
+        return {
+            hasValues: false,
+            parseInput: singleValueParseInput,
+            htmlInputProps: { inputMode: 'decimal' },
+            helpText: 'Add a single number',
+        };
+    }
+    return {
+        hasValues,
+        parseInput: parseParameterStrings,
+        helpText: 'Maximum 100 char length per value',
+    };
+};
+
 const TopRowInput: FC<{
     addValues: (value: string | string[]) => void;
-    clearValues: () => void;
     localConstraint: EditableConstraintType;
     validator: (value: string) => ConstraintValidationResult;
     addValuesButtonRef: React.RefObject<HTMLDivElement | null>;
@@ -128,13 +174,16 @@ const TopRowInput: FC<{
     setEditingOpen: (open: boolean) => void;
 }> = ({
     addValues,
-    clearValues,
     localConstraint,
     validator,
     addValuesButtonRef,
-    setEditingOpen,
     editingOpen,
+    setEditingOpen,
 }) => {
+    const hasValues =
+        isMultiValueConstraint(localConstraint) &&
+        localConstraint.values.size > 0;
+
     if (isDateConstraint(localConstraint)) {
         return (
             <ConstraintDateInput
@@ -144,61 +193,29 @@ const TopRowInput: FC<{
             />
         );
     }
-    if (isSemVerConstraint(localConstraint)) {
-        return (
-            <AddSingleValueChip
-                validator={validator}
-                onAddValue={addValues}
-                removeValue={clearValues}
-                currentValue={localConstraint.value}
-                helpText={
-                    'A semver value should be of the format X.Y.Z, optionally with a prerelease and/or build suffix, such as 1.2.3-beta.1+build.5'
-                }
-                inputType={'text'}
-            />
-        );
+
+    if (!isMultiValueConstraint(localConstraint) && localConstraint.value) {
+        return null;
     }
+
     if (isRegexConstraint(localConstraint)) {
+        if (editingOpen) return null;
         return (
-            <AddRegexValueChip
-                removeValue={clearValues}
-                currentValue={localConstraint.value}
-                validator={validator}
-                editingOpen={editingOpen}
-                setEditingOpen={setEditingOpen}
-            />
-        );
-    }
-    if (isCidrConstraint(localConstraint)) {
-        return (
-            <AddValuesChip
-                validator={validator}
-                helpText='IP addresses or CIDR ranges, for example 192.168.1.1 or 10.0.0.0/8'
-                ref={addValuesButtonRef}
-                onAddValues={addValues}
-                ValuePreview={CidrTargetRange}
-            />
-        );
-    }
-    if (isNumberConstraint(localConstraint)) {
-        return (
-            <AddSingleValueChip
-                validator={validator}
-                onAddValue={addValues}
-                removeValue={clearValues}
-                currentValue={localConstraint.value}
-                helpText={'Add a single number'}
-                inputType={'number'}
+            <AddValueButton
+                hasValues={false}
+                onClick={() => setEditingOpen(true)}
             />
         );
     }
 
     return (
-        <AddValuesChip
-            validator={validator}
-            helpText='Maximum 100 char length per value'
+        <AddValueInline
+            key={localConstraint.operator}
             ref={addValuesButtonRef}
+            validator={validator}
             onAddValues={addValues}
+            multiValue={isMultiValueConstraint(localConstraint)}
+            {...getAddValueInlineVariant(localConstraint, hasValues)}
         />
     );
 };
@@ -286,23 +303,12 @@ export const EditableConstraint: FC<Props> = ({
         validator,
         legalValueData,
         invertedDisabled,
+        currentValueInvalid,
     } = useEditableConstraint(constraint, onUpdate);
-    let editingShouldBeOpen = false;
-    if (
-        isSingleValueConstraint(localConstraint) &&
-        isRegexConstraint(localConstraint)
-    ) {
-        const [isValid] = localConstraint.value
-            ? validator(localConstraint.value)
-            : [true];
-        editingShouldBeOpen = !localConstraint.value || !isValid;
-    }
-    const [editingOpen, setEditingOpen] = useState(editingShouldBeOpen);
-    useEffect(() => {
-        // open the editor when regex value is empty or invalid,
-        // even if it was closed before by the user
-        if (editingShouldBeOpen) setEditingOpen(true);
-    }, [editingShouldBeOpen]);
+    const [editingRequested, setEditingOpen] = useState(false);
+    const editingOpen =
+        editingRequested ||
+        (isRegexConstraint(localConstraint) && currentValueInvalid);
 
     const addValues = useCallback(
         (value: string | string[]) =>
@@ -310,8 +316,10 @@ export const EditableConstraint: FC<Props> = ({
         [updateConstraint],
     );
     const removeValue = useCallback(
-        (value: string) =>
-            updateConstraint({ type: 'remove value', payload: value }),
+        (value: string) => {
+            updateConstraint({ type: 'remove value', payload: value });
+            setEditingOpen(false);
+        },
         [updateConstraint],
     );
     const clearAll = useCallback(
@@ -420,7 +428,7 @@ export const EditableConstraint: FC<Props> = ({
                         values={
                             isMultiValueConstraint(localConstraint)
                                 ? Array.from(localConstraint.values)
-                                : legalValueData && localConstraint.value
+                                : localConstraint.value
                                   ? [localConstraint.value]
                                   : undefined
                         }
@@ -435,7 +443,6 @@ export const EditableConstraint: FC<Props> = ({
                             <TopRowInput
                                 localConstraint={localConstraint}
                                 addValues={addValues}
-                                clearValues={clearAll}
                                 validator={validator}
                                 addValuesButtonRef={addValuesButtonRef}
                                 editingOpen={editingOpen}

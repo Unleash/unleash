@@ -47,10 +47,39 @@ describe('EditableConstraint', () => {
             await screen.findByTestId('CONSTRAINT_VALUES_INPUT');
             await screen.findByText(/value must be a valid RE2 regex/i);
         });
+
+        test('closes the editor and brings back the add value button when the value is deleted', async () => {
+            setupApi();
+
+            const constraint: IConstraint = {
+                contextName: 'appName',
+                operator: 'REGEX',
+                value: '[invalid',
+            };
+
+            const { container } = render(
+                <EditableConstraint
+                    constraint={constraint}
+                    onDelete={noOp}
+                    onUpdate={noOp}
+                />,
+            );
+
+            await screen.findByTestId('CONSTRAINT_VALUES_INPUT');
+
+            const deleteIcon = container.querySelector('.MuiChip-deleteIcon');
+            expect(deleteIcon).not.toBeNull();
+            fireEvent.click(deleteIcon as Element);
+
+            expect(
+                screen.queryByTestId('CONSTRAINT_VALUES_INPUT'),
+            ).not.toBeInTheDocument();
+            await screen.findByRole('button', { name: 'Add value' });
+        });
     });
 
     describe('REGEX constraint with an existing valid value', () => {
-        test('opens the regex editor when operator changes away from and back to REGEX', async () => {
+        test('shows the add value button after operator changes away from and back to REGEX, and opens the editor on click', async () => {
             setupApi();
 
             const constraint: IConstraint = {
@@ -81,9 +110,65 @@ describe('EditableConstraint', () => {
             fireEvent.click(screen.getByRole('button', { name: 'Operator' }));
             fireEvent.click(await screen.findByText(/matches regex/i));
 
-            // The editor should open automatically because the value was
-            // cleared when the operator changed.
+            const addValueButton = await screen.findByRole('button', {
+                name: 'Add value',
+            });
+            expect(
+                screen.queryByTestId('CONSTRAINT_VALUES_INPUT'),
+            ).not.toBeInTheDocument();
+
+            fireEvent.click(addValueButton);
+
             await screen.findByTestId('CONSTRAINT_VALUES_INPUT');
+            expect(
+                screen.queryByRole('button', { name: 'Add value' }),
+            ).not.toBeInTheDocument();
+        });
+    });
+
+    describe('inline value input', () => {
+        test('keeps an unsubmitted draft after an accidental close, but clears it on submit or operator change', async () => {
+            setupApi();
+
+            render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'appName',
+                        operator: 'IN',
+                        values: [],
+                    }}
+                    onDelete={noOp}
+                    onUpdate={noOp}
+                />,
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            let input = await screen.findByLabelText('Constraint Value');
+            await userEvent.type(input, 'draft-value');
+            fireEvent.keyDown(input, { key: 'Escape' });
+            expect(
+                screen.queryByTestId('CONSTRAINT_VALUES_INPUT'),
+            ).not.toBeInTheDocument();
+
+            fireEvent.click(screen.getByTestId('CONSTRAINT_ADD_VALUES_BUTTON'));
+            input = await screen.findByLabelText('Constraint Value');
+            expect(input).toHaveValue('draft-value');
+
+            fireEvent.click(screen.getByTestId('CONSTRAINT_VALUES_ADD_BUTTON'));
+            await screen.findByText('draft-value');
+            expect(input).toHaveValue('');
+
+            await userEvent.type(input, 'leftover');
+            fireEvent.keyDown(input, { key: 'Escape' });
+
+            fireEvent.click(screen.getByRole('button', { name: 'Operator' }));
+            fireEvent.click(await screen.findByText(/is not one of/i));
+
+            fireEvent.click(screen.getByTestId('CONSTRAINT_ADD_VALUES_BUTTON'));
+            input = await screen.findByLabelText('Constraint Value');
+            expect(input).toHaveValue('');
         });
     });
 

@@ -232,7 +232,7 @@ describe('StrategyFormBody', () => {
         await userEvent.click(defaultFieldOption);
 
         const addValueEl = await screen.findByRole('button', {
-            name: 'Add values',
+            name: 'Add value',
         });
         await userEvent.click(addValueEl);
 

@@ -5,6 +5,7 @@ import {
     fromIConstraint,
     invertedToggleDisabled,
     isMultiValueConstraint,
+    isSingleValueConstraint,
     toIConstraint,
 } from './editable-constraint-type.ts';
 import type {
@@ -58,6 +59,7 @@ type EditableConstraintState = {
     legalValueData?: LegalValueData;
     constraint: EditableConstraint;
     invertedDisabled: boolean;
+    currentValueInvalid: boolean;
 };
 
 export const useEditableConstraint = (
@@ -148,11 +150,17 @@ export const useEditableConstraint = (
 
     const invertedDisabled = invertedToggleDisabled(localConstraint);
 
+    const currentValueInvalid =
+        isSingleValueConstraint(localConstraint) &&
+        Boolean(localConstraint.value) &&
+        !validator(localConstraint.value)[0];
+
     return {
         updateConstraint,
         constraint: localConstraint,
         validator,
         legalValueData,
         invertedDisabled,
+        currentValueInvalid,
     } as EditableConstraintState;
 };

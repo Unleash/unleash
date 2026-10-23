@@ -61,7 +61,6 @@ process.nextTick(async () => {
                         semverBuildMetadata: true,
                         totalUsageMetrics: true,
                         helpMenuRelocationHint: true,
-                        playgroundPerFlag: true,
                         ipConstraintOperator: true,
                         githubIntegration: true,
                         tagManagementViaUi: true,

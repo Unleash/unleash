@@ -77,7 +77,6 @@ export type IFlagKey =
     | 'totalUsageMetrics'
     | 'auditEventUserAgent'
     | 'helpMenuRelocationHint'
-    | 'playgroundPerFlag'
     | 'ipConstraintOperator'
     | 'githubIntegration'
     | 'tagManagementViaUi'
@@ -355,10 +354,6 @@ const flags: IFlags = {
     ),
     helpMenuRelocationHint: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_HELP_MENU_RELOCATION_HINT,
-        false,
-    ),
-    playgroundPerFlag: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PLAYGROUND_PER_FLAG,
         false,
     ),
     githubIntegration: parseEnvVarBoolean(

@@ -105,7 +105,6 @@ export type UiFlags = {
     semverBuildMetadata?: boolean;
     helpMenuRelocationHint?: boolean;
     ipConstraintOperator?: boolean;
-    playgroundPerFlag?: boolean;
     githubIntegration?: boolean;
     tagManagementViaUi?: boolean;
     integrationParamKvpEditor?: boolean;

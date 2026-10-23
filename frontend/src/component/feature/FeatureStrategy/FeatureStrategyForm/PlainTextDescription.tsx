@@ -13,6 +13,8 @@ import { focusOutline } from 'themes/themeStyles';
 import { useSegmentsMap } from 'hooks/api/getters/useSegments/useSegmentsMap.ts';
 import { formatConstraintText } from 'utils/formatConstraintText';
 import { useLocationSettings } from 'hooks/useLocationSettings';
+import { calculateVariantWeight } from 'component/common/util';
+import type { IFeatureVariant } from 'interfaces/featureToggle';
 
 const SummaryIcon = styled(ModeCommentOutlinedIcon)(({ theme }) => ({
     color: theme.palette.primary.main,
@@ -124,25 +126,93 @@ const useTargetingDescription = ({
 };
 
 const describeRollout = (strategy: StrategyFormState) => {
-    // todo: figure out what to do here for non-rollout strategies.
     return `${strategy.parameters?.rollout ?? 100}%`;
 };
 
-const describeVariants = (strategy: StrategyFormState) => {
-    // todo: figure out what to do here for non-rollout strategies.
-    if (!strategy.variants?.length) return 'they all get the same experience.';
+const variantDisplayName = (variant: IFeatureVariant) =>
+    variant.name || 'unnamed variant';
 
-    if (strategy.variants?.length === 1)
+const PayloadInfo = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    '::before': {
+        content: '" — "',
+    },
+}));
+
+const VariantList = styled(
+    ({
+        variants,
+        ...props
+    }: {
+        variants?: IFeatureVariant[];
+        className?: string;
+    }) => (
+        <ul
+            // biome-ignore lint/a11y/noRedundantRoles: Safari drops list semantics when list-style is none: https://bugs.webkit.org/show_bug.cgi?id=170179
+            role='list'
+            {...props}
+        >
+            {variants?.map((variant) => (
+                <li key={variant.name}>
+                    <strong>{calculateVariantWeight(variant.weight)}%</strong>{' '}
+                    get <strong>{variantDisplayName(variant)}</strong>
+                    <PayloadInfo>
+                        {variant.payload
+                            ? `${variant.payload.type} payload`
+                            : 'no payload set'}
+                    </PayloadInfo>
+                </li>
+            ))}
+        </ul>
+    ),
+)(({ theme }) => {
+    const colors = theme.palette.variants;
+    const markerColors = Object.fromEntries(
+        colors.map((color, i) => [
+            `& > li:nth-of-type(${colors.length}n + ${i + 1})`,
+            { '--variant-color': color },
+        ]),
+    );
+    const markerSize = theme.spacing(1);
+    const markerGap = theme.spacing(1);
+    return {
+        ':empty': { display: 'none' },
+        '--left-padding': `calc(${markerSize} + ${markerGap})`,
+        paddingInlineStart: 'var(--left-padding)',
+        listStyle: 'none',
+        'li + li': {
+            marginBlockStart: theme.spacing(1.5),
+        },
+        '& > li::before': {
+            content: '""',
+            display: 'inline-block',
+            width: markerSize,
+            aspectRatio: '1 / 1',
+            borderRadius: '50%',
+            marginRight: markerGap,
+            marginLeft: `calc(-1 * var(--left-padding))`,
+            backgroundColor: 'var(--variant-color)',
+            border: `1px solid ${theme.palette.text.secondary}`,
+            boxSizing: 'content-box', // avoid border overflowing container
+        },
+        ...markerColors,
+    };
+});
+
+const describeVariants = (strategy: StrategyFormState) => {
+    if (!strategy.variants?.length) return 'they all get the same experience.';
+    if (strategy.variants.length === 1)
         return (
             <>
-                they all get <strong>{strategy.variants[0].name}</strong>.
+                they all get{' '}
+                <strong>{variantDisplayName(strategy.variants[0])}</strong>.
             </>
         );
 
     return (
         <>
             they're split across{' '}
-            <strong>{strategy.variants?.length} variants</strong>:
+            <strong>{strategy.variants.length} variants</strong>:
         </>
     );
 };
@@ -159,11 +229,15 @@ const StrategyDescription = styled(
         const rolloutDescription = describeRollout(strategy);
         const variantDescription = describeVariants(strategy);
         return (
-            <p {...props}>
-                This strategy targets <strong>{targetingDescription}</strong>.
-                Of them, <strong>{rolloutDescription}</strong> are exposed to
-                the flag, and {variantDescription}
-            </p>
+            <>
+                <p {...props}>
+                    This strategy targets{' '}
+                    <strong>{targetingDescription}</strong>. Of them,{' '}
+                    <strong>{rolloutDescription}</strong> are exposed to the
+                    flag, and {variantDescription}
+                </p>
+                <VariantList variants={strategy.variants} />
+            </>
         );
     },
 )(({ theme }) => ({

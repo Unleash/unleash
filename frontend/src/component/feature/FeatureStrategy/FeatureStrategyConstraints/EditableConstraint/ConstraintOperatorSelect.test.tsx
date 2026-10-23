@@ -15,7 +15,7 @@ const openPopover = async () => {
 };
 
 describe('ConstraintOperatorSelect', () => {
-    test('shows "matches" as pressed when not inverted', async () => {
+    test('checks "matches" when not inverted', async () => {
         setupApi();
 
         render(
@@ -31,16 +31,13 @@ describe('ConstraintOperatorSelect', () => {
 
         await openPopover();
 
-        expect(screen.getByRole('button', { name: 'matches' })).toHaveAttribute(
-            'aria-pressed',
-            'true',
-        );
+        expect(screen.getByRole('radio', { name: 'matches' })).toBeChecked();
         expect(
-            screen.getByRole('button', { name: 'does not match' }),
-        ).toHaveAttribute('aria-pressed', 'false');
+            screen.getByRole('radio', { name: 'does not match' }),
+        ).not.toBeChecked();
     });
 
-    test('shows "does not match" as pressed when inverted', async () => {
+    test('checks "does not match" when inverted', async () => {
         setupApi();
 
         render(
@@ -56,16 +53,21 @@ describe('ConstraintOperatorSelect', () => {
 
         await openPopover();
 
-        expect(screen.getByRole('button', { name: 'matches' })).toHaveAttribute(
-            'aria-pressed',
-            'false',
-        );
         expect(
-            screen.getByRole('button', { name: 'does not match' }),
-        ).toHaveAttribute('aria-pressed', 'true');
+            screen.getByRole('radio', { name: 'matches' }),
+        ).not.toBeChecked();
+        expect(
+            screen.getByRole('radio', { name: 'does not match' }),
+        ).toBeChecked();
     });
 
-    test('toggles inversion when clicking the other match button', async () => {
+    test.each([
+        { inverted: false, option: 'does not match' },
+        { inverted: true, option: 'matches' },
+    ])('toggles inversion when clicking $option', async ({
+        inverted,
+        option,
+    }) => {
         setupApi();
         const onToggleInverted = vi.fn();
 
@@ -75,18 +77,18 @@ describe('ConstraintOperatorSelect', () => {
                 options={['IN', 'NOT_IN']}
                 value='IN'
                 onChange={vi.fn()}
-                inverted={false}
+                inverted={inverted}
                 onToggleInverted={onToggleInverted}
             />,
         );
 
         await openPopover();
-        fireEvent.click(screen.getByRole('button', { name: 'does not match' }));
+        fireEvent.click(screen.getByRole('radio', { name: option }));
 
         expect(onToggleInverted).toHaveBeenCalledTimes(1);
     });
 
-    test('disables the match toggle and shows the reason when inversion is unsupported', async () => {
+    test('disables the match options and shows the reason when inversion is unsupported', async () => {
         setupApi();
 
         render(
@@ -103,13 +105,14 @@ describe('ConstraintOperatorSelect', () => {
 
         await openPopover();
 
-        const matchesButton = screen.getByRole('button', { name: 'matches' });
-        expect(matchesButton).toBeDisabled();
+        expect(screen.getByRole('radio', { name: 'matches' })).toBeDisabled();
         expect(
-            screen.getByRole('button', { name: 'does not match' }),
+            screen.getByRole('radio', { name: 'does not match' }),
         ).toBeDisabled();
 
-        fireEvent.mouseOver(matchesButton.closest('span') ?? matchesButton);
+        fireEvent.mouseOver(
+            screen.getByRole('radiogroup', { name: 'Match type' }),
+        );
         await screen.findByText(
             'The REGEX operator does not support inversion',
         );

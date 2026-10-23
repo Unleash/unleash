@@ -7,10 +7,8 @@ import {
     Popover,
     styled,
     Switch,
-    ToggleButton,
-    toggleButtonClasses,
-    ToggleButtonGroup,
 } from '@mui/material';
+import { visuallyHidden } from '@mui/utils';
 import {
     type Operator,
     stringOperators,
@@ -74,51 +72,54 @@ const StyledMenuList = styled(MenuList)(({ theme }) => ({
     padding: 0,
 }));
 
-const StyledMatchToggle = styled('div')(({ theme }) => ({
+const StyledMatchSection = styled('div')(({ theme }) => ({
     padding: theme.spacing(0.5, 1.5, 1.5),
     borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
-const StyledMatchButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
-    width: '100%',
+const StyledMatchRadioGroup = styled('div')(({ theme }) => ({
+    display: 'flex',
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: `${theme.shape.borderRadius}px`,
     overflow: 'hidden',
 }));
 
-const StyledMatchButton = styled(ToggleButton)(({ theme }) => ({
+const StyledMatchOption = styled('label')(({ theme }) => ({
+    ...theme.typography.button,
     flex: 1,
-    textAlign: 'center',
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     height: controlHeights.medium,
     padding: theme.spacing(0, 1.25),
     fontSize: theme.fontSizes.smallBody,
     fontWeight: theme.typography.fontWeightMedium,
     textTransform: 'none',
-    border: 'none',
     backgroundColor: theme.palette.background.paper,
     color: theme.palette.text.primary,
-    '&:hover': {
-        backgroundColor: theme.palette.background.paper,
-    },
-    [`&.${toggleButtonClasses.disabled}`]: {
-        border: 'none',
-    },
+    cursor: 'pointer',
     '&:first-of-type': {
         borderRadius: `${theme.shape.borderRadius}px 0 0 ${theme.shape.borderRadius}px`,
     },
     '&:last-of-type': {
         borderRadius: `0 ${theme.shape.borderRadius}px ${theme.shape.borderRadius}px 0`,
+        marginLeft: -1,
+        borderLeft: '1px solid transparent',
         boxShadow: `inset 1px 0 0 0 ${theme.palette.divider}`,
     },
-    [`&.${toggleButtonClasses.selected}, &.${toggleButtonClasses.selected}:hover`]:
-        {
-            fontWeight: theme.typography.fontWeightBold,
-            backgroundColor: theme.palette.primary.container,
-            color: theme.palette.primary.main,
-            boxShadow: `inset 0 0 0 1px ${theme.palette.primary.main}`,
-            zIndex: 1,
-        },
-    '&:focus-visible': {
+    '&:has(:disabled)': {
+        color: theme.palette.action.disabled,
+        cursor: 'default',
+    },
+    '&:has(:checked)': {
+        fontWeight: theme.typography.fontWeightBold,
+        backgroundColor: theme.palette.primary.container,
+        color: theme.palette.primary.main,
+        boxShadow: `inset 0 0 0 1px ${theme.palette.primary.main}`,
+        zIndex: 1,
+    },
+    '&:has(:focus-visible)': {
         outline: `2px solid ${theme.palette.primary.main}`,
         outlineOffset: '-2px',
         zIndex: 1,
@@ -229,6 +230,7 @@ export const ConstraintOperatorSelect = ({
     onToggleCaseSensitivity,
 }: IConstraintOperatorSelectProps) => {
     const caseSensitivitySwitchId = useId();
+    const matchName = useId();
     const triggerRef = useRef<HTMLButtonElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const open = Boolean(anchorEl);
@@ -253,23 +255,35 @@ export const ConstraintOperatorSelect = ({
 
     const invertedDisabled = Boolean(invertedDisabledText);
 
-    const matchToggle = (
-        <StyledMatchToggle>
-            <StyledMatchButtonGroup
-                exclusive
-                value={inverted ? 'does-not-match' : 'matches'}
-                onChange={(_, choice) => {
-                    if (choice) onToggleInverted();
-                }}
-                disabled={invertedDisabled}
-                aria-label='Match type'
-            >
-                <StyledMatchButton value='matches'>matches</StyledMatchButton>
-                <StyledMatchButton value='does-not-match'>
+    const matchOptions = (
+        <StyledMatchSection>
+            <StyledMatchRadioGroup role='radiogroup' aria-label='Match type'>
+                <StyledMatchOption>
+                    <input
+                        type='radio'
+                        name={matchName}
+                        value='matches'
+                        checked={!inverted}
+                        onChange={onToggleInverted}
+                        disabled={invertedDisabled}
+                        style={visuallyHidden}
+                    />
+                    matches
+                </StyledMatchOption>
+                <StyledMatchOption>
+                    <input
+                        type='radio'
+                        name={matchName}
+                        value='does-not-match'
+                        checked={Boolean(inverted)}
+                        onChange={onToggleInverted}
+                        disabled={invertedDisabled}
+                        style={visuallyHidden}
+                    />
                     does not match
-                </StyledMatchButton>
-            </StyledMatchButtonGroup>
-        </StyledMatchToggle>
+                </StyledMatchOption>
+            </StyledMatchRadioGroup>
+        </StyledMatchSection>
     );
 
     return (
@@ -312,10 +326,10 @@ export const ConstraintOperatorSelect = ({
                 <StyledHeader component='div'>{contextName}</StyledHeader>
                 {invertedDisabledText ? (
                     <HtmlTooltip title={invertedDisabledText} arrow>
-                        <span>{matchToggle}</span>
+                        <span>{matchOptions}</span>
                     </HtmlTooltip>
                 ) : (
-                    matchToggle
+                    matchOptions
                 )}
                 <StyledMenuList
                     autoFocus

@@ -24,6 +24,14 @@ import {
     type FeatureSearchQueryParameters,
     featureSearchQueryParameters,
 } from '../../openapi/spec/feature-search-query-parameters.js';
+import {
+    type ContextFieldValuesQueryParameters,
+    contextFieldValuesQueryParameters,
+} from '../../openapi/spec/context-field-values-query-parameters.js';
+import {
+    type ContextFieldValuesSchema,
+    contextFieldValuesSchema,
+} from '../../openapi/spec/context-field-values-schema.js';
 import { normalizeQueryParams } from './search-utils.js';
 import { anonymise, extractUserId } from '../../util/index.js';
 
@@ -74,6 +82,29 @@ export default class FeatureSearchController extends Controller {
                 }),
             ],
         });
+
+        this.route({
+            method: 'get',
+            path: '/context-field-values',
+            handler: this.getContextFieldValues,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Search'],
+                    summary:
+                        'Get context field values used by feature flag constraints',
+                    description:
+                        'Returns the distinct context field values used by strategy and segment constraints in a project. Useful for building filter options for the feature search.',
+                    release: { beta: '8.2.0' },
+                    operationId: 'getContextFieldValues',
+                    parameters: [...contextFieldValuesQueryParameters],
+                    responses: {
+                        200: createResponseSchema('contextFieldValuesSchema'),
+                        ...getStandardResponses(401, 403, 404),
+                    },
+                }),
+            ],
+        });
     }
 
     maybeAnonymise(
@@ -111,6 +142,7 @@ export default class FeatureSearchController extends Controller {
             favorite,
             sortBy,
             lastSeenAt,
+            contextField,
         } = req.query;
         const userId = extractUserId(req);
         const {
@@ -154,6 +186,7 @@ export default class FeatureSearchController extends Controller {
             lifecycle,
             lastSeenAt,
             favorite,
+            contextField,
             status: normalizedStatus,
             offset: normalizedOffset,
             limit: normalizedLimit,
@@ -170,6 +203,25 @@ export default class FeatureSearchController extends Controller {
                 features: this.maybeAnonymise(features),
                 total,
             }),
+        );
+    }
+
+    async getContextFieldValues(
+        req: IAuthRequest<any, any, any, ContextFieldValuesQueryParameters>,
+        res: Response<ContextFieldValuesSchema>,
+    ): Promise<void> {
+        const { project } = req.query;
+        const contextFieldValues =
+            await this.featureSearchService.getContextFieldValues(
+                extractUserId(req),
+                project,
+            );
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            contextFieldValuesSchema.$id,
+            contextFieldValues,
         );
     }
 }

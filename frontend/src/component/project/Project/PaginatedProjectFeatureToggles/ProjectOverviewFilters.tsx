@@ -6,6 +6,7 @@ import {
     type IFilterItem,
 } from 'component/filter/Filters/Filters';
 import { useProjectFlagCreators } from 'hooks/api/getters/useProjectFlagCreators/useProjectFlagCreators';
+import { useProjectContextFieldValues } from 'hooks/api/getters/useProjectContextFieldValues/useProjectContextFieldValues';
 import { formatTag } from 'utils/format-tag';
 import { styled } from '@mui/material';
 import { useTracking } from 'hooks/useTracking';
@@ -28,6 +29,7 @@ export const ProjectOverviewFilters: FC<ProjectOverviewFiltersProps> = ({
 }) => {
     const { tags } = useAllTags();
     const { flagCreators } = useProjectFlagCreators(project);
+    const { contextFieldValues } = useProjectContextFieldValues(project);
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
     const trackFilterFavorites = useTracking(filterFavoritesTracking);
 
@@ -54,6 +56,26 @@ export const ProjectOverviewFilters: FC<ProjectOverviewFiltersProps> = ({
             label: creator.name,
             value: String(creator.id),
         }));
+
+        const contextFieldValuesByName = new Map<string, string[]>();
+        for (const { contextName, value } of contextFieldValues) {
+            const values = contextFieldValuesByName.get(contextName) ?? [];
+            values.push(value);
+            contextFieldValuesByName.set(contextName, values);
+        }
+
+        const contextFieldOptions = [...contextFieldValuesByName].flatMap(
+            ([contextName, values]) => [
+                {
+                    label: `${contextName} (any value)`,
+                    value: encodeURIComponent(contextName),
+                },
+                ...values.map((value) => ({
+                    label: `${contextName} = ${value}`,
+                    value: `${encodeURIComponent(contextName)}=${encodeURIComponent(value)}`,
+                })),
+            ],
+        );
 
         const stateOptions = [
             {
@@ -140,10 +162,27 @@ export const ProjectOverviewFilters: FC<ProjectOverviewFiltersProps> = ({
                 singularOperators: ['IS'] as [string, ...string[]],
                 pluralOperators: ['IS_ANY_OF'] as [string, ...string[]],
             },
+            {
+                label: 'Context field',
+                icon: 'data_object',
+                options: contextFieldOptions,
+                filterKey: 'contextField',
+                singularOperators: ['INCLUDE', 'DO_NOT_INCLUDE'],
+                pluralOperators: [
+                    'INCLUDE_ANY_OF',
+                    'INCLUDE_ALL_OF',
+                    'EXCLUDE_IF_ANY_OF',
+                    'EXCLUDE_ALL',
+                ],
+            },
         ];
 
         setAvailableFilters(availableFilters);
-    }, [JSON.stringify(tags), JSON.stringify(flagCreators)]);
+    }, [
+        JSON.stringify(tags),
+        JSON.stringify(flagCreators),
+        JSON.stringify(contextFieldValues),
+    ]);
 
     return (
         <StyledFilters

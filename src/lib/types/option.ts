@@ -43,11 +43,13 @@ export interface IDBOption {
 export interface ISessionOption {
     /**
      * The ceiling, counted from login and never extended. Default: 48 hours.
+     * Enforced whether or not the `sessionTimeouts` flag is on.
      */
     ttlHours: number;
     /**
-     * default: `0`, OFF. Above `0`, a session ends this many minutes
-     * after the last thing the user actually did.
+     * How many minutes after the last thing the user actually did a session
+     * ends. Default: 15, `0` is OFF. Only takes effect while the
+     * `sessionTimeouts` flag is on, which is what gates the idle window.
      */
     idleTimeoutMinutes: number;
     db: boolean;

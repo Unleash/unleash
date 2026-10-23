@@ -12,7 +12,7 @@ const options = (overrides = {}) => ({
 });
 
 describe('session limits', () => {
-    test('the idle timeout is off by default', () => {
+    test('an idle timeout of 0 is off', () => {
         expect(resolveSessionLimits(options()).idleTimeoutMs).toBe(0);
     });
 

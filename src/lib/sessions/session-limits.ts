@@ -3,6 +3,7 @@ import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import type { ISessionOption } from '../types/option.js';
 
 export const DEFAULT_SESSION_TTL_HOURS = 48;
+export const DEFAULT_SESSION_IDLE_TIMEOUT_MINUTES = 15;
 
 const MAX_KEEP_ALIVE_INTERVAL_SECONDS = 60;
 

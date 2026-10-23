@@ -4,40 +4,55 @@ import { updateWeightEdit } from 'component/common/util';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
-import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions.ts';
 import { WeightType } from '../../../constants/variantTypes.ts';
-import { Link, styled, Typography, useTheme } from '@mui/material';
+import {
+    Box,
+    styled,
+    Typography,
+    useTheme,
+    Alert,
+    Button,
+} from '@mui/material';
 import type { StrategyFormState } from 'interfaces/strategy';
 import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { StrategyVariantsUpgradeAlert } from 'component/common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
 import { useEventTracker } from 'hooks/useEventTracker';
+import Add from '@mui/icons-material/Add';
 
 const StyledVariantForms = styled('div')({
     display: 'flex',
     flexDirection: 'column',
 });
 
-interface StrategyVariantsProps<T extends StrategyFormState> {
+const StyledHelpIconBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+}));
+
+interface LegacyStrategyVariantsProps<T extends StrategyFormState> {
     setStrategy: React.Dispatch<React.SetStateAction<T>>;
     strategy: T;
-    projectId: string;
-    environment: string;
-    editable?: boolean;
-    permission?: string | string[];
+    canRenamePreexistingVariants?: boolean;
 }
 
-export const StrategyVariants = <T extends StrategyFormState>({
+export const LegacyStrategyVariants = <T extends StrategyFormState>({
     strategy,
     setStrategy,
-    projectId,
-    environment,
-    editable,
-    permission = UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
-}: StrategyVariantsProps<T>) => {
+    canRenamePreexistingVariants,
+}: LegacyStrategyVariantsProps<T>) => {
     const { trackEvent } = useEventTracker();
-    const [variantsEdit, setVariantsEdit] = useState<IFeatureVariantEdit[]>([]);
+    const initialVariants = (strategy.variants || []).map((variant) => ({
+        ...variant,
+        new: canRenamePreexistingVariants || false,
+        isValid: true,
+        id: createUuid(),
+        overrides: [],
+    }));
+    const [variantsEdit, setVariantsEdit] =
+        useState<IFeatureVariantEdit[]>(initialVariants);
     const theme = useTheme();
 
     const stickiness =
@@ -46,16 +61,15 @@ export const StrategyVariants = <T extends StrategyFormState>({
             : 'default';
 
     useEffect(() => {
-        setVariantsEdit(
-            (strategy.variants || []).map((variant) => ({
-                ...variant,
-                new: editable || false,
-                isValid: true,
-                id: createUuid(),
-                overrides: [],
-            })),
-        );
-    }, []);
+        return () => {
+            setStrategy((prev: T) => ({
+                ...prev,
+                variants: variantsEdit.filter((variant) =>
+                    Boolean(variant.name),
+                ),
+            }));
+        };
+    }, [JSON.stringify(variantsEdit)]);
 
     useEffect(() => {
         setStrategy((prev: T) => ({
@@ -102,35 +116,48 @@ export const StrategyVariants = <T extends StrategyFormState>({
         });
     };
 
+    const variantWeightsError =
+        variantsEdit.reduce(
+            (acc, variant) => acc + (variant.weight || 0),
+            0,
+        ) !== 1000;
+
     return (
         <>
-            <Typography
-                component='h3'
-                sx={{ m: 0, display: 'flex', gap: '1ch' }}
-                variant='h3'
-            >
-                Variants
+            <Alert severity='info' icon={false}>
+                Variants enhance a feature flag by providing a version of the
+                feature to be enabled
+            </Alert>
+            <StyledHelpIconBox>
+                <Typography>Variants</Typography>
                 <HelpIcon
-                    htmlTooltip={true}
+                    htmlTooltip
                     tooltip={
-                        <>
-                            <span>
-                                Variants allow to attach one or more values to
-                                this strategy. Variants at the strategy level
-                                override variants at the feature level.
-                            </span>
-                            <Link
-                                target='_blank'
-                                href='https://docs.getunleash.io/concepts/strategy-variants'
-                            >
-                                Learn more
-                            </Link>
-                        </>
+                        <Box>
+                            <Typography variant='body2'>
+                                Variants in feature flagging allow you to serve
+                                different versions of a feature to different
+                                users. This can be used for A/B testing, gradual
+                                rollouts, and canary releases. Variants provide
+                                a way to control the user experience at a
+                                granular level, enabling you to test and
+                                optimize different aspects of your features.
+                                Read more about variants{' '}
+                                <a
+                                    href='https://docs.getunleash.io/concepts/strategy-variants'
+                                    target='_blank'
+                                    rel='noopener noreferrer'
+                                >
+                                    here
+                                </a>
+                            </Typography>
+                        </Box>
                     }
                 />
-            </Typography>
+            </StyledHelpIconBox>
             <StyledVariantForms>
-                <StrategyVariantsUpgradeAlert />
+                {variantsEdit.length > 0 && <StrategyVariantsUpgradeAlert />}
+
                 {variantsEdit.map((variant, i) => (
                     <VariantForm
                         disableOverrides={true}
@@ -155,20 +182,24 @@ export const StrategyVariants = <T extends StrategyFormState>({
                                 i % theme.palette.variants.length
                             ]
                         }
+                        weightsError={variantWeightsError}
                     />
                 ))}
             </StyledVariantForms>
-            <PermissionButton
+
+            <Button
+                sx={{ width: 'fit-content' }}
                 onClick={addVariant}
                 variant='outlined'
-                permission={permission}
-                projectId={projectId}
-                environmentId={environment}
                 data-testid='ADD_STRATEGY_VARIANT_BUTTON'
+                startIcon={<Add />}
             >
                 Add variant
-            </PermissionButton>
-            <VariantsSplitPreview variants={variantsEdit} />
+            </Button>
+            <VariantsSplitPreview
+                variants={variantsEdit}
+                weightsError={variantWeightsError}
+            />
         </>
     );
 };

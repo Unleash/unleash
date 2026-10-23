@@ -5,10 +5,8 @@ import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { type FormEvent, useEffect, useMemo, useState, memo } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import type {
-    IFeatureEnvironment,
-    IFeatureVariant,
-} from 'interfaces/featureToggle';
+import type { IFeatureEnvironment } from 'interfaces/featureToggle';
+import type { VariantSchema } from 'openapi';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { Operation } from 'fast-json-patch';
 import CloudCircle from '@mui/icons-material/CloudCircle';
@@ -114,7 +112,7 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
 }));
 
-export type IFeatureVariantEdit = IFeatureVariant & {
+export type IFeatureVariantEdit = VariantSchema & {
     isValid: boolean;
     new: boolean;
     id: string;
@@ -125,15 +123,15 @@ interface IEnvironmentVariantModalProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     getApiPayload: (
-        variants: IFeatureVariant[],
-        newVariants: IFeatureVariant[],
+        variants: VariantSchema[],
+        newVariants: VariantSchema[],
     ) => { patch: Operation[]; error?: string };
-    getCrPayload: (variants: IFeatureVariant[]) => {
+    getCrPayload: (variants: VariantSchema[]) => {
         feature: string;
         action: 'patchVariant';
-        payload: { variants: IFeatureVariant[] };
+        payload: { variants: VariantSchema[] };
     };
-    onConfirm: (updatedVariants: IFeatureVariant[]) => void;
+    onConfirm: (updatedVariants: VariantSchema[]) => void;
 }
 
 const MemoizedVariantForm = memo(VariantForm);

@@ -58,7 +58,7 @@ const StyledVariantPayload = styled('code')(({ theme }) => ({
 }));
 
 type SplitPreviewTooltipProps = {
-    variant: StrategyVariantSchema;
+    variant: Pick<StrategyVariantSchema, 'name' | 'weight' | 'payload'>;
     index: number;
     selected?: boolean;
 };

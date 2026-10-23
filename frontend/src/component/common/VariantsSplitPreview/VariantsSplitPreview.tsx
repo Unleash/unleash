@@ -72,7 +72,7 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
 }));
 
 type VariantsSplitPreviewProps = {
-    variants: StrategyVariantSchema[];
+    variants: Pick<StrategyVariantSchema, 'name' | 'weight' | 'payload'>[];
     weightsError?: boolean;
     header?: boolean;
     selected?: string;

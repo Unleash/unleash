@@ -25,10 +25,6 @@ const summarizeVariants = (variants: StrategyFormState['variants']) =>
         stickiness: variant.stickiness,
         weight: variant.weight,
         weightType: variant.weightType,
-        overrides: variant.overrides?.map(({ contextName, values }) => ({
-            contextName,
-            valueCount: values?.length ?? 0,
-        })),
         payloadType: variant.payload?.type ?? null,
     }));
 

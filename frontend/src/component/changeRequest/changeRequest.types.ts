@@ -1,10 +1,10 @@
-import type { IFeatureVariant } from 'interfaces/featureToggle';
 import type { ISegment } from 'interfaces/segment';
 import type { IFeatureStrategy } from '../../interfaces/strategy.js';
 import type { IUser } from '../../interfaces/user.js';
 import type {
     SetStrategySortOrderSchema,
     TransitionConditionSchema,
+    VariantSchema,
 } from 'openapi';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import type { ISafeguard } from 'interfaces/safeguard';
@@ -322,8 +322,8 @@ export type ISegmentChange =
     | IChangeRequestDeleteSegment;
 
 type ChangeRequestVariantPatch = {
-    variants: IFeatureVariant[];
-    snapshot?: IFeatureVariant[];
+    variants: VariantSchema[];
+    snapshot?: VariantSchema[];
 };
 
 type ChangeRequestEnabled = { enabled: boolean };

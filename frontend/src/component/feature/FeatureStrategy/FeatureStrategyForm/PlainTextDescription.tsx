@@ -14,7 +14,7 @@ import { useSegmentsMap } from 'hooks/api/getters/useSegments/useSegmentsMap.ts'
 import { formatConstraintText } from 'utils/formatConstraintText';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { calculateVariantWeight } from 'component/common/util';
-import type { IFeatureVariant } from 'interfaces/featureToggle';
+import type { StrategyVariantSchema } from 'openapi';
 
 const SummaryIcon = styled(ModeCommentOutlinedIcon)(({ theme }) => ({
     color: theme.palette.primary.main,
@@ -129,7 +129,7 @@ const describeRollout = (strategy: StrategyFormState) => {
     return `${strategy.parameters?.rollout ?? 100}%`;
 };
 
-const variantDisplayName = (variant: IFeatureVariant) =>
+const variantDisplayName = (variant: StrategyVariantSchema) =>
     variant.name || 'unnamed variant';
 
 const PayloadInfo = styled('span')(({ theme }) => ({
@@ -144,7 +144,7 @@ const VariantList = styled(
         variants,
         ...props
     }: {
-        variants?: IFeatureVariant[];
+        variants?: StrategyVariantSchema[];
         className?: string;
     }) => (
         <ul

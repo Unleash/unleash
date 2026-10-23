@@ -11,7 +11,6 @@ import { VirtualizedTable } from 'component/common/Table/VirtualizedTable/Virtua
 import { sortingFns } from 'utils/sortingFns';
 import type { AdvancedPlaygroundEnvironmentFeatureSchema } from 'openapi';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
-import type { IFeatureVariant } from 'interfaces/featureToggle';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { FeatureStatusCell } from '../PlaygroundResultsTable/FeatureStatusCell/FeatureStatusCell.tsx';
 import { FeatureResultInfoPopoverCell } from '../PlaygroundResultsTable/FeatureResultInfoPopoverCell/FeatureResultInfoPopoverCell.tsx';
@@ -59,8 +58,7 @@ export const PlaygroundEnvironmentTable = ({
                 }) => (
                     <VariantCell
                         variant={variant?.enabled ? String(getValue()) : ''}
-                        // schema/interface mismatch predates this migration
-                        variants={variants as IFeatureVariant[]}
+                        variants={variants}
                         feature={name}
                         isEnabled={isEnabled}
                     />

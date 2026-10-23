@@ -2,9 +2,12 @@ import { useCallback } from 'react';
 import type { ITag } from 'interfaces/tags';
 import type { Operation } from 'fast-json-patch';
 import type { IConstraint } from 'interfaces/strategy';
-import type { CreateFeatureSchema, UpdateTagsSchema } from 'openapi';
+import type {
+    CreateFeatureSchema,
+    UpdateTagsSchema,
+    VariantSchema,
+} from 'openapi';
 import useAPI from '../useApi/useApi.js';
-import type { IFeatureVariant } from 'interfaces/featureToggle';
 
 const useFeatureApi = () => {
     const { makeRequest, makeLightRequest, createRequest, errors, loading } =
@@ -226,7 +229,7 @@ const useFeatureApi = () => {
     const overrideVariantsInEnvironments = async (
         projectId: string,
         featureId: string,
-        variants: IFeatureVariant[],
+        variants: VariantSchema[],
         environments: string[],
     ) => {
         const put = `api/admin/projects/${projectId}/features/${featureId}/variants-batch`;

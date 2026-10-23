@@ -1,4 +1,8 @@
-import type { CreateFeatureSchemaType, FeatureSchema } from 'openapi';
+import type {
+    CreateFeatureSchemaType,
+    FeatureSchema,
+    VariantSchema,
+} from 'openapi';
 import type { IFeatureStrategy } from './strategy.js';
 import type { ITag } from './tags.js';
 import type { IReleasePlan } from './releasePlans.js';
@@ -68,7 +72,7 @@ export interface IFeatureToggle {
     favorite: boolean;
     project: string;
     type: CreateFeatureSchemaType;
-    variants: IFeatureVariant[];
+    variants: VariantSchema[];
     impressionData: boolean;
     strategies?: IFeatureStrategy[];
     dependencies: Array<IDependency>;
@@ -95,7 +99,7 @@ export interface IFeatureEnvironment {
     name: string;
     enabled: boolean;
     strategies: IFeatureStrategy[];
-    variants?: IFeatureVariant[];
+    variants?: VariantSchema[];
     lastSeenAt?: string;
     yes?: number;
     no?: number;
@@ -105,18 +109,6 @@ export interface IFeatureEnvironment {
 
 export interface IFeatureEnvironmentWithCrEnabled extends IFeatureEnvironment {
     crEnabled?: boolean;
-}
-
-/**
- * @deprecated use `StrategyVariantSchema` from openapi
- */
-export interface IFeatureVariant {
-    name: string;
-    stickiness: string;
-    weight: number;
-    weightType: 'fix' | 'variable';
-    overrides?: IOverride[];
-    payload?: IPayload;
 }
 
 export interface IOverride {

@@ -4,7 +4,7 @@ import type {
     IChangeRequestUpdateSegment,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
-import type { IFeatureVariant } from 'interfaces/featureToggle';
+import type { VariantSchema } from 'openapi';
 import type { ISegment } from 'interfaces/segment';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { OverwriteWarning } from './OverwriteWarning.tsx';
@@ -17,7 +17,7 @@ import {
 type ChangeData =
     | {
           changeType: 'environment variant configuration';
-          current?: IFeatureVariant[];
+          current?: VariantSchema[];
           change: IChangeRequestPatchVariant;
       }
     | {

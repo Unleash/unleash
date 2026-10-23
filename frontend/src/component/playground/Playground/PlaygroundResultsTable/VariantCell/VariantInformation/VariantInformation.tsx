@@ -1,7 +1,7 @@
 import { Typography, styled, useTheme } from '@mui/material';
 import { Table, TableBody, TableCell, TableRow } from 'component/common/Table';
 import { useMemo, type FC } from 'react';
-import type { IFeatureVariant } from 'interfaces/featureToggle';
+import type { VariantSchema } from 'openapi';
 import { calculateVariantWeight } from 'component/common/util';
 import {
     type ColumnDef,
@@ -17,7 +17,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 
 interface IVariantInformationProps {
-    variants: IFeatureVariant[];
+    variants: VariantSchema[];
     selectedVariant: string;
 }
 

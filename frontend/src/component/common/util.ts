@@ -1,7 +1,7 @@
 import { weightTypes } from 'constants/weightTypes';
 import type { IUiConfig } from 'interfaces/uiConfig';
 import type { INavigationMenuItem } from 'interfaces/route';
-import type { IFeatureVariant } from 'interfaces/featureToggle';
+import type { VariantSchema } from 'openapi';
 import { format, isValid, parseISO } from 'date-fns';
 import type { IFeatureVariantEdit } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal';
 import { formatDateYMD } from '../../utils/formatDate.js';
@@ -87,7 +87,7 @@ export const calculateVariantWeight = (weight: number) => {
     return weight / 10.0;
 };
 
-export function updateWeight(variants: IFeatureVariant[], totalWeight: number) {
+export function updateWeight(variants: VariantSchema[], totalWeight: number) {
     if (variants.length === 0) {
         return [];
     }

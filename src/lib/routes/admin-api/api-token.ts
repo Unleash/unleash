@@ -367,14 +367,9 @@ export class ApiTokenController extends Controller {
         const expiry = new Date(expiresAt);
         const v2Identifier = parseApiTokenV2Identifier(token);
         if (v2Identifier) {
-            try {
-                await this.transactionalApiTokenV2Service.transactional(
-                    (service) =>
-                        service.updateExpiry(v2Identifier, expiry, req.audit),
-                );
-            } catch (_error) {
-                // Fall through to legacy storage during the migration period.
-            }
+            await this.transactionalApiTokenV2Service.transactional((service) =>
+                service.updateExpiry(v2Identifier, expiry, req.audit),
+            );
         } else {
             // only v2 is transactional, v1 is kept as is for simplicity, since it is not used in production anymore.
             // people might still be able to update expiry but it will not be transactional, which is fine for the migration period.
@@ -408,14 +403,10 @@ export class ApiTokenController extends Controller {
         }
         const v2Identifier = parseApiTokenV2Identifier(token);
         if (v2Identifier) {
-            try {
-                await this.transactionalApiTokenV2Service.transactional(
-                    (service) => service.delete(v2Identifier, req.audit),
-                );
-                this.apiTokenV2Service.invalidateCache([v2Identifier.selector]);
-            } catch (_error) {
-                // Fall through to legacy storage during the migration period.
-            }
+            await this.transactionalApiTokenV2Service.transactional((service) =>
+                service.delete(v2Identifier, req.audit),
+            );
+            this.apiTokenV2Service.invalidateCache([v2Identifier.selector]);
         } else {
             try {
                 await this.apiTokenService.delete(token, req.audit);

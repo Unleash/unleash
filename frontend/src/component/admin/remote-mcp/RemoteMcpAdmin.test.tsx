@@ -11,19 +11,16 @@ const server = testServerSetup();
 const setupApi = ({
     enabled,
     feedbackOptIn,
-    feedbackOptInAvailable = true,
     postStatus = 204,
 }: {
     enabled: boolean;
     feedbackOptIn?: boolean;
-    feedbackOptInAvailable?: boolean;
     postStatus?: number;
 }) => {
     testServerRoute(server, '/api/admin/ui-config', {
         environment: 'Enterprise',
         versionInfo: { current: { enterprise: 'version' } },
         unleashUrl: 'https://unleash.example.com',
-        flags: { remoteMcpFeedback: feedbackOptInAvailable },
     });
     testServerRoute(server, '/api/admin/remote-mcp/settings', {
         enabled,
@@ -167,30 +164,6 @@ describe('RemoteMcpAdmin', () => {
         expect(getFeedbackSwitch()).toBeChecked();
         expect(getSaveButton()).toBeDisabled();
         expect(getCancelButton()).toBeDisabled();
-    });
-
-    test('saving without the feedback feature sends only the server toggle', async () => {
-        const { requests } = setupApi({
-            enabled: false,
-            feedbackOptInAvailable: false,
-        });
-
-        renderPage();
-
-        await findServerSwitch();
-        expect(
-            screen.queryByRole('switch', { name: feedbackSwitchName }),
-        ).not.toBeInTheDocument();
-
-        await userEvent.click(getServerSwitch());
-        await userEvent.click(getSaveButton());
-
-        expect(
-            await screen.findByText(
-                'Remote MCP server has been successfully enabled',
-            ),
-        ).toBeInTheDocument();
-        expect(requests).toEqual([{ enabled: true }]);
     });
 
     test('cancel resets both toggles to the saved values', async () => {

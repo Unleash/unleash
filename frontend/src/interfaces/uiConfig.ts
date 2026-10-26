@@ -109,7 +109,6 @@ export type UiFlags = {
     tagManagementViaUi?: boolean;
     integrationParamKvpEditor?: boolean;
     perFlagLifetime?: boolean;
-    remoteMcpFeedback?: boolean;
     sessionTimeouts?: boolean;
     payloadSchemas?: boolean;
     singlePageStrategyForm?: boolean;

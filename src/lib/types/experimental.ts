@@ -74,7 +74,6 @@ export type IFlagKey =
     | 'recordSdkFlavorMetrics'
     | 'searchDocsWidget'
     | 'semverBuildMetadata'
-    | 'totalUsageMetrics'
     | 'auditEventUserAgent'
     | 'helpMenuRelocationHint'
     | 'ipConstraintOperator'
@@ -342,10 +341,6 @@ const flags: IFlags = {
     ),
     semverBuildMetadata: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SEMVER_BUILD_METADATA,
-        false,
-    ),
-    totalUsageMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_TOTAL_USAGE_METRICS,
         false,
     ),
     auditEventUserAgent: parseEnvVarBoolean(

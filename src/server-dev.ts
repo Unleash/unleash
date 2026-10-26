@@ -59,7 +59,6 @@ process.nextTick(async () => {
                         serviceNowIntegration: true,
                         recordSdkFlavorMetrics: true,
                         semverBuildMetadata: true,
-                        totalUsageMetrics: true,
                         helpMenuRelocationHint: true,
                         ipConstraintOperator: true,
                         githubIntegration: true,

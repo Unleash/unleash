@@ -15,11 +15,6 @@ import {
 
 const server = testServerSetup();
 
-const setExposureFlag = (enabled: boolean) =>
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { exposureBasedAutomation: enabled },
-    });
-
 const setTotalUsageForMyFeature = () =>
     testServerRoute(server, '/api/admin/client-metrics/features/my-feature', {
         lastHourUsage: [],
@@ -44,6 +39,7 @@ const renderDisplay = ({
     featureName?: string;
 }) => {
     const onSave = vi.fn().mockResolvedValue({});
+    testServerRoute(server, '/api/admin/ui-config', {});
     render(
         <Routes>
             <Route
@@ -71,23 +67,15 @@ const renderDisplay = ({
     return onSave;
 };
 
-test('shows a saved exposure automation and keeps it editable when the flag is off', async () => {
-    setExposureFlag(false);
+test('shows a saved exposure automation as counted since feature creation', () => {
     renderDisplay({
         transitionCondition: { type: 'exposure', minimumExposures: 1000 },
     });
 
     expect(screen.getByText('since feature creation')).toBeInTheDocument();
-
-    await userEvent.click(screen.getByLabelText('Condition unit'));
-
-    expect(
-        await screen.findByRole('option', { name: 'Exposures' }),
-    ).toBeInTheDocument();
 });
 
 test('offers save only when the condition meaningfully changes', async () => {
-    setExposureFlag(true);
     renderDisplay({ transitionCondition: { intervalMinutes: 120 } });
 
     expect(screen.getByText('from milestone start')).toBeInTheDocument();
@@ -108,7 +96,6 @@ test('offers save only when the condition meaningfully changes', async () => {
 });
 
 test('saves an exposure automation for the target milestone', async () => {
-    setExposureFlag(true);
     const onSave = renderDisplay({
         transitionCondition: { intervalMinutes: 120 },
     });
@@ -129,7 +116,6 @@ test('saves an exposure automation for the target milestone', async () => {
 });
 
 test('projects the next milestone start for time automations only', () => {
-    setExposureFlag(true);
     renderDisplay({
         transitionCondition: { intervalMinutes: 600 },
         sourceMilestoneStartedAt: anHourAgo(),
@@ -140,7 +126,6 @@ test('projects the next milestone start for time automations only', () => {
 });
 
 test('projects no start time for exposure automations', () => {
-    setExposureFlag(true);
     renderDisplay({
         transitionCondition: { type: 'exposure', minimumExposures: 1000 },
         sourceMilestoneStartedAt: anHourAgo(),
@@ -153,7 +138,6 @@ test('projects no start time for exposure automations', () => {
 });
 
 test("shows the environment's exposure progress against the automation target", async () => {
-    setExposureFlag(true);
     setTotalUsageForMyFeature();
     renderDisplay({
         transitionCondition: { type: 'exposure', minimumExposures: 1000 },
@@ -165,8 +149,8 @@ test("shows the environment's exposure progress against the automation target", 
 });
 
 test('shows exposure progress in the readonly milestone view', async () => {
-    setExposureFlag(true);
     setTotalUsageForMyFeature();
+    testServerRoute(server, '/api/admin/ui-config', {});
     render(
         <Routes>
             <Route

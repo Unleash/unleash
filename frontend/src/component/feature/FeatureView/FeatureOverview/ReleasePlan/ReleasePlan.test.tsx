@@ -38,9 +38,7 @@ const planWith = (milestones: IReleasePlanMilestone[]): IReleasePlan => ({
 });
 
 const renderReadonlyPlan = (plan: IReleasePlan) => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { exposureBasedAutomation: true },
-    });
+    testServerRoute(server, '/api/admin/ui-config', {});
     testServerRoute(
         server,
         '/api/admin/projects/default/change-requests/pending',
@@ -108,9 +106,7 @@ test('a readonly plan offers no editing controls', async () => {
 });
 
 const renderEditablePlan = (plan: IReleasePlan) => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { exposureBasedAutomation: true },
-    });
+    testServerRoute(server, '/api/admin/ui-config', {});
     testServerRoute(
         server,
         '/api/admin/projects/default/change-requests/pending',

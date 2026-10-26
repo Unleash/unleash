@@ -101,7 +101,6 @@ export type UiFlags = {
     learningLab?: Variant;
     flightRecorderFrontend?: Variant;
     searchDocsWidget?: boolean;
-    exposureBasedAutomation?: boolean;
     semverBuildMetadata?: boolean;
     helpMenuRelocationHint?: boolean;
     ipConstraintOperator?: boolean;

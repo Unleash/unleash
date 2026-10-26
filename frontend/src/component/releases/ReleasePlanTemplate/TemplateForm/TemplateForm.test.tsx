@@ -14,10 +14,7 @@ const server = testServerSetup();
 
 const setAutomationsFlag = (enabled: boolean) =>
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            releaseTemplatesAutomations: enabled,
-            exposureBasedAutomation: enabled,
-        },
+        flags: { releaseTemplatesAutomations: enabled },
     });
 
 const defaultMilestone = (

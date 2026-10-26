@@ -2375,7 +2375,14 @@ export class FeatureToggleService {
             )?.variants ||
             [];
 
-        await this.eventService.storeEvent(
+        // Save the variants before the event: other flag operations lock in this
+        // order too, which prevents deadlocks between them
+        await this.featureEnvironmentStore.setVariantsToFeatureEnvironments(
+            featureName,
+            [environment],
+            fixedVariants,
+        );
+        await this.eventService.storeEventsOrThrow([
             new EnvironmentVariantEvent({
                 featureName,
                 environment,
@@ -2384,12 +2391,7 @@ export class FeatureToggleService {
                 newVariants: fixedVariants,
                 auditUser,
             }),
-        );
-        await this.featureEnvironmentStore.setVariantsToFeatureEnvironments(
-            featureName,
-            [environment],
-            fixedVariants,
-        );
+        ]);
         return fixedVariants;
     }
 
@@ -2455,7 +2457,14 @@ export class FeatureToggleService {
             oldVariants[env] = featureEnv?.variants || [];
         }
 
-        await this.eventService.storeEvents(
+        // Save the variants before the event: other flag operations lock in this
+        // order too, which prevents deadlocks between them
+        await this.featureEnvironmentStore.setVariantsToFeatureEnvironments(
+            featureName,
+            environments,
+            fixedVariants,
+        );
+        await this.eventService.storeEventsOrThrow(
             environments.map(
                 (environment) =>
                     new EnvironmentVariantEvent({
@@ -2467,11 +2476,6 @@ export class FeatureToggleService {
                         auditUser,
                     }),
             ),
-        );
-        await this.featureEnvironmentStore.setVariantsToFeatureEnvironments(
-            featureName,
-            environments,
-            fixedVariants,
         );
         return fixedVariants;
     }

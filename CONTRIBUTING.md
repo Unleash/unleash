@@ -61,7 +61,7 @@ Install the required prerequisites and then follow the steps below.
 You'll need:
 
 - [Docker](https://www.docker.com/) to run the database
-- [Node.js](https://nodejs.org/en/) to run the project. You can install it directly, or use `nvm` (see the next point) to manage it for you.
+- [Node.js](https://nodejs.org/en/) 22.23.4 to run the project. You can install it directly, or use `nvm` (see the next point) to manage it for you.
 - [nvm](https://github.com/nvm-sh/nvm) (optional) to manage your Node.js installation.
 - [Yarn](https://yarnpkg.com/) (optional but recommended; the steps below assume that you have it installed) to install packages and run the project.
 

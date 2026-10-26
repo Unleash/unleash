@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [20.13.1-alpine]
+        version: [22.23.4-alpine]
     steps:
       - name: Checkout tag v${{ inputs.version }}
         if: ${{ inputs.version != '' }}
@@ -53,6 +53,11 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Use Node.js 22.23.4
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.23.4
+          cache: 'yarn'
       - name: Build frontend
         run: |
           yarn --cwd ./frontend install

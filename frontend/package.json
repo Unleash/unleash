@@ -4,7 +4,7 @@
   "private": true,
   "files": ["index.js", "build"],
   "engines": {
-    "node": ">=18"
+    "node": ">=22.23.4 <23 || >=24.22.1 <25 || >=26.12.1"
   },
   "scripts": {
     "build": "yarn run lint:material:icons && vite build",

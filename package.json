@@ -27,7 +27,7 @@
   },
   "types": "./dist/lib/server-impl.d.ts",
   "engines": {
-    "node": ">=18 <21"
+    "node": ">=22.23.4 <23 || >=24.22.1 <25 || >=26.12.1"
   },
   "license": "Apache-2.0",
   "main": "./dist/lib/server-impl.js",

@@ -23,6 +23,7 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           working-directory: frontend
+          node-version: 22.23.4
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
           config: baseUrl=${{ github.event.deployment_status.target_url }}
           spec: cypress/integration/${{ matrix.test }}

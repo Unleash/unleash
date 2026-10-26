@@ -5,6 +5,10 @@ import VideoContent from '@site/src/components/VideoContent.jsx'
 
 Generally, the intention is that `unleash-server` should always provide support for clients one major version lower than the current one. This should make it possible to upgrade `unleash` gradually.
 
+## Node.js runtime
+
+Use Node.js 22.23.4 or later. On the 24 and 26 release lines, use 24.22.1 and 26.12.1 or later. Node.js 25, 23, 20, and earlier are end of life and do not receive a fix for CVE-2026-111497.
+
 ## Upgrading to v6 from v5
 
 [Unleash v6](https://github.com/Unleash/unleash/issues/4380) was released on June 6th, 2024. **We expect this upgrade to be straightforward**, provided you have followed the previous migration guides on this page. We're removing some features that were deprecated in version 5 and marking some features as deprecated, but these will continue to be supported during version 6. Here's the list of the outstanding changes you need to take into account when migrating from v5 to v6:

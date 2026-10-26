@@ -8,7 +8,7 @@ title: Getting Started
 
 You will need:
 
-- [Node.js](https://nodejs.org/en/download/) (version 18 or later)
+- [Node.js](https://nodejs.org/en/download/) 22.23.4 or later. On the 24 and 26 release lines, use 24.22.1 and 26.12.1 or later. Earlier versions are affected by CVE-2026-111497 and are not supported.
 - [PostgreSQL](https://www.postgresql.org/download/) (version 10 or later)
 - [Create an unleash user and database](./database-setup).
 

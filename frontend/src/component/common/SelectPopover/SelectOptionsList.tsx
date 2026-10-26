@@ -22,6 +22,13 @@ const StyledRow = styled('li')(({ theme }) => ({
     '&:hover': {
         backgroundColor: theme.palette.action.hover,
     },
+    '&[aria-disabled="true"]': {
+        cursor: 'default',
+        color: theme.palette.text.disabled,
+        '&:hover': {
+            backgroundColor: 'transparent',
+        },
+    },
 }));
 
 const StyledCheckbox = styled(Checkbox)({
@@ -84,13 +91,15 @@ export const SelectOptionsList = <T extends string | number>({
     listMaxHeight,
 }: SelectOptionsListProps<T>) => {
     const renderRow = (option: FlatOption<T>, index: number) => {
-        const { key, ...optionProps } = getOptionProps({ option, index }) as {
-            key: string;
-        } & Record<string, unknown>;
+        const { key, onClick, ...optionProps } = getOptionProps({
+            option,
+            index,
+        }) as { key: string; onClick: () => void } & Record<string, unknown>;
         return (
             <StyledRow
                 key={key}
                 {...optionProps}
+                onClick={option.disabled ? undefined : onClick}
                 aria-selected={isOptionSelected(option)}
             >
                 {multiple ? (
@@ -99,6 +108,7 @@ export const SelectOptionsList = <T extends string | number>({
                         tabIndex={-1}
                         size='small'
                         aria-hidden
+                        disabled={option.disabled}
                     />
                 ) : null}
                 <StyledLabel>{option.label}</StyledLabel>

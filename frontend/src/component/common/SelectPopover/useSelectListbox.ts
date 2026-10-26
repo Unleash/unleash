@@ -11,6 +11,7 @@ export type SelectOption<T> = {
     value: T;
     label: string;
     detail?: ReactNode;
+    disabled?: boolean;
 };
 
 export type SelectOptionGroup<T> = {
@@ -136,6 +137,7 @@ export const useSelectListbox = <T extends string | number>(
         },
         getOptionLabel: (option) => option.label,
         getOptionKey: (option) => String(option.value),
+        getOptionDisabled: (option) => Boolean(option.disabled),
         isOptionEqualToValue: (option, value) => option.value === value.value,
         groupBy: (option) => option.group ?? '',
         autoHighlight: true,

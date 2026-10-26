@@ -1,5 +1,5 @@
 variable "NODE_VERSION" {
-  default = null
+  default = "22.23.4-alpine3.23"
 }
 
 target "docker-metadata-action" {}

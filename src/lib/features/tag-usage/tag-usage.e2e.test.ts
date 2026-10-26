@@ -3,9 +3,11 @@ import dbInit, {
 } from '../../../test/e2e/helpers/database-init.js';
 import {
     type IUnleashTest,
+    setupAppWithAuth,
     setupAppWithCustomConfig,
 } from '../../../test/e2e/helpers/test-helper.js';
 import getLogger from '../../../test/fixtures/no-logger.js';
+import { ApiTokenType } from '../../types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -140,4 +142,68 @@ test('responds not found for values of an unknown tag type', async () => {
     await app.request
         .get('/api/admin/tag-types/does-not-exist/values')
         .expect(404);
+});
+
+describe('with an admin API token', () => {
+    let enterpriseApp: IUnleashTest;
+    let adminTokenSecret: string;
+    const tagType = 'api-token-tag-type';
+
+    beforeAll(async () => {
+        enterpriseApp = await setupAppWithAuth(
+            db.stores,
+            {
+                enterpriseVersion: '5.3.0',
+                ui: { environment: 'Enterprise' },
+                experimental: {
+                    flags: {
+                        tagManagementViaUi: true,
+                    },
+                },
+            },
+            db.rawDatabase,
+        );
+
+        const token =
+            await enterpriseApp.services.apiTokenService.createApiTokenWithProjects(
+                {
+                    tokenName: 'admin',
+                    type: ApiTokenType.ADMIN,
+                    environment: '*',
+                    projects: ['*'],
+                },
+            );
+        adminTokenSecret = token.secret;
+
+        await db.stores.tagTypeStore.createTagType({ name: tagType });
+    });
+
+    afterAll(async () => {
+        await enterpriseApp.destroy();
+    });
+
+    test('lists tag types with usage', async () => {
+        const { body } = await enterpriseApp.request
+            .get('/api/admin/tag-types')
+            .set('Authorization', adminTokenSecret)
+            .expect(200);
+
+        expect(body.tagTypes.map((tagType) => tagType.name)).toContain(tagType);
+    });
+
+    test('lists tag values with usage', async () => {
+        await db.stores.tagStore.createTag({
+            type: tagType,
+            value: 'from-token',
+        });
+
+        const { body } = await enterpriseApp.request
+            .get(`/api/admin/tag-types/${tagType}/values`)
+            .set('Authorization', adminTokenSecret)
+            .expect(200);
+
+        expect(body.tagValues.map((tagValue) => tagValue.value)).toContain(
+            'from-token',
+        );
+    });
 });

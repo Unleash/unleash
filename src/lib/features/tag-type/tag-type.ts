@@ -40,6 +40,7 @@ import {
     type TagValuesUsageSchema,
 } from '../../openapi/spec/tag-values-usage-schema.js';
 import { normalizeQueryParams } from '../feature-search/search-utils.js';
+import { extractUserId } from '../../util/index.js';
 
 const version = 1;
 
@@ -217,7 +218,7 @@ class TagTypeController extends Controller {
         res: Response<TagTypesSchema>,
     ): Promise<void> {
         const tagTypes = this.flagResolver.isEnabled('tagManagementViaUi')
-            ? await this.tagTypeService.getAllWithUsage(req.user.id)
+            ? await this.tagTypeService.getAllWithUsage(extractUserId(req))
             : await this.tagTypeService.getAll();
         res.json({ version, tagTypes });
     }
@@ -295,7 +296,7 @@ class TagTypeController extends Controller {
             await this.tagTypeService.getValuesWithUsage(
                 req.params.name,
                 { limit, offset },
-                req.user.id,
+                extractUserId(req),
             );
         this.openApiService.respondWithValidation(
             200,

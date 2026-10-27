@@ -1,3 +1,4 @@
+import { reservedObjectPropertyNames } from '../util/reserved-object-property-names.js';
 import joi from 'joi';
 import { ALL_OPERATORS } from '../util/constants.js';
 import { nameType } from '../routes/util.js';
@@ -7,6 +8,15 @@ export const nameSchema = joi
     .object()
     .keys({ name: nameType })
     .options({ stripUnknown: true, allowUnknown: false, abortEarly: false });
+
+const featureNameType = nameType
+    .invalid(...reservedObjectPropertyNames)
+    .messages({
+        'any.invalid':
+            '{{#label}} must not be a reserved JavaScript property name',
+    });
+
+export const featureNameSchema = nameSchema.keys({ name: featureNameType });
 
 export const constraintSchema = joi.object().keys({
     contextName: joi.string().required(),
@@ -86,7 +96,7 @@ export const variantsArraySchema = joi
 export const featureMetadataSchema = joi
     .object()
     .keys({
-        name: nameType,
+        name: featureNameType,
         stale: joi.boolean().default(false),
         archived: joi.boolean().default(false),
         type: joi.string().default('release'),
@@ -121,7 +131,7 @@ export const featureMetadataSchema = joi
 export const featureSchema = joi
     .object()
     .keys({
-        name: nameType,
+        name: featureNameType,
         enabled: joi.boolean().default(false),
         stale: joi.boolean().default(false),
         archived: joi.boolean().default(false),

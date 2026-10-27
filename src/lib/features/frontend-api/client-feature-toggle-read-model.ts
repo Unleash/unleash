@@ -101,14 +101,14 @@ export default class ClientFeatureToggleReadModel
         const featureTogglesByEnv: Record<
             string,
             Record<string, IFeatureToggleClient>
-        > = {};
+        > = Object.create(null);
 
         rows.forEach((row) => {
             const environment = row.environment;
             const featureName = row.name;
 
             if (!featureTogglesByEnv[environment]) {
-                featureTogglesByEnv[environment] = {};
+                featureTogglesByEnv[environment] = Object.create(null);
             }
 
             if (!featureTogglesByEnv[environment][featureName]) {

@@ -65,7 +65,7 @@ import {
 } from '../../error/index.js';
 import {
     featureMetadataSchema,
-    nameSchema,
+    featureNameSchema,
     variantsArraySchema,
 } from '../../schema/feature-schema.js';
 import NotFoundError from '../../error/notfound-error.js';
@@ -1686,7 +1686,7 @@ export class FeatureToggleService {
 
     /** Validations  */
     async validateName(name: string): Promise<string> {
-        await nameSchema.validateAsync({ name });
+        await featureNameSchema.validateAsync({ name });
         await this.validateUniqueFeatureName(name);
         return name;
     }

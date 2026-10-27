@@ -45,6 +45,9 @@ export interface StrategyFormBodyProps<T extends StrategyFormState> {
     onSubmit: (event: React.FormEvent) => void;
 }
 
+const pluralize = (count: number, noun: string) =>
+    `${count} ${noun}${count === 1 ? '' : 's'}`;
+
 const StyledHeaderBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -327,11 +330,12 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                                     Variants
                                 </StyledAccordionHeading>
                                 <StyledAccordionHint>
-                                    {strategy.variants?.length ? (
-                                        <>{strategy.variants.length} variants</>
-                                    ) : (
-                                        'Same for everyone'
-                                    )}
+                                    {strategy.variants?.length
+                                        ? pluralize(
+                                              strategy.variants.length,
+                                              'variant',
+                                          )
+                                        : 'Same for everyone'}
                                 </StyledAccordionHint>
                             </AccordionSummary>
                             <AccordionDetails>

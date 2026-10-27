@@ -2,23 +2,27 @@ import { createUuid } from 'utils/createUuid';
 import { VariantForm } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm.tsx';
 import { updateWeightEdit } from 'component/common/util';
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
 import { WeightType } from '../../../constants/variantTypes.ts';
-import { styled, useTheme, Button } from '@mui/material';
+import { styled, useTheme, Button, Tabs } from '@mui/material';
 import type { StrategyFormState } from 'interfaces/strategy';
 import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';
 import { useEventTracker } from 'hooks/useEventTracker';
 import Add from '@mui/icons-material/Add';
-
-const StyledVariantForms = styled('div')({
-    display: 'flex',
-    flexDirection: 'column',
-});
+import { VariantPill } from './VariantPill/VariantPill.tsx';
 
 const EmptyStateDescription = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(2),
     color: theme.palette.text.secondary,
+}));
+
+const PillRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    marginBottom: theme.spacing(2),
 }));
 
 interface StrategyVariantsProps<T extends StrategyFormState> {
@@ -42,6 +46,19 @@ export const StrategyVariants = <T extends StrategyFormState>({
     }));
     const [variantsEdit, setVariantsEdit] =
         useState<IFeatureVariantEdit[]>(initialVariants);
+    const [selectedVariantId, setSelectedVariantId] = useState(
+        initialVariants[0]?.id,
+    );
+    const pillListRef = useRef<HTMLDivElement>(null);
+    const focusSelectedPillAfterRender = useRef(false);
+
+    useEffect(() => {
+        if (!focusSelectedPillAfterRender.current) return;
+        focusSelectedPillAfterRender.current = false;
+        pillListRef.current
+            ?.querySelector<HTMLElement>('[aria-selected="true"]')
+            ?.focus();
+    });
     const theme = useTheme();
 
     const stickiness =
@@ -100,11 +117,23 @@ export const StrategyVariants = <T extends StrategyFormState>({
                 id,
             },
         ]);
+        setSelectedVariantId(id);
+        focusSelectedPillAfterRender.current = true;
         trackEvent('strategy-variants', {
             props: {
                 eventType: 'variant added',
             },
         });
+    };
+
+    const removeVariant = (id: string) => {
+        const removedIndex = variantsEdit.findIndex(
+            (variant) => variant.id === id,
+        );
+        const remaining = variantsEdit.filter((variant) => variant.id !== id);
+        setVariantsEdit(updateWeightEdit(remaining, 1000));
+        setSelectedVariantId(remaining[Math.max(removedIndex - 1, 0)]?.id);
+        focusSelectedPillAfterRender.current = true;
     };
 
     const variantWeightsError =
@@ -134,47 +163,63 @@ export const StrategyVariants = <T extends StrategyFormState>({
         );
     }
 
+    const variantColor = (index: number) =>
+        theme.palette.variants[index % theme.palette.variants.length];
+    const selectedVariant =
+        variantsEdit.find((variant) => variant.id === selectedVariantId) ??
+        variantsEdit[0];
+    const selectedIndex = variantsEdit.indexOf(selectedVariant);
+
     return (
         <>
-            <StyledVariantForms>
-                {variantsEdit.map((variant, i) => (
-                    <VariantForm
-                        disableOverrides={true}
-                        key={variant.id}
-                        variant={variant}
-                        variants={variantsEdit}
-                        updateVariant={(updatedVariant) =>
-                            updateVariant(updatedVariant, variant.id)
-                        }
-                        removeVariant={() =>
-                            setVariantsEdit((variantsEdit) =>
-                                updateWeightEdit(
-                                    variantsEdit.filter(
-                                        (v) => v.id !== variant.id,
-                                    ),
-                                    1000,
-                                ),
-                            )
-                        }
-                        decorationColor={
-                            theme.palette.variants[
-                                i % theme.palette.variants.length
-                            ]
-                        }
-                        weightsError={variantWeightsError}
-                    />
-                ))}
-            </StyledVariantForms>
+            <PillRow>
+                <Tabs
+                    ref={pillListRef}
+                    value={selectedVariant.id}
+                    onChange={(_, id: string) => setSelectedVariantId(id)}
+                    selectionFollowsFocus
+                    aria-label='Variants'
+                    sx={{ minHeight: 0, overflow: 'visible' }}
+                    slotProps={{
+                        indicator: { sx: { display: 'none' } },
+                        scroller: { style: { overflow: 'visible' } },
+                        list: { sx: { flexWrap: 'wrap', gap: 1 } },
+                    }}
+                >
+                    {variantsEdit.map((variant, index) => (
+                        <VariantPill
+                            key={variant.id}
+                            value={variant.id}
+                            name={variant.name}
+                            weight={variant.weight}
+                            color={variantColor(index)}
+                        />
+                    ))}
+                </Tabs>
+                <Button
+                    onClick={addVariant}
+                    variant='text'
+                    size='small'
+                    startIcon={<Add />}
+                    data-testid='ADD_STRATEGY_VARIANT_BUTTON'
+                >
+                    Add variant
+                </Button>
+            </PillRow>
 
-            <Button
-                sx={{ width: 'fit-content' }}
-                onClick={addVariant}
-                variant='outlined'
-                data-testid='ADD_STRATEGY_VARIANT_BUTTON'
-                startIcon={<Add />}
-            >
-                Add variant
-            </Button>
+            <VariantForm
+                disableOverrides={true}
+                key={selectedVariant.id}
+                variant={selectedVariant}
+                variants={variantsEdit}
+                updateVariant={(updatedVariant) =>
+                    updateVariant(updatedVariant, selectedVariant.id)
+                }
+                removeVariant={() => removeVariant(selectedVariant.id)}
+                decorationColor={variantColor(selectedIndex)}
+                weightsError={variantWeightsError}
+            />
+
             <VariantsSplitPreview
                 variants={variantsEdit}
                 weightsError={variantWeightsError}

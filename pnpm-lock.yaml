@@ -3367,6 +3367,7 @@ packages:
   db-migrate@0.11.14:
     resolution: {integrity: sha512-8e+/YsIlM3d69hj+cb6qG6WyubR8nwXfDf9gGLWl4AxHpI6mTomcqhRLNfPrs7Le7AZv2eEsgK8hkXDSQqfIvg==}
     engines: {node: '>=8.0.0'}
+    deprecated: 0.x is end of life, please upgrade to db-migrate 1.0
     hasBin: true
 
   debounce@2.2.0:

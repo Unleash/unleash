@@ -29,8 +29,6 @@ import {
     getStandardResponses,
 } from '../../openapi/util/standard-responses.js';
 import type { WithTransactional } from '../../db/transaction.js';
-import type { IFlagResolver } from '../../types/experimental.js';
-import { requireFeatureEnabled } from '../../middleware/conditional-middleware.js';
 import {
     basePaginationParameters,
     type BasePaginationParameters,
@@ -49,8 +47,6 @@ class TagTypeController extends Controller {
 
     private openApiService: OpenApiService;
 
-    private flagResolver: IFlagResolver;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -64,7 +60,6 @@ class TagTypeController extends Controller {
         super(config);
         this.tagTypeService = transactionalTagTypeService;
         this.openApiService = openApiService;
-        this.flagResolver = config.flagResolver;
         this.route({
             method: 'get',
             path: '',
@@ -150,13 +145,9 @@ class TagTypeController extends Controller {
             handler: this.getTagValuesWithUsage,
             permission: NONE,
             middleware: [
-                requireFeatureEnabled(
-                    config.flagResolver,
-                    'tagManagementViaUi',
-                ),
                 openApiService.validPath({
                     tags: ['Tags'],
-                    release: { alpha: true },
+                    release: { beta: '8.3.0' },
                     operationId: 'getTagValuesWithUsage',
                     summary: 'Get the values of a tag type with their usage',
                     description:
@@ -217,9 +208,9 @@ class TagTypeController extends Controller {
         req: IAuthRequest,
         res: Response<TagTypesSchema>,
     ): Promise<void> {
-        const tagTypes = this.flagResolver.isEnabled('tagManagementViaUi')
-            ? await this.tagTypeService.getAllWithUsage(extractUserId(req))
-            : await this.tagTypeService.getAll();
+        const tagTypes = await this.tagTypeService.getAllWithUsage(
+            extractUserId(req),
+        );
         res.json({ version, tagTypes });
     }
 

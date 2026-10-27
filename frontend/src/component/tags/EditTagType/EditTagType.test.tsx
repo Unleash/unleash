@@ -8,9 +8,6 @@ import EditTagType from './EditTagType.tsx';
 const server = testServerSetup();
 
 test('shows the values of the tag type', async () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { tagManagementViaUi: true },
-    });
     testServerRoute(server, '/api/admin/tag-types/team', {
         tagType: { name: 'team', description: '' },
     });

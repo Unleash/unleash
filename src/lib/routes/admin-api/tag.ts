@@ -29,10 +29,8 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses.js';
-import type { IFlagResolver } from '../../types/index.js';
 import type { WithTransactional } from '../../db/transaction.js';
 import type { CreateTagSchema, RenameTagSchema } from '../../openapi/index.js';
-import { requireFeatureEnabled } from '../../middleware/conditional-middleware.js';
 
 const version = 1;
 
@@ -40,8 +38,6 @@ class TagController extends Controller {
     private tagService: WithTransactional<TagService>;
 
     private openApiService: OpenApiService;
-
-    private flagResolver: IFlagResolver;
 
     constructor(
         config: IUnleashConfig,
@@ -53,7 +49,6 @@ class TagController extends Controller {
         super(config);
         this.tagService = transactionalTagService;
         this.openApiService = openApiService;
-        this.flagResolver = config.flagResolver;
 
         this.route({
             method: 'get',
@@ -146,13 +141,9 @@ class TagController extends Controller {
             // to edit. Deleting can only remove a tag from them.
             permission: UPDATE_TAG_TYPE,
             middleware: [
-                requireFeatureEnabled(
-                    config.flagResolver,
-                    'tagManagementViaUi',
-                ),
                 openApiService.validPath({
                     tags: ['Tags'],
-                    release: { alpha: true },
+                    release: { beta: '8.3.0' },
                     operationId: 'renameTag',
                     summary: 'Rename a tag.',
                     description:

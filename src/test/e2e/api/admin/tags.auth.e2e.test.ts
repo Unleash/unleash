@@ -18,17 +18,7 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('tag_api_auth_serial', getLogger);
-    app = await setupAppWithAuth(
-        db.stores,
-        {
-            experimental: {
-                flags: {
-                    tagManagementViaUi: true,
-                },
-            },
-        },
-        db.rawDatabase,
-    );
+    app = await setupAppWithAuth(db.stores, {}, db.rawDatabase);
 });
 
 afterAll(async () => {

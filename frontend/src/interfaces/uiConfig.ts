@@ -104,7 +104,6 @@ export type UiFlags = {
     helpMenuRelocationHint?: boolean;
     ipConstraintOperator?: boolean;
     githubIntegration?: boolean;
-    tagManagementViaUi?: boolean;
     integrationParamKvpEditor?: boolean;
     perFlagLifetime?: boolean;
     sessionTimeouts?: boolean;

@@ -22,7 +22,6 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
-                    tagManagementViaUi: true,
                 },
             },
         },
@@ -155,11 +154,6 @@ describe('with an admin API token', () => {
             {
                 enterpriseVersion: '5.3.0',
                 ui: { environment: 'Enterprise' },
-                experimental: {
-                    flags: {
-                        tagManagementViaUi: true,
-                    },
-                },
             },
             db.rawDatabase,
         );

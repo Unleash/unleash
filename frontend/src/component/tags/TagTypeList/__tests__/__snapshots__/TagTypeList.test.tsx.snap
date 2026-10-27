@@ -162,6 +162,124 @@ exports[`renders an empty list correctly 1`] = `
                 </button>
               </th>
               <th
+                class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium mui-aoexvr-MuiTableCell-root"
+                scope="col"
+              >
+                <button
+                  aria-label=""
+                  class="mui-6ml68f"
+                  data-mui-internal-clone-element="true"
+                  type="button"
+                >
+                  <span
+                    aria-hidden="true"
+                    class="mui-15yxmxx"
+                    style="justify-content: center; text-align: center;"
+                  >
+                    <span
+                      class="mui-1w3kvnb"
+                      data-text="Used in"
+                      tabindex="-1"
+                    >
+                      Used in
+                    </span>
+                    <svg
+                      aria-hidden="true"
+                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit hover-only mui-1wcp32s-MuiSvgIcon-root"
+                      data-testid="UnfoldMoreOutlinedIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"
+                      />
+                    </svg>
+                  </span>
+                  <span
+                    class="mui-y8b3t8"
+                    style="justify-content: center; text-align: center;"
+                  >
+                    <span
+                      tabindex="-1"
+                    >
+                      <span>
+                        Used in
+                      </span>
+                    </span>
+                    <svg
+                      aria-hidden="true"
+                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit sort-arrow hover-only mui-1wcp32s-MuiSvgIcon-root"
+                      data-testid="UnfoldMoreOutlinedIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </th>
+              <th
+                class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium mui-aoexvr-MuiTableCell-root"
+                scope="col"
+              >
+                <button
+                  aria-label=""
+                  class="mui-6ml68f"
+                  data-mui-internal-clone-element="true"
+                  type="button"
+                >
+                  <span
+                    aria-hidden="true"
+                    class="mui-15yxmxx"
+                    style="justify-content: center; text-align: center;"
+                  >
+                    <span
+                      class="mui-1w3kvnb"
+                      data-text="Tag values"
+                      tabindex="-1"
+                    >
+                      Tag values
+                    </span>
+                    <svg
+                      aria-hidden="true"
+                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit hover-only mui-1wcp32s-MuiSvgIcon-root"
+                      data-testid="UnfoldMoreOutlinedIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"
+                      />
+                    </svg>
+                  </span>
+                  <span
+                    class="mui-y8b3t8"
+                    style="justify-content: center; text-align: center;"
+                  >
+                    <span
+                      tabindex="-1"
+                    >
+                      <span>
+                        Tag values
+                      </span>
+                    </span>
+                    <svg
+                      aria-hidden="true"
+                      class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit sort-arrow hover-only mui-1wcp32s-MuiSvgIcon-root"
+                      data-testid="UnfoldMoreOutlinedIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M12 5.83 15.17 9l1.41-1.41L12 3 7.41 7.59 8.83 9zm0 12.34L8.83 15l-1.41 1.41L12 21l4.59-4.59L15.17 15z"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </th>
+              <th
                 class="MuiTableCell-root MuiTableCell-head MuiTableCell-sizeMedium mui-v5ykp5-MuiTableCell-root"
                 scope="col"
                 style="width: 150px;"
@@ -236,6 +354,12 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
+              />
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
+              />
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
               >
                 <div
                   class="MuiBox-root mui-1bvc4cc skeleton"
@@ -245,10 +369,10 @@ exports[`renders an empty list correctly 1`] = `
                     aria-label="Edit tag type"
                     class=""
                     data-mui-internal-clone-element="true"
-                    id="_r_6_"
+                    id="_r_8_"
                   >
                     <button
-                      aria-labelledby="_r_6_"
+                      aria-labelledby="_r_8_"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
@@ -270,10 +394,10 @@ exports[`renders an empty list correctly 1`] = `
                     aria-label="Delete tag type"
                     class=""
                     data-mui-internal-clone-element="true"
-                    id="_r_9_"
+                    id="_r_b_"
                   >
                     <button
-                      aria-labelledby="_r_9_"
+                      aria-labelledby="_r_b_"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
@@ -353,6 +477,12 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
+              />
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
+              />
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
               >
                 <div
                   class="MuiBox-root mui-1bvc4cc skeleton"
@@ -362,10 +492,10 @@ exports[`renders an empty list correctly 1`] = `
                     aria-label="Edit tag type"
                     class=""
                     data-mui-internal-clone-element="true"
-                    id="_r_e_"
+                    id="_r_g_"
                   >
                     <button
-                      aria-labelledby="_r_e_"
+                      aria-labelledby="_r_g_"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
@@ -387,10 +517,10 @@ exports[`renders an empty list correctly 1`] = `
                     aria-label="Delete tag type"
                     class=""
                     data-mui-internal-clone-element="true"
-                    id="_r_h_"
+                    id="_r_j_"
                   >
                     <button
-                      aria-labelledby="_r_h_"
+                      aria-labelledby="_r_j_"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
@@ -470,6 +600,12 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
+              />
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
+              />
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
               >
                 <div
                   class="MuiBox-root mui-1bvc4cc skeleton"
@@ -479,10 +615,10 @@ exports[`renders an empty list correctly 1`] = `
                     aria-label="Edit tag type"
                     class=""
                     data-mui-internal-clone-element="true"
-                    id="_r_m_"
+                    id="_r_o_"
                   >
                     <button
-                      aria-labelledby="_r_m_"
+                      aria-labelledby="_r_o_"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
@@ -504,10 +640,10 @@ exports[`renders an empty list correctly 1`] = `
                     aria-label="Delete tag type"
                     class=""
                     data-mui-internal-clone-element="true"
-                    id="_r_p_"
+                    id="_r_r_"
                   >
                     <button
-                      aria-labelledby="_r_p_"
+                      aria-labelledby="_r_r_"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
@@ -587,6 +723,12 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
+              />
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
+              />
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
               >
                 <div
                   class="MuiBox-root mui-1bvc4cc skeleton"
@@ -596,10 +738,10 @@ exports[`renders an empty list correctly 1`] = `
                     aria-label="Edit tag type"
                     class=""
                     data-mui-internal-clone-element="true"
-                    id="_r_u_"
+                    id="_r_10_"
                   >
                     <button
-                      aria-labelledby="_r_u_"
+                      aria-labelledby="_r_10_"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
@@ -621,10 +763,10 @@ exports[`renders an empty list correctly 1`] = `
                     aria-label="Delete tag type"
                     class=""
                     data-mui-internal-clone-element="true"
-                    id="_r_11_"
+                    id="_r_13_"
                   >
                     <button
-                      aria-labelledby="_r_11_"
+                      aria-labelledby="_r_13_"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
@@ -704,6 +846,12 @@ exports[`renders an empty list correctly 1`] = `
               </td>
               <td
                 class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
+              />
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
+              />
+              <td
+                class="MuiTableCell-root MuiTableCell-body MuiTableCell-alignCenter MuiTableCell-sizeMedium mui-k16mq8-MuiTableCell-root"
               >
                 <div
                   class="MuiBox-root mui-1bvc4cc skeleton"
@@ -713,10 +861,10 @@ exports[`renders an empty list correctly 1`] = `
                     aria-label="Edit tag type"
                     class=""
                     data-mui-internal-clone-element="true"
-                    id="_r_16_"
+                    id="_r_18_"
                   >
                     <button
-                      aria-labelledby="_r_16_"
+                      aria-labelledby="_r_18_"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"
@@ -738,10 +886,10 @@ exports[`renders an empty list correctly 1`] = `
                     aria-label="Delete tag type"
                     class=""
                     data-mui-internal-clone-element="true"
-                    id="_r_19_"
+                    id="_r_1b_"
                   >
                     <button
-                      aria-labelledby="_r_19_"
+                      aria-labelledby="_r_1b_"
                       class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge mui-1snxgz0-MuiButtonBase-root-MuiIconButton-root"
                       tabindex="0"
                       type="button"

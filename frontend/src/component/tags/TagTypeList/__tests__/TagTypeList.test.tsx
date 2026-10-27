@@ -36,9 +36,6 @@ const openDeleteDialog = async (usage: {
     usedInProjects: number;
     valueCount: number;
 }) => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { tagManagementViaUi: true },
-    });
     testServerRoute(server, '/api/admin/tag-types', {
         version: 1,
         tagTypes: [{ name: 'team', ...usage }],

@@ -62,7 +62,6 @@ process.nextTick(async () => {
                         helpMenuRelocationHint: true,
                         ipConstraintOperator: true,
                         githubIntegration: true,
-                        tagManagementViaUi: true,
                         integrationParamKvpEditor: true,
                         singlePageStrategyForm: true,
                         feedbackModule: true,

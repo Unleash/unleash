@@ -78,7 +78,6 @@ export type IFlagKey =
     | 'helpMenuRelocationHint'
     | 'ipConstraintOperator'
     | 'githubIntegration'
-    | 'tagManagementViaUi'
     | 'integrationParamKvpEditor'
     | 'perFlagLifetime'
     | 'payloadSchemas'
@@ -353,10 +352,6 @@ const flags: IFlags = {
     ),
     githubIntegration: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_GITHUB_INTEGRATION,
-        false,
-    ),
-    tagManagementViaUi: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_TAG_MANAGEMENT_VIA_UI,
         false,
     ),
     integrationParamKvpEditor: parseEnvVarBoolean(

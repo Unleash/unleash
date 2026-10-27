@@ -63,7 +63,7 @@ describe('SurveyCard', () => {
         expect(screen.getByLabelText('Anything else?')).toBeInTheDocument();
     });
 
-    it('holds back Submit, explaining why, until required questions are answered', async () => {
+    it('holds back Submit until required questions are answered', async () => {
         renderCard();
         const submit = screen.getByRole('button', { name: 'Submit' });
 
@@ -71,16 +71,12 @@ describe('SurveyCard', () => {
         submit.focus();
         await userEvent.keyboard('{Enter}');
         expect(submit).toHaveAttribute('aria-disabled', 'true');
-        expect(submit).toHaveAccessibleDescription(
-            'Answer the questions marked * to submit.',
-        );
         expect(
             screen.queryByText('Thanks for your feedback!'),
         ).not.toBeInTheDocument();
 
         fireEvent.click(screen.getByRole('radio', { name: '4 Stars' }));
         expect(submit).not.toHaveAttribute('aria-disabled');
-        expect(submit).not.toHaveAccessibleDescription();
     });
 
     it('submits trimmed answers and shows the thanks state', async () => {

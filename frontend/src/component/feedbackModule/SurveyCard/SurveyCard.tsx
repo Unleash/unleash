@@ -2,7 +2,6 @@ import {
     type SyntheticEvent,
     useEffect,
     useEffectEvent,
-    useId,
     useRef,
     useState,
 } from 'react';
@@ -122,7 +121,6 @@ interface SurveyFormProps {
 
 const SurveyForm = ({ survey, onSubmit }: SurveyFormProps) => {
     const [answers, setAnswers] = useState<SurveyAnswers>({});
-    const submitHintId = useId();
 
     const canSubmit = survey.questions.every(
         (question) => !question.required || isAnswered(answers[question.id]),
@@ -167,22 +165,12 @@ const SurveyForm = ({ survey, onSubmit }: SurveyFormProps) => {
                         onChange={(value) => setAnswer(question.id, value)}
                     />
                 ))}
-                {canSubmit ? null : (
-                    <Typography
-                        id={submitHintId}
-                        variant='body2'
-                        color='text.secondary'
-                    >
-                        Answer the questions marked * to submit.
-                    </Typography>
-                )}
                 {/* with native `disabled` the submit button is not reachable by keyboard */}
                 <Button
                     type='submit'
                     variant='contained'
                     color='primary'
                     aria-disabled={canSubmit ? undefined : true}
-                    aria-describedby={canSubmit ? undefined : submitHintId}
                     className={canSubmit ? undefined : 'Mui-disabled'}
                 >
                     Submit

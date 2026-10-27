@@ -143,7 +143,7 @@ class TagController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Tags'],
-                    release: { beta: '8.3.0' },
+                    release: { stable: '8.3.0' },
                     operationId: 'renameTag',
                     summary: 'Rename a tag.',
                     description:

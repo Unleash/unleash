@@ -147,7 +147,7 @@ class TagTypeController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Tags'],
-                    release: { beta: '8.3.0' },
+                    release: { stable: '8.3.0' },
                     operationId: 'getTagValuesWithUsage',
                     summary: 'Get the values of a tag type with their usage',
                     description:

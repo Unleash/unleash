@@ -5,13 +5,7 @@ import {
     isStringOperator,
     type Operator,
 } from 'constants/operators';
-import {
-    useCallback,
-    useRef,
-    useState,
-    type ComponentProps,
-    type FC,
-} from 'react';
+import { useCallback, useRef, useState, type FC } from 'react';
 import { operatorsForContext } from 'utils/operatorsForContext';
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
@@ -35,9 +29,7 @@ import {
     isCidrConstraint,
     isDateConstraint,
     isMultiValueConstraint,
-    isNumberConstraint,
     isRegexConstraint,
-    isSemVerConstraint,
 } from './useEditableConstraint/editable-constraint-type.ts';
 import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator.ts';
 import { createContextFieldOptions } from './createContextFieldOptions.ts';
@@ -45,9 +37,8 @@ import { ContextFieldSelect } from './ContextFieldSelect.tsx';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
 import { AddRegexValueEditor } from './AddRegexValueEditor/AddRegexValueEditor.tsx';
 import { CidrSdkRequirements } from './CidrSdkRequirements.tsx';
-import { CidrTargetRange, formatTargetRange } from './CidrTargetRange.tsx';
+import { formatTargetRange } from './CidrTargetRange.tsx';
 import { getTargetRange } from './useEditableConstraint/ip-address.ts';
-import { parseParameterStrings } from 'utils/parseParameter';
 
 const invertedDisabledMessages: Partial<Record<Operator, string>> = {
     REGEX: 'The REGEX operator does not support inversion',
@@ -122,49 +113,6 @@ const ButtonPlaceholder = styled('div')(({ theme }) => ({
     width: theme.spacing(2),
 }));
 
-type AddValueInlineVariant = Pick<
-    ComponentProps<typeof AddValueInline>,
-    'hasValues' | 'parseInput' | 'helpText' | 'htmlInputProps' | 'ValuePreview'
->;
-
-const singleValueParseInput = (raw: string) => [raw];
-
-const getAddValueInlineVariant = (
-    localConstraint: EditableConstraintType,
-    hasValues: boolean,
-): AddValueInlineVariant => {
-    if (isSemVerConstraint(localConstraint)) {
-        return {
-            hasValues: false,
-            parseInput: singleValueParseInput,
-            helpText:
-                'A semver value should be of the format X.Y.Z, optionally with a prerelease and/or build suffix, such as 1.2.3-beta.1+build.5',
-        };
-    }
-    if (isCidrConstraint(localConstraint)) {
-        return {
-            hasValues,
-            parseInput: parseParameterStrings,
-            helpText:
-                'IP addresses or CIDR ranges, for example 192.168.1.1 or 10.0.0.0/8',
-            ValuePreview: CidrTargetRange,
-        };
-    }
-    if (isNumberConstraint(localConstraint)) {
-        return {
-            hasValues: false,
-            parseInput: singleValueParseInput,
-            htmlInputProps: { inputMode: 'decimal' },
-            helpText: 'Add a single number',
-        };
-    }
-    return {
-        hasValues,
-        parseInput: parseParameterStrings,
-        helpText: 'Maximum 100 char length per value',
-    };
-};
-
 const TopRowInput: FC<{
     addValues: (value: string | string[]) => void;
     localConstraint: EditableConstraintType;
@@ -180,9 +128,7 @@ const TopRowInput: FC<{
     editingOpen,
     setEditingOpen,
 }) => {
-    const hasValues =
-        isMultiValueConstraint(localConstraint) &&
-        localConstraint.values.size > 0;
+    const [draftValue, setDraftValue] = useState('');
 
     if (isDateConstraint(localConstraint)) {
         return (
@@ -208,15 +154,28 @@ const TopRowInput: FC<{
         );
     }
 
+    const hasValues =
+        isMultiValueConstraint(localConstraint) &&
+        localConstraint.values.size > 0;
+
     return (
-        <AddValueInline
-            key={localConstraint.operator}
-            ref={addValuesButtonRef}
-            validator={validator}
-            onAddValues={addValues}
-            multiValue={isMultiValueConstraint(localConstraint)}
-            {...getAddValueInlineVariant(localConstraint, hasValues)}
-        />
+        <div ref={addValuesButtonRef}>
+            {editingOpen ? (
+                <AddValueInline
+                    localConstraint={localConstraint}
+                    validator={validator}
+                    onAddValues={addValues}
+                    value={draftValue}
+                    onChange={setDraftValue}
+                    onClose={() => setEditingOpen(false)}
+                />
+            ) : (
+                <AddValueButton
+                    hasValues={hasValues}
+                    onClick={() => setEditingOpen(true)}
+                />
+            )}
+        </div>
     );
 };
 
@@ -441,6 +400,7 @@ export const EditableConstraint: FC<Props> = ({
                     >
                         {legalValueData ? null : (
                             <TopRowInput
+                                key={operator}
                                 localConstraint={localConstraint}
                                 addValues={addValues}
                                 validator={validator}

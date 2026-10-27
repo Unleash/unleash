@@ -1647,6 +1647,7 @@ export * from './surveyQuestionSchemaOneOfThree.ts';
 export * from './surveyQuestionSchemaOneOfThreeType.ts';
 export * from './surveyQuestionSchemaOneOfType.ts';
 export * from './surveyResponseSchema.ts';
+export * from './surveyResponsesPageSchema.ts';
 export * from './surveyResponsesSchema.ts';
 export * from './surveyResponsesSchemaSurvey.ts';
 export * from './tagsBulkAddSchema.ts';

@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SurveyResponseSchema } from './surveyResponseSchema.ts';
+import type { SurveyResponsesPageSchema } from './surveyResponsesPageSchema.ts';
 import type { SurveyResponsesSchemaSurvey } from './surveyResponsesSchemaSurvey.ts';
 
 /**
@@ -12,10 +12,9 @@ import type { SurveyResponsesSchemaSurvey } from './surveyResponsesSchemaSurvey.
 export interface SurveyResponsesSchema {
     /** Whether the flag that delivers the survey is archived. */
     archived: boolean;
+    page: SurveyResponsesPageSchema;
     /** The project of the flag that delivers the survey. */
     project: string;
-    /** The responses matching the filters, newest first. */
-    responses: SurveyResponseSchema[];
     /**
      * The current definition of the survey, read from the variant payload of the flag. Null when no strategy variant holds a valid survey definition.
      * @nullable

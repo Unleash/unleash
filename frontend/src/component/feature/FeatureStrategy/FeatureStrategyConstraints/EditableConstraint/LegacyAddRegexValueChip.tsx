@@ -1,7 +1,7 @@
 import Add from '@mui/icons-material/Add';
 import { styled } from '@mui/material';
 import type { FC } from 'react';
-import { ValueChip } from './ValueList.tsx';
+import { ValueChip } from './LegacyValueChip.tsx';
 import type { ConstraintValidatorOutput } from './ConstraintValidatorOutput.ts';
 
 // No, escape handling doesn't work correctly with chips and popovers in MUI v5.

@@ -8,7 +8,7 @@ import {
     useState,
 } from 'react';
 import { parseParameterStrings } from 'utils/parseParameter';
-import { ValueChip } from './ValueList.tsx';
+import { ValueChip } from './LegacyValueChip.tsx';
 import { AddValuesPopover, type OnAddActions } from './AddValuesPopover.tsx';
 import type { ConstraintValidatorOutput } from './ConstraintValidatorOutput.ts';
 

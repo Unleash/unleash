@@ -2,6 +2,800 @@
 
 All notable changes to this project will be documented in this file.
 
+## [8.3.0] - 2026-10-27
+
+### Bug Fixes
+
+- Hide SSO options on the invitation screen ([#12622](https://github.com/Unleash/unleash/issues/12622))
+
+- Make client registration writes resilient to deadlocks ([#12619](https://github.com/Unleash/unleash/issues/12619))
+
+- Show more honest graphs / align time series
+
+- Avoid cleaning the negative cache
+
+- Harden the signup endpoint
+
+- Help announcement colors
+
+- Count every environment toggle attempt, not just confirmed dialogs
+
+- Apply the OSS default-project rule in  project read model
+
+- Clean up v2 token clients
+
+- Apply the OSS default-project rule to personal dashboard flags
+
+- New strategies flow - apply ui feedback
+
+- Reject duplicate strategy parameter names ([#12632](https://github.com/Unleash/unleash/issues/12632))
+
+- Cross-project IDOR in feature links (GHSA-65r2-v52f-778r)
+
+- SSRF guard bypass via IPv6 transition addresses
+
+- ReDoS via feature-naming regex
+
+- Race condition in password-reset/invite token allows single-use bypass and silent password overwrite
+
+- Clear announcer timeouts
+
+- Small playground ui issues
+
+- Reflected XSS in admin email-preview endpoint (GHSA-5c47-jgc3-3gm4)
+
+- Flag env name typo
+
+- Update regex SDK requirements
+
+- Playground sidebar minor fixes
+
+- Evaluate "parent must be off" dependencies like the SDK
+
+- Update dependency ip-address to v10.5.1 [security] ([#12686](https://github.com/Unleash/unleash/issues/12686))
+
+- Keep line breaks in string variant payloads
+
+- Update dependency ip-address to v10.7.1 [security] ([#12694](https://github.com/Unleash/unleash/issues/12694))
+
+- Feature lifecycle project belonging check
+
+- Remove duplicated description
+
+- Strategy env check
+
+- Segment strategy project and env check
+
+- Update dependency ip-address to v10.7.2 ([#12702](https://github.com/Unleash/unleash/issues/12702))
+
+- Update dependency @fern-api/search-widget to v0.5.6 ([#12701](https://github.com/Unleash/unleash/issues/12701))
+
+- Return sensitive fields as masked on update/create
+
+- Show the safeguard trigger window on closed change requests
+
+- Drain scheduled jobs before database shutdown
+
+- Use Dockerfile Node version by default in Bake ([#12713](https://github.com/Unleash/unleash/issues/12713))
+
+- CSP rules can't depend on the dynamic flag
+
+- Require frontend E2E success in PR build gate ([#12715](https://github.com/Unleash/unleash/issues/12715))
+
+- Remove usage of node:util in the frontend app
+
+- Force OIDC re-auth behind sessionTimeouts (EG-4756)
+
+- Hydrate streaming state and revision from one database snapshot
+
+- Don't force ChangeRequestTable width to avoid breaking layout on smaller breakpoints
+
+- Adjust CreateProjectDialog modal sidebar height regardless of content scroll
+
+- Disable keyboard shortcut when its triggers are hidden, resolve modifiers exactly
+
+- Flag name placeholder shows the project's naming example
+
+- Document the empty response of the environment toggle endpoints
+
+- Add `endSession()` and call it from six different modules
+
+- Tell a missing session start from an unreadable one 
+
+- Incorrect bulk-tag assignment
+
+- Silent errors on assigning single-emoji tag
+
+- Reviewer button layout
+
+- Stop `useLocalStorageState` from writing outdated values on re-render
+
+- Don't render an empty div if there is no limit warning
+
+- Compare users.updated_at at ms precision in user sync
+
+- Say when a logout was the session's timeout
+
+- Start recurring interval after the initial jitter
+
+- Clean up never-seen system API tokens
+
+- Reduce the focus outline on Radio, Checkbox and Switch controls
+
+- Initialize revision baseline alongside frontend cache warming
+
+- Exclude potentially-stale and lifecycle events from configuration revisions
+
+- Share token validation caches with Edge
+
+- Remove RecentlyUsedSegments from new Strategy form
+
+- Disable Modal focus trap when Unleash Toolbar is enabled
+
+- Compact dialog header and truncate long project names
+
+- Make chip text selectable on constraint editor
+
+- Enforce hard max-age regardless of the sessionTimeouts flag
+
+- Use UTC dates for the default event log range ([#12731](https://github.com/Unleash/unleash/issues/12731))
+
+- Write flag events when an environment is removed from a project
+
+- [**breaking**] Remove administrative metadata from Client API configuration
+
+- Skip existing links and roll back failed startup environment overrides
+
+- Only compare strategies for the stale data dialog
+
+- Add max height and dismiss button to the stale data dialog
+
+- Await segment insertion instead of fire and forget
+
+- Wrong tooltip title for link actions
+
+- Api token list permission checks
+
+- Does no longer keep MarkCompletedDialogue state between flags
+
+- Use author's name in Change Request description
+
+- Bump Node to 24.22.1 / 22.23.4 to distrust compromised eMudhra CAs
+
+- Fail add and update changes that can't apply
+
+- Keep shared delta cursor when hydrating another environment
+
+- Build SelectPopover keyboard handling on top of MUI's combobox
+
+- Fail v2 token expiry update and delete when the transaction rolls back
+
+- Set default idle timeout to 15 minutes
+
+- Extract the user id using the helper
+
+- Save variants and their events in one transaction
+
+- Remove discrepancies between Chips in Strategy form
+
+- Stop prototype pollution by not accepting JS reserved property names
+
+
+### Documentation
+
+- Record how to track user journeys
+
+
+### Features
+
+- Simpler strategy setup - part 4 - more strategies dropdown menu
+
+- Allow uxtweak survey submissions through the CSP
+
+- Track API token and environment journeys
+
+- Moves Addon project filter from frontend to backend
+
+- Show current exposures count indicator next to automation
+
+- Adds user-agent to audit events for user-initiated events only - EG-4693
+
+- Displays all project scoped integrations and makes UI similar to global Integrations page
+
+- Hash email in flight recorder not unleash
+
+- Batch same user expiry tokens in one email
+
+- Simpler strategy setup - part 5c - template card and template screen
+
+- Simpler strategy setup - part 8 - icons from the design
+
+- Add highlight help
+
+- Let Dialogue own the confirm journey via onConfirm
+
+- Track strategy delete and enable/disable
+
+- Show api token exact last seen time
+
+- Added rate limiting for Admin API
+
+- Add UPDATE_PROJECT_ADDON project permission
+
+- Track project actions journeys
+
+- Track project flags list navigation
+
+- Track change request journeys
+
+- Track favorites across all surfaces
+
+- Mark-completed lifecycle journey
+
+- Track event log gestures
+
+- Track header actions and exports
+
+- Readies addon service layer for project addon route
+
+- Add display type scale + apply to large content numbers
+
+- Page headers use the new h1/h2 scale
+
+- Move /api/admin/flag-creators to beta
+
+- Simpler strategy setup - part 6 - tracking
+
+- Support whitespaces in playground multi values
+
+- Adds project scoped addon endpoints/controller
+
+- Track personal dashboard section toggles
+
+- Modifies UI to let project owner modify project integrations
+
+- IN_CIDR operator support
+
+- Add a flag for IP constraints
+
+- Ingest context enricher metrics
+
+- Add the IN_CIDR operator to the constraint editor
+
+- Show SDK version warning for IN_CIDR operator
+
+- Hashed email targeting
+
+- Add playground to sidebar on flag page
+
+- Playground ip operator
+
+- Show the target IP range for CIDR values
+
+- Disable legal values which fail validation
+
+- Unleash Intro
+
+- Onboarding checkist to help the first admin
+
+- Add `lifetime_days` column to features
+
+- Add `tagManagementViaUi` feature flag
+
+- Read and write `lifetime_days` on feature toggle store
+
+- Update `features_view` to include feature `lifetime_days`
+
+- Label the ToggleCard switch with its title
+
+- Update feature Joi schema to include lifetime
+
+- Implement usage and counts for the tag types API
+
+- Show user-defined key-value pairs in integration form
+
+- Add feedback opt-in toggle to the admin page
+
+- Read and persist feedbackOptIn via the settings API
+
+- Give flag own lifetime precedence for potentially stale computation
+
+- Allow end users to send objects as parameter values to integration API
+
+- Update snow addon to allow it to accept and process kvps.
+
+- Prepare query for the upcoming tag values usage API
+
+- Add remoteMcpFeedback flag gating the feedback opt-in
+
+- Add `GET /api/admin/tag-types/:name/values` endpoint
+
+- Tag rename API
+
+- Render tag values
+
+- Add optional idle timeout settings, behind a flag - EG-4704
+
+- Creates initial bare-bones setup of GitHub Integration
+
+- Add browser and viewport width to flight recorder events
+
+- StartSession() creates every logged-in session - EG-4707
+
+- Enforce session max-age and idle timeout server-side - EG-4705 EG-4706
+
+- Enable remote mcp feedback by default
+
+- Tag types usage
+
+- Move tag type form buttons above the values table
+
+- Add viewport height to flight recorder events
+
+- Report the session deadline internally - EG-4709
+
+- Add the keep-alive endpoint - EG-4709
+
+- Report user activity from the admin UI - EG-4709
+
+- Left-align the hide/show environments button
+
+- Delete tag values from the UI
+
+- Add support for array and object-array parameter types
+
+- Rename tag values from the UI
+
+- Feature overview description expand/collapse
+
+- Feature overview: merge Links into Details
+
+- Gh-integration frontend mapping of appname to repos
+
+- Payload schema endpoint
+
+- Payload schema validation
+
+- More descriptive message for unsupported schema
+
+- Payload schema access check
+
+- Add feature schema modal
+
+- Payload schema store
+
+- Merge tags on rename
+
+- Add new bare create flag dialog with expected lifetime
+
+- Predefined schema list
+
+- New experimental install type that can be used by addon scheme
+
+- Add `expectedLifetimeEndsAt` to admin GET feature payload
+
+- Add custom date picking option for flag expected lifetime
+
+- Add frontend validation for renaming tags
+
+- New invite signup page behind newInviteFlow flag ([#12730](https://github.com/Unleash/unleash/issues/12730))
+
+- Add expected lifetime and permanent flag cleanup reminders
+
+- Reorganize the form into sections
+
+- Core projects listing
+
+- Define a frontend model for a survey
+
+- Merge Segments and Constraints into Target audience
+
+- Core project features listing
+
+- Segment Section design updates
+
+- Add naming pattern hint in new create feature dialog
+
+- Hooks for creating a survey
+
+- Store feedback survey responses
+
+- Show customer logos on invite page panel ([#12738](https://github.com/Unleash/unleash/issues/12738))
+
+- Bulk deletion of users based on inactivity
+
+- Add optional settings with impression data to new create feature dialog
+
+- Create survey component
+
+- Set password step in new invite signup flow ([#12739](https://github.com/Unleash/unleash/issues/12739))
+
+- Manual mapping of github repos
+
+- Survey question fields
+
+- Survey card
+
+- Define a feature flag to kill single eval endpoint
+
+- Add support for single flag evaluations
+
+- Wire up the new read model in the playground service
+
+- Log in automatically after setting password in new invite flow ([#12740](https://github.com/Unleash/unleash/issues/12740))
+
+- Add multi-choice option to the survey
+
+- Add tags section to optional settings in new create feature dialog
+
+- Generate Orval types for survey responses
+
+- New segment selection box
+
+- Move Segment preview to tooltip
+
+- Final setup of Install & connect using app manifest flow
+
+- Suppression logic for surveys
+
+- Constraint section redesign
+
+- Survey delivery
+
+- Accept survey responses on the public /feedback endpoint
+
+- New addon definition properties that allows pre-selecting and hiding events and/or environments.
+
+- Add tracking to new create feature dialog
+
+- Add submit url to the survey configuration
+
+- Require environmentId when submitting survey responses
+
+- Add environmentId field to the creator
+
+- Update context field selector design
+
+- Add survey responses endpoint returning not found
+
+- Per-instance bucket offset for user sync job
+
+- Input field to configure submit URL
+
+- Survey draft model
+
+- Survey question cards for rating and free-text questions
+
+- Multiple choice options in the survey question card
+
+- Update constraint operator selector design
+
+- Replace the survey JSON editor with the question builder
+
+- Move focus to the first invalid survey field on submit
+
+- Update 'Match'/'Does not match' toggle design
+
+- Release editable instance name on cloud
+
+- Add `*.app.unleash-hosted` to CSP-allowed urls
+
+- Update Case-sensitive toggle design
+
+- 'Add constraint' field selection popover
+
+- Add legal values count into field selection popover
+
+- Update rollout slider in new strategy form accordion
+
+- Add advanced settings to new flexible strategy
+
+- New Constraint value input UX
+
+- Pagination in list feedback responses API
+
+- Add disabled option support to SelectPopover
+
+- Add total, offset and limit to list responses api
+
+- Add variants empty state in new strategy form
+
+
+### Miscellaneous Tasks
+
+- Revert rate limit search features and add proper types
+
+- Sync Unleash/unleash main
+
+- Sync Unleash/unleash main
+
+- Sync Unleash/unleash main
+
+- Sync Unleash/unleash main
+
+- Sync Unleash/unleash main
+
+- Sync Unleash/unleash main
+
+- New flag editableInstanceName
+
+- Clamp exposure valure for automations
+
+- Update Admin settings -> Network -> Traffic graph to match analytics
+
+- Sync Unleash/unleash main
+
+- New admin instance name page placeholder
+
+- Sync Unleash/unleash main
+
+- Remove unused newProfileDropdown
+
+- Clean up `topLabelInputs` flag
+
+- Auto-focus search on open
+
+- Add playgroundperflag feature flag
+
+- Migrate existing strategy-related tracking
+
+- Sync Unleash/unleash main
+
+- Name journey types verb-object, kebab-case all events
+
+- Deprecate unused fields in project schema
+
+- Count conflicting change requests on edit-strategy
+
+- Drop the customer names and ids still sent on rows
+
+- Rename local hooks that shadow useTracking
+
+- Refactor `PageHeader` props
+
+- Show unleash instance name
+
+- Ran orval, generating models for new project addon endpoints
+
+- Deprecate ConditionallyRender
+
+- Edit instance name
+
+- Remove usersTabsUI flag ([#12676](https://github.com/Unleash/unleash/issues/12676))
+
+- Add event log recort for changed cloud settings
+
+- Move default strategy helpers out of the playground evaluator
+
+- Adds githubIntegration flag
+
+- Clean up flagStatusTooltips flag
+
+- Remove unused evaluator options and providers
+
+- Correct typo in featureTypeSchema
+
+- Add newUserInviteDialog flag
+
+- Add feature flag for kvp editing in the front end.
+
+- Add perFlagLifetime flag
+
+- Regenerate orval (for tags project + catch up)
+
+- Bring back the border of the strategy flow
+
+- Rename newUserInviteDialog flag to newUserInviteFlow
+
+- Add tracking
+
+- `simplerStrategySetup` flag clean up - part 1 - move tests
+
+- SimplerStrategySetup flag clean up - part 2 - remove the flag
+
+- `simplerStrategySetup` flag clean up - part 3 - delete unused code
+
+- `simplerStrategySetup` flag clean up - part 4 - drop unused options and move wizard components
+
+- Sync Unleash/unleash main
+
+- Remove Plausible tracking from the admin UI
+
+- Log docker logs on e2e test fail
+
+- Break out CreateFeatureDialog sidebar into reusable component
+
+- New invite button in header
+
+- Security maintenance
+
+- Fix pnpm in the frontend directory
+
+- Forbid Node.js builtin imports in frontend source
+
+- Clean up feature release plans leftovers
+
+- Add tracking for sorting tag types and tag value tables
+
+- Add singlePageStrategyForm flag
+
+- Remove the Plausible chart from impact metrics
+
+- Bump MUI to v9.4
+
+- Split out new Strategy form; rename existing to Legacy
+
+- Align the permissions for renaming and deleting
+
+- Flip cancel/save buttons in strategy edit/create dialog
+
+- Remove dead queryMissingTokens experimental flag ([#12729](https://github.com/Unleash/unleash/issues/12729))
+
+- Define a flag for feedback module
+
+- Split feature toggle create read type
+
+- Split FeatureStrategySegmentChip
+
+- Sync Unleash/unleash main
+
+- Add "in plain text" base component
+
+- Remove flag for secure account tokens
+
+- Remove legacy token cache after promise cache rollout
+
+- Remove secure token storage rollout flag
+
+- Clean up newUserInviteFlow
+
+- Fix font size and padding of plain text accordion
+
+- Split FeatureStrategyConstraints
+
+- Add feedbackModuleDisplaySurvey flag
+
+- Improve new create feature dialog
+
+- Add new dashboardV2 flag
+
+- Split ConstraintOperatorSelect and ToggleConstraintCaseSensitivity
+
+- Add basic strategy description to plain text description
+
+- Use a separate flag for controlling submit responses API
+
+- Split Regex and Date constraint value components
+
+- Add repositories prop to github addon and hide from integration setup
+
+- Use bulk insert for milestone strategy segments
+
+- Replace hand-rolled useId hook with React's version
+
+- Rate limit playground
+
+- Is supposed to improve text around github cleanup integration
+
+- Use radios for matches / does not match instead of toggle buttons
+
+- Rename `NewStrategyVariants` to `StrategyVariants`
+
+- Add variant description to plain text description
+
+- Remove deprecated IFeatureVariant in favor of VariantSchema
+
+- Remove flag for playground in flag page
+
+- Move single flag playground endpoint to beta
+
+- Remove "this is an experimental property" from strat-level variants
+
+- Always show remote MCP feedback toggle
+
+- Clean up `totalUsageMetrics` feature flag
+
+- Clean up `exposureBasedAutomation` feature flag
+
+- Remove `releaseTemplatesAutomations` flag
+
+- Remove the `tagManagementViaUi` flag
+
+- Mark tag management endpoints as stable in 8.3.0
+
+
+### Performance
+
+- Scope feature search metrics to requested page
+
+- Aggregate feature search tags after paging
+
+- Avoid OR-join on dependent_features in feature search ([#12624](https://github.com/Unleash/unleash/issues/12624))
+
+- Don't rerender ProjectFeatureToggles on every parent render
+
+- Cache serialized client-features response to cut cold-start memory ([#12741](https://github.com/Unleash/unleash/issues/12741))
+
+
+### Refactor
+
+- One bound useTracking hook, no dialog hook
+
+- Colour system cleanup — container recipe + palette semantics ([#12574](https://github.com/Unleash/unleash/issues/12574))
+
+- Simpler strategy setup - part 5b - extract useAddReleasePlan
+
+- Extract NoReleaseTemplatesMessage and ReleaseTemplateCard
+
+- UseTracking returns one callable per journey
+
+- Dialogue onSubmit union with required tracking
+
+- Cloud vs self-hosted endpoints 
+
+- Rename read model to validator
+
+- H3/h4/caption + body to 14px, replace h4 with overline
+
+- Get potentially stale count from the features table 
+
+- Reuse Node SDK for feature evaluation
+
+- Early return if flag is missing
+
+- Move save flow from toggle to admin page
+
+- Extract ToggleCard
+
+- Providers behind feature flags now declares it themselves, handled generically by addon-service
+
+- Extract shared validation patterns in addon creation/updates
+
+- Retire `newModalDesign` flag and default to new design
+
+- Split create feature dialog into legacy and new component
+
+- Removing extra dependencies
+
+- Rename EditPayloadSchema to PayloadSchemaSidebar
+
+- Make scheduler initial delay a named option
+
+- Move complex single-feature query into a new read model
+
+- Reduce load of e2e tests and relocate file
+
+- Rename MultiSelectPopover and extend with single selection and options grouping
+
+- SelectPopover values arity cleanup
+
+- Speed up search features query
+
+- Split SelectPopover into reusable elements
+
+- Better EditableConstraint / AddValueInline responsiblities split
+
+
+### Styling
+
+- Enforce useExhaustiveDependencies in IntegrationForm
+
+
+### Testing
+
+- Raise global vitest timeouts for the frontend suite ([#12623](https://github.com/Unleash/unleash/issues/12623))
+
+- Improved playground tests
+
+- Kvp impl in integration form
+
+- Prove the session timeouts against real Postgres - EG-4708
+
+- TestServerRoute can answer with an empty body
+
+- Wait for form saves to navigate back in e2e specs
+
+
 ## [8.2.0] - 2026-09-08
 
 ### Bug Fixes

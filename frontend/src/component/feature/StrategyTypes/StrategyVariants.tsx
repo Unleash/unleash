@@ -5,18 +5,9 @@ import type React from 'react';
 import { useEffect, useState } from 'react';
 import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
 import { WeightType } from '../../../constants/variantTypes.ts';
-import {
-    Box,
-    styled,
-    Typography,
-    useTheme,
-    Alert,
-    Button,
-} from '@mui/material';
+import { styled, useTheme, Button } from '@mui/material';
 import type { StrategyFormState } from 'interfaces/strategy';
 import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';
-import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { StrategyVariantsUpgradeAlert } from 'component/common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
 import { useEventTracker } from 'hooks/useEventTracker';
 import Add from '@mui/icons-material/Add';
 
@@ -25,11 +16,9 @@ const StyledVariantForms = styled('div')({
     flexDirection: 'column',
 });
 
-const StyledHelpIconBox = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
+const EmptyStateDescription = styled('p')(({ theme }) => ({
+    marginBottom: theme.spacing(2),
+    color: theme.palette.text.secondary,
 }));
 
 interface StrategyVariantsProps<T extends StrategyFormState> {
@@ -124,42 +113,30 @@ export const StrategyVariants = <T extends StrategyFormState>({
             0,
         ) !== 1000;
 
+    if (variantsEdit.length === 0) {
+        return (
+            <>
+                <EmptyStateDescription>
+                    Everyone gets the same experience by default. Add one
+                    variant to send a payload. Add multiple to run an
+                    experiment.
+                </EmptyStateDescription>
+                <Button
+                    onClick={addVariant}
+                    startIcon={<Add />}
+                    variant='outlined'
+                    size='medium'
+                    data-testid='ADD_STRATEGY_VARIANT_BUTTON'
+                >
+                    Add variant
+                </Button>
+            </>
+        );
+    }
+
     return (
         <>
-            <Alert severity='info' icon={false}>
-                Variants enhance a feature flag by providing a version of the
-                feature to be enabled
-            </Alert>
-            <StyledHelpIconBox>
-                <Typography>Variants</Typography>
-                <HelpIcon
-                    htmlTooltip
-                    tooltip={
-                        <Box>
-                            <Typography variant='body2'>
-                                Variants in feature flagging allow you to serve
-                                different versions of a feature to different
-                                users. This can be used for A/B testing, gradual
-                                rollouts, and canary releases. Variants provide
-                                a way to control the user experience at a
-                                granular level, enabling you to test and
-                                optimize different aspects of your features.
-                                Read more about variants{' '}
-                                <a
-                                    href='https://docs.getunleash.io/concepts/strategy-variants'
-                                    target='_blank'
-                                    rel='noopener noreferrer'
-                                >
-                                    here
-                                </a>
-                            </Typography>
-                        </Box>
-                    }
-                />
-            </StyledHelpIconBox>
             <StyledVariantForms>
-                {variantsEdit.length > 0 && <StrategyVariantsUpgradeAlert />}
-
                 {variantsEdit.map((variant, i) => (
                     <VariantForm
                         disableOverrides={true}

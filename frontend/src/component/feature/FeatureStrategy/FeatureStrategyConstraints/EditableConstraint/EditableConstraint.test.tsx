@@ -302,17 +302,29 @@ describe('EditableConstraint', () => {
                 />,
             );
 
-            expect(
-                await screen.findByRole('checkbox', { name: 'not-an-ip-10' }),
-            ).toBeDisabled();
-            expect(
-                screen.getByRole('checkbox', { name: '10.0.0.0/8' }),
-            ).toBeEnabled();
-            screen.getByText(
-                'Values that are not valid for your chosen operator have been disabled.',
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
             );
+            await waitFor(() => {
+                expect(screen.queryAllByRole('option').length).toBeGreaterThan(
+                    0,
+                );
+            });
 
-            await userEvent.type(screen.getByLabelText('Search'), '10{Enter}');
+            expect(
+                screen.getByRole('option', { name: 'not-an-ip-10' }),
+            ).toHaveAttribute('aria-disabled', 'true');
+            expect(
+                screen.getByRole('option', { name: '10.0.0.0/8' }),
+            ).not.toHaveAttribute('aria-disabled', 'true');
+
+            const callsBeforeDisabledClick = onUpdate.mock.calls.length;
+            fireEvent.click(
+                screen.getByRole('option', { name: 'not-an-ip-10' }),
+            );
+            expect(onUpdate.mock.calls.length).toBe(callsBeforeDisabledClick);
+
+            fireEvent.click(screen.getByRole('option', { name: '10.0.0.0/8' }));
 
             await waitFor(() => {
                 expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
@@ -321,8 +333,9 @@ describe('EditableConstraint', () => {
                 });
             });
 
-            await userEvent.clear(screen.getByLabelText('Search'));
-            fireEvent.click(screen.getByRole('button', { name: 'Select all' }));
+            fireEvent.click(
+                screen.getByRole('option', { name: '192.168.1.1' }),
+            );
 
             await waitFor(() => {
                 expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
@@ -330,10 +343,9 @@ describe('EditableConstraint', () => {
                     values: ['10.0.0.0/8', '192.168.1.1'],
                 });
             });
-            screen.getByRole('button', { name: 'Unselect all' });
         });
 
-        test('disables select all when no legal value is valid for the operator', async () => {
+        test('shows legal values as disabled when none are valid for the operator', async () => {
             setupApi({
                 contextFields: [
                     {
@@ -355,9 +367,195 @@ describe('EditableConstraint', () => {
                 />,
             );
 
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            await waitFor(() => {
+                expect(screen.queryAllByRole('option').length).toBeGreaterThan(
+                    0,
+                );
+            });
+
             expect(
-                await screen.findByRole('button', { name: 'Select all' }),
-            ).toBeDisabled();
+                screen.getByRole('option', { name: 'not-an-ip' }),
+            ).toHaveAttribute('aria-disabled', 'true');
+        });
+
+        test('adds multiple legal values pasted as a comma-separated list, rejects values not in the legal set, and closes once exhausted', async () => {
+            setupApi({
+                contextFields: [
+                    {
+                        name: 'ipAddress',
+                        legalValues: [
+                            { value: '10.0.0.0/8' },
+                            { value: '192.168.1.1' },
+                            { value: '172.16.0.0/12' },
+                        ],
+                    },
+                ],
+            });
+            const onUpdate = vi.fn();
+
+            render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'ipAddress',
+                        operator: 'IN_CIDR',
+                        values: [],
+                    }}
+                    onDelete={vi.fn()}
+                    onUpdate={onUpdate}
+                />,
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            const input = await screen.findByLabelText('Constraint Value');
+            await waitFor(() => {
+                expect(screen.queryAllByRole('option').length).toBeGreaterThan(
+                    0,
+                );
+            });
+
+            await userEvent.type(input, '10.0.0.0/8,192.168.1.1');
+            fireEvent.keyDown(input, { key: 'Enter' });
+
+            await waitFor(() => {
+                expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
+                    operator: 'IN_CIDR',
+                    values: ['10.0.0.0/8', '192.168.1.1'],
+                });
+            });
+
+            await userEvent.type(input, '8.8.8.8');
+            fireEvent.keyDown(input, { key: 'Enter' });
+
+            expect(
+                await screen.findByText(
+                    '"8.8.8.8" is not a legal value for this field.',
+                ),
+            ).toBeInTheDocument();
+
+            // Picking the last remaining legal value (172.16.0.0/12) exhausts
+            // the list: the editor closes and the add-value button is gone.
+            await userEvent.clear(input);
+            fireEvent.click(
+                screen.getByRole('option', { name: '172.16.0.0/12' }),
+            );
+
+            await waitFor(() => {
+                expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
+                    operator: 'IN_CIDR',
+                    values: ['10.0.0.0/8', '192.168.1.1', '172.16.0.0/12'],
+                });
+            });
+
+            expect(input).not.toBeInTheDocument();
+            expect(
+                screen.queryByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            ).not.toBeInTheDocument();
+        });
+
+        test('typing a prefix and pressing Enter toggles the auto-highlighted match without raising a stale "not a legal value" error', async () => {
+            setupApi({
+                contextFields: [
+                    {
+                        name: 'ipAddress',
+                        legalValues: [
+                            { value: '10.0.0.0/8' },
+                            { value: '192.168.1.1' },
+                        ],
+                    },
+                ],
+            });
+            const onUpdate = vi.fn();
+
+            render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'ipAddress',
+                        operator: 'IN_CIDR',
+                        values: [],
+                    }}
+                    onDelete={vi.fn()}
+                    onUpdate={onUpdate}
+                />,
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            const input = await screen.findByLabelText('Constraint Value');
+            await waitFor(() => {
+                expect(screen.queryAllByRole('option').length).toBeGreaterThan(
+                    0,
+                );
+            });
+
+            await userEvent.type(input, '10.');
+            fireEvent.keyDown(input, { key: 'Enter' });
+
+            await waitFor(() => {
+                expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
+                    operator: 'IN_CIDR',
+                    values: ['10.0.0.0/8'],
+                });
+            });
+
+            expect(input).toHaveValue('');
+            expect(
+                screen.queryByText(/is not a legal value/),
+            ).not.toBeInTheDocument();
+        });
+
+        test('arrow keys visibly move the highlight between legal value options', async () => {
+            setupApi({
+                contextFields: [
+                    {
+                        name: 'ipAddress',
+                        legalValues: [
+                            { value: '10.0.0.0/8' },
+                            { value: '192.168.1.1' },
+                        ],
+                    },
+                ],
+            });
+
+            render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'ipAddress',
+                        operator: 'IN_CIDR',
+                        values: [],
+                    }}
+                    onDelete={vi.fn()}
+                    onUpdate={vi.fn()}
+                />,
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            const input = await screen.findByLabelText('Constraint Value');
+            await waitFor(() => {
+                expect(screen.queryAllByRole('option').length).toBeGreaterThan(
+                    0,
+                );
+            });
+
+            fireEvent.keyDown(input, { key: 'ArrowDown' });
+
+            await waitFor(() => {
+                const option = screen.getByRole('option', {
+                    name: '192.168.1.1',
+                });
+                expect(option).toHaveClass('Mui-focused');
+                expect(getComputedStyle(option).backgroundColor).not.toBe('');
+                expect(getComputedStyle(option).backgroundColor).not.toBe(
+                    'rgba(0, 0, 0, 0)',
+                );
+            });
         });
     });
 });

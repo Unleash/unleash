@@ -5,7 +5,7 @@ import {
     isStringOperator,
     type Operator,
 } from 'constants/operators';
-import { useCallback, useRef, useState, type FC } from 'react';
+import { useCallback, useEffect, useRef, useState, type FC } from 'react';
 import { operatorsForContext } from 'utils/operatorsForContext';
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
@@ -15,10 +15,6 @@ import { AddValueInline } from './AddValueInline.tsx';
 import { AddValueButton } from './AddValueButton.tsx';
 import { ToggleConstraintCaseSensitivity } from './ToggleConstraintCaseSensitivity.tsx';
 import { ConstraintDateInput } from './ConstraintDateInput.tsx';
-import {
-    LegalValuesSelector,
-    SingleLegalValueSelector,
-} from './LegalValuesSelector.tsx';
 import {
     type LegalValueData,
     useEditableConstraint,
@@ -89,11 +85,6 @@ const ConstraintDetails = styled('div')(({ theme }) => ({
     height: 'min-content',
 }));
 
-const LegalValuesContainer = styled('div')(({ theme }) => ({
-    padding: 'var(--padding)',
-    borderTop: `1px dashed ${theme.palette.divider}`,
-}));
-
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
     position: 'absolute',
     right: theme.spacing(1),
@@ -116,10 +107,13 @@ const ButtonPlaceholder = styled('div')(({ theme }) => ({
 const TopRowInput: FC<{
     addValues: (value: string | string[]) => void;
     localConstraint: EditableConstraintType;
-    validator: (value: string) => ConstraintValidationResult;
+    validator: (...values: string[]) => ConstraintValidationResult;
     addValuesButtonRef: React.RefObject<HTMLDivElement | null>;
     editingOpen: boolean;
     setEditingOpen: (open: boolean) => void;
+    toggleValue: (value: string) => void;
+    selectedValues: Set<string>;
+    legalValueData?: LegalValueData;
 }> = ({
     addValues,
     localConstraint,
@@ -127,8 +121,19 @@ const TopRowInput: FC<{
     addValuesButtonRef,
     editingOpen,
     setEditingOpen,
+    toggleValue,
+    selectedValues,
+    legalValueData,
 }) => {
     const [draftValue, setDraftValue] = useState('');
+
+    const legalValuesExhausted =
+        isMultiValueConstraint(localConstraint) &&
+        legalValueData?.remainingLegalValues.length === 0;
+
+    useEffect(() => {
+        if (legalValuesExhausted && editingOpen) setEditingOpen(false);
+    }, [legalValuesExhausted, editingOpen, setEditingOpen]);
 
     if (isDateConstraint(localConstraint)) {
         return (
@@ -144,7 +149,7 @@ const TopRowInput: FC<{
         return null;
     }
 
-    if (isRegexConstraint(localConstraint)) {
+    if (!legalValueData && isRegexConstraint(localConstraint)) {
         if (editingOpen) return null;
         return (
             <AddValueButton
@@ -154,9 +159,9 @@ const TopRowInput: FC<{
         );
     }
 
-    const hasValues =
-        isMultiValueConstraint(localConstraint) &&
-        localConstraint.values.size > 0;
+    if (legalValuesExhausted) {
+        return null;
+    }
 
     return (
         <div ref={addValuesButtonRef}>
@@ -168,10 +173,13 @@ const TopRowInput: FC<{
                     value={draftValue}
                     onChange={setDraftValue}
                     onClose={() => setEditingOpen(false)}
+                    selectedValues={selectedValues}
+                    toggleValue={toggleValue}
+                    legalValueData={legalValueData}
                 />
             ) : (
                 <AddValueButton
-                    hasValues={hasValues}
+                    hasValues={selectedValues.size > 0}
                     onClick={() => setEditingOpen(true)}
                 />
             )}
@@ -183,42 +191,16 @@ const InlineEdit: FC<{
     addValues: (value: string | string[]) => void;
     localConstraint: EditableConstraintType;
     editingOpen: boolean;
-    legalValueData?: LegalValueData;
-    toggleValue: (value: string) => void;
-    clearAll: () => void;
     validator: (value: string) => ConstraintValidationResult;
+    legalValueData?: LegalValueData;
 }> = ({
     addValues,
     localConstraint,
-    legalValueData,
-    toggleValue,
-    clearAll,
     editingOpen,
     validator,
+    legalValueData,
 }) => {
-    if (legalValueData) {
-        return (
-            <LegalValuesContainer>
-                {isMultiValueConstraint(localConstraint) ? (
-                    <LegalValuesSelector
-                        values={localConstraint.values}
-                        toggleValue={toggleValue}
-                        clearAll={clearAll}
-                        addValues={addValues}
-                        {...legalValueData}
-                    />
-                ) : (
-                    <SingleLegalValueSelector
-                        toggleValue={toggleValue}
-                        value={localConstraint.value}
-                        {...legalValueData}
-                    />
-                )}
-            </LegalValuesContainer>
-        );
-    }
-
-    if (isRegexConstraint(localConstraint) && editingOpen) {
+    if (!legalValueData && isRegexConstraint(localConstraint) && editingOpen) {
         return (
             <AddRegexValueEditor
                 initialValue={localConstraint.value}
@@ -261,6 +243,7 @@ export const EditableConstraint: FC<Props> = ({
         updateConstraint,
         validator,
         legalValueData,
+        selectedValues,
         invertedDisabled,
         currentValueInvalid,
     } = useEditableConstraint(constraint, onUpdate);
@@ -279,10 +262,6 @@ export const EditableConstraint: FC<Props> = ({
             updateConstraint({ type: 'remove value', payload: value });
             setEditingOpen(false);
         },
-        [updateConstraint],
-    );
-    const clearAll = useCallback(
-        () => updateConstraint({ type: 'clear values' }),
         [updateConstraint],
     );
     const toggleValue = useCallback(
@@ -384,13 +363,7 @@ export const EditableConstraint: FC<Props> = ({
                         </OperatorOptions>
                     </ConstraintOptions>
                     <ValueList
-                        values={
-                            isMultiValueConstraint(localConstraint)
-                                ? Array.from(localConstraint.values)
-                                : localConstraint.value
-                                  ? [localConstraint.value]
-                                  : undefined
-                        }
+                        values={Array.from(selectedValues)}
                         removeValue={removeValue}
                         getValueTitle={valueTitle}
                         getExternalFocusTarget={() =>
@@ -398,17 +371,18 @@ export const EditableConstraint: FC<Props> = ({
                             deleteButtonRef.current
                         }
                     >
-                        {legalValueData ? null : (
-                            <TopRowInput
-                                key={operator}
-                                localConstraint={localConstraint}
-                                addValues={addValues}
-                                validator={validator}
-                                addValuesButtonRef={addValuesButtonRef}
-                                editingOpen={editingOpen}
-                                setEditingOpen={setEditingOpen}
-                            />
-                        )}
+                        <TopRowInput
+                            key={operator}
+                            localConstraint={localConstraint}
+                            addValues={addValues}
+                            validator={validator}
+                            addValuesButtonRef={addValuesButtonRef}
+                            editingOpen={editingOpen}
+                            setEditingOpen={setEditingOpen}
+                            toggleValue={toggleValue}
+                            selectedValues={selectedValues}
+                            legalValueData={legalValueData}
+                        />
                     </ValueList>
                 </ConstraintDetails>
                 <ButtonPlaceholder />
@@ -427,12 +401,10 @@ export const EditableConstraint: FC<Props> = ({
             {isCidrConstraint(localConstraint) ? <CidrSdkRequirements /> : null}
             <InlineEdit
                 localConstraint={localConstraint}
-                legalValueData={legalValueData}
                 editingOpen={editingOpen}
-                toggleValue={toggleValue}
                 addValues={addValues}
-                clearAll={clearAll}
                 validator={validator}
+                legalValueData={legalValueData}
             />
         </Container>
     );

@@ -10,7 +10,7 @@ import { type PopoverProps, useAutocomplete } from '@mui/material';
 export type SelectOption<T> = {
     value: T;
     label: string;
-    detail?: ReactNode;
+    detail?: string;
     disabled?: boolean;
 };
 
@@ -45,6 +45,10 @@ export type UseSelectListboxOptions<T extends string | number> =
             inputValue: string;
             onInputValueChange: (value: string) => void;
             id?: string;
+            matchesSearch?: (
+                option: FlatOption<T>,
+                searchText: string,
+            ) => boolean;
         };
 
 export type SelectPopoverProps<T> = Pick<PopoverProps, 'open' | 'anchorEl'> &
@@ -65,6 +69,11 @@ const toSelectedArray = <T>({ multiple, selected }: SelectionProps<T>): T[] => {
     return [selected];
 };
 
+const defaultMatchesSearch = <T extends string | number>(
+    option: FlatOption<T>,
+    searchText: string,
+): boolean => option.label.toLowerCase().includes(searchText);
+
 export const useSelectListbox = <T extends string | number>(
     props: UseSelectListboxOptions<T>,
 ) => {
@@ -75,10 +84,19 @@ export const useSelectListbox = <T extends string | number>(
         inputValue,
         onInputValueChange,
         id,
+        matchesSearch = defaultMatchesSearch,
     } = props;
     const [keyboardHighlightedOption, setKeyboardHighlightedOption] =
         useState<FlatOption<T> | null>(null);
     const selectedValues = new Set(toSelectedArray(props));
+
+    const filterOptions = (
+        options: FlatOption<T>[],
+        state: { inputValue: string },
+    ) => {
+        const searchText = state.inputValue.trim().toLowerCase();
+        return options.filter((option) => matchesSearch(option, searchText));
+    };
 
     const toggleOption = (option: FlatOption<T>) => {
         if (props.multiple) {
@@ -117,6 +135,7 @@ export const useSelectListbox = <T extends string | number>(
         multiple: true,
         open: true,
         options: flatOptions,
+        filterOptions,
         value: NO_VALUE,
         inputValue,
         onInputChange: (_, value, reason) => {

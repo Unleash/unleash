@@ -44,6 +44,10 @@ const StyledLabel = styled('span')({
 
 const StyledDetail = styled('span')(({ theme }) => ({
     marginLeft: 'auto',
+    minWidth: 0,
+    maxWidth: '50%',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
     color: theme.palette.text.secondary,
 }));
@@ -111,9 +115,11 @@ export const SelectOptionsList = <T extends string | number>({
                         disabled={option.disabled}
                     />
                 ) : null}
-                <StyledLabel>{option.label}</StyledLabel>
+                <StyledLabel title={option.label}>{option.label}</StyledLabel>
                 {option.detail ? (
-                    <StyledDetail>{option.detail}</StyledDetail>
+                    <StyledDetail title={option.detail}>
+                        {option.detail}
+                    </StyledDetail>
                 ) : null}
             </StyledRow>
         );

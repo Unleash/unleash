@@ -1,7 +1,12 @@
 import type { FC } from 'react';
 import type { InputBaseComponentProps } from '@mui/material';
-import { InlineValueInput, type OnAddActions } from './InlineValueInput.tsx';
+import {
+    type InlineValueProps,
+    LegalValuesInput,
+    PlainValueInput,
+} from './InlineValueInput.tsx';
 import type { ConstraintValidatorOutput } from './ConstraintValidatorOutput.ts';
+import type { LegalValueData } from './useEditableConstraint/useEditableConstraint.js';
 import {
     type EditableConstraint as EditableConstraintType,
     isCidrConstraint,
@@ -52,6 +57,28 @@ const getEditingProps = (
     };
 };
 
+const withLegalValues = (
+    editingProps: EditingProps,
+    localConstraint: EditableConstraintType,
+): EditingProps => ({
+    ...editingProps,
+    helpText: undefined,
+    parseInput: isMultiValueConstraint(localConstraint)
+        ? parseParameterStrings
+        : singleValueParseInput,
+});
+
+const resolveEditingProps = (
+    localConstraint: EditableConstraintType,
+    legalValueData: LegalValueData | undefined,
+): EditingProps => {
+    const editingProps = getEditingProps(localConstraint);
+
+    return legalValueData
+        ? withLegalValues(editingProps, localConstraint)
+        : editingProps;
+};
+
 type Props = {
     localConstraint: EditableConstraintType;
     value: string;
@@ -59,6 +86,9 @@ type Props = {
     onAddValues: (newValues: string[]) => void;
     onClose: () => void;
     validator: (...values: string[]) => ConstraintValidatorOutput;
+    selectedValues: Set<string>;
+    toggleValue: (value: string) => void;
+    legalValueData?: LegalValueData;
 };
 
 export const AddValueInline: FC<Props> = ({
@@ -68,47 +98,33 @@ export const AddValueInline: FC<Props> = ({
     onAddValues,
     onClose,
     validator,
+    selectedValues,
+    toggleValue,
+    legalValueData,
 }) => {
     const multiValue = isMultiValueConstraint(localConstraint);
     const { parseInput, helpText, htmlInputProps, ValuePreview } =
-        getEditingProps(localConstraint);
+        resolveEditingProps(localConstraint, legalValueData);
 
-    const handleAdd = (
-        inputValue: string,
-        { setError, clearInput }: OnAddActions,
-    ) => {
-        const newValues = parseInput(inputValue);
-
-        if (newValues.length === 0) {
-            setError('Values cannot be empty');
-            return;
-        }
-
-        if (newValues.some((v) => v.length > 100)) {
-            setError('Values cannot be longer than 100 characters');
-            return;
-        }
-
-        const [isValid, errorMessage] = validator(...newValues);
-        if (isValid) {
-            onAddValues(newValues);
-            clearInput();
-            setError('');
-        } else {
-            setError(errorMessage);
-        }
+    const inlineValueProps: InlineValueProps = {
+        value,
+        onChange,
+        htmlInputProps,
+        parseInput,
+        validator,
+        onAddValues,
+        helpText,
+        onClose,
+        ValuePreview,
+        multiValue,
+        selectedValues,
+        toggleValue,
+        legalValues: legalValueData,
     };
 
-    return (
-        <InlineValueInput
-            value={value}
-            onChange={onChange}
-            htmlInputProps={htmlInputProps}
-            onAdd={handleAdd}
-            helpText={helpText}
-            onClose={onClose}
-            ValuePreview={ValuePreview}
-            multiValue={multiValue}
-        />
+    return legalValueData ? (
+        <LegalValuesInput {...inlineValueProps} legalValues={legalValueData} />
+    ) : (
+        <PlainValueInput {...inlineValueProps} />
     );
 };

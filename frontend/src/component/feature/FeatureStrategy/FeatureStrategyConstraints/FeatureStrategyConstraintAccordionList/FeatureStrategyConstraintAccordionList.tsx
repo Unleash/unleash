@@ -6,7 +6,7 @@ import {
     useState,
     type RefObject,
 } from 'react';
-import { Box, Button, styled, Typography } from '@mui/material';
+import { Box, Button, styled, Typography, useTheme } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import type { IConstraint } from 'interfaces/strategy';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
@@ -103,6 +103,7 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
     IConstraintAccordionListRef | undefined,
     IConstraintAccordionListProps
 >(({ constraints, setConstraints }, ref) => {
+    const theme = useTheme();
     const { addConstraint, context } = useConstraintAccordionList(
         setConstraints,
         ref as RefObject<IConstraintAccordionListRef | null>,
@@ -171,6 +172,7 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                     }}
                     searchPlaceholderText='Search context fields'
                     horizontalAlign='right'
+                    listMaxHeight={theme.spacing(45)}
                 />
             </StyledRow>
             {setConstraints ? (

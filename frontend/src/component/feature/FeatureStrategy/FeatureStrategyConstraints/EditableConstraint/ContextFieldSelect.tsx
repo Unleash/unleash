@@ -1,4 +1,4 @@
-import { Button, styled } from '@mui/material';
+import { Button, styled, useTheme } from '@mui/material';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { useRef, useState, type FC } from 'react';
 import {
@@ -23,6 +23,7 @@ export const ContextFieldSelect: FC<ContextFieldSelectProps> = ({
     options,
     onChange,
 }) => {
+    const theme = useTheme();
     const triggerRef = useRef<HTMLButtonElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const open = Boolean(anchorEl);
@@ -51,6 +52,7 @@ export const ContextFieldSelect: FC<ContextFieldSelectProps> = ({
                 selected={value || undefined}
                 onChange={(selected) => onChange(selected ?? '')}
                 searchPlaceholderText='Search context fields'
+                listMaxHeight={theme.spacing(40)}
             />
         </>
     );

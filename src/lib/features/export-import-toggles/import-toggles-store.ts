@@ -3,6 +3,7 @@ import type {
     ProjectFeaturesLimit,
 } from './import-toggles-store-type.js';
 import type { Db } from '../../db/db.js';
+import type { IStrategyConfig, WithRequired } from '../../types/index.js';
 
 const T = {
     featureStrategies: 'feature_strategies',
@@ -33,11 +34,22 @@ export class ImportTogglesStore implements IImportTogglesStore {
     async deleteStrategiesForFeatures(
         featureNames: string[],
         environment: string,
-    ): Promise<void> {
+    ): Promise<WithRequired<IStrategyConfig, 'featureName'>[]> {
         return this.db(T.featureStrategies)
             .where({ environment })
             .whereIn('feature_name', featureNames)
-            .del();
+            .del()
+            .returning([
+                'id',
+                'feature_name as featureName',
+                'strategy_name as name',
+                'title',
+                'disabled',
+                'constraints',
+                'parameters',
+                'variants',
+                'sort_order as sortOrder',
+            ]);
     }
 
     async strategiesExistForFeatures(

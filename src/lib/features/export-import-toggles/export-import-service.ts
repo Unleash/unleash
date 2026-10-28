@@ -5,6 +5,7 @@ import type { IFeatureStrategiesStore } from '../feature-toggle/types/feature-to
 import {
     FeaturesExportedEvent,
     FeaturesImportedEvent,
+    FeatureStrategyRemoveEvent,
     SYSTEM_USER,
     SYSTEM_USER_AUDIT,
     type FeatureToggleDTO,
@@ -363,7 +364,7 @@ export default class ExportImportService
         user: IUser,
         auditUser: IAuditUser,
     ): Promise<void> {
-        await this.deleteStrategies(dto);
+        await this.deleteStrategies(dto, auditUser);
         await this.importStrategies(dto, auditUser);
         await this.importToggleStatuses(dto, user, auditUser);
         await this.importDependencies(dto, user, auditUser);
@@ -465,10 +466,26 @@ export default class ExportImportService
         );
     }
 
-    private async deleteStrategies(dto: ImportTogglesSchema) {
-        return this.importTogglesStore.deleteStrategiesForFeatures(
-            dto.data.features.map((feature) => feature.name),
-            dto.environment,
+    private async deleteStrategies(
+        dto: ImportTogglesSchema,
+        auditUser: IAuditUser,
+    ) {
+        const strategies =
+            await this.importTogglesStore.deleteStrategiesForFeatures(
+                dto.data.features.map((feature) => feature.name),
+                dto.environment,
+            );
+        await this.eventService.storeEventsOrThrow(
+            strategies.map(
+                ({ featureName, ...preData }) =>
+                    new FeatureStrategyRemoveEvent({
+                        featureName,
+                        project: dto.project,
+                        environment: dto.environment,
+                        auditUser,
+                        preData,
+                    }),
+            ),
         );
     }
 

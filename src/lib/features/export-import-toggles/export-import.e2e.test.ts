@@ -29,6 +29,8 @@ import type {
     VariantsSchema,
 } from '../../openapi/index.js';
 import type { IContextFieldDto } from '../context/context-field-store-type.js';
+import { createClientFeatureToggleDelta } from '../client-feature-toggles/delta/createClientFeatureToggleDelta.js';
+import { FEATURE_STRATEGY_REMOVE } from '../../events/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -164,7 +166,11 @@ const getContextField = (name: string) =>
 
 beforeAll(async () => {
     db = await dbInit('export_import_api_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {}, db.rawDatabase);
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        { experimental: { flags: { deltaApi: true } } },
+        db.rawDatabase,
+    );
     eventStore = db.stores.eventStore;
     environmentStore = db.stores.environmentStore;
     projectStore = db.stores.projectStore;
@@ -940,6 +946,7 @@ test('import too many feature exceeding limit', async () => {
 test('can update toggles on subsequent import', async () => {
     await createProjects();
     await app.importToggles(defaultImportPayload);
+    const { body: imported } = await getFeatureEnvironment(defaultFeatureName);
     await app.importToggles({
         ...defaultImportPayload,
         data: {
@@ -986,6 +993,69 @@ test('can update toggles on subsequent import', async () => {
             },
         ],
     });
+
+    const { body } = await app.getRecordedEvents();
+    expect(
+        body.events.filter((event) => event.type === FEATURE_STRATEGY_REMOVE),
+    ).toMatchObject([
+        {
+            featureName: defaultFeatureName,
+            project: DEFAULT_PROJECT,
+            environment: DEFAULT_ENV,
+            preData: {
+                id: imported.strategies[0].id,
+                name: 'default',
+                constraints,
+            },
+        },
+    ]);
+});
+
+test('strategies removed by an import reach the delta', async () => {
+    await createProjects();
+    await app.importToggles(defaultImportPayload);
+    const delta = createClientFeatureToggleDelta(db.rawDatabase, app.config);
+    delta.resetDelta();
+    const query = { environment: DEFAULT_ENV, project: [DEFAULT_PROJECT] };
+    try {
+        const initial =
+            await app.services.clientFeatureToggleService.getClientDelta(
+                undefined,
+                query,
+            );
+        const hydration = initial!.events.find(
+            (event) => event.type === 'hydration',
+        )!;
+        expect(hydration.features).toMatchObject([
+            { name: defaultFeatureName, strategies: [{ name: 'default' }] },
+        ]);
+
+        const metadataOnlyImport = {
+            ...defaultImportPayload,
+            data: {
+                ...defaultImportPayload.data,
+                featureStrategies: [],
+                featureEnvironments: [],
+                featureTags: [],
+            },
+        };
+        await app.importToggles(metadataOnlyImport);
+        await delta.onUpdateRevisionEvent();
+
+        const updated =
+            await app.services.clientFeatureToggleService.getClientDelta(
+                hydration.eventId,
+                query,
+            );
+        expect(updated?.events).toMatchObject([
+            {
+                type: 'feature-updated',
+                feature: { name: defaultFeatureName, strategies: [] },
+            },
+        ]);
+    } finally {
+        delta.resetDelta();
+    }
 });
 
 test('reject import with unknown context fields', async () => {

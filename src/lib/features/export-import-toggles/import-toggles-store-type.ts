@@ -1,3 +1,5 @@
+import type { IStrategyConfig, WithRequired } from '../../types/index.js';
+
 export interface ProjectFeaturesLimit {
     limit: number;
     newFeaturesCount: number;
@@ -8,7 +10,7 @@ export interface IImportTogglesStore {
     deleteStrategiesForFeatures(
         featureNames: string[],
         environment: string,
-    ): Promise<void>;
+    ): Promise<WithRequired<IStrategyConfig, 'featureName'>[]>;
 
     getArchivedFeatures(featureNames: string[]): Promise<string[]>;
 

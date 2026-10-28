@@ -353,25 +353,7 @@ test('should collect metrics for project disabled numbers', async () => {
 });
 
 test('should collect metrics for lifecycle', async () => {
-    await db.stores.featureToggleStore.create('default', {
-        name: 'my_feature_b',
-        createdByUserId: 9999,
-    });
-    await featureLifeCycleStore.insert([
-        {
-            feature: 'my_feature_b',
-            stage: 'initial',
-        },
-    ]);
-    const stageCount = await featureLifeCycleReadModel.getStageCountByProject();
-    const stageDurations =
-        await featureLifeCycleReadModel.getAllWithStageDuration();
-    expect(stageCount).toHaveLength(1);
-    expect(stageDurations).toHaveLength(1);
-
     const metrics = await prometheusRegister.metrics();
-    expect(metrics).toMatch(/feature_lifecycle_stage_duration/);
-    expect(metrics).toMatch(/feature_lifecycle_stage_count_by_project/);
     expect(metrics).toMatch(/feature_lifecycle_stage_entered/);
 });
 

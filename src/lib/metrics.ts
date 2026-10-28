@@ -649,21 +649,6 @@ export function registerPrometheusMetrics(
     });
 
     dbMetrics.registerGaugeDbMetric({
-        name: 'feature_lifecycle_stage_duration',
-        labelNames: ['stage', 'project_id'],
-        help: 'Duration of feature lifecycle stages',
-        query: () => stores.featureLifecycleReadModel.getAllWithStageDuration(),
-        map: (result) =>
-            result.map((stageResult) => ({
-                value: stageResult.duration,
-                labels: {
-                    project_id: stageResult.project,
-                    stage: stageResult.stage,
-                },
-            })),
-    });
-
-    dbMetrics.registerGaugeDbMetric({
         name: 'onboarding_duration',
         labelNames: ['event'],
         help: 'firstLogin, secondLogin, firstFeatureFlag, firstPreLive, firstLive from first user creation',
@@ -697,21 +682,6 @@ export function registerPrometheusMetrics(
                             },
                         })),
             ),
-    });
-
-    dbMetrics.registerGaugeDbMetric({
-        name: 'feature_lifecycle_stage_count_by_project',
-        help: 'Count features in a given stage by project id',
-        labelNames: ['stage', 'project_id'],
-        query: () => stores.featureLifecycleReadModel.getStageCountByProject(),
-        map: (result) =>
-            result.map((stageResult) => ({
-                value: stageResult.count,
-                labels: {
-                    project_id: stageResult.project,
-                    stage: stageResult.stage,
-                },
-            })),
     });
 
     dbMetrics.registerGaugeDbMetric({

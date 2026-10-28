@@ -60,6 +60,7 @@ import { allSettledWithRejection } from '../../util/allSettledWithRejection.js';
 import type { ISegmentReadModel } from '../segment/segment-read-model-type.js';
 import { readFile } from '../../util/read-file.js';
 import type FeatureLinkService from '../feature-links/feature-link-service.js';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 
 export type IImportService = {
     validate(
@@ -83,6 +84,7 @@ export type IImportService = {
 export type IExportService = {
     export(
         query: ExportQuerySchema,
+        userId: number,
         auditUser: IAuditUser,
     ): Promise<ExportResultSchema>;
 };
@@ -134,6 +136,8 @@ export default class ExportImportService
 
     private featureLinkService: FeatureLinkService;
 
+    private privateProjectChecker: IPrivateProjectChecker;
+
     constructor(
         stores: Pick<
             IUnleashStores,
@@ -159,6 +163,7 @@ export default class ExportImportService
             featureTagService,
             dependentFeaturesService,
             featureLinkService,
+            privateProjectChecker,
         }: Pick<
             IUnleashServices,
             | 'featureToggleService'
@@ -170,6 +175,7 @@ export default class ExportImportService
             | 'featureTagService'
             | 'dependentFeaturesService'
             | 'featureLinkService'
+            | 'privateProjectChecker'
         >,
         dependentFeaturesReadModel: IDependentFeaturesReadModel,
         segmentReadModel: ISegmentReadModel,
@@ -192,6 +198,7 @@ export default class ExportImportService
         this.featureTagService = featureTagService;
         this.dependentFeaturesService = dependentFeaturesService;
         this.featureLinkService = featureLinkService;
+        this.privateProjectChecker = privateProjectChecker;
         this.importPermissionsService = new ImportPermissionsService(
             this.importTogglesStore,
             this.accessService,
@@ -889,6 +896,7 @@ export default class ExportImportService
 
     async export(
         query: ExportQuerySchema,
+        userId: number,
         auditUser: IAuditUser,
     ): Promise<ExportResultSchema> {
         let featureNames: string[] = [];
@@ -906,8 +914,18 @@ export default class ExportImportService
             featureNames = allFeatures.map((feature) => feature.name);
         }
 
+        const projectAccess =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+        const features = (
+            await this.toggleStore.getAllByNames(featureNames)
+        ).filter(
+            ({ project }) =>
+                projectAccess.mode === 'all' ||
+                projectAccess.projects.includes(project),
+        );
+        featureNames = features.map(({ name }) => name);
+
         const [
-            features,
             featureEnvironments,
             featureStrategies,
             strategySegments,
@@ -918,7 +936,6 @@ export default class ExportImportService
             featureDependencies,
             featureLinks,
         ] = await Promise.all([
-            this.toggleStore.getAllByNames(featureNames),
             await this.featureEnvironmentStore.getAllByFeatures(
                 featureNames,
                 query.environment,

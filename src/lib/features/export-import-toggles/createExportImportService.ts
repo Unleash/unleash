@@ -133,6 +133,7 @@ export const createFakeExportImportTogglesService = (
             tagTypeService,
             dependentFeaturesService,
             featureLinkService,
+            privateProjectChecker: createFakePrivateProjectChecker(),
         },
         dependentFeaturesReadModel,
         segmentReadModel,
@@ -174,7 +175,7 @@ export const deferredExportImportTogglesService = (
         );
         const accessService = createAccessService(db, config);
         const featureToggleService = createFeatureToggleService(db, config);
-        createPrivateProjectChecker(db, config);
+        const privateProjectChecker = createPrivateProjectChecker(db, config);
         const eventService = createEventsService(db, config);
 
         const featureTagService = new FeatureTagService(
@@ -231,6 +232,7 @@ export const deferredExportImportTogglesService = (
                 tagTypeService,
                 dependentFeaturesService,
                 featureLinkService,
+                privateProjectChecker,
             },
             dependentFeaturesReadModel,
             segmentReadModel,

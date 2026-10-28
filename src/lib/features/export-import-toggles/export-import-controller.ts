@@ -22,7 +22,7 @@ import {
     importTogglesValidateSchema,
 } from '../../openapi/index.js';
 import type { IAuthRequest } from '../../routes/unleash-types.js';
-import { extractUsername } from '../../util/index.js';
+import { extractUserId } from '../../util/index.js';
 import { BadDataError } from '../../error/index.js';
 import ApiUser from '../../types/api-user.js';
 
@@ -118,9 +118,12 @@ class ExportImportController extends Controller {
         res: Response,
     ): Promise<void> {
         const query = req.body;
-        const _userName = extractUsername(req);
 
-        const data = await this.exportService.export(query, req.audit);
+        const data = await this.exportService.export(
+            query,
+            extractUserId(req),
+            req.audit,
+        );
 
         this.openApiService.respondWithValidation(
             200,

@@ -45,9 +45,9 @@ const StyledCard = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
 }));
 
-const StyledMainRow = styled('div')(({ theme }) => ({
+const StyledSettingsRow = styled('div')(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: 'minmax(0, 1fr) 180px 180px',
+    gridTemplateColumns: '180px 180px',
     alignItems: 'start',
     gap: theme.spacing(2),
     [theme.breakpoints.down('md')]: {
@@ -94,18 +94,16 @@ export const QuestionCard = ({
                 role='group'
                 aria-labelledby={formFieldLabelId(promptId)}
             >
-                <StyledMainRow>
-                    <Input
-                        id={promptId}
-                        label={`Question ${number}`}
-                        value={question.prompt}
-                        onChange={(event) =>
-                            update({ prompt: event.target.value })
-                        }
-                        error={Boolean(errors.prompt)}
-                        errorText={errors.prompt}
-                        fullWidth
-                    />
+                <Input
+                    id={promptId}
+                    label={`Question ${number}`}
+                    value={question.prompt}
+                    onChange={(event) => update({ prompt: event.target.value })}
+                    error={Boolean(errors.prompt)}
+                    errorText={errors.prompt}
+                    fullWidth
+                />
+                <StyledSettingsRow>
                     <GeneralSelect
                         label='Type'
                         value={question.type}
@@ -128,7 +126,7 @@ export const QuestionCard = ({
                         errorText={errors.id}
                         fullWidth
                     />
-                </StyledMainRow>
+                </StyledSettingsRow>
                 {question.type === 'rating' ? (
                     <StyledScale>
                         <GeneralSelect

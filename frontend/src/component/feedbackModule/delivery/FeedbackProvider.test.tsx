@@ -58,7 +58,13 @@ const loadPage = async () => {
 let renderSurvey: Awaited<ReturnType<typeof loadPage>>;
 
 const submitComment = async (comment: string) => {
-    await userEvent.type(await screen.findByLabelText('Comment'), comment);
+    await userEvent.click(
+        await screen.findByRole('button', { name: 'Share feedback' }),
+    );
+    await userEvent.type(
+        screen.getByRole('textbox', { name: 'Comment' }),
+        comment,
+    );
     await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
 };
 

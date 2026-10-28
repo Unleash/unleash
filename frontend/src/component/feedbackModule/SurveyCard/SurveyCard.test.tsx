@@ -53,39 +53,108 @@ const multiChoiceSurvey: SurveyDefinition = {
     ],
 };
 
+const startSurvey = () =>
+    userEvent.click(screen.getByRole('button', { name: 'Share feedback' }));
+
+const answerRatingAndContinue = async (stars = 4) => {
+    fireEvent.click(screen.getByRole('radio', { name: `${stars} Stars` }));
+    await userEvent.click(screen.getByRole('button', { name: 'Next' }));
+};
+
 describe('SurveyCard', () => {
-    it('renders the survey and its questions', () => {
+    it('opens on an intro step without taking focus from the page', () => {
         renderCard();
 
         expect(screen.getByText('Quick feedback')).toBeInTheDocument();
         expect(screen.getByText('Two quick questions.')).toBeInTheDocument();
-        expect(screen.getByText('Rate this page')).toBeInTheDocument();
-        expect(screen.getByLabelText('Anything else?')).toBeInTheDocument();
+        expect(screen.queryByText('Rate this page')).not.toBeInTheDocument();
+        expect(screen.getByRole('progressbar')).toHaveAttribute(
+            'aria-valuetext',
+            'Step 1 of 3',
+        );
+        expect(
+            screen.queryByRole('button', { name: 'Back' }),
+        ).not.toBeInTheDocument();
+        expect(document.body).toHaveFocus();
     });
 
-    it('holds back Submit until required questions are answered', async () => {
+    it('moves from the intro to the first question, taking focus with it', async () => {
         renderCard();
-        const submit = screen.getByRole('button', { name: 'Submit' });
 
-        await userEvent.type(screen.getByLabelText('Anything else?'), 'Hi');
-        submit.focus();
+        await startSurvey();
+
+        expect(screen.queryByText('Quick feedback')).not.toBeInTheDocument();
+        expect(screen.getByRole('progressbar')).toHaveAttribute(
+            'aria-valuetext',
+            'Step 2 of 3',
+        );
+        expect(document.activeElement).toContainElement(
+            screen.getByRole('radiogroup', { name: 'Rate this page' }),
+        );
+    });
+
+    it('disables Next until a required question is answered', async () => {
+        renderCard();
+        await startSurvey();
+        const next = screen.getByRole('button', { name: 'Next' });
+
+        next.focus();
         await userEvent.keyboard('{Enter}');
-        expect(submit).toHaveAttribute('aria-disabled', 'true');
-        expect(
-            screen.queryByText('Thanks for your feedback!'),
-        ).not.toBeInTheDocument();
+        expect(next).toHaveAttribute('aria-disabled', 'true');
+        expect(next).toHaveAccessibleDescription(
+            'Answer this question to continue.',
+        );
+        expect(screen.getByText('Rate this page')).toBeInTheDocument();
 
         fireEvent.click(screen.getByRole('radio', { name: '4 Stars' }));
-        expect(submit).not.toHaveAttribute('aria-disabled');
+        expect(next).not.toHaveAttribute('aria-disabled');
+        expect(next).not.toHaveAccessibleDescription();
+    });
+
+    it('ends on Submit instead of Next', async () => {
+        renderCard();
+        await startSurvey();
+
+        await answerRatingAndContinue();
+
+        expect(
+            screen.getByRole('textbox', { name: 'Anything else?' }),
+        ).toBeInTheDocument();
+        expect(
+            screen.queryByRole('button', { name: 'Next' }),
+        ).not.toBeInTheDocument();
+        expect(
+            screen.getByRole('button', { name: 'Submit' }),
+        ).toBeInTheDocument();
+    });
+
+    it('goes back to the previous question keeping its answer', async () => {
+        renderCard();
+        await startSurvey();
+
+        await answerRatingAndContinue(3);
+        await userEvent.click(screen.getByRole('button', { name: 'Back' }));
+
+        expect(screen.getByRole('radio', { name: '3 Stars' })).toBeChecked();
+    });
+
+    it('goes back from the first question to the intro', async () => {
+        renderCard();
+        await startSurvey();
+
+        await userEvent.click(screen.getByRole('button', { name: 'Back' }));
+
+        expect(screen.getByText('Quick feedback')).toBeInTheDocument();
     });
 
     it('submits trimmed answers and shows the thanks state', async () => {
         const onSubmit = vi.fn();
         renderCard({ onSubmit });
+        await startSurvey();
 
-        fireEvent.click(screen.getByRole('radio', { name: '4 Stars' }));
+        await answerRatingAndContinue();
         await userEvent.type(
-            screen.getByLabelText('Anything else?'),
+            screen.getByRole('textbox', { name: 'Anything else?' }),
             '  More please ',
         );
         await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
@@ -97,9 +166,13 @@ describe('SurveyCard', () => {
     it('drops blank free-text answers', async () => {
         const onSubmit = vi.fn();
         renderCard({ onSubmit });
+        await startSurvey();
 
-        fireEvent.click(screen.getByRole('radio', { name: '2 Stars' }));
-        await userEvent.type(screen.getByLabelText('Anything else?'), '   ');
+        await answerRatingAndContinue(2);
+        await userEvent.type(
+            screen.getByRole('textbox', { name: 'Anything else?' }),
+            '   ',
+        );
         await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
 
         expect(onSubmit).toHaveBeenCalledWith({ rate: 2 });
@@ -115,8 +188,9 @@ describe('SurveyCard', () => {
                 return () => {};
             },
         });
+        await startSurvey();
 
-        fireEvent.click(screen.getByRole('radio', { name: '4 Stars' }));
+        await answerRatingAndContinue();
         await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
         expect(onDismiss).not.toHaveBeenCalled();
 
@@ -139,8 +213,9 @@ describe('SurveyCard', () => {
             />
         );
         const { rerender } = render(card());
+        await startSurvey();
 
-        fireEvent.click(screen.getByRole('radio', { name: '4 Stars' }));
+        await answerRatingAndContinue();
         await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
         rerender(card());
 
@@ -158,9 +233,24 @@ describe('SurveyCard', () => {
         expect(onDismiss).toHaveBeenCalledOnce();
     });
 
+    it('dismisses when the card is closed on the thanks message', async () => {
+        const onDismiss = vi.fn();
+        renderCard({ onDismiss });
+        await startSurvey();
+        await answerRatingAndContinue();
+        await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
+
+        await userEvent.click(
+            screen.getByRole('button', { name: 'Close survey' }),
+        );
+
+        expect(onDismiss).toHaveBeenCalledOnce();
+    });
+
     it('submits the picked options in the order they are offered', async () => {
         const onSubmit = vi.fn();
         renderCard({ survey: multiChoiceSurvey, onSubmit });
+        await startSurvey();
 
         await userEvent.click(screen.getByRole('checkbox', { name: 'Other' }));
         await userEvent.click(
@@ -175,6 +265,7 @@ describe('SurveyCard', () => {
 
     it('holds back Submit again when every picked option is unpicked', async () => {
         renderCard({ survey: multiChoiceSurvey });
+        await startSurvey();
 
         await userEvent.click(screen.getByRole('checkbox', { name: 'PM' }));
         await userEvent.click(screen.getByRole('checkbox', { name: 'PM' }));

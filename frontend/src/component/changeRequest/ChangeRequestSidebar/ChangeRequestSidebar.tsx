@@ -13,6 +13,8 @@ import { EnvironmentChangeRequest } from './EnvironmentChangeRequest/Environment
 import { ReviewChangesHeader } from './ReviewChangesHeader/ReviewChangesHeader.tsx';
 import { refreshFeatureChangeRequests } from 'utils/refreshAllPendingChangeRequests.ts';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
+import { useNavigate } from 'react-router';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IChangeRequestSidebarProps {
     open: boolean;
@@ -80,9 +82,12 @@ export const ChangeRequestSidebar: FC<IChangeRequestSidebarProps> = ({
     const featureName = useOptionalPathParam('featureId');
     const { discardDraft } = useChangeRequestApi();
     const { setToastApiError } = useToast();
+    const navigate = useNavigate();
+    const submitRedirect = useUiFlag('changeRequestSubmitRedirect');
 
     const onReview = async (
         changeState: (project: string) => Promise<void>,
+        changeRequestId: number,
     ) => {
         try {
             await changeState(project);
@@ -93,6 +98,11 @@ export const ChangeRequestSidebar: FC<IChangeRequestSidebarProps> = ({
                     : Promise.resolve(),
             ]);
             onClose();
+            if (submitRedirect) {
+                navigate(
+                    `/projects/${project}/change-requests/${changeRequestId}`,
+                );
+            }
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -139,7 +149,9 @@ export const ChangeRequestSidebar: FC<IChangeRequestSidebarProps> = ({
                         key={environmentChangeRequest.id}
                         environmentChangeRequest={environmentChangeRequest}
                         onClose={onClose}
-                        onReview={onReview}
+                        onReview={(changeState) =>
+                            onReview(changeState, environmentChangeRequest.id)
+                        }
                         onDiscard={onDiscard}
                     >
                         <ChangeRequest

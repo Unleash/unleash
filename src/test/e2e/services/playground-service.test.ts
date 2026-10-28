@@ -17,6 +17,7 @@ import { playgroundStrategyEvaluation } from '../../../lib/openapi/spec/playgrou
 import type { PlaygroundSegmentSchema } from '../../../lib/openapi/spec/playground-segment-schema.js';
 import { createPlaygroundService } from '../../../lib/features/index.js';
 import { DEFAULT_ENV } from '../../../lib/server-impl.js';
+import { SYSTEM_USER_ID } from '../../../lib/types/core.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -67,6 +68,7 @@ describe('the playground service (e2e)', () => {
             projects,
             env,
             context,
+            SYSTEM_USER_ID,
         );
 
         return serviceFeatures;

@@ -1,4 +1,4 @@
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import type { IUnleashConfig } from '../../types/option.js';
 import type { IUnleashServices } from '../../services/index.js';
 import { NONE } from '../../types/permissions.js';
@@ -128,13 +128,14 @@ export default class PlaygroundController extends Controller {
     }
 
     async evaluateContext(
-        req: Request<any, any, PlaygroundRequestSchema>,
+        req: IAuthRequest<any, any, PlaygroundRequestSchema>,
         res: Response<PlaygroundResponseSchema>,
     ): Promise<void> {
         const result = await this.playgroundService.evaluateQuery(
             req.body.projects || '*',
             req.body.environment,
             req.body.context,
+            extractUserIdFromUser(req.user),
         );
         const response: PlaygroundResponseSchema = playgroundViewModel(
             req.body,

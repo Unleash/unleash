@@ -124,19 +124,10 @@ export class PlaygroundService {
 
         const segments = await this.segmentReadModel.getActive();
 
-        let filteredProjects: typeof projects = projects;
-
-        const projectAccess =
-            await this.privateProjectChecker.getUserAccessibleProjects(userId);
-        if (projectAccess.mode === 'all') {
-            filteredProjects = projects;
-        } else if (projects === ALL) {
-            filteredProjects = projectAccess.projects;
-        } else {
-            filteredProjects = projects.filter((project) =>
-                projectAccess.projects.includes(project),
-            );
-        }
+        const filteredProjects = await this.filterAccessibleProjects(
+            projects,
+            userId,
+        );
 
         const environmentFeatures = await Promise.all(
             environments.map((env) =>
@@ -187,6 +178,23 @@ export class PlaygroundService {
             result,
             invalidContextProperties: removedProperties,
         };
+    }
+
+    private async filterAccessibleProjects(
+        projects: typeof ALL | string[],
+        userId: number,
+    ): Promise<typeof ALL | string[]> {
+        const projectAccess =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+        if (projectAccess.mode === 'all') {
+            return projects;
+        }
+        if (projects === ALL) {
+            return projectAccess.projects;
+        }
+        return projects.filter((project) =>
+            projectAccess.projects.includes(project),
+        );
     }
 
     private async evaluate({
@@ -342,9 +350,14 @@ export class PlaygroundService {
         projects: typeof ALL | string[],
         environment: string,
         context: SdkContextSchema,
+        userId: number,
     ): Promise<PlaygroundFeatureEvaluationResult[]> {
+        const filteredProjects = await this.filterAccessibleProjects(
+            projects,
+            userId,
+        );
         const [{ features, featureProject }, segments] = await Promise.all([
-            this.resolveFeatures(projects, environment),
+            this.resolveFeatures(filteredProjects, environment),
             this.segmentReadModel.getActive(),
         ]);
 

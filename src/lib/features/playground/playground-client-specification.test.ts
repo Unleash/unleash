@@ -4,6 +4,7 @@ import type { FeatureConfigurationClient } from '../feature-toggle/types/feature
 import type { FeatureToggle, ISegment } from '../../types/model.js';
 import type { SdkContextSchema } from '../../openapi/spec/sdk-context-schema.js';
 import { omitKeys } from '../../util/index.js';
+import { SYSTEM_USER_ID } from '../../types/core.js';
 import { createFakePlaygroundService } from './createPlaygroundService.js';
 
 const require = createRequire(import.meta.url);
@@ -90,6 +91,7 @@ specificationFiles
                     '*',
                     'development',
                     contextWithAppName,
+                    SYSTEM_USER_ID,
                 );
 
                 const evaluatedFeature = evaluatedFeatures.find(

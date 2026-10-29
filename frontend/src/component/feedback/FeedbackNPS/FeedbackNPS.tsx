@@ -26,6 +26,8 @@ import {
 import { useAuthFeedback } from 'hooks/api/getters/useAuth/useAuthFeedback';
 import { useAuthFeedbackApi } from 'hooks/api/actions/useAuthFeedbackApi/useAuthFeedbackApi';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { FeedbackNPSCard } from './FeedbackNPSCard.tsx';
 
 const StyledHeader = styled('h3')(({ theme }) => ({
     margin: 0,
@@ -45,6 +47,7 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
     const theme = useTheme();
     const feedbackId = PNPS_FEEDBACK_ID;
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const surveyCardEnabled = useUiFlag('feedbackModuleDisplaySurvey');
 
     const animations = useMemo(
         () => ({
@@ -97,6 +100,17 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
 
     if (!showNPSFeedback(feedback)) {
         return null;
+    }
+
+    if (surveyCardEnabled) {
+        return (
+            <FeedbackNPSCard
+                open={showFeedback}
+                onConfirm={onConfirm}
+                onDontShowAgain={onDontShowAgain}
+                onClose={() => setShowFeedback(false)}
+            />
+        );
     }
 
     return (

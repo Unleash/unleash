@@ -226,9 +226,7 @@ describe('SurveyCard', () => {
         const onDismiss = vi.fn();
         renderCard({ onDismiss });
 
-        await userEvent.click(
-            screen.getByRole('button', { name: 'Close survey' }),
-        );
+        await userEvent.click(screen.getByRole('button', { name: 'Close' }));
 
         expect(onDismiss).toHaveBeenCalledOnce();
     });
@@ -240,9 +238,7 @@ describe('SurveyCard', () => {
         await answerRatingAndContinue();
         await userEvent.click(screen.getByRole('button', { name: 'Submit' }));
 
-        await userEvent.click(
-            screen.getByRole('button', { name: 'Close survey' }),
-        );
+        await userEvent.click(screen.getByRole('button', { name: 'Close' }));
 
         expect(onDismiss).toHaveBeenCalledOnce();
     });

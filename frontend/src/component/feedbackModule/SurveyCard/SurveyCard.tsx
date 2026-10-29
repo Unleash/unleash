@@ -7,15 +7,7 @@ import {
     useRef,
     useState,
 } from 'react';
-import {
-    Button,
-    Fade,
-    IconButton,
-    Paper,
-    styled,
-    Typography,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Button, Fade, styled, Typography } from '@mui/material';
 import CheckCircleOutlined from '@mui/icons-material/CheckCircleOutlined';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import type {
@@ -25,31 +17,14 @@ import type {
     SurveyQuestion,
 } from '../survey.ts';
 import { QuestionField } from './QuestionField.tsx';
+import {
+    StyledSurveyCard,
+    StyledSurveyCardActions,
+    StyledSurveyCardHeader,
+    SurveyCardCloseButton,
+} from './SurveyCardLayout.tsx';
 
 const THANKS_VISIBLE_MS = 3000;
-
-const StyledCard = styled(Paper)(({ theme }) => ({
-    position: 'fixed',
-    bottom: theme.spacing(3),
-    right: theme.spacing(3),
-    zIndex: theme.zIndex.tooltip,
-    width: 360,
-    maxWidth: `calc(100vw - ${theme.spacing(6)})`,
-    maxHeight: `calc(100vh - ${theme.spacing(6)})`,
-    overflowY: 'auto',
-    padding: theme.spacing(3),
-    borderRadius: theme.shape.borderRadiusLarge,
-}));
-
-const StyledHeader = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    gap: theme.spacing(2),
-    marginTop: theme.spacing(-1),
-    marginRight: theme.spacing(-1),
-    marginBottom: theme.spacing(1),
-}));
 
 const StyledProgress = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -83,11 +58,6 @@ const StyledStep = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledActions = styled('div')(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(1.5),
-}));
-
 const StyledThanks = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -113,12 +83,6 @@ const cleanAnswers = (answers: SurveyAnswers): SurveyAnswers =>
                 typeof answer === 'string' ? answer.trim() : answer,
             ]),
     );
-
-const CloseButton = ({ onClick }: { onClick: () => void }) => (
-    <IconButton aria-label='Close survey' size='small' onClick={onClick}>
-        <CloseIcon fontSize='small' />
-    </IconButton>
-);
 
 interface SurveyProgressProps {
     step: number;
@@ -236,7 +200,7 @@ const QuestionStep = ({
                     onChange={onChange}
                 />
             </StyledStep>
-            <StyledActions>
+            <StyledSurveyCardActions>
                 <Button variant='outlined' onClick={onBack}>
                     Back
                 </Button>
@@ -257,7 +221,7 @@ const QuestionStep = ({
                 >
                     {isLast ? 'Submit' : 'Next'}
                 </Button>
-            </StyledActions>
+            </StyledSurveyCardActions>
         </>
     );
 };
@@ -313,10 +277,10 @@ const SurveyForm = ({ survey, onSubmit, onDismiss }: SurveyFormProps) => {
 
     return (
         <>
-            <StyledHeader>
+            <StyledSurveyCardHeader>
                 <SurveyProgress step={step} total={totalSteps} />
-                <CloseButton onClick={onDismiss} />
-            </StyledHeader>
+                <SurveyCardCloseButton onClick={onDismiss} />
+            </StyledSurveyCardHeader>
             <StyledForm onSubmit={handleSubmit}>
                 {question === undefined ? (
                     <IntroStep survey={survey} focusStep={focusStep} />
@@ -361,7 +325,11 @@ export const SurveyCard = ({
 
     return (
         <Fade in={state !== 'leaving'} onExited={onDismiss}>
-            <StyledCard elevation={8} role='complementary' aria-label='Survey'>
+            <StyledSurveyCard
+                elevation={8}
+                role='complementary'
+                aria-label='Survey'
+            >
                 {state === 'answering' ? (
                     <SurveyForm
                         survey={survey}
@@ -370,16 +338,16 @@ export const SurveyCard = ({
                     />
                 ) : (
                     <>
-                        <StyledHeader>
-                            <CloseButton onClick={onDismiss} />
-                        </StyledHeader>
+                        <StyledSurveyCardHeader>
+                            <SurveyCardCloseButton onClick={onDismiss} />
+                        </StyledSurveyCardHeader>
                         <ThanksMessage
                             scheduleLeave={scheduleLeave}
                             onLeave={() => setState('leaving')}
                         />
                     </>
                 )}
-            </StyledCard>
+            </StyledSurveyCard>
         </Fade>
     );
 };

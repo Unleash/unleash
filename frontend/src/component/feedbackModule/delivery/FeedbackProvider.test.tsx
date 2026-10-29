@@ -97,7 +97,7 @@ describe('FeedbackProvider', () => {
         ]);
         const { unmount } = renderSurvey(client);
         await userEvent.click(
-            await screen.findByRole('button', { name: 'Close survey' }),
+            await screen.findByRole('button', { name: 'Close' }),
         );
         unmount();
         vi.setSystemTime(Date.now() + SEVEN_DAYS_MS + 1);
@@ -222,7 +222,7 @@ describe('FeedbackProvider', () => {
         const { unmount } = renderSurvey(client);
 
         await userEvent.click(
-            await screen.findByRole('button', { name: 'Close survey' }),
+            await screen.findByRole('button', { name: 'Close' }),
         );
 
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();

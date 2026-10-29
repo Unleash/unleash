@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file.
 
+## [8.3.1] - 2026-10-29
+
+### Bug Fixes
+
+- Private project filter in deprecated playground endpoint
+
+- Write strategy removed events when an import deletes strategies
+
+- Restore feature type on SDK responses
+
+
+### Features
+
+- Add variant pills to new strategy form
+
+- New constraint legal values multi-select UI
+
+- Show survey one question at the time
+
+
+### Miscellaneous Tasks
+
+- Remove required hint
+
+- Protect feature flag export with private project access checks
+
+- Remove feature lifecycle stage prometheus metrics
+
+- Change the layout of survey creator
+
+- Adds flag for managing new OAuth flow according to Slacks guidelines
+
+- Remove flag and enable semver lte + gte operators
+
+
 ## [8.3.0] - 2026-10-27
 
 ### Bug Fixes

@@ -57,6 +57,7 @@ export class ClientFeatureToggleService {
         return result.map(
             ({
                 name,
+                type,
                 enabled,
                 project,
                 strategies,
@@ -65,6 +66,7 @@ export class ClientFeatureToggleService {
                 dependencies,
             }) => ({
                 name,
+                type,
                 enabled,
                 project,
                 strategies,

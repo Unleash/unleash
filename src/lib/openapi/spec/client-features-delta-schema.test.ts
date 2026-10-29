@@ -17,6 +17,7 @@ test('clientFeaturesDeltaSchema all fields', () => {
                     impressionData: false,
                     enabled: false,
                     name: 'base_feature',
+                    type: 'experiment',
                     project: 'default',
                     variants: [],
                     strategies: [],

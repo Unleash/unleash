@@ -26,6 +26,8 @@ export interface ClientFeatureSchema {
     project?: string;
     /** Evaluation strategies for this flag. Each entry in this list will be evaluated and ORed together */
     strategies?: FeatureStrategySchema[];
+    /** What kind of feature flag is this. Refer to the documentation on [feature flag types](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types) for more information */
+    type?: string;
     /**
      * [Variants](https://docs.getunleash.io/concepts/feature-flag-variants#what-are-variants) configured for this flag
      * @nullable

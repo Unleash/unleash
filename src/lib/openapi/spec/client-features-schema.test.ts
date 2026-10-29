@@ -14,6 +14,7 @@ test('clientFeaturesSchema required fields', () => {
         features: [
             {
                 name: 'some-name',
+                type: 'experiment',
                 enabled: false,
                 impressionData: false,
                 variants: [

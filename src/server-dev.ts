@@ -69,6 +69,7 @@ process.nextTick(async () => {
                         feedbackModuleSubmitResponses: true,
                         playgroundFeatureEvaluation: true,
                         perFlagLifetime: true,
+                        slackAppAuthV2: true,
                     },
                 },
                 authentication: {

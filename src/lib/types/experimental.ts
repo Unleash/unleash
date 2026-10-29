@@ -86,6 +86,7 @@ export type IFlagKey =
     | 'feedbackModuleDisplaySurvey'
     | 'feedbackModuleSubmitResponses'
     | 'playgroundFeatureEvaluation'
+    | 'slackAppAuthV2'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -352,6 +353,10 @@ const flags: IFlags = {
     ),
     githubIntegration: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_GITHUB_INTEGRATION,
+        false,
+    ),
+    slackAppAuthV2: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SLACK_APP_AUTH_V2,
         false,
     ),
     integrationParamKvpEditor: parseEnvVarBoolean(

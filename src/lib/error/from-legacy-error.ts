@@ -1,4 +1,8 @@
-import { fromJoiError } from './bad-data-error.js';
+import BadDataError, { fromJoiError } from './bad-data-error.js';
+import {
+    CHARACTER_NOT_IN_REPERTOIRE,
+    UNTRANSLATABLE_CHARACTER,
+} from './db-error.js';
 import pkg from 'joi';
 const { ValidationError: JoiValidationError } = pkg;
 import {
@@ -67,9 +71,22 @@ const getStatusCode = (errorName: string): number => {
     }
 };
 
+const postgresRejectedNulCharacter = (e: Error): boolean => {
+    const { code } = e as { code?: unknown };
+    return (
+        code === CHARACTER_NOT_IN_REPERTOIRE ||
+        code === UNTRANSLATABLE_CHARACTER
+    );
+};
+
 export const fromLegacyError = (e: Error): UnleashError => {
     if (e instanceof UnleashError) {
         return e;
+    }
+    if (postgresRejectedNulCharacter(e)) {
+        return new BadDataError(
+            'The request contains the NUL character (\\u0000), which cannot be stored.',
+        );
     }
     const name = UnleashApiErrorTypes.includes(e.name as UnleashApiErrorName)
         ? (e.name as UnleashApiErrorName)

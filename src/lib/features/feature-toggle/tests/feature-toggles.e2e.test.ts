@@ -2615,6 +2615,54 @@ test('should reject invalid constraint values for multi-valued constraints', asy
         .expect(200);
 });
 
+test('rejects a strategy with a NUL character in a text column (title) or a jsonb column (constraints)', async () => {
+    const project = await db.stores.projectStore.create({
+        id: randomId(),
+        name: randomId(),
+        description: '',
+        mode: 'open',
+    });
+
+    const flag = await db.stores.featureToggleStore.create(project.id, {
+        name: randomId(),
+        impressionData: true,
+        createdByUserId: 9999,
+    });
+
+    const featureStrategiesPath = `/api/admin/projects/${project.id}/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`;
+
+    const nulCharacterMessage =
+        'The request contains the NUL character (\\u0000), which cannot be stored.';
+
+    await app.request
+        .post(featureStrategiesPath)
+        .send({
+            name: 'flexibleRollout',
+            title: 'VISA_114\u0000',
+        })
+        .expect(400)
+        .expect((res) =>
+            expect(res.body.details[0].message).toBe(nulCharacterMessage),
+        );
+
+    await app.request
+        .post(featureStrategiesPath)
+        .send({
+            name: 'flexibleRollout',
+            constraints: [
+                {
+                    contextName: 'userId',
+                    operator: 'IN',
+                    values: ['VISA_114\u0000'],
+                },
+            ],
+        })
+        .expect(400)
+        .expect((res) =>
+            expect(res.body.details[0].message).toBe(nulCharacterMessage),
+        );
+});
+
 test('should add default constraint values for single-valued constraints', async () => {
     const project = await db.stores.projectStore.create({
         id: randomId(),

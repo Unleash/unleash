@@ -287,19 +287,19 @@ test('Stores no variants event when the variants cannot be saved', async () => {
             `/api/admin/projects/default/features/${featureName}/environments/${DEFAULT_ENV}/variants`,
         )
         .send([unsavableVariant])
-        .expect(500);
+        .expect(400);
     await app.request
         .patch(
             `/api/admin/projects/default/features/${featureName}/environments/${DEFAULT_ENV}/variants`,
         )
         .send([{ op: 'add', path: '/1', value: unsavableVariant }])
-        .expect(500);
+        .expect(400);
     await app.request
         .put(
             `/api/admin/projects/default/features/${featureName}/variants-batch`,
         )
         .send({ variants: [unsavableVariant], environments: [DEFAULT_ENV] })
-        .expect(500);
+        .expect(400);
 
     await expectVariantsUnchanged(featureName);
     // no variants event should be stored

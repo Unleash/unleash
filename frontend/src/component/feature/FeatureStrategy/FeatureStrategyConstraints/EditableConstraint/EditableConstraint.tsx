@@ -10,7 +10,7 @@ import { operatorsForContext } from 'utils/operatorsForContext';
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import Delete from '@mui/icons-material/Delete';
-import { ValueList } from './ValueList.tsx';
+import { ValueList, type ValueListHandle } from './ValueList.tsx';
 import { AddValueInline } from './AddValueInline.tsx';
 import { AddValueButton } from './AddValueButton.tsx';
 import { ToggleConstraintCaseSensitivity } from './ToggleConstraintCaseSensitivity.tsx';
@@ -108,7 +108,7 @@ const TopRowInput: FC<{
     addValues: (value: string | string[]) => void;
     localConstraint: EditableConstraintType;
     validator: (...values: string[]) => ConstraintValidationResult;
-    addValuesButtonRef: React.RefObject<HTMLDivElement | null>;
+    addValuesButtonRef: React.RefObject<HTMLButtonElement | null>;
     editingOpen: boolean;
     setEditingOpen: (open: boolean) => void;
     toggleValue: (value: string) => void;
@@ -126,6 +126,14 @@ const TopRowInput: FC<{
     legalValueData,
 }) => {
     const [draftValue, setDraftValue] = useState('');
+    const pendingButtonFocus = useRef(false);
+
+    useEffect(() => {
+        if (!editingOpen && pendingButtonFocus.current) {
+            pendingButtonFocus.current = false;
+            addValuesButtonRef.current?.focus();
+        }
+    }, [editingOpen, addValuesButtonRef]);
 
     const legalValuesExhausted =
         isMultiValueConstraint(localConstraint) &&
@@ -153,6 +161,7 @@ const TopRowInput: FC<{
         if (editingOpen) return null;
         return (
             <AddValueButton
+                ref={addValuesButtonRef}
                 hasValues={false}
                 onClick={() => setEditingOpen(true)}
             />
@@ -163,27 +172,27 @@ const TopRowInput: FC<{
         return null;
     }
 
-    return (
-        <div ref={addValuesButtonRef}>
-            {editingOpen ? (
-                <AddValueInline
-                    localConstraint={localConstraint}
-                    validator={validator}
-                    onAddValues={addValues}
-                    value={draftValue}
-                    onChange={setDraftValue}
-                    onClose={() => setEditingOpen(false)}
-                    selectedValues={selectedValues}
-                    toggleValue={toggleValue}
-                    legalValueData={legalValueData}
-                />
-            ) : (
-                <AddValueButton
-                    hasValues={selectedValues.size > 0}
-                    onClick={() => setEditingOpen(true)}
-                />
-            )}
-        </div>
+    return editingOpen ? (
+        <AddValueInline
+            localConstraint={localConstraint}
+            validator={validator}
+            onAddValues={addValues}
+            value={draftValue}
+            onChange={setDraftValue}
+            onClose={(shouldManageFocus) => {
+                if (shouldManageFocus) pendingButtonFocus.current = true;
+                setEditingOpen(false);
+            }}
+            selectedValues={selectedValues}
+            toggleValue={toggleValue}
+            legalValueData={legalValueData}
+        />
+    ) : (
+        <AddValueButton
+            ref={addValuesButtonRef}
+            hasValues={selectedValues.size > 0}
+            onClick={() => setEditingOpen(true)}
+        />
     );
 };
 
@@ -252,21 +261,61 @@ export const EditableConstraint: FC<Props> = ({
         editingRequested ||
         (isRegexConstraint(localConstraint) && currentValueInvalid);
 
+    const valueListRef = useRef<ValueListHandle>(null);
+    const addValuesButtonRef = useRef<HTMLButtonElement>(null);
+    const deleteButtonRef = useRef<HTMLButtonElement>(null);
+    const pendingValueFocus = useRef(false);
+    const hasSingleValue =
+        !isMultiValueConstraint(localConstraint) &&
+        Boolean(localConstraint.value);
+    const legalValuesExhausted =
+        isMultiValueConstraint(localConstraint) &&
+        legalValueData?.remainingLegalValues.length === 0;
+
     const addValues = useCallback(
-        (value: string | string[]) =>
-            updateConstraint({ type: 'add value(s)', payload: value }),
-        [updateConstraint],
+        (value: string | string[]) => {
+            updateConstraint({ type: 'add value(s)', payload: value });
+            if (!isMultiValueConstraint(localConstraint)) {
+                pendingValueFocus.current = true;
+            }
+        },
+        [updateConstraint, localConstraint],
     );
+
+    useEffect(() => {
+        if (!pendingValueFocus.current) return;
+        pendingValueFocus.current = false;
+        if (hasSingleValue) {
+            valueListRef.current?.focusValue(0);
+        } else if (legalValuesExhausted) {
+            valueListRef.current?.focusValue(selectedValues.size - 1);
+        }
+    }, [hasSingleValue, legalValuesExhausted, selectedValues]);
+
+    // The add button may not be mounted yet (e.g. single-value constraints)
+    const pendingDeleteFocus = useRef(false);
+
+    useEffect(() => {
+        if (!pendingDeleteFocus.current || selectedValues.size > 0) return;
+        pendingDeleteFocus.current = false;
+        addValuesButtonRef.current?.focus();
+    }, [selectedValues]);
+
     const removeValue = useCallback(
         (value: string) => {
+            if (selectedValues.size === 1) {
+                pendingDeleteFocus.current = true;
+            }
             updateConstraint({ type: 'remove value', payload: value });
             setEditingOpen(false);
         },
-        [updateConstraint],
+        [updateConstraint, selectedValues],
     );
     const toggleValue = useCallback(
-        (value: string) =>
-            updateConstraint({ type: 'toggle value', payload: value }),
+        (value: string) => {
+            updateConstraint({ type: 'toggle value', payload: value });
+            pendingValueFocus.current = true;
+        },
         [updateConstraint],
     );
     const onOperatorChange = useCallback(
@@ -290,8 +339,6 @@ export const EditableConstraint: FC<Props> = ({
     const { contextName, operator } = localConstraint;
     const showCaseSensitiveButton =
         isStringOperator(operator) || isRegexOperator(operator);
-    const deleteButtonRef = useRef<HTMLButtonElement>(null);
-    const addValuesButtonRef = useRef<HTMLDivElement>(null);
 
     if (!context) {
         return null;
@@ -363,13 +410,11 @@ export const EditableConstraint: FC<Props> = ({
                         </OperatorOptions>
                     </ConstraintOptions>
                     <ValueList
+                        ref={valueListRef}
                         values={Array.from(selectedValues)}
                         removeValue={removeValue}
                         getValueTitle={valueTitle}
-                        getExternalFocusTarget={() =>
-                            addValuesButtonRef.current ??
-                            deleteButtonRef.current
-                        }
+                        getExternalFocusTarget={() => null}
                     >
                         <TopRowInput
                             key={operator}

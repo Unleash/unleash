@@ -36,6 +36,7 @@ export type BaseProps = {
     renderBelowOptions?: (searchText: string) => ReactNode;
     horizontalAlign?: 'left' | 'right';
     id?: string;
+    disableRestoreFocus?: boolean;
 };
 
 export type UseSelectListboxOptions<T extends string | number> =

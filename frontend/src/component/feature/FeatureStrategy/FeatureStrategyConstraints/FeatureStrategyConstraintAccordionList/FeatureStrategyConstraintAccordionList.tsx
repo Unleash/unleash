@@ -1,6 +1,7 @@
 import type React from 'react';
 import {
     forwardRef,
+    useEffect,
     useImperativeHandle,
     useRef,
     useState,
@@ -112,6 +113,16 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
     const addConstraintButtonRef = useRef<HTMLButtonElement>(null);
     const [addConstraintAnchor, setAddConstraintAnchor] =
         useState<HTMLButtonElement | null>(null);
+    const listRef = useRef<HTMLDivElement>(null);
+    const [pendingNewRowFocus, setPendingNewRowFocus] = useState(false);
+
+    useEffect(() => {
+        if (!pendingNewRowFocus) return;
+        const rows = listRef.current?.querySelectorAll(':scope > ul > li');
+        if (!rows || rows.length !== constraints.length) return;
+        setPendingNewRowFocus(false);
+        rows[rows.length - 1].querySelector<HTMLElement>('button')?.focus();
+    }, [constraints, pendingNewRowFocus]);
 
     if (context.length === 0) {
         return null;
@@ -148,9 +159,10 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                 <Button
                     ref={addConstraintButtonRef}
                     type='button'
-                    onClick={() =>
-                        setAddConstraintAnchor(addConstraintButtonRef.current)
-                    }
+                    onClick={() => {
+                        setPendingNewRowFocus(false);
+                        setAddConstraintAnchor(addConstraintButtonRef.current);
+                    }}
                     startIcon={<Add />}
                     variant='outlined'
                     color='primary'
@@ -164,9 +176,11 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                     open={Boolean(addConstraintAnchor)}
                     anchorEl={addConstraintAnchor}
                     onClose={() => setAddConstraintAnchor(null)}
+                    disableRestoreFocus={pendingNewRowFocus}
                     optionGroups={contextFieldOptions}
                     onChange={(contextName) => {
                         if (contextName) {
+                            setPendingNewRowFocus(true);
                             addConstraint(contextName);
                         }
                     }}
@@ -176,11 +190,13 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                 />
             </StyledRow>
             {setConstraints ? (
-                <EditableConstraintsList
-                    ref={ref}
-                    setConstraints={setConstraints}
-                    constraints={constraints}
-                />
+                <div ref={listRef}>
+                    <EditableConstraintsList
+                        ref={ref}
+                        setConstraints={setConstraints}
+                        constraints={constraints}
+                    />
+                </div>
             ) : null}
             <StyledLimitBox>
                 <Limit

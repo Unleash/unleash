@@ -84,7 +84,7 @@ type Props = {
     value: string;
     onChange: (value: string) => void;
     onAddValues: (newValues: string[]) => void;
-    onClose: () => void;
+    onClose: (shouldManageFocus: boolean) => void;
     validator: (...values: string[]) => ConstraintValidatorOutput;
     selectedValues: Set<string>;
     toggleValue: (value: string) => void;

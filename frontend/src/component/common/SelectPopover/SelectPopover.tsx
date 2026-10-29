@@ -100,6 +100,7 @@ export const SelectPopover = <T extends string | number>(
         horizontalAlign = 'left',
         onClose,
         multiple,
+        disableRestoreFocus,
     } = props;
     const closeHintId = useId();
 
@@ -108,6 +109,7 @@ export const SelectPopover = <T extends string | number>(
             open={open}
             anchorEl={anchorEl}
             onClose={onClose}
+            disableRestoreFocus={disableRestoreFocus}
             anchorOrigin={{ vertical: 'bottom', horizontal: horizontalAlign }}
             transformOrigin={{ vertical: 'top', horizontal: horizontalAlign }}
             slotProps={{

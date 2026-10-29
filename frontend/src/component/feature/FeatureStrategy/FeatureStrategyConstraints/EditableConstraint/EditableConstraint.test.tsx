@@ -127,7 +127,7 @@ describe('EditableConstraint', () => {
     });
 
     describe('inline value input', () => {
-        test('keeps an unsubmitted draft after an accidental close, but clears it on submit or operator change', async () => {
+        test('keeps an unsubmitted draft selected after an accidental close, commits it via keyboard "Add" without losing focus, and clears it on operator change', async () => {
             setupApi();
 
             render(
@@ -145,20 +145,34 @@ describe('EditableConstraint', () => {
             fireEvent.click(
                 await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
             );
-            let input = await screen.findByLabelText('Constraint Value');
+            let input = (await screen.findByLabelText(
+                'Constraint Value',
+            )) as HTMLInputElement;
             await userEvent.type(input, 'draft-value');
             fireEvent.keyDown(input, { key: 'Escape' });
             expect(
                 screen.queryByTestId('CONSTRAINT_VALUES_INPUT'),
             ).not.toBeInTheDocument();
+            expect(
+                screen.getByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            ).toHaveFocus();
 
             fireEvent.click(screen.getByTestId('CONSTRAINT_ADD_VALUES_BUTTON'));
-            input = await screen.findByLabelText('Constraint Value');
+            input = (await screen.findByLabelText(
+                'Constraint Value',
+            )) as HTMLInputElement;
             expect(input).toHaveValue('draft-value');
+            expect(input.selectionStart).toBe(0);
+            expect(input.selectionEnd).toBe('draft-value'.length);
 
-            fireEvent.click(screen.getByTestId('CONSTRAINT_VALUES_ADD_BUTTON'));
+            await userEvent.tab();
+            expect(
+                screen.getByTestId('CONSTRAINT_VALUES_ADD_BUTTON'),
+            ).toHaveFocus();
+            await userEvent.keyboard('{Enter}');
             await screen.findByText('draft-value');
             expect(input).toHaveValue('');
+            expect(input).toHaveFocus();
 
             await userEvent.type(input, 'leftover');
             fireEvent.keyDown(input, { key: 'Escape' });
@@ -169,6 +183,112 @@ describe('EditableConstraint', () => {
             fireEvent.click(screen.getByTestId('CONSTRAINT_ADD_VALUES_BUTTON'));
             input = await screen.findByLabelText('Constraint Value');
             expect(input).toHaveValue('');
+        });
+
+        test('moves focus to the new chip after adding a value via keyboard "Add" on a single-value constraint, and back to the add value button once it\'s deleted', async () => {
+            setupApi();
+
+            const { container } = render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'appName',
+                        operator: 'NUM_EQ',
+                    }}
+                    onDelete={noOp}
+                    onUpdate={noOp}
+                />,
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            const input = await screen.findByLabelText('Constraint Value');
+            await userEvent.type(input, '42');
+
+            const addButton = screen.getByTestId(
+                'CONSTRAINT_VALUES_ADD_BUTTON',
+            );
+            addButton.focus();
+            fireEvent.click(addButton);
+
+            const chip = await screen.findByText('42');
+            await waitFor(() => {
+                expect(chip.closest('.MuiChip-root')).toHaveFocus();
+            });
+
+            const deleteIcon = container.querySelector('.MuiChip-deleteIcon');
+            expect(deleteIcon).not.toBeNull();
+            fireEvent.click(deleteIcon as Element);
+
+            const newAddButton = await screen.findByTestId(
+                'CONSTRAINT_ADD_VALUES_BUTTON',
+            );
+            await waitFor(() => {
+                expect(newAddButton).toHaveFocus();
+            });
+        });
+
+        test('moves focus to the add value button after deleting the last chip', async () => {
+            setupApi();
+
+            const { container } = render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'appName',
+                        operator: 'IN',
+                        values: ['only-value'],
+                    }}
+                    onDelete={noOp}
+                    onUpdate={noOp}
+                />,
+            );
+
+            await screen.findByText('only-value');
+            const deleteIcon = container.querySelector('.MuiChip-deleteIcon');
+            expect(deleteIcon).not.toBeNull();
+            fireEvent.click(deleteIcon as Element);
+
+            const addButton = await screen.findByTestId(
+                'CONSTRAINT_ADD_VALUES_BUTTON',
+            );
+            expect(addButton).toHaveFocus();
+        });
+
+        test('moves focus to the new chip after picking a single legal value', async () => {
+            setupApi({
+                contextFields: [
+                    {
+                        name: 'appName',
+                        legalValues: [{ value: '1' }, { value: '2' }],
+                    },
+                ],
+            });
+
+            render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'appName',
+                        operator: 'NUM_EQ',
+                    }}
+                    onDelete={noOp}
+                    onUpdate={noOp}
+                />,
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            await waitFor(() => {
+                expect(screen.queryAllByRole('option').length).toBeGreaterThan(
+                    0,
+                );
+            });
+            fireEvent.click(screen.getByRole('option', { name: '1' }));
+
+            const chip = await screen.findByText('1');
+            await waitFor(() => {
+                expect(chip.closest('.MuiChip-root')).toHaveFocus();
+            });
         });
     });
 
@@ -275,7 +395,7 @@ describe('EditableConstraint', () => {
             expect(chip).toHaveTextContent('10.0.0.0/8');
         });
 
-        test('prevents selecting legal values that are invalid for the operator', async () => {
+        test('prevents selecting legal values that are invalid for the operator, and moves focus to the add value button on Escape', async () => {
             setupApi({
                 contextFields: [
                     {
@@ -343,6 +463,14 @@ describe('EditableConstraint', () => {
                     values: ['10.0.0.0/8', '192.168.1.1'],
                 });
             });
+
+            fireEvent.keyDown(screen.getByLabelText('Constraint Value'), {
+                key: 'Escape',
+            });
+            expect(screen.queryByLabelText('Constraint Value')).toBeNull();
+            expect(
+                screen.getByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            ).toHaveFocus();
         });
 
         test('shows legal values as disabled when none are valid for the operator', async () => {
@@ -381,7 +509,7 @@ describe('EditableConstraint', () => {
             ).toHaveAttribute('aria-disabled', 'true');
         });
 
-        test('adds multiple legal values pasted as a comma-separated list, rejects values not in the legal set, and closes once exhausted', async () => {
+        test('adds multiple legal values pasted as a comma-separated list, rejects values not in the legal set, and moves focus to the last pill once exhausted', async () => {
             setupApi({
                 contextFields: [
                     {
@@ -455,9 +583,13 @@ describe('EditableConstraint', () => {
             expect(
                 screen.queryByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
             ).not.toBeInTheDocument();
+            const lastChip = await screen.findByText('172.16.0.0/12');
+            await waitFor(() => {
+                expect(lastChip.closest('.MuiChip-root')).toHaveFocus();
+            });
         });
 
-        test('typing a prefix and pressing Enter toggles the auto-highlighted match without raising a stale "not a legal value" error', async () => {
+        test('typing a prefix toggles the auto-highlighted match, via Enter or the "Add" button, without raising a stale "not a legal value" error', async () => {
             setupApi({
                 contextFields: [
                     {
@@ -504,6 +636,21 @@ describe('EditableConstraint', () => {
             });
 
             expect(input).toHaveValue('');
+            expect(
+                screen.queryByText(/is not a legal value/),
+            ).not.toBeInTheDocument();
+
+            // The "Add" button must match this, not fall back to a literal
+            // submit of "192." (which isn't itself a legal value).
+            await userEvent.type(input, '192.');
+            fireEvent.click(screen.getByTestId('CONSTRAINT_VALUES_ADD_BUTTON'));
+
+            await waitFor(() => {
+                expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
+                    operator: 'IN_CIDR',
+                    values: ['10.0.0.0/8', '192.168.1.1'],
+                });
+            });
             expect(
                 screen.queryByText(/is not a legal value/),
             ).not.toBeInTheDocument();

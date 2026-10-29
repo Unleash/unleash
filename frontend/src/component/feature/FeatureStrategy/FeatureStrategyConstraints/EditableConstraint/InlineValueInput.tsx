@@ -4,7 +4,7 @@ import {
     autocompleteClasses,
     ButtonBase,
     InputAdornment,
-    Popover,
+    Popper,
     type InputBaseComponentProps,
     styled,
     TextField,
@@ -22,6 +22,7 @@ import {
     type Ref,
     useId,
     useMemo,
+    useRef,
     useState,
 } from 'react';
 import { SelectOptionsList } from 'component/common/SelectPopover/SelectOptionsList.tsx';
@@ -39,7 +40,7 @@ export type InlineValueProps = {
     parseInput: (raw: string) => string[];
     validator: (...values: string[]) => ConstraintValidatorOutput;
     onAddValues: (newValues: string[]) => void;
-    onClose: () => void;
+    onClose: (shouldManageFocus: boolean) => void;
     helpText?: string;
     htmlInputProps?: InputBaseComponentProps;
     ValuePreview?: FC<{ value: string }>;
@@ -139,19 +140,17 @@ const AddAdornmentButton = styled(ButtonBase)(({ theme }) => ({
     },
 }));
 
-const StyledPopover = styled(Popover)(({ theme }) => ({
-    '& > .MuiPaper-root': {
-        borderRadius: `${theme.shape.borderRadiusLarge}px`,
-        border: `1px solid ${theme.palette.divider}`,
-        width: theme.spacing(40),
-        marginTop: theme.spacing(1),
-    },
-    '&.MuiPopover-root': {
-        pointerEvents: 'none',
-    },
-    '& > .MuiPopover-paper': {
-        pointerEvents: 'all',
-    },
+const StyledPopper = styled(Popper)(({ theme }) => ({
+    zIndex: theme.zIndex.modal,
+}));
+
+const FloatingPanel = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(1),
+    width: theme.spacing(40),
+    borderRadius: `${theme.shape.borderRadiusLarge}px`,
+    border: `1px solid ${theme.palette.divider}`,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[8],
 }));
 
 const PopoverBody = styled('div')(({ theme }) => ({
@@ -189,24 +188,6 @@ const Footer = styled('div')(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontSize: theme.typography.body2.fontSize,
 }));
-
-const ValuePopover: FC<{
-    anchorEl: HTMLDivElement | null;
-    children: ReactNode;
-}> = ({ anchorEl, children }) => (
-    <StyledPopover
-        open={Boolean(anchorEl)}
-        anchorEl={anchorEl}
-        disableAutoFocus
-        disableEnforceFocus
-        disableRestoreFocus
-        hideBackdrop
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-    >
-        {children}
-    </StyledPopover>
-);
 
 const AddValueButton: FC<{ value: string; onClick: () => void }> = ({
     value,
@@ -246,7 +227,6 @@ type FieldProps = {
     error: string;
     setError: (error: string) => void;
     announcement: string;
-    submit: () => void;
     rootProps?: Record<string, unknown>;
     inputRef?: Ref<HTMLInputElement>;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -272,7 +252,6 @@ const InlineValueChrome: FC<
     error,
     setError,
     announcement,
-    submit,
     rootProps,
     inputRef,
     onChange,
@@ -284,11 +263,26 @@ const InlineValueChrome: FC<
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
     const descriptionId = useId();
     const footerId = useId();
+    const hasAutoSelected = useRef(false);
 
     const onContainerBlur = (e: FocusEvent<HTMLDivElement>) => {
         if (!anchorEl?.contains(e.relatedTarget as Node | null)) {
-            onClose();
+            onClose(false);
         }
+    };
+
+    const submitAndRefocus = () => {
+        const input = anchorEl?.querySelector('input');
+        // Replay as if it came from the input, so toggling a highlighted
+        // match and submitting typed/CSV text work the same as Enter does.
+        input?.dispatchEvent(
+            new KeyboardEvent('keydown', {
+                key: 'Enter',
+                bubbles: true,
+                cancelable: true,
+            }),
+        );
+        input?.focus();
     };
 
     const hasDescription = Boolean(error || helpText || ValuePreview);
@@ -311,6 +305,12 @@ const InlineValueChrome: FC<
                     setError('');
                 }}
                 onBlur={onBlur}
+                onFocus={(e) => {
+                    if (!hasAutoSelected.current) {
+                        hasAutoSelected.current = true;
+                        e.target.select();
+                    }
+                }}
                 onKeyDown={onKeyDown}
                 size='medium'
                 variant='outlined'
@@ -326,26 +326,35 @@ const InlineValueChrome: FC<
                     input: {
                         sx: inputSx,
                         endAdornment: (
-                            <AddValueButton value={value} onClick={submit} />
+                            <AddValueButton
+                                value={value}
+                                onClick={submitAndRefocus}
+                            />
                         ),
                     },
                 }}
                 data-testid='CONSTRAINT_VALUES_INPUT'
             />
-            <ValuePopover anchorEl={anchorEl}>
-                <ValueDescriptionBody
-                    error={error}
-                    helpText={helpText}
-                    ValuePreview={ValuePreview}
-                    value={value}
-                    descriptionId={descriptionId}
-                />
-                {optionsPanel}
-                <Footer id={footerId}>
-                    Enter to add
-                    {multiValue ? ' · comma for many' : ''}
-                </Footer>
-            </ValuePopover>
+            <StyledPopper
+                open={Boolean(anchorEl)}
+                anchorEl={anchorEl}
+                placement='bottom-start'
+            >
+                <FloatingPanel>
+                    <ValueDescriptionBody
+                        error={error}
+                        helpText={helpText}
+                        ValuePreview={ValuePreview}
+                        value={value}
+                        descriptionId={descriptionId}
+                    />
+                    {optionsPanel}
+                    <Footer id={footerId}>
+                        Enter to add
+                        {multiValue ? ' · comma for many' : ''}
+                    </Footer>
+                </FloatingPanel>
+            </StyledPopper>
         </Container>
     );
 };
@@ -378,11 +387,15 @@ export const PlainValueInput: FC<InlineValueProps> = ({
         });
 
     const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+        // MUI bubbles the "Add" adornment's keys to the field too — ignore
+        // those, or they'd cancel the button's own click (see submitAndRefocus).
+        if ((e.target as HTMLElement).tagName !== 'INPUT') return;
         if (e.key === 'Enter') {
             e.preventDefault();
             submit();
         } else if (e.key === 'Escape') {
-            onClose();
+            e.stopPropagation(); // don't also close an outer dialog
+            onClose(true);
         }
     };
 
@@ -397,7 +410,6 @@ export const PlainValueInput: FC<InlineValueProps> = ({
             error={error}
             setError={setError}
             announcement={announcement}
-            submit={submit}
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={onKeyDown}
             htmlInputProps={htmlInputProps}
@@ -496,7 +508,7 @@ export const LegalValuesInput: FC<
         options,
         inputValue: value,
         onInputValueChange: onChange,
-        onClose,
+        onClose: () => onClose(true),
         id: inputId,
         matchesSearch: (option, searchText) =>
             option.label.toLowerCase().includes(searchText) ||
@@ -512,19 +524,26 @@ export const LegalValuesInput: FC<
 
     const { onKeyDown: builtInKeyDown, ...rootProps } = getRootProps();
 
-    // Order matters: the built-in handler can select an auto-highlighted
-    // option on Enter, with no signal we can check beforehand — so it must
-    // run first; Enter/Escape only submit typed text if it didn't act.
     const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+        // MUI bubbles the "Add" adornment's keys to the field too — ignore
+        // those, or they'd cancel the button's own click (see submitAndRefocus).
+        if ((e.target as HTMLElement).tagName !== 'INPUT') return;
+
+        if (e.key === 'Escape') {
+            e.stopPropagation(); // don't also close an outer dialog
+            onClose(true);
+            return;
+        }
+
+        // Toggles e.g. "stage-eu" if highlighted via arrow keys + Space.
         handleInputKeyDown(e);
         if (e.defaultPrevented) return;
+        // Toggles e.g. "stage-eu" if auto-highlighted by typing "stage-e".
         builtInKeyDown?.(e);
-        if (e.defaultPrevented) return;
+        if (e.defaultPrevented) return; // it toggled — don't also submit
         if (e.key === 'Enter') {
             e.preventDefault();
-            submit();
-        } else if (e.key === 'Escape') {
-            onClose();
+            submit(); // nothing matched — submit the typed text itself
         }
     };
 
@@ -539,7 +558,6 @@ export const LegalValuesInput: FC<
             error={error}
             setError={setError}
             announcement={announcement}
-            submit={submit}
             rootProps={rootProps}
             inputRef={inputRef}
             onChange={(e) => listboxOnChange?.(e)}

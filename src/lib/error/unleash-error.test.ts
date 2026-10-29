@@ -41,6 +41,18 @@ describe('Standard/legacy error conversion', () => {
             },
         ]);
     });
+
+    it('Hides the original message of unknown errors from the response', () => {
+        const message =
+            'update "tag_types" set "description" = $1 - invalid byte sequence';
+        const result = fromLegacyError(new Error(message));
+
+        expect(result).toMatchObject({
+            statusCode: 500,
+            internalMessage: message,
+        });
+        expect(JSON.stringify(result)).not.toContain('tag_types');
+    });
 });
 
 describe('OpenAPI error conversion', () => {

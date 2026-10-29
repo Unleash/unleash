@@ -75,6 +75,23 @@ test('querying a tag-type that does not exist yields 404', async () => {
     return app.request.get('/api/admin/tag-types/non-existent').expect(404);
 });
 
+test('database errors do not expose the query in the response', async () => {
+    await db.rawDatabase.schema.renameTable('tag_types', 'tag_types_hidden');
+    try {
+        const { body } = await app.request
+            .get('/api/admin/tag-types')
+            .expect(500);
+
+        expect(body.message).toBe('An unexpected error occurred.');
+        expect(JSON.stringify(body)).not.toContain('tag_types');
+    } finally {
+        await db.rawDatabase.schema.renameTable(
+            'tag_types_hidden',
+            'tag_types',
+        );
+    }
+});
+
 test('Can create a new tag type', async () => {
     await app.request
         .post('/api/admin/tag-types')

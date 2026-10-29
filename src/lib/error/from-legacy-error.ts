@@ -113,8 +113,17 @@ export const fromLegacyError = (e: Error): UnleashError => {
         });
     }
 
+    if (statusCode === 500) {
+        return new GenericUnleashError({
+            name,
+            message: 'An unexpected error occurred.',
+            statusCode,
+            internalMessage: e.message,
+        });
+    }
+
     return new GenericUnleashError({
-        name: name as UnleashApiErrorName,
+        name,
         message: e.message,
         statusCode,
     });

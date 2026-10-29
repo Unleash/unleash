@@ -20,8 +20,6 @@ import {
     inOperators,
     isRegexOperator,
     isCidrOperator,
-    SEMVER_GTE,
-    SEMVER_LTE,
 } from 'constants/operators';
 import { type ElementType, useId, useRef, useState } from 'react';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
@@ -237,19 +235,11 @@ export const ConstraintOperatorSelect = ({
     const onClose = () => setAnchorEl(null);
 
     const isRegexOperatorEnabled = useUiFlag('regexConstraintOperator');
-    const isSemverGteOperatorsEnabled = useUiFlag(
-        'semverGteConstraintOperators',
-    );
     const isIpOperatorEnabled = useUiFlag('ipConstraintOperator');
 
     const operators = options
         .filter(
             (operator) => isRegexOperatorEnabled || !isRegexOperator(operator),
-        )
-        .filter(
-            (operator) =>
-                isSemverGteOperatorsEnabled ||
-                (operator !== SEMVER_GTE && operator !== SEMVER_LTE),
         )
         .filter((operator) => isIpOperatorEnabled || !isCidrOperator(operator));
 

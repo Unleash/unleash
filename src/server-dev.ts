@@ -52,7 +52,6 @@ process.nextTick(async () => {
                         strictSchemaValidation: true,
                         disableImpactMetrics: false,
                         regexConstraintOperator: true,
-                        semverGteConstraintOperators: true,
                         userTokenWithClientApiLoggingKillSwitch: false,
                         allowDeprecatedApiTokenMiddleware: false,
                         learningLab: true,

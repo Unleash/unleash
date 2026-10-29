@@ -18,6 +18,9 @@ const LogRocketRunner = ({ appId, clientId, userId, onReady }: Props) => {
     useEffect(() => {
         try {
             LogRocket.init(appId, {
+                ...(window.location.hostname.endsWith('.getunleash.io') && {
+                    rootHostname: '.getunleash.io',
+                }),
                 dom: {
                     textSanitizer: true,
                     inputSanitizer: 'lipsum',

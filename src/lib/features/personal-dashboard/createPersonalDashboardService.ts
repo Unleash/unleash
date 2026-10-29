@@ -29,7 +29,7 @@ export const createPersonalDashboardService = (
         new ProjectOwnersReadModel(db),
         new ProjectReadModel(db, config),
         new OnboardingReadModel(db),
-        new EventStore(db, config.getLogger),
+        new EventStore(db, config.eventBus, config.getLogger),
         new FeatureEventFormatterMd({
             unleashUrl: config.server.unleashUrl,
             formatStyle: 'markdown',

@@ -94,7 +94,11 @@ export const createApiTokenV2Service = (
                     config.eventBus,
                     config,
                 ),
-                eventStore: new EventStore(db, config.getLogger),
+                eventStore: new EventStore(
+                    db,
+                    config.eventBus,
+                    config.getLogger,
+                ),
             },
             config,
             {

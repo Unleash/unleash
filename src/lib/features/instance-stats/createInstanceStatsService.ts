@@ -90,7 +90,7 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         eventBus,
         getLogger,
     );
-    const eventStore = new EventStore(db, getLogger);
+    const eventStore = new EventStore(db, eventBus, getLogger);
     const apiTokenStore = new ApiTokenStore(
         db,
         eventBus,

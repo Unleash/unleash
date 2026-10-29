@@ -28,7 +28,11 @@ export const createDeltaHydrationReader =
                     transaction,
                     eventBus,
                 );
-                const eventStore = new EventStore(transaction, getLogger);
+                const eventStore = new EventStore(
+                    transaction,
+                    eventBus,
+                    getLogger,
+                );
                 const segmentReadModel = new SegmentReadModel(transaction);
                 const features = await featureReadModel.getAll({ environment });
                 const revisionState = await eventStore.getDeltaRevisionState(

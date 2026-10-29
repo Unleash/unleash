@@ -783,6 +783,36 @@ test('Should update feature flag', async () => {
     expect(flag.archived).toBeFalsy();
 });
 
+test('Should not report a flag update as saved when its event fails to store', async () => {
+    const url = '/api/admin/projects/default/features';
+    const name = 'new.flag.update.event.failure';
+    await app.createFeature({ name, description: 'before' });
+    // events.created_by holds 255 characters; a token name has no limit
+    const token = await app.services.apiTokenService.createApiTokenWithProjects(
+        {
+            type: ApiTokenType.ADMIN,
+            projects: ['*'],
+            environment: '*',
+            tokenName: 'x'.repeat(256),
+        },
+    );
+
+    const res = await app.request
+        .put(`${url}/${name}`)
+        .set('Authorization', token.secret)
+        .send({ description: 'after' });
+
+    const { body: flag } = await app.request.get(`${url}/${name}`);
+    expect(flag.description).toBe('before');
+    const { body: events } = await app.getRecordedEvents({
+        feature: `IS:${name}`,
+        type: `IS:${FEATURE_METADATA_UPDATED}`,
+    });
+    expect(events.total).toBe(0);
+    // a change that rolled back must not be answered with 200
+    expect(res.status).toBe(500);
+});
+
 describe('expectedLifetimeEndsAt on the flag payload', () => {
     const url = '/api/admin/projects/default/features';
     const createdAt = new Date('2026-01-01T00:00:00.000Z');

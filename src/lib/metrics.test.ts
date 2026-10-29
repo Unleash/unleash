@@ -5,6 +5,7 @@ import { createTestConfig } from '../test/config/test-config.js';
 import {
     CLIENT_REGISTERED,
     DB_TIME,
+    EVENT_STORE_WRITE,
     EXCEEDS_LIMIT,
     FUNCTION_TIME,
     REQUEST_TIME,
@@ -368,6 +369,20 @@ test('should collect limit exceeded metrics', async () => {
     );
     expect(recordedMetric).toMatch(
         /exceeds_limit_error{resource="feature flags",limit="5000"} 1/,
+    );
+});
+
+test('should collect event store writes by type and transaction', async () => {
+    eventBus.emit(EVENT_STORE_WRITE, {
+        type: 'feature-updated',
+        transaction: 'outside',
+    });
+
+    const recordedMetric = await prometheusRegister.getSingleMetricAsString(
+        'event_store_writes_total',
+    );
+    expect(recordedMetric).toMatch(
+        /event_store_writes_total{type="feature-updated",transaction="outside"} 1/,
     );
 });
 

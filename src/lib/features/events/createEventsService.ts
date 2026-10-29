@@ -22,7 +22,7 @@ export const createEventsService: (
     db: Db,
     config: IUnleashConfig,
 ) => EventService = (db, config) => {
-    const eventStore = new EventStore(db, config.getLogger);
+    const eventStore = new EventStore(db, config.eventBus, config.getLogger);
     const featureTagStore = new FeatureTagStore(
         db,
         config.eventBus,

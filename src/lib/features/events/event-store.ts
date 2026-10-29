@@ -41,7 +41,11 @@ import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strateg
 import { applyGenericQueryParams } from '../feature-search/search-utils.js';
 import type { ITag } from '../../tags/index.js';
 import metricsHelper from '../../util/metrics-helper.js';
-import { DB_TIME } from '../../metric-events.js';
+import {
+    DB_TIME,
+    EVENT_STORE_WRITE,
+    emitMetricEvent,
+} from '../../metric-events.js';
 import type { EnvironmentVisibleRevisionState } from '../client-feature-toggles/delta/client-feature-toggle-delta.js';
 import { sanitizeUserAgent } from '../../util/sanitize-user-agent.js';
 
@@ -125,6 +129,8 @@ const TABLE = 'events';
 export class EventStore implements IEventStore {
     private db: Db;
 
+    private eventBus: EventEmitter;
+
     // only one shared event emitter should exist across all event store instances
     private eventEmitter: EventEmitter = sharedEventEmitter;
 
@@ -133,23 +139,41 @@ export class EventStore implements IEventStore {
     private metricTimer: Function;
 
     // a new DB has to be injected per transaction
-    constructor(db: Db, getLogger: LogProvider) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
+        this.eventBus = eventBus;
         this.logger = getLogger('event-store');
         this.metricTimer = (action) =>
-            metricsHelper.wrapTimer(this.eventEmitter, DB_TIME, {
+            metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'event',
                 action,
             });
     }
 
+    private countWrites(events: IBaseEvent[]): void {
+        const transaction = this.db.isTransaction ? 'inside' : 'outside';
+        for (const { type } of events) {
+            emitMetricEvent(this.eventBus, EVENT_STORE_WRITE, {
+                type,
+                transaction,
+            });
+        }
+    }
+
+    /**
+     * Inside a transaction a failed write is rethrown, since the change around it rolls back.
+     */
     async store(event: IBaseEvent): Promise<void> {
         const stopTimer = this.metricTimer('store');
+        this.countWrites([event]);
         try {
             await this.db(TABLE)
                 .insert(this.eventToDbRow(event))
                 .returning(EVENT_COLUMNS);
         } catch (error: unknown) {
+            if (this.db.isTransaction) {
+                throw error;
+            }
             this.logger.warn(`Failed to store "${event.type}" event: ${error}`);
         } finally {
             stopTimer();
@@ -191,13 +215,15 @@ export class EventStore implements IEventStore {
     }
 
     /**
-     * Logs and swallows write failures.
-     * Used in calls when need the failure - inside a transaction, say - want batchStoreOrThrow instead.
+     * Logs and swallows write failures outside a transaction.
      */
     async batchStore(events: IBaseEvent[]): Promise<void> {
         try {
             await this.batchStoreOrThrow(events);
         } catch (error: unknown) {
+            if (this.db.isTransaction) {
+                throw error;
+            }
             this.logger.warn(
                 `Failed to store ${events.length} events: ${[
                     ...new Set(events.map((event) => event.type)),
@@ -214,6 +240,7 @@ export class EventStore implements IEventStore {
      */
     async batchStoreOrThrow(events: IBaseEvent[]): Promise<void> {
         const stopTimer = this.metricTimer('batchStore');
+        this.countWrites(events);
         const rows = events.map((event) => this.eventToDbRow(event));
         try {
             for (let i = 0; i < rows.length; i += 1000) {

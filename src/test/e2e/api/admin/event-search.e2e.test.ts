@@ -729,7 +729,7 @@ test('should filter events by multiple IDs using IS_ANY_OF', async () => {
 
 test('should filter events by group ID', async () => {
     const eventStoreService = withTransactional(
-        (db) => new EventStore(db, getLogger),
+        (db) => new EventStore(db, config.eventBus, getLogger),
         db.rawDatabase,
     );
 
@@ -777,7 +777,7 @@ test('should filter events by group ID', async () => {
 
 test('should filter events by multiple group IDs using IS_ANY_OF', async () => {
     const eventStoreService = withTransactional(
-        (db) => new EventStore(db, getLogger),
+        (db) => new EventStore(db, config.eventBus, getLogger),
         db.rawDatabase,
     );
 
@@ -840,7 +840,7 @@ test('should filter events by multiple group IDs using IS_ANY_OF', async () => {
 
 test('Should return empty result when filtering by non-existent group ID', async () => {
     const eventStoreService = withTransactional(
-        (db) => new EventStore(db, getLogger),
+        (db) => new EventStore(db, config.eventBus, getLogger),
         db.rawDatabase,
     );
 

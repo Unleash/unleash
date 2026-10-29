@@ -19,7 +19,7 @@ import { FakeFeaturesReadModel } from '../feature-toggle/fakes/fake-features-rea
 export const createFeatureLifecycleService =
     (config: IUnleashConfig) => (db: Db) => {
         const { eventBus, getLogger } = config;
-        const eventStore = new EventStore(db, getLogger);
+        const eventStore = new EventStore(db, eventBus, getLogger);
         const featureLifecycleStore = new FeatureLifecycleStore(db, eventBus);
         const environmentStore = new EnvironmentStore(db, eventBus, config);
         const featureEnvironmentStore = new FeatureEnvironmentStore(

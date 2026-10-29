@@ -750,6 +750,12 @@ export function registerPrometheusMetrics(
         labelNames: ['type', 'method', 'source'],
     });
 
+    const eventStoreWrites = createCounter({
+        name: 'event_store_writes_total',
+        help: 'Event writes attempted by the event store, by event type and whether the write ran inside a transaction.',
+        labelNames: ['type', 'transaction'],
+    });
+
     const resourceLimit = createGauge({
         name: 'resource_limit',
         help: 'The maximum number of resources allowed.',
@@ -950,6 +956,14 @@ export function registerPrometheusMetrics(
                 method,
                 source: source || 'unknown',
             });
+        },
+    );
+
+    events.onMetricEvent(
+        eventBus,
+        events.EVENT_STORE_WRITE,
+        ({ type, transaction }) => {
+            eventStoreWrites.increment({ type, transaction });
         },
     );
 

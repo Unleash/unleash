@@ -17,8 +17,6 @@ import {
     inOperators,
     isRegexOperator,
     isCidrOperator,
-    SEMVER_GTE,
-    SEMVER_LTE,
 } from 'constants/operators';
 import { useId } from 'react';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
@@ -106,19 +104,11 @@ export const ConstraintOperatorSelect = ({
     };
 
     const isRegexOperatorEnabled = useUiFlag('regexConstraintOperator');
-    const isSemverGteOperatorsEnabled = useUiFlag(
-        'semverGteConstraintOperators',
-    );
     const isIpOperatorEnabled = useUiFlag('ipConstraintOperator');
 
     const operators = options
         .filter(
             (operator) => isRegexOperatorEnabled || !isRegexOperator(operator),
-        )
-        .filter(
-            (operator) =>
-                isSemverGteOperatorsEnabled ||
-                (operator !== SEMVER_GTE && operator !== SEMVER_LTE),
         )
         .filter((operator) => isIpOperatorEnabled || !isCidrOperator(operator));
 

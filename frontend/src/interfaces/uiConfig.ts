@@ -89,7 +89,6 @@ export type UiFlags = {
     oidcPkceSupport?: boolean;
     extendedUsageMetrics?: boolean;
     regexConstraintOperator?: boolean;
-    semverGteConstraintOperators?: boolean;
     signupDialog?: boolean;
     enterpriseEdgeTokensList?: boolean;
     impactMetricsFlagPage?: boolean;

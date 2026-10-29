@@ -47,6 +47,7 @@ export default class ClientFeatureToggleDeltaReadModel
 
         const selectColumns = [
             'features.name as name',
+            'features.type as type',
             'features.project as project',
             'features.impression_data as impression_data',
             'fe.variants as variants',
@@ -159,6 +160,7 @@ export default class ClientFeatureToggleDeltaReadModel
             feature.impressionData = r.impression_data;
             feature.enabled = !!r.enabled;
             feature.name = r.name;
+            feature.type = r.type;
             feature.project = r.project;
             feature.variants = r.variants || [];
             feature.project = r.project;

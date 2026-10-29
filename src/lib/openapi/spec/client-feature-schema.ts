@@ -21,6 +21,12 @@ export const clientFeatureSchema = {
                 'The unique name of a feature flag. Is validated to be URL safe on creation',
             example: 'new.payment.flow.stripe',
         },
+        type: {
+            type: 'string',
+            description:
+                'What kind of feature flag is this. Refer to the documentation on [feature flag types](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types) for more information',
+            example: 'release',
+        },
         enabled: {
             type: 'boolean',
             description:

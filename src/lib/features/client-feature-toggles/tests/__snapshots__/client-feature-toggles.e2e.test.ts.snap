@@ -30,6 +30,7 @@ exports[`should match snapshot from /api/client/features 1`] = `
           "variants": [],
         },
       ],
+      "type": "release",
       "variants": [],
     },
     {
@@ -53,6 +54,7 @@ exports[`should match snapshot from /api/client/features 1`] = `
           "variants": [],
         },
       ],
+      "type": "release",
       "variants": [],
     },
   ],

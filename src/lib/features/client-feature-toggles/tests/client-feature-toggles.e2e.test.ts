@@ -27,6 +27,7 @@ let proDummyAdmin: IUserWithRootRole;
 const getApiClientResponse = (project = 'default') => [
     {
         name: 'test1',
+        type: 'release',
         enabled: false,
         project: project,
         strategies: [
@@ -54,6 +55,7 @@ const getApiClientResponse = (project = 'default') => [
     },
     {
         name: 'test2',
+        type: 'release',
         enabled: false,
         project: project,
         strategies: [
@@ -304,7 +306,7 @@ test('should return correct data structure from /api/client/features', async () 
     expect(result.body.features).toEqual(getApiClientResponse());
 });
 
-test('full, single-feature and delta responses contain only SDK configuration fields', async () => {
+test('full, single-feature and delta responses include feature type and omit administrative metadata', async () => {
     const segmentId = await setupFeatures(db, app);
     await app.services.featureToggleService.updateFeatureToggle(
         'default',
@@ -324,6 +326,7 @@ test('full, single-feature and delta responses contain only SDK configuration fi
     );
     const expected = getApiClientResponse();
     expected[0].impressionData = true;
+    expected[0].type = 'experiment';
     const expectedWithSegmentReferences = [
         {
             ...expected[0],

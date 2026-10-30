@@ -152,8 +152,8 @@ const VariantList = styled(
             role='list'
             {...props}
         >
-            {variants?.map((variant) => (
-                <li key={variant.name}>
+            {variants?.map((variant, index) => (
+                <li key={index}>
                     <strong>{calculateVariantWeight(variant.weight)}%</strong>{' '}
                     get <strong>{variantDisplayName(variant)}</strong>
                     <PayloadInfo>

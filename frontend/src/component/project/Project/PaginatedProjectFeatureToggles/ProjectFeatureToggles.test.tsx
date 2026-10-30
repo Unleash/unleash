@@ -46,6 +46,10 @@ const setupApi = () => {
         { id: 1, name: 'AuthorA' },
         { id: 2, name: 'AuthorB' },
     ]);
+    testServerRoute(server, '/api/admin/search/features/context-field-values', [
+        { contextName: 'appName', value: 'web' },
+        { contextName: 'userId', value: '123' },
+    ]);
     testServerRoute(server, '/api/admin/projects/default/status', {
         activityCountByDate: [],
         resources: {
@@ -227,6 +231,66 @@ test('filters by flag author', async () => {
     fireEvent.click(authorA);
 
     expect(window.location.href).toContain('createdBy=IS%3A1');
+});
+
+test('filters by context field', async () => {
+    setupApi();
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={
+                    <ProjectFeatureToggles
+                        environments={['development', 'production']}
+                    />
+                }
+            />
+        </Routes>,
+        {
+            route: '/projects/default',
+        },
+    );
+    const addFilter = await screen.findByText('Add filter');
+    fireEvent.click(addFilter);
+
+    const contextField = await screen.findByText('Context field');
+    fireEvent.click(contextField);
+
+    const appName = await screen.findByText('appName = web');
+    fireEvent.click(appName);
+
+    expect(window.location.href).toContain(
+        'contextField=INCLUDE%3AappName%3Dweb',
+    );
+});
+
+test('filters by context field name only', async () => {
+    setupApi();
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={
+                    <ProjectFeatureToggles
+                        environments={['development', 'production']}
+                    />
+                }
+            />
+        </Routes>,
+        {
+            route: '/projects/default',
+        },
+    );
+    const addFilter = await screen.findByText('Add filter');
+    fireEvent.click(addFilter);
+
+    const contextField = await screen.findByText('Context field');
+    fireEvent.click(contextField);
+
+    const appName = await screen.findByText('appName (any value)');
+    fireEvent.click(appName);
+
+    expect(window.location.href).toContain('contextField=INCLUDE%3AappName');
 });
 
 test('Project is onboarded', async () => {

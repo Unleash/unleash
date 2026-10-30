@@ -12,6 +12,7 @@ const resolveMode = (): themeMode =>
 const UIProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
     const [toastData, setToast] = useState<IToast>(createEmptyToast());
     const [showFeedback, setShowFeedback] = useState(false);
+    const [surveyVisible, setSurveyVisible] = useState(false);
     const [themeMode, setThemeMode] = useState(resolveMode());
 
     const context = React.useMemo(
@@ -20,10 +21,12 @@ const UIProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
             toastData,
             showFeedback,
             setShowFeedback,
+            surveyVisible,
+            setSurveyVisible,
             themeMode,
             setThemeMode,
         }),
-        [toastData, showFeedback, themeMode],
+        [toastData, showFeedback, surveyVisible, themeMode],
     );
 
     return <UIContext.Provider value={context}>{children}</UIContext.Provider>;

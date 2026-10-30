@@ -3,7 +3,6 @@ import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import FlagProvider, { type IToggle } from '@unleash/proxy-client-react';
 import type { UnleashClient } from 'unleash-proxy-client';
-import { render } from 'utils/testRenderer';
 import { http, HttpResponse } from 'msw';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { testUnleashClient } from 'utils/testUnleashClient';
@@ -40,8 +39,11 @@ const surveyFlag = (name: string, title: string): IToggle => ({
 });
 
 // Fresh modules, because surveyStorage remembers impressions per page load.
+// Load the renderer after the reset too: otherwise its UIProvider would use
+// the old UIContext while FeedbackSurvey uses the new one.
 const loadPage = async () => {
     vi.resetModules();
+    const { render } = await import('utils/testRenderer');
     const { FeedbackProvider } = await import('./FeedbackProvider.tsx');
     const { FeedbackSurvey } = await import('./FeedbackSurvey.tsx');
 

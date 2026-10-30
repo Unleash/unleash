@@ -2,7 +2,8 @@
  * Rules that keep surveys from annoying users:
  * - Interaction: the user submitted or dismissed the survey. It never shows
  *   again. Answering some questions and leaving does not count.
- * - Grace period: after any survey interaction, no survey shows for 7 days.
+ * - Grace period: after any survey interaction, or once PNPS is due, no
+ *   survey shows for 7 days.
  * - Impressions: how many page loads a survey appeared on. An ignored survey
  *   stops showing after MAX_IMPRESSIONS.
  */
@@ -53,13 +54,17 @@ export const shouldShowSurvey = (flagName: string): boolean =>
     !isInSurveyGracePeriod() &&
     !hasReachedImpressionCap(flagName);
 
+export const startSurveyGracePeriod = (): void => {
+    gracePeriod().setValue('active');
+};
+
 export const recordSurveyInteraction = (flagName: string): void => {
     interactions().setValue((current) =>
         [...toFlagNames(current).filter((name) => name !== flagName), flagName]
             // Only the newest names are kept so the list can't grow forever.
             .slice(-MAX_INTERACTIONS),
     );
-    gracePeriod().setValue('active');
+    startSurveyGracePeriod();
 };
 
 // Re-renders and route changes must not count as new impressions.

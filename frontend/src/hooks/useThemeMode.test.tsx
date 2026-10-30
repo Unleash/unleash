@@ -37,6 +37,8 @@ const renderUseThemeMode = (initialMode: themeMode) =>
                         setToast: () => {},
                         showFeedback: false,
                         setShowFeedback: () => {},
+                        surveyVisible: false,
+                        setSurveyVisible: () => {},
                         themeMode,
                         setThemeMode,
                     }}

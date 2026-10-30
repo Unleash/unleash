@@ -15,7 +15,7 @@ import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReader
 import {
     RegexSdkRequirementsBanner,
     RegexSdkRequirementsToggle,
-} from './RegexSdkRequirements';
+} from './LegacyRegexSdkRequirements.tsx';
 import { useRegexSdkRequirements } from './useRegexSdkRequirements';
 import {
     type FC,

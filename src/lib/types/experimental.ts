@@ -86,6 +86,7 @@ export type IFlagKey =
     | 'feedbackModuleSubmitResponses'
     | 'playgroundFeatureEvaluation'
     | 'slackAppAuthV2'
+    | 'redactFeatureLabelInMetrics'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -352,6 +353,10 @@ const flags: IFlags = {
     ),
     slackAppAuthV2: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SLACK_APP_AUTH_V2,
+        false,
+    ),
+    redactFeatureLabelInMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_REDACT_FEATURE_LABEL_IN_METRICS,
         false,
     ),
     integrationParamKvpEditor: parseEnvVarBoolean(

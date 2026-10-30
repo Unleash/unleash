@@ -120,6 +120,10 @@ export function registerPrometheusMetrics(
     const { eventStore, environmentStore } = stores;
     const { flagResolver } = config;
     const dbMetrics = new DbMetricsMonitor(config);
+    const featureLabel = (feature: string): string =>
+        flagResolver.isEnabled('redactFeatureLabelInMetrics')
+            ? 'redacted'
+            : feature;
 
     const cachedEnvironments: () => Promise<IEnvironment[]> = memoizee(
         async () => environmentStore.getAll(),
@@ -208,7 +212,7 @@ export function registerPrometheusMetrics(
             value: result.count,
             labels: {
                 environment: result.environment,
-                feature: result.feature,
+                feature: featureLabel(result.feature),
             },
         }),
     });
@@ -221,7 +225,7 @@ export function registerPrometheusMetrics(
             stores.featureStrategiesReadModel.getMaxFeatureStrategies(),
         map: (result) => ({
             value: result.count,
-            labels: { feature: result.feature },
+            labels: { feature: featureLabel(result.feature) },
         }),
     });
 
@@ -234,7 +238,7 @@ export function registerPrometheusMetrics(
             value: result.count,
             labels: {
                 environment: result.environment,
-                feature: result.feature,
+                feature: featureLabel(result.feature),
             },
         }),
     });
@@ -249,7 +253,7 @@ export function registerPrometheusMetrics(
             value: result.count,
             labels: {
                 environment: result.environment,
-                feature: result.feature,
+                feature: featureLabel(result.feature),
             },
         }),
     });
@@ -282,7 +286,7 @@ export function registerPrometheusMetrics(
             return {
                 value: result.size,
                 labels: {
-                    feature: result.feature,
+                    feature: featureLabel(result.feature),
                     environment: result.environment,
                 },
             };

@@ -29,6 +29,7 @@ import { createFakeGetActiveUsers } from './features/instance-stats/getActiveUse
 import { createFakeGetProductionChanges } from './features/instance-stats/getProductionChanges.js';
 import type {
     IEnvironmentStore,
+    IUnleashConfig,
     IFeatureLifecycleReadModel,
     IFeatureLifecycleStore,
     IUnleashStores,
@@ -56,9 +57,10 @@ let featureLifeCycleStore: IFeatureLifecycleStore;
 let featureLifeCycleReadModel: IFeatureLifecycleReadModel;
 let db: ITestDb;
 let refreshDbMetrics: () => Promise<void>;
+let config: IUnleashConfig;
 
 beforeAll(async () => {
-    const config = createTestConfig({
+    config = createTestConfig({
         server: {
             serverMetrics: true,
             baseUriPath: '/demo',
@@ -243,6 +245,78 @@ test('should collect metrics for feature flag size', async () => {
     await refreshDbMetrics();
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(/feature_toggles_total\{version="(.*)"\} 0/);
+});
+
+describe('feature label on max/largest feature metrics', () => {
+    beforeEach(() => {
+        stores.featureStrategiesReadModel = {
+            getMaxFeatureEnvironmentStrategies: async () => ({
+                feature: 'secretFlag',
+                environment: 'production',
+                count: 3,
+            }),
+            getMaxFeatureStrategies: async () => ({
+                feature: 'secretFlag',
+                count: 4,
+            }),
+            getMaxConstraintValues: async () => ({
+                feature: 'secretFlag',
+                environment: 'production',
+                count: 5,
+            }),
+            getMaxConstraintsPerStrategy: async () => ({
+                feature: 'secretFlag',
+                environment: 'production',
+                count: 6,
+            }),
+        };
+        stores.largestResourcesReadModel = {
+            getLargestProjectEnvironments: async () => [],
+            getLargestFeatureEnvironments: async () => [
+                {
+                    feature: 'secretFlag',
+                    environment: 'production',
+                    size: 7,
+                },
+            ],
+        };
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    const featureMetrics = [
+        'max_feature_environment_strategies',
+        'max_feature_strategies',
+        'max_constraint_values',
+        'max_strategy_constraints',
+        'largest_feature_environment_size',
+    ];
+
+    test('uses the flag name as feature label by default', async () => {
+        await refreshDbMetrics();
+        const metrics = await prometheusRegister.metrics();
+        for (const name of featureMetrics) {
+            expect(metrics).toMatch(
+                new RegExp(`${name}\\{[^}]*feature="secretFlag"`),
+            );
+        }
+    });
+
+    test('redacts the feature label when redactFeatureLabelInMetrics is enabled', async () => {
+        vi.spyOn(config.flagResolver, 'isEnabled').mockImplementation(
+            (flag) => flag === 'redactFeatureLabelInMetrics',
+        );
+        await refreshDbMetrics();
+        const metrics = await prometheusRegister.metrics();
+        expect(metrics).not.toMatch(/secretFlag/);
+        for (const name of featureMetrics) {
+            expect(metrics).toMatch(
+                new RegExp(`${name}\\{[^}]*feature="redacted"`),
+            );
+        }
+    });
 });
 
 test('should collect metrics for archived feature flag size', async () => {

@@ -120,7 +120,7 @@ export const SelectPopover = <T extends string | number>(
                         display: 'flex',
                         flexDirection: 'column',
                         width: (theme) => theme.spacing(50),
-                        marginTop: (theme) => theme.spacing(1),
+                        margin: (theme) => theme.spacing(1, 0),
                         borderRadius: (theme) =>
                             `${theme.shape.borderRadiusMedium}px`,
                     },

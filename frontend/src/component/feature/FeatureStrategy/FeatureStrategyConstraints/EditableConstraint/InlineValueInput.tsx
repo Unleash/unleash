@@ -2,6 +2,7 @@ import {
     alpha,
     Alert,
     autocompleteClasses,
+    Button,
     ButtonBase,
     InputAdornment,
     Popper,
@@ -113,6 +114,10 @@ const Container = styled('div')({
     display: 'flex',
 });
 
+const InputArea = styled('div')({
+    display: 'contents',
+});
+
 const inputSx = (theme: Theme) => ({
     width: 150,
     '& fieldset': {
@@ -145,8 +150,8 @@ const StyledPopper = styled(Popper)(({ theme }) => ({
 }));
 
 const FloatingPanel = styled('div')(({ theme }) => ({
-    marginTop: theme.spacing(1),
-    width: theme.spacing(40),
+    margin: theme.spacing(1, 0),
+    width: theme.spacing(42),
     borderRadius: `${theme.shape.borderRadiusLarge}px`,
     border: `1px solid ${theme.palette.divider}`,
     backgroundColor: theme.palette.background.paper,
@@ -183,7 +188,11 @@ const ErrorText = styled('p')(({ theme }) => ({
 }));
 
 const Footer = styled('div')(({ theme }) => ({
-    padding: theme.spacing(1, 2),
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    padding: theme.spacing(1, 1, 1, 2),
     borderTop: `1px solid ${theme.palette.divider}`,
     color: theme.palette.text.secondary,
     fontSize: theme.typography.body2.fontSize,
@@ -234,6 +243,44 @@ type FieldProps = {
     onKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
     htmlInputProps?: InputBaseComponentProps;
     optionsPanel?: ReactNode;
+    footerAction?: ReactNode;
+};
+
+type LockablePlacement = 'bottom-start' | 'top-start';
+
+const useLockedFlipPlacement = (initialPlacement: LockablePlacement) => {
+    const [placement, setPlacement] = useState(initialPlacement);
+    const [flipEnabled, setFlipEnabled] = useState(true);
+
+    const popperOptions = useMemo(
+        () => ({
+            strategy: 'fixed' as const,
+            onFirstUpdate: (state: { placement?: string }) => {
+                if (
+                    state.placement === 'top-start' ||
+                    state.placement === 'bottom-start'
+                ) {
+                    setPlacement(state.placement);
+                }
+                setFlipEnabled(false);
+            },
+        }),
+        [],
+    );
+
+    const modifiers = useMemo(
+        () => [
+            {
+                name: 'flip',
+                enabled: flipEnabled,
+                options: { boundary: document.body },
+            },
+            { name: 'preventOverflow', options: { boundary: document.body } },
+        ],
+        [flipEnabled],
+    );
+
+    return { placement, popperOptions, modifiers };
 };
 
 const InlineValueChrome: FC<
@@ -259,8 +306,11 @@ const InlineValueChrome: FC<
     onKeyDown,
     htmlInputProps,
     optionsPanel,
+    footerAction,
 }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
+    const { placement, popperOptions, modifiers } =
+        useLockedFlipPlacement('bottom-start');
     const descriptionId = useId();
     const footerId = useId();
     const hasAutoSelected = useRef(false);
@@ -288,57 +338,62 @@ const InlineValueChrome: FC<
     const hasDescription = Boolean(error || helpText || ValuePreview);
 
     return (
-        <Container ref={setAnchorEl} {...rootProps} onBlur={onContainerBlur}>
+        <Container ref={setAnchorEl} onBlur={onContainerBlur}>
             <ScreenReaderOnly>
                 <label htmlFor={inputId}>Constraint Value</label>
             </ScreenReaderOnly>
             <ScreenReaderOnly aria-live='polite'>
                 {announcement}
             </ScreenReaderOnly>
-            <TextField
-                id={inputId}
-                placeholder='Enter value'
-                value={value}
-                inputRef={inputRef}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    onChange(e);
-                    setError('');
-                }}
-                onBlur={onBlur}
-                onFocus={(e) => {
-                    if (!hasAutoSelected.current) {
-                        hasAutoSelected.current = true;
-                        e.target.select();
-                    }
-                }}
-                onKeyDown={onKeyDown}
-                size='medium'
-                variant='outlined'
-                autoFocus
-                error={Boolean(error)}
-                slotProps={{
-                    htmlInput: {
-                        ...htmlInputProps,
-                        'aria-describedby': hasDescription
-                            ? `${descriptionId} ${footerId}`
-                            : footerId,
-                    },
-                    input: {
-                        sx: inputSx,
-                        endAdornment: (
-                            <AddValueButton
-                                value={value}
-                                onClick={submitAndRefocus}
-                            />
-                        ),
-                    },
-                }}
-                data-testid='CONSTRAINT_VALUES_INPUT'
-            />
+            <InputArea {...rootProps}>
+                <TextField
+                    id={inputId}
+                    placeholder='Enter value'
+                    value={value}
+                    inputRef={inputRef}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        onChange(e);
+                        setError('');
+                    }}
+                    onBlur={onBlur}
+                    onFocus={(e) => {
+                        if (!hasAutoSelected.current) {
+                            hasAutoSelected.current = true;
+                            e.target.select();
+                        }
+                    }}
+                    onKeyDown={onKeyDown}
+                    size='medium'
+                    variant='outlined'
+                    autoFocus
+                    error={Boolean(error)}
+                    slotProps={{
+                        htmlInput: {
+                            ...htmlInputProps,
+                            'aria-describedby': hasDescription
+                                ? `${descriptionId} ${footerId}`
+                                : footerId,
+                        },
+                        input: {
+                            sx: inputSx,
+                            endAdornment: (
+                                <AddValueButton
+                                    value={value}
+                                    onClick={submitAndRefocus}
+                                />
+                            ),
+                        },
+                    }}
+                    data-testid='CONSTRAINT_VALUES_INPUT'
+                />
+            </InputArea>
             <StyledPopper
                 open={Boolean(anchorEl)}
                 anchorEl={anchorEl}
-                placement='bottom-start'
+                placement={placement}
+                disablePortal
+                popperOptions={popperOptions}
+                modifiers={modifiers}
             >
                 <FloatingPanel>
                     <ValueDescriptionBody
@@ -350,8 +405,11 @@ const InlineValueChrome: FC<
                     />
                     {optionsPanel}
                     <Footer id={footerId}>
-                        Enter to add
-                        {multiValue ? ' · comma for many' : ''}
+                        <span>
+                            Enter to add
+                            {multiValue ? ' · comma for many' : ''}
+                        </span>
+                        {footerAction}
                     </Footer>
                 </FloatingPanel>
             </StyledPopper>
@@ -472,16 +530,12 @@ export const LegalValuesInput: FC<
               multiple: true,
               selected: Array.from(selectedValues),
               onChange: (newValues: string[]) => {
-                  // Exactly one value changes per toggle; diff against
-                  // selectedValues to find it instead of scanning legalValueList.
                   const nextSet = new Set(newValues);
-                  const added = newValues.find((v) => !selectedValues.has(v));
-                  const removed =
-                      added === undefined
-                          ? [...selectedValues].find((v) => !nextSet.has(v))
-                          : undefined;
-                  const changed = added ?? removed;
-                  if (changed !== undefined) toggleValue(changed);
+                  const added = newValues.filter((v) => !selectedValues.has(v));
+                  const removed = [...selectedValues].filter(
+                      (v) => !nextSet.has(v),
+                  );
+                  [...added, ...removed].forEach(toggleValue);
                   onChange('');
               },
           }
@@ -502,6 +556,8 @@ export const LegalValuesInput: FC<
         getOptionProps,
         isOptionSelected,
         groupedOptions,
+        isAllSelected,
+        toggleSelectAll,
         handleInputKeyDown,
     } = useSelectListbox({
         ...selectionProps,
@@ -547,6 +603,17 @@ export const LegalValuesInput: FC<
         }
     };
 
+    const selectAllAction = multiValue ? (
+        <Button
+            size='small'
+            onClick={toggleSelectAll}
+            sx={{ whiteSpace: 'nowrap' }}
+            data-testid='CONSTRAINT_VALUES_SELECT_ALL'
+        >
+            {isAllSelected ? 'Unselect all' : 'Select all'}
+        </Button>
+    ) : undefined;
+
     return (
         <InlineValueChrome
             value={value}
@@ -564,6 +631,7 @@ export const LegalValuesInput: FC<
             onBlur={listboxOnBlur}
             onKeyDown={onKeyDown}
             htmlInputProps={listboxInputProps}
+            footerAction={selectAllAction}
             optionsPanel={
                 <>
                     <SelfHighlightingOptions>

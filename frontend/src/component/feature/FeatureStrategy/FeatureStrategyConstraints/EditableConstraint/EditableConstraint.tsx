@@ -10,7 +10,8 @@ import { operatorsForContext } from 'utils/operatorsForContext';
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import Delete from '@mui/icons-material/Delete';
-import { ValueList, type ValueListHandle } from './ValueList.tsx';
+import type { ValueListHandle } from './ValueList.tsx';
+import { ValueListWithOverflow } from './ValueListWithOverflow.tsx';
 import { AddValueInline } from './AddValueInline.tsx';
 import { AddValueButton } from './AddValueButton.tsx';
 import { ToggleConstraintCaseSensitivity } from './ToggleConstraintCaseSensitivity.tsx';
@@ -135,14 +136,6 @@ const TopRowInput: FC<{
         }
     }, [editingOpen, addValuesButtonRef]);
 
-    const legalValuesExhausted =
-        isMultiValueConstraint(localConstraint) &&
-        legalValueData?.remainingLegalValues.length === 0;
-
-    useEffect(() => {
-        if (legalValuesExhausted && editingOpen) setEditingOpen(false);
-    }, [legalValuesExhausted, editingOpen, setEditingOpen]);
-
     if (isDateConstraint(localConstraint)) {
         return (
             <ConstraintDateInput
@@ -166,10 +159,6 @@ const TopRowInput: FC<{
                 onClick={() => setEditingOpen(true)}
             />
         );
-    }
-
-    if (legalValuesExhausted) {
-        return null;
     }
 
     return editingOpen ? (
@@ -268,9 +257,6 @@ export const EditableConstraint: FC<Props> = ({
     const hasSingleValue =
         !isMultiValueConstraint(localConstraint) &&
         Boolean(localConstraint.value);
-    const legalValuesExhausted =
-        isMultiValueConstraint(localConstraint) &&
-        legalValueData?.remainingLegalValues.length === 0;
 
     const addValues = useCallback(
         (value: string | string[]) => {
@@ -287,10 +273,8 @@ export const EditableConstraint: FC<Props> = ({
         pendingValueFocus.current = false;
         if (hasSingleValue) {
             valueListRef.current?.focusValue(0);
-        } else if (legalValuesExhausted) {
-            valueListRef.current?.focusValue(selectedValues.size - 1);
         }
-    }, [hasSingleValue, legalValuesExhausted, selectedValues]);
+    }, [hasSingleValue]);
 
     // The add button may not be mounted yet (e.g. single-value constraints)
     const pendingDeleteFocus = useRef(false);
@@ -409,7 +393,7 @@ export const EditableConstraint: FC<Props> = ({
                             ) : null}
                         </OperatorOptions>
                     </ConstraintOptions>
-                    <ValueList
+                    <ValueListWithOverflow
                         ref={valueListRef}
                         values={Array.from(selectedValues)}
                         removeValue={removeValue}
@@ -428,7 +412,7 @@ export const EditableConstraint: FC<Props> = ({
                             selectedValues={selectedValues}
                             legalValueData={legalValueData}
                         />
-                    </ValueList>
+                    </ValueListWithOverflow>
                 </ConstraintDetails>
                 <ButtonPlaceholder />
                 <HtmlTooltip title='Delete constraint' arrow>

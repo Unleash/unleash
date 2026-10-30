@@ -509,7 +509,7 @@ describe('EditableConstraint', () => {
             ).toHaveAttribute('aria-disabled', 'true');
         });
 
-        test('adds multiple legal values pasted as a comma-separated list, rejects values not in the legal set, and moves focus to the last pill once exhausted', async () => {
+        test('adds multiple legal values pasted as a comma-separated list, rejects values not in the legal set, and keeps the popover open once all values are selected', async () => {
             setupApi({
                 contextFields: [
                     {
@@ -565,8 +565,9 @@ describe('EditableConstraint', () => {
                 ),
             ).toBeInTheDocument();
 
-            // Picking the last remaining legal value (172.16.0.0/12) exhausts
-            // the list: the editor closes and the add-value button is gone.
+            // Picking the last remaining legal value (172.16.0.0/12) selects
+            // every legal value, but the popover stays open so the selection
+            // can still be edited (e.g. via "Unselect all").
             await userEvent.clear(input);
             fireEvent.click(
                 screen.getByRole('option', { name: '172.16.0.0/12' }),
@@ -579,14 +580,10 @@ describe('EditableConstraint', () => {
                 });
             });
 
-            expect(input).not.toBeInTheDocument();
+            expect(input).toBeInTheDocument();
             expect(
-                screen.queryByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
-            ).not.toBeInTheDocument();
-            const lastChip = await screen.findByText('172.16.0.0/12');
-            await waitFor(() => {
-                expect(lastChip.closest('.MuiChip-root')).toHaveFocus();
-            });
+                screen.getByRole('button', { name: 'Unselect all' }),
+            ).toBeInTheDocument();
         });
 
         test('typing a prefix toggles the auto-highlighted match, via Enter or the "Add" button, without raising a stale "not a legal value" error', async () => {
@@ -703,6 +700,70 @@ describe('EditableConstraint', () => {
                     'rgba(0, 0, 0, 0)',
                 );
             });
+
+            // Highlighting an option via arrow keys is virtual (focus stays
+            // on the input), so Tab must still reach "Select all" normally.
+            await userEvent.tab();
+            expect(
+                screen.getByTestId('CONSTRAINT_VALUES_SELECT_ALL'),
+            ).toHaveFocus();
+            expect(input).toBeInTheDocument();
+        });
+
+        test('tabs from the input through the "Add" button to "Select all" without closing the popover', async () => {
+            setupApi({
+                contextFields: [
+                    {
+                        name: 'ipAddress',
+                        legalValues: [
+                            { value: '10.0.0.0/8' },
+                            { value: '192.168.1.1' },
+                        ],
+                    },
+                ],
+            });
+
+            render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'ipAddress',
+                        operator: 'IN_CIDR',
+                        values: [],
+                    }}
+                    onDelete={vi.fn()}
+                    onUpdate={vi.fn()}
+                />,
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            const input = await screen.findByLabelText('Constraint Value');
+            await waitFor(() => {
+                expect(screen.queryAllByRole('option').length).toBeGreaterThan(
+                    0,
+                );
+            });
+
+            // With no typed value, "Add" is disabled and skipped by Tab.
+            await userEvent.tab();
+            expect(
+                screen.getByTestId('CONSTRAINT_VALUES_SELECT_ALL'),
+            ).toHaveFocus();
+            expect(input).toBeInTheDocument();
+
+            input.focus();
+            await userEvent.type(input, '10.0.0.0/8');
+            await userEvent.tab();
+            expect(
+                screen.getByTestId('CONSTRAINT_VALUES_ADD_BUTTON'),
+            ).toHaveFocus();
+
+            await userEvent.tab();
+            expect(
+                screen.getByTestId('CONSTRAINT_VALUES_SELECT_ALL'),
+            ).toHaveFocus();
+            expect(input).toBeInTheDocument();
         });
     });
 });

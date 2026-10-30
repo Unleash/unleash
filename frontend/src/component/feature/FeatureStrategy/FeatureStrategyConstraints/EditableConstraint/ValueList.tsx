@@ -16,7 +16,7 @@ const StyledList = styled('ul')({
     display: 'contents',
 });
 
-type Props = {
+export type ValueListProps = {
     values?: string[];
     removeValue: (value: string) => void;
     // the element that should receive focus when all value chips are deleted
@@ -28,7 +28,10 @@ export type ValueListHandle = {
     focusValue: (index: number) => void;
 };
 
-export const ValueList = forwardRef<ValueListHandle, PropsWithChildren<Props>>(
+export const ValueList = forwardRef<
+    ValueListHandle,
+    PropsWithChildren<ValueListProps>
+>(
     (
         {
             values = [],
@@ -62,6 +65,7 @@ export const ValueList = forwardRef<ValueListHandle, PropsWithChildren<Props>>(
 
         return (
             <ValueListWrapper>
+                {children}
                 <StyledList>
                     {values.map((value, index) => (
                         <li key={value}>
@@ -84,7 +88,6 @@ export const ValueList = forwardRef<ValueListHandle, PropsWithChildren<Props>>(
                         </li>
                     ))}
                 </StyledList>
-                {children}
             </ValueListWrapper>
         );
     },

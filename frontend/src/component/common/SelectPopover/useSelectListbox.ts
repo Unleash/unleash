@@ -125,6 +125,35 @@ export const useSelectListbox = <T extends string | number>(
         return options ?? [];
     }, [options, optionGroups]);
 
+    const selectableOptions = useMemo(
+        () => flatOptions.filter((option) => !option.disabled),
+        [flatOptions],
+    );
+
+    const selectableValues = useMemo(
+        () => selectableOptions.map((option) => option.value),
+        [selectableOptions],
+    );
+
+    const isAllSelected =
+        selectableValues.length > 0 &&
+        selectableValues.every((value) => selectedValues.has(value));
+
+    const toggleSelectAll = () => {
+        if (!props.multiple) return;
+        const selected = props.selected ?? [];
+        props.onChange(
+            isAllSelected
+                ? selected.filter((value) => !selectableValues.includes(value))
+                : [
+                      ...selected,
+                      ...selectableValues.filter(
+                          (value) => !selectedValues.has(value),
+                      ),
+                  ],
+        );
+    };
+
     const {
         getRootProps,
         getInputProps,
@@ -192,6 +221,8 @@ export const useSelectListbox = <T extends string | number>(
         keyboardHighlightedOption,
         isOptionSelected,
         groupedOptions,
+        isAllSelected,
+        toggleSelectAll,
         getRootProps,
         inputRef,
         inputProps,

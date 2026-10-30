@@ -412,6 +412,9 @@ export class UserService {
     }
 
     async deleteUser(userId: number, auditUser: IAuditUser): Promise<void> {
+        if (!(await this.store.exists(userId))) {
+            return;
+        }
         const user = await this.getUser(userId);
         await this.accessService.wipeUserPermissions(userId);
         await this.sessionService.deleteSessionsForUser(userId);

@@ -8,6 +8,7 @@ import type { IInactiveUsersStore } from './types/inactive-users-store-type.js';
 import type { Logger } from '../../logger.js';
 import type { InactiveUserSchema } from '../../openapi/index.js';
 import type { IUnleashServices, UserService } from '../../services/index.js';
+import type { WithTransactional } from '../../db/transaction.js';
 
 export interface InactiveUsers {
     totalInactiveUsers: number;
@@ -17,7 +18,7 @@ export interface InactiveUsers {
 export class InactiveUsersService {
     private inactiveUsersStore: IInactiveUsersStore;
     private readonly logger: Logger;
-    private userService: UserService;
+    private userService: WithTransactional<UserService>;
     private readonly userInactivityThresholdInDays: number;
     constructor(
         { inactiveUsersStore }: Pick<IUnleashStores, 'inactiveUsersStore'>,
@@ -68,10 +69,12 @@ export class InactiveUsersService {
         userIds: number[],
     ): Promise<void> {
         this.logger.info('Deleting inactive users');
-        for (const userid of userIds) {
-            if (calledByUser.id !== userid) {
-                await this.userService.deleteUser(userid, calledByUser);
+        await this.userService.transactional(async (txUserService) => {
+            for (const userid of userIds) {
+                if (calledByUser.id !== userid) {
+                    await txUserService.deleteUser(userid, calledByUser);
+                }
             }
-        }
+        });
     }
 }

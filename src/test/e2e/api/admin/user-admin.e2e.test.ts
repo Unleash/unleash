@@ -7,6 +7,7 @@ import {
 import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import getLogger from '../../../fixtures/no-logger.js';
 import {
+    SCIM_USERS_DELETED,
     USER_CREATED,
     USER_DELETED,
     USER_UPDATED,
@@ -492,6 +493,32 @@ describe('User Admin API without email', () => {
         expect(events[0].type).toBe(USER_DELETED);
         expect(events[0].preData.id).toBe(user.id);
         expect(events[0].preData.email).toBe(user.email);
+        expect(events[0].groupType).toBe('transaction');
+    });
+
+    test('should delete the selected inactive users that still exist in one transaction', async () => {
+        const deletedUser = await userStore.insert({
+            email: 'deleted@mail.com',
+        });
+        const users = [
+            await userStore.insert({ email: 'inactive-1@mail.com' }),
+            await userStore.insert({ email: 'inactive-2@mail.com' }),
+        ];
+        await app.request
+            .delete(`/api/admin/user-admin/${deletedUser.id}`)
+            .expect(200);
+
+        await app.request
+            .post('/api/admin/user-admin/inactive/delete')
+            .send({ ids: [deletedUser.id, ...users.map(({ id }) => id)] })
+            .expect(200);
+
+        const events = (await eventStore.getEvents()).slice(0, 2);
+        expect(events).toMatchObject([
+            { type: USER_DELETED, groupType: 'transaction' },
+            { type: USER_DELETED, groupType: 'transaction' },
+        ]);
+        expect(events[0].groupId).toBe(events[1].groupId);
     });
 
     test('generates USER_UPDATED event', async () => {
@@ -629,5 +656,11 @@ describe('User Admin API without email', () => {
         expect(users.every((u) => u.email !== 'made-by-scim@example.com')).toBe(
             true,
         );
+
+        const events = (await eventStore.getEvents()).slice(0, 2);
+        expect(events).toMatchObject([
+            { type: SCIM_USERS_DELETED, groupType: 'transaction' },
+            { type: USER_DELETED, groupType: 'transaction' },
+        ]);
     });
 });

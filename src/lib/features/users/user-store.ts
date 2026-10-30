@@ -337,7 +337,7 @@ export class UserStore implements IUserStore {
 
     async exists(id: number): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE id = ? and deleted_at = null) AS present`,
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE id = ? and deleted_at IS NULL) AS present`,
             [id],
         );
         const { present } = result.rows[0];

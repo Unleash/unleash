@@ -19,12 +19,16 @@ const mergeRecords = (
 ): Record<string, number> => {
     const result: Record<string, number> = {};
 
-    for (const key in firstRecord) {
-        result[key] = firstRecord[key] + (secondRecord[key] ?? 0);
+    // Variant names are client-supplied, so only look at own properties;
+    // names like "toString" would otherwise resolve to inherited functions.
+    for (const key of Object.keys(firstRecord)) {
+        result[key] =
+            firstRecord[key] +
+            (Object.hasOwn(secondRecord, key) ? secondRecord[key] : 0);
     }
 
-    for (const key in secondRecord) {
-        if (!(key in result)) {
+    for (const key of Object.keys(secondRecord)) {
+        if (!Object.hasOwn(result, key)) {
             result[key] = secondRecord[key];
         }
     }
@@ -42,21 +46,22 @@ export const collapseHourlyMetrics = (
             timestamp: startOfHour(metric.timestamp),
         };
         const key = createMetricKey(hourlyMetric);
-        if (!grouped[key]) {
-            grouped[key] = hourlyMetric;
+        const existing = grouped.get(key);
+        if (!existing) {
+            grouped.set(key, hourlyMetric);
         } else {
-            grouped[key].yes = metric.yes + (grouped[key].yes || 0);
-            grouped[key].no = metric.no + (grouped[key].no || 0);
+            existing.yes = metric.yes + (existing.yes || 0);
+            existing.no = metric.no + (existing.no || 0);
 
             if (metric.variants) {
-                grouped[key].variants = mergeRecords(
+                existing.variants = mergeRecords(
                     metric.variants,
-                    grouped[key].variants ?? {},
+                    existing.variants ?? {},
                 );
             }
         }
     });
-    return Object.values(grouped);
+    return [...grouped.values()];
 };
 
 export const spreadVariants = (

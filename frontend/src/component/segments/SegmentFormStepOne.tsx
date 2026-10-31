@@ -24,6 +24,8 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { Limit } from '../common/Limit/Limit.tsx';
 import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField.tsx';
+import { UPDATE_SEGMENT } from 'component/providers/AccessProvider/permissions';
+import { useHasRootAccess } from 'hooks/useHasAccess';
 
 interface ISegmentFormPartOneProps {
     name: string;
@@ -101,6 +103,7 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
 }) => {
     const segmentId = useOptionalPathParam('segmentId');
     const projectId = useOptionalPathParam('projectId');
+    const canChangeProject = useHasRootAccess(UPDATE_SEGMENT);
     const navigate = useNavigate();
     const { projects, loading: loadingProjects } = useProjects();
     const {
@@ -181,7 +184,10 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                                         project?
                                     </StyledInputDescription>
                                 }
-                                disabled={projectsUsed.size > 1}
+                                disabled={
+                                    projectsUsed.size > 1 ||
+                                    (Boolean(segmentId) && !canChangeProject)
+                                }
                             />
                             <SegmentProjectAlert
                                 projects={projects}

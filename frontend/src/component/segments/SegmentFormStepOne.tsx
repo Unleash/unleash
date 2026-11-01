@@ -103,7 +103,7 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
 }) => {
     const segmentId = useOptionalPathParam('segmentId');
     const projectId = useOptionalPathParam('projectId');
-    const canChangeProject = useHasRootAccess(UPDATE_SEGMENT);
+    const canUpdateSegment = useHasRootAccess(UPDATE_SEGMENT);
     const navigate = useNavigate();
     const { projects, loading: loadingProjects } = useProjects();
     const {
@@ -186,7 +186,7 @@ export const SegmentFormStepOne: React.FC<ISegmentFormPartOneProps> = ({
                                 }
                                 disabled={
                                     projectsUsed.size > 1 ||
-                                    (Boolean(segmentId) && !canChangeProject)
+                                    (Boolean(segmentId) && !canUpdateSegment)
                                 }
                             />
                             <SegmentProjectAlert

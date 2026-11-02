@@ -86,6 +86,7 @@ import {
     createFeatureLinkService,
     createFeatureToggleService,
     createProjectService,
+    createSegmentService,
     createUserSubscriptionsService,
 } from '../features/index.js';
 import EventAnnouncerService from './event-announcer-service.js';
@@ -337,6 +338,9 @@ export const createServices = (
         resourceLimitsService,
         constraintValidator,
     );
+    const transactionalSegmentService = db
+        ? withTransactional((db) => createSegmentService(db, config), db)
+        : withFakeTransactional(segmentService);
 
     const clientInstanceService = new ClientInstanceService(
         stores,
@@ -579,6 +583,7 @@ export const createServices = (
         projectHealthService,
         userSplashService,
         segmentService,
+        transactionalSegmentService,
         openApiService,
         clientSpecService,
         playgroundService,
@@ -729,6 +734,7 @@ export interface IUnleashServices {
     versionService: VersionService;
     userSplashService: UserSplashService;
     segmentService: ISegmentService;
+    transactionalSegmentService: WithTransactional<ISegmentService>;
     openApiService: OpenApiService;
     clientSpecService: ClientSpecService;
     patService: PatService;

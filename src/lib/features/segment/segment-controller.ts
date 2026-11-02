@@ -17,6 +17,7 @@ import {
     getStandardResponses,
 } from '../../openapi/util/standard-responses.js';
 import type { ISegmentService } from './segment-service-interface.js';
+import type { WithTransactional } from '../../db/transaction.js';
 import type { SegmentStrategiesSchema } from '../../openapi/spec/segment-strategies-schema.js';
 import type {
     AccessService,
@@ -50,6 +51,8 @@ type IUpdateFeatureStrategySegmentsRequest = IAuthRequest<
 export class SegmentsController extends Controller {
     private segmentService: ISegmentService;
 
+    private transactionalSegmentService: WithTransactional<ISegmentService>;
+
     private accessService: AccessService;
 
     private flagResolver: IFlagResolver;
@@ -60,17 +63,22 @@ export class SegmentsController extends Controller {
         config: IUnleashConfig,
         {
             segmentService,
+            transactionalSegmentService,
             accessService,
             openApiService,
         }: Pick<
             IUnleashServices,
-            'segmentService' | 'accessService' | 'openApiService'
+            | 'segmentService'
+            | 'transactionalSegmentService'
+            | 'accessService'
+            | 'openApiService'
         >,
     ) {
         super(config);
         this.flagResolver = config.flagResolver;
         this.config = config;
         this.segmentService = segmentService;
+        this.transactionalSegmentService = transactionalSegmentService;
         this.accessService = accessService;
         this.openApiService = openApiService;
 
@@ -447,7 +455,9 @@ export class SegmentsController extends Controller {
         if (segmentIsInUse) {
             res.status(409).send();
         } else {
-            await this.segmentService.delete(id, req.user, req.audit);
+            await this.transactionalSegmentService.transactional((service) =>
+                service.delete(id, req.user, req.audit),
+            );
             res.status(204).send();
         }
     }
@@ -463,11 +473,8 @@ export class SegmentsController extends Controller {
             project: req.body.project,
             constraints: req.body.constraints,
         };
-        await this.segmentService.update(
-            id,
-            updateRequest,
-            req.user,
-            req.audit,
+        await this.transactionalSegmentService.transactional((service) =>
+            service.update(id, updateRequest, req.user, req.audit),
         );
         res.status(204).send();
     }
@@ -492,9 +499,8 @@ export class SegmentsController extends Controller {
         res: Response<AdminSegmentSchema>,
     ): Promise<void> {
         const createRequest = req.body;
-        const segment = await this.segmentService.create(
-            createRequest,
-            req.audit,
+        const segment = await this.transactionalSegmentService.transactional(
+            (service) => service.create(createRequest, req.audit),
         );
         this.openApiService.respondWithValidation(
             201,

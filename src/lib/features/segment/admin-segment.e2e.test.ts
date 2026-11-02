@@ -463,6 +463,27 @@ test('should delete segments', async () => {
     expect((await fetchSegments()).length).toEqual(0);
 });
 
+test('should save segment create, update and delete each in one transaction with its event', async () => {
+    const { body: segment } = await app.createSegment({
+        name: 'a',
+        project: 'default',
+        constraints: [],
+    });
+    await updateSegment(segment.id, { ...segment, name: 'b' });
+    await app.deleteSegment(segment.id);
+
+    const { body } = await app.getRecordedEvents({
+        type: 'IS_ANY_OF:segment-created,segment-updated,segment-deleted',
+    });
+    expect(body.events).toMatchObject([
+        { type: 'segment-deleted', groupType: 'transaction' },
+        { type: 'segment-updated', groupType: 'transaction' },
+        { type: 'segment-created', groupType: 'transaction' },
+    ]);
+    // one transaction per request
+    expect(new Set(body.events.map((event) => event.groupId)).size).toBe(3);
+});
+
 test('should not delete segments used by strategies', async () => {
     await app.createSegment({
         name: 'a',

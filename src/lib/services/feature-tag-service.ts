@@ -21,7 +21,11 @@ import {
     type IUnleashConfig,
     FeatureTaggedEvent,
 } from '../types/index.js';
-import { BadDataError, FOREIGN_KEY_VIOLATION } from '../../lib/error/index.js';
+import {
+    BadDataError,
+    FOREIGN_KEY_VIOLATION,
+    UNIQUE_CONSTRAINT_VIOLATION,
+} from '../../lib/error/index.js';
 import type EventService from '../features/events/event-service.js';
 import type { ITag } from '../tags/index.js';
 import type { Logger } from '../logger.js';
@@ -180,6 +184,9 @@ class FeatureTagService {
                         throw new BadDataError(
                             `Tag type '${tag.type}' does not exist`,
                         );
+                    }
+                    if (err.code !== UNIQUE_CONSTRAINT_VIOLATION) {
+                        throw err;
                     }
                 }
             }

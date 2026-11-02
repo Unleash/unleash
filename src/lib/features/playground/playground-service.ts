@@ -15,7 +15,11 @@ import type {
     FeatureStrategiesEvaluationResult,
 } from '../../features/playground/feature-evaluator/client.js';
 import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
-import { generateObjectCombinations } from './generateObjectCombinations.js';
+import {
+    countCombinations,
+    generateCombinations,
+    splitByComma,
+} from './generateObjectCombinations.js';
 import groupBy from 'lodash.groupby';
 import { omitKeys } from '../../util/index.js';
 import type {
@@ -23,7 +27,10 @@ import type {
     playgroundStrategyEvaluation,
 } from '../../openapi/index.js';
 import type { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/spec/advanced-playground-environment-feature-schema.js';
-import { validateQueryComplexity } from './validateQueryComplexity.js';
+import {
+    validateContextComplexity,
+    validateQueryComplexity,
+} from './validateQueryComplexity.js';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import { defaultVariant } from 'unleash-client/lib/variant.js';
 import { cleanContext } from './clean-context.js';
@@ -137,14 +144,16 @@ export class PlaygroundService {
 
         const { context: cleanedContext, removedProperties } =
             cleanContext(context);
-        const contexts = generateObjectCombinations(cleanedContext);
-
+        const contextDimensions = splitByComma(cleanedContext);
+        const contextCombinationsCount = countCombinations(contextDimensions);
+        validateContextComplexity(contextCombinationsCount, limit);
         validateQueryComplexity(
             environments.length,
             environmentFeatures[0]?.features.length ?? 0,
-            contexts.length,
+            contextCombinationsCount,
             limit,
         );
+        const contexts = generateCombinations(contextDimensions);
 
         const results = await Promise.all(
             environmentFeatures.flatMap(

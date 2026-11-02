@@ -10,10 +10,16 @@ import type { SurveyQuestionSchema } from './surveyQuestionSchema.ts';
  * @nullable
  */
 export type SurveyResponsesSchemaSurvey = {
-    /** The description of the survey. Empty when not set. */
-    description: string;
+    /**
+     * The description of the survey. Null when the survey definition does not set one.
+     * @nullable
+     */
+    description: string | null;
     /** The current questions of the survey. */
     questions: SurveyQuestionSchema[];
-    /** The title of the survey. */
-    title: string;
+    /**
+     * The title of the survey. Null when the survey definition does not set one.
+     * @nullable
+     */
+    title: string | null;
 } | null;

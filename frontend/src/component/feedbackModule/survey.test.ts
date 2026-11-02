@@ -96,13 +96,12 @@ describe('parseSurveyDefinition', () => {
         const survey = definition({
             kind: 'unleash-survey',
             version: 1,
-            title: 'Title',
             questions: [{ id: 'rate', type: 'rating', prompt: 'Rate it' }],
         });
 
         expect(survey).toEqual({
-            title: 'Title',
-            description: '',
+            title: null,
+            description: null,
             questions: [
                 {
                     id: 'rate',
@@ -113,6 +112,26 @@ describe('parseSurveyDefinition', () => {
                 },
             ],
         });
+    });
+
+    it('nulls a title and description that are not text', () => {
+        const survey = definition({
+            ...validSurvey,
+            title: 5,
+            description: 5,
+        });
+
+        expect(survey).toMatchObject({ title: null, description: null });
+    });
+
+    it('keeps an empty title and description apart from missing ones', () => {
+        const survey = definition({
+            ...validSurvey,
+            title: '',
+            description: '',
+        });
+
+        expect(survey).toMatchObject({ title: '', description: '' });
     });
 
     it.each([2, 7, 10])('accepts a rating scale of %s', (scale) => {
@@ -130,7 +149,6 @@ describe('parseSurveyDefinition', () => {
     it.each([
         ['is not marked as a survey', { ...validSurvey, kind: 'other' }],
         ['has an unknown version', { ...validSurvey, version: 2 }],
-        ['has no title', { ...validSurvey, title: '' }],
         ['has no questions', withQuestions([])],
         ['has more than 10 questions', withQuestions(freeTextQuestions(11))],
         ['has a question that is not an object', withQuestions([null])],

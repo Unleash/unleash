@@ -24,8 +24,8 @@ export type SurveyAnswer = number | string | string[];
 export type SurveyAnswers = Record<string, SurveyAnswer>;
 
 export interface SurveyDefinition {
-    title: string;
-    description: string;
+    title: string | null;
+    description: string | null;
     questions: SurveyQuestion[];
 }
 
@@ -39,6 +39,9 @@ export type Survey = SurveyDefinition & SurveyTransport;
 
 const isNonEmptyString = (value: unknown): value is string =>
     typeof value === 'string' && value.length > 0;
+
+const parseOptionalText = (value: unknown): string | null =>
+    typeof value === 'string' ? value : null;
 
 const isObject = (value: unknown): value is Record<string, unknown> =>
     typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -129,9 +132,6 @@ const parseDefinition = (
     if (raw.kind !== SURVEY_KIND || raw.version !== SURVEY_VERSION) {
         return null;
     }
-    if (!isNonEmptyString(raw.title)) {
-        return null;
-    }
     if (
         !Array.isArray(raw.questions) ||
         raw.questions.length === 0 ||
@@ -154,8 +154,8 @@ const parseDefinition = (
     }
 
     return {
-        title: raw.title,
-        description: typeof raw.description === 'string' ? raw.description : '',
+        title: parseOptionalText(raw.title),
+        description: parseOptionalText(raw.description),
         questions,
     };
 };

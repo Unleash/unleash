@@ -151,9 +151,11 @@ interface IntroStepProps {
 const IntroStep = ({ survey, focusStep }: IntroStepProps) => (
     <>
         <StyledStep ref={focusStep} tabIndex={-1}>
-            <Typography variant='h3' component='h2'>
-                {survey.title}
-            </Typography>
+            {survey.title ? (
+                <Typography variant='h3' component='h2'>
+                    {survey.title}
+                </Typography>
+            ) : null}
             {survey.description ? (
                 <Typography
                     variant='body2'
@@ -174,7 +176,7 @@ interface QuestionStepProps {
     question: SurveyQuestion;
     value: SurveyAnswer | undefined;
     onChange: (value: SurveyAnswer | undefined) => void;
-    onBack: () => void;
+    onBack?: () => void;
     canContinue: boolean;
     isLast: boolean;
     focusStep: FocusStep;
@@ -201,9 +203,11 @@ const QuestionStep = ({
                 />
             </StyledStep>
             <StyledSurveyCardActions>
-                <Button variant='outlined' onClick={onBack}>
-                    Back
-                </Button>
+                {onBack ? (
+                    <Button variant='outlined' onClick={onBack}>
+                        Back
+                    </Button>
+                ) : null}
                 {canContinue ? null : (
                     <ScreenReaderOnly id={continueHintId}>
                         Answer this question to continue.
@@ -237,9 +241,11 @@ const SurveyForm = ({ survey, onSubmit, onDismiss }: SurveyFormProps) => {
     const [step, setStep] = useState(0);
     const focusStepOnMount = useRef(false);
 
-    const totalSteps = survey.questions.length + 1;
+    const introSteps = survey.title || survey.description ? 1 : 0;
+    const totalSteps = survey.questions.length + introSteps;
     const isLast = step === totalSteps - 1;
-    const question: SurveyQuestion | undefined = survey.questions[step - 1];
+    const question: SurveyQuestion | undefined =
+        survey.questions[step - introSteps];
     const canContinue = !question?.required || isAnswered(answers[question.id]);
 
     // focusStepOnMount is set to true only when you change the step, not when the survey shows up.
@@ -290,7 +296,7 @@ const SurveyForm = ({ survey, onSubmit, onDismiss }: SurveyFormProps) => {
                         question={question}
                         value={answers[question.id]}
                         onChange={(value) => setAnswer(question.id, value)}
-                        onBack={() => goToStep(step - 1)}
+                        onBack={step > 0 ? () => goToStep(step - 1) : undefined}
                         canContinue={canContinue}
                         isLast={isLast}
                         focusStep={focusStep}

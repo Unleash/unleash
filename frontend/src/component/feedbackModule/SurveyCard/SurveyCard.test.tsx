@@ -93,6 +93,42 @@ describe('SurveyCard', () => {
         );
     });
 
+    it.each([
+        ['missing', null],
+        ['empty', ''],
+    ])('opens on the first question when the title and description are %s', (_, value) => {
+        renderCard({ survey: { ...survey, title: value, description: value } });
+
+        expect(screen.getByText('Rate this page')).toBeInTheDocument();
+        expect(screen.getByRole('progressbar')).toHaveAttribute(
+            'aria-valuetext',
+            'Step 1 of 2',
+        );
+        expect(
+            screen.queryByRole('button', { name: 'Back' }),
+        ).not.toBeInTheDocument();
+        expect(document.body).toHaveFocus();
+    });
+
+    it('goes back to the first question, not an intro, when the survey has no title or description', async () => {
+        renderCard({ survey: { ...survey, title: null, description: null } });
+        await answerRatingAndContinue();
+
+        await userEvent.click(screen.getByRole('button', { name: 'Back' }));
+
+        expect(screen.getByText('Rate this page')).toBeInTheDocument();
+    });
+
+    it('opens on an intro step when the survey has only a description', () => {
+        renderCard({ survey: { ...survey, title: null } });
+
+        expect(screen.getByText('Two quick questions.')).toBeInTheDocument();
+        expect(screen.queryByRole('heading')).not.toBeInTheDocument();
+        expect(
+            screen.getByRole('button', { name: 'Share feedback' }),
+        ).toBeInTheDocument();
+    });
+
     it('disables Next until a required question is answered', async () => {
         renderCard();
         await startSurvey();

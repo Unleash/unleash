@@ -61,10 +61,12 @@ export class FakeApiTokenV2Store implements IApiTokenV2Store {
         );
     }
 
-    async getUserDefinedTokens(): Promise<ApiTokenV2[]> {
-        return [...this.tokens.values()].map(
-            ({ verifier: _verifier, ...token }) => token,
-        );
+    async getUserDefinedTokens(appName?: string): Promise<ApiTokenV2[]> {
+        return [...this.tokens.values()]
+            .filter(
+                (token) => appName === undefined || token.appName === appName,
+            )
+            .map(({ verifier: _verifier, ...token }) => token);
     }
 
     async setExpiry(

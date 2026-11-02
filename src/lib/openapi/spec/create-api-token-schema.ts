@@ -10,6 +10,11 @@ const tokenNameSchema = {
             description: 'The name of the token.',
             example: 'token-64522',
         },
+        appName: {
+            type: 'string',
+            minLength: 1,
+            example: 'checkout-service',
+        },
     },
 } as const;
 

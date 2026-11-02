@@ -42,6 +42,9 @@ import { ApiTokenV2Store } from './api-token-v2-store.js';
 import EnvironmentStore from '../project-environments/environment-store.js';
 import { FakeApiTokenV2Store } from './fake-api-token-v2-store.js';
 import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';
+import ClientApplicationsStore from '../../db/client-applications-store.js';
+import FakeClientApplicationsStore from '../../../test/fixtures/fake-client-applications-store.js';
+import type { IClientApplicationsStore } from '../../types/stores/client-applications-store.js';
 import {
     createEventsService,
     createFakeEventsService,
@@ -89,6 +92,12 @@ export const createApiTokenV2Service = (
         new ApiTokenV2Service(
             {
                 apiTokenV2Store: new ApiTokenV2Store(db),
+                clientApplicationsStore: new ClientApplicationsStore(
+                    db,
+                    config.eventBus,
+                    config.getLogger,
+                    config.flagResolver,
+                ),
                 environmentStore: new EnvironmentStore(
                     db,
                     config.eventBus,
@@ -129,7 +138,14 @@ export const createFakeApiTokenV2Service = (
     const resourceLimitsService =
         services?.resourceLimitsService ?? new ResourceLimitsService(config);
     return new ApiTokenV2Service(
-        { apiTokenV2Store, environmentStore, eventStore: fakeEventStore },
+        {
+            apiTokenV2Store,
+            environmentStore,
+            eventStore: fakeEventStore,
+            clientApplicationsStore:
+                stores?.clientApplicationsStore ??
+                new FakeClientApplicationsStore(),
+        },
         config,
         { eventService, resourceLimitsService },
     );
@@ -144,7 +160,7 @@ export interface ReadOnlyApiTokenV2Service {
         secret,
         selector,
     }: ApiTokenV2Credential): Promise<IApiUser | undefined>;
-    getUserDefinedTokens(): Promise<IApiToken[]>;
+    getUserDefinedTokens(appName?: string): Promise<IApiToken[]>;
 
     initialize(): Promise<void>;
     invalidateCache(selectors: string[]): void;
@@ -181,6 +197,7 @@ class ApiTokenV2Service
     private apiTokenV2Store: IApiTokenV2Store;
     private eventService: EventService;
     private environmentStore: IEnvironmentStore;
+    private clientApplicationsStore: IClientApplicationsStore;
     private resourceLimitsService: ResourceLimitsService;
     private eventBus: EventEmitter;
     private logger: Logger;
@@ -196,9 +213,13 @@ class ApiTokenV2Service
             apiTokenV2Store,
             environmentStore,
             eventStore,
+            clientApplicationsStore,
         }: Pick<
             IUnleashStores,
-            'apiTokenV2Store' | 'environmentStore' | 'eventStore'
+            | 'apiTokenV2Store'
+            | 'environmentStore'
+            | 'eventStore'
+            | 'clientApplicationsStore'
         >,
         { eventBus, getLogger }: Pick<IUnleashConfig, 'eventBus' | 'getLogger'>,
         {
@@ -207,6 +228,7 @@ class ApiTokenV2Service
         }: Pick<IUnleashServices, 'eventService' | 'resourceLimitsService'>,
     ) {
         this.apiTokenV2Store = apiTokenV2Store;
+        this.clientApplicationsStore = clientApplicationsStore;
         this.eventService = eventService;
         this.environmentStore = environmentStore;
         this.eventStore = eventStore;
@@ -328,6 +350,18 @@ class ApiTokenV2Service
         auditUser: IAuditUser,
     ): Promise<ApiTokenV2WithSecret> {
         validateApiToken(token);
+        if (token.type === ApiTokenType.ADMIN && token.appName !== undefined) {
+            throw new BadDataError(
+                'Admin tokens cannot be associated with an Application',
+            );
+        }
+        if (token.appName !== undefined) {
+            if (!(await this.clientApplicationsStore.exists(token.appName))) {
+                throw new BadDataError(
+                    'Unable to associate token with the requested Application',
+                );
+            }
+        }
         await this.validateApiTokenEnvironment(token);
         await this.validateApiTokenLimit(token.userCreated);
 
@@ -341,6 +375,14 @@ class ApiTokenV2Service
         const created = await this.apiTokenV2Store
             .create(token, credential.selector, credential.verifier)
             .catch((error) => {
+                if (
+                    error.code === FOREIGN_KEY_VIOLATION &&
+                    error.constraint === 'api_tokens_v2_application_fkey'
+                ) {
+                    throw new BadDataError(
+                        'Unable to associate token with the requested Application',
+                    );
+                }
                 if (
                     error.code === FOREIGN_KEY_VIOLATION &&
                     error.constraint === 'api_tokens_v2_project_project_fkey'
@@ -460,8 +502,8 @@ class ApiTokenV2Service
         return Boolean(token?.expiresAt && isPast(token.expiresAt));
     }
 
-    async getUserDefinedTokens(): Promise<IApiToken[]> {
-        const tokens = await this.apiTokenV2Store.getUserDefinedTokens();
+    async getUserDefinedTokens(appName?: string): Promise<IApiToken[]> {
+        const tokens = await this.apiTokenV2Store.getUserDefinedTokens(appName);
         return tokens.map((token) => this.toApiToken(token));
     }
 
@@ -559,6 +601,7 @@ class ApiTokenV2Service
             environment: token.environment,
             type: token.type,
             secret: token.selector,
+            appName: token.appName,
         });
         return apiUser;
     }
@@ -627,6 +670,7 @@ class ApiTokenV2Service
             createdAt: token.createdAt,
             seenAt: token.seenAt,
             secure: true,
+            appName: token.appName,
         };
     }
 }

@@ -365,8 +365,8 @@ export default class ClientInstanceService {
     }
 
     async deleteApplication(appName: string): Promise<void> {
-        await this.clientInstanceStore.deleteForApplication(appName);
         await this.clientApplicationsStore.delete(appName);
+        await this.clientInstanceStore.deleteForApplication(appName);
     }
 
     async createApplication(input: IApplication): Promise<void> {

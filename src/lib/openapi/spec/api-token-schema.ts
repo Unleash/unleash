@@ -9,6 +9,12 @@ export const apiTokenSchema = {
     description:
         'An overview of an [Unleash API token](https://docs.getunleash.io/concepts/api-tokens-and-client-keys).',
     properties: {
+        appName: {
+            type: 'string',
+            description:
+                'The immutable appName of the explicitly associated Application, when configured.',
+            example: 'checkout-service',
+        },
         secret: {
             type: 'string',
             description: 'The token used for authentication.',

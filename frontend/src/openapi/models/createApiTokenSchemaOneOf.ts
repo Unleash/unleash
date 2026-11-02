@@ -5,6 +5,8 @@
  */
 
 export type CreateApiTokenSchemaOneOf = {
+    /** @minLength 1 */
+    appName?: string;
     /** The environment that the token should be valid for. Defaults to "default" */
     environment?: string;
     /** The time when this token should expire. */

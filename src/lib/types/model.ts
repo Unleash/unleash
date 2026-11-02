@@ -225,6 +225,7 @@ export interface IApiTokenCreate {
 
 export interface IApiToken
     extends Omit<IApiTokenCreate, 'alias' | 'createdByUserId'> {
+    appName?: string;
     createdAt: Date;
     seenAt?: Date;
     environment: string;

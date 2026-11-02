@@ -14,6 +14,8 @@ export interface ApiTokenSchema {
      * @nullable
      */
     alias?: string | null;
+    /** The immutable appName of the explicitly associated Application, when configured. */
+    appName?: string;
     /** When the token was created. */
     createdAt: string;
     /** The environment the token has access to. */

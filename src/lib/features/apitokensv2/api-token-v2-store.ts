@@ -25,6 +25,7 @@ const toToken = (row: any): Omit<ApiTokenV2, 'projects'> => ({
     createdAt: row.created_at,
     seenAt: row.seen_at ?? undefined,
     secure: true,
+    appName: row.application ?? undefined,
 });
 
 const toTokens = (rows: any[]): ApiTokenV2WithVerifier[] => {
@@ -75,6 +76,7 @@ export class ApiTokenV2Store implements IApiTokenV2Store {
                     environment: newApiToken.environment,
                     expires_at: newApiToken.expiresAt,
                     user_created: newApiToken.userCreated,
+                    application: newApiToken.appName,
                 })
                 .returning('*');
             const updateProjectTask = newApiToken.projects
@@ -111,6 +113,7 @@ export class ApiTokenV2Store implements IApiTokenV2Store {
                 'tokens.expires_at as expires_at',
                 'tokens.created_at as created_at',
                 'tokens.seen_at as seen_at',
+                'tokens.application as application',
             );
     }
 
@@ -134,11 +137,13 @@ export class ApiTokenV2Store implements IApiTokenV2Store {
         return toTokens(rows);
     }
 
-    async getUserDefinedTokens(): Promise<ApiTokenV2[]> {
-        const rows = await this.makeTokenProjectQuery().where(
-            'user_created',
-            true,
-        );
+    async getUserDefinedTokens(appName?: string): Promise<ApiTokenV2[]> {
+        const rows = await this.makeTokenProjectQuery()
+            .modify((builder) => {
+                if (appName !== undefined)
+                    builder.where('tokens.application', appName);
+            })
+            .where('user_created', true);
         return toTokens(rows);
     }
 

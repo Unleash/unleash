@@ -261,7 +261,7 @@ export function registerPrometheusMetrics(
     dbMetrics.registerGaugeDbMetric({
         name: 'largest_project_environment_size',
         help: 'The largest project environment size (bytes) based on strategies, constraints, variants and parameters',
-        labelNames: ['project', 'environment'],
+        labelNames: ['environment'],
         query: () =>
             stores.largestResourcesReadModel.getLargestProjectEnvironments(1),
         map: (results) => {
@@ -269,7 +269,6 @@ export function registerPrometheusMetrics(
             return {
                 value: result.size,
                 labels: {
-                    project: result.project,
                     environment: result.environment,
                 },
             };
@@ -669,26 +668,6 @@ export function registerPrometheusMetrics(
     });
 
     dbMetrics.registerGaugeDbMetric({
-        name: 'project_onboarding_duration',
-        labelNames: ['event', 'project'],
-        help: 'firstFeatureFlag, firstPreLive, firstLive from project creation',
-        query: () => stores.onboardingReadModel.getProjectsOnboardingMetrics(),
-        map: (projectsOnboardingMetrics) =>
-            projectsOnboardingMetrics.flatMap(
-                ({ project, ...projectMetrics }) =>
-                    Object.keys(projectMetrics)
-                        .filter((key) => Number.isInteger(projectMetrics[key]))
-                        .map((key) => ({
-                            value: projectMetrics[key],
-                            labels: {
-                                event: key,
-                                project,
-                            },
-                        })),
-            ),
-    });
-
-    dbMetrics.registerGaugeDbMetric({
         name: 'feature_link_by_domain',
         help: 'Count most popular domains used in feature links',
         labelNames: ['domain'],
@@ -718,8 +697,7 @@ export function registerPrometheusMetrics(
 
     const projectEnvironmentsDisabled = createCounter({
         name: 'project_environments_disabled',
-        help: 'How many "environment disabled" events we have received for each project',
-        labelNames: ['project_id'],
+        help: 'How many "environment disabled" events we have received',
     });
 
     const orphanedTokensTotal = createGauge({
@@ -1233,8 +1211,8 @@ export function registerPrometheusMetrics(
         }
     });
 
-    eventStore.on(PROJECT_ENVIRONMENT_REMOVED, ({ project }) => {
-        projectEnvironmentsDisabled.increment({ project_id: project });
+    eventStore.on(PROJECT_ENVIRONMENT_REMOVED, () => {
+        projectEnvironmentsDisabled.inc();
     });
 
     eventBus.on(events.ADDON_EVENTS_HANDLED, ({ result, destination }) => {

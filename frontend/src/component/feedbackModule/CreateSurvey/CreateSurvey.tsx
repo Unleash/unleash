@@ -1,14 +1,12 @@
-import { type FormEvent, useRef, useState } from 'react';
+import { type FormEvent, type ReactNode, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { useNavigate } from 'react-router';
 import { Button, styled } from '@mui/material';
-import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import Input from 'component/common/Input/Input';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import NotFound from 'component/common/NotFound/NotFound';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { IntroStepper } from 'component/onboarding/intro/IntroStepper';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import {
     type CreateSurveyResult,
     useSurveysApi,
@@ -17,7 +15,6 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { GO_BACK } from 'constants/navigate';
 import { parseSubmitBase, SURVEY_FLAG_PREFIX } from '../survey.ts';
 import {
     hasSurveyErrors,
@@ -27,8 +24,23 @@ import {
     toSurveyJson,
     validateSurveyDraft,
 } from './surveyDraft.ts';
-import { SurveyQuestions } from './SurveyQuestions/SurveyQuestions.tsx';
-import { SurveyTitleSlide } from './SurveyTitleSlide/SurveyTitleSlide.tsx';
+import { DefineSurveyStep } from './DefineSurveyStep.tsx';
+import {
+    type SurveySettingsErrors,
+    SurveySettingsStep,
+} from './SurveySettingsStep.tsx';
+
+const StyledHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
+    marginBottom: theme.spacing(2.5),
+}));
+
+const StyledTitle = styled('h1')(({ theme }) => ({
+    ...theme.typography.h1,
+    margin: 0,
+}));
 
 const StyledForm = styled('form')(({ theme }) => ({
     display: 'flex',
@@ -42,13 +54,13 @@ const StyledButtons = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-interface FormErrors {
-    name?: string;
-    submitUrl?: string;
-    survey: SurveyErrors;
+interface WizardStep {
+    label: string;
+    hasErrors: boolean;
+    content: ReactNode;
 }
 
-const NO_ERRORS: FormErrors = { survey: { questions: [] } };
+const NO_SURVEY_ERRORS: SurveyErrors = { questions: [] };
 
 const validateName = (name: string): string | undefined =>
     !name.startsWith(SURVEY_FLAG_PREFIX) || name === SURVEY_FLAG_PREFIX
@@ -64,7 +76,6 @@ export const CreateSurvey = () => {
     const feedbackModuleEnabled = useUiFlag('feedbackModule');
     const navigate = useNavigate();
     const { setToastData, setToastApiError } = useToast();
-    const { projects } = useProjects();
     const { uiConfig } = useUiConfig();
     const { createSurvey, loading } = useSurveysApi();
 
@@ -73,30 +84,60 @@ export const CreateSurvey = () => {
     const [editedSubmitUrl, setSubmitUrl] = useState<string>();
     const submitUrl = editedSubmitUrl ?? uiConfig.unleashUrl ?? '';
     const [draft, setDraft] = useState<SurveyDraft>(initialSurveyDraft);
-    // Errors appear after the first submit and then follow the edits.
+    const [stepIndex, setStepIndex] = useState(0);
+    // Errors appear after the first attempt to leave a step and then follow the edits.
     const [showErrors, setShowErrors] = useState(false);
-    const errors: FormErrors = {
+    const surveyErrors = validateSurveyDraft(draft);
+    const settingsErrors: SurveySettingsErrors = {
         name: validateName(name),
         submitUrl: validateSubmitUrl(submitUrl),
-        survey: validateSurveyDraft(draft),
     };
-    const shownErrors = showErrors ? errors : NO_ERRORS;
     const formRef = useRef<HTMLFormElement>(null);
 
     if (!feedbackModuleEnabled) {
         return <NotFound />;
     }
 
+    const steps: WizardStep[] = [
+        {
+            label: 'Define survey',
+            hasErrors: hasSurveyErrors(surveyErrors),
+            content: (
+                <DefineSurveyStep
+                    draft={draft}
+                    errors={showErrors ? surveyErrors : NO_SURVEY_ERRORS}
+                    onChange={setDraft}
+                />
+            ),
+        },
+        {
+            label: 'Settings',
+            hasErrors: Boolean(settingsErrors.name || settingsErrors.submitUrl),
+            content: (
+                <SurveySettingsStep
+                    projectId={projectId}
+                    name={name}
+                    submitUrl={submitUrl}
+                    errors={showErrors ? settingsErrors : {}}
+                    onProjectIdChange={setProjectId}
+                    onNameChange={setName}
+                    onSubmitUrlChange={setSubmitUrl}
+                />
+            ),
+        },
+    ];
+    const isLastStep = stepIndex === steps.length - 1;
+
+    const goToStep = (index: number) => {
+        setShowErrors(false);
+        setStepIndex(index);
+    };
+
     const onSubmit = async (event: FormEvent) => {
         event.preventDefault();
-        // Flushed so the invalid fields are marked in the DOM before focusing.
-        flushSync(() => setShowErrors(true));
-        const submitBase = parseSubmitBase(submitUrl);
-        if (
-            errors.name ||
-            submitBase === null ||
-            hasSurveyErrors(errors.survey)
-        ) {
+        if (steps[stepIndex].hasErrors) {
+            // Flushed so the invalid fields are marked in the DOM before focusing.
+            flushSync(() => setShowErrors(true));
             const firstInvalid = formRef.current?.querySelector<HTMLElement>(
                 '[aria-invalid="true"]',
             );
@@ -105,6 +146,14 @@ export const CreateSurvey = () => {
                 block: 'center',
             });
             firstInvalid?.focus({ preventScroll: true });
+            return;
+        }
+        if (!isLastStep) {
+            goToStep(stepIndex + 1);
+            return;
+        }
+        const submitBase = parseSubmitBase(submitUrl);
+        if (submitBase === null) {
             return;
         }
         let result: CreateSurveyResult;
@@ -134,60 +183,44 @@ export const CreateSurvey = () => {
     return (
         <FormTemplate
             loading={loading}
-            title='Create survey'
             description='A survey is an experiment flag whose variant payload holds the questions. Enable the flag in an environment to start showing it.'
         >
-            <StyledForm ref={formRef} onSubmit={onSubmit}>
-                <GeneralSelect
-                    label='Project'
-                    value={projectId}
-                    onChange={setProjectId}
-                    options={projects.map((project) => ({
-                        key: project.id,
-                        label: project.name,
+            <StyledHeader>
+                <IntroStepper
+                    steps={steps.map((step, index) => ({
+                        label: step.label,
+                        clickable: index < stepIndex,
                     }))}
-                    fullWidth
+                    activeIndex={stepIndex}
+                    onStepClick={goToStep}
                 />
-                <Input
-                    label='Flag name'
-                    value={name}
-                    onChange={(event) => setName(event.target.value.trim())}
-                    error={Boolean(shownErrors.name)}
-                    errorText={shownErrors.name}
-                />
-                <Input
-                    label='Submit URL'
-                    description='The Unleash instance that collects the responses. Defaults to this one.'
-                    value={submitUrl}
-                    onChange={(event) =>
-                        setSubmitUrl(event.target.value.trim())
-                    }
-                    error={Boolean(shownErrors.submitUrl)}
-                    errorText={shownErrors.submitUrl}
-                    fullWidth
-                />
-                <SurveyTitleSlide
-                    titleSlide={draft}
-                    titleError={shownErrors.survey.title}
-                    onChange={(titleSlide) =>
-                        setDraft({ ...draft, ...titleSlide })
-                    }
-                />
-                <SurveyQuestions
-                    questions={draft.questions}
-                    errors={shownErrors.survey.questions}
-                    onChange={(questions) => setDraft({ ...draft, questions })}
-                />
+                <StyledTitle>Create survey</StyledTitle>
+            </StyledHeader>
+            <StyledForm ref={formRef} onSubmit={onSubmit}>
+                {steps[stepIndex].content}
                 <StyledButtons>
-                    <Button onClick={() => navigate(GO_BACK)}>Cancel</Button>
-                    <PermissionButton
-                        type='submit'
-                        permission={CREATE_FEATURE}
-                        projectId={projectId}
-                        disabled={loading}
-                    >
-                        Create survey
-                    </PermissionButton>
+                    {stepIndex > 0 ? (
+                        <Button
+                            variant='outlined'
+                            onClick={() => goToStep(stepIndex - 1)}
+                        >
+                            Back
+                        </Button>
+                    ) : null}
+                    {isLastStep ? (
+                        <PermissionButton
+                            type='submit'
+                            permission={CREATE_FEATURE}
+                            projectId={projectId}
+                            disabled={loading}
+                        >
+                            Create survey
+                        </PermissionButton>
+                    ) : (
+                        <Button type='submit' variant='contained'>
+                            Next
+                        </Button>
+                    )}
                 </StyledButtons>
             </StyledForm>
         </FormTemplate>

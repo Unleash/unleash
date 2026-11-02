@@ -94,6 +94,10 @@ const sentSurvey = (addStrategy: { requests: unknown[] }) => {
     return JSON.parse(strategy.variants[0].payload.value);
 };
 
+const goToSettings = async () => {
+    await userEvent.click(await screen.findByRole('button', { name: 'Next' }));
+};
+
 const submitSurvey = async () => {
     await userEvent.type(
         await screen.findByLabelText('Flag name'),
@@ -109,6 +113,7 @@ describe('CreateSurvey', () => {
         const { createFlag } = setupApi({ projectId: 'marketing' });
         renderPage();
 
+        await goToSettings();
         await userEvent.click(
             await screen.findByRole('combobox', { name: 'Project' }),
         );
@@ -129,6 +134,7 @@ describe('CreateSurvey', () => {
         setupApi(failure);
         renderPage();
 
+        await goToSettings();
         await submitSurvey();
 
         await screen.findByText('Flag page for default/survey-onboarding');
@@ -141,6 +147,7 @@ describe('CreateSurvey', () => {
         const { addStrategy } = setupApi();
         renderPage();
 
+        await goToSettings();
         await submitSurvey();
 
         await screen.findByText('Survey created');
@@ -153,6 +160,7 @@ describe('CreateSurvey', () => {
         const { addStrategy } = setupApi();
         renderPage();
 
+        await goToSettings();
         const submitUrl = await screen.findByLabelText('Submit URL');
         await waitFor(() =>
             expect(submitUrl).toHaveValue('https://hosted.example.com/hosted'),
@@ -174,6 +182,7 @@ describe('CreateSurvey', () => {
         });
         renderPage();
 
+        await goToSettings();
         await submitSurvey();
 
         await screen.findByText(
@@ -186,6 +195,7 @@ describe('CreateSurvey', () => {
         const { createFlag } = setupApi();
         renderPage();
 
+        await goToSettings();
         await userEvent.click(
             await screen.findByRole('button', { name: 'Create survey' }),
         );
@@ -209,6 +219,7 @@ describe('CreateSurvey', () => {
                 name: 'Remove question',
             }),
         );
+        await goToSettings();
         await submitSurvey();
 
         await screen.findByText('Survey created');
@@ -230,6 +241,7 @@ describe('CreateSurvey', () => {
         await waitFor(() =>
             expect(screen.queryByLabelText('Title')).not.toBeInTheDocument(),
         );
+        await goToSettings();
         await submitSurvey();
 
         await screen.findByText('Survey created');
@@ -239,31 +251,76 @@ describe('CreateSurvey', () => {
         });
     });
 
-    it('shows an error from the first submit until it is fixed', async () => {
+    it('shows an error from the first attempt to continue until it is fixed', async () => {
         setupApi();
         renderPage();
         const title = await screen.findByLabelText('Title');
         await userEvent.clear(title);
         expect(screen.queryByText('Enter a title')).not.toBeInTheDocument();
 
-        await submitSurvey();
+        await goToSettings();
         await screen.findByText('Enter a title');
         await userEvent.type(title, 'Onboarding');
 
         expect(screen.queryByText('Enter a title')).not.toBeInTheDocument();
     });
 
-    it('does not create the survey until its questions are complete', async () => {
-        const { createFlag } = setupApi();
+    it('opens the settings without errors after the survey definition is fixed', async () => {
+        setupApi();
+        renderPage();
+        const title = await screen.findByLabelText('Title');
+        await userEvent.clear(title);
+        await goToSettings();
+        await userEvent.type(title, 'Onboarding');
+
+        await goToSettings();
+
+        await screen.findByLabelText('Flag name');
+        expect(screen.queryByText(/Must start with/)).not.toBeInTheDocument();
+    });
+
+    it('does not move on to the settings until the questions are complete', async () => {
+        setupApi();
         renderPage();
 
         await userEvent.clear(
             await screen.findByRole('textbox', { name: 'Question 1' }),
         );
-        await submitSurvey();
+        await goToSettings();
 
         await screen.findByText('Enter a question');
-        expect(createFlag.requests).toHaveLength(0);
+        expect(screen.queryByLabelText('Flag name')).not.toBeInTheDocument();
+    });
+
+    it('keeps what was entered when going back and forth between steps', async () => {
+        setupApi();
+        renderPage();
+
+        const title = await screen.findByLabelText('Title');
+        await userEvent.clear(title);
+        await userEvent.type(title, 'Onboarding');
+        await goToSettings();
+        await userEvent.type(
+            await screen.findByLabelText('Flag name'),
+            'onboarding',
+        );
+        await userEvent.click(screen.getByRole('button', { name: 'Back' }));
+
+        expect(await screen.findByLabelText('Title')).toHaveValue('Onboarding');
+        await goToSettings();
+        expect(await screen.findByLabelText('Flag name')).toHaveValue(flagName);
+    });
+
+    it('goes back to the survey definition from the stepper', async () => {
+        setupApi();
+        renderPage();
+
+        await goToSettings();
+        await userEvent.click(
+            await screen.findByRole('button', { name: /Define survey/ }),
+        );
+
+        expect(await screen.findByLabelText('Title')).toBeInTheDocument();
     });
 
     it('moves focus to the first invalid field on every failed submit', async () => {
@@ -277,13 +334,11 @@ describe('CreateSurvey', () => {
             screen.getByRole('textbox', { name: 'Question 3' }),
         );
 
-        await submitSurvey();
+        await goToSettings();
         await waitFor(() => expect(secondPrompt).toHaveFocus());
 
         await userEvent.click(screen.getByLabelText('Title'));
-        await userEvent.click(
-            screen.getByRole('button', { name: 'Create survey' }),
-        );
+        await goToSettings();
         await waitFor(() => expect(secondPrompt).toHaveFocus());
     });
 
@@ -291,6 +346,7 @@ describe('CreateSurvey', () => {
         const { createFlag } = setupApi();
         renderPage([{ permission: CREATE_FEATURE, project: 'marketing' }]);
 
+        await goToSettings();
         await userEvent.type(
             await screen.findByLabelText('Flag name'),
             'onboarding',
@@ -313,6 +369,7 @@ describe('CreateSurvey', () => {
         );
         renderPage();
 
+        await goToSettings();
         await submitSurvey();
 
         await screen.findByText(/A flag with that name already exists/);

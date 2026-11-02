@@ -67,3 +67,20 @@ test('should still render history if no search context', async () => {
 
     await screen.findByText('oldquery');
 });
+
+test('should not overwrite text the user is typing when a stale initial value arrives', async () => {
+    const { rerender } = render(<Search onChange={() => {}} initialValue='' />);
+
+    const input = screen.getByTestId(SEARCH_INPUT);
+    input.focus();
+    fireEvent.change(input, { target: { value: 'feature' } });
+
+    rerender(<Search onChange={() => {}} initialValue='fea' />);
+
+    expect(input).toHaveValue('feature');
+
+    input.blur();
+    rerender(<Search onChange={() => {}} initialValue='from-url' />);
+
+    expect(input).toHaveValue('from-url');
+});

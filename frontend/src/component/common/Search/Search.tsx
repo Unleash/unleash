@@ -183,6 +183,10 @@ export const Search = ({
     useOnBlur(searchContainerRef, hideSuggestions);
 
     useEffect(() => {
+        const userIsTyping = document.activeElement === searchInputRef.current;
+        if (userIsTyping) {
+            return;
+        }
         setValue(initialValue);
     }, [initialValue]);
 

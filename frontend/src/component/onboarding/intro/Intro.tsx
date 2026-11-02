@@ -24,7 +24,7 @@ import { IntroFlagView } from './IntroFlagView.tsx';
 import { IntroImpactCharts } from './IntroImpactCharts.tsx';
 import { IntroSuccess } from './IntroSuccess.tsx';
 import { IntroShowcase } from './IntroShowcase.tsx';
-import { IntroStepper } from './IntroStepper.tsx';
+import { Stepper } from 'component/common/Stepper/Stepper';
 import { HintBadge, useIdleHint } from './introHints.tsx';
 import {
     INTRO_RELEASE_PLAN_MILESTONE_MS,
@@ -852,7 +852,7 @@ export const Intro = ({
         <StyledPanel>
             <StyledLeft>
                 <StyledHeader>
-                    <IntroStepper
+                    <Stepper
                         steps={topics.map((item, index) => ({
                             label: item.stepLabel,
                             clickable: index <= topicIndex,

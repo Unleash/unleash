@@ -3,13 +3,13 @@ import { Box, styled } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
-export interface IntroStepperStep {
+export interface StepperStep {
     label: string;
     clickable: boolean;
 }
 
-interface IIntroStepperProps {
-    steps: IntroStepperStep[];
+interface IStepperProps {
+    steps: StepperStep[];
     activeIndex: number;
     onStepClick: (index: number) => void;
 }
@@ -84,12 +84,8 @@ const StyledChevron = styled(ChevronRightIcon)(({ theme }) => ({
     flexShrink: 0,
 }));
 
-export const IntroStepper = ({
-    steps,
-    activeIndex,
-    onStepClick,
-}: IIntroStepperProps) => (
-    <StyledStepper data-testid='QUICK_TOUR_INTRO_STEPPER'>
+export const Stepper = ({ steps, activeIndex, onStepClick }: IStepperProps) => (
+    <StyledStepper data-testid='STEPPER'>
         {steps.map((step, index) => {
             const state =
                 index < activeIndex

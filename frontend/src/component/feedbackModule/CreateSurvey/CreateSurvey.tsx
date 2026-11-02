@@ -5,7 +5,7 @@ import { Button, styled } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import NotFound from 'component/common/NotFound/NotFound';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { IntroStepper } from 'component/onboarding/intro/IntroStepper';
+import { Stepper } from 'component/common/Stepper/Stepper';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import {
     type CreateSurveyResult,
@@ -186,7 +186,7 @@ export const CreateSurvey = () => {
             description='A survey is an experiment flag whose variant payload holds the questions. Enable the flag in an environment to start showing it.'
         >
             <StyledHeader>
-                <IntroStepper
+                <Stepper
                     steps={steps.map((step, index) => ({
                         label: step.label,
                         clickable: index < stepIndex,

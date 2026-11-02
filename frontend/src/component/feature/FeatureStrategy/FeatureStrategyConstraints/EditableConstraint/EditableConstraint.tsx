@@ -1,5 +1,4 @@
-import { IconButton, Link, styled } from '@mui/material';
-import OpenInNew from '@mui/icons-material/OpenInNew';
+import { IconButton, styled } from '@mui/material';
 import {
     isRegexOperator,
     isStringOperator,
@@ -26,13 +25,11 @@ import {
     isCidrConstraint,
     isDateConstraint,
     isMultiValueConstraint,
-    isRegexConstraint,
 } from './useEditableConstraint/editable-constraint-type.ts';
 import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator.ts';
 import { createContextFieldOptions } from './createContextFieldOptions.ts';
 import { ContextFieldSelect } from './ContextFieldSelect.tsx';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
-import { AddRegexValueEditor } from './AddRegexValueEditor/AddRegexValueEditor.tsx';
 import { CidrSdkRequirements } from './CidrSdkRequirements.tsx';
 import { formatTargetRange } from './CidrTargetRange.tsx';
 import { getTargetRange } from './useEditableConstraint/ip-address.ts';
@@ -91,12 +88,6 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
     right: theme.spacing(1),
 }));
 
-const StyledHelpLink = styled(Link)(({ theme }) => ({
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: 0.25,
-}));
-
 const ButtonPlaceholder = styled('div')(({ theme }) => ({
     // this is a trick that lets us use absolute positioning for the button so
     // that it can go over the operator context fields when necessary (narrow
@@ -150,17 +141,6 @@ const TopRowInput: FC<{
         return null;
     }
 
-    if (!legalValueData && isRegexConstraint(localConstraint)) {
-        if (editingOpen) return null;
-        return (
-            <AddValueButton
-                ref={addValuesButtonRef}
-                hasValues={false}
-                onClick={() => setEditingOpen(true)}
-            />
-        );
-    }
-
     return editingOpen ? (
         <AddValueInline
             localConstraint={localConstraint}
@@ -185,46 +165,6 @@ const TopRowInput: FC<{
     );
 };
 
-const InlineEdit: FC<{
-    addValues: (value: string | string[]) => void;
-    localConstraint: EditableConstraintType;
-    editingOpen: boolean;
-    validator: (value: string) => ConstraintValidationResult;
-    legalValueData?: LegalValueData;
-}> = ({
-    addValues,
-    localConstraint,
-    editingOpen,
-    validator,
-    legalValueData,
-}) => {
-    if (!legalValueData && isRegexConstraint(localConstraint) && editingOpen) {
-        return (
-            <AddRegexValueEditor
-                initialValue={localConstraint.value}
-                caseInsensitive={Boolean(localConstraint.caseInsensitive)}
-                addValue={addValues}
-                validator={validator}
-                editingOpen={editingOpen}
-                helpText={
-                    <>
-                        A regex value should be a valid{' '}
-                        <StyledHelpLink
-                            href='https://github.com/google/re2/wiki/Syntax'
-                            target='_blank'
-                            rel='noopener noreferrer'
-                        >
-                            RE2 regular expression
-                            <OpenInNew sx={{ fontSize: 'inherit' }} />
-                        </StyledHelpLink>
-                    </>
-                }
-            />
-        );
-    }
-    return null;
-};
-
 type Props = {
     constraint: IConstraint;
     onDelete: () => void;
@@ -243,12 +183,8 @@ export const EditableConstraint: FC<Props> = ({
         legalValueData,
         selectedValues,
         invertedDisabled,
-        currentValueInvalid,
     } = useEditableConstraint(constraint, onUpdate);
-    const [editingRequested, setEditingOpen] = useState(false);
-    const editingOpen =
-        editingRequested ||
-        (isRegexConstraint(localConstraint) && currentValueInvalid);
+    const [editingOpen, setEditingOpen] = useState(false);
 
     const valueListRef = useRef<ValueListHandle>(null);
     const addValuesButtonRef = useRef<HTMLButtonElement>(null);
@@ -428,13 +364,6 @@ export const EditableConstraint: FC<Props> = ({
                 </HtmlTooltip>
             </TopRow>
             {isCidrConstraint(localConstraint) ? <CidrSdkRequirements /> : null}
-            <InlineEdit
-                localConstraint={localConstraint}
-                editingOpen={editingOpen}
-                addValues={addValues}
-                validator={validator}
-                legalValueData={legalValueData}
-            />
         </Container>
     );
 };

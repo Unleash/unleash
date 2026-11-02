@@ -1,11 +1,14 @@
-import type { FC } from 'react';
-import type { InputBaseComponentProps } from '@mui/material';
+import type { FC, ReactNode } from 'react';
+import { Link, styled, type InputBaseComponentProps } from '@mui/material';
+import OpenInNew from '@mui/icons-material/OpenInNew';
 import {
     type InlineValueProps,
     type SubmitValue,
     LegalValuesInput,
     PlainValueInput,
 } from './InlineValueInput.tsx';
+import { RegexValueInput } from './AddRegexValueEditor/RegexValueInput.tsx';
+import { MinimumVersionsTooltip } from './AddRegexValueEditor/RegexSdkRequirements.tsx';
 import type { ConstraintValidatorOutput } from './ConstraintValidatorOutput.ts';
 import type { LegalValueData } from './useEditableConstraint/useEditableConstraint.js';
 import {
@@ -13,14 +16,21 @@ import {
     isCidrConstraint,
     isMultiValueConstraint,
     isNumberConstraint,
+    isRegexConstraint,
     isSemVerConstraint,
 } from './useEditableConstraint/editable-constraint-type.ts';
 import { CidrTargetRange } from './CidrTargetRange.tsx';
 import { parseParameterStrings } from 'utils/parseParameter';
 
+const StyledHelpLink = styled(Link)(({ theme }) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: 0.25,
+}));
+
 type EditingProps = {
     parseInput: (raw: string) => string[];
-    helpText?: string;
+    helpText?: ReactNode;
     htmlInputProps?: InputBaseComponentProps;
     ValuePreview?: FC<{ value: string }>;
 };
@@ -50,6 +60,25 @@ const getEditingProps = (
             parseInput: singleValueParseInput,
             htmlInputProps: { inputMode: 'decimal' },
             helpText: 'Add a single number',
+        };
+    }
+    if (isRegexConstraint(localConstraint)) {
+        return {
+            parseInput: singleValueParseInput,
+            helpText: (
+                <>
+                    Use a valid{' '}
+                    <StyledHelpLink
+                        href='https://github.com/google/re2/wiki/Syntax'
+                        target='_blank'
+                        rel='noopener noreferrer'
+                    >
+                        RE2 regular expression
+                        <OpenInNew sx={{ fontSize: 'inherit' }} />
+                    </StyledHelpLink>
+                    . Regex needs a recent SDK. <MinimumVersionsTooltip />
+                </>
+            ),
         };
     }
     return {
@@ -163,9 +192,27 @@ export const AddValueInline: FC<Props> = ({
         legalValues: legalValueData,
     };
 
-    return legalValueData ? (
-        <LegalValuesInput {...inlineValueProps} legalValues={legalValueData} />
-    ) : (
-        <PlainValueInput {...inlineValueProps} />
-    );
+    if (legalValueData) {
+        return (
+            <LegalValuesInput
+                {...inlineValueProps}
+                legalValues={legalValueData}
+            />
+        );
+    }
+
+    if (isRegexConstraint(localConstraint)) {
+        return (
+            <RegexValueInput
+                value={value}
+                onChange={onChange}
+                onClose={onClose}
+                submitValue={submitValue}
+                helpText={helpText}
+                caseInsensitive={Boolean(localConstraint.caseInsensitive)}
+            />
+        );
+    }
+
+    return <PlainValueInput {...inlineValueProps} />;
 };

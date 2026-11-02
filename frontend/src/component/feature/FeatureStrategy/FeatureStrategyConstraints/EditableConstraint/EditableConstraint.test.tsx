@@ -26,58 +26,6 @@ const setupApi = ({
 };
 
 describe('EditableConstraint', () => {
-    describe('REGEX constraint with an existing invalid value', () => {
-        test('opens the regex editor and shows a validation error', async () => {
-            setupApi();
-
-            const constraint: IConstraint = {
-                contextName: 'appName',
-                operator: 'REGEX',
-                value: '[invalid',
-            };
-
-            render(
-                <EditableConstraint
-                    constraint={constraint}
-                    onDelete={noOp}
-                    onUpdate={noOp}
-                />,
-            );
-
-            await screen.findByTestId('CONSTRAINT_VALUES_INPUT');
-            await screen.findByText(/value must be a valid RE2 regex/i);
-        });
-
-        test('closes the editor and brings back the add value button when the value is deleted', async () => {
-            setupApi();
-
-            const constraint: IConstraint = {
-                contextName: 'appName',
-                operator: 'REGEX',
-                value: '[invalid',
-            };
-
-            const { container } = render(
-                <EditableConstraint
-                    constraint={constraint}
-                    onDelete={noOp}
-                    onUpdate={noOp}
-                />,
-            );
-
-            await screen.findByTestId('CONSTRAINT_VALUES_INPUT');
-
-            const deleteIcon = container.querySelector('.MuiChip-deleteIcon');
-            expect(deleteIcon).not.toBeNull();
-            fireEvent.click(deleteIcon as Element);
-
-            expect(
-                screen.queryByTestId('CONSTRAINT_VALUES_INPUT'),
-            ).not.toBeInTheDocument();
-            await screen.findByRole('button', { name: 'Add value' });
-        });
-    });
-
     describe('REGEX constraint with an existing valid value', () => {
         test('shows the add value button after operator changes away from and back to REGEX, and opens the editor on click', async () => {
             setupApi();

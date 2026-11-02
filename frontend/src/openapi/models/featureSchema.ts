@@ -9,6 +9,7 @@ import type { FeatureSchemaCreatedBy } from './featureSchemaCreatedBy.ts';
 import type { FeatureSchemaDependenciesItem } from './featureSchemaDependenciesItem.ts';
 import type { FeatureSchemaLifecycle } from './featureSchemaLifecycle.ts';
 import type { FeatureSchemaLinksItem } from './featureSchemaLinksItem.ts';
+import type { FeatureSchemaPayloadSchema } from './featureSchemaPayloadSchema.ts';
 import type { TagSchema } from './tagSchema.ts';
 
 /**
@@ -44,16 +45,28 @@ export interface FeatureSchema {
     enabled?: boolean;
     /** The list of environments where the feature can be used */
     environments?: FeatureEnvironmentSchema[];
+    /**
+     * The date the flag is expected to reach the end of its lifetime. `null` if the flag is permanent. This is an experimental field and may change.
+     * @nullable
+     */
+    expectedLifetimeEndsAt?: string | null;
     /** `true` if the feature was favorited, otherwise `false`. */
     favorite?: boolean;
     /** `true` if the impression data collection is enabled for the feature, otherwise `false`. */
     impressionData?: boolean;
     /** Current lifecycle stage of the feature */
     lifecycle?: FeatureSchemaLifecycle;
+    /**
+     * The lifetime of this flag in days. If the value is `0`, the flag is expected to be permanent. Absent when the flag uses the lifetime of its feature type. This is an experimental field and may change.
+     * @minimum 0
+     */
+    lifetimeDays?: number;
     /** The list of links. This is an experimental field and may change. */
     links?: FeatureSchemaLinksItem[];
     /** Unique feature name */
     name: string;
+    /** The JSON Schema document, draft 2020-12, that describes the variant payloads of the flag. Absent when the flag has none. This is an experimental field and may change. */
+    payloadSchema?: FeatureSchemaPayloadSchema;
     /** Name of the project the feature belongs to */
     project?: string;
     /** `true` if the feature is stale based on the age and feature type, otherwise `false`. */

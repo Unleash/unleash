@@ -11,6 +11,8 @@ import type { InactiveUserSchema } from './inactiveUserSchema.ts';
 export interface InactiveUsersSchema {
     /** The list of users that are flagged as inactive */
     inactiveUsers: InactiveUserSchema[];
+    /** The total number of inactive users */
+    totalInactiveUsers: number;
     /**
      * The version of this schema. Used to keep track of compatibility
      * @minimum 1

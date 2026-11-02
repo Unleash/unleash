@@ -11,6 +11,12 @@ import type { SurveyAnswersSchema } from './surveyAnswersSchema.ts';
 export interface CreateSurveyResponseSchema {
     answers: SurveyAnswersSchema;
     /**
+     * The environment the survey was answered in.
+     * @minLength 1
+     * @maxLength 100
+     */
+    environmentId: string;
+    /**
      * Identifies the respondent across responses.
      * @maxLength 255
      */

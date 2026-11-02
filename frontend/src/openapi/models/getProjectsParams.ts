@@ -3,7 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { GetProjectsView } from './getProjectsView.ts';
 
 export type GetProjectsParams = {
     archived?: boolean;
+    /**
+     * Experimental: which shape of project to return. `core` returns only the fields stored on the project itself (id, name, description, createdAt, archivedAt) and skips the derived fields such as feature counts, member counts, owners and health. Omit it to get the full projects listing. This parameter may change or be removed in a future release.
+     */
+    view?: GetProjectsView;
 };

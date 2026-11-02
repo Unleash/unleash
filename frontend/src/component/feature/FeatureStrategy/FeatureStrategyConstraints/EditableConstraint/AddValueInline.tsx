@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import type { InputBaseComponentProps } from '@mui/material';
 import {
     type InlineValueProps,
+    type SubmitValue,
     LegalValuesInput,
     PlainValueInput,
 } from './InlineValueInput.tsx';
@@ -106,13 +107,53 @@ export const AddValueInline: FC<Props> = ({
     const { parseInput, helpText, htmlInputProps, ValuePreview } =
         resolveEditingProps(localConstraint, legalValueData);
 
+    const submitValue: SubmitValue = (
+        rawValue,
+        setError,
+        setAnnouncement,
+        checkValues,
+    ) => {
+        if (!rawValue?.trim()) {
+            setError('Value cannot be empty or whitespace');
+            return false;
+        }
+
+        const newValues = parseInput(rawValue);
+
+        if (newValues.length === 0) {
+            setError('Values cannot be empty');
+            return false;
+        }
+
+        if (newValues.some((v) => v.length > 100)) {
+            setError('Values cannot be longer than 100 characters');
+            return false;
+        }
+
+        const checkError = checkValues?.(newValues);
+        if (checkError) {
+            setError(checkError);
+            return false;
+        }
+
+        const [isValid, errorMessage] = validator(...newValues);
+        if (!isValid) {
+            setError(errorMessage);
+            return false;
+        }
+
+        onAddValues(newValues);
+        onChange('');
+        setAnnouncement(`"${rawValue}" added`);
+        setError('');
+        return true;
+    };
+
     const inlineValueProps: InlineValueProps = {
         value,
         onChange,
         htmlInputProps,
-        parseInput,
-        validator,
-        onAddValues,
+        submitValue,
         helpText,
         onClose,
         ValuePreview,

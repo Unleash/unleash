@@ -28,6 +28,7 @@ import {
     validateSurveyDraft,
 } from './surveyDraft.ts';
 import { SurveyQuestions } from './SurveyQuestions/SurveyQuestions.tsx';
+import { SurveyTitleSlide } from './SurveyTitleSlide/SurveyTitleSlide.tsx';
 
 const StyledForm = styled('form')(({ theme }) => ({
     display: 'flex',
@@ -165,26 +166,12 @@ export const CreateSurvey = () => {
                     errorText={shownErrors.submitUrl}
                     fullWidth
                 />
-                <Input
-                    label='Title'
-                    value={draft.title}
-                    onChange={(event) =>
-                        setDraft({ ...draft, title: event.target.value })
+                <SurveyTitleSlide
+                    titleSlide={draft}
+                    titleError={shownErrors.survey.title}
+                    onChange={(titleSlide) =>
+                        setDraft({ ...draft, ...titleSlide })
                     }
-                    error={Boolean(shownErrors.survey.title)}
-                    errorText={shownErrors.survey.title}
-                    fullWidth
-                />
-                <Input
-                    label='Description'
-                    description='Optional. Shown under the title.'
-                    value={draft.description}
-                    onChange={(event) =>
-                        setDraft({ ...draft, description: event.target.value })
-                    }
-                    multiline
-                    minRows={2}
-                    fullWidth
                 />
                 <SurveyQuestions
                     questions={draft.questions}

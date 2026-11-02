@@ -11,6 +11,7 @@ export type QuestionType = SurveyQuestion['type'];
 export type QuestionDraft = SurveyQuestion & { key: string };
 
 export interface SurveyDraft {
+    showTitleSlide: boolean;
     title: string;
     description: string;
     questions: QuestionDraft[];
@@ -61,6 +62,7 @@ export const newQuestion = (questions: QuestionDraft[]): QuestionDraft => ({
 });
 
 export const initialSurveyDraft = (): SurveyDraft => ({
+    showTitleSlide: true,
     title: 'How was creating your flag?',
     description: 'Three quick questions.',
     questions: [
@@ -104,7 +106,10 @@ const validateOptions = (options: string[]): (string | undefined)[] =>
 export const validateSurveyDraft = (draft: SurveyDraft): SurveyErrors => {
     const ids = draft.questions.map(({ id }) => id.trim());
     return {
-        title: draft.title.trim() === '' ? 'Enter a title' : undefined,
+        title:
+            draft.showTitleSlide && draft.title.trim() === ''
+                ? 'Enter a title'
+                : undefined,
         questions: draft.questions.map((question, index) => ({
             id:
                 ids[index] === ''
@@ -154,8 +159,8 @@ export const toSurveyJson = (draft: SurveyDraft): string =>
         {
             kind: SURVEY_KIND,
             version: SURVEY_VERSION,
-            title: draft.title.trim(),
-            description: draft.description.trim(),
+            title: draft.showTitleSlide ? draft.title.trim() : null,
+            description: draft.showTitleSlide ? draft.description.trim() : null,
             questions: draft.questions.map(toQuestion),
         },
         null,

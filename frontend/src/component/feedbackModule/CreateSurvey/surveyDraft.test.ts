@@ -29,6 +29,7 @@ const choiceQuestion = (options: string[]): QuestionDraft => ({
 });
 
 const draftWith = (questions: QuestionDraft[]): SurveyDraft => ({
+    showTitleSlide: true,
     title: 'Survey',
     description: '',
     questions,
@@ -44,6 +45,7 @@ describe('toSurveyJson', () => {
 
     it('turns every question type into its survey fields, trimmed', () => {
         const draft = {
+            showTitleSlide: true,
             title: ' Survey ',
             description: ' About you ',
             questions: [
@@ -86,6 +88,19 @@ describe('toSurveyJson', () => {
             ],
         });
     });
+
+    it('leaves out the title and description when the title slide is hidden', () => {
+        const draft = {
+            ...draftWith([draftQuestion()]),
+            showTitleSlide: false,
+            description: 'About you',
+        };
+
+        expect(JSON.parse(toSurveyJson(draft))).toMatchObject({
+            title: null,
+            description: null,
+        });
+    });
 });
 
 describe('newQuestion', () => {
@@ -124,6 +139,16 @@ describe('validateSurveyDraft', () => {
         const draft = { ...draftWith([draftQuestion()]), title: '  ' };
 
         expect(validateSurveyDraft(draft).title).toBe('Enter a title');
+    });
+
+    it('does not require a title when the title slide is hidden', () => {
+        const draft = {
+            ...draftWith([draftQuestion()]),
+            showTitleSlide: false,
+            title: '',
+        };
+
+        expect(hasSurveyErrors(validateSurveyDraft(draft))).toBe(false);
     });
 
     it.each([

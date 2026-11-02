@@ -219,6 +219,26 @@ describe('CreateSurvey', () => {
         });
     });
 
+    it('sends a survey without a title or description when the title slide is hidden', async () => {
+        const { addStrategy } = setupApi();
+        renderPage();
+
+        await userEvent.clear(await screen.findByLabelText('Title'));
+        await userEvent.click(
+            screen.getByRole('checkbox', { name: 'Show title slide' }),
+        );
+        await waitFor(() =>
+            expect(screen.queryByLabelText('Title')).not.toBeInTheDocument(),
+        );
+        await submitSurvey();
+
+        await screen.findByText('Survey created');
+        expect(sentSurvey(addStrategy)).toMatchObject({
+            title: null,
+            description: null,
+        });
+    });
+
     it('shows an error from the first submit until it is fixed', async () => {
         setupApi();
         renderPage();

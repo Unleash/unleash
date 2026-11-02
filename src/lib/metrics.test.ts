@@ -422,9 +422,7 @@ test('should collect metrics for project disabled numbers', async () => {
     const recordedMetric = await prometheusRegister.getSingleMetricAsString(
         'project_environments_disabled',
     );
-    expect(recordedMetric).toMatch(
-        /project_environments_disabled{project_id="default"} 1/,
-    );
+    expect(recordedMetric).toMatch(/project_environments_disabled 1/);
 });
 
 test('should collect metrics for lifecycle', async () => {

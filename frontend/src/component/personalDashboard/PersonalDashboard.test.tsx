@@ -1,4 +1,4 @@
-import { test } from 'vitest';
+import { expect, test } from 'vitest';
 import { PersonalDashboard } from './PersonalDashboard.tsx';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
@@ -173,4 +173,33 @@ test('Render personal dashboard for a new project', async () => {
     await screen.findByText(
         'You have not created or favorited any feature flags. Once you do, they will show up here.',
     );
+});
+
+test('Render projects as cards with dashboardV2', async () => {
+    const projects = ['first', 'second', 'third', 'fourth'].map((name) => ({
+        id: name,
+        name,
+    }));
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: { dashboardV2: true },
+    });
+    testServerRoute(server, '/api/admin/user', {
+        user: { name: 'Unleash User' },
+    });
+    testServerRoute(server, '/api/admin/personal-dashboard', {
+        projects,
+        flags: [],
+    });
+    testServerRoute(server, '/api/admin/projects', {
+        projects: [...projects].reverse(),
+    });
+
+    render(
+        <WelcomeDialogProvider>
+            <PersonalDashboard />
+        </WelcomeDialogProvider>,
+    );
+
+    const firstCard = await screen.findByRole('link', { name: /first/ });
+    expect(firstCard).toHaveAttribute('href', '/projects/first');
 });

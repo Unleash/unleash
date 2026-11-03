@@ -1,16 +1,16 @@
 import { createUuid } from 'utils/createUuid';
 import { VariantForm } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm.tsx';
-import { updateWeightEdit } from 'component/common/util';
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
 import { WeightType } from '../../../constants/variantTypes.ts';
 import { styled, useTheme, Button, Tabs } from '@mui/material';
 import type { StrategyFormState } from 'interfaces/strategy';
-import { VariantsSplitPreview } from 'component/common/VariantsSplitPreview/VariantsSplitPreview';
 import { useEventTracker } from 'hooks/useEventTracker';
 import Add from '@mui/icons-material/Add';
 import { VariantPill } from './VariantPill/VariantPill.tsx';
+import { VariantsWeightBar } from './VariantsWeightBar/VariantsWeightBar.tsx';
+import { splitWeightsEvenly } from './variantWeights.ts';
 
 const EmptyStateDescription = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -94,29 +94,30 @@ export const StrategyVariants = <T extends StrategyFormState>({
 
     const updateVariant = (updatedVariant: IFeatureVariantEdit, id: string) => {
         setVariantsEdit((prevVariants) =>
-            updateWeightEdit(
-                prevVariants.map((prevVariant) =>
-                    prevVariant.id === id ? updatedVariant : prevVariant,
-                ),
-                1000,
+            prevVariants.map((prevVariant) =>
+                prevVariant.id === id
+                    ? { ...updatedVariant, weight: prevVariant.weight }
+                    : prevVariant,
             ),
         );
     };
 
     const addVariant = () => {
         const id = createUuid();
-        setVariantsEdit((variantsEdit) => [
-            ...variantsEdit,
-            {
-                name: '',
-                weightType: WeightType.VARIABLE,
-                weight: 0,
-                stickiness,
-                new: true,
-                isValid: false,
-                id,
-            },
-        ]);
+        setVariantsEdit((variantsEdit) =>
+            splitWeightsEvenly([
+                ...variantsEdit,
+                {
+                    name: '',
+                    weightType: WeightType.VARIABLE,
+                    weight: 0,
+                    stickiness,
+                    new: true,
+                    isValid: false,
+                    id,
+                },
+            ]),
+        );
         setSelectedVariantId(id);
         focusSelectedPillAfterRender.current = true;
         trackEvent('strategy-variants', {
@@ -126,12 +127,20 @@ export const StrategyVariants = <T extends StrategyFormState>({
         });
     };
 
+    const changeWeights = (weights: number[]) =>
+        setVariantsEdit((prevVariants) =>
+            prevVariants.map((variant, index) => ({
+                ...variant,
+                weight: weights[index],
+            })),
+        );
+
     const removeVariant = (id: string) => {
         const removedIndex = variantsEdit.findIndex(
             (variant) => variant.id === id,
         );
         const remaining = variantsEdit.filter((variant) => variant.id !== id);
-        setVariantsEdit(updateWeightEdit(remaining, 1000));
+        setVariantsEdit(splitWeightsEvenly(remaining));
         setSelectedVariantId(remaining[Math.max(removedIndex - 1, 0)]?.id);
         focusSelectedPillAfterRender.current = true;
     };
@@ -172,6 +181,16 @@ export const StrategyVariants = <T extends StrategyFormState>({
 
     return (
         <>
+            <VariantsWeightBar
+                variants={variantsEdit.map((variant, index) => ({
+                    id: variant.id,
+                    name: variant.name,
+                    weight: variant.weight,
+                    color: variantColor(index),
+                }))}
+                weightsError={variantWeightsError}
+                onWeightsChange={changeWeights}
+            />
             <PillRow>
                 <Tabs
                     ref={pillListRef}
@@ -218,11 +237,6 @@ export const StrategyVariants = <T extends StrategyFormState>({
                 }
                 removeVariant={() => removeVariant(selectedVariant.id)}
                 decorationColor={variantColor(selectedIndex)}
-                weightsError={variantWeightsError}
-            />
-
-            <VariantsSplitPreview
-                variants={variantsEdit}
                 weightsError={variantWeightsError}
             />
         </>

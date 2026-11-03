@@ -132,24 +132,21 @@ const StyledReopenHint = styled(Typography)(({ theme }) => ({
 }));
 
 export const SignupDialogComplete: SignupStepContent = ({
-    data,
     onNext,
     onBack,
     isSubmitting,
     error,
 }) => {
     const advancedTopics = useUiFlag('onboardingIntroTourAdvancedTopics');
-    const description =
-        data.inviteEmails.length === 0
-            ? "Choose how you'd like to get started."
-            : "Your teammate invitations are on the way. Choose how you'd like to get started.";
 
     return (
         <StyledContent data-public>
             <StyledCheck />
             <StyledHeader>
                 <StyledTitle>Welcome to Unleash</StyledTitle>
-                <StyledDescription>{description}</StyledDescription>
+                <StyledDescription>
+                    Choose how you'd like to get started.
+                </StyledDescription>
             </StyledHeader>
             <StyledDemoSection>
                 <StyledChoices>

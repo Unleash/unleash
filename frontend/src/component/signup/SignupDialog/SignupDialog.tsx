@@ -10,7 +10,7 @@ import { type ComponentType, useContext, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
-import { SignupDialogInviteOthers } from './SignupDialogInviteOthers.tsx';
+import { SignupDialogDomainJoin } from './SignupDialogDomainJoin.tsx';
 import { useIntro } from 'component/onboarding/intro/IntroProvider.tsx';
 import { type SignupData, useSignup } from '../hooks/useSignup.ts';
 import { type SubmitSignupData, useSignupApi } from '../hooks/useSignupApi.ts';
@@ -26,6 +26,7 @@ import {
     useDefaultProjectId,
 } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId.ts';
 import AccessContext from 'contexts/AccessContext.ts';
+import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus.ts';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -186,15 +187,20 @@ export type SignupStepContent = ComponentType<{
     error?: string;
 }>;
 
+type SignupStepContext = {
+    signupData?: SignupData;
+    emailDomain?: string;
+};
+
 type SignupStep = {
     title:
         | 'Set password'
         | 'Set up your account'
-        | 'Invite your team'
+        | 'Let your team join'
         | `You're all set`;
     description?: string;
     content: SignupStepContent;
-    show?: (signupData?: SignupData) => boolean;
+    show?: (context: SignupStepContext) => boolean;
     adminOnly?: boolean;
     isCustom?: boolean;
 };
@@ -204,8 +210,7 @@ const SIGNUP_STEPS: SignupStep[] = [
         title: 'Set password',
         description: `Create a secure password, and you're good to go!`,
         content: SignupDialogSetPassword,
-        show: (signupData?: SignupData) =>
-            Boolean(signupData?.shouldSetPassword),
+        show: ({ signupData }) => Boolean(signupData?.shouldSetPassword),
     },
     {
         title: 'Set up your account',
@@ -213,11 +218,13 @@ const SIGNUP_STEPS: SignupStep[] = [
         content: SignupDialogAccountDetails,
     },
     {
-        title: 'Invite your team',
+        title: 'Let your team join',
         description:
-            'Bring your teammates on board to collaborate on feature flags and evaluate Unleash together.\nYou can always invite more people later.',
-        content: SignupDialogInviteOthers,
+            'Make it easy for your teammates to find this instance and collaborate on feature flags with you.\nYou can change this later in user settings.',
+        content: SignupDialogDomainJoin,
         adminOnly: true,
+        show: ({ signupData, emailDomain }) =>
+            Boolean(emailDomain) && !signupData?.companyName,
     },
     {
         title: `You're all set`,
@@ -226,16 +233,13 @@ const SIGNUP_STEPS: SignupStep[] = [
     },
 ];
 
-export const getSignupSteps = (
-    signupData: SignupData | undefined,
-    isAdmin: boolean,
-) =>
+export const getSignupSteps = (context: SignupStepContext, isAdmin: boolean) =>
     SIGNUP_STEPS.filter(({ show, adminOnly }) => {
         if (adminOnly && !isAdmin) {
             return false;
         }
 
-        if (show && !show(signupData)) {
+        if (show && !show(context)) {
             return false;
         }
 
@@ -251,6 +255,10 @@ export const SignupDialog = () => {
     const defaultProjectId = useDefaultProjectId();
     const { open: openIntro } = useIntro();
     const { isAdmin } = useContext(AccessContext);
+    const { instanceStatus } = useInstanceStatus();
+    const emailDomain = instanceStatus?.ucaSignup
+        ? instanceStatus.emailDomain
+        : undefined;
 
     const [data, setData] = useState<SubmitSignupData>({
         password: '',
@@ -259,13 +267,12 @@ export const SignupDialog = () => {
         companyName: '',
         companyIsNA: false,
         productUpdatesEmailConsent: false,
-        inviteEmails: [],
     });
     const [step, setStep] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
 
-    const steps = getSignupSteps(signupData, isAdmin);
+    const steps = getSignupSteps({ signupData, emailDomain }, isAdmin);
     const safeStep = Math.min(step, steps.length - 1);
     const currentStep = steps[safeStep];
 
@@ -296,9 +303,6 @@ export const SignupDialog = () => {
             props: {
                 eventType,
                 step: currentStep.title,
-                ...(eventType === 'invite' && {
-                    totalInvitedEmails: data.inviteEmails.length,
-                }),
             },
         });
 
@@ -335,7 +339,7 @@ export const SignupDialog = () => {
                 />
                 <StyledHearts>
                     {Array.from({
-                        length: safeStep + 1 + data.inviteEmails.length,
+                        length: safeStep + 1,
                     }).map((_, i) => (
                         <StyledHeartWrapper key={i}>
                             <StyledHeart

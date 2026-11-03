@@ -21,7 +21,10 @@ import {
     useSelectListbox,
 } from 'component/common/SelectPopover/useSelectListbox.ts';
 import type { LegalValueData } from './useEditableConstraint/useEditableConstraint.tsx';
-import { InlineValueChrome } from './InlineValueChrome.tsx';
+import {
+    DefaultInlineValueField,
+    InlineValueChrome,
+} from './InlineValueChrome.tsx';
 
 export type SubmitValue = (
     value: string,
@@ -92,14 +95,21 @@ export const PlainValueInput: FC<InlineValueProps> = ({
             helpText={helpText}
             ValuePreview={ValuePreview}
             multiValue={multiValue}
-            onChange={(e) => {
-                onChange(e.target.value);
-                setError('');
-            }}
-            onKeyDown={onKeyDown}
             onClose={onClose}
             submit={multiValue ? undefined : submit}
-            htmlInputProps={htmlInputProps}
+            field={
+                <DefaultInlineValueField
+                    inputId={inputId}
+                    value={value}
+                    error={error}
+                    onChange={(e) => {
+                        onChange(e.target.value);
+                        setError('');
+                    }}
+                    onKeyDown={onKeyDown}
+                    htmlInputProps={htmlInputProps}
+                />
+            }
         />
     );
 };
@@ -241,12 +251,19 @@ export const LegalValuesInput: FC<
             ValuePreview={ValuePreview}
             multiValue={multiValue}
             rootProps={rootProps}
-            inputRef={inputRef}
-            onChange={(e) => listboxOnChange?.(e)}
-            onBlur={listboxOnBlur}
-            onKeyDown={onKeyDown}
             onClose={onClose}
-            htmlInputProps={listboxInputProps}
+            field={
+                <DefaultInlineValueField
+                    inputId={inputId}
+                    value={value}
+                    error={error}
+                    inputRef={inputRef}
+                    onChange={(e) => listboxOnChange?.(e)}
+                    onBlur={listboxOnBlur}
+                    onKeyDown={onKeyDown}
+                    htmlInputProps={listboxInputProps}
+                />
+            }
             footerActions={
                 multiValue ? (
                     <Button

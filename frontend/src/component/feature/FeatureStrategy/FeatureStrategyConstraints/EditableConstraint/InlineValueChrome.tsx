@@ -19,7 +19,6 @@ import {
     type ReactNode,
     type Ref,
     type RefObject,
-    useId,
     useMemo,
     useRef,
     useState,
@@ -27,8 +26,17 @@ import {
 
 const usePopperAnchor = (onClose: (manageFocus: boolean) => void) => {
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
+    const pointerDownInside = useRef(false);
+
+    const onContainerMouseDown = () => {
+        pointerDownInside.current = true;
+    };
 
     const onContainerBlur = (e: FocusEvent<HTMLDivElement>) => {
+        if (pointerDownInside.current) {
+            pointerDownInside.current = false;
+            return;
+        }
         if (!anchorEl?.contains(e.relatedTarget as Node | null)) {
             onClose(false);
         }
@@ -41,7 +49,13 @@ const usePopperAnchor = (onClose: (manageFocus: boolean) => void) => {
         }
     };
 
-    return { anchorEl, setAnchorEl, onContainerBlur, onPanelKeyDown };
+    return {
+        anchorEl,
+        setAnchorEl,
+        onContainerMouseDown,
+        onContainerBlur,
+        onPanelKeyDown,
+    };
 };
 
 const useSelectOnFirstFocus = () => {
@@ -99,7 +113,7 @@ const InputArea = styled('div')({
     display: 'contents',
 });
 
-const inputSx = (theme: Theme) => ({
+export const inputSx = (theme: Theme) => ({
     width: 150,
     '& fieldset': {
         borderColor: theme.palette.divider,
@@ -192,7 +206,7 @@ const ValueDescriptionBody: FC<{
     );
 };
 
-const AddValueButton: FC<{ value: string; onClick: () => void }> = ({
+export const AddValueButton: FC<{ value: string; onClick: () => void }> = ({
     value,
     onClick,
 }) => (
@@ -208,6 +222,9 @@ const AddValueButton: FC<{ value: string; onClick: () => void }> = ({
     </InputAdornment>
 );
 
+export const fieldDescribedBy = (inputId: string) =>
+    `${inputId}-description ${inputId}-footer`;
+
 const mergeInputRefs =
     (
         ownRef: RefObject<HTMLInputElement | null>,
@@ -219,53 +236,29 @@ const mergeInputRefs =
         else if (givenRef) givenRef.current = node;
     };
 
-type InlineValueChromeProps = {
+type DefaultInlineValueFieldProps = {
     inputId: string;
     value: string;
     error: string;
-    announcement: string;
-    helpText?: ReactNode;
-    ValuePreview?: FC<{ value: string }>;
-    multiValue?: boolean;
-    rootProps?: Record<string, unknown>;
-    inputRef?: Ref<HTMLInputElement>;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-    onBlur?: FocusEventHandler<HTMLInputElement>;
     onKeyDown: (e: KeyboardEvent<HTMLInputElement>) => void;
-    onClose: (manageFocus: boolean) => void;
-    submit?: () => boolean;
+    onBlur?: FocusEventHandler<HTMLInputElement>;
+    inputRef?: Ref<HTMLInputElement>;
     htmlInputProps?: InputBaseComponentProps;
-    footerActions?: ReactNode;
-    children?: ReactNode;
 };
 
-export const InlineValueChrome: FC<InlineValueChromeProps> = ({
+export const DefaultInlineValueField: FC<DefaultInlineValueFieldProps> = ({
     inputId,
     value,
     error,
-    announcement,
-    helpText,
-    ValuePreview,
-    multiValue,
-    rootProps,
-    inputRef,
     onChange,
-    onBlur,
     onKeyDown,
-    onClose,
-    submit,
+    onBlur,
+    inputRef,
     htmlInputProps,
-    footerActions,
-    children,
 }) => {
-    const { anchorEl, setAnchorEl, onContainerBlur, onPanelKeyDown } =
-        usePopperAnchor(onClose);
-    const { placement, popperOptions, modifiers } =
-        useLockedFlipPlacement('bottom-start');
     const onFocus = useSelectOnFirstFocus();
     const ownInputRef = useRef<HTMLInputElement | null>(null);
-    const descriptionId = useId();
-    const footerId = useId();
 
     const addViaInput = () => {
         ownInputRef.current?.dispatchEvent(
@@ -278,14 +271,84 @@ export const InlineValueChrome: FC<InlineValueChromeProps> = ({
         ownInputRef.current?.focus();
     };
 
-    const hasDescription = Boolean(error || helpText || ValuePreview);
-    const describedBy = hasDescription
-        ? `${descriptionId} ${footerId}`
-        : footerId;
+    return (
+        <TextField
+            id={inputId}
+            placeholder='Enter value'
+            value={value}
+            inputRef={mergeInputRefs(ownInputRef, inputRef)}
+            onChange={onChange}
+            onBlur={onBlur}
+            onFocus={onFocus}
+            onKeyDown={onKeyDown}
+            size='medium'
+            variant='outlined'
+            autoFocus
+            error={Boolean(error)}
+            slotProps={{
+                htmlInput: {
+                    ...htmlInputProps,
+                    'aria-describedby': fieldDescribedBy(inputId),
+                },
+                input: {
+                    sx: inputSx,
+                    endAdornment: (
+                        <AddValueButton value={value} onClick={addViaInput} />
+                    ),
+                },
+            }}
+            data-testid='CONSTRAINT_VALUES_INPUT'
+        />
+    );
+};
+
+type InlineValueChromeProps = {
+    inputId: string;
+    value: string;
+    error: string;
+    announcement: string;
+    helpText?: ReactNode;
+    ValuePreview?: FC<{ value: string }>;
+    multiValue?: boolean;
+    rootProps?: Record<string, unknown>;
+    onClose: (manageFocus: boolean) => void;
+    submit?: () => boolean;
+    footerActions?: ReactNode;
+    field: ReactNode;
+    children?: ReactNode;
+};
+
+export const InlineValueChrome: FC<InlineValueChromeProps> = ({
+    inputId,
+    value,
+    error,
+    announcement,
+    helpText,
+    ValuePreview,
+    multiValue,
+    rootProps,
+    onClose,
+    submit,
+    footerActions,
+    field,
+    children,
+}) => {
+    const {
+        anchorEl,
+        setAnchorEl,
+        onContainerMouseDown,
+        onContainerBlur,
+        onPanelKeyDown,
+    } = usePopperAnchor(onClose);
+    const { placement, popperOptions, modifiers } =
+        useLockedFlipPlacement('bottom-start');
+    const descriptionId = `${inputId}-description`;
+    const footerId = `${inputId}-footer`;
 
     return (
         <Container
             ref={setAnchorEl}
+            onMouseDown={onContainerMouseDown}
             onBlur={onContainerBlur}
             onKeyDown={onPanelKeyDown}
         >
@@ -295,38 +358,7 @@ export const InlineValueChrome: FC<InlineValueChromeProps> = ({
             <ScreenReaderOnly aria-live='polite'>
                 {announcement}
             </ScreenReaderOnly>
-            <InputArea {...rootProps}>
-                <TextField
-                    id={inputId}
-                    placeholder='Enter value'
-                    value={value}
-                    inputRef={mergeInputRefs(ownInputRef, inputRef)}
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    onFocus={onFocus}
-                    onKeyDown={onKeyDown}
-                    size='medium'
-                    variant='outlined'
-                    autoFocus
-                    error={Boolean(error)}
-                    slotProps={{
-                        htmlInput: {
-                            ...htmlInputProps,
-                            'aria-describedby': describedBy,
-                        },
-                        input: {
-                            sx: inputSx,
-                            endAdornment: (
-                                <AddValueButton
-                                    value={value}
-                                    onClick={addViaInput}
-                                />
-                            ),
-                        },
-                    }}
-                    data-testid='CONSTRAINT_VALUES_INPUT'
-                />
-            </InputArea>
+            <InputArea {...rootProps}>{field}</InputArea>
             <StyledPopper
                 open={Boolean(anchorEl)}
                 anchorEl={anchorEl}

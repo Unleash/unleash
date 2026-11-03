@@ -1,6 +1,9 @@
 import type { ChangeEvent, FC, KeyboardEvent, ReactNode } from 'react';
 import { useId, useState } from 'react';
-import { InlineValueChrome } from '../InlineValueChrome.tsx';
+import {
+    DefaultInlineValueField,
+    InlineValueChrome,
+} from '../InlineValueChrome.tsx';
 import type { SubmitValue } from '../InlineValueInput.tsx';
 import { AddRegexValueEditor } from './AddRegexValueEditor.tsx';
 
@@ -44,13 +47,20 @@ export const RegexValueInput: FC<Props> = ({
             error={error}
             announcement={announcement}
             helpText={helpText}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                onChange(e.target.value);
-                setError('');
-            }}
-            onKeyDown={onKeyDown}
             onClose={onClose}
             submit={submit}
+            field={
+                <DefaultInlineValueField
+                    inputId={inputId}
+                    value={value}
+                    error={error}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                        onChange(e.target.value);
+                        setError('');
+                    }}
+                    onKeyDown={onKeyDown}
+                />
+            }
         >
             <AddRegexValueEditor
                 value={value}

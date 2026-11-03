@@ -33,6 +33,8 @@ const draftWith = (questions: QuestionDraft[]): SurveyDraft => ({
     title: 'Survey',
     description: '',
     questions,
+    triggerMode: 'always',
+    trigger: { on: 'page', path: '' },
 });
 
 const delivered = (surveyJson: string) => ({
@@ -55,8 +57,8 @@ describe('toSurveyJson', () => {
     });
 
     it('turns every question type into its survey fields, trimmed', () => {
-        const draft = {
-            showTitleSlide: true,
+        const draft: SurveyDraft = {
+            ...draftWith([]),
             title: ' Survey ',
             description: ' About you ',
             questions: [
@@ -99,6 +101,33 @@ describe('toSurveyJson', () => {
             ],
             trigger: { on: 'page' },
         });
+    });
+
+    it.each([
+        [
+            'every page when shown whenever enabled',
+            'always',
+            ' /projects ',
+            { on: 'page' },
+        ],
+        ['every page when no page is entered', 'custom', ' ', { on: 'page' }],
+        [
+            'the page entered, trimmed',
+            'custom',
+            ' /projects/:projectId ',
+            { on: 'page', path: '/projects/:projectId' },
+        ],
+    ] as const)('triggers on %s', (_, triggerMode, path, expected) => {
+        const draft: SurveyDraft = {
+            ...draftWith([draftQuestion()]),
+            triggerMode,
+            trigger: { on: 'page', path },
+        };
+
+        expect(JSON.parse(toSurveyJson(draft)).trigger).toEqual(expected);
+        expect(
+            parseSurveyPayload('survey-x', delivered(toSurveyJson(draft))),
+        ).toMatchObject({ trigger: expected });
     });
 
     it('leaves out the title and description when the title slide is hidden', () => {

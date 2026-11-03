@@ -25,7 +25,7 @@ import {
     validateSurveyDraft,
 } from './surveyDraft.ts';
 import { DefineSurveyStep } from './DefineSurveyStep.tsx';
-import { type TriggerMode, SurveyTriggerStep } from './SurveyTriggerStep.tsx';
+import { SurveyTriggerStep } from './SurveyTriggerStep.tsx';
 import {
     type SurveySettingsErrors,
     SurveySettingsStep,
@@ -85,7 +85,6 @@ export const CreateSurvey = () => {
     const [editedSubmitUrl, setSubmitUrl] = useState<string>();
     const submitUrl = editedSubmitUrl ?? uiConfig.unleashUrl ?? '';
     const [draft, setDraft] = useState<SurveyDraft>(initialSurveyDraft);
-    const [triggerMode, setTriggerMode] = useState<TriggerMode>('always');
     const [stepIndex, setStepIndex] = useState(0);
     // Errors appear after the first attempt to leave a step and then follow the edits.
     const [showErrors, setShowErrors] = useState(false);
@@ -115,12 +114,7 @@ export const CreateSurvey = () => {
         {
             label: 'Trigger',
             hasErrors: false,
-            content: (
-                <SurveyTriggerStep
-                    mode={triggerMode}
-                    onModeChange={setTriggerMode}
-                />
-            ),
+            content: <SurveyTriggerStep draft={draft} onChange={setDraft} />,
         },
         {
             label: 'Settings',

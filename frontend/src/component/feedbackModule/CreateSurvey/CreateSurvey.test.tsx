@@ -388,6 +388,53 @@ describe('CreateSurvey', () => {
         ).toBeChecked();
     });
 
+    it('selects the page trigger by default when something happens is chosen', async () => {
+        setupApi();
+        renderPage();
+
+        await goToTrigger();
+        expect(screen.queryByLabelText('Page')).not.toBeInTheDocument();
+
+        await userEvent.click(
+            screen.getByRole('radio', { name: 'When something happens' }),
+        );
+
+        expect(
+            await screen.findByRole('combobox', {
+                name: 'Show the survey when',
+            }),
+        ).toHaveTextContent('The user opens a page');
+        expect(screen.getByLabelText('Page')).toHaveValue('');
+        expect(screen.getByLabelText('Delay in milliseconds')).toHaveValue(0);
+        expect(
+            screen.getByLabelText(
+                'Show after the condition is met this many times',
+            ),
+        ).toHaveValue(1);
+    });
+
+    it('sends the page entered as the trigger', async () => {
+        const { addStrategy } = setupApi();
+        renderPage();
+
+        await goToTrigger();
+        await userEvent.click(
+            screen.getByRole('radio', { name: 'When something happens' }),
+        );
+        await userEvent.type(
+            screen.getByLabelText('Page'),
+            '/projects/:projectId',
+        );
+        await clickNext();
+        await submitSurvey();
+
+        await screen.findByText('Survey created');
+        expect(sentSurvey(addStrategy).trigger).toEqual({
+            on: 'page',
+            path: '/projects/:projectId',
+        });
+    });
+
     it('does not create the survey in a project the user cannot create flags in', async () => {
         const { createFlag } = setupApi();
         renderPage([{ permission: CREATE_FEATURE, project: 'marketing' }]);

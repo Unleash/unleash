@@ -33,8 +33,7 @@ const draftWith = (questions: QuestionDraft[]): SurveyDraft => ({
     title: 'Survey',
     description: '',
     questions,
-    triggerMode: 'always',
-    trigger: { on: 'page', path: '' },
+    trigger: { mode: 'always', on: 'page', path: '' },
 });
 
 const delivered = (surveyJson: string) => ({
@@ -117,11 +116,10 @@ describe('toSurveyJson', () => {
             ' /projects/:projectId ',
             { on: 'page', path: '/projects/:projectId' },
         ],
-    ] as const)('triggers on %s', (_, triggerMode, path, expected) => {
+    ] as const)('triggers on %s', (_, mode, path, expected) => {
         const draft: SurveyDraft = {
             ...draftWith([draftQuestion()]),
-            triggerMode,
-            trigger: { on: 'page', path },
+            trigger: { mode, on: 'page', path },
         };
 
         expect(JSON.parse(toSurveyJson(draft)).trigger).toEqual(expected);

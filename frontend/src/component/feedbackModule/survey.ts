@@ -1,5 +1,5 @@
 import { PayloadType } from 'utils/variants';
-import { isValidPagePattern } from './CreateSurvey/surveyTrigger.ts';
+import { parseTrigger, type SurveyTrigger } from './triggers/surveyTrigger.ts';
 
 export const SURVEY_FLAG_PREFIX = 'survey-';
 export const SURVEY_KIND = 'unleash-survey';
@@ -23,12 +23,6 @@ export type SurveyQuestion =
 export type SurveyAnswer = number | string | string[];
 
 export type SurveyAnswers = Record<string, SurveyAnswer>;
-
-export type Condition = { on: 'page' };
-
-export type SurveyTrigger = Condition & {
-    path?: string;
-};
 
 export interface SurveyDefinition {
     title: string | null;
@@ -124,26 +118,6 @@ const parseQuestion = (raw: unknown): SurveyQuestion | null => {
     }
 };
 
-const parseCondition = (raw: Record<string, unknown>): Condition | null =>
-    raw.on === 'page' ? { on: 'page' } : null;
-
-const parseTrigger = (raw: unknown): SurveyTrigger | null => {
-    if (!isObject(raw)) {
-        return null;
-    }
-    const condition = parseCondition(raw);
-    if (condition === null) {
-        return null;
-    }
-    if (raw.path === undefined) {
-        return condition;
-    }
-    if (typeof raw.path !== 'string' || !isValidPagePattern(raw.path)) {
-        return null;
-    }
-    return { ...condition, path: raw.path };
-};
-
 const parseJsonObject = (json: string): Record<string, unknown> | null => {
     let raw: unknown;
     try {
@@ -218,7 +192,7 @@ export const parseSurveyPayload = (
     if (definition === null) {
         return null;
     }
-    const trigger = parseTrigger(raw.trigger);
+    const trigger = isObject(raw.trigger) ? parseTrigger(raw.trigger) : null;
     if (trigger === null) {
         return null;
     }

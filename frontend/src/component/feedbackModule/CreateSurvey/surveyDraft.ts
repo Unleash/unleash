@@ -3,27 +3,23 @@ import {
     DEFAULT_RATING_SCALE,
     SURVEY_KIND,
     SURVEY_VERSION,
-    type Condition,
     type SurveyQuestion,
-    type SurveyTrigger,
 } from '../survey.ts';
-
-const ALWAYS_TRIGGER: SurveyTrigger = { on: 'page' };
+import {
+    initialTriggerDraft,
+    type TriggerDraft,
+    toTrigger,
+} from './triggerDraft.ts';
 
 export type QuestionType = SurveyQuestion['type'];
 
 export type QuestionDraft = SurveyQuestion & { key: string };
-
-export type TriggerMode = 'always' | 'custom';
-
-export type TriggerDraft = Condition & { path: string };
 
 export interface SurveyDraft {
     showTitleSlide: boolean;
     title: string;
     description: string;
     questions: QuestionDraft[];
-    triggerMode: TriggerMode;
     trigger: TriggerDraft;
 }
 
@@ -100,8 +96,7 @@ export const initialSurveyDraft = (): SurveyDraft => ({
             required: false,
         },
     ],
-    triggerMode: 'always',
-    trigger: { on: 'page', path: '' },
+    trigger: initialTriggerDraft(),
 });
 
 const validateOptions = (options: string[]): (string | undefined)[] =>
@@ -166,14 +161,6 @@ const toQuestion = (draft: QuestionDraft): SurveyQuestion => {
     }
 };
 
-const toTrigger = ({ triggerMode, trigger }: SurveyDraft): SurveyTrigger => {
-    if (triggerMode === 'always') {
-        return ALWAYS_TRIGGER;
-    }
-    const path = trigger.path.trim();
-    return path === '' ? { on: trigger.on } : { on: trigger.on, path };
-};
-
 export const toSurveyJson = (draft: SurveyDraft): string =>
     JSON.stringify(
         {
@@ -182,7 +169,7 @@ export const toSurveyJson = (draft: SurveyDraft): string =>
             title: draft.showTitleSlide ? draft.title.trim() : null,
             description: draft.showTitleSlide ? draft.description.trim() : null,
             questions: draft.questions.map(toQuestion),
-            trigger: toTrigger(draft),
+            trigger: toTrigger(draft.trigger),
         },
         null,
         2,

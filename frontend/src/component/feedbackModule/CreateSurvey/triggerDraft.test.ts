@@ -1,31 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
-    isValidPagePattern,
+    hasTriggerErrors,
     matchPage,
     validatePage,
-} from './surveyTrigger.ts';
-
-describe('isValidPagePattern', () => {
-    it.each([
-        '/',
-        '/projects',
-        '/projects/:projectId',
-        '/projects/:projectId/features/*',
-        '/projects/:projectId/features/:featureId?',
-        '/(projects|features)',
-    ])('accepts %s', (pattern) => {
-        expect(isValidPagePattern(pattern)).toBe(true);
-    });
-
-    it.each([
-        ['an empty string', ''],
-        ['a relative path', 'projects'],
-        ['a full URL', 'https://example.com/projects'],
-        ['an unclosed group', '/projects/('],
-    ])('rejects %s', (_, pattern) => {
-        expect(isValidPagePattern(pattern)).toBe(false);
-    });
-});
+    validateTriggerDraft,
+} from './triggerDraft.ts';
 
 describe('validatePage', () => {
     it.each([
@@ -49,6 +28,31 @@ describe('validatePage', () => {
         expect(validatePage('/projects/(')).toBe(
             'This is not a valid page pattern',
         );
+    });
+});
+
+describe('validateTriggerDraft', () => {
+    it('reports an invalid page pattern on a custom trigger', () => {
+        const errors = validateTriggerDraft({
+            mode: 'custom',
+            on: 'page',
+            path: 'projects',
+        });
+
+        expect(errors.path).toBe(
+            'Start the pattern with /, for example /projects/:projectId',
+        );
+        expect(hasTriggerErrors(errors)).toBe(true);
+    });
+
+    it('ignores the page pattern when the survey shows whenever it is enabled', () => {
+        const errors = validateTriggerDraft({
+            mode: 'always',
+            on: 'page',
+            path: 'projects',
+        });
+
+        expect(hasTriggerErrors(errors)).toBe(false);
     });
 });
 

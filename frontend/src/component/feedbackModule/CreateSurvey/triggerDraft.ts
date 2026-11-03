@@ -1,19 +1,29 @@
-// Older browsers lack URLPattern; they can still save a pattern, just not check it.
-export const canMatchPages = (): boolean => typeof URLPattern !== 'undefined';
+import { canMatchPages, toPagePattern } from '../triggers/pagePattern.ts';
+import type {
+    SurveyTrigger,
+    TriggerCondition,
+} from '../triggers/surveyTrigger.ts';
 
-const toPagePattern = (page: string): URLPattern | null => {
-    if (!page.startsWith('/')) {
-        return null;
-    }
-    try {
-        return new URLPattern({ pathname: page });
-    } catch {
-        return null;
-    }
-};
+export type TriggerMode = 'always' | 'custom';
 
-export const isValidPagePattern = (pattern: string): boolean =>
-    toPagePattern(pattern) !== null;
+// Flat so that the fields of one condition survive switching to another and back.
+export interface TriggerDraft {
+    mode: TriggerMode;
+    on: TriggerCondition['on'];
+    path: string;
+}
+
+export interface TriggerErrors {
+    path?: string;
+}
+
+const ALWAYS_TRIGGER: SurveyTrigger = { on: 'page' };
+
+export const initialTriggerDraft = (): TriggerDraft => ({
+    mode: 'always',
+    on: 'page',
+    path: '',
+});
 
 export const validatePage = (page: string): string | undefined => {
     const trimmedPage = page.trim();
@@ -23,9 +33,23 @@ export const validatePage = (page: string): string | undefined => {
     if (!trimmedPage.startsWith('/')) {
         return 'Start the pattern with /, for example /projects/:projectId';
     }
-    return !canMatchPages() || isValidPagePattern(trimmedPage)
+    return !canMatchPages() || toPagePattern(trimmedPage) !== null
         ? undefined
         : 'This is not a valid page pattern';
+};
+
+export const validateTriggerDraft = (draft: TriggerDraft): TriggerErrors =>
+    draft.mode === 'always' ? {} : { path: validatePage(draft.path) };
+
+export const hasTriggerErrors = (errors: TriggerErrors): boolean =>
+    Object.values(errors).some(Boolean);
+
+export const toTrigger = (draft: TriggerDraft): SurveyTrigger => {
+    if (draft.mode === 'always') {
+        return ALWAYS_TRIGGER;
+    }
+    const path = draft.path.trim();
+    return path === '' ? { on: draft.on } : { on: draft.on, path };
 };
 
 export type PageMatch =

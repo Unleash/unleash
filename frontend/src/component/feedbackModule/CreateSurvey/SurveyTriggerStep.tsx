@@ -10,9 +10,15 @@ import {
 } from '@mui/material';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Input from 'component/common/Input/Input';
-import type { Condition } from '../survey.ts';
-import { canMatchPages, matchPage, type PageMatch } from './surveyTrigger.ts';
-import type { SurveyDraft, TriggerDraft, TriggerMode } from './surveyDraft.ts';
+import { canMatchPages } from '../triggers/pagePattern.ts';
+import type { TriggerCondition } from '../triggers/surveyTrigger.ts';
+import {
+    matchPage,
+    type PageMatch,
+    type TriggerDraft,
+    type TriggerErrors,
+    type TriggerMode,
+} from './triggerDraft.ts';
 
 const StyledCard = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -73,7 +79,7 @@ const StyledMatch = styled('div', {
     color: matched ? theme.palette.success.main : theme.palette.text.primary,
 }));
 
-const TRIGGER_OPTIONS: { key: Condition['on']; label: string }[] = [
+const TRIGGER_OPTIONS: { key: TriggerCondition['on']; label: string }[] = [
     { key: 'page', label: 'The user opens a page' },
 ];
 
@@ -145,13 +151,13 @@ const PageGuidance = ({ page }: { page: string }) => (
     </StyledGuidance>
 );
 
-interface PageTriggerProps {
+interface CustomTriggerProps {
     trigger: TriggerDraft;
-    pageError?: string;
+    errors: TriggerErrors;
     onChange: (trigger: TriggerDraft) => void;
 }
 
-const PageTrigger = ({ trigger, pageError, onChange }: PageTriggerProps) => {
+const CustomTrigger = ({ trigger, errors, onChange }: CustomTriggerProps) => {
     const [delayMs, setDelayMs] = useState('0');
     const [occurrence, setOccurrence] = useState('1');
 
@@ -161,7 +167,7 @@ const PageTrigger = ({ trigger, pageError, onChange }: PageTriggerProps) => {
                 <GeneralSelect
                     label='Show the survey when'
                     value={trigger.on}
-                    onChange={(on: Condition['on']) =>
+                    onChange={(on: TriggerCondition['on']) =>
                         onChange({ ...trigger, on })
                     }
                     options={TRIGGER_OPTIONS}
@@ -177,8 +183,8 @@ const PageTrigger = ({ trigger, pageError, onChange }: PageTriggerProps) => {
                     onChange={(event) =>
                         onChange({ ...trigger, path: event.target.value })
                     }
-                    error={Boolean(pageError)}
-                    errorText={pageError}
+                    error={Boolean(errors.path)}
+                    errorText={errors.path}
                     fullWidth
                 />
                 <PageGuidance page={trigger.path} />
@@ -208,14 +214,14 @@ const PageTrigger = ({ trigger, pageError, onChange }: PageTriggerProps) => {
 };
 
 interface SurveyTriggerStepProps {
-    draft: SurveyDraft;
-    pageError?: string;
-    onChange: (draft: SurveyDraft) => void;
+    draft: TriggerDraft;
+    errors: TriggerErrors;
+    onChange: (draft: TriggerDraft) => void;
 }
 
 export const SurveyTriggerStep = ({
     draft,
-    pageError,
+    errors,
     onChange,
 }: SurveyTriggerStepProps) => {
     const headingId = useId();
@@ -227,9 +233,9 @@ export const SurveyTriggerStep = ({
             </Typography>
             <RadioGroup
                 aria-labelledby={headingId}
-                value={draft.triggerMode}
+                value={draft.mode}
                 onChange={(_, value) =>
-                    onChange({ ...draft, triggerMode: value as TriggerMode })
+                    onChange({ ...draft, mode: value as TriggerMode })
                 }
             >
                 <FormControlLabel
@@ -243,11 +249,11 @@ export const SurveyTriggerStep = ({
                     label='When something happens'
                 />
             </RadioGroup>
-            {draft.triggerMode === 'custom' ? (
-                <PageTrigger
-                    trigger={draft.trigger}
-                    pageError={pageError}
-                    onChange={(trigger) => onChange({ ...draft, trigger })}
+            {draft.mode === 'custom' ? (
+                <CustomTrigger
+                    trigger={draft}
+                    errors={errors}
+                    onChange={onChange}
                 />
             ) : null}
         </section>

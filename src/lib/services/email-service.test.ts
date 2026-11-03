@@ -7,6 +7,24 @@ import {
 import noLoggerProvider from '../../test/fixtures/no-logger.js';
 import type { IUnleashConfig } from '../types/index.js';
 import { vi } from 'vitest';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const mailTemplatesDir = path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    '../../mailtemplates',
+);
+
+// Plain strings (not { file } objects): vitest truncates `$file` titles to
+// 40 chars, which would hide which template/format failed; `%s` does not.
+const templateFiles = readdirSync(mailTemplatesDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .flatMap((entry) =>
+        ['html', 'plain']
+            .map((format) => `${entry.name}/${entry.name}.${format}.mustache`)
+            .filter((file) => existsSync(path.join(mailTemplatesDir, file))),
+    );
 
 test('Can send reset email', async () => {
     const emailService = new EmailService({
@@ -32,6 +50,24 @@ test('Can send reset email', async () => {
     expect(content.subject).toBe('Unleash - Reset your password');
     expect(content.html.includes(resetLinkUrl)).toBe(true);
     expect(content.text.includes(resetLinkUrl)).toBe(true);
+    expect(content.html).not.toContain('Email not displaying correctly');
+    expect(content.html).not.toContain('*|');
+    expect(content.html).toContain('Reset password</a>');
+    expect(content.html).toContain('Someone has requested a password reset');
+});
+
+test('Mail template regression cases cover all templates', () => {
+    expect(templateFiles).toContain(
+        'reset-password/reset-password.html.mustache',
+    );
+    expect(templateFiles.length).toBeGreaterThanOrEqual(18);
+});
+
+test.each(
+    templateFiles,
+)('%s has no unrendered Mailchimp merge tags', (file) => {
+    const content = readFileSync(path.join(mailTemplatesDir, file), 'utf8');
+    expect(content.match(/\*\|[^|\s]+\|\*/g) ?? []).toEqual([]);
 });
 
 test('Can send welcome mail', async () => {

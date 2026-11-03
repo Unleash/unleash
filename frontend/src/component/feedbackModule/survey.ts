@@ -1,5 +1,5 @@
 import { PayloadType } from 'utils/variants';
-import { isValidPagePattern } from './triggers/pagePattern.ts';
+import { isValidPagePattern } from './CreateSurvey/surveyTrigger.ts';
 
 export const SURVEY_FLAG_PREFIX = 'survey-';
 export const SURVEY_KIND = 'unleash-survey';

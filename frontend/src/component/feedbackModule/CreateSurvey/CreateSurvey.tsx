@@ -24,6 +24,7 @@ import {
     toSurveyJson,
     validateSurveyDraft,
 } from './surveyDraft.ts';
+import { validatePage } from './surveyTrigger.ts';
 import { DefineSurveyStep } from './DefineSurveyStep.tsx';
 import { SurveyTriggerStep } from './SurveyTriggerStep.tsx';
 import {
@@ -89,6 +90,10 @@ export const CreateSurvey = () => {
     // Errors appear after the first attempt to leave a step and then follow the edits.
     const [showErrors, setShowErrors] = useState(false);
     const surveyErrors = validateSurveyDraft(draft);
+    const triggerPageError =
+        draft.triggerMode === 'custom'
+            ? validatePage(draft.trigger.path)
+            : undefined;
     const settingsErrors: SurveySettingsErrors = {
         name: validateName(name),
         submitUrl: validateSubmitUrl(submitUrl),
@@ -113,8 +118,14 @@ export const CreateSurvey = () => {
         },
         {
             label: 'Trigger',
-            hasErrors: false,
-            content: <SurveyTriggerStep draft={draft} onChange={setDraft} />,
+            hasErrors: Boolean(triggerPageError),
+            content: (
+                <SurveyTriggerStep
+                    draft={draft}
+                    pageError={showErrors ? triggerPageError : undefined}
+                    onChange={setDraft}
+                />
+            ),
         },
         {
             label: 'Settings',

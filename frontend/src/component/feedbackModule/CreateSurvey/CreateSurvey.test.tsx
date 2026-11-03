@@ -103,6 +103,13 @@ const goToTrigger = async () => {
     await screen.findByRole('heading', { name: 'When to show the survey' });
 };
 
+const goToCustomTrigger = async () => {
+    await goToTrigger();
+    await userEvent.click(
+        screen.getByRole('radio', { name: 'When something happens' }),
+    );
+};
+
 const goToSettings = async () => {
     await goToTrigger();
     await clickNext();
@@ -372,10 +379,7 @@ describe('CreateSurvey', () => {
         setupApi();
         renderPage();
 
-        await goToTrigger();
-        await userEvent.click(
-            screen.getByRole('radio', { name: 'When something happens' }),
-        );
+        await goToCustomTrigger();
         await clickNext();
         await userEvent.click(
             await screen.findByRole('button', { name: 'Back' }),
@@ -417,10 +421,7 @@ describe('CreateSurvey', () => {
         const { addStrategy } = setupApi();
         renderPage();
 
-        await goToTrigger();
-        await userEvent.click(
-            screen.getByRole('radio', { name: 'When something happens' }),
-        );
+        await goToCustomTrigger();
         await userEvent.type(
             screen.getByLabelText('Page'),
             '/projects/:projectId',
@@ -433,6 +434,65 @@ describe('CreateSurvey', () => {
             on: 'page',
             path: '/projects/:projectId',
         });
+    });
+
+    it('tells whether a URL matches the page pattern', async () => {
+        setupApi();
+        renderPage();
+
+        await goToCustomTrigger();
+        await userEvent.type(
+            await screen.findByLabelText('Page'),
+            '/projects/:projectId',
+        );
+        const url = screen.getByLabelText('Try a URL');
+        await userEvent.type(url, 'https://app.example.com/projects/default');
+
+        expect(
+            screen.getByText('Matches. The survey can show on this page.'),
+        ).toBeInTheDocument();
+
+        await userEvent.type(url, '/settings');
+
+        expect(
+            screen.getByText('Does not match this URL.'),
+        ).toBeInTheDocument();
+    });
+
+    it('does not move on to the settings with an invalid page pattern', async () => {
+        setupApi();
+        renderPage();
+
+        await goToCustomTrigger();
+        await userEvent.type(
+            await screen.findByLabelText('Page'),
+            'projects/:projectId',
+        );
+        await clickNext();
+
+        await screen.findByText(
+            'Start the pattern with /, for example /projects/:projectId',
+        );
+        expect(screen.queryByLabelText('Flag name')).not.toBeInTheDocument();
+    });
+
+    it('ignores the page pattern when the survey shows whenever it is enabled', async () => {
+        setupApi();
+        renderPage();
+
+        await goToCustomTrigger();
+        await userEvent.type(
+            await screen.findByLabelText('Page'),
+            'projects/:projectId',
+        );
+        await userEvent.click(
+            screen.getByRole('radio', {
+                name: 'Whenever the survey is enabled',
+            }),
+        );
+        await clickNext();
+
+        expect(await screen.findByLabelText('Flag name')).toBeInTheDocument();
     });
 
     it('does not create the survey in a project the user cannot create flags in', async () => {

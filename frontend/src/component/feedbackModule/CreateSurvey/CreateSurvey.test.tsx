@@ -94,8 +94,18 @@ const sentSurvey = (addStrategy: { requests: unknown[] }) => {
     return JSON.parse(strategy.variants[0].payload.value);
 };
 
-const goToSettings = async () => {
+const clickNext = async () => {
     await userEvent.click(await screen.findByRole('button', { name: 'Next' }));
+};
+
+const goToTrigger = async () => {
+    await clickNext();
+    await screen.findByRole('heading', { name: 'When to show the survey' });
+};
+
+const goToSettings = async () => {
+    await goToTrigger();
+    await clickNext();
 };
 
 const submitSurvey = async () => {
@@ -258,7 +268,7 @@ describe('CreateSurvey', () => {
         await userEvent.clear(title);
         expect(screen.queryByText('Enter a title')).not.toBeInTheDocument();
 
-        await goToSettings();
+        await clickNext();
         await screen.findByText('Enter a title');
         await userEvent.type(title, 'Onboarding');
 
@@ -270,7 +280,7 @@ describe('CreateSurvey', () => {
         renderPage();
         const title = await screen.findByLabelText('Title');
         await userEvent.clear(title);
-        await goToSettings();
+        await clickNext();
         await userEvent.type(title, 'Onboarding');
 
         await goToSettings();
@@ -286,7 +296,7 @@ describe('CreateSurvey', () => {
         await userEvent.clear(
             await screen.findByRole('textbox', { name: 'Question 1' }),
         );
-        await goToSettings();
+        await clickNext();
 
         await screen.findByText('Enter a question');
         expect(screen.queryByLabelText('Flag name')).not.toBeInTheDocument();
@@ -305,6 +315,9 @@ describe('CreateSurvey', () => {
             'onboarding',
         );
         await userEvent.click(screen.getByRole('button', { name: 'Back' }));
+        await userEvent.click(
+            await screen.findByRole('button', { name: 'Back' }),
+        );
 
         expect(await screen.findByLabelText('Title')).toHaveValue('Onboarding');
         await goToSettings();
@@ -334,12 +347,45 @@ describe('CreateSurvey', () => {
             screen.getByRole('textbox', { name: 'Question 3' }),
         );
 
-        await goToSettings();
+        await clickNext();
         await waitFor(() => expect(secondPrompt).toHaveFocus());
 
         await userEvent.click(screen.getByLabelText('Title'));
-        await goToSettings();
+        await clickNext();
         await waitFor(() => expect(secondPrompt).toHaveFocus());
+    });
+
+    it('preselects "Whenever the survey is enabled" as the trigger', async () => {
+        setupApi();
+        renderPage();
+
+        await goToTrigger();
+
+        expect(
+            screen.getByRole('radio', {
+                name: 'Whenever the survey is enabled',
+            }),
+        ).toBeChecked();
+    });
+
+    it('keeps the chosen trigger when going back and forth between steps', async () => {
+        setupApi();
+        renderPage();
+
+        await goToTrigger();
+        await userEvent.click(
+            screen.getByRole('radio', { name: 'When something happens' }),
+        );
+        await clickNext();
+        await userEvent.click(
+            await screen.findByRole('button', { name: 'Back' }),
+        );
+
+        expect(
+            await screen.findByRole('radio', {
+                name: 'When something happens',
+            }),
+        ).toBeChecked();
     });
 
     it('does not create the survey in a project the user cannot create flags in', async () => {

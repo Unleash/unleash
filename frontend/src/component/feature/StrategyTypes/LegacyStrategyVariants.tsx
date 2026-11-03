@@ -1,5 +1,5 @@
 import { createUuid } from 'utils/createUuid';
-import { VariantForm } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm.tsx';
+import { LegacyVariantForm } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/LegacyVariantForm.tsx';
 import { updateWeightEdit } from 'component/common/util';
 import type React from 'react';
 import { useEffect, useState } from 'react';
@@ -159,7 +159,7 @@ export const LegacyStrategyVariants = <T extends StrategyFormState>({
                 {variantsEdit.length > 0 && <StrategyVariantsUpgradeAlert />}
 
                 {variantsEdit.map((variant, i) => (
-                    <VariantForm
+                    <LegacyVariantForm
                         disableOverrides={true}
                         key={variant.id}
                         variant={variant}

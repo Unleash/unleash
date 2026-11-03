@@ -30,7 +30,6 @@ import type { ConstraintValidationResult } from './useEditableConstraint/constra
 import { createContextFieldOptions } from './createContextFieldOptions.ts';
 import { ContextFieldSelect } from './ContextFieldSelect.tsx';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
-import { CidrSdkRequirements } from './CidrSdkRequirements.tsx';
 import { formatTargetRange } from './CidrTargetRange.tsx';
 import { getTargetRange } from './useEditableConstraint/ip-address.ts';
 
@@ -363,7 +362,6 @@ export const EditableConstraint: FC<Props> = ({
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
-            {isCidrConstraint(localConstraint) ? <CidrSdkRequirements /> : null}
         </Container>
     );
 };

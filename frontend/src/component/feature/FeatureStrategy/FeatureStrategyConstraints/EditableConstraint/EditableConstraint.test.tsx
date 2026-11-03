@@ -275,15 +275,11 @@ describe('EditableConstraint', () => {
             );
             fireEvent.click(await screen.findByText(/is an IP in/i));
 
-            await screen.findByText(
-                /IP constraints require these SDK versions/,
-            );
-
             fireEvent.click(
                 await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
             );
             await screen.findByText(
-                'IP addresses or CIDR ranges, for example 192.168.1.1 or 10.0.0.0/8',
+                /IP addresses or CIDR ranges, for example 192\.168\.1\.1 or\s*10\.0\.0\.0\/8\. IP constraints need a recent SDK\./,
             );
             await userEvent.type(
                 await screen.findByLabelText('Constraint Value'),

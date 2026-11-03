@@ -8,7 +8,7 @@ import {
     PlainValueInput,
 } from './InlineValueInput.tsx';
 import { RegexValueInput } from './AddRegexValueEditor/RegexValueInput.tsx';
-import { MinimumVersionsTooltip } from './AddRegexValueEditor/RegexSdkRequirements.tsx';
+import { MinimumVersionsTooltip } from './MinimumVersionsTooltip.tsx';
 import type { ConstraintValidatorOutput } from './ConstraintValidatorOutput.ts';
 import type { LegalValueData } from './useEditableConstraint/useEditableConstraint.js';
 import {
@@ -37,6 +37,36 @@ type EditingProps = {
 
 const singleValueParseInput = (raw: string) => [raw];
 
+const cidrMinimumVersions: [sdk: string, version: string][] = [
+    ['Node.js', '6.11.0'],
+    ['Java', '12.3.0'],
+    ['Ruby', '6.7.1'],
+    ['Python', '6.7.0'],
+    ['.NET', '6.2.0'],
+    ['Go', '6.4.0'],
+    ['Rust', '0.16.0'],
+    [
+        'Edge',
+        'Frontend SDK connected to Unleash or Unleash Enterprise Edge: 20.2.0',
+    ],
+    ['PHP', 'Not supported'],
+];
+
+const regexMinimumVersions: [sdk: string, version: string][] = [
+    ['Node.js', '6.10.0'],
+    ['Java', '12.2.0'],
+    ['Ruby', '6.5.0'],
+    ['Python', '6.6.0'],
+    ['.NET', '6.1.0'],
+    ['Go', '6.2.0'],
+    ['Rust', '0.16.0'],
+    [
+        'Edge',
+        'Frontend SDK connected to Unleash or Unleash Enterprise Edge: 20.1.9',
+    ],
+    ['PHP', 'Not supported'],
+];
+
 const getEditingProps = (
     localConstraint: EditableConstraintType,
 ): EditingProps => {
@@ -50,8 +80,15 @@ const getEditingProps = (
     if (isCidrConstraint(localConstraint)) {
         return {
             parseInput: parseParameterStrings,
-            helpText:
-                'IP addresses or CIDR ranges, for example 192.168.1.1 or 10.0.0.0/8',
+            helpText: (
+                <>
+                    IP addresses or CIDR ranges, for example 192.168.1.1 or
+                    10.0.0.0/8. IP constraints need a recent SDK.{' '}
+                    <MinimumVersionsTooltip
+                        minimumVersions={cidrMinimumVersions}
+                    />
+                </>
+            ),
             ValuePreview: CidrTargetRange,
         };
     }
@@ -76,7 +113,10 @@ const getEditingProps = (
                         RE2 regular expression
                         <OpenInNew sx={{ fontSize: 'inherit' }} />
                     </StyledHelpLink>
-                    . Regex needs a recent SDK. <MinimumVersionsTooltip />
+                    . Regex needs a recent SDK.{' '}
+                    <MinimumVersionsTooltip
+                        minimumVersions={regexMinimumVersions}
+                    />
                 </>
             ),
         };

@@ -8,22 +8,13 @@ const MinimumVersionsLabel = styled('span')(({ theme }) => ({
     cursor: 'default',
 }));
 
-const minimumVersions = [
-    ['Node.js', '6.10.0'],
-    ['Java', '12.2.0'],
-    ['Ruby', '6.5.0'],
-    ['Python', '6.6.0'],
-    ['.NET', '6.1.0'],
-    ['Go', '6.2.0'],
-    ['Rust', '0.16.0'],
-    [
-        'Edge',
-        'Frontend SDK connected to Unleash or Unleash Enterprise Edge: 20.1.9',
-    ],
-    ['PHP', 'Not supported'],
-];
+type MinimumVersionsTooltipProps = {
+    minimumVersions: [sdk: string, version: string][];
+};
 
-export const MinimumVersionsTooltip: FC = () => (
+export const MinimumVersionsTooltip: FC<MinimumVersionsTooltipProps> = ({
+    minimumVersions,
+}) => (
     <HtmlTooltip
         arrow
         title={

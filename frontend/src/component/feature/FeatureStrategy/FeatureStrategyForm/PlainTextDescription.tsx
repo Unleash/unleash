@@ -4,6 +4,7 @@ import {
     Accordion,
     AccordionSummary,
     AccordionDetails,
+    accordionClasses,
     accordionSummaryClasses,
     alpha,
 } from '@mui/material';
@@ -15,6 +16,10 @@ import { formatConstraintText } from 'utils/formatConstraintText';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { calculateVariantWeight } from 'component/common/util';
 import type { StrategyVariantSchema } from 'openapi';
+import {
+    fitContainerHeightSelector,
+    formTemplatePinnedFooterMediaQuery,
+} from 'component/common/FormTemplate/FormTemplate.styles';
 
 const SummaryIcon = styled(ModeCommentOutlinedIcon)(({ theme }) => ({
     color: theme.palette.primary.main,
@@ -30,6 +35,18 @@ const PlainTextAccordion = styled(Accordion)(({ theme }) => ({
     '&:first-of-type, &:last-of-type': {
         // override the global theme override that rounds borders on accordions
         borderRadius: 0,
+    },
+    [`& .${accordionClasses.region}`]: {
+        [`${fitContainerHeightSelector} &`]: {
+            [formTemplatePinnedFooterMediaQuery]: {
+                maxHeight: '25vh',
+                overflowY: 'auto',
+            },
+        },
+        '&:focus-visible': {
+            ...focusOutline(theme),
+            outlineOffset: -2,
+        },
     },
 }));
 
@@ -254,7 +271,10 @@ export const PlainTextDescription = ({
     const headerId = useId();
     const contentId = useId();
     return (
-        <PlainTextAccordion disableGutters>
+        <PlainTextAccordion
+            disableGutters
+            slotProps={{ region: { tabIndex: 0 } }}
+        >
             <Summary id={headerId} aria-controls={contentId}>
                 <SummaryIcon fontSize='small' />
                 <SummaryText>In plain text</SummaryText>

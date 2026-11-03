@@ -11,6 +11,7 @@ import {
 } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { StrategyFormBodySelector } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBodySelector.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export interface IReleasePlanTemplateAddStrategyFormProps {
     onCancel: () => void;
@@ -27,6 +28,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
     onAddUpdateStrategy,
     editMode,
 }: IReleasePlanTemplateAddStrategyFormProps) => {
+    const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
     const normalizedStrategyName = strategy.name || strategy.strategyName;
     const [currentStrategy, setCurrentStrategy] = useState({
         ...strategy,
@@ -45,6 +47,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
     return (
         <FormTemplate
             modal
+            fitContainerHeight={singlePageStrategyForm}
             disablePadding
             description={featureStrategyHelp}
             documentationLink={featureStrategyDocsLink}

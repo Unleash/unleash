@@ -32,6 +32,7 @@ import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-repla
 import type { CreateFeatureStrategySchema } from 'openapi/index.ts';
 import { summarizeStrategy } from '../summarizeStrategy.ts';
 import { createStrategyTracking } from '../strategyActionsTracking.ts';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const useStrategyLimit = (strategyCount: number) => {
     const { uiConfig } = useUiConfig();
@@ -46,6 +47,7 @@ const useStrategyLimit = (strategyCount: number) => {
 };
 
 export const FeatureStrategyCreate = () => {
+    const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const environmentId = useRequiredQueryParam('environmentId');
@@ -167,6 +169,7 @@ export const FeatureStrategyCreate = () => {
     return (
         <FormTemplate
             modal
+            fitContainerHeight={singlePageStrategyForm}
             description={featureStrategyHelp}
             documentationLink={featureStrategyDocsLink}
             documentationLinkLabel={featureStrategyDocsLinkLabel}

@@ -32,6 +32,7 @@ import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-repla
 import { getChangeStrategyName } from 'utils/getChangeStrategyName.ts';
 import { editChangeTracking } from 'component/changeRequest/changeRequestTracking';
 import { useTracking } from 'hooks/useTracking';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IEditChangeProps {
     change:
@@ -68,6 +69,7 @@ export const EditChange = ({
     onClose,
     featureId,
 }: IEditChangeProps) => {
+    const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
     const projectId = useRequiredPathParam('projectId');
     const { editChange } = useChangeRequestApi();
     const editTracking = editChangeTracking(change);
@@ -154,6 +156,7 @@ export const EditChange = ({
         >
             <FormTemplate
                 modal
+                fitContainerHeight={singlePageStrategyForm}
                 disablePadding
                 description={featureStrategyHelp}
                 documentationLink={featureStrategyDocsLink}

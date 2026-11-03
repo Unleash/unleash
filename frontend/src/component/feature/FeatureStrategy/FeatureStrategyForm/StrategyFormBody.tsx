@@ -107,25 +107,28 @@ const StyledAccordionHint = styled('span')(({ theme }) => ({
 
 const StyledForm = styled('form')(({ theme }) => ({
     '--form-inset': theme.spacing(3),
-    position: 'relative',
-    paddingTop: theme.spacing(4),
     flex: 1,
+    minHeight: 0,
     display: 'flex',
     flexDirection: 'column',
 }));
+
+const FormScrollArea = styled('div')({
+    flex: 1,
+    minHeight: 0,
+    overflowY: 'auto',
+    display: 'flex',
+    flexDirection: 'column',
+});
 
 const FormMainContent = styled('div')(({ theme }) => ({
     flex: 'auto',
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(2),
+    paddingBlock: theme.spacing(4),
     paddingInline: 'var(--form-inset)',
 }));
-
-const FormFooter = styled('div')({
-    position: 'sticky',
-    bottom: 0,
-});
 
 const StyledButtons = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -245,22 +248,22 @@ export const StrategyFormBody = <T extends StrategyFormState>({
     };
 
     return (
-        <>
-            <StyledHeaderBox>
-                <StyledTitle>
-                    {formatStrategyName(strategyName || '')}
-                </StyledTitle>
-            </StyledHeaderBox>
+        <StyledForm
+            onSubmit={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onSubmit(e);
+            }}
+        >
+            <FormScrollArea>
+                <StyledHeaderBox>
+                    <StyledTitle>
+                        {formatStrategyName(strategyName || '')}
+                    </StyledTitle>
+                </StyledHeaderBox>
 
-            {alertContent}
+                {alertContent}
 
-            <StyledForm
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onSubmit(e);
-                }}
-            >
                 <FormMainContent>
                     <FeatureStrategyTitle
                         title={strategy.title || ''}
@@ -365,13 +368,11 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                     {statusContent}
                     {beforeFooter}
                 </FormMainContent>
+            </FormScrollArea>
 
-                <FormFooter>
-                    <PlainTextDescription strategy={strategy} />
+            <PlainTextDescription strategy={strategy} />
 
-                    <StyledButtons>{children}</StyledButtons>
-                </FormFooter>
-            </StyledForm>
-        </>
+            <StyledButtons>{children}</StyledButtons>
+        </StyledForm>
     );
 };

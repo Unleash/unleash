@@ -17,8 +17,10 @@ import React from 'react';
 import { type ReactNode, useState } from 'react';
 import MobileGuidanceBG from 'assets/img/mobileGuidanceBg.svg?react';
 import {
+    fitContainerHeightSelector,
     formTemplateFixedSidebarWidth,
     formTemplateFormWidth,
+    formTemplatePinnedFooterMediaQuery,
     formTemplateSidebarWidth,
 } from './FormTemplate.styles';
 import { relative } from 'themes/themeStyles';
@@ -50,6 +52,13 @@ interface ICreateProps {
      * link + API command) is rendered.
      */
     sidebar?: ReactNode;
+    /**
+     * Make the template as tall as its container instead of its content, so
+     * the content can choose what scrolls. The sidebar scrolls on its own. On
+     * short viewports, such as at high zoom, the template grows with its
+     * content as usual.
+     */
+    fitContainerHeight?: boolean;
     children?: React.ReactNode;
 }
 
@@ -69,6 +78,10 @@ const StyledContainer = styled('section', {
             flexDirection: 'column',
             minHeight: narrowWidthMinHeight,
         },
+        [`&${fitContainerHeightSelector}`]: {
+            '& > aside': { overflowY: 'auto' },
+            [formTemplatePinnedFooterMediaQuery]: { height: '100%' },
+        },
     };
 });
 
@@ -86,6 +99,12 @@ const StyledMobileGuidanceWrapper = styled('div', {
               },
           }
         : {}),
+    [`${fitContainerHeightSelector} & aside`]: {
+        [formTemplatePinnedFooterMediaQuery]: {
+            maxHeight: '25vh',
+            overflowY: 'auto',
+        },
+    },
 }));
 
 const StyledMain = styled('div', {
@@ -99,6 +118,7 @@ const StyledMain = styled('div', {
     [theme.breakpoints.down(1100)]: {
         width: '100%',
     },
+    [`${fitContainerHeightSelector} &`]: { minHeight: 0 },
 }));
 
 const StyledFormContent = styled('div', {
@@ -124,6 +144,7 @@ const StyledFormContent = styled('div', {
             flexDirection: 'column',
             flexGrow: 1,
             padding,
+            [`${fitContainerHeightSelector} &`]: { overflowY: 'auto' },
             [theme.breakpoints.down('lg')]: {
                 padding: paddingLgDown,
                 '--form-content-padding': paddingLgDown,
@@ -259,6 +280,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
     useFixedSidebar,
     sidebarWidth,
     sidebar,
+    fitContainerHeight,
 }) => {
     const { setToastData } = useToast();
     const { trackEvent } = useEventTracker();
@@ -303,7 +325,11 @@ const FormTemplate: React.FC<ICreateProps> = ({
     const SidebarComponent = useFixedSidebar ? FixedGuidance : Guidance;
 
     return (
-        <StyledContainer modal={modal} compact={compact}>
+        <StyledContainer
+            modal={modal}
+            compact={compact}
+            data-fit-container-height={fitContainerHeight}
+        >
             <ConditionallyRender
                 condition={showGuidance && smallScreen}
                 show={

@@ -24,6 +24,7 @@ import { createStrategyPayload } from 'component/feature/FeatureStrategy/feature
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export const useDefaultStrategy = (
     projectId: string,
@@ -49,6 +50,7 @@ export const useDefaultStrategy = (
 };
 
 const EditDefaultStrategy = () => {
+    const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
     const projectId = useRequiredPathParam('projectId');
     const environmentId = useRequiredQueryParam('environmentId');
     const { refetch: refetchProjectOverview } = useProjectOverview(projectId);
@@ -104,6 +106,7 @@ const EditDefaultStrategy = () => {
     return (
         <FormTemplate
             modal
+            fitContainerHeight={singlePageStrategyForm}
             disablePadding
             description={projectDefaultStrategyHelp}
             documentationLink={projectDefaultStrategyDocsLink}

@@ -77,14 +77,14 @@ const StyledContainer = styled('section')(({ theme }) => ({
         [theme.breakpoints.down(1100)]: {
             minHeight: 0,
         },
-        [`&${fitContainerHeightSelector}`]: {
-            '& > aside': { overflowY: 'auto' },
-            [formTemplatePinnedFooterMediaQuery]: { height: '100%' },
-        },
     },
     '&[data-layout="modal"]': {
         minHeight: '100vh',
         borderRadius: 0,
+        [`&${fitContainerHeightSelector}`]: {
+            '& > aside': { overflowY: 'auto' },
+            [formTemplatePinnedFooterMediaQuery]: { height: '100%' },
+        },
     },
 }));
 

@@ -105,7 +105,7 @@ const EditDefaultStrategy = () => {
 
     return (
         <FormTemplate
-            modal
+            layout='modal'
             fitContainerHeight={singlePageStrategyForm}
             disablePadding
             description={projectDefaultStrategyHelp}

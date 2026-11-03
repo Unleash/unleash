@@ -249,7 +249,7 @@ export const LegacyCreateFeatureForm = ({
             }
         >
             <FormTemplate
-                compact
+                layout='compact'
                 disablePadding
                 description={documentation.text}
                 documentationIcon={documentation.icon}

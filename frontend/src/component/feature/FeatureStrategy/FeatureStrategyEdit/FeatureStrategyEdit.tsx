@@ -262,7 +262,7 @@ export const FeatureStrategyEdit = () => {
 
     return (
         <FormTemplate
-            modal
+            layout='modal'
             fitContainerHeight={singlePageStrategyForm}
             disablePadding
             description={featureStrategyHelp}

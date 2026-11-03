@@ -29,7 +29,9 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { IntegrationMultiSelector } from './IntegrationMultiSelector/IntegrationMultiSelector.tsx';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import FormTemplate, {
+    type FormTemplateLayout,
+} from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import {
@@ -79,7 +81,7 @@ type IntegrationFormProps = {
     editMode: boolean;
     addon: AddonSchema | Omit<AddonSchema, 'id'>;
     deprecated?: boolean;
-    modal?: boolean;
+    layout?: FormTemplateLayout;
 };
 
 const eventsFor = (
@@ -116,7 +118,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
     addon: initialValues,
     fetch,
     deprecated,
-    modal,
+    layout,
 }) => {
     const projectId = useOptionalPathParam('projectId');
     const { createAddon, updateAddon } = useAddonsApi();
@@ -369,7 +371,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
 
     return (
         <FormTemplate
-            modal={modal}
+            layout={layout}
             description={description || ''}
             documentationLink={documentationUrl}
             documentationLinkLabel={`${

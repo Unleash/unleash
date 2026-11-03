@@ -325,7 +325,7 @@ export const EnvironmentVariantsModal = ({
     return (
         <SidebarModal open={open} onClose={handleClose} label=''>
             <FormTemplate
-                modal
+                layout='modal'
                 title=''
                 description='Variants allow you to return a variant object if the feature flag is considered enabled for the current request.'
                 documentationLink='https://docs.getunleash.io/concepts/feature-flag-variants'

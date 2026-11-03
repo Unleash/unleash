@@ -46,7 +46,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
 
     return (
         <FormTemplate
-            modal
+            layout='modal'
             fitContainerHeight={singlePageStrategyForm}
             disablePadding
             description={featureStrategyHelp}

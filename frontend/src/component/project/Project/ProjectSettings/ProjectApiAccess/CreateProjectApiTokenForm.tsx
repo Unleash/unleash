@@ -108,7 +108,7 @@ export const CreateProjectApiTokenForm = () => {
         <FormTemplate
             loading={loading}
             title={pageTitle}
-            modal
+            layout='modal'
             description="Unleash SDKs use API tokens to authenticate to the Unleash API. Client SDKs need a token with 'client privileges', which allows them to fetch feature flag configurations and post usage metrics."
             documentationLink='https://docs.getunleash.io/concepts/api-tokens-and-client-keys'
             documentationLinkLabel='API tokens documentation'

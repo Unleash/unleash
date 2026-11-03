@@ -1,4 +1,6 @@
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import FormTemplate, {
+    type FormTemplateLayout,
+} from 'component/common/FormTemplate/FormTemplate';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { UPDATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
@@ -23,10 +25,10 @@ import {
 } from 'component/context/contextFieldTrackingProps';
 
 type EditContextProps = {
-    modal?: boolean;
+    layout?: FormTemplateLayout;
 };
 
-export const EditContext: FC<EditContextProps> = ({ modal }) => {
+export const EditContext: FC<EditContextProps> = ({ layout }) => {
     useEffect(() => {
         scrollToTop();
     }, []);
@@ -118,7 +120,7 @@ export const EditContext: FC<EditContextProps> = ({ modal }) => {
 
     return (
         <FormTemplate
-            modal={modal}
+            layout={layout}
             loading={loading}
             title='Edit context'
             description='Context fields are a basic building block used in Unleash to control roll-out.

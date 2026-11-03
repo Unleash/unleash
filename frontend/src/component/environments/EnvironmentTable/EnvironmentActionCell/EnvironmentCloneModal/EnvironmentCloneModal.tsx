@@ -241,7 +241,7 @@ export const EnvironmentCloneModal = ({
         >
             <FormTemplate
                 loading={loading}
-                modal
+                layout='modal'
                 title={`Clone ${environment.name} environment`}
                 description='Cloning an environment will clone all feature flags and their configuration (activation strategies, segments, status, etc) into a new environment.'
                 documentationLink='https://docs.getunleash.io/concepts/environments#clone-an-environment'

@@ -103,7 +103,7 @@ export const ProjectIntegrations = () => {
                             onClose={closeModal}
                             label='Create integration'
                         >
-                            <CreateIntegration modal />
+                            <CreateIntegration layout='modal' />
                         </SidebarModal>
                     }
                 />
@@ -115,7 +115,7 @@ export const ProjectIntegrations = () => {
                             onClose={closeModal}
                             label='Edit integration'
                         >
-                            <EditIntegration modal />
+                            <EditIntegration layout='modal' />
                         </SidebarModal>
                     }
                 />

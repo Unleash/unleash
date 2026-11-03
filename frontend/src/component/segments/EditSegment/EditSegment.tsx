@@ -1,5 +1,7 @@
 import { createUuid } from 'utils/createUuid';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import FormTemplate, {
+    type FormTemplateLayout,
+} from 'component/common/FormTemplate/FormTemplate';
 import {
     UPDATE_PROJECT_SEGMENT,
     UPDATE_SEGMENT,
@@ -36,7 +38,7 @@ import {
 } from 'component/segments/segmentTrackingProps';
 
 interface IEditSegmentProps {
-    modal?: boolean;
+    layout?: FormTemplateLayout;
 }
 
 const addIdSymbolToConstraints = (segment?: ISegment): ISegment | undefined => {
@@ -49,7 +51,7 @@ const addIdSymbolToConstraints = (segment?: ISegment): ISegment | undefined => {
     return { ...segment, constraints };
 };
 
-export const EditSegment = ({ modal }: IEditSegmentProps) => {
+export const EditSegment = ({ layout }: IEditSegmentProps) => {
     const projectId = useOptionalPathParam('projectId');
     const segmentId = useRequiredPathParam('segmentId');
     const { segment: segmentWithoutConstraintIds } = useSegment(
@@ -165,7 +167,7 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
     return (
         <FormTemplate
             loading={loading}
-            modal={modal}
+            layout={layout}
             title='Edit segment'
             description={segmentsFormDescription}
             documentationLink={segmentsDocsLink}

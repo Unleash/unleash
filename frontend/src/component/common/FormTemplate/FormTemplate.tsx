@@ -27,6 +27,8 @@ import { relative } from 'themes/themeStyles';
 import { ApiCommandBlock } from './ApiCommandBlock.tsx';
 import { apiCommandTrackingProps } from './apiCommandTrackingProps.ts';
 
+export type FormTemplateLayout = 'modal' | 'compact' | 'page';
+
 interface ICreateProps {
     title?: ReactNode;
     description: ReactNode;
@@ -34,14 +36,13 @@ interface ICreateProps {
     documentationIcon?: ReactNode;
     documentationLinkLabel?: string;
     loading?: boolean;
-    modal?: boolean;
+    layout?: FormTemplateLayout;
     disablePadding?: boolean;
     compactPadding?: boolean;
     showDescription?: boolean;
     showLink?: boolean;
     formatApiCode?: () => string;
     footer?: ReactNode;
-    compact?: boolean;
     showGuidance?: boolean;
     useFixedSidebar?: boolean;
     sidebarWidth?: string;
@@ -62,28 +63,30 @@ interface ICreateProps {
     children?: React.ReactNode;
 }
 
-const StyledContainer = styled('section', {
-    shouldForwardProp: (prop) =>
-        !['modal', 'compact'].includes(prop.toString()),
-})<{ modal?: boolean; compact?: boolean }>(({ theme, modal, compact }) => {
-    const narrowWidthMinHeight = modal || compact ? undefined : 0;
-    return {
-        minHeight: modal ? '100vh' : compact ? 'unset' : '80vh',
-        borderRadius: modal ? 0 : theme.spacing(2),
-        width: '100%',
-        display: 'flex',
-        margin: '0 auto',
-        overflow: modal || compact ? 'unset' : 'hidden',
+const StyledContainer = styled('section')(({ theme }) => ({
+    borderRadius: theme.spacing(2),
+    width: '100%',
+    display: 'flex',
+    margin: '0 auto',
+    [theme.breakpoints.down(1100)]: {
+        flexDirection: 'column',
+    },
+    '&[data-layout="page"]': {
+        minHeight: '80vh',
+        overflow: 'hidden',
         [theme.breakpoints.down(1100)]: {
-            flexDirection: 'column',
-            minHeight: narrowWidthMinHeight,
+            minHeight: 0,
         },
         [`&${fitContainerHeightSelector}`]: {
             '& > aside': { overflowY: 'auto' },
             [formTemplatePinnedFooterMediaQuery]: { height: '100%' },
         },
-    };
-});
+    },
+    '&[data-layout="modal"]': {
+        minHeight: '100vh',
+        borderRadius: 0,
+    },
+}));
 
 const StyledMobileGuidanceWrapper = styled('div', {
     shouldForwardProp: (prop) => !['guidanceHeight'].includes(prop.toString()),
@@ -268,14 +271,13 @@ const FormTemplate: React.FC<ICreateProps> = ({
     documentationIcon,
     documentationLinkLabel,
     loading,
-    modal,
+    layout = 'page',
     formatApiCode,
     disablePadding,
     compactPadding = false,
     showDescription = true,
     showLink = true,
     footer,
-    compact,
     showGuidance = true,
     useFixedSidebar,
     sidebarWidth,
@@ -326,8 +328,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
 
     return (
         <StyledContainer
-            modal={modal}
-            compact={compact}
+            data-layout={layout}
             data-fit-container-height={fitContainerHeight}
         >
             <ConditionallyRender

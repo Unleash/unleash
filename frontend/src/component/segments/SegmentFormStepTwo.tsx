@@ -170,7 +170,7 @@ export const SegmentFormStepTwo: React.FC<ISegmentFormPartTwoProps> = ({
                         <CreateUnleashContext
                             onSubmit={() => setOpen(false)}
                             onCancel={() => setOpen(false)}
-                            modal
+                            layout='modal'
                         />
                     </SidebarModal>
                     <PermissionButton

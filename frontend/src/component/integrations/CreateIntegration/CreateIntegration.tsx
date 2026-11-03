@@ -4,6 +4,7 @@ import cloneDeep from 'lodash.clonedeep';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import type { AddonSchema } from 'openapi';
+import type { FormTemplateLayout } from 'component/common/FormTemplate/FormTemplate';
 
 export const DEFAULT_DATA: Omit<AddonSchema, 'id'> = {
     provider: '',
@@ -16,10 +17,10 @@ export const DEFAULT_DATA: Omit<AddonSchema, 'id'> = {
 };
 
 type CreateIntegrationProps = {
-    modal?: boolean;
+    layout?: FormTemplateLayout;
 };
 
-export const CreateIntegration = ({ modal }: CreateIntegrationProps) => {
+export const CreateIntegration = ({ layout }: CreateIntegrationProps) => {
     const providerId = useRequiredPathParam('providerId');
     const projectId = useOptionalPathParam('projectId');
     const { providers, refetchAddons } = useAddons();
@@ -44,7 +45,7 @@ export const CreateIntegration = ({ modal }: CreateIntegrationProps) => {
             fetch={refetchAddons}
             addon={defaultAddon}
             deprecated={deprecated}
-            modal={modal}
+            layout={layout}
         />
     );
 };

@@ -85,7 +85,7 @@ export const IntegrationEventsModal = ({
         >
             <FormTemplate
                 loading={loading && integrationEvents.length === 0}
-                modal
+                layout='modal'
                 description=''
                 documentationLink=''
                 documentationLinkLabel=''

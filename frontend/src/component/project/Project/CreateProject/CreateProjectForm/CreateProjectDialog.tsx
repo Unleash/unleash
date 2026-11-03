@@ -486,7 +486,7 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
     return (
         <StyledDialog open={open} onClose={onClose}>
             <FormTemplate
-                compact
+                layout='compact'
                 disablePadding
                 description=''
                 formatApiCode={formatApiCode}

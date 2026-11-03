@@ -168,7 +168,7 @@ export const FeatureStrategyCreate = () => {
 
     return (
         <FormTemplate
-            modal
+            layout='modal'
             fitContainerHeight={singlePageStrategyForm}
             description={featureStrategyHelp}
             documentationLink={featureStrategyDocsLink}

@@ -155,7 +155,7 @@ export const EditChange = ({
             }}
         >
             <FormTemplate
-                modal
+                layout='modal'
                 fitContainerHeight={singlePageStrategyForm}
                 disablePadding
                 description={featureStrategyHelp}

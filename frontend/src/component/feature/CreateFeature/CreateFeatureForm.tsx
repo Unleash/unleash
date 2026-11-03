@@ -281,7 +281,7 @@ export const CreateFeatureForm = ({
             }
         >
             <FormTemplate
-                compact
+                layout='compact'
                 disablePadding
                 description='Feature flags are at the core of Unleash. Use them to control your feature rollouts.'
                 documentationIcon={<FlagIcon />}

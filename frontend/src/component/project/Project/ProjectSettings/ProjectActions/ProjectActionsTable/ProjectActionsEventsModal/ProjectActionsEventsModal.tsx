@@ -98,7 +98,7 @@ export const ProjectActionsEventsModal = ({
         >
             <FormTemplate
                 loading={loading && actionEvents.length === 0}
-                modal
+                layout='modal'
                 description=''
                 documentationLink=''
                 documentationLinkLabel=''

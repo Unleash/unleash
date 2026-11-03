@@ -36,6 +36,7 @@ const payload = (survey: object) => ({
     value: JSON.stringify({
         environmentId: 'development',
         submitBase: SUBMIT_BASE,
+        trigger: { on: 'page', path: '/insights' },
         ...survey,
     }),
 });
@@ -64,7 +65,7 @@ const ratingQuestion = (scale: number) => ({
 
 describe('parseSurveyDefinition', () => {
     it('parses a survey with every question type', () => {
-        expect(definition(validSurvey)).toEqual({
+        expect(definition(validSurvey)).toStrictEqual({
             title: 'How was creating your flag?',
             description: 'Three quick questions.',
             questions: [
@@ -257,6 +258,73 @@ describe('parseSurveyPayload', () => {
     it('rejects a flag name without the survey- prefix', () => {
         expect(
             parseSurveyPayload('onboarding', payload(validSurvey)),
+        ).toBeNull();
+    });
+
+    it('reads a page trigger with a pathname pattern', () => {
+        const survey = parseSurveyPayload(
+            'survey-x',
+            payload({
+                ...validSurvey,
+                trigger: {
+                    on: 'page',
+                    path: '/projects/:projectId/features/*',
+                },
+            }),
+        );
+
+        expect(survey?.trigger).toStrictEqual({
+            on: 'page',
+            path: '/projects/:projectId/features/*',
+        });
+    });
+
+    it('reads a page trigger without a page pattern', () => {
+        const survey = parseSurveyPayload(
+            'survey-x',
+            payload({ ...validSurvey, trigger: { on: 'page' } }),
+        );
+
+        expect(survey?.trigger).toStrictEqual({ on: 'page' });
+    });
+
+    it('drops unknown trigger fields', () => {
+        const survey = parseSurveyPayload(
+            'survey-x',
+            payload({
+                ...validSurvey,
+                trigger: { on: 'page', path: '/projects', delay: 5 },
+            }),
+        );
+
+        expect(survey?.trigger).toStrictEqual({
+            on: 'page',
+            path: '/projects',
+        });
+    });
+
+    it.each([
+        ['is not an object', 'page'],
+        ['is null', null],
+        ['has an unknown condition', { on: 'click' }],
+        ['has no condition', { path: '/projects' }],
+        ['has a non-string path', { on: 'page', path: 42 }],
+        ['has an invalid path pattern', { on: 'page', path: '/projects/(' }],
+    ])('rejects a survey whose trigger %s', (_, trigger) => {
+        expect(
+            parseSurveyPayload(
+                'survey-x',
+                payload({ ...validSurvey, trigger }),
+            ),
+        ).toBeNull();
+    });
+
+    it('rejects a survey without a trigger', () => {
+        expect(
+            parseSurveyPayload(
+                'survey-x',
+                payload({ ...validSurvey, trigger: undefined }),
+            ),
         ).toBeNull();
     });
 

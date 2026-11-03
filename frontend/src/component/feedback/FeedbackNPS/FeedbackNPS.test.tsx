@@ -36,6 +36,7 @@ const surveyFlag = (name: string, title: string): IToggle => ({
                     { id: 'comment', type: 'free-text', prompt: 'Comment' },
                 ],
                 submitBase: 'https://hosted.example.com/hosted',
+                trigger: { on: 'page' },
             }),
         },
     },

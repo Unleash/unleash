@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseSurveyDefinition } from '../survey.ts';
+import { parseSurveyPayload } from '../survey.ts';
 import {
     hasSurveyErrors,
     initialSurveyDraft,
@@ -35,12 +35,23 @@ const draftWith = (questions: QuestionDraft[]): SurveyDraft => ({
     questions,
 });
 
+const delivered = (surveyJson: string) => ({
+    type: 'json',
+    value: JSON.stringify({
+        ...JSON.parse(surveyJson),
+        environmentId: 'development',
+        submitBase: 'https://app.unleash-hosted.com/hosted',
+    }),
+});
+
 describe('toSurveyJson', () => {
     it('turns the starting draft into a valid survey', () => {
         const draft = initialSurveyDraft();
 
         expect(hasSurveyErrors(validateSurveyDraft(draft))).toBe(false);
-        expect(parseSurveyDefinition(toSurveyJson(draft))).not.toBeNull();
+        expect(
+            parseSurveyPayload('survey-x', delivered(toSurveyJson(draft))),
+        ).not.toBeNull();
     });
 
     it('turns every question type into its survey fields, trimmed', () => {
@@ -86,6 +97,7 @@ describe('toSurveyJson', () => {
                     scale: 7,
                 },
             ],
+            trigger: { on: 'page' },
         });
     });
 

@@ -1,4 +1,5 @@
 import { PayloadType } from 'utils/variants';
+import { isValidPagePattern } from './triggers/pagePattern.ts';
 
 export const SURVEY_FLAG_PREFIX = 'survey-';
 export const SURVEY_KIND = 'unleash-survey';
@@ -23,6 +24,12 @@ export type SurveyAnswer = number | string | string[];
 
 export type SurveyAnswers = Record<string, SurveyAnswer>;
 
+export type Condition = { on: 'page' };
+
+export type SurveyTrigger = Condition & {
+    path?: string;
+};
+
 export interface SurveyDefinition {
     title: string | null;
     description: string | null;
@@ -35,7 +42,8 @@ export interface SurveyTransport {
     submitBase: string;
 }
 
-export type Survey = SurveyDefinition & SurveyTransport;
+export type Survey = SurveyDefinition &
+    SurveyTransport & { trigger: SurveyTrigger };
 
 const isNonEmptyString = (value: unknown): value is string =>
     typeof value === 'string' && value.length > 0;
@@ -116,6 +124,26 @@ const parseQuestion = (raw: unknown): SurveyQuestion | null => {
     }
 };
 
+const parseCondition = (raw: Record<string, unknown>): Condition | null =>
+    raw.on === 'page' ? { on: 'page' } : null;
+
+const parseTrigger = (raw: unknown): SurveyTrigger | null => {
+    if (!isObject(raw)) {
+        return null;
+    }
+    const condition = parseCondition(raw);
+    if (condition === null) {
+        return null;
+    }
+    if (raw.path === undefined) {
+        return condition;
+    }
+    if (typeof raw.path !== 'string' || !isValidPagePattern(raw.path)) {
+        return null;
+    }
+    return { ...condition, path: raw.path };
+};
+
 const parseJsonObject = (json: string): Record<string, unknown> | null => {
     let raw: unknown;
     try {
@@ -190,11 +218,16 @@ export const parseSurveyPayload = (
     if (definition === null) {
         return null;
     }
+    const trigger = parseTrigger(raw.trigger);
+    if (trigger === null) {
+        return null;
+    }
 
     return {
         flagName,
         environmentId: raw.environmentId,
         submitBase,
         ...definition,
+        trigger,
     };
 };

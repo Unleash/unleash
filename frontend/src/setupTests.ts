@@ -3,6 +3,12 @@ import 'whatwg-fetch';
 import 'regenerator-runtime';
 import { beforeAll, vi } from 'vitest';
 
+// Node 22 (our minimum, see mise.toml) has no global URLPattern; Node 24+ does.
+// Remove this and the urlpattern-polyfill dev dependency once we require Node 24+.
+if (typeof globalThis.URLPattern === 'undefined') {
+    await import('urlpattern-polyfill');
+}
+
 class ResizeObserver {
     callback: ResizeObserverCallback;
     observedTargets = new Set<Element>();

@@ -858,6 +858,9 @@ importers:
       unleash-proxy-client:
         specifier: 3.8.2
         version: 3.8.2
+      urlpattern-polyfill:
+        specifier: ^10.1.0
+        version: 10.1.0
       use-query-params:
         specifier: ^2.2.2
         version: 2.2.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -6184,6 +6187,9 @@ packages:
 
   url-parse@1.5.10:
     resolution: {integrity: sha512-WypcfiRhfeUP9vvF0j6rw0J3hrWrw6iZv3+22h6iRMJ/8z1Tj6XfLP4DsUix5MhMPnXpiHDoKyoZ/bdCkwBCiQ==}
+
+  urlpattern-polyfill@10.1.0:
+    resolution: {integrity: sha512-IGjKp/o0NL3Bso1PymYURCJxMPNAf/ILOpendP9f5B6e1rTJgdgiOvgfoT8VxCAdY+Wisb9uhGaJJf3yZ2V9nw==}
 
   use-query-params@2.2.2:
     resolution: {integrity: sha512-OwGab8u8/x2xZp9uSyBsx0kXlkR9IR436zbygsYVGikPYY3OJosvve6IJVGwIJPcfyb/YHwvPrUNu65/JR++Kw==}
@@ -12093,6 +12099,8 @@ snapshots:
     dependencies:
       querystringify: 2.2.0
       requires-port: 1.0.0
+
+  urlpattern-polyfill@10.1.0: {}
 
   use-query-params@2.2.2(react-dom@19.2.8(react@19.2.8))(react@19.2.8):
     dependencies:

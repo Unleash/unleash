@@ -139,6 +139,7 @@
     "tss-react": "4.9.21",
     "typescript": "7.0.2",
     "unleash-proxy-client": "3.8.2",
+    "urlpattern-polyfill": "^10.1.0",
     "use-query-params": "^2.2.2",
     "vite": "^8.0.10",
     "vite-plugin-env-compatible": "2.0.1",

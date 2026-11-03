@@ -4,7 +4,10 @@ import {
     SURVEY_KIND,
     SURVEY_VERSION,
     type SurveyQuestion,
+    type SurveyTrigger,
 } from '../survey.ts';
+
+const ALWAYS_TRIGGER: SurveyTrigger = { on: 'page' };
 
 export type QuestionType = SurveyQuestion['type'];
 
@@ -162,6 +165,7 @@ export const toSurveyJson = (draft: SurveyDraft): string =>
             title: draft.showTitleSlide ? draft.title.trim() : null,
             description: draft.showTitleSlide ? draft.description.trim() : null,
             questions: draft.questions.map(toQuestion),
+            trigger: ALWAYS_TRIGGER,
         },
         null,
         2,

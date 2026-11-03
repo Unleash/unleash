@@ -7,7 +7,6 @@ export type SubmitSignupData = {
     companyName: string;
     companyIsNA: boolean;
     productUpdatesEmailConsent: boolean;
-    inviteEmails: string[];
 };
 
 const ENDPOINT = 'api/admin/signup';

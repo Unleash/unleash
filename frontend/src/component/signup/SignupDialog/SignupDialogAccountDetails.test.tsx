@@ -11,7 +11,6 @@ const data = {
     companyName: '',
     companyIsNA: false,
     productUpdatesEmailConsent: false,
-    inviteEmails: [],
 };
 
 describe('signup account details', () => {

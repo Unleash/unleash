@@ -15,7 +15,6 @@ const signupData = {
     companyName: '',
     companyIsNA: false,
     productUpdatesEmailConsent: false,
-    inviteEmails: [],
 };
 
 test('presents Unleash Intro as a playful, interactive experience', async () => {

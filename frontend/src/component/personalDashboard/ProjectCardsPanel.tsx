@@ -37,6 +37,17 @@ const PanelTitle = styled('h3')(({ theme }) => ({
     margin: 0,
 }));
 
+const PanelTitleText = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(0.5),
+}));
+
+const PanelSubtitle = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.body2.fontSize,
+}));
+
 const CardGrid = styled('div')(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: `repeat(auto-fill, minmax(${theme.spacing(35)}, 1fr))`,
@@ -95,17 +106,26 @@ export const ProjectCardsPanelView = ({
     const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
     const ref = useLoading(projects.state === 'loading');
     const { gridRef, cardsPerRow } = useCardsPerRow();
+    // A single card looks odd on narrow screens
+    const visibleCount = cardsPerRow === 1 ? 3 : cardsPerRow;
 
     const loadedProjects = projects.state === 'success' ? projects.data : [];
     const visibleProjects = (
         projects.state === 'loading' ? loadingData : loadedProjects
-    ).slice(0, cardsPerRow);
-    const hiddenCount = loadedProjects.length - cardsPerRow;
+    ).slice(0, visibleCount);
+    const hiddenCount = loadedProjects.length - visibleCount;
 
     return (
         <Panel ref={ref} aria-labelledby='projects-panel-header'>
             <PanelHeader>
-                <PanelTitle id='projects-panel-header'>My projects</PanelTitle>
+                <PanelTitleText>
+                    <PanelTitle id='projects-panel-header'>
+                        My projects
+                    </PanelTitle>
+                    <PanelSubtitle>
+                        Projects you recently created, changed or favorited
+                    </PanelSubtitle>
+                </PanelTitleText>
                 <ProjectCreationButton
                     isDialogOpen={isCreateDialogOpen}
                     setIsDialogOpen={setIsCreateDialogOpen}

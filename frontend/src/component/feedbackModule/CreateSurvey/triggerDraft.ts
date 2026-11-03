@@ -1,7 +1,9 @@
 import { canMatchPages, toPagePattern } from '../triggers/pagePattern.ts';
-import type {
-    SurveyTrigger,
-    TriggerCondition,
+import {
+    isValidDelayMs,
+    isValidOccurrence,
+    type SurveyTrigger,
+    type TriggerCondition,
 } from '../triggers/surveyTrigger.ts';
 
 export type TriggerMode = 'always' | 'custom';
@@ -11,10 +13,14 @@ export interface TriggerDraft {
     mode: TriggerMode;
     on: TriggerCondition['on'];
     path: string;
+    delayMs: string;
+    onOccurrence: string;
 }
 
 export interface TriggerErrors {
     path?: string;
+    delayMs?: string;
+    onOccurrence?: string;
 }
 
 const ALWAYS_TRIGGER: SurveyTrigger = { on: 'page' };
@@ -23,6 +29,8 @@ export const initialTriggerDraft = (): TriggerDraft => ({
     mode: 'always',
     on: 'page',
     path: '',
+    delayMs: '0',
+    onOccurrence: '1',
 });
 
 export const validatePage = (page: string): string | undefined => {
@@ -38,8 +46,28 @@ export const validatePage = (page: string): string | undefined => {
         : 'This is not a valid page pattern';
 };
 
+// An empty number input gives '', which Number would read as 0.
+const toNumber = (value: string): number =>
+    value.trim() === '' ? Number.NaN : Number(value);
+
+const validateDelayMs = (delayMs: string): string | undefined =>
+    isValidDelayMs(toNumber(delayMs))
+        ? undefined
+        : 'Enter a whole number of milliseconds, 0 or more';
+
+const validateOccurrence = (onOccurrence: string): string | undefined =>
+    isValidOccurrence(toNumber(onOccurrence))
+        ? undefined
+        : 'Enter a whole number, 1 or more';
+
 export const validateTriggerDraft = (draft: TriggerDraft): TriggerErrors =>
-    draft.mode === 'always' ? {} : { path: validatePage(draft.path) };
+    draft.mode === 'always'
+        ? {}
+        : {
+              path: validatePage(draft.path),
+              delayMs: validateDelayMs(draft.delayMs),
+              onOccurrence: validateOccurrence(draft.onOccurrence),
+          };
 
 export const hasTriggerErrors = (errors: TriggerErrors): boolean =>
     Object.values(errors).some(Boolean);
@@ -49,7 +77,12 @@ export const toTrigger = (draft: TriggerDraft): SurveyTrigger => {
         return ALWAYS_TRIGGER;
     }
     const path = draft.path.trim();
-    return path === '' ? { on: draft.on } : { on: draft.on, path };
+    return {
+        on: draft.on,
+        ...(path === '' ? {} : { path }),
+        delayMs: toNumber(draft.delayMs),
+        onOccurrence: toNumber(draft.onOccurrence),
+    };
 };
 
 export type PageMatch =

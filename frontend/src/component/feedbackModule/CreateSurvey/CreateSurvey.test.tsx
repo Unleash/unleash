@@ -417,7 +417,7 @@ describe('CreateSurvey', () => {
         ).toHaveValue(1);
     });
 
-    it('sends the page entered as the trigger', async () => {
+    it('sends the page, delay and occurrence entered as the trigger', async () => {
         const { addStrategy } = setupApi();
         renderPage();
 
@@ -426,6 +426,14 @@ describe('CreateSurvey', () => {
             screen.getByLabelText('Page'),
             '/projects/:projectId',
         );
+        const delay = screen.getByLabelText('Delay in milliseconds');
+        await userEvent.clear(delay);
+        await userEvent.type(delay, '2000');
+        const occurrence = screen.getByLabelText(
+            'Show after the condition is met this many times',
+        );
+        await userEvent.clear(occurrence);
+        await userEvent.type(occurrence, '3');
         await clickNext();
         await submitSurvey();
 
@@ -433,6 +441,8 @@ describe('CreateSurvey', () => {
         expect(sentSurvey(addStrategy).trigger).toEqual({
             on: 'page',
             path: '/projects/:projectId',
+            delayMs: 2000,
+            onOccurrence: 3,
         });
     });
 
@@ -473,6 +483,28 @@ describe('CreateSurvey', () => {
         await screen.findByText(
             'Start the pattern with /, for example /projects/:projectId',
         );
+        expect(screen.queryByLabelText('Flag name')).not.toBeInTheDocument();
+    });
+
+    it('does not move on to the settings without a delay and occurrence', async () => {
+        setupApi();
+        renderPage();
+
+        await goToCustomTrigger();
+        await userEvent.clear(screen.getByLabelText('Delay in milliseconds'));
+        await userEvent.clear(
+            screen.getByLabelText(
+                'Show after the condition is met this many times',
+            ),
+        );
+        await clickNext();
+
+        await screen.findByText(
+            'Enter a whole number of milliseconds, 0 or more',
+        );
+        expect(
+            screen.getByText('Enter a whole number, 1 or more'),
+        ).toBeInTheDocument();
         expect(screen.queryByLabelText('Flag name')).not.toBeInTheDocument();
     });
 

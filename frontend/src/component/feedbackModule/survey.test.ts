@@ -288,6 +288,22 @@ describe('parseSurveyPayload', () => {
         expect(survey?.trigger).toStrictEqual({ on: 'page' });
     });
 
+    it('reads the delay and occurrence of a trigger', () => {
+        const survey = parseSurveyPayload(
+            'survey-x',
+            payload({
+                ...validSurvey,
+                trigger: { on: 'page', delayMs: 0, onOccurrence: 3 },
+            }),
+        );
+
+        expect(survey?.trigger).toStrictEqual({
+            on: 'page',
+            delayMs: 0,
+            onOccurrence: 3,
+        });
+    });
+
     it('drops unknown trigger fields', () => {
         const survey = parseSurveyPayload(
             'survey-x',
@@ -310,6 +326,11 @@ describe('parseSurveyPayload', () => {
         ['has no condition', { path: '/projects' }],
         ['has a non-string path', { on: 'page', path: 42 }],
         ['has an invalid path pattern', { on: 'page', path: '/projects/(' }],
+        ['has a negative delay', { on: 'page', delayMs: -1 }],
+        ['has a fractional delay', { on: 'page', delayMs: 1.5 }],
+        ['has a non-number delay', { on: 'page', delayMs: '500' }],
+        ['has a zero occurrence', { on: 'page', onOccurrence: 0 }],
+        ['has a fractional occurrence', { on: 'page', onOccurrence: 1.5 }],
     ])('rejects a survey whose trigger %s', (_, trigger) => {
         expect(
             parseSurveyPayload(

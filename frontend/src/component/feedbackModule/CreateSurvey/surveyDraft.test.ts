@@ -10,6 +10,7 @@ import {
     validateSurveyDraft,
     withType,
 } from './surveyDraft.ts';
+import { initialTriggerDraft } from './triggerDraft.ts';
 
 const draftQuestion = (
     fields: Partial<Pick<QuestionDraft, 'id' | 'prompt' | 'required'>> = {},
@@ -33,7 +34,7 @@ const draftWith = (questions: QuestionDraft[]): SurveyDraft => ({
     title: 'Survey',
     description: '',
     questions,
-    trigger: { mode: 'always', on: 'page', path: '' },
+    trigger: initialTriggerDraft(),
 });
 
 const delivered = (surveyJson: string) => ({
@@ -109,17 +110,33 @@ describe('toSurveyJson', () => {
             ' /projects ',
             { on: 'page' },
         ],
-        ['every page when no page is entered', 'custom', ' ', { on: 'page' }],
+        [
+            'every page when no page is entered',
+            'custom',
+            ' ',
+            { on: 'page', delayMs: 500, onOccurrence: 3 },
+        ],
         [
             'the page entered, trimmed',
             'custom',
             ' /projects/:projectId ',
-            { on: 'page', path: '/projects/:projectId' },
+            {
+                on: 'page',
+                path: '/projects/:projectId',
+                delayMs: 500,
+                onOccurrence: 3,
+            },
         ],
     ] as const)('triggers on %s', (_, mode, path, expected) => {
         const draft: SurveyDraft = {
             ...draftWith([draftQuestion()]),
-            trigger: { mode, on: 'page', path },
+            trigger: {
+                ...initialTriggerDraft(),
+                mode,
+                path,
+                delayMs: '500',
+                onOccurrence: '3',
+            },
         };
 
         expect(JSON.parse(toSurveyJson(draft)).trigger).toEqual(expected);

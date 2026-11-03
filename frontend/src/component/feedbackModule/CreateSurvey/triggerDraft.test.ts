@@ -1,10 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import {
     hasTriggerErrors,
+    initialTriggerDraft,
     matchPage,
+    type TriggerDraft,
     validatePage,
     validateTriggerDraft,
 } from './triggerDraft.ts';
+
+const customDraft: TriggerDraft = {
+    ...initialTriggerDraft(),
+    mode: 'custom',
+};
 
 describe('validatePage', () => {
     it.each([
@@ -34,8 +41,7 @@ describe('validatePage', () => {
 describe('validateTriggerDraft', () => {
     it('reports an invalid page pattern on a custom trigger', () => {
         const errors = validateTriggerDraft({
-            mode: 'custom',
-            on: 'page',
+            ...customDraft,
             path: 'projects',
         });
 
@@ -45,11 +51,29 @@ describe('validateTriggerDraft', () => {
         expect(hasTriggerErrors(errors)).toBe(true);
     });
 
-    it('ignores the page pattern when the survey shows whenever it is enabled', () => {
+    it('accepts the default delay and occurrence', () => {
+        expect(hasTriggerErrors(validateTriggerDraft(customDraft))).toBe(false);
+    });
+
+    it.each(['', '-1', '1.5'])('rejects a delay of %j', (delayMs) => {
+        expect(validateTriggerDraft({ ...customDraft, delayMs }).delayMs).toBe(
+            'Enter a whole number of milliseconds, 0 or more',
+        );
+    });
+
+    it.each(['', '0', '1.5'])('rejects an occurrence of %j', (onOccurrence) => {
+        expect(
+            validateTriggerDraft({ ...customDraft, onOccurrence }).onOccurrence,
+        ).toBe('Enter a whole number, 1 or more');
+    });
+
+    it('ignores the custom fields when the survey shows whenever it is enabled', () => {
         const errors = validateTriggerDraft({
+            ...customDraft,
             mode: 'always',
-            on: 'page',
             path: 'projects',
+            delayMs: '-1',
+            onOccurrence: '0',
         });
 
         expect(hasTriggerErrors(errors)).toBe(false);

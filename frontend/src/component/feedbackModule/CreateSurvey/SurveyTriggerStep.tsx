@@ -157,61 +157,67 @@ interface CustomTriggerProps {
     onChange: (trigger: TriggerDraft) => void;
 }
 
-const CustomTrigger = ({ trigger, errors, onChange }: CustomTriggerProps) => {
-    const [delayMs, setDelayMs] = useState('0');
-    const [occurrence, setOccurrence] = useState('1');
-
-    return (
-        <StyledCard>
-            <StyledHalfWidth>
-                <GeneralSelect
-                    label='Show the survey when'
-                    value={trigger.on}
-                    onChange={(on: TriggerCondition['on']) =>
-                        onChange({ ...trigger, on })
-                    }
-                    options={TRIGGER_OPTIONS}
-                    fullWidth
-                />
-            </StyledHalfWidth>
-            <StyledField>
-                <Input
-                    label='Page'
-                    description='Optional. Leave empty to match every page.'
-                    placeholder='/projects/:projectId'
-                    value={trigger.path}
-                    onChange={(event) =>
-                        onChange({ ...trigger, path: event.target.value })
-                    }
-                    error={Boolean(errors.path)}
-                    errorText={errors.path}
-                    fullWidth
-                />
-                <PageGuidance page={trigger.path} />
-            </StyledField>
-            <StyledHalfWidth>
-                <Input
-                    label='Delay in milliseconds'
-                    description='Show the survey this long after the condition is met. 0 means immediately.'
-                    type='number'
-                    value={delayMs}
-                    onChange={(event) => setDelayMs(event.target.value)}
-                    fullWidth
-                />
-            </StyledHalfWidth>
-            <StyledHalfWidth>
-                <Input
-                    label='Show after the condition is met this many times'
-                    description="Counted separately in each user's browser. 1 shows the survey the first time; 3 waits until the third time."
-                    type='number'
-                    value={occurrence}
-                    onChange={(event) => setOccurrence(event.target.value)}
-                    fullWidth
-                />
-            </StyledHalfWidth>
-        </StyledCard>
-    );
-};
+const CustomTrigger = ({ trigger, errors, onChange }: CustomTriggerProps) => (
+    <StyledCard>
+        <StyledHalfWidth>
+            <GeneralSelect
+                label='Show the survey when'
+                value={trigger.on}
+                onChange={(on: TriggerCondition['on']) =>
+                    onChange({ ...trigger, on })
+                }
+                options={TRIGGER_OPTIONS}
+                fullWidth
+            />
+        </StyledHalfWidth>
+        <StyledField>
+            <Input
+                label='Page'
+                description='Optional. Leave empty to match every page.'
+                placeholder='/projects/:projectId'
+                value={trigger.path}
+                onChange={(event) =>
+                    onChange({ ...trigger, path: event.target.value })
+                }
+                error={Boolean(errors.path)}
+                errorText={errors.path}
+                fullWidth
+            />
+            <PageGuidance page={trigger.path} />
+        </StyledField>
+        <StyledHalfWidth>
+            <Input
+                label='Delay in milliseconds'
+                description='Show the survey this long after the condition is met. 0 means immediately.'
+                type='number'
+                value={trigger.delayMs}
+                onChange={(event) =>
+                    onChange({ ...trigger, delayMs: event.target.value })
+                }
+                error={Boolean(errors.delayMs)}
+                errorText={errors.delayMs}
+                fullWidth
+            />
+        </StyledHalfWidth>
+        <StyledHalfWidth>
+            <Input
+                label='Show after the condition is met this many times'
+                description="Counted separately in each user's browser. 1 shows the survey the first time; 3 waits until the third time."
+                type='number'
+                value={trigger.onOccurrence}
+                onChange={(event) =>
+                    onChange({
+                        ...trigger,
+                        onOccurrence: event.target.value,
+                    })
+                }
+                error={Boolean(errors.onOccurrence)}
+                errorText={errors.onOccurrence}
+                fullWidth
+            />
+        </StyledHalfWidth>
+    </StyledCard>
+);
 
 interface SurveyTriggerStepProps {
     draft: TriggerDraft;

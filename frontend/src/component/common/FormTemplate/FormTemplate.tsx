@@ -29,14 +29,29 @@ import { apiCommandTrackingProps } from './apiCommandTrackingProps.ts';
 
 export type FormTemplateLayout = 'modal' | 'compact' | 'page';
 
-interface ICreateProps {
+type ModalProps = {
+    layout: 'modal';
+    /**
+     * Make the template as tall as its container instead of its content, so
+     * the content can choose what scrolls. The sidebar scrolls on its own. On
+     * short viewports, such as at high zoom, the template grows with its
+     * content as usual.
+     */
+    fitContainerHeight?: boolean;
+};
+
+type NonModalProps = {
+    layout?: 'page' | 'compact';
+    fitContainerHeight?: never;
+};
+
+type FormTemplateProps = {
     title?: ReactNode;
     description: ReactNode;
     documentationLink?: string;
     documentationIcon?: ReactNode;
     documentationLinkLabel?: string;
     loading?: boolean;
-    layout?: FormTemplateLayout;
     disablePadding?: boolean;
     compactPadding?: boolean;
     showDescription?: boolean;
@@ -53,15 +68,8 @@ interface ICreateProps {
      * link + API command) is rendered.
      */
     sidebar?: ReactNode;
-    /**
-     * Make the template as tall as its container instead of its content, so
-     * the content can choose what scrolls. The sidebar scrolls on its own. On
-     * short viewports, such as at high zoom, the template grows with its
-     * content as usual.
-     */
-    fitContainerHeight?: boolean;
     children?: React.ReactNode;
-}
+} & (ModalProps | NonModalProps);
 
 const StyledContainer = styled('section')(({ theme }) => ({
     borderRadius: theme.spacing(2),
@@ -263,7 +271,7 @@ const StyledDocumentationLink = styled('a')(({ theme }) => ({
     },
 }));
 
-const FormTemplate: React.FC<ICreateProps> = ({
+const FormTemplate: React.FC<FormTemplateProps> = ({
     title,
     description,
     children,

@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { Link } from 'react-router';
 import { Button, styled, Typography } from '@mui/material';
-import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboard';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import useLoading from 'hooks/useLoading';
 import { useEventTracker } from 'hooks/useEventTracker';
@@ -10,6 +9,7 @@ import type { ProjectSchema } from 'openapi';
 import { ProjectCard } from 'component/project/ProjectCard/ProjectCard';
 import { ProjectCreationButton } from 'component/project/ProjectList/ProjectCreationButton/ProjectCreationButton';
 import { loadingData } from 'component/project/ProjectList/loadingData';
+import { useMyProjects } from 'component/project/ProjectList/hooks/useMyProjects';
 import { TablePlaceholder } from 'component/common/Table/TablePlaceholder/TablePlaceholder';
 import type { RemoteData } from './RemoteData.ts';
 
@@ -158,26 +158,22 @@ export const ProjectCardsPanelView = ({
 
 export const ProjectCardsPanel = () => {
     const {
-        personalDashboard,
-        loading: dashboardLoading,
-        error: dashboardError,
-    } = usePersonalDashboard();
-    const {
         projects: allProjects,
         loading: projectsLoading,
         error: projectsError,
     } = useProjects();
     const { trackEvent } = useEventTracker();
 
-    const projectsById = new Map(allProjects.map((p) => [p.id, p]));
-    const myProjects = (personalDashboard?.projects ?? [])
-        .map(({ id }) => projectsById.get(id))
-        .filter((project): project is ProjectSchema => Boolean(project));
+    const { myProjects, profileLoading, profileError } = useMyProjects(
+        allProjects,
+        undefined,
+        'updated',
+    );
 
-    const error = dashboardError ?? projectsError;
+    const error = profileError ?? projectsError;
     const projects: RemoteData<ProjectSchema[]> = error
         ? { state: 'error', error }
-        : dashboardLoading || projectsLoading
+        : profileLoading || projectsLoading
           ? { state: 'loading' }
           : { state: 'success', data: myProjects };
 

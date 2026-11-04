@@ -39,6 +39,7 @@ export const scheduleServices = (
         edgeService,
         apiTokenV2Service,
         transactionalApiTokenV2Service,
+        transactionalFeatureToggleService,
     } = services;
 
     schedulerService.schedule(
@@ -140,9 +141,10 @@ export const scheduleServices = (
     );
 
     schedulerService.schedule(
-        featureToggleService.updatePotentiallyStaleFeatures.bind(
-            featureToggleService,
-        ),
+        () =>
+            transactionalFeatureToggleService.transactional((service) =>
+                service.updatePotentiallyStaleFeatures(),
+            ),
         minutesToMilliseconds(1),
         'updatePotentiallyStaleFeatures',
     );

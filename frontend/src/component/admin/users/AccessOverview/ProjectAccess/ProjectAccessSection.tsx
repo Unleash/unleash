@@ -87,7 +87,10 @@ export const ProjectAccessSection = ({
                         <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
                             Select projects to see permissions
                         </Typography>
-                        <Typography variant='caption' color='text.secondary'>
+                        <Typography
+                            variant='caption'
+                            sx={{ color: 'text.secondary' }}
+                        >
                             Choose the projects you want to look closer at
                         </Typography>
                     </StyledSelectorCardText>
@@ -123,7 +126,10 @@ export const ProjectAccessSection = ({
                         <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
                             Select environments to see what is allowed
                         </Typography>
-                        <Typography variant='caption' color='text.secondary'>
+                        <Typography
+                            variant='caption'
+                            sx={{ color: 'text.secondary' }}
+                        >
                             {environments.length} environment
                             {environments.length !== 1 ? 's' : ''} available
                         </Typography>

@@ -159,8 +159,7 @@ const IntroStep = ({ survey, focusStep }: IntroStepProps) => (
             {survey.description ? (
                 <Typography
                     variant='body2'
-                    color='text.secondary'
-                    sx={{ mt: 1 }}
+                    sx={{ mt: 1, color: 'text.secondary' }}
                 >
                     {survey.description}
                 </Typography>

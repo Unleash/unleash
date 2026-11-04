@@ -81,15 +81,25 @@ const EditHeader: FC<{
     willBeDisabled?: boolean;
 }> = ({ wasDisabled = false, willBeDisabled = false }) => {
     if (wasDisabled && willBeDisabled) {
-        return <Action color='text.secondary'>Editing strategy</Action>;
+        return (
+            <Action sx={{ color: 'text.secondary' }}>Editing strategy</Action>
+        );
     }
 
     if (!wasDisabled && willBeDisabled) {
-        return <Action color='error.onContainer'>Editing strategy</Action>;
+        return (
+            <Action sx={{ color: 'error.onContainer' }}>
+                Editing strategy
+            </Action>
+        );
     }
 
     if (wasDisabled && !willBeDisabled) {
-        return <Action color='success.onContainer'>Editing strategy</Action>;
+        return (
+            <Action sx={{ color: 'success.onContainer' }}>
+                Editing strategy
+            </Action>
+        );
     }
 
     return <Action>Editing strategy</Action>;

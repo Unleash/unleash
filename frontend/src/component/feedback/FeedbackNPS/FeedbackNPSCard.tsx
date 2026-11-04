@@ -48,8 +48,7 @@ export const FeedbackNPSCard = ({
                         </Typography>
                         <Typography
                             variant='body2'
-                            color='text.secondary'
-                            sx={{ mt: 1 }}
+                            sx={{ mt: 1, color: 'text.secondary' }}
                         >
                             {answeredNotNow
                                 ? 'Alright, apologies for the disruption. Have a nice day!'

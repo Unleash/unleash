@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { type CSSProperties, useId } from 'react';
 import {
     styled,
     Accordion,
@@ -7,12 +7,16 @@ import {
     accordionClasses,
     accordionSummaryClasses,
     alpha,
+    Typography,
 } from '@mui/material';
 import type { IConstraint, StrategyFormState } from 'interfaces/strategy';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 import { focusOutline } from 'themes/themeStyles';
 import { useSegmentsMap } from 'hooks/api/getters/useSegments/useSegmentsMap.ts';
-import { formatConstraintText } from 'utils/formatConstraintText';
+import {
+    constraintTextParts,
+    formatConstraintText,
+} from 'utils/formatConstraintText';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { calculateVariantWeight } from 'component/common/util';
 import type { StrategyVariantSchema } from 'openapi';
@@ -20,6 +24,7 @@ import {
     fitContainerHeightSelector,
     formTemplatePinnedFooterMediaQuery,
 } from 'component/common/FormTemplate/FormTemplate.styles';
+import { constraintId } from 'constants/constraintId';
 
 const SummaryIcon = styled(ModeCommentOutlinedIcon)(({ theme }) => ({
     color: theme.palette.primary.main,
@@ -111,6 +116,9 @@ const ShowHideText = styled(({ className }: { className?: string }) => (
     [`.${accordionSummaryClasses.focusVisible} &`]: focusOutline(theme),
 }));
 
+const isConstraintWithValue = (constraint: IConstraint) =>
+    constraint.values?.length || constraint.value;
+
 const useTargetingDescription = ({
     constraints,
     segments,
@@ -119,7 +127,7 @@ const useTargetingDescription = ({
     const { locationSettings } = useLocationSettings();
 
     if (!constraints?.length && !segments?.length)
-        return <strong>everyone in production</strong>;
+        return 'everyone in production';
 
     const segmentText = !segments?.length
         ? 'users'
@@ -132,19 +140,115 @@ const useTargetingDescription = ({
         `whose ${formatConstraintText(constraint, locationSettings)}`;
 
     const constraintText = constraints
-        ?.filter((constraint) => constraint.values?.length || constraint.value)
+        ?.filter(isConstraintWithValue)
         .map(describeConstraint)
         .join(', and ');
-    return (
-        <strong>
-            {segmentText} {constraintText}
-        </strong>
-    );
+
+    return `${segmentText} ${constraintText}`.trim();
 };
 
 const describeRollout = (strategy: StrategyFormState) => {
     return `${strategy.parameters?.rollout ?? 100}%`;
 };
+
+const FormattedRuleValues = ({ values }: { values: string[] }) => {
+    const namedValues = values.slice(0, 3).join(', ');
+
+    const remainingValues = values.length - 3;
+
+    const remainingText =
+        remainingValues > 0 ? (
+            <Typography component='span' color='textSecondary'>
+                +{remainingValues} more
+            </Typography>
+        ) : null;
+
+    return (
+        <>
+            <strong>{namedValues}</strong> {remainingText}
+        </>
+    );
+};
+
+const SegmentRow = ({ segments }: { segments?: number[] }) => {
+    const segmentsMap = useSegmentsMap();
+    if (!segments || segments.length === 0) return null;
+
+    const segmentNames = segments
+        .map((segment) => segmentsMap.get(segment)?.name)
+        .filter((name) => name !== undefined);
+
+    return (
+        <li>
+            the user is part of <FormattedRuleValues values={segmentNames} />
+        </li>
+    );
+};
+
+const RuleList = styled(
+    ({
+        strategy,
+        ...props
+    }: {
+        strategy: StrategyFormState;
+        className?: string;
+    }) => {
+        const { locationSettings } = useLocationSettings();
+        const ruleCount =
+            (strategy.segments?.length ? 1 : 0) +
+            (strategy.constraints?.length ?? 0);
+        return (
+            <ol
+                style={
+                    {
+                        '--marker-width': `${String(ruleCount).length}ch`,
+                    } as CSSProperties
+                }
+                {...props}
+            >
+                <SegmentRow segments={strategy.segments} />
+                {strategy.constraints
+                    ?.filter(isConstraintWithValue)
+                    .map((constraint, index) => {
+                        const { contextName, operatorText, values } =
+                            constraintTextParts(constraint, locationSettings);
+
+                        return (
+                            <li key={constraint[constraintId] || index}>
+                                <strong>{contextName}</strong> {operatorText}{' '}
+                                <FormattedRuleValues values={values} />
+                            </li>
+                        );
+                    })}
+            </ol>
+        );
+    },
+)(({ theme }) => ({
+    '@counter-style rule-number': {
+        system: 'extends decimal',
+        suffix: '""',
+    },
+    '--separator': `1px solid ${theme.palette.divider}`,
+    listStyle: 'rule-number',
+    paddingInlineStart: 'var(--marker-width)',
+    borderBlockEnd: `var(--separator)`,
+    '& > li': {
+        position: 'relative',
+        paddingInlineStart: theme.spacing(3),
+        paddingBlock: theme.spacing(1),
+    },
+    '& > li::before': {
+        content: '""',
+        position: 'absolute',
+        insetBlockStart: 0,
+        insetInline: 'calc(-1 * var(--marker-width)) 0',
+        borderBlockStart: `var(--separator)`,
+    },
+    '& > li::marker': {
+        fontVariantNumeric: 'tabular-nums',
+        color: theme.palette.primary.onContainer,
+    },
+}));
 
 const variantDisplayName = (variant: StrategyVariantSchema) =>
     variant.name || 'unnamed variant';
@@ -234,35 +338,68 @@ const describeVariants = (strategy: StrategyFormState) => {
     );
 };
 
-const StrategyDescription = styled(
-    ({
-        strategy,
-        ...props
-    }: {
-        strategy: StrategyFormState;
-        className?: string;
-    }) => {
-        const targetingDescription = useTargetingDescription(strategy);
-        const rolloutDescription = describeRollout(strategy);
-        const variantDescription = describeVariants(strategy);
-        return (
-            <>
-                <p {...props}>
-                    This strategy targets{' '}
-                    <strong>{targetingDescription}</strong>. Of them,{' '}
-                    <strong>{rolloutDescription}</strong> are exposed to the
-                    flag, and {variantDescription}
-                </p>
-                <VariantList variants={strategy.variants} />
-            </>
-        );
-    },
-)(({ theme }) => ({
+const StrategyDescriptionText = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.primary,
     fontSize: theme.typography.body1.fontSize,
     lineHeight: 1.6,
 }));
 
+const SimpleStrategyDescription = ({
+    strategy,
+}: {
+    strategy: StrategyFormState;
+}) => {
+    const targetingDescription = useTargetingDescription(strategy);
+    const rolloutDescription = describeRollout(strategy);
+    const variantDescription = describeVariants(strategy);
+    return (
+        <>
+            <StrategyDescriptionText>
+                This strategy targets <strong>{targetingDescription}</strong>.
+                Of them, <strong>{rolloutDescription}</strong> are exposed to
+                the flag, and {variantDescription}
+            </StrategyDescriptionText>
+            <VariantList variants={strategy.variants} />
+        </>
+    );
+};
+
+const ComplexStrategyDescription = ({
+    strategy,
+    totalRules,
+}: {
+    strategy: StrategyFormState;
+    totalRules: number;
+}) => {
+    const rolloutDescription = describeRollout(strategy);
+    const variantDescription = describeVariants(strategy);
+    return (
+        <>
+            <StrategyDescriptionText>
+                <strong>{rolloutDescription}</strong> of users who match{' '}
+                <strong>all {totalRules} rules</strong> are exposed to the flag,
+                and {variantDescription}
+            </StrategyDescriptionText>
+            <RuleList strategy={strategy} />
+            <VariantList variants={strategy.variants} />
+        </>
+    );
+};
+
+const StrategyDescription = ({ strategy }: { strategy: StrategyFormState }) => {
+    const totalRules =
+        (strategy.segments?.length ?? 0) + (strategy.constraints?.length ?? 0);
+    if (totalRules < 5) {
+        return <SimpleStrategyDescription strategy={strategy} />;
+    } else {
+        return (
+            <ComplexStrategyDescription
+                strategy={strategy}
+                totalRules={totalRules}
+            />
+        );
+    }
+};
 export const PlainTextDescription = ({
     strategy,
 }: {

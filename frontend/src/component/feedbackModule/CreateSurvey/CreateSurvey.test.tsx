@@ -567,6 +567,22 @@ describe('CreateSurvey', () => {
         });
     });
 
+    it('warns about matching the clicked element by text alone', async () => {
+        setupApi();
+        renderPage();
+        const warning =
+            'Matching by text alone checks every element on the page and can slow it down. Add a CSS selector where you can.';
+
+        await goToClickTrigger();
+        expect(screen.queryByText(warning)).not.toBeInTheDocument();
+
+        await userEvent.type(screen.getByLabelText('Text'), 'Create flag');
+        expect(screen.getByText(warning)).toBeInTheDocument();
+
+        await userEvent.type(screen.getByLabelText('CSS selector'), 'button');
+        expect(screen.queryByText(warning)).not.toBeInTheDocument();
+    });
+
     it('does not move on to the settings with an invalid CSS selector', async () => {
         setupApi();
         renderPage();

@@ -84,6 +84,9 @@ export const validateSelector = (
         : 'This is not a valid CSS selector';
 };
 
+export const matchesByTextOnly = (draft: TriggerDraft): boolean =>
+    draft.selector.trim() === '' && draft.text.trim() !== '';
+
 export const validateTriggerDraft = (draft: TriggerDraft): TriggerErrors =>
     draft.mode === 'always'
         ? {}

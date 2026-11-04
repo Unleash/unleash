@@ -2,6 +2,7 @@ import { useId, useState } from 'react';
 import Cancel from '@mui/icons-material/Cancel';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 import {
+    Alert,
     FormControlLabel,
     Radio,
     RadioGroup,
@@ -13,6 +14,7 @@ import Input from 'component/common/Input/Input';
 import { canMatchPages } from '../triggers/pagePattern.ts';
 import type { TriggerCondition } from '../triggers/surveyTrigger.ts';
 import {
+    matchesByTextOnly,
     matchPage,
     type PageMatch,
     type TriggerDraft,
@@ -152,6 +154,35 @@ const PageGuidance = ({ page }: { page: string }) => (
     </StyledGuidance>
 );
 
+const SelectorGuidance = () => (
+    <StyledGuidance>
+        <p>
+            <strong>Writing a CSS selector</strong>
+        </p>
+        <ul>
+            <li>
+                Prefer attributes you control, such as{' '}
+                <code>[data-testid="create-flag"]</code> or{' '}
+                <code>#create-flag</code>.
+            </li>
+            <li>
+                Avoid generated class names such as <code>.css-1q2w3e</code>.
+                They can change with every release.
+            </li>
+            <li>
+                Keep the selector short and add text to narrow it down, for
+                example <code>button</code> with the text{' '}
+                <code>Create flag</code>.
+            </li>
+            <li>
+                To check it, open the page, right-click the element, choose
+                Inspect and run <code>document.querySelectorAll('…')</code> in
+                the console. It should list only the elements you mean.
+            </li>
+        </ul>
+    </StyledGuidance>
+);
+
 interface CustomTriggerProps {
     trigger: TriggerDraft;
     errors: TriggerErrors;
@@ -211,6 +242,13 @@ const CustomTrigger = ({ trigger, errors, onChange }: CustomTriggerProps) => (
                     }
                     fullWidth
                 />
+                {matchesByTextOnly(trigger) ? (
+                    <Alert severity='warning'>
+                        Matching by text alone checks every element on the page
+                        and can slow it down. Add a CSS selector where you can.
+                    </Alert>
+                ) : null}
+                <SelectorGuidance />
             </StyledField>
         ) : null}
         <StyledHalfWidth>

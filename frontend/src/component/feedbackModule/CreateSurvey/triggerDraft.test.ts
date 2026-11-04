@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
     hasTriggerErrors,
     initialTriggerDraft,
+    matchesByTextOnly,
     matchPage,
     type TriggerDraft,
     validatePage,
@@ -119,6 +120,18 @@ describe('validateSelector', () => {
         expect(validateSelector('button[', 'Create flag')).toBe(
             'This is not a valid CSS selector',
         );
+    });
+});
+
+describe('matchesByTextOnly', () => {
+    it('treats a blank selector as no selector', () => {
+        expect(
+            matchesByTextOnly({
+                ...customDraft,
+                selector: ' ',
+                text: 'Create flag',
+            }),
+        ).toBe(true);
     });
 });
 

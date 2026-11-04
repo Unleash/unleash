@@ -763,6 +763,7 @@ export * from './edgeEnvironmentProjectsListSchemaTokensItem.ts';
 export * from './edgeInstanceDataSchema.ts';
 export * from './edgeInstanceDataSchemaEnricherMetrics.ts';
 export * from './edgeInstanceDataSchemaHosting.ts';
+export * from './edgeInstanceDataSchemaProcessMetrics.ts';
 export * from './edgeInstanceHeartbeat400.ts';
 export * from './edgeInstanceTrafficSchema.ts';
 export * from './edgeInstanceTrafficSchemaAccessDenied.ts';

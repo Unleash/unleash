@@ -7,8 +7,8 @@ import type { ConnectionConsumptionSchema } from './connectionConsumptionSchema.
 import type { EdgeApiKeyRevisionIdSchema } from './edgeApiKeyRevisionIdSchema.ts';
 import type { EdgeInstanceDataSchemaEnricherMetrics } from './edgeInstanceDataSchemaEnricherMetrics.ts';
 import type { EdgeInstanceDataSchemaHosting } from './edgeInstanceDataSchemaHosting.ts';
+import type { EdgeInstanceDataSchemaProcessMetrics } from './edgeInstanceDataSchemaProcessMetrics.ts';
 import type { EdgeInstanceTrafficSchema } from './edgeInstanceTrafficSchema.ts';
-import type { EdgeProcessMetricsSchema } from './edgeProcessMetricsSchema.ts';
 import type { EdgeRequestStatsSchema } from './edgeRequestStatsSchema.ts';
 import type { EdgeUpstreamLatencySchema } from './edgeUpstreamLatencySchema.ts';
 import type { RequestConsumptionSchema } from './requestConsumptionSchema.ts';
@@ -45,8 +45,7 @@ export interface EdgeInstanceDataSchema {
     /** The ID of the Edge process, typically a ULID. Newly generated for each restart of the instance. */
     identifier: string;
     latencyUpstream: EdgeUpstreamLatencySchema;
-    /** @nullable */
-    processMetrics?: EdgeProcessMetricsSchema | null;
+    processMetrics?: EdgeInstanceDataSchemaProcessMetrics;
     /**
      * Which region the Edge instance is running in. Set to AWS_REGION by default (if present).
      * @nullable

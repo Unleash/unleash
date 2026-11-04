@@ -181,7 +181,7 @@ overrides:
   fast-uri: 3.1.8
   form-data: 4.0.6
   glob: ^10.5.0
-  ip-address: 10.7.2
+  ip-address: 10.7.4
   ip: ^2.0.1
   json-schema: ^0.4.0
   json5: ^2.2.2
@@ -297,8 +297,8 @@ importers:
         specifier: ^1.0.2
         version: 1.0.2
       ip-address:
-        specifier: 10.7.2
-        version: 10.7.2
+        specifier: 10.7.4
+        version: 10.7.4
       joi:
         specifier: 18.2.9
         version: 18.2.9
@@ -562,8 +562,8 @@ importers:
         specifier: ^11.11.1
         version: 11.12.0
       ip-address:
-        specifier: 10.7.2
-        version: 10.7.2
+        specifier: 10.7.4
+        version: 10.7.4
       json-2-csv:
         specifier: ^5.5.10
         version: 5.6.0
@@ -4112,8 +4112,8 @@ packages:
     resolution: {integrity: sha512-Ju0Bz/cEia55xDwUWEa8+olFpCiQoypjnQySseKtmjNrnps3P+xfpUmGr90T7yjlVJmOtybRvPXhKMbHr+fWnw==}
     engines: {node: '>= 0.10'}
 
-  ip-address@10.7.2:
-    resolution: {integrity: sha512-7H/2gFSIitxc0hG3nOI1glS8QLo/EHBFFLk8vEUjXY/xu0AdL8jZ9U1IzO2PUm0d2D/ofQcAifb0g6OBkt8U7w==}
+  ip-address@10.7.4:
+    resolution: {integrity: sha512-DWBMKyeM25D70nrIiTkgQth59/G+naKOTep6huF9j+GmeK3DMD60Zvxg5d5qQnz+38AHgou6ean2LECX+lrKDg==}
     engines: {node: '>= 12'}
 
   ipaddr.js@1.9.1:
@@ -9333,7 +9333,7 @@ snapshots:
     dependencies:
       debug: 4.4.3(supports-color@10.2.2)
       express: 4.22.3(supports-color@10.2.2)
-      ip-address: 10.7.2
+      ip-address: 10.7.4
     transitivePeerDependencies:
       - supports-color
 
@@ -9841,7 +9841,7 @@ snapshots:
 
   interpret@2.2.0: {}
 
-  ip-address@10.7.2: {}
+  ip-address@10.7.4: {}
 
   ipaddr.js@1.9.1: {}
 
@@ -11620,7 +11620,7 @@ snapshots:
 
   socks@2.8.9:
     dependencies:
-      ip-address: 10.7.2
+      ip-address: 10.7.4
       smart-buffer: 4.2.0
 
   source-map-js@1.2.1: {}
@@ -12069,7 +12069,7 @@ snapshots:
     dependencies:
       http-proxy-agent: 7.0.2(supports-color@10.2.2)
       https-proxy-agent: 7.0.6(supports-color@10.2.2)
-      ip-address: 10.7.2
+      ip-address: 10.7.4
       launchdarkly-eventsource: 2.2.0
       lru-cache: 11.5.1
       make-fetch-happen: 15.0.6(supports-color@10.2.2)

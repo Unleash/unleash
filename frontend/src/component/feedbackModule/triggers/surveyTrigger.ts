@@ -11,9 +11,12 @@ export type ElementTriggerCondition =
     | ElementAppearTriggerCondition
     | ElementClickTriggerCondition;
 
+export type CustomEventTriggerCondition = { on: 'event'; name: string };
+
 export type TriggerCondition =
     | PageViewTriggerCondition
-    | ElementTriggerCondition;
+    | ElementTriggerCondition
+    | CustomEventTriggerCondition;
 
 export const isElementCondition = (
     on: TriggerCondition['on'],
@@ -48,6 +51,10 @@ const parseCondition = (
             const match = parseElementMatch(raw);
             return match === null ? null : { on: 'click', ...match };
         }
+        case 'event':
+            return typeof raw.name === 'string' && raw.name.trim().length > 0
+                ? { on: 'event', name: raw.name }
+                : null;
         default:
             return null;
     }

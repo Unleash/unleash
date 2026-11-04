@@ -172,6 +172,22 @@ describe('toSurveyJson', () => {
                 onOccurrence: 3,
             },
         ],
+        [
+            'the event named, trimmed',
+            {
+                mode: 'custom',
+                on: 'event',
+                path: ' /projects/:projectId ',
+                eventName: ' flag-created ',
+            },
+            {
+                on: 'event',
+                name: 'flag-created',
+                path: '/projects/:projectId',
+                delayMs: 500,
+                onOccurrence: 3,
+            },
+        ],
     ] as const)('triggers on %s', (_, trigger, expected) => {
         const draft: SurveyDraft = {
             ...draftWith([draftQuestion()]),

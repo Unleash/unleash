@@ -124,6 +124,8 @@ const goToClickTrigger = () => goToCondition('The user clicks an element');
 
 const goToAppearTrigger = () => goToCondition('An element appears on the page');
 
+const goToEventTrigger = () => goToCondition('Your app sends an event');
+
 const goToSettings = async () => {
     await goToTrigger();
     await clickNext();
@@ -615,6 +617,60 @@ describe('CreateSurvey', () => {
         await clickNext();
 
         await screen.findByText('This is not a valid CSS selector');
+        expect(screen.queryByLabelText('Flag name')).not.toBeInTheDocument();
+    });
+
+    it('sends the event entered as the event trigger', async () => {
+        const { addStrategy } = setupApi();
+        renderPage();
+
+        await goToEventTrigger();
+        await userEvent.type(
+            screen.getByLabelText('Event name'),
+            'flag-created',
+        );
+        await clickNext();
+        await submitSurvey();
+
+        await screen.findByText('Survey created');
+        expect(sentSurvey(addStrategy).trigger).toEqual({
+            on: 'event',
+            name: 'flag-created',
+            delayMs: 0,
+            onOccurrence: 1,
+        });
+    });
+
+    it('shows how to send an example event until one is entered', async () => {
+        setupApi();
+        renderPage();
+
+        await goToEventTrigger();
+        expect(
+            screen.getByText(
+                `window.dispatchEvent(new CustomEvent("flag-created"));`,
+            ),
+        ).toBeInTheDocument();
+
+        await userEvent.type(
+            screen.getByLabelText('Event name'),
+            ' survey-ready ',
+        );
+        expect(
+            screen.getByText(
+                `window.dispatchEvent(new CustomEvent("survey-ready"));`,
+            ),
+        ).toBeInTheDocument();
+    });
+
+    it('does not move on to the settings without an event name', async () => {
+        setupApi();
+        renderPage();
+
+        await goToEventTrigger();
+        await clickNext();
+
+        await screen.findByText('Enter an event name');
         expect(screen.queryByLabelText('Flag name')).not.toBeInTheDocument();
     });
 

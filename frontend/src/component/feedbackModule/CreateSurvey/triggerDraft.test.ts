@@ -94,6 +94,30 @@ describe('validateTriggerDraft', () => {
         expect(hasTriggerErrors(errors)).toBe(true);
     });
 
+    it.each([
+        '',
+        ' ',
+    ])('reports an event name of %j on an event trigger', (eventName) => {
+        const errors = validateTriggerDraft({
+            ...customDraft,
+            on: 'event',
+            eventName,
+        });
+
+        expect(errors.eventName).toBe('Enter an event name');
+        expect(hasTriggerErrors(errors)).toBe(true);
+    });
+
+    it('accepts an event trigger with a name', () => {
+        const errors = validateTriggerDraft({
+            ...customDraft,
+            on: 'event',
+            eventName: 'flag-created',
+        });
+
+        expect(hasTriggerErrors(errors)).toBe(false);
+    });
+
     it('ignores the selector on a page trigger', () => {
         const errors = validateTriggerDraft({
             ...customDraft,

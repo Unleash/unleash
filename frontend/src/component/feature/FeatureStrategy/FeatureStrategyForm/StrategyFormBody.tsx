@@ -24,7 +24,7 @@ import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVarian
 import type { ParametersSchema } from 'openapi/index.ts';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { parseParameterNumber } from 'utils/parseParameter.ts';
-import { PlainTextDescription } from './PlainTextDescription.tsx';
+import { PlainTextDescription } from './PlainTextDescription/PlainTextDescription.tsx';
 
 export interface StrategyFormBodyProps<T extends StrategyFormState> {
     strategy: T;

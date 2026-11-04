@@ -14,6 +14,7 @@ const signupData = {
     companyRole: '',
     companyName: '',
     companyIsNA: false,
+    hearAboutUs: '',
     productUpdatesEmailConsent: false,
 };
 

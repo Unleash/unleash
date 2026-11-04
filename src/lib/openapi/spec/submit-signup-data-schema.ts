@@ -12,6 +12,11 @@ export const submitSignupDataSchema = {
     additionalProperties: false,
     properties: {
         ...commonSignupDataProperties,
+        hearAboutUs: {
+            type: 'string',
+            description: 'How the user heard about Unleash.',
+            example: 'Search Engine (Google, Bing, etc.)',
+        },
         password: {
             type: 'string',
             example: 'k!5As3HquUrQ',

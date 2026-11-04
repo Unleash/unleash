@@ -361,10 +361,12 @@ export async function createApp(
     };
 
     if (config.import.file) {
-        await services.importService.importFromFile(
-            config.import.file,
-            config.import.project,
-            config.import.environment,
+        await services.importService.transactional((service) =>
+            service.importFromFile(
+                config.import.file,
+                config.import.project,
+                config.import.environment,
+            ),
         );
     }
 

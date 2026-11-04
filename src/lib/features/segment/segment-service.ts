@@ -347,6 +347,25 @@ export class SegmentService implements ISegmentService {
         );
     }
 
+    async validateProjectCanAccessSegments(
+        projectId: string,
+        segmentIds?: number[],
+    ): Promise<void> {
+        if (segmentIds && segmentIds.length > 0) {
+            const segments = await Promise.all(
+                segmentIds.map((segmentId) => this.get(segmentId)),
+            );
+            const mismatchedSegments = segments.filter(
+                (segment) => segment.project && segment.project !== projectId,
+            );
+            if (mismatchedSegments.length > 0) {
+                throw new BadDataError(
+                    `The segments ${mismatchedSegments.map((s) => `${s.name} with id ${s.id}`).join(',')} does not belong to project "${projectId}"`,
+                );
+            }
+        }
+    }
+
     async validateStrategyBelongsToProjectAndEnvironment({
         strategyId,
         projectId,

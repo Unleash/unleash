@@ -373,6 +373,48 @@ test('should return 403 when strategy does not belong to the given project', asy
         .expect(403);
 });
 
+test('should return 400 when attaching a segment that does not belong to the strategy project', async () => {
+    const strategyProject = 'default';
+    const segmentProject = 'another-project';
+    await db.stores.projectStore.create({
+        id: segmentProject,
+        name: segmentProject,
+    });
+    const foreignSegment = await db.stores.segmentStore.create(
+        {
+            name: randomId(),
+            project: segmentProject,
+            constraints: [],
+            createdAt: new Date(),
+        },
+        { username: 'test' },
+    );
+    const flag = mockFeatureFlag();
+    await createFeatureFlag(app, flag);
+    await addStrategyToFeatureEnv(
+        app,
+        { ...flag.strategies[0] },
+        DEFAULT_ENV,
+        flag.name,
+    );
+    const [feature] = await fetchFeatures();
+    const [strategy] = await fetchFeatureStrategies(feature.name);
+
+    await app.request
+        .post(`${SEGMENTS_BASE_PATH}/strategies`)
+        .set('Content-type', 'application/json')
+        .send({
+            strategyId: strategy.id,
+            segmentIds: [foreignSegment.id],
+            projectId: strategyProject,
+            environmentId: DEFAULT_ENV,
+        })
+        .expect(400);
+
+    const strategySegments = await fetchSegmentsByStrategy(strategy.id);
+    expect(strategySegments).toHaveLength(0);
+});
+
 test('should create segments', async () => {
     await app.createSegment({
         name: 'a',

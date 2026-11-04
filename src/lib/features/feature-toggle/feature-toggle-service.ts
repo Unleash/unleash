@@ -358,29 +358,6 @@ export class FeatureToggleService {
         }
     }
 
-    async validateProjectCanAccessSegments(
-        projectId: string,
-        segmentIds?: number[],
-    ): Promise<void> {
-        if (segmentIds && segmentIds.length > 0) {
-            await Promise.all(
-                segmentIds.map((segmentId) =>
-                    this.segmentService.get(segmentId),
-                ),
-            ).then((segments) => {
-                const mismatchedSegments = segments.filter(
-                    (segment) =>
-                        segment?.project && segment.project !== projectId,
-                );
-                if (mismatchedSegments.length > 0) {
-                    throw new BadDataError(
-                        `The segments ${mismatchedSegments.map((s) => `${s.name} with id ${s.id}`).join(',')} does not belong to project "${projectId}"`,
-                    );
-                }
-            });
-        }
-    }
-
     async validateStrategyLimit(featureEnv: {
         projectId: string;
         environment: string;
@@ -692,7 +669,7 @@ export class FeatureToggleService {
         await this.validateFeatureBelongsToProject(context);
 
         await this.validateStrategyType(strategyConfig.name);
-        await this.validateProjectCanAccessSegments(
+        await this.segmentService.validateProjectCanAccessSegments(
             projectId,
             strategyConfig.segments,
         );
@@ -835,7 +812,7 @@ export class FeatureToggleService {
         }
         this.validateUpdatedProperties(context, existingStrategy);
         await this.validateStrategyType(updates.name);
-        await this.validateProjectCanAccessSegments(
+        await this.segmentService.validateProjectCanAccessSegments(
             projectId,
             updates.segments,
         );

@@ -35,7 +35,7 @@ const useTargetingDescription = ({
     const { locationSettings } = useLocationSettings();
 
     if (!constraints?.length && !segments?.length)
-        return 'everyone in production';
+        return 'everyone in the selected environment';
 
     const segmentText = !segments?.length ? 'users' : segments.join(' + ');
 

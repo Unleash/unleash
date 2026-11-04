@@ -110,17 +110,19 @@ const goToCustomTrigger = async () => {
     );
 };
 
-const goToClickTrigger = async () => {
+const goToCondition = async (condition: string) => {
     await goToCustomTrigger();
     await userEvent.click(
         await screen.findByRole('combobox', { name: 'Show the survey when' }),
     );
     await userEvent.click(
-        await screen.findByRole('option', {
-            name: 'The user clicks an element',
-        }),
+        await screen.findByRole('option', { name: condition }),
     );
 };
+
+const goToClickTrigger = () => goToCondition('The user clicks an element');
+
+const goToAppearTrigger = () => goToCondition('An element appears on the page');
 
 const goToSettings = async () => {
     await goToTrigger();
@@ -581,6 +583,27 @@ describe('CreateSurvey', () => {
 
         await userEvent.type(screen.getByLabelText('CSS selector'), 'button');
         expect(screen.queryByText(warning)).not.toBeInTheDocument();
+    });
+
+    it('sends the element entered as the appear trigger', async () => {
+        const { addStrategy } = setupApi();
+        renderPage();
+
+        await goToAppearTrigger();
+        await userEvent.type(
+            screen.getByLabelText('CSS selector'),
+            '[[role="alert"]',
+        );
+        await userEvent.type(screen.getByLabelText('Text'), 'Flag created');
+        await clickNext();
+        await submitSurvey();
+
+        await screen.findByText('Survey created');
+        expect(sentSurvey(addStrategy).trigger).toMatchObject({
+            on: 'appear',
+            selector: '[role="alert"]',
+            text: 'Flag created',
+        });
     });
 
     it('does not move on to the settings with an invalid CSS selector', async () => {

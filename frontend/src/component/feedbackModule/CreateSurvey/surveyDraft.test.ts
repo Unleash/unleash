@@ -143,6 +143,16 @@ describe('toSurveyJson', () => {
             },
         ],
         [
+            'an element appearing',
+            { mode: 'custom', on: 'appear', selector: '[role="alert"]' },
+            {
+                on: 'appear',
+                selector: '[role="alert"]',
+                delayMs: 500,
+                onOccurrence: 3,
+            },
+        ],
+        [
             'a click on an element matched by selector alone',
             { mode: 'custom', on: 'click', selector: 'button', text: ' ' },
             {

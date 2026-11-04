@@ -3,11 +3,21 @@ import { isValidPagePattern } from './pagePattern.ts';
 
 export type PageViewTriggerCondition = { on: 'page' };
 
+export type ElementAppearTriggerCondition = { on: 'appear' } & ElementMatch;
+
 export type ElementClickTriggerCondition = { on: 'click' } & ElementMatch;
+
+export type ElementTriggerCondition =
+    | ElementAppearTriggerCondition
+    | ElementClickTriggerCondition;
 
 export type TriggerCondition =
     | PageViewTriggerCondition
-    | ElementClickTriggerCondition;
+    | ElementTriggerCondition;
+
+export const isElementCondition = (
+    on: TriggerCondition['on'],
+): on is ElementTriggerCondition['on'] => on === 'appear' || on === 'click';
 
 export type SurveyTrigger = TriggerCondition & {
     path?: string;
@@ -30,6 +40,10 @@ const parseCondition = (
     switch (raw.on) {
         case 'page':
             return { on: 'page' };
+        case 'appear': {
+            const match = parseElementMatch(raw);
+            return match === null ? null : { on: 'appear', ...match };
+        }
         case 'click': {
             const match = parseElementMatch(raw);
             return match === null ? null : { on: 'click', ...match };

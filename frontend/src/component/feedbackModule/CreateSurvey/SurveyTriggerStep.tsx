@@ -12,7 +12,10 @@ import {
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Input from 'component/common/Input/Input';
 import { canMatchPages } from '../triggers/pagePattern.ts';
-import type { TriggerCondition } from '../triggers/surveyTrigger.ts';
+import {
+    isElementCondition,
+    type TriggerCondition,
+} from '../triggers/surveyTrigger.ts';
 import {
     matchesByTextOnly,
     matchPage,
@@ -83,6 +86,7 @@ const StyledMatch = styled('div', {
 
 const TRIGGER_OPTIONS: { key: TriggerCondition['on']; label: string }[] = [
     { key: 'page', label: 'The user opens a page' },
+    { key: 'appear', label: 'An element appears on the page' },
     { key: 'click', label: 'The user clicks an element' },
 ];
 
@@ -217,7 +221,7 @@ const CustomTrigger = ({ trigger, errors, onChange }: CustomTriggerProps) => (
             />
             <PageGuidance page={trigger.path} />
         </StyledField>
-        {trigger.on === 'click' ? (
+        {isElementCondition(trigger.on) ? (
             <StyledField>
                 <Input
                     label='CSS selector'

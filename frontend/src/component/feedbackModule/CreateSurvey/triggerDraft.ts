@@ -4,6 +4,7 @@ import {
 } from '../triggers/elementMatch.ts';
 import { canMatchPages, toPagePattern } from '../triggers/pagePattern.ts';
 import {
+    isElementCondition,
     isValidDelayMs,
     isValidOccurrence,
     type SurveyTrigger,
@@ -94,10 +95,9 @@ export const validateTriggerDraft = (draft: TriggerDraft): TriggerErrors =>
               path: validatePage(draft.path),
               delayMs: validateDelayMs(draft.delayMs),
               onOccurrence: validateOccurrence(draft.onOccurrence),
-              selector:
-                  draft.on === 'click'
-                      ? validateSelector(draft.selector, draft.text)
-                      : undefined,
+              selector: isElementCondition(draft.on)
+                  ? validateSelector(draft.selector, draft.text)
+                  : undefined,
           };
 
 export const hasTriggerErrors = (errors: TriggerErrors): boolean =>
@@ -116,6 +116,8 @@ const toCondition = (draft: TriggerDraft): TriggerCondition => {
     switch (draft.on) {
         case 'page':
             return { on: 'page' };
+        case 'appear':
+            return { on: 'appear', ...toElementMatch(draft) };
         case 'click':
             return { on: 'click', ...toElementMatch(draft) };
     }

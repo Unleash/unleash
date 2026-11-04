@@ -81,10 +81,13 @@ describe('validateTriggerDraft', () => {
         expect(hasTriggerErrors(errors)).toBe(false);
     });
 
-    it('reports a missing selector and text on a click trigger', () => {
+    it.each([
+        'appear',
+        'click',
+    ] as const)('reports a missing selector and text on an %s trigger', (on) => {
         const errors = validateTriggerDraft({
             ...customDraft,
-            on: 'click',
+            on,
         });
 
         expect(errors.selector).toBe('Enter a CSS selector, text or both');

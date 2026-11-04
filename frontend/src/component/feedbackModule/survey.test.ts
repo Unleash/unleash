@@ -304,9 +304,12 @@ describe('parseSurveyPayload', () => {
         });
     });
 
-    it('reads a click trigger with a selector, text and page pattern', () => {
+    it.each([
+        'appear',
+        'click',
+    ])('reads an %s trigger with a selector, text and page pattern', (on) => {
         const trigger = {
-            on: 'click',
+            on,
             selector: '[data-testid="create-flag"]',
             text: 'Create flag',
             path: '/projects/:projectId',
@@ -339,6 +342,7 @@ describe('parseSurveyPayload', () => {
         ['is null', null],
         ['has an unknown condition', { on: 'scroll' }],
         ['clicks without a selector or text', { on: 'click' }],
+        ['appears without a selector or text', { on: 'appear' }],
         ['has no condition', { path: '/projects' }],
         ['has a non-string path', { on: 'page', path: 42 }],
         ['has an invalid path pattern', { on: 'page', path: '/projects/(' }],

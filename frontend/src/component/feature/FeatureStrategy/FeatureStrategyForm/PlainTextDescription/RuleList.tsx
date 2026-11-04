@@ -1,5 +1,5 @@
-import type { CSSProperties } from 'react';
-import { styled, Typography } from '@mui/material';
+import { type CSSProperties, useId, useState } from 'react';
+import { Button, styled, Typography } from '@mui/material';
 import type { IConstraint } from 'interfaces/strategy';
 import { constraintTextParts } from 'utils/formatConstraintText';
 import { useLocationSettings } from 'hooks/useLocationSettings';
@@ -24,15 +24,13 @@ const FormattedRuleValues = ({ values }: { values: string[] }) => {
     );
 };
 
-const SegmentRow = ({ segments }: { segments?: string[] }) => {
-    if (!segments || segments.length === 0) return null;
+const SegmentRow = ({ segments }: { segments: string[] }) => (
+    <li>
+        the user is part of <FormattedRuleValues values={segments} />
+    </li>
+);
 
-    return (
-        <li>
-            the user is part of <FormattedRuleValues values={segments} />
-        </li>
-    );
-};
+const MAX_VISIBLE_RULES = 6;
 
 export const RuleList = styled(
     ({
@@ -45,30 +43,52 @@ export const RuleList = styled(
         className?: string;
     }) => {
         const { locationSettings } = useLocationSettings();
-        const ruleCount =
-            (segments?.length ? 1 : 0) + (constraints?.length ?? 0);
-        return (
-            <ol
-                style={
-                    {
-                        '--marker-width': `${String(ruleCount).length}ch`,
-                    } as CSSProperties
-                }
-                {...props}
-            >
-                <SegmentRow segments={segments} />
-                {constraints?.map((constraint, index) => {
-                    const { contextName, operatorText, values } =
-                        constraintTextParts(constraint, locationSettings);
+        const [showAll, setShowAll] = useState(false);
+        const listId = useId();
 
-                    return (
-                        <li key={constraint[constraintId] || index}>
-                            <strong>{contextName}</strong> {operatorText}{' '}
-                            <FormattedRuleValues values={values} />
-                        </li>
-                    );
-                })}
-            </ol>
+        const rules = [
+            ...(segments?.length
+                ? [<SegmentRow key='segments' segments={segments} />]
+                : []),
+            ...(constraints ?? []).map((constraint, index) => {
+                const { contextName, operatorText, values } =
+                    constraintTextParts(constraint, locationSettings);
+
+                return (
+                    <li key={constraint[constraintId] || index}>
+                        <strong>{contextName}</strong> {operatorText}{' '}
+                        <FormattedRuleValues values={values} />
+                    </li>
+                );
+            }),
+        ];
+
+        return (
+            <>
+                <ol
+                    id={listId}
+                    style={
+                        {
+                            '--marker-width': `${String(rules.length).length}ch`,
+                        } as CSSProperties
+                    }
+                    {...props}
+                >
+                    {showAll ? rules : rules.slice(0, MAX_VISIBLE_RULES)}
+                </ol>
+                {rules.length > MAX_VISIBLE_RULES ? (
+                    <Button
+                        variant='text'
+                        aria-controls={listId}
+                        aria-expanded={showAll}
+                        onClick={() => setShowAll(!showAll)}
+                    >
+                        {showAll
+                            ? 'Show less'
+                            : `Show all ${rules.length} rules`}
+                    </Button>
+                ) : null}
+            </>
         );
     },
 )(({ theme }) => ({

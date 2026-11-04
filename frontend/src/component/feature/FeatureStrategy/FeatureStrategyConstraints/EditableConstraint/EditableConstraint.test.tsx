@@ -74,6 +74,51 @@ describe('EditableConstraint', () => {
         });
     });
 
+    describe('editing an existing single value via its pill', () => {
+        test('clicking the value pill opens the editor prefilled with the current value, and submitting replaces it', async () => {
+            setupApi();
+
+            render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'appName',
+                        operator: 'NUM_EQ',
+                        value: '42',
+                    }}
+                    onDelete={noOp}
+                    onUpdate={noOp}
+                />,
+            );
+
+            const chip = await screen.findByText('42');
+            expect(
+                screen.queryByTestId('CONSTRAINT_VALUES_INPUT'),
+            ).not.toBeInTheDocument();
+
+            fireEvent.click(chip);
+
+            const input = (await screen.findByLabelText(
+                'Constraint Value',
+            )) as HTMLInputElement;
+            expect(input).toHaveValue('42');
+            // the pill is hidden while its value is being edited
+            expect(screen.queryByText('42')).not.toBeInTheDocument();
+
+            await userEvent.clear(input);
+            await userEvent.type(input, '99');
+            fireEvent.keyDown(input, { key: 'Enter' });
+
+            const chipAfterSubmit = await screen.findByText('99');
+            expect(screen.queryByText('42')).not.toBeInTheDocument();
+            expect(
+                screen.queryByTestId('CONSTRAINT_VALUES_INPUT'),
+            ).not.toBeInTheDocument();
+            await waitFor(() => {
+                expect(chipAfterSubmit.closest('.MuiChip-root')).toHaveFocus();
+            });
+        });
+    });
+
     describe('inline value input', () => {
         test('keeps an unsubmitted draft selected after an accidental close, commits it via keyboard "Add" without losing focus, and clears it on operator change', async () => {
             setupApi();

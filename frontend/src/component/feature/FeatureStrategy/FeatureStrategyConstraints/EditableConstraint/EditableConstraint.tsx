@@ -100,6 +100,7 @@ const TopRowInput: FC<{
     localConstraint: EditableConstraintType;
     validator: (...values: string[]) => ConstraintValidationResult;
     addValuesButtonRef: React.RefObject<HTMLButtonElement | null>;
+    valueListRef: React.RefObject<ValueListHandle | null>;
     editingOpen: boolean;
     setEditingOpen: (open: boolean) => void;
     toggleValue: (value: string) => void;
@@ -110,6 +111,7 @@ const TopRowInput: FC<{
     localConstraint,
     validator,
     addValuesButtonRef,
+    valueListRef,
     editingOpen,
     setEditingOpen,
     toggleValue,
@@ -122,9 +124,27 @@ const TopRowInput: FC<{
     useEffect(() => {
         if (!editingOpen && pendingButtonFocus.current) {
             pendingButtonFocus.current = false;
-            addValuesButtonRef.current?.focus();
+            // a cancelled edit returns to the chip it was editing; otherwise
+            // (no value yet, or multi-value) the add button is still there
+            if (
+                !isMultiValueConstraint(localConstraint) &&
+                localConstraint.value
+            ) {
+                valueListRef.current?.focusValue(0);
+            } else {
+                addValuesButtonRef.current?.focus();
+            }
         }
-    }, [editingOpen, addValuesButtonRef]);
+    }, [editingOpen, addValuesButtonRef, valueListRef, localConstraint]);
+
+    const existingValue = !isMultiValueConstraint(localConstraint)
+        ? localConstraint.value
+        : undefined;
+    useEffect(() => {
+        if (editingOpen && existingValue) {
+            setDraftValue(existingValue);
+        }
+    }, [editingOpen, existingValue]);
 
     if (isDateConstraint(localConstraint)) {
         return (
@@ -136,21 +156,32 @@ const TopRowInput: FC<{
         );
     }
 
-    if (!isMultiValueConstraint(localConstraint) && localConstraint.value) {
+    if (
+        !isMultiValueConstraint(localConstraint) &&
+        localConstraint.value &&
+        !editingOpen
+    ) {
         return null;
     }
+
+    const closeEditor = (shouldManageFocus: boolean) => {
+        if (shouldManageFocus) pendingButtonFocus.current = true;
+        setEditingOpen(false);
+    };
 
     return editingOpen ? (
         <AddValueInline
             localConstraint={localConstraint}
             validator={validator}
-            onAddValues={addValues}
+            onAddValues={(value) => {
+                addValues(value);
+                if (!isMultiValueConstraint(localConstraint)) {
+                    closeEditor(false);
+                }
+            }}
             value={draftValue}
             onChange={setDraftValue}
-            onClose={(shouldManageFocus) => {
-                if (shouldManageFocus) pendingButtonFocus.current = true;
-                setEditingOpen(false);
-            }}
+            onClose={closeEditor}
             selectedValues={selectedValues}
             toggleValue={toggleValue}
             legalValueData={legalValueData}
@@ -192,6 +223,9 @@ export const EditableConstraint: FC<Props> = ({
     const hasSingleValue =
         !isMultiValueConstraint(localConstraint) &&
         Boolean(localConstraint.value);
+    const singleValue = !isMultiValueConstraint(localConstraint)
+        ? localConstraint.value
+        : undefined;
 
     const addValues = useCallback(
         (value: string | string[]) => {
@@ -206,10 +240,10 @@ export const EditableConstraint: FC<Props> = ({
     useEffect(() => {
         if (!pendingValueFocus.current) return;
         pendingValueFocus.current = false;
-        if (hasSingleValue) {
+        if (singleValue) {
             valueListRef.current?.focusValue(0);
         }
-    }, [hasSingleValue]);
+    }, [singleValue]);
 
     // The add button may not be mounted yet (e.g. single-value constraints)
     const pendingDeleteFocus = useRef(false);
@@ -277,6 +311,10 @@ export const EditableConstraint: FC<Props> = ({
           }
         : undefined;
 
+    const onEditValue = hasSingleValue ? () => setEditingOpen(true) : undefined;
+    const visibleValues =
+        hasSingleValue && editingOpen ? [] : Array.from(selectedValues);
+
     return (
         <Container>
             <TopRow>
@@ -330,10 +368,11 @@ export const EditableConstraint: FC<Props> = ({
                     </ConstraintOptions>
                     <ValueListWithOverflow
                         ref={valueListRef}
-                        values={Array.from(selectedValues)}
+                        values={visibleValues}
                         removeValue={removeValue}
                         getValueTitle={valueTitle}
                         getExternalFocusTarget={() => null}
+                        onEditValue={onEditValue}
                     >
                         <TopRowInput
                             key={operator}
@@ -341,6 +380,7 @@ export const EditableConstraint: FC<Props> = ({
                             addValues={addValues}
                             validator={validator}
                             addValuesButtonRef={addValuesButtonRef}
+                            valueListRef={valueListRef}
                             editingOpen={editingOpen}
                             setEditingOpen={setEditingOpen}
                             toggleValue={toggleValue}

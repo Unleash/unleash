@@ -81,10 +81,12 @@ const pollEveryInterval: Poll = (callback) => {
 const browserNavigation = (): EventTarget | undefined =>
     'navigation' in window ? navigation : undefined;
 
-export const observeBrowserPage = (
+export type PageObserver = (
     onPageChange: (path: string) => void,
     basePath: string,
-): Unsubscribe =>
+) => Unsubscribe;
+
+export const observeBrowserPage: PageObserver = (onPageChange, basePath) =>
     observePage(onPageChange, {
         basePath,
         getLocation: () => location,

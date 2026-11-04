@@ -21,6 +21,12 @@ import {
     shouldShowSurvey,
 } from './surveyStorage.ts';
 import { submitSurveyResponse } from './submitSurveyResponse.ts';
+import { matchTriggers } from '../triggers/matchTriggers.ts';
+import {
+    observeBrowserPage,
+    type PageObserver,
+} from '../observers/observePage.ts';
+import { basePath as appBasePath } from 'utils/formatPath';
 
 interface FeedbackContextValue {
     survey: Survey | null;
@@ -30,21 +36,37 @@ interface FeedbackContextValue {
 
 const FeedbackContext = createContext<FeedbackContextValue | null>(null);
 
-const findEligibleSurvey = (flags: IToggle[]): Survey | null => {
-    for (const flag of flags.toSorted((a, b) => a.name.localeCompare(b.name))) {
-        const survey = parseSurveyPayload(flag.name, flag.variant?.payload);
-        if (survey && shouldShowSurvey(survey.flagName)) {
-            return survey;
-        }
-    }
-    return null;
-};
+const parseSurveys = (flags: IToggle[]): Survey[] =>
+    flags
+        .toSorted((a, b) => a.name.localeCompare(b.name))
+        .map((flag) => parseSurveyPayload(flag.name, flag.variant?.payload))
+        .filter((survey) => survey !== null);
 
-export const FeedbackProvider = ({ children }: { children: ReactNode }) => {
+const findEligibleSurvey = (flags: IToggle[], path: string): Survey | null =>
+    matchTriggers(path, parseSurveys(flags)).find(({ flagName }) =>
+        shouldShowSurvey(flagName),
+    ) ?? null;
+
+interface FeedbackProviderProps {
+    children: ReactNode;
+    observePage?: PageObserver;
+    basePath?: string;
+}
+
+export const FeedbackProvider = ({
+    children,
+    observePage = observeBrowserPage,
+    basePath = appBasePath,
+}: FeedbackProviderProps) => {
     const flags = useFlags();
     const client = useUnleashClient();
+    const [path, setPath] = useState<string | null>(null);
     const [shownSurvey, setShownSurvey] = useState<Survey | null>(null);
-    const survey = shownSurvey ?? findEligibleSurvey(flags);
+
+    useEffect(() => observePage(setPath, basePath), [observePage, basePath]);
+
+    const survey =
+        shownSurvey ?? (path === null ? null : findEligibleSurvey(flags, path));
     if (survey !== shownSurvey) {
         setShownSurvey(survey);
     }

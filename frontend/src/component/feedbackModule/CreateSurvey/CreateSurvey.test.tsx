@@ -110,6 +110,18 @@ const goToCustomTrigger = async () => {
     );
 };
 
+const goToClickTrigger = async () => {
+    await goToCustomTrigger();
+    await userEvent.click(
+        await screen.findByRole('combobox', { name: 'Show the survey when' }),
+    );
+    await userEvent.click(
+        await screen.findByRole('option', {
+            name: 'The user clicks an element',
+        }),
+    );
+};
+
 const goToSettings = async () => {
     await goToTrigger();
     await clickNext();
@@ -525,6 +537,46 @@ describe('CreateSurvey', () => {
         await clickNext();
 
         expect(await screen.findByLabelText('Flag name')).toBeInTheDocument();
+    });
+
+    it('sends the element entered as the click trigger', async () => {
+        const { addStrategy } = setupApi();
+        renderPage();
+
+        await goToClickTrigger();
+        await userEvent.type(
+            screen.getByLabelText('Page'),
+            '/projects/:projectId',
+        );
+        await userEvent.type(
+            screen.getByLabelText('CSS selector'),
+            '[[data-testid="create-flag"]',
+        );
+        await userEvent.type(screen.getByLabelText('Text'), 'Create flag');
+        await clickNext();
+        await submitSurvey();
+
+        await screen.findByText('Survey created');
+        expect(sentSurvey(addStrategy).trigger).toEqual({
+            on: 'click',
+            selector: '[data-testid="create-flag"]',
+            text: 'Create flag',
+            path: '/projects/:projectId',
+            delayMs: 0,
+            onOccurrence: 1,
+        });
+    });
+
+    it('does not move on to the settings with an invalid CSS selector', async () => {
+        setupApi();
+        renderPage();
+
+        await goToClickTrigger();
+        await userEvent.type(screen.getByLabelText('CSS selector'), 'button[[');
+        await clickNext();
+
+        await screen.findByText('This is not a valid CSS selector');
+        expect(screen.queryByLabelText('Flag name')).not.toBeInTheDocument();
     });
 
     it('does not create the survey in a project the user cannot create flags in', async () => {

@@ -81,6 +81,7 @@ const StyledMatch = styled('div', {
 
 const TRIGGER_OPTIONS: { key: TriggerCondition['on']; label: string }[] = [
     { key: 'page', label: 'The user opens a page' },
+    { key: 'click', label: 'The user clicks an element' },
 ];
 
 const MATCH_MESSAGES: Record<PageMatch, string> = {
@@ -185,6 +186,33 @@ const CustomTrigger = ({ trigger, errors, onChange }: CustomTriggerProps) => (
             />
             <PageGuidance page={trigger.path} />
         </StyledField>
+        {trigger.on === 'click' ? (
+            <StyledField>
+                <Input
+                    label='CSS selector'
+                    placeholder='[data-testid="create-flag"]'
+                    value={trigger.selector}
+                    onChange={(event) =>
+                        onChange({
+                            ...trigger,
+                            selector: event.target.value,
+                        })
+                    }
+                    error={Boolean(errors.selector)}
+                    errorText={errors.selector}
+                    fullWidth
+                />
+                <Input
+                    label='Text'
+                    description='Only matches elements with this text'
+                    value={trigger.text}
+                    onChange={(event) =>
+                        onChange({ ...trigger, text: event.target.value })
+                    }
+                    fullWidth
+                />
+            </StyledField>
+        ) : null}
         <StyledHalfWidth>
             <Input
                 label='Delay in milliseconds'

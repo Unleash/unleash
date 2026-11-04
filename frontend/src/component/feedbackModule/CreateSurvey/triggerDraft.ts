@@ -1,3 +1,7 @@
+import {
+    type ElementMatch,
+    isValidSelector,
+} from '../triggers/elementMatch.ts';
 import { canMatchPages, toPagePattern } from '../triggers/pagePattern.ts';
 import {
     isValidDelayMs,
@@ -15,12 +19,15 @@ export interface TriggerDraft {
     path: string;
     delayMs: string;
     onOccurrence: string;
+    selector: string;
+    text: string;
 }
 
 export interface TriggerErrors {
     path?: string;
     delayMs?: string;
     onOccurrence?: string;
+    selector?: string;
 }
 
 const ALWAYS_TRIGGER: SurveyTrigger = { on: 'page' };
@@ -31,6 +38,8 @@ export const initialTriggerDraft = (): TriggerDraft => ({
     path: '',
     delayMs: '0',
     onOccurrence: '1',
+    selector: '',
+    text: '',
 });
 
 export const validatePage = (page: string): string | undefined => {
@@ -60,6 +69,21 @@ const validateOccurrence = (onOccurrence: string): string | undefined =>
         ? undefined
         : 'Enter a whole number, 1 or more';
 
+export const validateSelector = (
+    selector: string,
+    text: string,
+): string | undefined => {
+    const trimmedSelector = selector.trim();
+    if (trimmedSelector === '') {
+        return text.trim() === ''
+            ? 'Enter a CSS selector, text or both'
+            : undefined;
+    }
+    return isValidSelector(trimmedSelector)
+        ? undefined
+        : 'This is not a valid CSS selector';
+};
+
 export const validateTriggerDraft = (draft: TriggerDraft): TriggerErrors =>
     draft.mode === 'always'
         ? {}
@@ -67,18 +91,41 @@ export const validateTriggerDraft = (draft: TriggerDraft): TriggerErrors =>
               path: validatePage(draft.path),
               delayMs: validateDelayMs(draft.delayMs),
               onOccurrence: validateOccurrence(draft.onOccurrence),
+              selector:
+                  draft.on === 'click'
+                      ? validateSelector(draft.selector, draft.text)
+                      : undefined,
           };
 
 export const hasTriggerErrors = (errors: TriggerErrors): boolean =>
     Object.values(errors).some(Boolean);
 
+const toElementMatch = (draft: TriggerDraft): ElementMatch => {
+    const selector = draft.selector.trim();
+    const text = draft.text.trim();
+    if (selector === '') {
+        return { text };
+    }
+    return text === '' ? { selector } : { selector, text };
+};
+
+const toCondition = (draft: TriggerDraft): TriggerCondition => {
+    switch (draft.on) {
+        case 'page':
+            return { on: 'page' };
+        case 'click':
+            return { on: 'click', ...toElementMatch(draft) };
+    }
+};
+
 export const toTrigger = (draft: TriggerDraft): SurveyTrigger => {
     if (draft.mode === 'always') {
         return ALWAYS_TRIGGER;
     }
+    const condition = toCondition(draft);
     const path = draft.path.trim();
     return {
-        on: draft.on,
+        ...condition,
         ...(path === '' ? {} : { path }),
         delayMs: toNumber(draft.delayMs),
         onOccurrence: toNumber(draft.onOccurrence),

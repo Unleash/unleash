@@ -106,20 +106,17 @@ describe('toSurveyJson', () => {
     it.each([
         [
             'every page when shown whenever enabled',
-            'always',
-            ' /projects ',
+            { mode: 'always', path: ' /projects ' },
             { on: 'page' },
         ],
         [
             'every page when no page is entered',
-            'custom',
-            ' ',
+            { mode: 'custom', path: ' ' },
             { on: 'page', delayMs: 500, onOccurrence: 3 },
         ],
         [
             'the page entered, trimmed',
-            'custom',
-            ' /projects/:projectId ',
+            { mode: 'custom', path: ' /projects/:projectId ' },
             {
                 on: 'page',
                 path: '/projects/:projectId',
@@ -127,15 +124,52 @@ describe('toSurveyJson', () => {
                 onOccurrence: 3,
             },
         ],
-    ] as const)('triggers on %s', (_, mode, path, expected) => {
+        [
+            'a click on an element matched by selector and text, trimmed',
+            {
+                mode: 'custom',
+                on: 'click',
+                path: ' /projects/:projectId ',
+                selector: ' button ',
+                text: ' Create flag ',
+            },
+            {
+                on: 'click',
+                selector: 'button',
+                text: 'Create flag',
+                path: '/projects/:projectId',
+                delayMs: 500,
+                onOccurrence: 3,
+            },
+        ],
+        [
+            'a click on an element matched by selector alone',
+            { mode: 'custom', on: 'click', selector: 'button', text: ' ' },
+            {
+                on: 'click',
+                selector: 'button',
+                delayMs: 500,
+                onOccurrence: 3,
+            },
+        ],
+        [
+            'a click on an element matched by text alone',
+            { mode: 'custom', on: 'click', text: 'Create flag' },
+            {
+                on: 'click',
+                text: 'Create flag',
+                delayMs: 500,
+                onOccurrence: 3,
+            },
+        ],
+    ] as const)('triggers on %s', (_, trigger, expected) => {
         const draft: SurveyDraft = {
             ...draftWith([draftQuestion()]),
             trigger: {
                 ...initialTriggerDraft(),
-                mode,
-                path,
                 delayMs: '500',
                 onOccurrence: '3',
+                ...trigger,
             },
         };
 

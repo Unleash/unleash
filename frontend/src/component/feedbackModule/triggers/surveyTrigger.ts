@@ -1,6 +1,13 @@
+import { type ElementMatch, parseElementMatch } from './elementMatch.ts';
 import { isValidPagePattern } from './pagePattern.ts';
 
-export type TriggerCondition = { on: 'page' };
+export type PageViewTriggerCondition = { on: 'page' };
+
+export type ElementClickTriggerCondition = { on: 'click' } & ElementMatch;
+
+export type TriggerCondition =
+    | PageViewTriggerCondition
+    | ElementClickTriggerCondition;
 
 export type SurveyTrigger = TriggerCondition & {
     path?: string;
@@ -19,7 +26,18 @@ export const isValidOccurrence = (value: unknown): value is number =>
 
 const parseCondition = (
     raw: Record<string, unknown>,
-): TriggerCondition | null => (raw.on === 'page' ? { on: 'page' } : null);
+): TriggerCondition | null => {
+    switch (raw.on) {
+        case 'page':
+            return { on: 'page' };
+        case 'click': {
+            const match = parseElementMatch(raw);
+            return match === null ? null : { on: 'click', ...match };
+        }
+        default:
+            return null;
+    }
+};
 
 export const parseTrigger = (
     raw: Record<string, unknown>,

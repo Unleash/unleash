@@ -5,6 +5,7 @@ import {
     matchPage,
     type TriggerDraft,
     validatePage,
+    validateSelector,
     validateTriggerDraft,
 } from './triggerDraft.ts';
 
@@ -77,6 +78,47 @@ describe('validateTriggerDraft', () => {
         });
 
         expect(hasTriggerErrors(errors)).toBe(false);
+    });
+
+    it('reports a missing selector and text on a click trigger', () => {
+        const errors = validateTriggerDraft({
+            ...customDraft,
+            on: 'click',
+        });
+
+        expect(errors.selector).toBe('Enter a CSS selector, text or both');
+        expect(hasTriggerErrors(errors)).toBe(true);
+    });
+
+    it('ignores the selector on a page trigger', () => {
+        const errors = validateTriggerDraft({
+            ...customDraft,
+            selector: 'button[',
+        });
+
+        expect(hasTriggerErrors(errors)).toBe(false);
+    });
+});
+
+describe('validateSelector', () => {
+    it.each([
+        ['a selector', ' [data-testid="create-flag"] ', ''],
+        ['a selector and text', 'button', 'Create flag'],
+        ['text alone', ' ', 'Create flag'],
+    ])('accepts %s', (_, selector, text) => {
+        expect(validateSelector(selector, text)).toBeUndefined();
+    });
+
+    it('needs a selector or text', () => {
+        expect(validateSelector(' ', ' ')).toBe(
+            'Enter a CSS selector, text or both',
+        );
+    });
+
+    it('rejects a selector the browser cannot parse', () => {
+        expect(validateSelector('button[', 'Create flag')).toBe(
+            'This is not a valid CSS selector',
+        );
     });
 });
 

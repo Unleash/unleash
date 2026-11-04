@@ -304,6 +304,21 @@ describe('parseSurveyPayload', () => {
         });
     });
 
+    it('reads a click trigger with a selector, text and page pattern', () => {
+        const trigger = {
+            on: 'click',
+            selector: '[data-testid="create-flag"]',
+            text: 'Create flag',
+            path: '/projects/:projectId',
+        };
+        const survey = parseSurveyPayload(
+            'survey-x',
+            payload({ ...validSurvey, trigger }),
+        );
+
+        expect(survey?.trigger).toStrictEqual(trigger);
+    });
+
     it('drops unknown trigger fields', () => {
         const survey = parseSurveyPayload(
             'survey-x',
@@ -322,7 +337,8 @@ describe('parseSurveyPayload', () => {
     it.each([
         ['is not an object', 'page'],
         ['is null', null],
-        ['has an unknown condition', { on: 'click' }],
+        ['has an unknown condition', { on: 'scroll' }],
+        ['clicks without a selector or text', { on: 'click' }],
         ['has no condition', { path: '/projects' }],
         ['has a non-string path', { on: 'page', path: 42 }],
         ['has an invalid path pattern', { on: 'page', path: '/projects/(' }],

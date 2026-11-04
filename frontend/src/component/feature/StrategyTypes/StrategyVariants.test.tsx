@@ -6,6 +6,7 @@ import { testServerRoute, testServerSetup } from 'utils/testServer';
 import type { StrategyFormState } from 'interfaces/strategy';
 import type { StrategyVariantSchema } from 'openapi';
 import { StrategyVariants } from './StrategyVariants.tsx';
+import { absorbWeightChange } from './variantWeights.ts';
 
 const server = testServerSetup();
 
@@ -67,4 +68,26 @@ test("moving the handle trades weight between the handle's two neighbours", asyn
     );
 
     expect(pillLabels()).toEqual(['a35%', 'b32%', 'c33%']);
+    expect(await screen.findByLabelText('Weight')).toHaveValue(35);
+});
+
+test('a weight typed in the variant form flows to the pills, the neighbour absorbing the change first', async () => {
+    setupContextApi();
+    render(
+        <VariantsEditor
+            variants={[variant('a', 340), variant('b', 330), variant('c', 330)]}
+        />,
+    );
+
+    fireEvent.change(await screen.findByLabelText('Weight'), {
+        target: { value: '50' },
+    });
+
+    expect(pillLabels()).toEqual(['a50%', 'b17%', 'c33%']);
+});
+
+test('a changed weight trades with its following neighbours first, draining each before the next, and trades leftward only from the last variant', () => {
+    expect(absorbWeightChange([340, 200, 330], 1)).toEqual([340, 200, 460]);
+    expect(absorbWeightChange([950, 100, 100], 0)).toEqual([950, 0, 50]);
+    expect(absorbWeightChange([330, 330, 500], 2)).toEqual([330, 170, 500]);
 });

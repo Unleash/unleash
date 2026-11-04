@@ -13,7 +13,7 @@ import CloudCircle from '@mui/icons-material/CloudCircle';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { VariantForm } from './VariantForm/VariantForm.tsx';
+import { LegacyVariantForm } from './VariantForm/LegacyVariantForm.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from 'component/providers/AccessProvider/permissions';
 import { WeightType } from 'constants/variantTypes';
@@ -134,7 +134,7 @@ interface IEnvironmentVariantModalProps {
     onConfirm: (updatedVariants: VariantSchema[]) => void;
 }
 
-const MemoizedVariantForm = memo(VariantForm);
+const MemoizedVariantForm = memo(LegacyVariantForm);
 
 export const EnvironmentVariantsModal = ({
     environment,

@@ -1,183 +1,132 @@
-import React, { Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Input from 'component/common/Input/Input';
-import { FormField } from 'component/common/FormField/FormField';
-import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import SelectMenu from 'component/common/select';
-import { OverrideConfig } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/VariantOverrides';
-import {
-    Button,
-    FormControlLabel,
-    IconButton,
-    InputAdornment,
-    styled,
-    Switch,
-    Tooltip,
-} from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Button, InputAdornment, styled, Tooltip } from '@mui/material';
 import type { IPayload } from 'interfaces/featureToggle';
-import { useOverrides } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/useOverrides';
-import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext';
 import { WeightType } from 'constants/variantTypes';
 import type { IFeatureVariantEdit } from '../EnvironmentVariantsModal.tsx';
 import Delete from '@mui/icons-material/Delete';
 
-const LazyReactJSONEditor = React.lazy(
-    () => import('component/common/ReactJSONEditor/ReactJSONEditor'),
-);
-
 const StyledVariantForm = styled('div')(({ theme }) => ({
-    position: 'relative',
-    backgroundColor: theme.palette.neutral.container,
     display: 'flex',
     flexDirection: 'column',
-    padding: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-    borderRadius: theme.shape.borderRadiusLarge,
-    overflow: 'hidden',
-}));
-
-const StyledDecoration = styled('div')<{ color?: string }>(
-    ({ theme, color }) => ({
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        height: '100%',
-        background: color || 'transparent',
-        width: theme.spacing(1),
-    }),
-);
-
-const StyledDeleteButtonTooltip = styled(Tooltip)(({ theme }) => ({
-    position: 'absolute',
-    top: theme.spacing(2),
-    right: theme.spacing(2),
-}));
-
-const StyledLabel = styled('p')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-}));
-
-const StyledMarginLabel = styled(StyledLabel)(({ theme }) => ({
-    display: 'flex',
-    color: theme.palette.text.primary,
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(2),
-}));
-
-const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
-    marginBottom: theme.spacing(1),
-    '& > span': {
-        fontSize: theme.fontSizes.smallBody,
-    },
-    [theme.breakpoints.down('sm')]: {
-        marginTop: theme.spacing(1),
-        marginBottom: theme.spacing(1.5),
-    },
-}));
-
-const StyledFieldColumn = styled('div')(({ theme }) => ({
-    flex: 1,
-    minWidth: 0,
     gap: theme.spacing(1.5),
+    padding: theme.spacing(2.5),
+    marginBottom: theme.spacing(3),
+    background: theme.palette.neutral.container,
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadiusLarge,
+}));
+
+const TopRow = styled('div')(({ theme }) => ({
+    display: 'grid',
+    gridAutoFlow: 'column',
+    gridTemplateColumns: 'minmax(0, 1fr)',
+    gridAutoColumns: 'auto',
+    gap: theme.spacing(2),
+    alignItems: 'start',
+    [theme.breakpoints.down('sm')]: {
+        gridAutoFlow: 'row',
+        gridTemplateColumns: '1fr',
+    },
+}));
+
+const Dot = styled('span', {
+    shouldForwardProp: (prop) => prop !== 'color',
+})<{ color?: string }>(({ theme, color }) => ({
+    width: theme.spacing(1.5),
+    height: theme.spacing(1.5),
+    borderRadius: '50%',
+    background: color || 'transparent',
+    marginRight: theme.spacing(1),
+    verticalAlign: 'middle',
+    display: 'inline-block',
+}));
+
+const Field = styled('div')({
     display: 'flex',
-    '& > div': {
+    flexDirection: 'column',
+});
+
+const FieldLabelRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
+    height: theme.spacing(2.5),
+}));
+
+const FieldLabel = styled('label')(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
+    fontWeight: theme.typography.fontWeightBold,
+    color: theme.palette.text.primary,
+}));
+
+const FormatButton = styled(Button)(({ theme }) => ({
+    marginLeft: 'auto',
+    padding: theme.spacing(0, 1),
+    minWidth: 0,
+    fontSize: theme.typography.body2.fontSize,
+}));
+
+const WeightInput = styled(Input)(({ theme }) => ({
+    width: theme.spacing(12),
+    [theme.breakpoints.down('sm')]: {
         width: '100%',
     },
 }));
 
-const StyledInput = styled(Input)({
+const PayloadTypeSelect = styled(SelectMenu)(({ theme }) => ({
+    minWidth: theme.spacing(20),
+}));
+
+const ValueInput = styled(Input)({
     width: '100%',
     '& textarea': {
         resize: 'vertical',
+        fontFamily: 'monospace',
     },
 });
 
-const StyledPercentageContainer = styled('div')(({ theme }) => ({
-    marginLeft: theme.spacing(3),
-    paddingRight: theme.spacing(5),
-    [theme.breakpoints.down('sm')]: {
-        paddingRight: 0,
+const RemoveButton = styled(Button)(({ theme }) => ({
+    alignSelf: 'flex-start',
+    marginLeft: theme.spacing(-0.5),
+    color: theme.palette.text.secondary,
+    fontWeight: theme.typography.fontWeightRegular,
+    '&:hover': {
+        backgroundColor: 'transparent',
+        color: theme.palette.error.main,
     },
-}));
-
-const StyledWeightInput = styled(Input)(({ theme }) => ({
-    width: theme.spacing(24),
-    [theme.breakpoints.down('sm')]: {
-        width: '100%',
-    },
-}));
-
-const StyledNameContainer = styled('div')(({ theme }) => ({
-    marginTop: theme.spacing(3),
-    flexGrow: 1,
-}));
-
-const StyledRow = styled('div')(({ theme }) => ({
-    display: 'flex',
-    rowGap: theme.spacing(1.5),
-    marginBottom: theme.spacing(2),
-    [theme.breakpoints.down('sm')]: {
-        flexDirection: 'column',
-        '& > div, .MuiInputBase-root': {
-            width: '100%',
-        },
-    },
-}));
-
-const StyledTopRow = styled(StyledRow)({
-    alignItems: 'end',
-    justifyContent: 'space-between',
-});
-
-const StyledPayloadRow = styled(StyledRow)(({ theme }) => ({
-    gap: theme.spacing(2),
-    '& > :first-child': {
-        flex: '0 0 auto',
-        width: 'auto',
-    },
-}));
-
-const StyledSelectMenu = styled(SelectMenu)(({ theme }) => ({
-    [theme.breakpoints.up('sm')]: {
-        minWidth: theme.spacing(20),
-    },
-}));
-
-const StyledAddOverrideButton = styled(Button)(({ theme }) => ({
-    marginTop: theme.spacing(-1),
-    marginLeft: theme.spacing(-1),
 }));
 
 const payloadOptions = [
     { key: 'string', label: 'string' },
-    { key: 'json', label: 'json' },
-    { key: 'csv', label: 'csv' },
+    { key: 'json', label: 'JSON' },
+    { key: 'csv', label: 'CSV' },
     { key: 'number', label: 'number' },
 ];
+
+const payloadPlaceholders: Record<string, string> = {
+    json: '{"cta" : "Start free trial"}',
+};
 
 const EMPTY_PAYLOAD = { type: 'string' as const, value: '' };
 
 enum ErrorField {
     NAME = 'name',
-    PERCENTAGE = 'percentage',
     PAYLOAD = 'payload',
-    OTHER = 'other',
 }
 
 interface IVariantFormErrors {
     [ErrorField.NAME]?: string;
-    [ErrorField.PERCENTAGE]?: string;
     [ErrorField.PAYLOAD]?: string;
-    [ErrorField.OTHER]?: string;
 }
 
 interface IVariantFormProps {
     variant: IFeatureVariantEdit;
     variants: IFeatureVariantEdit[];
     updateVariant: (updatedVariant: IFeatureVariantEdit) => void;
+    changeWeight: (weight: number) => void;
     removeVariant: (variantId: string) => void;
-    error?: string;
-    disableOverrides?: boolean;
     decorationColor?: string;
     weightsError?: boolean;
 }
@@ -186,25 +135,16 @@ export const VariantForm = ({
     variant,
     variants,
     updateVariant,
+    changeWeight,
     removeVariant,
-    error,
-    disableOverrides = false,
     decorationColor,
     weightsError,
 }: IVariantFormProps) => {
     const [name, setName] = useState(variant.name);
-    const [customPercentage, setCustomPercentage] = useState(
-        variant.weightType === WeightType.FIX,
-    );
     const [percentage, setPercentage] = useState(String(variant.weight / 10));
     const [payload, setPayload] = useState<IPayload>(
         variant.payload || EMPTY_PAYLOAD,
     );
-    const [overrides, overridesDispatch] = useOverrides(
-        'overrides' in variant ? variant.overrides || [] : [],
-    );
-
-    const { context } = useAssignableUnleashContext();
 
     const [errors, setErrors] = useState<IVariantFormErrors>({});
 
@@ -216,15 +156,8 @@ export const VariantForm = ({
         setErrors((errors) => ({ ...errors, [field]: error }));
     };
 
-    useEffect(() => {
-        clearError(ErrorField.PERCENTAGE);
-        if (error?.includes('%')) {
-            setError(ErrorField.PERCENTAGE, 'Total weight must equal 100%');
-        }
-    }, [error]);
-
     const editing = !variant.new;
-    const customPercentageVisible =
+    const weightInputVisible =
         variants.filter(
             ({ id, weightType }) =>
                 id !== variant.id && weightType === WeightType.VARIABLE,
@@ -262,23 +195,17 @@ export const VariantForm = ({
         if (percentage === '' || isValidPercentage(percentage)) {
             setPercentage(percentage);
         }
+        if (isValidPercentage(percentage)) {
+            changeWeight(Number(percentage) * 10);
+        }
     };
 
     const validatePayload = (payload: IPayload) => {
         if (!isValidPayload(payload)) {
             setError(
                 ErrorField.PAYLOAD,
-                payload.type === 'json' ? 'Invalid json' : 'Invalid number',
+                payload.type === 'json' ? 'Invalid JSON' : 'Invalid number',
             );
-        }
-    };
-
-    const onAddOverride = () => {
-        if (context.length > 0) {
-            overridesDispatch({
-                type: 'ADD',
-                payload: { contextName: context[0].name, values: [] },
-            });
         }
     };
 
@@ -287,7 +214,6 @@ export const VariantForm = ({
         editing ||
         !variants.some((variant) => variant.name === name && variant.id !== id);
     const isValidPercentage = (percentage: string) => {
-        if (!customPercentage) return true;
         if (percentage === '') return false;
         if (percentage.match(/\.[0-9]{2,}$/)) return false;
 
@@ -296,7 +222,7 @@ export const VariantForm = ({
     };
     const isValidPayload = (payload: IPayload): boolean => {
         try {
-            if (payload.type === 'json') {
+            if (payload.type === 'json' && payload.value.trim() !== '') {
                 JSON.parse(payload.value);
             }
             if (payload.type === 'number') {
@@ -320,12 +246,25 @@ export const VariantForm = ({
         }
     };
 
+    const formatJsonPayload = () => {
+        try {
+            const formatted = JSON.stringify(
+                JSON.parse(payload.value),
+                null,
+                2,
+            );
+            clearError(ErrorField.PAYLOAD);
+            setPayload((payload) => ({ ...payload, value: formatted }));
+        } catch {
+            setError(ErrorField.PAYLOAD, 'Invalid JSON');
+        }
+    };
+
     useEffect(() => {
         const newVariant: IFeatureVariantEdit = {
             ...variant,
             name,
-            weight: Number(customPercentage ? percentage : 100) * 10,
-            weightType: customPercentage ? WeightType.FIX : WeightType.VARIABLE,
+            weight: variant.weight,
             stickiness:
                 variants?.length > 0 ? variants[0].stickiness : 'default',
             payload: payload.value ? payload : undefined,
@@ -333,122 +272,73 @@ export const VariantForm = ({
                 isNameNotEmpty(name) &&
                 isNameUnique(name, variant.id) &&
                 isValidPercentage(percentage) &&
-                isValidPayload(payload) &&
-                !error,
+                isValidPayload(payload),
         };
-        if (!disableOverrides) {
-            newVariant.overrides = overrides
-                .map((o) => ({
-                    contextName: o.contextName,
-                    values: o.values,
-                }))
-                .filter((o) => o.values && o.values.length > 0);
-        }
         updateVariant(newVariant);
-    }, [name, customPercentage, percentage, payload, overrides]);
+    }, [name, percentage, payload]);
 
     useEffect(() => {
-        if (!customPercentage) {
-            setPercentage(String(variant.weight / 10));
-        }
+        setPercentage(String(variant.weight / 10));
     }, [variant.weight]);
 
-    const percentageError =
-        errors?.percentage || weightsError
-            ? 'Total weight may not exceed 100%'
-            : '';
+    const weightError = weightsError ? 'Total weight may not exceed 100%' : '';
+
+    const weightInputId = `variant-weight-input-${variant.id}`;
+    const valueInputId = `variant-payload-value-${variant.id}`;
+    const valueError = errors.payload ?? getJsonPayloadError(payload);
 
     return (
         <StyledVariantForm data-testid='VARIANT'>
-            <StyledDecoration color={decorationColor} />
-            <StyledDeleteButtonTooltip
-                arrow
-                title={
-                    isProtectedVariant(variant)
-                        ? 'You need to have at least one variable variant'
-                        : 'Delete variant'
-                }
-            >
-                <div>
-                    <IconButton
-                        data-testid={`VARIANT_DELETE_BUTTON_${variant.name}`}
-                        onClick={() => removeVariant(variant.id)}
-                        disabled={isProtectedVariant(variant)}
-                    >
-                        <Delete />
-                    </IconButton>
-                </div>
-            </StyledDeleteButtonTooltip>
-            <StyledTopRow>
-                <StyledNameContainer>
-                    <StyledInput
-                        id={`variant-name-input-${variant.id}`}
-                        data-testid='VARIANT_NAME_INPUT'
-                        label='Variant name'
-                        description='This will be used to identify the variant in your code'
-                        error={Boolean(errors.name)}
-                        errorText={errors.name}
-                        value={name}
-                        onChange={(e) => onSetName(e.target.value)}
-                        disabled={editing}
-                        required
-                    />
-                </StyledNameContainer>
-                <ConditionallyRender
-                    condition={customPercentageVisible}
-                    show={
-                        <StyledPercentageContainer>
-                            <StyledFormControlLabel
-                                label='Custom percentage'
-                                control={
-                                    <Switch
-                                        data-testid='VARIANT_WEIGHT_CHECK'
-                                        checked={customPercentage}
-                                        onChange={(e) =>
-                                            setCustomPercentage(
-                                                e.target.checked,
-                                            )
-                                        }
-                                    />
-                                }
-                            />
-                            <StyledWeightInput
-                                data-testid='VARIANT_WEIGHT_INPUT'
-                                type='number'
-                                label='Variant weight'
-                                error={Boolean(percentageError)}
-                                errorText={percentageError}
-                                value={percentage}
-                                onChange={(e) =>
-                                    onSetPercentage(e.target.value)
-                                }
-                                required={customPercentage}
-                                disabled={!customPercentage}
-                                aria-valuemin={0}
-                                aria-valuemax={100}
-                                slotProps={{
-                                    input: {
-                                        endAdornment: (
-                                            <InputAdornment position='end'>
-                                                %
-                                            </InputAdornment>
-                                        ),
-                                    },
-                                }}
-                            />
-                        </StyledPercentageContainer>
+            <TopRow>
+                <Input
+                    id={`variant-name-input-${variant.id}`}
+                    data-testid='VARIANT_NAME_INPUT'
+                    label={
+                        <>
+                            <Dot color={decorationColor} aria-hidden />
+                            Variant name
+                        </>
                     }
+                    fullWidth
+                    error={Boolean(errors.name)}
+                    errorText={errors.name}
+                    value={name}
+                    onChange={(e) => onSetName(e.target.value)}
+                    disabled={editing}
+                    required
                 />
-            </StyledTopRow>
-            <StyledMarginLabel>
-                Payload
-                <HelpIcon tooltip='Passed along with the the variant object.' />
-            </StyledMarginLabel>
-            <StyledPayloadRow>
-                <StyledSelectMenu
+                {weightInputVisible ? (
+                    <Field>
+                        <FieldLabelRow>
+                            <FieldLabel htmlFor={weightInputId}>
+                                Weight
+                            </FieldLabel>
+                        </FieldLabelRow>
+                        <WeightInput
+                            id={weightInputId}
+                            data-testid='VARIANT_WEIGHT_INPUT'
+                            type='number'
+                            label=''
+                            error={Boolean(weightError)}
+                            errorText={weightError}
+                            value={percentage}
+                            onChange={(e) => onSetPercentage(e.target.value)}
+                            slotProps={{
+                                input: {
+                                    endAdornment: (
+                                        <InputAdornment position='end'>
+                                            %
+                                        </InputAdornment>
+                                    ),
+                                },
+                            }}
+                        />
+                    </Field>
+                ) : null}
+                <PayloadTypeSelect
                     id='variant-payload-type'
                     name='type'
-                    label='Type'
+                    label='Payload type'
                     value={payload.type}
                     options={payloadOptions}
                     onChange={(e) => {
@@ -459,94 +349,60 @@ export const VariantForm = ({
                         }));
                     }}
                 />
-                <StyledFieldColumn>
-                    <ConditionallyRender
-                        condition={payload.type === 'json'}
-                        show={
-                            <FormField label='Value'>
-                                <div>
-                                    <Suspense fallback={null}>
-                                        <LazyReactJSONEditor
-                                            content={{ text: payload.value }}
-                                            onChange={(content) =>
-                                                setPayload((payload) => {
-                                                    clearError(
-                                                        ErrorField.PAYLOAD,
-                                                    );
-                                                    return {
-                                                        ...payload,
-                                                        value:
-                                                            'json' in content
-                                                                ? JSON.stringify(
-                                                                      content.json,
-                                                                  ) || ''
-                                                                : content.text,
-                                                    };
-                                                })
-                                            }
-                                            onBlur={() =>
-                                                validatePayload(payload)
-                                            }
-                                            validationError={getJsonPayloadError(
-                                                payload,
-                                            )}
-                                        />
-                                    </Suspense>
-                                </div>
-                            </FormField>
-                        }
-                        elseShow={
-                            <StyledInput
-                                id='variant-payload-value'
-                                name='variant-payload-value'
-                                label='Value'
-                                multiline
-                                minRows={payload.type === 'csv' ? 4 : 1}
-                                maxRows={14}
-                                // Override the theme's multiline min-height on purpose, as these should look
-                                // like single line fields to begin with before turning into a multi-line input.
-                                slotProps={{
-                                    htmlInput: { style: { minHeight: 0 } },
-                                }}
-                                value={payload.value}
-                                onChange={(e) => {
-                                    clearError(ErrorField.PAYLOAD);
-                                    setPayload((payload) => ({
-                                        ...payload,
-                                        value: e.target.value,
-                                    }));
-                                }}
-                                placeholder={''}
-                                onBlur={() => validatePayload(payload)}
-                                error={Boolean(errors.payload)}
-                                errorText={errors.payload}
-                            />
-                        }
-                    />
-                </StyledFieldColumn>
-            </StyledPayloadRow>
-            {!disableOverrides ? (
-                <>
-                    <StyledMarginLabel>
-                        Overrides
-                        <HelpIcon tooltip='Here you can specify which users should get this variant.' />
-                    </StyledMarginLabel>
-                    <OverrideConfig
-                        overrides={overrides}
-                        overridesDispatch={overridesDispatch}
-                    />
-                    <div>
-                        <StyledAddOverrideButton
-                            onClick={onAddOverride}
+            </TopRow>
+            <Field>
+                <FieldLabelRow>
+                    <FieldLabel htmlFor={valueInputId}>Value</FieldLabel>
+                    {payload.type === 'json' ? (
+                        <FormatButton
                             variant='text'
-                            color='primary'
-                            data-testid='VARIANT_ADD_OVERRIDE_BUTTON'
+                            size='small'
+                            onClick={formatJsonPayload}
                         >
-                            Add override
-                        </StyledAddOverrideButton>
-                    </div>
-                </>
-            ) : null}
+                            Format
+                        </FormatButton>
+                    ) : null}
+                </FieldLabelRow>
+                <ValueInput
+                    id={valueInputId}
+                    label=''
+                    multiline
+                    minRows={4}
+                    maxRows={14}
+                    value={payload.value}
+                    onChange={(e) => {
+                        clearError(ErrorField.PAYLOAD);
+                        setPayload((payload) => ({
+                            ...payload,
+                            value: e.target.value,
+                        }));
+                    }}
+                    placeholder={payloadPlaceholders[payload.type] ?? ''}
+                    onBlur={() => validatePayload(payload)}
+                    error={Boolean(valueError)}
+                    errorText={valueError}
+                />
+            </Field>
+            <Tooltip
+                arrow
+                title={
+                    isProtectedVariant(variant)
+                        ? 'You need to have at least one variable variant'
+                        : ''
+                }
+            >
+                <span>
+                    <RemoveButton
+                        variant='text'
+                        startIcon={<Delete />}
+                        data-testid={`VARIANT_DELETE_BUTTON_${variant.name}`}
+                        onClick={() => removeVariant(variant.id)}
+                        disabled={isProtectedVariant(variant)}
+                    >
+                        Remove variant
+                    </RemoveButton>
+                </span>
+            </Tooltip>
         </StyledVariantForm>
     );
 };

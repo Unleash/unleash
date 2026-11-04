@@ -10,7 +10,7 @@ import { useEventTracker } from 'hooks/useEventTracker';
 import Add from '@mui/icons-material/Add';
 import { VariantPill } from './VariantPill/VariantPill.tsx';
 import { VariantsWeightBar } from './VariantsWeightBar/VariantsWeightBar.tsx';
-import { splitWeightsEvenly } from './variantWeights.ts';
+import { absorbWeightChange, splitWeightsEvenly } from './variantWeights.ts';
 
 const EmptyStateDescription = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -100,6 +100,24 @@ export const StrategyVariants = <T extends StrategyFormState>({
                     : prevVariant,
             ),
         );
+    };
+
+    const changeVariantWeight = (weight: number, id: string) => {
+        setVariantsEdit((prevVariants) => {
+            const changedIndex = prevVariants.findIndex(
+                (variant) => variant.id === id,
+            );
+            const nextWeights = absorbWeightChange(
+                prevVariants.map((variant, index) =>
+                    index === changedIndex ? weight : variant.weight,
+                ),
+                changedIndex,
+            );
+            return prevVariants.map((variant, index) => ({
+                ...variant,
+                weight: nextWeights[index],
+            }));
+        });
     };
 
     const addVariant = () => {
@@ -228,10 +246,12 @@ export const StrategyVariants = <T extends StrategyFormState>({
             </PillRow>
 
             <VariantForm
-                disableOverrides={true}
                 key={selectedVariant.id}
                 variant={selectedVariant}
                 variants={variantsEdit}
+                changeWeight={(weight) =>
+                    changeVariantWeight(weight, selectedVariant.id)
+                }
                 updateVariant={(updatedVariant) =>
                     updateVariant(updatedVariant, selectedVariant.id)
                 }

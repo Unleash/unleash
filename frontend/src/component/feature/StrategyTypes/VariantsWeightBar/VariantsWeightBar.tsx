@@ -4,8 +4,6 @@ import DragIndicator from '@mui/icons-material/DragIndicator';
 import { focusOutline } from 'themes/themeStyles';
 import { TOTAL_WEIGHT, weightsFromSplitPositions } from '../variantWeights.ts';
 
-const MIN_SEGMENT_FLEX = 40;
-
 const cumulativeWeights = (weights: number[]) =>
     weights.map((_, index) =>
         weights.slice(0, index + 1).reduce((sum, weight) => sum + weight, 0),
@@ -39,6 +37,7 @@ const Segment = styled('div', {
     justifyContent: 'center',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
+    minWidth: theme.spacing(0.5),
     background: color,
     color: theme.palette.text.primary,
     fontSize: theme.typography.caption.fontSize,
@@ -116,7 +115,7 @@ export const VariantsWeightBar = ({
                         key={variant.id}
                         color={variant.color}
                         style={{
-                            flex: `${Math.max(weights[index], MIN_SEGMENT_FLEX)} 0 0`,
+                            flex: `${weights[index]} 0 0`,
                         }}
                     >
                         {weights[index] / 10}%
@@ -130,7 +129,6 @@ export const VariantsWeightBar = ({
                     max={TOTAL_WEIGHT}
                     step={10}
                     track={false}
-                    disableSwap
                     slots={{ thumb: GripThumb }}
                     slotProps={{ rail: { style: { display: 'none' } } }}
                     getAriaLabel={(index) =>

@@ -11,6 +11,40 @@ export const weightsFromSplitPositions = (
     return segmentStarts.map((start, index) => segmentEnds[index] - start);
 };
 
+export const absorbWeightChange = (
+    weights: number[],
+    changedIndex: number,
+): number[] => {
+    const indexesAfter = weights
+        .map((_, index) => index)
+        .slice(changedIndex + 1);
+    const indexesBefore = weights
+        .map((_, index) => index)
+        .slice(0, changedIndex)
+        .reverse();
+    const absorberIndexes = [...indexesAfter, ...indexesBefore];
+
+    const currentTotal = weights.reduce((sum, weight) => sum + weight, 0);
+    const excess = currentTotal - TOTAL_WEIGHT;
+    const nextWeights = [...weights];
+
+    if (excess <= 0) {
+        nextWeights[absorberIndexes[0]] += -excess;
+        return nextWeights;
+    }
+
+    let leftToTake = excess;
+    for (const index of absorberIndexes) {
+        const taken = Math.min(leftToTake, nextWeights[index]);
+        nextWeights[index] -= taken;
+        leftToTake -= taken;
+        if (leftToTake === 0) {
+            break;
+        }
+    }
+    return nextWeights;
+};
+
 const distributeWholeParts = (count: number): number[] => {
     const total = TOTAL_WEIGHT / PERCENT;
     const base = Math.floor(total / count);

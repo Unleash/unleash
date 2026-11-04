@@ -5,7 +5,11 @@ export const rewriteHTML = (
     uiFlags?: string,
     unleashToken?: string,
 ): string => {
-    let result = input;
+    // Rewrite asset paths before injecting configuration that may contain /static.
+    let result = input.replace(
+        /\/static/gi,
+        `${cdnPrefix || rewriteValue}/static`,
+    );
     result = result.replace(/::baseUriPath::/gi, rewriteValue);
     result = result.replace(/::cdnPrefix::/gi, cdnPrefix || '');
 
@@ -15,11 +19,6 @@ export const rewriteHTML = (
     result = result.replace(/::uiFlags::/gi, uiFlags || '{}');
 
     result = result.replace(/::unleashToken::/gi, unleashToken || '');
-
-    result = result.replace(
-        /\/static/gi,
-        `${cdnPrefix || rewriteValue}/static`,
-    );
 
     return result;
 };

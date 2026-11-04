@@ -112,7 +112,7 @@
     "lodash.omit": "4.18.0",
     "millify": "^6.1.0",
     "msw": "2.15.0",
-    "orval": "^8.22.0",
+    "orval": "8.38.0",
     "pkginfo": "0.4.1",
     "prop-types": "15.8.1",
     "react": "^19.0.0",

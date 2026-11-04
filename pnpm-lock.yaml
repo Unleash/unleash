@@ -778,7 +778,7 @@ importers:
         specifier: 2.15.0
         version: 2.15.0(@types/node@22.20.4)(typescript@7.0.2)
       orval:
-        specifier: ^8.22.0
+        specifier: 8.38.0
         version: 8.38.0(@faker-js/faker@10.6.0)(msw@2.15.0(@types/node@22.20.4)(typescript@7.0.2))(swr@2.5.1(react@19.2.8))(typedoc-plugin-markdown@4.13.0(typedoc@0.28.20(typescript@7.0.2)))(typedoc@0.28.20(typescript@7.0.2))(typescript@7.0.2)(zod@4.6.5)
       pkginfo:
         specifier: 0.4.1

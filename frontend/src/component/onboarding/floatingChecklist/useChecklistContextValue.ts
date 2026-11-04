@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash.ts';
 import { getProjectOnboardingStep } from 'utils/getProjectOnboardingStep.ts';
@@ -34,6 +36,8 @@ export interface FloatingOnboardingChecklistContextValue {
 export const useChecklistContextValue =
     (): FloatingOnboardingChecklistContextValue | null => {
         const visibility = useOnboardingChecklistVisibility();
+        const dashboardV2 = useUiFlag('dashboardV2');
+        const { loading: configLoading } = useUiConfig();
         const { state, update, markCompleted } =
             useFloatingOnboardingChecklistState();
         const [openRequestCounter, setOpenRequestCounter] = useState(0);
@@ -43,7 +47,7 @@ export const useChecklistContextValue =
         const splashDismissed = Boolean(
             splash?.[ONBOARDING_CHECKLIST_SPLASH_ID],
         );
-        const dismissed = state.dismissed ?? splashDismissed;
+        const dismissed = state.dismissed ?? (splashDismissed || dashboardV2);
 
         const {
             project,
@@ -73,7 +77,7 @@ export const useChecklistContextValue =
         const totalSteps = visibleSteps.length;
         const completedCount = visibleSteps.filter((key) => done[key]).length;
 
-        if (visibility === 'hidden') return null;
+        if (visibility === 'hidden' || configLoading) return null;
         if (visibility === 'visible' && (projectError || loading)) return null;
 
         return {

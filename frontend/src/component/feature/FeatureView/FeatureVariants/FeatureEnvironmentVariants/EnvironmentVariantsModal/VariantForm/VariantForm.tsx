@@ -1,11 +1,21 @@
-import { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import Input from 'component/common/Input/Input';
 import SelectMenu from 'component/common/select';
-import { Button, InputAdornment, styled, Tooltip } from '@mui/material';
+import {
+    Button,
+    type ButtonProps,
+    InputAdornment,
+    styled,
+    Tooltip,
+} from '@mui/material';
 import type { IPayload } from 'interfaces/featureToggle';
 import { WeightType } from 'constants/variantTypes';
 import type { IFeatureVariantEdit } from '../EnvironmentVariantsModal.tsx';
 import Delete from '@mui/icons-material/Delete';
+
+const LazyReactJSONEditor = React.lazy(
+    () => import('component/common/ReactJSONEditor/ReactJSONEditor'),
+);
 
 const StyledVariantForm = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -61,12 +71,15 @@ const FieldLabel = styled('label')(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
 
-const FormatButton = styled(Button)(({ theme }) => ({
-    marginLeft: 'auto',
-    padding: theme.spacing(0, 1),
-    minWidth: 0,
-    fontSize: theme.typography.body2.fontSize,
-}));
+const formatButtonProps: ButtonProps = {
+    size: 'small',
+    startIcon: null,
+    sx: (theme) => ({
+        padding: theme.spacing(0, 1),
+        minWidth: 0,
+        fontSize: theme.typography.body2.fontSize,
+    }),
+};
 
 const WeightInput = styled(Input)(({ theme }) => ({
     width: theme.spacing(12),
@@ -104,10 +117,6 @@ const payloadOptions = [
     { key: 'csv', label: 'CSV' },
     { key: 'number', label: 'number' },
 ];
-
-const payloadPlaceholders: Record<string, string> = {
-    json: '{"cta" : "Start free trial"}',
-};
 
 const EMPTY_PAYLOAD = { type: 'string' as const, value: '' };
 
@@ -233,33 +242,6 @@ export const VariantForm = ({
             return false;
         }
     };
-    const getJsonPayloadError = (payload: IPayload): string | undefined => {
-        if (payload.type !== 'json' || payload.value.trim() === '') {
-            return undefined;
-        }
-
-        try {
-            JSON.parse(payload.value);
-            return undefined;
-        } catch (error) {
-            return error instanceof Error ? error.message : 'Invalid JSON';
-        }
-    };
-
-    const formatJsonPayload = () => {
-        try {
-            const formatted = JSON.stringify(
-                JSON.parse(payload.value),
-                null,
-                2,
-            );
-            clearError(ErrorField.PAYLOAD);
-            setPayload((payload) => ({ ...payload, value: formatted }));
-        } catch {
-            setError(ErrorField.PAYLOAD, 'Invalid JSON');
-        }
-    };
-
     useEffect(() => {
         const newVariant: IFeatureVariantEdit = {
             ...variant,
@@ -285,7 +267,6 @@ export const VariantForm = ({
 
     const weightInputId = `variant-weight-input-${variant.id}`;
     const valueInputId = `variant-payload-value-${variant.id}`;
-    const valueError = errors.payload ?? getJsonPayloadError(payload);
 
     return (
         <StyledVariantForm data-testid='VARIANT'>
@@ -353,35 +334,45 @@ export const VariantForm = ({
             <Field>
                 <FieldLabelRow>
                     <FieldLabel htmlFor={valueInputId}>Value</FieldLabel>
-                    {payload.type === 'json' ? (
-                        <FormatButton
-                            variant='text'
-                            size='small'
-                            onClick={formatJsonPayload}
-                        >
-                            Format
-                        </FormatButton>
-                    ) : null}
                 </FieldLabelRow>
-                <ValueInput
-                    id={valueInputId}
-                    label=''
-                    multiline
-                    minRows={4}
-                    maxRows={14}
-                    value={payload.value}
-                    onChange={(e) => {
-                        clearError(ErrorField.PAYLOAD);
-                        setPayload((payload) => ({
-                            ...payload,
-                            value: e.target.value,
-                        }));
-                    }}
-                    placeholder={payloadPlaceholders[payload.type] ?? ''}
-                    onBlur={() => validatePayload(payload)}
-                    error={Boolean(valueError)}
-                    errorText={valueError}
-                />
+                {payload.type === 'json' ? (
+                    <Suspense fallback={null}>
+                        <LazyReactJSONEditor
+                            content={{ text: payload.value }}
+                            placeholder='{"cta" : "Start free trial"}'
+                            formatButtonProps={formatButtonProps}
+                            onChange={(content) => {
+                                clearError(ErrorField.PAYLOAD);
+                                setPayload((payload) => ({
+                                    ...payload,
+                                    value:
+                                        'json' in content
+                                            ? JSON.stringify(content.json) || ''
+                                            : content.text,
+                                }));
+                            }}
+                        />
+                    </Suspense>
+                ) : (
+                    <ValueInput
+                        id={valueInputId}
+                        label=''
+                        multiline
+                        minRows={4}
+                        maxRows={14}
+                        value={payload.value}
+                        onChange={(e) => {
+                            clearError(ErrorField.PAYLOAD);
+                            setPayload((payload) => ({
+                                ...payload,
+                                value: e.target.value,
+                            }));
+                        }}
+                        onBlur={() => validatePayload(payload)}
+                        error={Boolean(errors.payload)}
+                        errorText={errors.payload}
+                    />
+                )}
             </Field>
             <Tooltip
                 arrow

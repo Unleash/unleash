@@ -17,8 +17,10 @@ export const createPatService = (
     return new PatService({ patStore }, config, eventService);
 };
 
-export const createFakePatService = (config: IUnleashConfig): PatService => {
-    const patStore = new FakePatStore();
+export const createFakePatService = (
+    config: IUnleashConfig,
+    patStore: FakePatStore = new FakePatStore(),
+): PatService => {
     const eventService = createFakeEventsService(config);
     return new PatService({ patStore }, config, eventService);
 };

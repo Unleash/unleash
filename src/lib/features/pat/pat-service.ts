@@ -52,8 +52,13 @@ export default class PatService {
         pat: CreatePatSchema,
         ownerId: number,
         auditUser: IAuditUser,
+        clockOverride: Date = new Date(),
     ): Promise<PatSchema> {
-        const createdToken = await this.createAccountToken(pat, ownerId);
+        const createdToken = await this.createAccountToken(
+            pat,
+            ownerId,
+            clockOverride,
+        );
 
         await this.eventService.storeEvent(
             new PatCreatedEvent({
@@ -73,8 +78,9 @@ export default class PatService {
     async createAccountToken(
         token: CreatePatSchema,
         ownerId: number,
+        clockOverride: Date = new Date(),
     ): Promise<CreatedAccountToken> {
-        await this.validatePat(token, ownerId);
+        await this.validatePat(token, ownerId, clockOverride);
 
         const { secret, selector, verifier } = createTokenV2Credential({
             kind: AuthorizationTokenKind.ACCOUNT_ACCESS,
@@ -135,12 +141,13 @@ export default class PatService {
     async validatePat(
         { description, expiresAt }: CreatePatSchema,
         ownerId: number,
+        clockOverride: Date = new Date(),
     ): Promise<void> {
         if (!description) {
             throw new BadDataError('PAT description cannot be empty.');
         }
 
-        if (new Date(expiresAt) < new Date()) {
+        if (new Date(expiresAt) < clockOverride) {
             throw new BadDataError('The expiry date should be in future.');
         }
 

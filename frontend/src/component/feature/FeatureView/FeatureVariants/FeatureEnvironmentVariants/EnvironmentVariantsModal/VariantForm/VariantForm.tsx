@@ -196,7 +196,7 @@ export const VariantForm = ({
             setPercentage(percentage);
         }
         if (isValidPercentage(percentage)) {
-            changeWeight(Number(percentage) * 10);
+            changeWeight(Math.round(Number(percentage) * 10));
         }
     };
 

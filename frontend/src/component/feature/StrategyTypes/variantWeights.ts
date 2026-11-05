@@ -1,11 +1,8 @@
 import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
 
 export const TOTAL_WEIGHT = 1000;
-const PERCENT = 10;
 
-export const weightsFromSplitPositions = (
-    splitPositions: number[], // the handle positions (e.g. 850 puts a handle 85% of the way across the bar)
-): number[] => {
+const weightsFromSplitPositions = (splitPositions: number[]): number[] => {
     const segmentStarts = [0, ...splitPositions];
     const segmentEnds = [...splitPositions, TOTAL_WEIGHT];
     return segmentStarts.map((start, index) => segmentEnds[index] - start);
@@ -45,10 +42,35 @@ export const absorbWeightChange = (
     return nextWeights;
 };
 
+const roundChangedWeights = (
+    previousWeights: number[],
+    nextWeights: number[],
+): number[] => {
+    const changedIndexes = nextWeights
+        .map((_, index) => index)
+        .filter((index) => nextWeights[index] !== previousWeights[index]);
+    if (changedIndexes.length === 0) {
+        return nextWeights;
+    }
+
+    const roundedWeights = nextWeights.map((weight, index) =>
+        changedIndexes.includes(index) ? Math.round(weight / 10) * 10 : weight,
+    );
+    const lastChangedIndex = changedIndexes[changedIndexes.length - 1];
+    return absorbWeightChange(roundedWeights, lastChangedIndex);
+};
+
+export const weightsFromDraggedPositions = (
+    previousWeights: number[],
+    splitPositions: number[], // the handle positions (e.g. 850 puts a handle 85% of the way across the bar)
+): number[] => {
+    const nextWeights = weightsFromSplitPositions(splitPositions);
+    return roundChangedWeights(previousWeights, nextWeights);
+};
+
 const distributeWholeParts = (count: number): number[] => {
-    const total = TOTAL_WEIGHT / PERCENT;
-    const base = Math.floor(total / count);
-    const extraPoints = total - base * count;
+    const base = Math.floor(TOTAL_WEIGHT / count);
+    const extraPoints = TOTAL_WEIGHT - base * count;
     return Array.from({ length: count }, (_, index) =>
         index < extraPoints ? base + 1 : base,
     );
@@ -60,6 +82,6 @@ export const splitWeightsEvenly = (
     const shares = distributeWholeParts(variants.length);
     return variants.map((variant, index) => ({
         ...variant,
-        weight: shares[index] * PERCENT,
+        weight: shares[index],
     }));
 };

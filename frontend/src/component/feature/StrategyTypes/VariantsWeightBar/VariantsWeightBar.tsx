@@ -2,7 +2,10 @@ import type { HTMLAttributes } from 'react';
 import { Slider, styled } from '@mui/material';
 import DragIndicator from '@mui/icons-material/DragIndicator';
 import { focusOutline } from 'themes/themeStyles';
-import { TOTAL_WEIGHT, weightsFromSplitPositions } from '../variantWeights.ts';
+import {
+    TOTAL_WEIGHT,
+    weightsFromDraggedPositions,
+} from '../variantWeights.ts';
 
 const cumulativeWeights = (weights: number[]) =>
     weights.map((_, index) =>
@@ -104,7 +107,9 @@ export const VariantsWeightBar = ({
 
     const changeSplitPositions = (value: number | number[]) => {
         const nextSplitPositions = Array.isArray(value) ? value : [value];
-        onWeightsChange(weightsFromSplitPositions(nextSplitPositions));
+        onWeightsChange(
+            weightsFromDraggedPositions(weights, nextSplitPositions),
+        );
     };
 
     return (

@@ -167,8 +167,8 @@
     "@types/supertest": "7.2.1",
     "@types/type-is": "1.6.7",
     "@unleash/client-specification": "6.2.1",
-    "@vitest/coverage-v8": "4.1.11",
-    "@vitest/ui": "4.1.11",
+    "@vitest/coverage-v8": "4.1.12",
+    "@vitest/ui": "4.1.12",
     "concurrently": "^10.0.0",
     "del-cli": "7.0.0",
     "fast-check": "4.10.2",
@@ -185,7 +185,7 @@
     "tsc-watch": "7.2.1",
     "typescript": "7.0.2",
     "vite-node": "^6.0.0",
-    "vitest": "4.1.11",
+    "vitest": "4.1.12",
     "wait-on": "^9.0.5"
   },
   "lint-staged": {

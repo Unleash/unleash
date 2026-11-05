@@ -20,7 +20,7 @@ export type ConstraintValidatorFlags = Pick<UiFlags, 'semverBuildMetadata'>;
 const numberValidator = (value: string): ConstraintValidationResult => {
     const converted = Number(value);
 
-    if (typeof converted !== 'number' || Number.isNaN(converted)) {
+    if (!Number.isFinite(converted)) {
         if (typeof value === 'string' && value.includes(',')) {
             return [
                 false,

@@ -43,8 +43,8 @@ const parseSurveys = (flags: IToggle[]): Survey[] =>
         .filter((survey) => survey !== null);
 
 const findEligibleSurvey = (flags: IToggle[], path: string): Survey | null =>
-    matchTriggers(path, parseSurveys(flags)).find(({ flagName }) =>
-        shouldShowSurvey(flagName),
+    matchTriggers({ on: 'page', path }, parseSurveys(flags)).find(
+        ({ flagName }) => shouldShowSurvey(flagName),
     ) ?? null;
 
 interface FeedbackProviderProps {

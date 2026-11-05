@@ -1,6 +1,11 @@
 import type { Survey } from '../survey.ts';
 import type { SurveyTrigger } from './surveyTrigger.ts';
+import { matchesElement } from './elementMatch.ts';
 import { canMatchPages, toPagePattern } from './pagePattern.ts';
+
+export type TriggerEvent =
+    | { on: 'page'; path: string }
+    | { on: 'click'; path: string; target: Element };
 
 const matchesPage = (trigger: SurveyTrigger, path: string): boolean => {
     if (trigger.path === undefined) {
@@ -12,5 +17,25 @@ const matchesPage = (trigger: SurveyTrigger, path: string): boolean => {
     return toPagePattern(trigger.path)?.test({ pathname: path }) ?? false;
 };
 
-export const matchTriggers = (path: string, surveys: Survey[]): Survey[] =>
-    surveys.filter(({ trigger }) => matchesPage(trigger, path));
+const matchesEvent = (trigger: SurveyTrigger, event: TriggerEvent): boolean => {
+    if (!matchesPage(trigger, event.path)) {
+        return false;
+    }
+    switch (trigger.on) {
+        case 'page':
+            return event.on === 'page';
+        case 'click':
+            return (
+                event.on === 'click' && matchesElement(trigger, event.target)
+            );
+        case 'appear':
+            return false;
+        case 'event':
+            return false;
+    }
+};
+
+export const matchTriggers = (
+    event: TriggerEvent,
+    surveys: Survey[],
+): Survey[] => surveys.filter(({ trigger }) => matchesEvent(trigger, event));

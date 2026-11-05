@@ -88,7 +88,7 @@ import type EventEmitter from 'events';
 import type { ApiTokenService } from '../../services/index.js';
 import type { ProjectCore, ProjectForUi } from './project-read-model-type.js';
 import { canGrantProjectRole } from './can-grant-project-role.js';
-import { batchExecute } from '../../util/index.js';
+import { FOREIGN_KEY_VIOLATION } from '../../error/index.js';
 import metricsHelper from '../../util/metrics-helper.js';
 import { FUNCTION_TIME } from '../../metric-events.js';
 import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
@@ -1211,14 +1211,29 @@ export default class ProjectService {
     async statusJob(): Promise<void> {
         const projects = await this.projectStore.getAll();
 
-        // run one project status update at a time every
-        void batchExecute(projects, 1, 30_000, async (project) => {
-            const statusUpdate = await this.getStatusUpdates(project.id);
-            await this.projectStatsStore.updateProjectStats(
-                statusUpdate.projectId,
-                statusUpdate.updates,
-            );
-        });
+        // One project at a time, awaited, so a failure is caught here instead
+        // of escaping as an unhandled rejection.
+        for (const { id } of projects) {
+            try {
+                const { updates } = await this.getStatusUpdates(id);
+                await this.projectStatsStore.updateProjectStats(id, updates);
+            } catch (error) {
+                if (
+                    error?.code === FOREIGN_KEY_VIOLATION &&
+                    error?.constraint === 'project_stats_project_fkey'
+                ) {
+                    // Deleted after the job listed it.
+                    this.logger.info(
+                        `Skipping project stats for deleted project ${id}`,
+                    );
+                } else {
+                    this.logger.error(
+                        `Failed to update project stats for project ${id}`,
+                        error,
+                    );
+                }
+            }
+        }
     }
 
     async getStatusUpdates(projectId: string): Promise<ICalculateStatus> {

@@ -8,8 +8,7 @@ import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { testUnleashClient } from 'utils/testUnleashClient';
 import { SURVEY_KIND, SURVEY_VERSION } from '../survey.ts';
 import type { SurveyTrigger } from '../triggers/surveyTrigger.ts';
-import type { PageObserver } from '../observers/observePage.ts';
-import type { ClickObserver } from '../observers/observeClicks.ts';
+import type { PageObserver, Unsubscribe } from '../observers/observePage.ts';
 import type { IdentifyUser } from './FeedbackProvider.tsx';
 import { appPath } from '../observers/appPath.ts';
 
@@ -67,23 +66,29 @@ const fakePageObserver = (initialPathname: string) => {
     };
 };
 
-const fakeClickObserver = () => {
-    let onClick: ((target: Element) => void) | null = null;
-    const observe: ClickObserver = (callback) => {
-        onClick = callback;
+const fakeElementObserver = () => {
+    let onElement: ((element: Element) => void) | null = null;
+    const observe = (callback: (element: Element) => void): Unsubscribe => {
+        onElement = callback;
         return () => {
-            onClick = null;
+            onElement = null;
         };
     };
     return {
         observe,
-        click: (target: Element) => act(() => onClick?.(target)),
-        isInstalled: () => onClick !== null,
+        emit: (...elements: Element[]) =>
+            act(() => {
+                for (const element of elements) {
+                    onElement?.(element);
+                }
+            }),
+        isInstalled: () => onElement !== null,
     };
 };
 
 let pageObserver: ReturnType<typeof fakePageObserver>;
-let clickObserver: ReturnType<typeof fakeClickObserver>;
+let clickObserver: ReturnType<typeof fakeElementObserver>;
+let appearObserver: ReturnType<typeof fakeElementObserver>;
 
 const createFlagButton = (): Element => {
     const button = document.createElement('button');
@@ -95,6 +100,11 @@ const createFlagButton = (): Element => {
 const CLICK_CREATE_FLAG: SurveyTrigger = {
     on: 'click',
     selector: '[data-testid="create-flag"]',
+};
+
+const APPEAR_FLAG_CREATED_TOAST: SurveyTrigger = {
+    on: 'appear',
+    selector: '[data-testid="toast"]',
 };
 
 // Fresh modules, because surveyStorage remembers impressions per page load.
@@ -115,6 +125,7 @@ const loadPage = async () => {
                 <FeedbackProvider
                     observePage={pageObserver.observe}
                     observeClicks={clickObserver.observe}
+                    observeAppear={appearObserver.observe}
                     basePath='/unleash'
                     identifyUser={identifyUser}
                 >
@@ -150,7 +161,8 @@ describe('FeedbackProvider', () => {
     beforeEach(async () => {
         window.localStorage.clear();
         pageObserver = fakePageObserver('/unleash/projects');
-        clickObserver = fakeClickObserver();
+        clickObserver = fakeElementObserver();
+        appearObserver = fakeElementObserver();
         renderSurvey = await loadPage();
     });
 
@@ -306,13 +318,19 @@ describe('FeedbackProvider', () => {
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
     });
 
-    it('stops observing pages and clicks on unmount', () => {
-        const { unmount } = renderSurvey(testUnleashClient([]));
+    it('stops observing pages, clicks and appearances on unmount', () => {
+        const { unmount } = renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', APPEAR_FLAG_CREATED_TOAST),
+            ]),
+        );
+        expect(appearObserver.isInstalled()).toBe(true);
 
         unmount();
 
         expect(pageObserver.isInstalled()).toBe(false);
         expect(clickObserver.isInstalled()).toBe(false);
+        expect(appearObserver.isInstalled()).toBe(false);
     });
 
     it('shows a page survey on the page it was opened on when the path matches', async () => {
@@ -427,7 +445,7 @@ describe('FeedbackProvider', () => {
 
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
 
-        clickObserver.click(createFlagButton());
+        clickObserver.emit(createFlagButton());
 
         expect(await screen.findByText('Survey A')).toBeInTheDocument();
     });
@@ -443,7 +461,7 @@ describe('FeedbackProvider', () => {
         );
         pageObserver.navigate('/unleash/projects/default');
 
-        clickObserver.click(createFlagButton());
+        clickObserver.emit(createFlagButton());
 
         expect(await screen.findByText('Survey A')).toBeInTheDocument();
     });
@@ -457,7 +475,7 @@ describe('FeedbackProvider', () => {
         );
         await screen.findByText('Survey B');
 
-        clickObserver.click(createFlagButton());
+        clickObserver.emit(createFlagButton());
 
         expect(screen.getByText('Survey B')).toBeInTheDocument();
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
@@ -469,13 +487,48 @@ describe('FeedbackProvider', () => {
                 surveyFlag('survey-a', 'Survey A', CLICK_CREATE_FLAG),
             ]),
         );
-        clickObserver.click(createFlagButton());
+        clickObserver.emit(createFlagButton());
         await userEvent.click(
             await screen.findByRole('button', { name: 'Close' }),
         );
 
-        clickObserver.click(createFlagButton());
+        clickObserver.emit(createFlagButton());
 
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
+    });
+
+    it('observes appearances only while no survey is shown', async () => {
+        renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', APPEAR_FLAG_CREATED_TOAST),
+                surveyFlag('survey-b', 'Survey B', { on: 'page' }),
+            ]),
+        );
+        await screen.findByText('Survey B');
+        expect(appearObserver.isInstalled()).toBe(false);
+
+        await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+
+        expect(appearObserver.isInstalled()).toBe(true);
+    });
+
+    it('observes appearances only while a survey waits for one', async () => {
+        const client = testUnleashClient([
+            surveyFlag('survey-a', 'Survey A', CLICK_CREATE_FLAG),
+        ]);
+        renderSurvey(client);
+        expect(appearObserver.isInstalled()).toBe(false);
+
+        act(() =>
+            client.setFlags([
+                surveyFlag('survey-a', 'Survey A', APPEAR_FLAG_CREATED_TOAST),
+            ]),
+        );
+
+        expect(appearObserver.isInstalled()).toBe(true);
+
+        act(() => client.setFlags([]));
+
+        expect(appearObserver.isInstalled()).toBe(false);
     });
 });

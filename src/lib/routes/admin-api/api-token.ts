@@ -408,9 +408,7 @@ export class ApiTokenController extends Controller {
             );
             this.apiTokenV2Service.invalidateCache([v2Identifier.selector]);
         } else {
-            try {
-                await this.apiTokenService.delete(token, req.audit);
-            } catch (_err) {}
+            await this.apiTokenService.delete(token, req.audit);
         }
         await this.frontendApiService.deleteClientForFrontendApiToken(
             v2Identifier?.selector ?? token,
@@ -447,21 +445,12 @@ export class ApiTokenController extends Controller {
     private async getToken(token: string): Promise<IApiToken | undefined> {
         const v2Identifier = parseApiTokenV2Identifier(token);
         if (v2Identifier) {
-            try {
-                const tokenV2 =
-                    await this.apiTokenV2Service.getToken(v2Identifier);
-                if (tokenV2) {
-                    return tokenV2;
-                }
-            } catch (_error) {
-                // Fall through to legacy storage during the migration period.
+            const tokenV2 = await this.apiTokenV2Service.getToken(v2Identifier);
+            if (tokenV2) {
+                return tokenV2;
             }
         }
 
-        try {
-            return await this.apiTokenService.getToken(token);
-        } catch (_error) {
-            return undefined;
-        }
+        return await this.apiTokenService.getToken(token);
     }
 }

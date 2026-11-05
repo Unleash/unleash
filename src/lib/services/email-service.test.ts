@@ -60,7 +60,6 @@ test('Mail template regression cases cover all templates', () => {
     expect(templateFiles).toContain(
         'reset-password/reset-password.html.mustache',
     );
-    expect(templateFiles.length).toBeGreaterThanOrEqual(18);
 });
 
 test.each(

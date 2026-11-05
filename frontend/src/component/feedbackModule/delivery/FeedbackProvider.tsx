@@ -3,6 +3,7 @@ import {
     type ReactNode,
     useContext,
     useEffect,
+    useEffectEvent,
     useState,
 } from 'react';
 import {
@@ -21,11 +22,15 @@ import {
     shouldShowSurvey,
 } from './surveyStorage.ts';
 import { submitSurveyResponse } from './submitSurveyResponse.ts';
-import { matchTriggers } from '../triggers/matchTriggers.ts';
+import { matchTriggers, type TriggerEvent } from '../triggers/matchTriggers.ts';
 import {
     observeBrowserPage,
     type PageObserver,
 } from '../observers/observePage.ts';
+import {
+    observeBrowserClicks,
+    type ClickObserver,
+} from '../observers/observeClicks.ts';
 import { basePath as appBasePath } from 'utils/formatPath';
 
 interface FeedbackContextValue {
@@ -42,20 +47,25 @@ const parseSurveys = (flags: IToggle[]): Survey[] =>
         .map((flag) => parseSurveyPayload(flag.name, flag.variant?.payload))
         .filter((survey) => survey !== null);
 
-const findEligibleSurvey = (flags: IToggle[], path: string): Survey | null =>
-    matchTriggers({ on: 'page', path }, parseSurveys(flags)).find(
-        ({ flagName }) => shouldShowSurvey(flagName),
+const findEligibleSurvey = (
+    flags: IToggle[],
+    event: TriggerEvent,
+): Survey | null =>
+    matchTriggers(event, parseSurveys(flags)).find(({ flagName }) =>
+        shouldShowSurvey(flagName),
     ) ?? null;
 
 interface FeedbackProviderProps {
     children: ReactNode;
     observePage?: PageObserver;
+    observeClicks?: ClickObserver;
     basePath?: string;
 }
 
 export const FeedbackProvider = ({
     children,
     observePage = observeBrowserPage,
+    observeClicks = observeBrowserClicks,
     basePath = appBasePath,
 }: FeedbackProviderProps) => {
     const flags = useFlags();
@@ -66,10 +76,29 @@ export const FeedbackProvider = ({
     useEffect(() => observePage(setPath, basePath), [observePage, basePath]);
 
     const survey =
-        shownSurvey ?? (path === null ? null : findEligibleSurvey(flags, path));
+        shownSurvey ??
+        (path === null
+            ? null
+            : findEligibleSurvey(flags, { on: 'page', path }));
     if (survey !== shownSurvey) {
         setShownSurvey(survey);
     }
+
+    const showSurveyOnClick = useEffectEvent((target: Element) => {
+        if (survey !== null || path === null) {
+            return;
+        }
+        const clickTriggeredSurvey = findEligibleSurvey(flags, {
+            on: 'click',
+            path,
+            target,
+        });
+        if (clickTriggeredSurvey !== null) {
+            setShownSurvey(clickTriggeredSurvey);
+        }
+    });
+
+    useEffect(() => observeClicks(showSurveyOnClick), [observeClicks]);
 
     const flagName = survey?.flagName;
     useEffect(() => {

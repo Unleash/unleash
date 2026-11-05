@@ -71,6 +71,11 @@ export const observePage = (
     };
 };
 
+/**
+ * Keep this well below human reaction time. When polling, click triggers
+ * are matched against the last polled path, so a click that lands between a
+ * navigation and the next poll is matched to the previous page.
+ */
 const POLLING_INTERVAL_MS = 250;
 
 const pollEveryInterval: Poll = (callback) => {

@@ -529,8 +529,8 @@ importers:
         specifier: 10.3.0
         version: 10.3.0(supports-color@10.2.2)
       supertest:
-        specifier: 7.2.2
-        version: 7.2.2(supports-color@10.2.2)
+        specifier: 7.3.1
+        version: 7.3.1(supports-color@10.2.2)
       ts-node:
         specifier: 10.9.2
         version: 10.9.2(@types/node@22.20.4)(typescript@7.0.2)
@@ -5858,8 +5858,8 @@ packages:
     resolution: {integrity: sha512-B+4Ik7ROgVKrQsXTV0Jwp2u+PXYLSlqtDAhYnkkD+zn3yg8s/zjA2MeGayPoY/KICrbitwneDHrjSotxKL+0XQ==}
     engines: {node: '>=14.18.0'}
 
-  supertest@7.2.2:
-    resolution: {integrity: sha512-oK8WG9diS3DlhdUkcFn4tkNIiIbBx9lI2ClF8K+b2/m8Eyv47LSawxUzZQSNKUrVb2KsqeTDCcjAAVPYaSLVTA==}
+  supertest@7.3.1:
+    resolution: {integrity: sha512-vNaNCFoCR/edDbErQZp5KLNT8R4dSPHX7rlDLoE8hWLAm/878j6ShMbe8HK/E6RwwuhlSXVelXAIg9AxR5WWPw==}
     engines: {node: '>=14.18.0'}
 
   supports-color@10.2.2:
@@ -11757,7 +11757,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  supertest@7.2.2(supports-color@10.2.2):
+  supertest@7.3.1(supports-color@10.2.2):
     dependencies:
       cookie-signature: 1.2.2
       methods: 1.1.2

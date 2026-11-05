@@ -11,6 +11,7 @@ import {
     useFlags,
     useUnleashClient,
 } from '@unleash/proxy-client-react';
+import type { IContext } from 'unleash-proxy-client';
 import {
     parseSurveyPayload,
     type Survey,
@@ -55,8 +56,11 @@ const findEligibleSurvey = (
         shouldShowSurvey(flagName),
     ) ?? null;
 
+export type IdentifyUser = (context: IContext) => string | undefined;
+
 interface FeedbackProviderProps {
     children: ReactNode;
+    identifyUser: IdentifyUser;
     observePage?: PageObserver;
     observeClicks?: ClickObserver;
     basePath?: string;
@@ -64,6 +68,7 @@ interface FeedbackProviderProps {
 
 export const FeedbackProvider = ({
     children,
+    identifyUser,
     observePage = observeBrowserPage,
     observeClicks = observeBrowserClicks,
     basePath = appBasePath,
@@ -112,12 +117,11 @@ export const FeedbackProvider = ({
             return;
         }
         recordSurveyInteraction(survey.flagName);
-        const { sessionId } = client.getContext();
         submitSurveyResponse({
             flagName: survey.flagName,
             submitBase: survey.submitBase,
             environmentId: survey.environmentId,
-            respondentId: sessionId ? String(sessionId) : undefined,
+            respondentId: identifyUser(client.getContext()),
             answers,
         }).catch(() => {});
     };

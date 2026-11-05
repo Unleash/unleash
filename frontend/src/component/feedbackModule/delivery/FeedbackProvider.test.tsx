@@ -10,6 +10,7 @@ import { SURVEY_KIND, SURVEY_VERSION } from '../survey.ts';
 import type { SurveyTrigger } from '../triggers/surveyTrigger.ts';
 import type { PageObserver } from '../observers/observePage.ts';
 import type { ClickObserver } from '../observers/observeClicks.ts';
+import type { IdentifyUser } from './FeedbackProvider.tsx';
 import { appPath } from '../observers/appPath.ts';
 
 const server = testServerSetup();
@@ -105,13 +106,17 @@ const loadPage = async () => {
     const { FeedbackProvider } = await import('./FeedbackProvider.tsx');
     const { FeedbackSurvey } = await import('./FeedbackSurvey.tsx');
 
-    return (client: UnleashClient) =>
+    return (
+        client: UnleashClient,
+        identifyUser: IdentifyUser = () => undefined,
+    ) =>
         render(
             <FlagProvider unleashClient={client} startClient={false}>
                 <FeedbackProvider
                     observePage={pageObserver.observe}
                     observeClicks={clickObserver.observe}
                     basePath='/unleash'
+                    identifyUser={identifyUser}
                 >
                     <FeedbackSurvey />
                 </FeedbackProvider>
@@ -201,9 +206,11 @@ describe('FeedbackProvider', () => {
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
     });
 
-    it('sends the answers to the server', async () => {
+    it('sends the answers to the server as the identified user', async () => {
         const { requests } = surveyResponsesRoute();
-        renderSurvey(testUnleashClient([surveyFlag('survey-a', 'Survey A')]));
+        const client = testUnleashClient([surveyFlag('survey-a', 'Survey A')]);
+        client.getContext = () => ({ appName: 'test', userId: '7' });
+        renderSurvey(client, ({ userId }) => `user-${userId}`);
 
         await submitComment('Nice');
 
@@ -212,18 +219,19 @@ describe('FeedbackProvider', () => {
                 {
                     surveyVersion: SURVEY_VERSION,
                     environmentId: 'production',
-                    respondentId: 'test-session',
+                    respondentId: 'user-7',
                     answers: { comment: 'Nice' },
                 },
             ]),
         );
     });
 
-    it('leaves out the respondent when the session is not known yet', async () => {
+    it('leaves out the respondent when the user cannot be identified', async () => {
         const { requests } = surveyResponsesRoute();
-        const client = testUnleashClient([surveyFlag('survey-a', 'Survey A')]);
-        client.getContext = () => ({ appName: 'test' });
-        renderSurvey(client);
+        renderSurvey(
+            testUnleashClient([surveyFlag('survey-a', 'Survey A')]),
+            () => undefined,
+        );
 
         await submitComment('Nice');
 

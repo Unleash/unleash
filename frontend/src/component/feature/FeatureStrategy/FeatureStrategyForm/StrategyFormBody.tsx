@@ -133,8 +133,8 @@ const FormMainContent = styled('div')(({ theme }) => ({
 const StyledButtons = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
-    paddingTop: theme.spacing(3),
-    paddingBottom: theme.spacing(3),
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
     paddingInline: 'var(--form-inset)',
     backgroundColor: theme.palette.background.paper,
     justifyContent: 'end',

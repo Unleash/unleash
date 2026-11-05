@@ -23,6 +23,7 @@ describe('rate limit policies', () => {
                 sdkApiMaxPerMinute: 106,
                 feedbackMaxPerMinute: 61,
                 playgroundMaxPerMinute: 62,
+                mcpMaxPerMinute: 63,
             },
             metricsRateLimiting: {
                 clientMetricsMaxPerMinute: 101,
@@ -86,6 +87,20 @@ describe('rate limit policies', () => {
                 'afterAuthentication',
             ),
         ).toEqual([{ windowMs: 60_000, limit: 62 }]);
+        expect(
+            matchingOptions(
+                config,
+                request('/api/admin/mcp'),
+                'afterAuthentication',
+            ),
+        ).toEqual([{ windowMs: 60_000, limit: 63 }]);
+        expect(
+            matchingOptions(
+                config,
+                request('/api/admin/mcp/oauth/token'),
+                'afterAuthentication',
+            ),
+        ).toEqual([{ windowMs: 60_000, limit: 63 }]);
         expect(
             matchingOptions(
                 config,

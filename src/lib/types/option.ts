@@ -286,6 +286,7 @@ export interface IRateLimiting {
     adminApiMaxPerMinute: number;
     feedbackMaxPerMinute: number;
     playgroundMaxPerMinute: number;
+    mcpMaxPerMinute: number;
 }
 
 export interface IUnleashConfig {

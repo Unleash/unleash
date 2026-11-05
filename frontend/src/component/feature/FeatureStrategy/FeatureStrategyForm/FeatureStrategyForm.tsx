@@ -9,6 +9,7 @@ import type {
 import { FeatureStrategyEnabled } from './FeatureStrategyEnabled/FeatureStrategyEnabled.tsx';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
@@ -100,6 +101,15 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
 
     const navigate = useNavigate();
 
+    const useNewStatusContent = useUiFlag('singlePageStrategyForm');
+    const envIsEnabled =
+        feature.environments.find((environment) => {
+            return environment.name === environmentId;
+        })?.enabled ?? false;
+    const environmentDisabledText = envIsEnabled
+        ? null
+        : `This flag is disabled in ${environmentId}, so changes won't take effect until you enable the environment.`;
+
     const { error: uiConfigError, loading: uiConfigLoading } = useUiConfig();
 
     if (uiConfigError) {
@@ -184,7 +194,9 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
             }
             allowEnableDisable
             statusContent={
-                changeRequestsEnabled ? null : (
+                changeRequestsEnabled ? null : useNewStatusContent ? (
+                    environmentDisabledText
+                ) : (
                     <FeatureStrategyEnabled
                         projectId={feature.project}
                         featureId={feature.name}

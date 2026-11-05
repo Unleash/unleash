@@ -1,3 +1,4 @@
+// todo: This is now legacy code. Delete this file when cleaning up the `singlePageStrategyForm` flag.
 import type { FC } from 'react';
 import { Link } from 'react-router';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

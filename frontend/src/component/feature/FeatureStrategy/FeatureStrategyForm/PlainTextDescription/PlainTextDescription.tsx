@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { type ReactNode, useId } from 'react';
 import {
     styled,
     Accordion,
@@ -7,6 +7,7 @@ import {
     accordionClasses,
     accordionSummaryClasses,
     alpha,
+    Typography,
 } from '@mui/material';
 import type { StrategyFormState } from 'interfaces/strategy';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
@@ -107,10 +108,19 @@ const ShowHideText = styled(({ className }: { className?: string }) => (
     [`.${accordionSummaryClasses.focusVisible} &`]: focusOutline(theme),
 }));
 
+const EnvironmentDisabledText = styled(Typography)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+    ':empty': { display: 'none' },
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.caption.fontSize,
+}));
+
 export const PlainTextDescription = ({
     strategy,
+    environmentDisabledText,
 }: {
     strategy: StrategyFormState;
+    environmentDisabledText?: string | ReactNode; // todo: remove ReactNode with the removal of the singlePageStrategyForm flag.
 }) => {
     const headerId = useId();
     const contentId = useId();
@@ -126,6 +136,9 @@ export const PlainTextDescription = ({
             </Summary>
             <Details>
                 <StrategyDescription strategy={strategy} />
+                <EnvironmentDisabledText>
+                    {environmentDisabledText}
+                </EnvironmentDisabledText>
             </Details>
         </PlainTextAccordion>
     );

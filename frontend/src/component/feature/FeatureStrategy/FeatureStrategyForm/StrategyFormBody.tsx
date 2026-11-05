@@ -150,7 +150,7 @@ export const StrategyFormBody = <T extends StrategyFormState>({
     canRenamePreexistingVariants,
     alertContent,
     allowEnableDisable,
-    statusContent,
+    statusContent: environmentDisabledText, // todo: consider renaming prop when deleting singlePageStrategyForm flag
     beforeFooter,
     groupIdTooltip,
     children,
@@ -365,12 +365,14 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                         />
                     ) : null}
 
-                    {statusContent}
                     {beforeFooter}
                 </FormMainContent>
             </FormScrollArea>
 
-            <PlainTextDescription strategy={strategy} />
+            <PlainTextDescription
+                strategy={strategy}
+                environmentDisabledText={environmentDisabledText}
+            />
 
             <StyledButtons>{children}</StyledButtons>
         </StyledForm>

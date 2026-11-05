@@ -31,6 +31,7 @@ export type ValueListProps = {
     // the element that should receive focus when all value chips are deleted
     getExternalFocusTarget: () => HTMLElement | null;
     getValueTitle?: (value: string) => string | undefined;
+    getValueLabel?: (value: string) => string;
     // when set, values can be clicked to edit them in place
     onEditValue?: (value: string) => void;
 };
@@ -49,6 +50,7 @@ export const ValueList = forwardRef<
             removeValue,
             getExternalFocusTarget,
             getValueTitle,
+            getValueLabel,
             onEditValue,
             children,
         },
@@ -92,7 +94,7 @@ export const ValueList = forwardRef<
                                     whiteSpace: 'normal',
                                     userSelect: 'text',
                                 }}
-                                label={value}
+                                label={getValueLabel?.(value) ?? value}
                                 title={getValueTitle?.(value)}
                                 onClick={
                                     onEditValue

@@ -14,7 +14,6 @@ import { ValueListWithOverflow } from './ValueListWithOverflow.tsx';
 import { AddValueInline } from './AddValueInline.tsx';
 import { AddValueButton } from './AddValueButton.tsx';
 import { ToggleConstraintCaseSensitivity } from './ToggleConstraintCaseSensitivity.tsx';
-import { ConstraintDateInput } from './ConstraintDateInput.tsx';
 import {
     type LegalValueData,
     useEditableConstraint,
@@ -23,7 +22,6 @@ import type { IConstraint } from 'interfaces/strategy';
 import {
     type EditableConstraint as EditableConstraintType,
     isCidrConstraint,
-    isDateConstraint,
     isMultiValueConstraint,
 } from './useEditableConstraint/editable-constraint-type.ts';
 import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator.ts';
@@ -32,6 +30,8 @@ import { ContextFieldSelect } from './ContextFieldSelect.tsx';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
 import { formatTargetRange } from './CidrTargetRange.tsx';
 import { getTargetRange } from './useEditableConstraint/ip-address.ts';
+import { formatConstraintValue } from 'utils/formatConstraintValue';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 
 const invertedDisabledMessages: Partial<Record<Operator, string>> = {
     REGEX: 'The REGEX operator does not support inversion',
@@ -145,16 +145,6 @@ const TopRowInput: FC<{
             setDraftValue(existingValue);
         }
     }, [editingOpen, existingValue]);
-
-    if (isDateConstraint(localConstraint)) {
-        return (
-            <ConstraintDateInput
-                setValue={addValues}
-                value={localConstraint.value}
-                validator={validator}
-            />
-        );
-    }
 
     if (
         !isMultiValueConstraint(localConstraint) &&
@@ -288,6 +278,7 @@ export const EditableConstraint: FC<Props> = ({
     }, [updateConstraint]);
 
     const { context } = useAssignableUnleashContext();
+    const { locationSettings } = useLocationSettings();
 
     const { contextName, operator } = localConstraint;
     const showCaseSensitiveButton =
@@ -310,6 +301,16 @@ export const EditableConstraint: FC<Props> = ({
                   : undefined;
           }
         : undefined;
+
+    const formatValue = (value: string) =>
+        formatConstraintValue(
+            {
+                value,
+                contextName: localConstraint.contextName,
+                operator: localConstraint.operator,
+            },
+            locationSettings,
+        ) ?? value;
 
     const onEditValue = hasSingleValue ? () => setEditingOpen(true) : undefined;
     const visibleValues =
@@ -371,6 +372,7 @@ export const EditableConstraint: FC<Props> = ({
                         values={visibleValues}
                         removeValue={removeValue}
                         getValueTitle={valueTitle}
+                        getValueLabel={formatValue}
                         getExternalFocusTarget={() => null}
                         onEditValue={onEditValue}
                     >

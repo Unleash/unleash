@@ -6,6 +6,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { EditableConstraint } from './EditableConstraint';
 import type { IConstraint } from 'interfaces/strategy';
 import type { IUnleashContextDefinition } from 'interfaces/context';
+import { formatDateYMDHMS } from 'utils/formatDate';
 
 const server = testServerSetup();
 
@@ -753,6 +754,159 @@ describe('EditableConstraint', () => {
                 screen.getByTestId('CONSTRAINT_VALUES_SELECT_ALL'),
             ).toHaveFocus();
             expect(input).toBeInTheDocument();
+        });
+    });
+
+    describe('DATE_AFTER constraint', () => {
+        const dateConstraint: IConstraint = {
+            contextName: 'appName',
+            operator: 'DATE_AFTER',
+            value: '',
+        };
+
+        test('opens a popover with an expanded calendar, and adds a date picked from it as a chip labeled with a human-readable date', async () => {
+            setupApi();
+            const onUpdate = vi.fn();
+
+            render(
+                <EditableConstraint
+                    constraint={dateConstraint}
+                    onDelete={noOp}
+                    onUpdate={onUpdate}
+                />,
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+
+            expect(await screen.findByRole('grid')).toBeInTheDocument();
+            expect(
+                document.querySelector('input[type="datetime-local"]'),
+            ).not.toBeInTheDocument();
+            expect(
+                screen.getByText(/shown in your local time zone/i),
+            ).toBeInTheDocument();
+
+            // submitting with no date picked shows a date-specific error,
+            // not the generic empty-value message
+            fireEvent.keyDown(document.activeElement!, { key: 'Enter' });
+            expect(
+                screen.getByText('The value must be a complete date with time'),
+            ).toBeInTheDocument();
+            expect(
+                screen.queryByText('Value cannot be empty or whitespace'),
+            ).not.toBeInTheDocument();
+
+            const today = await screen.findByRole('gridcell', {
+                current: 'date',
+            });
+            fireEvent.click(today);
+            fireEvent.click(screen.getByTestId('CONSTRAINT_VALUES_DONE'));
+
+            await waitFor(() => {
+                expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
+                    operator: 'DATE_AFTER',
+                });
+            });
+
+            const isoValue = onUpdate.mock.lastCall?.[0].value as string;
+            const expectedLabel = formatDateYMDHMS(
+                isoValue,
+                navigator.language,
+            );
+            expect(screen.getByText(expectedLabel)).toBeInTheDocument();
+            expect(screen.queryByText(isoValue)).not.toBeInTheDocument();
+            expect(
+                screen.queryByTestId('CONSTRAINT_VALUES_INPUT'),
+            ).not.toBeInTheDocument();
+        });
+
+        test('Enter does not submit while still on the day/hours steps, only once the minutes step is reached', async () => {
+            setupApi();
+            const onUpdate = vi.fn();
+
+            render(
+                <EditableConstraint
+                    constraint={dateConstraint}
+                    onDelete={noOp}
+                    onUpdate={onUpdate}
+                />,
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            const baselineCalls = onUpdate.mock.calls.length;
+
+            const today = await screen.findByRole('gridcell', {
+                current: 'date',
+            });
+            fireEvent.click(today);
+
+            // picking a day auto-advances straight to the hours view
+            fireEvent.keyDown(screen.getByRole('listbox'), { key: 'Enter' });
+            expect(onUpdate.mock.calls.length).toBe(baselineCalls);
+
+            // advance from hours to minutes, the last step
+            fireEvent.click(
+                screen.getByRole('button', { name: /open next view/i }),
+            );
+            fireEvent.keyDown(screen.getByRole('listbox'), { key: 'Enter' });
+
+            await waitFor(() => {
+                expect(onUpdate.mock.calls.length).toBeGreaterThan(
+                    baselineCalls,
+                );
+            });
+            expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
+                operator: 'DATE_AFTER',
+            });
+        });
+
+        test('the trigger is a native-like segmented field: each date/time part is its own control, adjustable with arrow keys', async () => {
+            setupApi();
+            const onUpdate = vi.fn();
+
+            render(
+                <EditableConstraint
+                    constraint={dateConstraint}
+                    onDelete={noOp}
+                    onUpdate={onUpdate}
+                />,
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            const sections = screen.getAllByRole('spinbutton');
+            // section order/12h-vs-24h follows the resolved locale; jsdom
+            // defaults to en-US (Month/Day/Year order, 12h clock)
+            expect(sections.map((s) => s.getAttribute('aria-label'))).toEqual([
+                'Month',
+                'Day',
+                'Year',
+                'Hours',
+                'Minutes',
+                'Meridiem',
+            ]);
+
+            for (const section of sections) {
+                await userEvent.click(section);
+                await userEvent.keyboard('{ArrowUp}');
+            }
+            fireEvent.click(screen.getByTestId('CONSTRAINT_VALUES_DONE'));
+
+            await waitFor(() => {
+                expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
+                    operator: 'DATE_AFTER',
+                });
+            });
+            expect(onUpdate.mock.lastCall?.[0].value).toBe(
+                new Date(
+                    `${new Date().getFullYear()}-01-01T01:00`,
+                ).toISOString(),
+            );
         });
     });
 });

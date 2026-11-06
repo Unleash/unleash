@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import {
     styled,
     Tab,
@@ -142,14 +143,14 @@ type VariantPillProps = Omit<TabProps, 'label' | 'icon'> & {
     locked?: boolean;
 };
 
-export const VariantPill = ({
+export const VariantPill = memo(function VariantPill({
     name,
     weight,
     payload,
     color,
     locked,
     ...tabProps
-}: VariantPillProps) => {
+}: VariantPillProps) {
     const theme = useTheme();
 
     return (
@@ -183,4 +184,4 @@ export const VariantPill = ({
             />
         </HtmlTooltip>
     );
-};
+});

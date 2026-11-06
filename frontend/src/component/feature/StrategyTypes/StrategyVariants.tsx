@@ -1,7 +1,7 @@
 import { createUuid } from 'utils/createUuid';
 import { VariantForm } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm.tsx';
 import type React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
 import { WeightType } from '../../../constants/variantTypes.ts';
 import { styled, useTheme, Button, Tabs } from '@mui/material';
@@ -149,13 +149,21 @@ export const StrategyVariants = <T extends StrategyFormState>({
         });
     };
 
-    const changeWeights = (weights: number[]) =>
-        setVariantsEdit((prevVariants) =>
-            prevVariants.map((variant, index) => ({
-                ...variant,
-                weight: weights[index],
-            })),
-        );
+    const changeWeights = useCallback(
+        (weights: number[]) =>
+            setVariantsEdit((prevVariants) =>
+                prevVariants.map((variant, index) => ({
+                    ...variant,
+                    weight: weights[index],
+                })),
+            ),
+        [],
+    );
+
+    const selectVariant = useCallback(
+        (_: unknown, id: string) => setSelectedVariantId(id),
+        [],
+    );
 
     const removeVariant = (id: string) => {
         const removedIndex = variantsEdit.findIndex(
@@ -166,6 +174,24 @@ export const StrategyVariants = <T extends StrategyFormState>({
         setSelectedVariantId(remaining[Math.max(removedIndex - 1, 0)]?.id);
         focusSelectedPillAfterRender.current = true;
     };
+
+    const variantColor = useCallback(
+        (index: number) =>
+            theme.palette.variants[index % theme.palette.variants.length],
+        [theme],
+    );
+
+    const barVariants = useMemo(
+        () =>
+            variantsEdit.map((variant, index) => ({
+                id: variant.id,
+                name: variant.name,
+                weight: variant.weight,
+                color: variantColor(index),
+                locked: variant.weightType === WeightType.FIX,
+            })),
+        [variantsEdit, variantColor],
+    );
 
     const variantWeightsError =
         variantsEdit.reduce(
@@ -194,8 +220,6 @@ export const StrategyVariants = <T extends StrategyFormState>({
         );
     }
 
-    const variantColor = (index: number) =>
-        theme.palette.variants[index % theme.palette.variants.length];
     const selectedVariant =
         variantsEdit.find((variant) => variant.id === selectedVariantId) ??
         variantsEdit[0];
@@ -204,13 +228,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
     return (
         <>
             <VariantsWeightBar
-                variants={variantsEdit.map((variant, index) => ({
-                    id: variant.id,
-                    name: variant.name,
-                    weight: variant.weight,
-                    color: variantColor(index),
-                    locked: variant.weightType === WeightType.FIX,
-                }))}
+                variants={barVariants}
                 weightsError={variantWeightsError}
                 onWeightsChange={changeWeights}
             />
@@ -218,7 +236,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
                 <Tabs
                     ref={pillListRef}
                     value={selectedVariant.id}
-                    onChange={(_, id: string) => setSelectedVariantId(id)}
+                    onChange={selectVariant}
                     selectionFollowsFocus
                     aria-label='Variants'
                     sx={{ minHeight: 0, overflow: 'visible' }}

@@ -1,4 +1,5 @@
-import type { HTMLAttributes } from 'react';
+import { type HTMLAttributes, memo } from 'react';
+import type { IFeatureVariantEdit } from '../../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
 import { alpha, Slider, styled } from '@mui/material';
 import DragIndicator from '@mui/icons-material/DragIndicator';
 import { focusOutline } from 'themes/themeStyles';
@@ -98,10 +99,7 @@ const GripThumb = ({
     );
 };
 
-type BarVariant = {
-    id: string;
-    name: string;
-    weight: number;
+type BarVariant = Pick<IFeatureVariantEdit, 'id' | 'name' | 'weight'> & {
     color: string;
     locked: boolean;
 };
@@ -112,7 +110,7 @@ type VariantsWeightBarProps = {
     onWeightsChange: (weights: number[]) => void;
 };
 
-export const VariantsWeightBar = ({
+const VariantsWeightBarComponent = ({
     variants,
     weightsError = false,
     onWeightsChange,
@@ -188,3 +186,18 @@ export const VariantsWeightBar = ({
         </Bar>
     );
 };
+
+const barVariantsAreEqual = (previous: BarVariant[], next: BarVariant[]) =>
+    previous.length === next.length &&
+    previous.every((variant, index) => {
+        const fields = Object.keys(variant) as (keyof BarVariant)[];
+        return fields.every((field) => variant[field] === next[index][field]);
+    });
+
+export const VariantsWeightBar = memo(
+    VariantsWeightBarComponent,
+    (previousProps, nextProps) =>
+        previousProps.weightsError === nextProps.weightsError &&
+        previousProps.onWeightsChange === nextProps.onWeightsChange &&
+        barVariantsAreEqual(previousProps.variants, nextProps.variants),
+);

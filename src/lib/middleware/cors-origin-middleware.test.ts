@@ -124,3 +124,54 @@ test('corsOriginMiddleware with caching enabled', async () => {
         frontendApiOrigins: ['*'],
     });
 });
+
+test('resolveOrigin with a wildcard origin', () => {
+    const previews = 'https://deploy-preview-*--my-site.netlify.app';
+    const dotOrg = 'https://example.org';
+
+    const [exact, pattern] = resolveOrigin([dotOrg, previews]) as [
+        string,
+        RegExp,
+    ];
+
+    expect(exact).toEqual(dotOrg);
+    expect(
+        pattern.test('https://deploy-preview-123--my-site.netlify.app'),
+    ).toEqual(true);
+    expect(
+        pattern.test('https://deploy-preview-1--my-site.netlify.app'),
+    ).toEqual(true);
+    expect(
+        pattern.test('https://deploy-preview---my-site.netlify.app'),
+    ).toEqual(false);
+    expect(
+        pattern.test('https://deploy-preview-a.b--my-site.netlify.app'),
+    ).toEqual(false);
+    expect(
+        pattern.test('https://deploy-preview-1--my-site.netlify.app.evil.com'),
+    ).toEqual(false);
+    expect(
+        pattern.test('http://deploy-preview-1--my-site.netlify.app'),
+    ).toEqual(false);
+    expect(pattern.test('https://my-site.netlify.app')).toEqual(false);
+});
+
+test('corsOriginMiddleware accepts a wildcard origin setting', async () => {
+    const { frontendApiService } = createSettingService([]);
+    const previews = 'https://deploy-preview-*--my-site.netlify.app';
+
+    await frontendApiService.setFrontendCorsSettings(
+        [previews],
+        TEST_AUDIT_USER,
+    );
+
+    expect(await frontendApiService.getFrontendSettings(false)).toEqual({
+        frontendApiOrigins: [previews],
+    });
+    await expect(() =>
+        frontendApiService.setFrontendCorsSettings(
+            ['https://*.netlify.app'],
+            TEST_AUDIT_USER,
+        ),
+    ).rejects.toThrow('Invalid origin: https://*.netlify.app');
+});

@@ -22,3 +22,24 @@ test('validateOrigin', () => {
     expect(validateOrigin('https://example.com')).toEqual(true);
     expect(validateOrigin('https://example.com:8080')).toEqual(true);
 });
+
+test('validateOrigin with a wildcard in a host label', () => {
+    expect(
+        validateOrigin('https://deploy-preview-*--my-site.netlify.app'),
+    ).toEqual(true);
+    expect(validateOrigin('https://a-*-b.app.example.com')).toEqual(true);
+
+    expect(validateOrigin('https://preview-*.app.example.com')).toEqual(false);
+    expect(validateOrigin('https://*--x.netlify.app')).toEqual(false);
+    expect(validateOrigin('https://a-*-*-b.app.example.com')).toEqual(false);
+
+    expect(validateOrigin('https://*.netlify.app')).toEqual(false);
+    expect(validateOrigin('https://*.app.example.com')).toEqual(false);
+    expect(validateOrigin('https://app-*.netlify.app')).toEqual(false);
+    expect(validateOrigin('https://app.example-*.com')).toEqual(false);
+    expect(validateOrigin('https://app.example.*')).toEqual(false);
+    expect(validateOrigin('http*://app.example.com')).toEqual(false);
+    expect(validateOrigin('https://a-*-b.app.example.com:*')).toEqual(false);
+    expect(validateOrigin('https://a-*-b.app.example.com/')).toEqual(false);
+    expect(validateOrigin('https://a-*-b.app.example.com/*')).toEqual(false);
+});

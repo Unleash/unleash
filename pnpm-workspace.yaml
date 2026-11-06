@@ -125,5 +125,5 @@ overrides:
   systeminformation: "5.33.16"
   tough-cookie: "4.1.4"
   undici: "7.30.1"
-  vite: "8.3.1"
+  vite: "8.3.3"
   ws: "8.21.3"

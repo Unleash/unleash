@@ -141,7 +141,7 @@
     "unleash-proxy-client": "3.8.2",
     "urlpattern-polyfill": "^10.1.0",
     "use-query-params": "^2.2.2",
-    "vite": "^8.0.10",
+    "vite": "^8.3.3",
     "vite-plugin-env-compatible": "2.0.1",
     "vite-plugin-svgr": "5.2.0",
     "vite-tsconfig-paths": "^5.1.4",

@@ -130,6 +130,7 @@ export const ProjectFeatureToggles = ({
         lifecycle: tableState.lifecycle,
         lastSeenAt: tableState.lastSeenAt,
         favorite: tableState.favorite,
+        contextField: tableState.contextField,
     };
     const listProps = flagsListProps({
         filterState,

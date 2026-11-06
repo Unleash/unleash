@@ -89,4 +89,9 @@ export type SearchFeaturesParams = {
      * @pattern ^(IS_BEFORE|IS_ON_OR_AFTER):\d{4}-\d{2}-\d{2}$
      */
     lastSeenAt?: string;
+    /**
+     * The names of the context fields to filter by. A feature flag matches when a strategy constraint or a segment constraint references the context field. Each value can be a context field name, or a URL-encoded `contextName=value` pair to only match constraints with that value. The names can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF, INCLUDE, DO_NOT_INCLUDE, INCLUDE_ALL_OF, INCLUDE_ANY_OF, EXCLUDE_IF_ANY_OF, EXCLUDE_ALL.
+     * @pattern ^(IS|IS_NOT|IS_ANY_OF|IS_NONE_OF|INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL):(.+)$
+     */
+    contextField?: string;
 };

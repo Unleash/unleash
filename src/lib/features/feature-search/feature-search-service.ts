@@ -9,6 +9,7 @@ import type {
 } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import { parseSearchOperatorValue } from './search-utils.js';
+import type { ContextFieldValue } from './feature-search-store-type.js';
 
 export class FeatureSearchService {
     private featureSearchStore: IFeatureSearchStore;
@@ -39,6 +40,22 @@ export class FeatureSearchService {
             features,
             total,
         };
+    }
+
+    async getContextFieldValues(
+        userId: number,
+        project: string,
+    ): Promise<ContextFieldValue[]> {
+        const hasAccess = await this.privateProjectChecker.hasAccessToProject(
+            userId,
+            project,
+        );
+
+        if (!hasAccess) {
+            return [];
+        }
+
+        return this.featureSearchStore.getContextFieldValues(project);
     }
 
     convertToQueryParams = async (
@@ -97,6 +114,14 @@ export class FeatureSearchService {
             const parsed = parseSearchOperatorValue(
                 'lifecycle.latest_stage',
                 params.lifecycle,
+            );
+            if (parsed) queryParams.push(parsed);
+        }
+
+        if (params.contextField) {
+            const parsed = parseSearchOperatorValue(
+                'contextField',
+                params.contextField,
             );
             if (parsed) queryParams.push(parsed);
         }

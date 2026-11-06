@@ -16,6 +16,7 @@ import type {
 } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
 import { applyGenericQueryParams, applySearchFilters } from './search-utils.js';
 import { generateImageUrl } from '../../util/index.js';
+import type { ContextFieldValue } from './feature-search-store-type.js';
 type Raw<T = any> = Knex.Raw<T>;
 
 const sortEnvironments = (overview: IFeatureSearchOverview[]) => {
@@ -383,6 +384,75 @@ class FeatureSearchStore implements IFeatureSearchStore {
             total: 0,
         };
     }
+
+    async getContextFieldValues(project: string): Promise<ContextFieldValue[]> {
+        const stopTimer = this.timer('getContextFieldValues');
+        try {
+            const { rows } = await this.db.raw(
+                `
+            SELECT DISTINCT
+                constraint_entry ->> 'contextName' AS context_name,
+                context_value AS value
+            FROM feature_strategies fs
+            INNER JOIN features f ON f.name = fs.feature_name
+            CROSS JOIN LATERAL jsonb_array_elements(
+                CASE
+                    WHEN jsonb_typeof(fs.constraints) = 'array' THEN fs.constraints
+                    ELSE '[]'::jsonb
+                END
+            ) AS constraint_entry
+            CROSS JOIN LATERAL jsonb_array_elements_text(
+                CASE
+                    WHEN jsonb_typeof(constraint_entry -> 'values') = 'array' THEN constraint_entry -> 'values'
+                    WHEN jsonb_typeof(constraint_entry -> 'value') = 'string' THEN jsonb_build_array(constraint_entry -> 'value')
+                    ELSE '[]'::jsonb
+                END
+            ) AS context_value
+            WHERE f.project = ?
+              AND f.archived_at IS NULL
+              AND fs.milestone_id IS NULL
+              AND constraint_entry ->> 'contextName' IS NOT NULL
+
+            UNION
+
+            SELECT DISTINCT
+                constraint_entry ->> 'contextName' AS context_name,
+                context_value AS value
+            FROM feature_strategies fs
+            INNER JOIN features f ON f.name = fs.feature_name
+            INNER JOIN feature_strategy_segment fss ON fss.feature_strategy_id = fs.id
+            INNER JOIN segments seg ON seg.id = fss.segment_id
+            CROSS JOIN LATERAL jsonb_array_elements(
+                CASE
+                    WHEN jsonb_typeof(seg.constraints) = 'array' THEN seg.constraints
+                    ELSE '[]'::jsonb
+                END
+            ) AS constraint_entry
+            CROSS JOIN LATERAL jsonb_array_elements_text(
+                CASE
+                    WHEN jsonb_typeof(constraint_entry -> 'values') = 'array' THEN constraint_entry -> 'values'
+                    WHEN jsonb_typeof(constraint_entry -> 'value') = 'string' THEN jsonb_build_array(constraint_entry -> 'value')
+                    ELSE '[]'::jsonb
+                END
+            ) AS context_value
+            WHERE f.project = ?
+              AND f.archived_at IS NULL
+              AND fs.milestone_id IS NULL
+              AND constraint_entry ->> 'contextName' IS NOT NULL
+
+            ORDER BY context_name, value
+            `,
+                [project, project],
+            );
+            return rows.map((row) => ({
+                contextName: row.context_name,
+                value: row.value,
+            }));
+        } finally {
+            stopTimer();
+        }
+    }
+
     /*
         This is noncritical data that can should be joined after paging and is not part of filtering/sorting
      */
@@ -874,6 +944,177 @@ const applyFavoriteCondition = (
     }
 };
 
+type ContextFieldCondition = {
+    contextName: string;
+    value?: string;
+};
+
+const safeDecodeUriComponent = (value: string): string => {
+    try {
+        return decodeURIComponent(value);
+    } catch {
+        return value;
+    }
+};
+
+const parseContextFieldCondition = (token: string): ContextFieldCondition => {
+    const separatorIndex = token.indexOf('=');
+
+    if (separatorIndex === -1) {
+        return { contextName: safeDecodeUriComponent(token) };
+    }
+
+    return {
+        contextName: safeDecodeUriComponent(token.slice(0, separatorIndex)),
+        value: safeDecodeUriComponent(token.slice(separatorIndex + 1)),
+    };
+};
+
+const contextFieldConditionMatcher = (
+    alias: string,
+    { contextName, value }: ContextFieldCondition,
+): { sql: string; bindings: string[] } => {
+    if (value === undefined) {
+        return {
+            sql: `${alias} ->> 'contextName' = ?`,
+            bindings: [contextName],
+        };
+    }
+
+    return {
+        sql: `(
+            ${alias} ->> 'contextName' = ?
+            AND (
+                EXISTS (
+                    SELECT 1
+                    FROM jsonb_array_elements_text(
+                        CASE
+                            WHEN jsonb_typeof(${alias} -> 'values') = 'array' THEN ${alias} -> 'values'
+                            ELSE '[]'::jsonb
+                        END
+                    ) AS context_value(value_text)
+                    WHERE value_text = ?
+                )
+                OR ${alias} ->> 'value' = ?
+            )
+        )`,
+        bindings: [contextName, value, value],
+    };
+};
+
+const contextFieldMatcher = (
+    alias: string,
+    conditions: ContextFieldCondition[],
+): { sql: string; bindings: string[] } => {
+    const parts = conditions.map((condition) =>
+        contextFieldConditionMatcher(alias, condition),
+    );
+
+    return {
+        sql: parts.map((part) => part.sql).join(' OR '),
+        bindings: parts.flatMap((part) => part.bindings),
+    };
+};
+
+const createContextFieldExistsSql = (
+    conditions: ContextFieldCondition[],
+): { sql: string; bindings: string[] } => {
+    const strategyMatcher = contextFieldMatcher(
+        'strategy_constraint',
+        conditions,
+    );
+    const segmentMatcher = contextFieldMatcher(
+        'segment_constraint',
+        conditions,
+    );
+
+    return {
+        sql: `EXISTS (
+            SELECT 1
+            FROM feature_strategies AS fs
+            WHERE fs.feature_name = features.name
+              AND fs.milestone_id IS NULL
+              AND (
+                  EXISTS (
+                      SELECT 1
+                      FROM jsonb_array_elements(
+                          CASE
+                              WHEN jsonb_typeof(fs.constraints) = 'array' THEN fs.constraints
+                              ELSE '[]'::jsonb
+                          END
+                      ) AS strategy_constraint
+                      WHERE ${strategyMatcher.sql}
+                  )
+                  OR EXISTS (
+                      SELECT 1
+                      FROM feature_strategy_segment AS fss
+                      INNER JOIN segments AS seg ON seg.id = fss.segment_id
+                      WHERE fss.feature_strategy_id = fs.id
+                        AND EXISTS (
+                            SELECT 1
+                            FROM jsonb_array_elements(
+                                CASE
+                                    WHEN jsonb_typeof(seg.constraints) = 'array' THEN seg.constraints
+                                    ELSE '[]'::jsonb
+                                END
+                            ) AS segment_constraint
+                            WHERE ${segmentMatcher.sql}
+                        )
+                  )
+              )
+        )`,
+        bindings: [...strategyMatcher.bindings, ...segmentMatcher.bindings],
+    };
+};
+
+const applyContextFieldConditions = (
+    query: Knex.QueryBuilder,
+    conditions: IQueryParam[],
+): void => {
+    conditions.forEach(({ operator, values }) => {
+        const parsedConditions = values
+            .filter((value): value is string => Boolean(value))
+            .map(parseContextFieldCondition);
+
+        if (parsedConditions.length === 0) return;
+
+        switch (operator) {
+            case 'IS':
+            case 'IS_ANY_OF':
+            case 'INCLUDE':
+            case 'INCLUDE_ANY_OF': {
+                const { sql, bindings } =
+                    createContextFieldExistsSql(parsedConditions);
+                query.whereRaw(sql, bindings);
+                break;
+            }
+            case 'IS_NOT':
+            case 'IS_NONE_OF':
+            case 'DO_NOT_INCLUDE':
+            case 'EXCLUDE_IF_ANY_OF': {
+                const { sql, bindings } =
+                    createContextFieldExistsSql(parsedConditions);
+                query.whereRaw(`NOT (${sql})`, bindings);
+                break;
+            }
+            case 'INCLUDE_ALL_OF':
+            case 'EXCLUDE_ALL': {
+                const parts = parsedConditions.map((condition) =>
+                    createContextFieldExistsSql([condition]),
+                );
+                const sql = parts.map((part) => part.sql).join(' AND ');
+                const bindings = parts.flatMap((part) => part.bindings);
+
+                query.whereRaw(
+                    operator === 'INCLUDE_ALL_OF' ? sql : `NOT (${sql})`,
+                    bindings,
+                );
+                break;
+            }
+        }
+    });
+};
+
 const applyQueryParams = (
     query: Knex.QueryBuilder,
     queryParams: IQueryParam[],
@@ -891,6 +1132,9 @@ const applyQueryParams = (
     const favoriteCondition = queryParams.find(
         (param) => param.field === 'favorite',
     );
+    const contextFieldConditions = queryParams.filter(
+        (param) => param.field === 'contextField',
+    );
     const genericConditions = queryParams.filter(
         (param) =>
             ![
@@ -899,6 +1143,7 @@ const applyQueryParams = (
                 'segment',
                 'lastSeenAt',
                 'favorite',
+                'contextField',
                 'lifecycle.latest_stage',
             ].includes(param.field),
     );
@@ -907,6 +1152,7 @@ const applyQueryParams = (
 
     applyStaleConditions(query, staleConditions);
     applyLastSeenAtConditions(query, lastSeenAtConditions);
+    applyContextFieldConditions(query, contextFieldConditions);
 
     applyMultiQueryParams(
         query,

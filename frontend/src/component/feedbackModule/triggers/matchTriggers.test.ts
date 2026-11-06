@@ -38,6 +38,12 @@ const appearedFlagNames = (
     surveys: Survey[],
 ): string[] => flagNames({ on: 'appear', path, added }, surveys);
 
+const eventFlagNames = (
+    path: string,
+    name: string,
+    surveys: Survey[],
+): string[] => flagNames({ on: 'event', path, name }, surveys);
+
 const toast = (text: string): Element => {
     const element = document.createElement('div');
     element.dataset.testid = 'toast';
@@ -168,6 +174,46 @@ describe('matchTriggers', () => {
 
         expect(pageViewFlagNames('/projects', surveys)).toEqual([]);
         expect(clickedFlagNames('/projects', button(), surveys)).toEqual([]);
+    });
+
+    it('matches an event trigger when the dispatched event has its name', () => {
+        const surveys = [
+            survey('survey-a', { on: 'event', name: 'flag-created' }),
+            survey('survey-b', { on: 'event', name: 'flag-archived' }),
+        ];
+
+        expect(eventFlagNames('/projects', 'flag-created', surveys)).toEqual([
+            'survey-a',
+        ]);
+    });
+
+    it('does not match page, click or appear triggers on an event', () => {
+        const surveys = [
+            survey('survey-a', { on: 'page' }),
+            survey('survey-b', { on: 'click', selector: 'button' }),
+            survey('survey-c', { on: 'appear', selector: 'button' }),
+        ];
+
+        expect(eventFlagNames('/projects', 'flag-created', surveys)).toEqual(
+            [],
+        );
+    });
+
+    it('matches an event trigger only on a page its path pattern matches', () => {
+        const surveys = [
+            survey('survey-a', {
+                on: 'event',
+                name: 'flag-created',
+                path: '/projects/:projectId',
+            }),
+        ];
+
+        expect(
+            eventFlagNames('/projects/default', 'flag-created', surveys),
+        ).toEqual(['survey-a']);
+        expect(eventFlagNames('/features', 'flag-created', surveys)).toEqual(
+            [],
+        );
     });
 
     it('matches an appear trigger when the added element matches', () => {

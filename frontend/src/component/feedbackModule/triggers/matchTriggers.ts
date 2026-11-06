@@ -6,7 +6,8 @@ import { canMatchPages, toPagePattern } from './pagePattern.ts';
 export type TriggerEvent =
     | { on: 'page'; path: string }
     | { on: 'click'; path: string; target: Element }
-    | { on: 'appear'; path: string; added: Element };
+    | { on: 'appear'; path: string; added: Element }
+    | { on: 'event'; path: string; name: string };
 
 export const matchesPage = (trigger: SurveyTrigger, path: string): boolean => {
     if (trigger.path === undefined) {
@@ -35,7 +36,7 @@ const matchesEvent = (trigger: SurveyTrigger, event: TriggerEvent): boolean => {
                 matchesAddedElement(trigger, event.added)
             );
         case 'event':
-            return false;
+            return event.on === 'event' && event.name === trigger.name;
     }
 };
 

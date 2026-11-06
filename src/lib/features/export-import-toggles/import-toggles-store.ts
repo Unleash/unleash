@@ -38,6 +38,7 @@ export class ImportTogglesStore implements IImportTogglesStore {
         return this.db(T.featureStrategies)
             .where({ environment })
             .whereIn('feature_name', featureNames)
+            .whereNull('milestone_id')
             .del()
             .returning([
                 'id',

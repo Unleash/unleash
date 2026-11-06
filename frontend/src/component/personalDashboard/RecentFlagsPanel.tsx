@@ -21,6 +21,7 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useLoading from 'hooks/useLoading';
 import useToast from 'hooks/useToast';
+import { useEventTracker } from 'hooks/useEventTracker';
 import type { RemoteData } from './RemoteData.ts';
 
 const RECENT_FLAGS_LIMIT = 20;
@@ -73,11 +74,13 @@ const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 type RecentFlagsPanelViewProps = {
     flags: RemoteData<FeatureSearchResponseSchema[]>;
     onFavorite: (feature: FeatureSchema) => void;
+    onFlagClick: () => void;
 };
 
 export const RecentFlagsPanelView = ({
     flags,
     onFavorite,
+    onFlagClick,
 }: RecentFlagsPanelViewProps) => {
     const { projects } = useProjects();
     const { isOss } = useUiConfig();
@@ -98,6 +101,7 @@ export const RecentFlagsPanelView = ({
                             `/search?type=${encodeURIComponent(`IS:${type}`)}`,
                         ),
                     onFavorite,
+                    onFlagClick,
                 ),
                 meta: { width: '100%', align: 'left' },
             }),
@@ -155,7 +159,7 @@ export const RecentFlagsPanelView = ({
                 },
             }),
         ],
-        [projects, isOss, onFavorite, navigate],
+        [projects, isOss, onFavorite, onFlagClick, navigate],
     );
 
     const data = useMemo(
@@ -210,6 +214,7 @@ export const RecentFlagsPanel = () => {
     });
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { setToastApiError } = useToast();
+    const { trackEvent } = useEventTracker();
 
     const onFavorite = useCallback(
         async (feature: FeatureSchema) => {
@@ -235,5 +240,22 @@ export const RecentFlagsPanel = () => {
           ? { state: 'loading' }
           : { state: 'success', data: flags ?? [] };
 
-    return <RecentFlagsPanelView flags={remoteFlags} onFavorite={onFavorite} />;
+    const onFlagClick = useCallback(
+        () =>
+            trackEvent('personal-dashboard', {
+                props: {
+                    eventType: 'Go to flag from list',
+                    dashboardVersion: 'v2',
+                },
+            }),
+        [trackEvent],
+    );
+
+    return (
+        <RecentFlagsPanelView
+            flags={remoteFlags}
+            onFavorite={onFavorite}
+            onFlagClick={onFlagClick}
+        />
+    );
 };

@@ -130,7 +130,13 @@ const Panel = ({
     flags,
 }: {
     flags: RemoteData<FeatureSearchResponseSchema[]>;
-}) => <RecentFlagsPanelView flags={flags} onFavorite={() => {}} />;
+}) => (
+    <RecentFlagsPanelView
+        flags={flags}
+        onFavorite={() => {}}
+        onFlagClick={() => {}}
+    />
+);
 
 export const SomeFlags: Story = () => (
     <Setup>

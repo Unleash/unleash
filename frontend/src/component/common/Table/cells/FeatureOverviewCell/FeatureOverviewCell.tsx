@@ -131,10 +131,14 @@ const FeatureName: FC<{
     project: string;
     feature: string;
     searchQuery: string;
-}> = ({ project, feature, searchQuery }) => {
+    onClick?: () => void;
+}> = ({ project, feature, searchQuery, onClick }) => {
     return (
         <Box sx={(theme) => ({ fontWeight: theme.typography.fontWeightBold })}>
-            <StyledFeatureLink to={`/projects/${project}/features/${feature}`}>
+            <StyledFeatureLink
+                to={`/projects/${project}/features/${feature}`}
+                onClick={onClick}
+            >
                 <Truncator
                     lines={1}
                     title={feature}
@@ -305,6 +309,7 @@ export const PrimaryFeatureInfo: FC<{
     delay?: number;
     isFavorite: boolean;
     onFavorite: () => void;
+    onFlagClick?: () => void;
 }> = ({
     project,
     feature,
@@ -316,6 +321,7 @@ export const PrimaryFeatureInfo: FC<{
     delay = 500,
     isFavorite,
     onFavorite,
+    onFlagClick,
 }) => {
     const { featureTypes } = useFeatureTypes();
     const IconComponent = getFeatureTypeIcons(type);
@@ -349,6 +355,7 @@ export const PrimaryFeatureInfo: FC<{
                     project={project}
                     feature={feature}
                     searchQuery={searchQuery}
+                    onClick={onFlagClick}
                 />
             )}
             <FavoriteButton isFavorite={isFavorite} onClick={onFavorite} />
@@ -412,6 +419,7 @@ export const createFeatureOverviewCell =
         onTagClick: (tag: string) => void,
         onFlagTypeClick: (type: string) => void,
         onFavorite: (feature: FeatureSearchResponseSchema) => void,
+        onFlagClick?: () => void,
     ): FC<IFeatureNameCellProps> =>
     ({ row }) => {
         const { searchQuery } = useSearchHighlightContext();
@@ -430,6 +438,7 @@ export const createFeatureOverviewCell =
                     onFavorite={() =>
                         onFavorite(row.original as FeatureSearchResponseSchema)
                     }
+                    onFlagClick={onFlagClick}
                 />
                 <SecondaryFeatureInfo
                     description={row.original.description || ''}

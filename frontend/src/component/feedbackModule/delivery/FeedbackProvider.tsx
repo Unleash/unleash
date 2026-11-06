@@ -24,7 +24,11 @@ import {
     shouldShowSurvey,
 } from './surveyStorage.ts';
 import { submitSurveyResponse } from './submitSurveyResponse.ts';
-import { matchTriggers, type TriggerEvent } from '../triggers/matchTriggers.ts';
+import {
+    matchesPage,
+    matchTriggers,
+    type TriggerEvent,
+} from '../triggers/matchTriggers.ts';
 import {
     observeBrowserPage,
     type PageObserver,
@@ -123,7 +127,11 @@ export const FeedbackProvider = ({
 
     const waitsForAppearance =
         survey === null &&
-        surveys.some(({ trigger }) => trigger.on === 'appear');
+        path !== null &&
+        surveys.some(
+            ({ trigger }) =>
+                trigger.on === 'appear' && matchesPage(trigger, path),
+        );
     useEffect(() => {
         if (waitsForAppearance) {
             return observeAppear(showSurveyOnAppear);

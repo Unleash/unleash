@@ -531,4 +531,24 @@ describe('FeedbackProvider', () => {
 
         expect(appearObserver.isInstalled()).toBe(false);
     });
+
+    it('observes appearances only on pages an appear survey can trigger on', async () => {
+        renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', {
+                    ...APPEAR_FLAG_CREATED_TOAST,
+                    path: '/projects/*',
+                }),
+            ]),
+        );
+        expect(appearObserver.isInstalled()).toBe(false);
+
+        pageObserver.navigate('/unleash/projects/default');
+
+        expect(appearObserver.isInstalled()).toBe(true);
+
+        pageObserver.navigate('/unleash/features');
+
+        expect(appearObserver.isInstalled()).toBe(false);
+    });
 });

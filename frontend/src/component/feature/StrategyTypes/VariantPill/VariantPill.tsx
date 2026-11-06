@@ -5,6 +5,7 @@ import {
     Typography,
     useTheme,
 } from '@mui/material';
+import Lock from '@mui/icons-material/Lock';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import type { StrategyVariantSchema } from 'openapi';
 
@@ -45,6 +46,11 @@ const Label = styled('span')(({ theme }) => ({
 }));
 
 const Weight = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
+
+const LockMark = styled(Lock)(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
     color: theme.palette.text.secondary,
 }));
 
@@ -133,6 +139,7 @@ type VariantPillProps = Omit<TabProps, 'label' | 'icon'> & {
     weight: number;
     payload?: StrategyVariantSchema['payload'];
     color: string;
+    locked?: boolean;
 };
 
 export const VariantPill = ({
@@ -140,6 +147,7 @@ export const VariantPill = ({
     weight,
     payload,
     color,
+    locked,
     ...tabProps
 }: VariantPillProps) => {
     const theme = useTheme();
@@ -167,6 +175,9 @@ export const VariantPill = ({
                     <Label>
                         {name}
                         <Weight>{weight / 10}%</Weight>
+                        {locked ? (
+                            <LockMark titleAccess='Locked weight' />
+                        ) : null}
                     </Label>
                 }
             />

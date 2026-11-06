@@ -4,6 +4,7 @@ import SelectMenu from 'component/common/select';
 import {
     Button,
     type ButtonProps,
+    IconButton,
     InputAdornment,
     styled,
     Tooltip,
@@ -12,6 +13,8 @@ import type { IPayload } from 'interfaces/featureToggle';
 import { WeightType } from 'constants/variantTypes';
 import type { IFeatureVariantEdit } from '../EnvironmentVariantsModal.tsx';
 import Delete from '@mui/icons-material/Delete';
+import Lock from '@mui/icons-material/Lock';
+import LockOpenOutlined from '@mui/icons-material/LockOpenOutlined';
 
 const LazyReactJSONEditor = React.lazy(
     () => import('component/common/ReactJSONEditor/ReactJSONEditor'),
@@ -80,6 +83,20 @@ const formatButtonProps: ButtonProps = {
         fontSize: theme.typography.body2.fontSize,
     }),
 };
+
+const LockButton = styled(IconButton)(({ theme }) => ({
+    padding: theme.spacing(0.25),
+    marginLeft: 'auto',
+    height: 'auto',
+    width: 'auto',
+    '& svg': { fontSize: theme.spacing(2) },
+}));
+
+const LockedHint = styled('p')(({ theme }) => ({
+    margin: 0,
+    fontSize: theme.typography.body2.fontSize,
+    color: theme.palette.text.secondary,
+}));
 
 const WeightInput = styled(Input)(({ theme }) => ({
     width: theme.spacing(12),
@@ -150,6 +167,7 @@ export const VariantForm = ({
     weightsError,
 }: IVariantFormProps) => {
     const [name, setName] = useState(variant.name);
+    const [locked, setLocked] = useState(variant.weightType === WeightType.FIX);
     const [percentage, setPercentage] = useState(String(variant.weight / 10));
     const [payload, setPayload] = useState<IPayload>(
         variant.payload || EMPTY_PAYLOAD,
@@ -247,6 +265,7 @@ export const VariantForm = ({
             ...variant,
             name,
             weight: variant.weight,
+            weightType: locked ? WeightType.FIX : WeightType.VARIABLE,
             stickiness:
                 variants?.length > 0 ? variants[0].stickiness : 'default',
             payload: payload.value ? payload : undefined,
@@ -257,7 +276,7 @@ export const VariantForm = ({
                 isValidPayload(payload),
         };
         updateVariant(newVariant);
-    }, [name, percentage, payload]);
+    }, [name, locked, percentage, payload]);
 
     useEffect(() => {
         setPercentage(String(variant.weight / 10));
@@ -294,12 +313,25 @@ export const VariantForm = ({
                             <FieldLabel htmlFor={weightInputId}>
                                 Weight
                             </FieldLabel>
+                            <LockButton
+                                aria-label={
+                                    locked ? 'Unlock weight' : 'Lock weight'
+                                }
+                                onClick={() => setLocked((locked) => !locked)}
+                            >
+                                {locked ? (
+                                    <Lock color='primary' fontSize='inherit' />
+                                ) : (
+                                    <LockOpenOutlined fontSize='inherit' />
+                                )}
+                            </LockButton>
                         </FieldLabelRow>
                         <WeightInput
                             id={weightInputId}
                             data-testid='VARIANT_WEIGHT_INPUT'
                             type='number'
                             label=''
+                            disabled={locked}
                             error={Boolean(weightError)}
                             errorText={weightError}
                             value={percentage}
@@ -331,6 +363,12 @@ export const VariantForm = ({
                     }}
                 />
             </TopRow>
+            {locked ? (
+                <LockedHint>
+                    Locked. Other variants share the remaining{' '}
+                    {100 - variant.weight / 10}%.
+                </LockedHint>
+            ) : null}
             <Field>
                 <FieldLabelRow>
                     <FieldLabel htmlFor={valueInputId}>Value</FieldLabel>

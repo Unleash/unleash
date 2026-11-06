@@ -107,12 +107,16 @@ export const StrategyVariants = <T extends StrategyFormState>({
             const changedIndex = prevVariants.findIndex(
                 (variant) => variant.id === id,
             );
-            const nextWeights = absorbWeightChange(
-                prevVariants.map((variant, index) =>
+            const lockedIndexes = prevVariants.flatMap((variant, index) =>
+                variant.weightType === WeightType.FIX ? [index] : [],
+            );
+            const nextWeights = absorbWeightChange({
+                weights: prevVariants.map((variant, index) =>
                     index === changedIndex ? weight : variant.weight,
                 ),
                 changedIndex,
-            );
+                lockedIndexes,
+            });
             return prevVariants.map((variant, index) => ({
                 ...variant,
                 weight: nextWeights[index],
@@ -205,6 +209,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
                     name: variant.name,
                     weight: variant.weight,
                     color: variantColor(index),
+                    locked: variant.weightType === WeightType.FIX,
                 }))}
                 weightsError={variantWeightsError}
                 onWeightsChange={changeWeights}
@@ -231,6 +236,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
                             weight={variant.weight}
                             payload={variant.payload}
                             color={variantColor(index)}
+                            locked={variant.weightType === WeightType.FIX}
                         />
                     ))}
                 </Tabs>

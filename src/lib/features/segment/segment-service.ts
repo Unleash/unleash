@@ -336,9 +336,9 @@ export class SegmentService implements ISegmentService {
             ),
         );
 
-        const segmentIdsToAdd = segmentIds.filter(
-            (id) => !currentSegmentIds.includes(id),
-        );
+        const segmentIdsToAdd = segmentIds
+            .filter((id) => !currentSegmentIds.includes(id))
+            .sort((a, b) => a - b);
 
         await Promise.all(
             segmentIdsToAdd.map((segmentId) =>

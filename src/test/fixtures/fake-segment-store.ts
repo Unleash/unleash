@@ -6,6 +6,7 @@ import type {
 
 export default class FakeSegmentStore implements ISegmentStore {
     segments: ISegment[] = [];
+    strategySegments: IFeatureStrategySegment[] = [];
     currentId: number = 0;
 
     async count(): Promise<number> {
@@ -40,16 +41,23 @@ export default class FakeSegmentStore implements ISegmentStore {
         return [];
     }
 
-    async getByStrategy(): Promise<ISegment[]> {
-        return [];
+    async getByStrategy(strategyId: string): Promise<ISegment[]> {
+        return this.strategySegments
+            .filter((row) => row.featureStrategyId === strategyId)
+            .flatMap((row) =>
+                this.segments.filter((segment) => segment.id === row.segmentId),
+            );
     }
 
     update(): Promise<ISegment> {
         throw new Error('Method not implemented.');
     }
 
-    addToStrategy(): Promise<void> {
-        throw new Error('Method not implemented.');
+    async addToStrategy(id: number, strategyId: string): Promise<void> {
+        this.strategySegments.push({
+            featureStrategyId: strategyId,
+            segmentId: id,
+        });
     }
 
     removeFromStrategy(): Promise<void> {

@@ -88,6 +88,8 @@ import type { AccessService } from '../../services/access-service.js';
 import type { IUser } from '../../types/index.js';
 import type { IFeatureProjectUserParams } from './feature-toggle-controller.js';
 import { unique } from '../../util/unique.js';
+import { arraysHaveSameItems } from '../../util/arraysHaveSameItems.js';
+import { collectIds } from '../../util/collect-ids.js';
 import type { ISegmentService } from '../segment/segment-service-interface.js';
 import type { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model.js';
 import { checkFeatureFlagNamesAgainstPattern } from '../feature-naming-pattern/feature-naming-validation.js';
@@ -913,6 +915,34 @@ export class FeatureToggleService {
             return data;
         }
         throw new NotFoundError(`Could not find strategy with id ${id}`);
+    }
+
+    // updateStrategy would rewrite the whole row and undo a concurrent edit
+    async setStrategySegments(
+        id: string,
+        segmentIds: number[],
+        auditUser: IAuditUser,
+    ): Promise<void> {
+        const previousSegments = await this.segmentService.getByStrategy(id);
+        if (arraysHaveSameItems(collectIds(previousSegments), segmentIds)) {
+            return;
+        }
+        const strategy = await this.featureStrategiesStore.getStrategyById(id);
+        await this.segmentService.updateStrategySegments(id, segmentIds);
+        const segments = await this.segmentService.getByStrategy(id);
+        await this.eventService.storeEventsOrThrow([
+            new FeatureStrategyUpdateEvent({
+                project: strategy.projectId,
+                featureName: strategy.featureName,
+                environment: strategy.environment,
+                data: this.featureStrategyToPublic(strategy, segments),
+                preData: this.featureStrategyToPublic(
+                    strategy,
+                    previousSegments,
+                ),
+                auditUser,
+            }),
+        ]);
     }
 
     /**

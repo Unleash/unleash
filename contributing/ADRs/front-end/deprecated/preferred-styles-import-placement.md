@@ -24,7 +24,7 @@ const SecondComponent = () => {
 
 ## Decision
 
-We have decided to always place style imports as the last import in the file, so that any components that the file may use can safely be overriden with styles from the parent component.
+We have decided to always place style imports as the last import in the file, so that any components that the file may use can safely be overridden with styles from the parent component.
 
 ```tsx
 // Do:

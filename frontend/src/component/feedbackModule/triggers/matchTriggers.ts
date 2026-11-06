@@ -1,6 +1,6 @@
 import type { Survey } from '../survey.ts';
 import type { SurveyTrigger } from './surveyTrigger.ts';
-import { matchesElement } from './elementMatch.ts';
+import { matchesAddedElement, matchesElement } from './elementMatch.ts';
 import { canMatchPages, toPagePattern } from './pagePattern.ts';
 
 export type TriggerEvent =
@@ -30,7 +30,10 @@ const matchesEvent = (trigger: SurveyTrigger, event: TriggerEvent): boolean => {
                 event.on === 'click' && matchesElement(trigger, event.target)
             );
         case 'appear':
-            return false;
+            return (
+                event.on === 'appear' &&
+                matchesAddedElement(trigger, event.added)
+            );
         case 'event':
             return false;
     }

@@ -52,6 +52,7 @@ import {
     getVariantValue,
     isDefined,
     parseEnvVarBoolean,
+    parseEnvVarNumber,
     randomId,
 } from './util/index.js';
 import type {
@@ -508,6 +509,7 @@ export {
     defaultToRow,
     isDefined,
     parseEnvVarBoolean,
+    parseEnvVarNumber,
     querySchema,
     basePaginationParameters,
     migrateDb,

@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+import { constraintValidator } from './constraint-validator.js';
 import {
     getDeletedLegalValues,
     getInvalidLegalValues,
@@ -18,4 +19,22 @@ test('should return invalid legal values', () => {
         [{ value: 'A' }, { value: 'B' }],
     );
     expect([...invalidLegalValues]).toEqual(['A']);
+});
+
+test('should mark non-finite numeric legal values as invalid', () => {
+    const validate = constraintValidator('NUM_EQ');
+    const invalidLegalValues = getInvalidLegalValues(
+        (value) => validate(value)[0],
+        [
+            { value: 'Infinity' },
+            { value: '-Infinity' },
+            { value: '1e309' },
+            { value: '0' },
+            { value: '-1' },
+            { value: '3.14' },
+            { value: '1e3' },
+        ],
+    );
+
+    expect([...invalidLegalValues]).toEqual(['Infinity', '-Infinity', '1e309']);
 });

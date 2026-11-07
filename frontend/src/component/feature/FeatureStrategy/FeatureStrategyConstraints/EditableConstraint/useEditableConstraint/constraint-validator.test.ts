@@ -11,6 +11,18 @@ describe('constraintValidator', () => {
             expect(validate('0')).toEqual([true, '']);
             expect(validate('-1')).toEqual([true, '']);
             expect(validate('3.14')).toEqual([true, '']);
+            expect(validate('1e3')).toEqual([true, '']);
+            expect(validate('-2.5e-3')).toEqual([true, '']);
+        });
+
+        test.each([
+            'Infinity',
+            '+Infinity',
+            '-Infinity',
+            '1e309',
+            '-1e309',
+        ])('rejects non-finite number %s', (value) => {
+            expect(validate(value)).toEqual([false, 'Value must be a number']);
         });
 
         test('rejects non-numeric strings', () => {

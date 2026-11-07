@@ -6,6 +6,7 @@ export type SubmitSignupData = {
     companyRole: string;
     companyName: string;
     companyIsNA: boolean;
+    hearAboutUs: string;
     productUpdatesEmailConsent: boolean;
 };
 

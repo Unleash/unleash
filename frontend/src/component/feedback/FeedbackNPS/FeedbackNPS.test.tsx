@@ -10,6 +10,7 @@ import UIContext from 'contexts/UIContext';
 import { SURVEY_KIND, SURVEY_VERSION } from 'component/feedbackModule/survey';
 import { FeedbackProvider } from 'component/feedbackModule/delivery/FeedbackProvider';
 import { FeedbackSurvey } from 'component/feedbackModule/delivery/FeedbackSurvey';
+import { observeBrowserPage } from 'component/feedbackModule/observers/observePage';
 import { shouldShowSurvey } from 'component/feedbackModule/delivery/surveyStorage';
 import { FeedbackNPS } from './FeedbackNPS.tsx';
 
@@ -55,7 +56,11 @@ const renderSurveys = (flags: IToggle[]) => {
     const client = testUnleashClient(flags);
     const view = render(
         <FlagProvider unleashClient={client} startClient={false}>
-            <FeedbackProvider>
+            <FeedbackProvider
+                identifyUser={() => undefined}
+                observePage={observeBrowserPage}
+                basePath=''
+            >
                 <FeedbackSurvey />
             </FeedbackProvider>
             <FeedbackNPS openUrl='https://feedback.example.com' />

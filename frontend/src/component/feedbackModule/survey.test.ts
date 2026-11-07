@@ -304,11 +304,28 @@ describe('parseSurveyPayload', () => {
         });
     });
 
-    it('reads a click trigger with a selector, text and page pattern', () => {
+    it.each([
+        'appear',
+        'click',
+    ])('reads an %s trigger with a selector, text and page pattern', (on) => {
         const trigger = {
-            on: 'click',
+            on,
             selector: '[data-testid="create-flag"]',
             text: 'Create flag',
+            path: '/projects/:projectId',
+        };
+        const survey = parseSurveyPayload(
+            'survey-x',
+            payload({ ...validSurvey, trigger }),
+        );
+
+        expect(survey?.trigger).toStrictEqual(trigger);
+    });
+
+    it('reads a custom event trigger with a page pattern', () => {
+        const trigger = {
+            on: 'event',
+            name: 'flag-created',
             path: '/projects/:projectId',
         };
         const survey = parseSurveyPayload(
@@ -339,6 +356,14 @@ describe('parseSurveyPayload', () => {
         ['is null', null],
         ['has an unknown condition', { on: 'scroll' }],
         ['clicks without a selector or text', { on: 'click' }],
+        ['appears without a selector or text', { on: 'appear' }],
+        ['listens for an event without a name', { on: 'event' }],
+        ['listens for an event with an empty name', { on: 'event', name: '' }],
+        ['listens for an event with a blank name', { on: 'event', name: '  ' }],
+        [
+            'listens for an event with a non-string name',
+            { on: 'event', name: 42 },
+        ],
         ['has no condition', { path: '/projects' }],
         ['has a non-string path', { on: 'page', path: 42 }],
         ['has an invalid path pattern', { on: 'page', path: '/projects/(' }],

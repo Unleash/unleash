@@ -20,7 +20,10 @@ export interface IFeatureStrategy {
 }
 
 export type StrategyFormParameters = Partial<ParametersSchema>;
-export type StrategyFormState = Omit<Partial<IFeatureStrategy>, 'parameters'> &
+export type StrategyFormState = Omit<
+    Partial<IFeatureStrategy>,
+    'parameters' | 'environment' | 'featureName' | 'projectId'
+> &
     Required<Pick<IFeatureStrategy, 'name'>> & {
         parameters?: StrategyFormParameters;
     };

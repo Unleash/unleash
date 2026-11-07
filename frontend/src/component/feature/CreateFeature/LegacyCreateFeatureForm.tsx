@@ -252,7 +252,6 @@ export const LegacyCreateFeatureForm = ({
                 layout='compact'
                 disablePadding
                 description={documentation.text}
-                documentationIcon={documentation.icon}
                 documentationLink={documentation.link?.url}
                 documentationLinkLabel={documentation.link?.label}
                 formatApiCode={formatApiCode}

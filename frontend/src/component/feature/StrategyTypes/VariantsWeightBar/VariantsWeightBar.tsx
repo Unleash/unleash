@@ -1,10 +1,12 @@
-import type { HTMLAttributes } from 'react';
-import { Slider, styled } from '@mui/material';
+import { type HTMLAttributes, memo } from 'react';
+import type { IFeatureVariantEdit } from '../../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
+import { alpha, Slider, styled } from '@mui/material';
 import DragIndicator from '@mui/icons-material/DragIndicator';
 import { focusOutline } from 'themes/themeStyles';
-import { TOTAL_WEIGHT, weightsFromSplitPositions } from '../variantWeights.ts';
-
-const MIN_SEGMENT_FLEX = 40;
+import {
+    TOTAL_WEIGHT,
+    weightsFromDraggedPositions,
+} from '../variantWeights.ts';
 
 const cumulativeWeights = (weights: number[]) =>
     weights.map((_, index) =>
@@ -31,15 +33,16 @@ const Segments = styled('div')(({ theme }) => ({
     overflow: 'hidden',
 }));
 
-const Segment = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'color',
-})<{ color: string }>(({ theme, color }) => ({
+const lockedStripes = (color: string) =>
+    `repeating-linear-gradient(135deg, ${color} 0, ${color} 4px, ${alpha(color, 0.5)} 4px, ${alpha(color, 0.5)} 8px)`;
+
+const Segment = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    background: color,
+    minWidth: theme.spacing(0.5),
     color: theme.palette.text.primary,
     fontSize: theme.typography.caption.fontSize,
     fontWeight: theme.typography.fontWeightBold,
@@ -72,21 +75,33 @@ const Grip = styled('span')(({ theme }) => ({
     '&.Mui-focusVisible': focusOutline(theme),
 }));
 
+type GripThumbProps = HTMLAttributes<HTMLSpanElement> & {
+    'data-index'?: number;
+    hiddenHandleIndexes?: number[];
+};
+
 const GripThumb = ({
     children,
+    hiddenHandleIndexes = [],
     ...thumbProps
-}: HTMLAttributes<HTMLSpanElement>) => (
-    <Grip {...thumbProps}>
-        {children}
-        <DragIndicator fontSize='inherit' />
-    </Grip>
-);
+}: GripThumbProps) => {
+    const handleIsHidden = hiddenHandleIndexes.includes(
+        thumbProps['data-index'] ?? -1,
+    );
+    if (handleIsHidden) {
+        return null;
+    }
+    return (
+        <Grip {...thumbProps}>
+            {children}
+            <DragIndicator fontSize='inherit' />
+        </Grip>
+    );
+};
 
-type BarVariant = {
-    id: string;
-    name: string;
-    weight: number;
+type BarVariant = Pick<IFeatureVariantEdit, 'id' | 'name' | 'weight'> & {
     color: string;
+    locked: boolean;
 };
 
 type VariantsWeightBarProps = {
@@ -95,7 +110,7 @@ type VariantsWeightBarProps = {
     onWeightsChange: (weights: number[]) => void;
 };
 
-export const VariantsWeightBar = ({
+const VariantsWeightBarComponent = ({
     variants,
     weightsError = false,
     onWeightsChange,
@@ -103,9 +118,31 @@ export const VariantsWeightBar = ({
     const weights = variants.map((variant) => variant.weight);
     const splitPositions = cumulativeWeights(weights).slice(0, -1);
 
+    const hiddenHandleIndexes = splitPositions.flatMap((_, handleIndex) => {
+        const variantLeftOfHandle = variants[handleIndex];
+        const variantRightOfHandle = variants[handleIndex + 1];
+        return variantLeftOfHandle.locked || variantRightOfHandle.locked
+            ? [handleIndex]
+            : [];
+    });
     const changeSplitPositions = (value: number | number[]) => {
         const nextSplitPositions = Array.isArray(value) ? value : [value];
-        onWeightsChange(weightsFromSplitPositions(nextSplitPositions));
+        const lockedIndexes = variants.flatMap((variant, index) =>
+            variant.locked ? [index] : [],
+        );
+        const nextWeights = weightsFromDraggedPositions({
+            previousWeights: weights,
+            splitPositions: nextSplitPositions,
+            lockedIndexes,
+        });
+        const changesLockedWeight = variants.some(
+            (variant, index) =>
+                variant.locked && nextWeights[index] !== weights[index],
+        );
+        if (changesLockedWeight) {
+            return;
+        }
+        onWeightsChange(nextWeights);
     };
 
     return (
@@ -114,9 +151,11 @@ export const VariantsWeightBar = ({
                 {variants.map((variant, index) => (
                     <Segment
                         key={variant.id}
-                        color={variant.color}
                         style={{
-                            flex: `${Math.max(weights[index], MIN_SEGMENT_FLEX)} 0 0`,
+                            flex: `${weights[index]} 0 0`,
+                            background: variant.locked
+                                ? lockedStripes(variant.color)
+                                : variant.color,
                         }}
                     >
                         {weights[index] / 10}%
@@ -130,9 +169,11 @@ export const VariantsWeightBar = ({
                     max={TOTAL_WEIGHT}
                     step={10}
                     track={false}
-                    disableSwap
                     slots={{ thumb: GripThumb }}
-                    slotProps={{ rail: { style: { display: 'none' } } }}
+                    slotProps={{
+                        thumb: { hiddenHandleIndexes } as GripThumbProps,
+                        rail: { style: { display: 'none' } },
+                    }}
                     getAriaLabel={(index) =>
                         `Split between ${variants[index].name} and ${variants[index + 1].name}`
                     }
@@ -145,3 +186,18 @@ export const VariantsWeightBar = ({
         </Bar>
     );
 };
+
+const barVariantsAreEqual = (previous: BarVariant[], next: BarVariant[]) =>
+    previous.length === next.length &&
+    previous.every((variant, index) => {
+        const fields = Object.keys(variant) as (keyof BarVariant)[];
+        return fields.every((field) => variant[field] === next[index][field]);
+    });
+
+export const VariantsWeightBar = memo(
+    VariantsWeightBarComponent,
+    (previousProps, nextProps) =>
+        previousProps.weightsError === nextProps.weightsError &&
+        previousProps.onWeightsChange === nextProps.onWeightsChange &&
+        barVariantsAreEqual(previousProps.variants, nextProps.variants),
+);

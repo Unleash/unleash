@@ -36,6 +36,7 @@ afterAll(async () => {
 });
 
 afterEach(async () => {
+    await db.stores.edgeTokenStore.deleteAll();
     await db.stores.apiTokenStore.deleteAll();
     await db.rawDatabase('api_tokens_v2').delete();
 });
@@ -163,6 +164,30 @@ test('removes api token', async () => {
         .expect((res) => {
             expect(res.body.tokens.length).toBe(0);
         });
+});
+
+test('refuses to remove an api token Enterprise Edge created', async () => {
+    const tokenSecret = '*:development.edge-secret';
+    const token = await db.stores.apiTokenStore.insert(
+        {
+            environment: 'development',
+            projects: ['*'],
+            tokenName: 'edge-token',
+            secret: tokenSecret,
+            type: ApiTokenType.BACKEND,
+        },
+        SYSTEM_USER_ID,
+    );
+    await db.stores.edgeTokenStore.saveClient(
+        'edge-client',
+        Buffer.from('client-secret'),
+    );
+    await db.stores.edgeTokenStore.saveToken('edge-client', token);
+
+    const { body } = await app.request
+        .delete(`/api/admin/api-tokens/${tokenSecret}`)
+        .expect(403);
+    expect(body.message).toMatch(/Enterprise Edge/);
 });
 
 test.each([

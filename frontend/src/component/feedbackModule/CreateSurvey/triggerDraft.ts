@@ -4,6 +4,7 @@ import {
 } from '../triggers/elementMatch.ts';
 import { canMatchPages, toPagePattern } from '../triggers/pagePattern.ts';
 import {
+    isElementCondition,
     isValidDelayMs,
     isValidOccurrence,
     type SurveyTrigger,
@@ -21,6 +22,7 @@ export interface TriggerDraft {
     onOccurrence: string;
     selector: string;
     text: string;
+    eventName: string;
 }
 
 export interface TriggerErrors {
@@ -28,6 +30,7 @@ export interface TriggerErrors {
     delayMs?: string;
     onOccurrence?: string;
     selector?: string;
+    eventName?: string;
 }
 
 const ALWAYS_TRIGGER: SurveyTrigger = { on: 'page' };
@@ -40,6 +43,7 @@ export const initialTriggerDraft = (): TriggerDraft => ({
     onOccurrence: '1',
     selector: '',
     text: '',
+    eventName: '',
 });
 
 export const validatePage = (page: string): string | undefined => {
@@ -84,6 +88,12 @@ export const validateSelector = (
         : 'This is not a valid CSS selector';
 };
 
+export const matchesByTextOnly = (draft: TriggerDraft): boolean =>
+    draft.selector.trim() === '' && draft.text.trim() !== '';
+
+const validateEventName = (eventName: string): string | undefined =>
+    eventName.trim() === '' ? 'Enter an event name' : undefined;
+
 export const validateTriggerDraft = (draft: TriggerDraft): TriggerErrors =>
     draft.mode === 'always'
         ? {}
@@ -91,9 +101,12 @@ export const validateTriggerDraft = (draft: TriggerDraft): TriggerErrors =>
               path: validatePage(draft.path),
               delayMs: validateDelayMs(draft.delayMs),
               onOccurrence: validateOccurrence(draft.onOccurrence),
-              selector:
-                  draft.on === 'click'
-                      ? validateSelector(draft.selector, draft.text)
+              selector: isElementCondition(draft.on)
+                  ? validateSelector(draft.selector, draft.text)
+                  : undefined,
+              eventName:
+                  draft.on === 'event'
+                      ? validateEventName(draft.eventName)
                       : undefined,
           };
 
@@ -113,8 +126,12 @@ const toCondition = (draft: TriggerDraft): TriggerCondition => {
     switch (draft.on) {
         case 'page':
             return { on: 'page' };
+        case 'appear':
+            return { on: 'appear', ...toElementMatch(draft) };
         case 'click':
             return { on: 'click', ...toElementMatch(draft) };
+        case 'event':
+            return { on: 'event', name: draft.eventName.trim() };
     }
 };
 

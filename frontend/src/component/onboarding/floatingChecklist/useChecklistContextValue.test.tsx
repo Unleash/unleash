@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import { beforeEach, expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { ADMIN } from 'component/providers/AccessProvider/permissions.ts';
 import { createLocalStorage } from 'utils/createLocalStorage.ts';
@@ -22,7 +23,7 @@ const server = testServerSetup();
 const TestComponent: FC = () => {
     const value = useChecklistContextValue();
     if (!value) return <div>null</div>;
-    const { done, completedCount, totalSteps, dismissed } = value;
+    const { done, completedCount, totalSteps, dismissed, open } = value;
 
     return (
         <div>
@@ -34,17 +35,22 @@ const TestComponent: FC = () => {
             <span data-testid='sdk'>{done.sdk ? 'y' : 'n'}</span>
             <span data-testid='on'>{done.on ? 'y' : 'n'}</span>
             <span data-testid='dismissed'>{dismissed ? 'y' : 'n'}</span>
+            <button type='button' onClick={open}>
+                Open checklist
+            </button>
         </div>
     );
 };
 
 const mockEligibleUser = ({
     splash = {},
+    dashboardV2 = false,
 }: {
     splash?: Record<string, boolean>;
+    dashboardV2?: boolean;
 } = {}) => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: {},
+        flags: { dashboardV2 },
     });
     testServerRoute(server, '/api/admin/user', {
         user: { id: 1 },
@@ -108,6 +114,7 @@ test('shows completed count matching the server progress', async () => {
     expect(await screen.findByTestId('sdk')).toHaveTextContent('y');
     expect(await screen.findByTestId('on')).toHaveTextContent('n');
     expect(await screen.findByTestId('count')).toHaveTextContent('2/4');
+    expect(screen.getByTestId('dismissed')).toHaveTextContent('n');
 });
 
 test('keeps the flag step ticked while the server still reports it incomplete', async () => {
@@ -144,10 +151,56 @@ test('keeps the tour step ticked for a returning user who already finished it', 
 
 test('stays visible on next load after the user reopens a dismissed checklist', async () => {
     seedState({ dismissed: false });
-    mockEligibleUser({ splash: { [ONBOARDING_CHECKLIST_SPLASH_ID]: true } });
+    mockEligibleUser({
+        dashboardV2: true,
+        splash: { [ONBOARDING_CHECKLIST_SPLASH_ID]: true },
+    });
     mockProjectOverview('onboarding-started');
 
     render(<TestComponent />, { permissions: [{ permission: ADMIN }] });
+
+    expect(await screen.findByTestId('dismissed')).toHaveTextContent('n');
+});
+
+test.each([
+    '/personal',
+    '/projects/default',
+])('starts closed on %s when dashboard V2 is enabled', async (route) => {
+    mockEligibleUser({ dashboardV2: true });
+    mockProjectOverview('onboarding-started');
+
+    render(<TestComponent />, { permissions: [{ permission: ADMIN }], route });
+
+    expect(await screen.findByTestId('dismissed')).toHaveTextContent('y');
+});
+
+test('opening the checklist keeps it open across project and dashboard page loads', async () => {
+    seedState({ completed: { flag: true } });
+    mockEligibleUser({ dashboardV2: true });
+    mockProjectOverview('onboarding-started');
+    const options = { permissions: [{ permission: ADMIN }] };
+    const user = userEvent.setup();
+    const dashboard = render(<TestComponent />, {
+        ...options,
+        route: '/personal',
+    });
+    expect(await screen.findByTestId('dismissed')).toHaveTextContent('y');
+
+    await user.click(screen.getByRole('button', { name: 'Open checklist' }));
+
+    expect(screen.getByTestId('dismissed')).toHaveTextContent('n');
+    expect(screen.getByTestId('flag')).toHaveTextContent('y');
+    dashboard.unmount();
+
+    const project = render(<TestComponent />, {
+        ...options,
+        route: '/projects/default',
+    });
+    expect(await screen.findByTestId('dismissed')).toHaveTextContent('n');
+    expect(screen.getByTestId('flag')).toHaveTextContent('y');
+    project.unmount();
+
+    render(<TestComponent />, { ...options, route: '/personal' });
 
     expect(await screen.findByTestId('dismissed')).toHaveTextContent('n');
 });

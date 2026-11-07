@@ -24,22 +24,27 @@ import {
     useState,
 } from 'react';
 
-const usePopperAnchor = (onClose: (manageFocus: boolean) => void) => {
+const usePopperAnchor = (
+    onClose: (manageFocus: boolean) => void,
+    // lets a consumer whose content has its own exotic focus needs (e.g. a
+    // date picker's view transitions) attempt its own recovery and veto the
+    // close; returns true if it handled the escape
+    onFocusEscape?: () => boolean,
+) => {
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
-    const pointerDownInside = useRef(false);
+    const blurTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(
+        undefined,
+    );
 
-    const onContainerMouseDown = () => {
-        pointerDownInside.current = true;
-    };
-
-    const onContainerBlur = (e: FocusEvent<HTMLDivElement>) => {
-        if (pointerDownInside.current) {
-            pointerDownInside.current = false;
-            return;
-        }
-        if (!anchorEl?.contains(e.relatedTarget as Node | null)) {
+    const onContainerBlur = () => {
+        // a single focus change can blur more than once before settling;
+        // coalesce bursts so only the last one is acted on
+        clearTimeout(blurTimeout.current);
+        blurTimeout.current = setTimeout(() => {
+            if (anchorEl?.contains(document.activeElement)) return;
+            if (onFocusEscape?.()) return;
             onClose(false);
-        }
+        }, 0);
     };
 
     const onPanelKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -52,7 +57,6 @@ const usePopperAnchor = (onClose: (manageFocus: boolean) => void) => {
     return {
         anchorEl,
         setAnchorEl,
-        onContainerMouseDown,
         onContainerBlur,
         onPanelKeyDown,
     };
@@ -312,6 +316,7 @@ type InlineValueChromeProps = {
     multiValue?: boolean;
     rootProps?: Record<string, unknown>;
     onClose: (manageFocus: boolean) => void;
+    onFocusEscape?: () => boolean;
     submit?: () => boolean;
     footerActions?: ReactNode;
     field: ReactNode;
@@ -328,18 +333,14 @@ export const InlineValueChrome: FC<InlineValueChromeProps> = ({
     multiValue,
     rootProps,
     onClose,
+    onFocusEscape,
     submit,
     footerActions,
     field,
     children,
 }) => {
-    const {
-        anchorEl,
-        setAnchorEl,
-        onContainerMouseDown,
-        onContainerBlur,
-        onPanelKeyDown,
-    } = usePopperAnchor(onClose);
+    const { anchorEl, setAnchorEl, onContainerBlur, onPanelKeyDown } =
+        usePopperAnchor(onClose, onFocusEscape);
     const { placement, popperOptions, modifiers } =
         useLockedFlipPlacement('bottom-start');
     const descriptionId = `${inputId}-description`;
@@ -348,7 +349,6 @@ export const InlineValueChrome: FC<InlineValueChromeProps> = ({
     return (
         <Container
             ref={setAnchorEl}
-            onMouseDown={onContainerMouseDown}
             onBlur={onContainerBlur}
             onKeyDown={onPanelKeyDown}
         >

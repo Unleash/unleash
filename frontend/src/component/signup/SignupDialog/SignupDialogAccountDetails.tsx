@@ -22,6 +22,21 @@ const StyledCheckboxContainer = styled('div')(({ theme }) => ({
     },
 }));
 
+const HEAR_ABOUT_US_OPTIONS = [
+    'Search Engine (Google, Bing, etc.)',
+    'LLM (e.g. ChatGPT, Gemini, Claude, Perplexity, etc)',
+    'Used Open-Source',
+    'Recommended by friend or colleague',
+    'Webinar',
+    'G2.com',
+    'Podcast or Newsletter',
+    'Ad',
+    'Another website (referral)',
+    'News or Article',
+    'Social Media',
+    'Other',
+];
+
 export const SignupDialogAccountDetails: SignupStepContent = ({
     data,
     setData,
@@ -105,6 +120,32 @@ export const SignupDialogAccountDetails: SignupStepContent = ({
                                 companyName: e.target.value,
                             }))
                         }
+                    />
+                </StyledSignupDialogField>
+            )}
+            {requestCompanyData && (
+                <StyledSignupDialogField data-public>
+                    <StyledSignupDialogLabel>
+                        How did you hear about us? (optional)
+                    </StyledSignupDialogLabel>
+                    <Autocomplete
+                        openOnFocus
+                        value={
+                            data.hearAboutUs === '' ? null : data.hearAboutUs
+                        }
+                        onChange={(_, hearAboutUs) =>
+                            setData((prev) => ({
+                                ...prev,
+                                hearAboutUs: hearAboutUs ?? '',
+                            }))
+                        }
+                        options={HEAR_ABOUT_US_OPTIONS}
+                        renderInput={(params) => (
+                            <StyledSignupDialogTextField
+                                {...params}
+                                placeholder='Please select'
+                            />
+                        )}
                     />
                 </StyledSignupDialogField>
             )}

@@ -21,6 +21,7 @@ import type { WithTransactional } from '../../db/transaction.js';
 import type { SegmentStrategiesSchema } from '../../openapi/spec/segment-strategies-schema.js';
 import type {
     AccessService,
+    FeatureToggleService,
     IUnleashServices,
     OpenApiService,
 } from '../../services/index.js';
@@ -53,6 +54,8 @@ export class SegmentsController extends Controller {
 
     private transactionalSegmentService: WithTransactional<ISegmentService>;
 
+    private transactionalFeatureToggleService: WithTransactional<FeatureToggleService>;
+
     private accessService: AccessService;
 
     private flagResolver: IFlagResolver;
@@ -64,12 +67,14 @@ export class SegmentsController extends Controller {
         {
             segmentService,
             transactionalSegmentService,
+            transactionalFeatureToggleService,
             accessService,
             openApiService,
         }: Pick<
             IUnleashServices,
             | 'segmentService'
             | 'transactionalSegmentService'
+            | 'transactionalFeatureToggleService'
             | 'accessService'
             | 'openApiService'
         >,
@@ -79,6 +84,8 @@ export class SegmentsController extends Controller {
         this.config = config;
         this.segmentService = segmentService;
         this.transactionalSegmentService = transactionalSegmentService;
+        this.transactionalFeatureToggleService =
+            transactionalFeatureToggleService;
         this.accessService = accessService;
         this.openApiService = openApiService;
 
@@ -376,23 +383,19 @@ export class SegmentsController extends Controller {
             { strategyId, projectId, environment: environmentId },
         );
 
+        await this.segmentService.validateProjectCanAccessSegments(
+            projectId,
+            segmentIds,
+        );
+
         if (segmentIds.length > this.config.strategySegmentsLimit) {
             throw new BadDataError(
                 `Strategies may not have more than ${this.config.strategySegmentsLimit} segments`,
             );
         }
 
-        const segments = await this.segmentService.getByStrategy(strategyId);
-        const currentSegmentIds = segments.map((segment) => segment.id);
-
-        await this.removeFromStrategy(
-            strategyId,
-            currentSegmentIds.filter((id) => !segmentIds.includes(id)),
-        );
-
-        await this.addToStrategy(
-            strategyId,
-            segmentIds.filter((id) => !currentSegmentIds.includes(id)),
+        await this.transactionalFeatureToggleService.transactional((service) =>
+            service.setStrategySegments(strategyId, segmentIds, req.audit),
         );
 
         this.openApiService.respondWithValidation(
@@ -529,28 +532,6 @@ export class SegmentsController extends Controller {
             res,
             segmentsSchema.$id,
             serializeDates(response),
-        );
-    }
-
-    private async removeFromStrategy(
-        strategyId: string,
-        segmentIds: number[],
-    ): Promise<void> {
-        await Promise.all(
-            segmentIds.map((id) =>
-                this.segmentService.removeFromStrategy(id, strategyId),
-            ),
-        );
-    }
-
-    private async addToStrategy(
-        strategyId: string,
-        segmentIds: number[],
-    ): Promise<void> {
-        await Promise.all(
-            segmentIds.map((id) =>
-                this.segmentService.addToStrategy(id, strategyId),
-            ),
         );
     }
 }

@@ -54,7 +54,11 @@ export const SurveyTitleSlide = ({
                     />
                 }
             />
-            <Typography id={hintId} variant='body2' color='text.secondary'>
+            <Typography
+                id={hintId}
+                variant='body2'
+                sx={{ color: 'text.secondary' }}
+            >
                 Shown before the first question.
             </Typography>
             <Collapse in={titleSlide.showTitleSlide} unmountOnExit>

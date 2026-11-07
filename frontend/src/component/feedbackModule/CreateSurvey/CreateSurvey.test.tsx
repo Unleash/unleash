@@ -110,17 +110,21 @@ const goToCustomTrigger = async () => {
     );
 };
 
-const goToClickTrigger = async () => {
+const goToCondition = async (condition: string) => {
     await goToCustomTrigger();
     await userEvent.click(
         await screen.findByRole('combobox', { name: 'Show the survey when' }),
     );
     await userEvent.click(
-        await screen.findByRole('option', {
-            name: 'The user clicks an element',
-        }),
+        await screen.findByRole('option', { name: condition }),
     );
 };
+
+const goToClickTrigger = () => goToCondition('The user clicks an element');
+
+const goToAppearTrigger = () => goToCondition('An element appears on the page');
+
+const goToEventTrigger = () => goToCondition('Your app sends an event');
 
 const goToSettings = async () => {
     await goToTrigger();
@@ -567,6 +571,43 @@ describe('CreateSurvey', () => {
         });
     });
 
+    it('warns about matching the clicked element by text alone', async () => {
+        setupApi();
+        renderPage();
+        const warning =
+            'Matching by text alone checks every element on the page and can slow it down. Add a CSS selector where you can.';
+
+        await goToClickTrigger();
+        expect(screen.queryByText(warning)).not.toBeInTheDocument();
+
+        await userEvent.type(screen.getByLabelText('Text'), 'Create flag');
+        expect(screen.getByText(warning)).toBeInTheDocument();
+
+        await userEvent.type(screen.getByLabelText('CSS selector'), 'button');
+        expect(screen.queryByText(warning)).not.toBeInTheDocument();
+    });
+
+    it('sends the element entered as the appear trigger', async () => {
+        const { addStrategy } = setupApi();
+        renderPage();
+
+        await goToAppearTrigger();
+        await userEvent.type(
+            screen.getByLabelText('CSS selector'),
+            '[[role="alert"]',
+        );
+        await userEvent.type(screen.getByLabelText('Text'), 'Flag created');
+        await clickNext();
+        await submitSurvey();
+
+        await screen.findByText('Survey created');
+        expect(sentSurvey(addStrategy).trigger).toMatchObject({
+            on: 'appear',
+            selector: '[role="alert"]',
+            text: 'Flag created',
+        });
+    });
+
     it('does not move on to the settings with an invalid CSS selector', async () => {
         setupApi();
         renderPage();
@@ -576,6 +617,60 @@ describe('CreateSurvey', () => {
         await clickNext();
 
         await screen.findByText('This is not a valid CSS selector');
+        expect(screen.queryByLabelText('Flag name')).not.toBeInTheDocument();
+    });
+
+    it('sends the event entered as the event trigger', async () => {
+        const { addStrategy } = setupApi();
+        renderPage();
+
+        await goToEventTrigger();
+        await userEvent.type(
+            screen.getByLabelText('Event name'),
+            'flag-created',
+        );
+        await clickNext();
+        await submitSurvey();
+
+        await screen.findByText('Survey created');
+        expect(sentSurvey(addStrategy).trigger).toEqual({
+            on: 'event',
+            name: 'flag-created',
+            delayMs: 0,
+            onOccurrence: 1,
+        });
+    });
+
+    it('shows how to send an example event until one is entered', async () => {
+        setupApi();
+        renderPage();
+
+        await goToEventTrigger();
+        expect(
+            screen.getByText(
+                `window.dispatchEvent(new CustomEvent("flag-created"));`,
+            ),
+        ).toBeInTheDocument();
+
+        await userEvent.type(
+            screen.getByLabelText('Event name'),
+            ' survey-ready ',
+        );
+        expect(
+            screen.getByText(
+                `window.dispatchEvent(new CustomEvent("survey-ready"));`,
+            ),
+        ).toBeInTheDocument();
+    });
+
+    it('does not move on to the settings without an event name', async () => {
+        setupApi();
+        renderPage();
+
+        await goToEventTrigger();
+        await clickNext();
+
+        await screen.findByText('Enter an event name');
         expect(screen.queryByLabelText('Flag name')).not.toBeInTheDocument();
     });
 

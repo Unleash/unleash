@@ -160,6 +160,14 @@ const createRateLimitRules = (config: IUnleashConfig): RateLimitRule[] => {
             },
         },
         {
+            pathPrefixes: ['/api/admin/mcp'],
+            methods: ['POST'],
+            afterAuthentication: {
+                ...perMinute,
+                limit: config.rateLimiting.mcpMaxPerMinute,
+            },
+        },
+        {
             pathPrefixes: ['/api/admin/user-admin'],
             methods: ['POST'],
             afterAuthentication: {

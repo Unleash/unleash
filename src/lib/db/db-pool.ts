@@ -11,6 +11,7 @@ export function createDb({
     return knex({
         client: 'pg',
         version: db.version,
+        acquireConnectionTimeout: db.acquireConnectionTimeout,
         connection: {
             ...db,
             application_name: db.applicationName,

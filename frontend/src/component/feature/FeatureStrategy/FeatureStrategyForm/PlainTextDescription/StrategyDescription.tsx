@@ -53,17 +53,29 @@ const describeRollout = (parameters: PlainTextStrategy['parameters']) => {
 };
 
 const describeVariants = (variants: PlainTextStrategy['variants']) => {
-    if (!variants?.length) return 'they all get the same experience.';
+    if (!variants?.length) return 'they all get the same experience';
     if (variants.length === 1)
         return (
             <>
-                they all get <strong>{variantDisplayName(variants[0])}</strong>.
+                they all get <strong>{variantDisplayName(variants[0])}</strong>
             </>
         );
 
     return (
         <>
-            they're split across <strong>{variants.length} variants</strong>:
+            they're split across <strong>{variants.length} variants</strong>
+        </>
+    );
+};
+
+const describeActiveState = (disabled?: boolean) => {
+    if (!disabled) {
+        return '';
+    }
+    return (
+        <>
+            {' '}
+            is <strong>disabled</strong>. When it's enabled, it
         </>
     );
 };
@@ -82,12 +94,15 @@ const SimpleStrategyDescription = ({
     const targetingDescription = useTargetingDescription(strategy);
     const rolloutDescription = describeRollout(strategy.parameters);
     const variantDescription = describeVariants(strategy.variants);
+    const inactiveDescription = describeActiveState(strategy.disabled);
+
     return (
         <>
             <StrategyDescriptionText>
-                This strategy targets <strong>{targetingDescription}</strong>.
-                Of them, <strong>{rolloutDescription}</strong> are exposed to
-                the flag, and {variantDescription}
+                This strategy{inactiveDescription} targets{' '}
+                <strong>{targetingDescription}</strong>. Of them,{' '}
+                <strong>{rolloutDescription}</strong> are exposed to the flag,
+                and {variantDescription}.
             </StrategyDescriptionText>
             <VariantList variants={strategy.variants} />
         </>
@@ -103,12 +118,14 @@ const ComplexStrategyDescription = ({
 }) => {
     const rolloutDescription = describeRollout(strategy.parameters);
     const variantDescription = describeVariants(strategy.variants);
+    const inactiveDescription = describeActiveState(strategy.disabled);
     return (
         <>
             <StrategyDescriptionText>
+                This strategy{inactiveDescription} targets{' '}
                 <strong>{rolloutDescription}</strong> of users who match{' '}
-                <strong>all {totalRules} rules</strong> are exposed to the flag,
-                and {variantDescription}
+                <strong>all {totalRules} rules</strong>, and{' '}
+                {variantDescription}.
             </StrategyDescriptionText>
             <RuleList
                 segments={strategy.segments}

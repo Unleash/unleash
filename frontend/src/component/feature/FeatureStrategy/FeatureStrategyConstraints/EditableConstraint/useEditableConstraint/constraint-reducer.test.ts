@@ -108,10 +108,9 @@ describe('changing context field', () => {
     test.each([
         ['multi-value', multiValueConstraint],
         ['single-value', singleValueConstraint],
-    ])('changing context field to currentTime from a %s constraint sets the current time as the value', (_, constraint) => {
-        const now = new Date();
+    ])('changing context field to currentTime from a %s constraint sets DATE_AFTER with an empty value', (_, constraint) => {
         const input = { ...constraint, contextName: 'field-a' };
-        const { value, ...result } = constraintReducer(input, {
+        const result = constraintReducer(input, {
             type: 'set context field',
             payload: 'currentTime',
         }) as Extractable;
@@ -120,10 +119,8 @@ describe('changing context field', () => {
             ...inputBody,
             contextName: 'currentTime',
             operator: DATE_AFTER,
+            value: '',
         });
-        expect(new Date(value as string).getTime()).toBeGreaterThanOrEqual(
-            now.getTime(),
-        );
     });
     test('changing context field from currentTime to something else sets a default operator', () => {
         const input = dateConstraint;

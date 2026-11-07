@@ -40,7 +40,6 @@ jobs:
 
   frontend-e2e:
     uses: ./.github/workflows/e2e.frontend.yaml
-    secrets: inherit
 
   build:
     needs: [backend, frontend, frontend-e2e]

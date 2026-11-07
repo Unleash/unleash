@@ -56,7 +56,11 @@ const renderSurveys = (flags: IToggle[]) => {
     const client = testUnleashClient(flags);
     const view = render(
         <FlagProvider unleashClient={client} startClient={false}>
-            <FeedbackProvider observePage={observeBrowserPage} basePath=''>
+            <FeedbackProvider
+                identifyUser={() => undefined}
+                observePage={observeBrowserPage}
+                basePath=''
+            >
                 <FeedbackSurvey />
             </FeedbackProvider>
             <FeedbackNPS openUrl='https://feedback.example.com' />

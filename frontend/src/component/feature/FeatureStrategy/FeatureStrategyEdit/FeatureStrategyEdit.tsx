@@ -45,6 +45,7 @@ import { refreshFeatureChangeRequests } from 'utils/refreshAllPendingChangeReque
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 import type { UpdateFeatureStrategySchema } from 'openapi/index.ts';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { withIncompleteConstraintsDiscarded } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 
 const addIdSymbolToConstraints = (strategy?: IFeatureStrategy) => {
     if (!strategy) return;
@@ -188,7 +189,11 @@ export const FeatureStrategyEdit = () => {
         });
     }, [defaultStickiness, strategyDefinition?.name]);
 
-    const payload = createStrategyPayload(strategy);
+    const payload = createStrategyPayload(
+        singlePageStrategyForm
+            ? withIncompleteConstraintsDiscarded(strategy)
+            : strategy,
+    );
 
     const onStrategyEdit = async (payload: UpdateFeatureStrategySchema) => {
         const updateFn =

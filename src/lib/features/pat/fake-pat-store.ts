@@ -32,6 +32,22 @@ export default class FakePatStore implements IPatStore {
         return newPat;
     }
 
+    /** Records that the PAT was used, as authentication does in the real store. */
+    markSeen(id: number, seenAt: Date): void {
+        this.pats = this.pats.map((pat) =>
+            pat.id === id ? { ...pat, seenAt: seenAt.toISOString() } : pat,
+        );
+    }
+
+    /** Sets when the PAT was created. The real store stamps it on insert. */
+    setCreatedAt(id: number, createdAt: Date): void {
+        this.pats = this.pats.map((pat) =>
+            pat.id === id
+                ? { ...pat, createdAt: createdAt.toISOString() }
+                : pat,
+        );
+    }
+
     async delete(key: number): Promise<void> {
         this.pats = this.pats.filter((p) => p.id !== key);
     }

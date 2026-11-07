@@ -9,11 +9,13 @@ import {
 } from './InlineValueInput.tsx';
 import { RegexValueInput } from './AddRegexValueEditor/RegexValueInput.tsx';
 import { MinimumVersionsTooltip } from './MinimumVersionsTooltip.tsx';
+import { ConstraintDateInput } from './ConstraintDateInput.tsx';
 import type { ConstraintValidatorOutput } from './ConstraintValidatorOutput.ts';
 import type { LegalValueData } from './useEditableConstraint/useEditableConstraint.js';
 import {
     type EditableConstraint as EditableConstraintType,
     isCidrConstraint,
+    isDateConstraint,
     isMultiValueConstraint,
     isNumberConstraint,
     isRegexConstraint,
@@ -119,6 +121,12 @@ const getEditingProps = (
                     />
                 </>
             ),
+        };
+    }
+    if (isDateConstraint(localConstraint)) {
+        return {
+            parseInput: singleValueParseInput,
+            helpText: 'Pick a date and time, shown in your local time zone',
         };
     }
     return {
@@ -250,6 +258,18 @@ export const AddValueInline: FC<Props> = ({
                 submitValue={submitValue}
                 helpText={helpText}
                 caseInsensitive={Boolean(localConstraint.caseInsensitive)}
+            />
+        );
+    }
+
+    if (isDateConstraint(localConstraint)) {
+        return (
+            <ConstraintDateInput
+                value={value}
+                onChange={onChange}
+                onClose={onClose}
+                submitValue={submitValue}
+                helpText={helpText}
             />
         );
     }

@@ -12,7 +12,6 @@ import {
     type SxProps,
     type Theme,
 } from '@mui/material';
-import FlagIcon from '@mui/icons-material/Flag';
 import { hoursToMilliseconds } from 'date-fns';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { Limit } from 'component/common/Limit/Limit';
@@ -284,7 +283,6 @@ export const CreateFeatureForm = ({
                 layout='compact'
                 disablePadding
                 description='Feature flags are at the core of Unleash. Use them to control your feature rollouts.'
-                documentationIcon={<FlagIcon />}
                 documentationLink='https://docs.getunleash.io/concepts/feature-flags'
                 documentationLinkLabel='Feature flags documentation'
                 formatApiCode={formatApiCode}

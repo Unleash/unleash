@@ -1,20 +1,23 @@
+import { WeightType } from '../../../constants/variantTypes.ts';
 import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
 
 export const TOTAL_WEIGHT = 1000;
-const PERCENT = 10;
 
-export const weightsFromSplitPositions = (
-    splitPositions: number[], // the handle positions (e.g. 850 puts a handle 85% of the way across the bar)
-): number[] => {
+const weightsFromSplitPositions = (splitPositions: number[]): number[] => {
     const segmentStarts = [0, ...splitPositions];
     const segmentEnds = [...splitPositions, TOTAL_WEIGHT];
     return segmentStarts.map((start, index) => segmentEnds[index] - start);
 };
 
-export const absorbWeightChange = (
-    weights: number[],
-    changedIndex: number,
-): number[] => {
+export const absorbWeightChange = ({
+    weights,
+    changedIndex,
+    lockedIndexes = [],
+}: {
+    weights: number[];
+    changedIndex: number;
+    lockedIndexes?: number[];
+}): number[] => {
     const indexesAfter = weights
         .map((_, index) => index)
         .slice(changedIndex + 1);
@@ -22,7 +25,12 @@ export const absorbWeightChange = (
         .map((_, index) => index)
         .slice(0, changedIndex)
         .reverse();
-    const absorberIndexes = [...indexesAfter, ...indexesBefore];
+    const absorberIndexes = [...indexesAfter, ...indexesBefore].filter(
+        (index) => !lockedIndexes.includes(index),
+    );
+    if (absorberIndexes.length === 0) {
+        return weights;
+    }
 
     const currentTotal = weights.reduce((sum, weight) => sum + weight, 0);
     const excess = currentTotal - TOTAL_WEIGHT;
@@ -45,8 +53,47 @@ export const absorbWeightChange = (
     return nextWeights;
 };
 
-const distributeWholeParts = (count: number): number[] => {
-    const total = TOTAL_WEIGHT / PERCENT;
+const roundChangedWeights = ({
+    previousWeights,
+    nextWeights,
+    lockedIndexes,
+}: {
+    previousWeights: number[];
+    nextWeights: number[];
+    lockedIndexes: number[];
+}): number[] => {
+    const changedIndexes = nextWeights
+        .map((_, index) => index)
+        .filter((index) => nextWeights[index] !== previousWeights[index]);
+    if (changedIndexes.length === 0) {
+        return nextWeights;
+    }
+
+    const roundedWeights = nextWeights.map((weight, index) =>
+        changedIndexes.includes(index) ? Math.round(weight / 10) * 10 : weight,
+    );
+    const lastChangedIndex = changedIndexes[changedIndexes.length - 1];
+    return absorbWeightChange({
+        weights: roundedWeights,
+        changedIndex: lastChangedIndex,
+        lockedIndexes,
+    });
+};
+
+export const weightsFromDraggedPositions = ({
+    previousWeights,
+    splitPositions,
+    lockedIndexes = [],
+}: {
+    previousWeights: number[];
+    splitPositions: number[]; // the handle positions (e.g. 850 puts a handle 85% of the way across the bar)
+    lockedIndexes?: number[];
+}): number[] => {
+    const nextWeights = weightsFromSplitPositions(splitPositions);
+    return roundChangedWeights({ previousWeights, nextWeights, lockedIndexes });
+};
+
+const distributeWholeParts = (total: number, count: number): number[] => {
     const base = Math.floor(total / count);
     const extraPoints = total - base * count;
     return Array.from({ length: count }, (_, index) =>
@@ -57,9 +104,25 @@ const distributeWholeParts = (count: number): number[] => {
 export const splitWeightsEvenly = (
     variants: IFeatureVariantEdit[],
 ): IFeatureVariantEdit[] => {
-    const shares = distributeWholeParts(variants.length);
-    return variants.map((variant, index) => ({
-        ...variant,
-        weight: shares[index] * PERCENT,
-    }));
+    const lockedVariants = variants.filter(
+        (variant) => variant.weightType === WeightType.FIX,
+    );
+    const lockedWeight = lockedVariants.reduce(
+        (sum, variant) => sum + variant.weight,
+        0,
+    );
+    const variableCount = variants.length - lockedVariants.length;
+    const shares = distributeWholeParts(
+        TOTAL_WEIGHT - lockedWeight,
+        variableCount,
+    );
+    let shareIndex = 0;
+    return variants.map((variant) => {
+        if (variant.weightType === WeightType.FIX) {
+            return variant;
+        }
+        const weight = shares[shareIndex];
+        shareIndex += 1;
+        return { ...variant, weight };
+    });
 };

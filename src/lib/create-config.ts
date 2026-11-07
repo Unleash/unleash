@@ -194,6 +194,11 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
         30,
     );
 
+    const mcpMaxPerMinute = parseEnvVarNumber(
+        process.env.MCP_RATE_LIMIT_PER_MINUTE,
+        600,
+    );
+
     const defaultRateLimitOptions: IRateLimiting = {
         createUserMaxPerMinute,
         simpleLoginMaxPerMinute,
@@ -205,6 +210,7 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
         adminApiMaxPerMinute,
         feedbackMaxPerMinute,
         playgroundMaxPerMinute,
+        mcpMaxPerMinute,
     };
     return mergeAll([defaultRateLimitOptions, options.rateLimiting || {}]);
 }

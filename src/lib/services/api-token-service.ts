@@ -12,6 +12,7 @@ import {
 import type { IApiTokenStore } from '../types/stores/api-token-store.js';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error.js';
 import BadDataError from '../error/bad-data-error.js';
+import InvalidOperationError from '../error/invalid-operation-error.js';
 import type { IEnvironmentStore } from '../features/project-environments/environment-store-type.js';
 import {
     ADMIN_TOKEN_USER,
@@ -316,7 +317,16 @@ export class ApiTokenService {
     public async delete(secret: string, auditUser: IAuditUser): Promise<void> {
         if (await this.store.exists(secret)) {
             const token = (await this.store.get(secret))!;
-            await this.store.delete(secret);
+            try {
+                await this.store.delete(secret);
+            } catch (error) {
+                if (error.constraint === 'edge_api_tokens_token_value_fkey') {
+                    throw new InvalidOperationError(
+                        'This token is managed by Enterprise Edge and cannot be deleted.',
+                    );
+                }
+                throw error;
+            }
             await this.eventService.storeEvent(
                 new ApiTokenDeletedEvent({
                     auditUser,

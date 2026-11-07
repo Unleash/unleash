@@ -133,8 +133,8 @@ const FormMainContent = styled('div')(({ theme }) => ({
 const StyledButtons = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
-    paddingTop: theme.spacing(3),
-    paddingBottom: theme.spacing(3),
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
     paddingInline: 'var(--form-inset)',
     backgroundColor: theme.palette.background.paper,
     justifyContent: 'end',
@@ -150,7 +150,7 @@ export const StrategyFormBody = <T extends StrategyFormState>({
     canRenamePreexistingVariants,
     alertContent,
     allowEnableDisable,
-    statusContent,
+    statusContent: environmentDisabledText, // todo: consider renaming prop when deleting singlePageStrategyForm flag
     beforeFooter,
     groupIdTooltip,
     children,
@@ -365,12 +365,14 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                         />
                     ) : null}
 
-                    {statusContent}
                     {beforeFooter}
                 </FormMainContent>
             </FormScrollArea>
 
-            <PlainTextDescription strategy={strategy} />
+            <PlainTextDescription
+                strategy={strategy}
+                environmentDisabledText={environmentDisabledText}
+            />
 
             <StyledButtons>{children}</StyledButtons>
         </StyledForm>

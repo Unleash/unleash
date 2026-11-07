@@ -14,10 +14,14 @@ const setupContextApi = () => {
     testServerRoute(server, '/api/admin/context', [{ name: 'appName' }]);
 };
 
-const variant = (name: string, weight: number): StrategyVariantSchema => ({
+const variant = (
+    name: string,
+    weight: number,
+    weightType: StrategyVariantSchema['weightType'] = 'variable',
+): StrategyVariantSchema => ({
     name,
     weight,
-    weightType: 'variable',
+    weightType,
     stickiness: 'default',
 });
 
@@ -43,7 +47,7 @@ const VariantsEditor = ({
 const pillLabels = () =>
     screen.getAllByRole('tab').map((pill) => pill.textContent);
 
-test('adding a variant splits 100% as evenly as whole percents allow, with the leftover percent going to the first variants', async () => {
+test('adding a variant splits 100% as evenly as the percents allow, with the leftover going to the first variants', async () => {
     setupContextApi();
     render(<VariantsEditor />);
 
@@ -51,7 +55,7 @@ test('adding a variant splits 100% as evenly as whole percents allow, with the l
     fireEvent.click(screen.getByTestId('ADD_STRATEGY_VARIANT_BUTTON'));
     fireEvent.click(screen.getByTestId('ADD_STRATEGY_VARIANT_BUTTON'));
 
-    expect(pillLabels()).toEqual(['34%', '33%', '33%']);
+    expect(pillLabels()).toEqual(['33.4%', '33.3%', '33.3%']);
 });
 
 test("moving the handle trades weight between the handle's two neighbours", async () => {
@@ -71,6 +75,27 @@ test("moving the handle trades weight between the handle's two neighbours", asyn
     expect(await screen.findByLabelText('Weight')).toHaveValue(35);
 });
 
+test('dragging a handle rounds the changed weights to whole percents, the decimals moving to the nearest other variant, the rest keeping theirs', async () => {
+    setupContextApi();
+    render(
+        <VariantsEditor
+            variants={[
+                variant('a', 253),
+                variant('b', 252),
+                variant('c', 248),
+                variant('d', 247),
+            ]}
+        />,
+    );
+
+    fireEvent.change(
+        screen.getByRole('slider', { name: 'Split between a and b' }),
+        { target: { value: '270' } },
+    );
+
+    expect(pillLabels()).toEqual(['a27%', 'b24%', 'c24.3%', 'd24.7%']);
+});
+
 test('a weight typed in the variant form flows to the pills, the neighbour absorbing the change first', async () => {
     setupContextApi();
     render(
@@ -87,7 +112,52 @@ test('a weight typed in the variant form flows to the pills, the neighbour absor
 });
 
 test('a changed weight trades with its following neighbours first, draining each before the next, and trades leftward only from the last variant', () => {
-    expect(absorbWeightChange([340, 200, 330], 1)).toEqual([340, 200, 460]);
-    expect(absorbWeightChange([950, 100, 100], 0)).toEqual([950, 0, 50]);
-    expect(absorbWeightChange([330, 330, 500], 2)).toEqual([330, 170, 500]);
+    expect(
+        absorbWeightChange({ weights: [340, 200, 330], changedIndex: 1 }),
+    ).toEqual([340, 200, 460]);
+    expect(
+        absorbWeightChange({ weights: [950, 100, 100], changedIndex: 0 }),
+    ).toEqual([950, 0, 50]);
+    expect(
+        absorbWeightChange({ weights: [330, 330, 500], changedIndex: 2 }),
+    ).toEqual([330, 170, 500]);
+});
+
+test('a locked variant keeps its weight while others are added and retyped', async () => {
+    setupContextApi();
+    render(
+        <VariantsEditor
+            variants={[variant('a', 400, 'fix'), variant('b', 600)]}
+        />,
+    );
+
+    expect(
+        await screen.findByLabelText('Weight'),
+        "the locked variant's own weight input",
+    ).toBeDisabled();
+
+    fireEvent.click(screen.getByTestId('ADD_STRATEGY_VARIANT_BUTTON'));
+    expect(pillLabels()).toEqual(['a40%Locked weight', 'b30%', '30%']);
+
+    fireEvent.click(screen.getByRole('tab', { name: /b/ }));
+    fireEvent.change(await screen.findByLabelText('Weight'), {
+        target: { value: '50' },
+    });
+    expect(pillLabels()).toEqual(['a40%Locked weight', 'b50%', '10%']);
+});
+
+test('dragging a handle that rounds the changed weights down gives the missing weight to the nearest other variant', async () => {
+    setupContextApi();
+    render(
+        <VariantsEditor
+            variants={[variant('a', 334), variant('b', 330), variant('c', 336)]}
+        />,
+    );
+
+    fireEvent.change(
+        screen.getByRole('slider', { name: 'Split between a and b' }),
+        { target: { value: '350' } },
+    );
+
+    expect(pillLabels()).toEqual(['a35%', 'b31%', 'c34%']);
 });

@@ -62,3 +62,44 @@ test('rewriteHTML sets favicon path to root', () => {
         true,
     );
 });
+
+test.each([
+    '/static',
+    '/static/unleash',
+    '/static-assets',
+])('rewriteHTML preserves baseUriPath %s while prefixing assets once', (baseUriPath) => {
+    const result = rewriteHTML(input, baseUriPath);
+
+    expect(result).toContain(
+        `<meta name="baseUriPath" content="${baseUriPath}" />`,
+    );
+    expect(result).toContain(`src="${baseUriPath}/static/index`);
+    expect(result).toContain(`href="${baseUriPath}/static/index`);
+});
+
+test.each([
+    'https://cdn.example.com/static',
+    'https://cdn.example.com/static/unleash',
+    'https://static.example.com',
+])('rewriteHTML preserves CDN prefix %s in configuration and favicon', (cdnPrefix) => {
+    const result = rewriteHTML(input, '/hosted', cdnPrefix);
+
+    expect(result).toContain(`<meta name="baseUriPath" content="/hosted" />`);
+    expect(result).toContain(
+        `<meta name="cdnPrefix" content="${cdnPrefix}" />`,
+    );
+    expect(result).toContain(`href="${cdnPrefix}/favicon.ico"`);
+    expect(result).toContain(`src="${cdnPrefix}/static/index`);
+    expect(result).toContain(`href="${cdnPrefix}/static/index`);
+});
+
+test('rewriteHTML still rewrites static references in custom HTML', () => {
+    const result = rewriteHTML(
+        '<a href="/static/manual.pdf">Manual</a><img src="/static/logo.svg" />',
+        '/static/unleash',
+    );
+
+    expect(result).toBe(
+        '<a href="/static/unleash/static/manual.pdf">Manual</a><img src="/static/unleash/static/logo.svg" />',
+    );
+});

@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import {
     isValidSelector,
+    matchesAddedElement,
     matchesElement,
     parseElementMatch,
 } from './elementMatch.ts';
@@ -168,5 +169,117 @@ describe('matchesElement', () => {
         expect(matchesElement({ text: 'Create' }, target('button'))).toBe(
             false,
         );
+    });
+});
+
+describe('matchesAddedElement', () => {
+    const added = (html: string): Element => {
+        const container = document.createElement('div');
+        container.innerHTML = html;
+        const element = container.firstElementChild;
+        if (element === null) {
+            throw new Error(`No element in ${html}`);
+        }
+        return element;
+    };
+
+    it('matches the added element by selector', () => {
+        expect(
+            matchesAddedElement(
+                { selector: '[data-testid="toast"]' },
+                added('<div data-testid="toast">Flag created</div>'),
+            ),
+        ).toBe(true);
+    });
+
+    it('matches an element inside the added subtree by selector', () => {
+        expect(
+            matchesAddedElement(
+                { selector: '[data-testid="toast"]' },
+                added('<div><p data-testid="toast">Flag created</p></div>'),
+            ),
+        ).toBe(true);
+    });
+
+    it('does not match when nothing in the added subtree matches the selector', () => {
+        expect(
+            matchesAddedElement(
+                { selector: '[data-testid="toast"]' },
+                added('<div><p>Flag created</p></div>'),
+            ),
+        ).toBe(false);
+    });
+
+    it('matches by selector and text only when a selected element has the text', () => {
+        const match = { selector: '.toast', text: 'Flag created' };
+
+        expect(
+            matchesAddedElement(
+                match,
+                added('<div><p class="toast">Flag created</p></div>'),
+            ),
+        ).toBe(true);
+        expect(
+            matchesAddedElement(
+                match,
+                added('<div><p class="toast">Flag archived</p></div>'),
+            ),
+        ).toBe(false);
+    });
+
+    it('does not match when the selector and the text match different elements', () => {
+        expect(
+            matchesAddedElement(
+                { selector: '.toast', text: 'Flag created' },
+                added(
+                    '<div class="toast"><span>Flag created</span> just now</div>',
+                ),
+            ),
+        ).toBe(false);
+    });
+
+    it('matches by text alone against the added element', () => {
+        expect(
+            matchesAddedElement(
+                { text: 'Flag created' },
+                added('<div><svg></svg><p>Flag created</p></div>'),
+            ),
+        ).toBe(true);
+    });
+
+    it('matches by text alone against a descendant of the added element', () => {
+        expect(
+            matchesAddedElement(
+                { text: 'Flag created' },
+                added('<div><p>Flag created</p><button>Undo</button></div>'),
+            ),
+        ).toBe(true);
+    });
+
+    it('ignores differences in whitespace when matching text', () => {
+        expect(
+            matchesAddedElement(
+                { text: ' Flag created ' },
+                added('<div>Flag  \n created</div>'),
+            ),
+        ).toBe(true);
+    });
+
+    it('does not match an element whose text only partly matches', () => {
+        expect(
+            matchesAddedElement(
+                { text: 'Flag' },
+                added('<div><p>Flag created</p></div>'),
+            ),
+        ).toBe(false);
+    });
+
+    it('does not match text spread over sibling elements', () => {
+        expect(
+            matchesAddedElement(
+                { text: 'Flag created' },
+                added('<div><p>Flag</p><p>created</p><p>now</p></div>'),
+            ),
+        ).toBe(false);
     });
 });

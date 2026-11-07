@@ -33,6 +33,7 @@ export interface IFeatureSearchParams {
     lifecycle?: string;
     lastSeenAt?: string;
     favorite?: string;
+    featureNames?: string[];
     status?: string[][];
     offset: number;
     favoritesFirst?: boolean;

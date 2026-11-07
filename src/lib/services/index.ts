@@ -158,6 +158,11 @@ import {
     createFakePersonalDashboardService,
     createPersonalDashboardService,
 } from '../features/personal-dashboard/createPersonalDashboardService.js';
+import type { UserRecentFlagsService } from '../features/user-recent-flags/user-recent-flags-service.js';
+import {
+    createFakeUserRecentFlagsService,
+    createUserRecentFlagsService,
+} from '../features/user-recent-flags/createUserRecentFlagsService.js';
 import {
     createFakeProjectStatusService,
     createProjectStatusService,
@@ -532,6 +537,18 @@ export const createServices = (
         ? createPersonalDashboardService(db, config, stores)
         : createFakePersonalDashboardService(config);
 
+    const userRecentFlagsService = db
+        ? createUserRecentFlagsService(
+              db,
+              config,
+              featureSearchService,
+              privateProjectChecker,
+          )
+        : createFakeUserRecentFlagsService(
+              featureSearchService,
+              privateProjectChecker,
+          );
+
     const transactionalUserSubscriptionsService = db
         ? withTransactional(createUserSubscriptionsService(config), db)
         : withFakeTransactional(createFakeUserSubscriptionsService(config));
@@ -616,6 +633,7 @@ export const createServices = (
         integrationEventsService,
         onboardingService,
         personalDashboardService,
+        userRecentFlagsService,
         projectStatusService,
         transactionalUserSubscriptionsService,
         uniqueConnectionService,
@@ -763,6 +781,7 @@ export interface IUnleashServices {
     integrationEventsService: IntegrationEventsService;
     onboardingService: OnboardingService;
     personalDashboardService: PersonalDashboardService;
+    userRecentFlagsService: UserRecentFlagsService;
     projectStatusService: ProjectStatusService;
     transactionalUserSubscriptionsService: WithTransactional<UserSubscriptionsService>;
     uniqueConnectionService: UniqueConnectionService;

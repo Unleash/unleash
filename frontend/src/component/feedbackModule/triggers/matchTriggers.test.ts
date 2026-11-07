@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { Survey } from '../survey.ts';
 import type { SurveyTrigger } from './surveyTrigger.ts';
-import { matchTriggers } from './matchTriggers.ts';
+import { matchTriggers, type TriggerEvent } from './matchTriggers.ts';
 
 const survey = (flagName: string, trigger: SurveyTrigger): Survey => ({
     flagName,
@@ -20,19 +20,36 @@ const survey = (flagName: string, trigger: SurveyTrigger): Survey => ({
     trigger,
 });
 
+const flagNames = (event: TriggerEvent, surveys: Survey[]): string[] =>
+    matchTriggers(event, surveys).map(({ flagName }) => flagName);
+
 const pageViewFlagNames = (path: string, surveys: Survey[]): string[] =>
-    matchTriggers({ on: 'page', path }, surveys).map(
-        ({ flagName }) => flagName,
-    );
+    flagNames({ on: 'page', path }, surveys);
 
 const clickedFlagNames = (
     path: string,
     target: Element,
     surveys: Survey[],
-): string[] =>
-    matchTriggers({ on: 'click', path, target }, surveys).map(
-        ({ flagName }) => flagName,
-    );
+): string[] => flagNames({ on: 'click', path, target }, surveys);
+
+const appearedFlagNames = (
+    path: string,
+    added: Element,
+    surveys: Survey[],
+): string[] => flagNames({ on: 'appear', path, added }, surveys);
+
+const eventFlagNames = (
+    path: string,
+    name: string,
+    surveys: Survey[],
+): string[] => flagNames({ on: 'event', path, name }, surveys);
+
+const toast = (text: string): Element => {
+    const element = document.createElement('div');
+    element.dataset.testid = 'toast';
+    element.textContent = text;
+    return element;
+};
 
 const button = (testId?: string): Element => {
     const element = document.createElement('button');
@@ -157,6 +174,106 @@ describe('matchTriggers', () => {
 
         expect(pageViewFlagNames('/projects', surveys)).toEqual([]);
         expect(clickedFlagNames('/projects', button(), surveys)).toEqual([]);
+    });
+
+    it('matches an event trigger when the dispatched event has its name', () => {
+        const surveys = [
+            survey('survey-a', { on: 'event', name: 'flag-created' }),
+            survey('survey-b', { on: 'event', name: 'flag-archived' }),
+        ];
+
+        expect(eventFlagNames('/projects', 'flag-created', surveys)).toEqual([
+            'survey-a',
+        ]);
+    });
+
+    it('does not match page, click or appear triggers on an event', () => {
+        const surveys = [
+            survey('survey-a', { on: 'page' }),
+            survey('survey-b', { on: 'click', selector: 'button' }),
+            survey('survey-c', { on: 'appear', selector: 'button' }),
+        ];
+
+        expect(eventFlagNames('/projects', 'flag-created', surveys)).toEqual(
+            [],
+        );
+    });
+
+    it('matches an event trigger only on a page its path pattern matches', () => {
+        const surveys = [
+            survey('survey-a', {
+                on: 'event',
+                name: 'flag-created',
+                path: '/projects/:projectId',
+            }),
+        ];
+
+        expect(
+            eventFlagNames('/projects/default', 'flag-created', surveys),
+        ).toEqual(['survey-a']);
+        expect(eventFlagNames('/features', 'flag-created', surveys)).toEqual(
+            [],
+        );
+    });
+
+    it('matches an appear trigger when the added element matches', () => {
+        const surveys = [
+            survey('survey-a', {
+                on: 'appear',
+                selector: '[data-testid="toast"]',
+                text: 'Flag created',
+            }),
+        ];
+
+        expect(
+            appearedFlagNames('/projects', toast('Flag created'), surveys),
+        ).toEqual(['survey-a']);
+    });
+
+    it('does not match an appear trigger when the added element does not match', () => {
+        const surveys = [
+            survey('survey-a', { on: 'appear', text: 'Flag created' }),
+        ];
+
+        expect(
+            appearedFlagNames('/projects', toast('Flag archived'), surveys),
+        ).toEqual([]);
+    });
+
+    it('does not match page, click or event triggers on an appearance', () => {
+        const surveys = [
+            survey('survey-a', { on: 'page' }),
+            survey('survey-b', {
+                on: 'click',
+                selector: '[data-testid="toast"]',
+            }),
+            survey('survey-c', { on: 'event', name: 'flag-created' }),
+        ];
+
+        expect(
+            appearedFlagNames('/projects', toast('Flag created'), surveys),
+        ).toEqual([]);
+    });
+
+    it('matches an appear trigger only on a page its path pattern matches', () => {
+        const surveys = [
+            survey('survey-a', {
+                on: 'appear',
+                text: 'Flag created',
+                path: '/projects/*',
+            }),
+        ];
+
+        expect(
+            appearedFlagNames(
+                '/projects/default/features/x',
+                toast('Flag created'),
+                surveys,
+            ),
+        ).toEqual(['survey-a']);
+        expect(
+            appearedFlagNames('/features', toast('Flag created'), surveys),
+        ).toEqual([]);
     });
 
     it('matches a click trigger only on a page its path pattern matches', () => {

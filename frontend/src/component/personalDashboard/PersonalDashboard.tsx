@@ -27,6 +27,7 @@ import { Link } from 'react-router';
 import { useWelcomeDialogContext } from './WelcomeDialogContext.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ProjectCardsPanel } from './ProjectCardsPanel.tsx';
+import { RecentFlagsPanel } from './RecentFlagsPanel.tsx';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -326,7 +327,7 @@ export const PersonalDashboard = () => {
 
             {dashboardV2 ? <ProjectCardsPanel /> : <ProjectPanel />}
 
-            <FlagPanel />
+            {dashboardV2 ? <RecentFlagsPanel /> : <FlagPanel />}
         </MainContent>
     );
 };

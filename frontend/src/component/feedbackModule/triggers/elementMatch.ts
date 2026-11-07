@@ -14,6 +14,9 @@ export const isValidSelector = (selector: string): boolean => {
 const normalizeText = (text: string): string =>
     text.replace(/\s+/g, ' ').trim();
 
+const normalizedTextContent = (element: Element): string =>
+    normalizeText(element.textContent ?? '');
+
 const isMatchableText = (value: unknown): value is string =>
     typeof value === 'string' && normalizeText(value).length > 0;
 
@@ -70,7 +73,7 @@ export const matchesElement = (
     }
     const expectedText = normalizeText(match.text);
     for (const element of candidates) {
-        const elementText = normalizeText(element.textContent ?? '');
+        const elementText = normalizedTextContent(element);
         // Each parent has at least as much text as its child, so once the
         // text gets too long it will not match for any parent either.
         // Stopping here avoids reading textContent of large ancestors on
@@ -85,4 +88,37 @@ export const matchesElement = (
         }
     }
     return false;
+};
+
+const containsSelected = (selector: string, added: Element): boolean =>
+    added.matches(selector) || added.querySelector(selector) !== null;
+
+const hasSelfOrDescendantMatching = (
+    match: ElementMatch,
+    element: Element,
+    expectedText: string,
+): boolean => {
+    const elementText = normalizedTextContent(element);
+    if (!elementText.includes(expectedText)) {
+        return false;
+    }
+    if (elementText === expectedText && matchesSelector(match, element)) {
+        return true;
+    }
+    return Array.from(element.children).some((child) =>
+        hasSelfOrDescendantMatching(match, child, expectedText),
+    );
+};
+
+export const matchesAddedElement = (
+    match: ElementMatch,
+    added: Element,
+): boolean => {
+    if ('selector' in match && !containsSelected(match.selector, added)) {
+        return false;
+    }
+    if (match.text === undefined) {
+        return true;
+    }
+    return hasSelfOrDescendantMatching(match, added, normalizeText(match.text));
 };

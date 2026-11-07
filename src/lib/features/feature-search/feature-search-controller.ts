@@ -6,7 +6,6 @@ import type {
     IUnleashServices,
 } from '../../services/index.js';
 import {
-    type IFeatureSearchOverview,
     type IFlagResolver,
     type IUnleashConfig,
     NONE,
@@ -25,7 +24,8 @@ import {
     featureSearchQueryParameters,
 } from '../../openapi/spec/feature-search-query-parameters.js';
 import { normalizeQueryParams } from './search-utils.js';
-import { anonymise, extractUserId } from '../../util/index.js';
+import { extractUserId } from '../../util/index.js';
+import { maybeAnonymiseEventLog } from './anonymise-event-log.js';
 
 type FeatureSearchServices = Pick<
     IUnleashServices,
@@ -74,21 +74,6 @@ export default class FeatureSearchController extends Controller {
                 }),
             ],
         });
-    }
-
-    maybeAnonymise(
-        features: IFeatureSearchOverview[],
-    ): IFeatureSearchOverview[] {
-        if (this.flagResolver.isEnabled('anonymiseEventLog')) {
-            return features.map((feature) => ({
-                ...feature,
-                createdBy: {
-                    ...feature.createdBy,
-                    name: anonymise(feature.createdBy.name),
-                },
-            }));
-        }
-        return features;
     }
 
     async searchFeatures(
@@ -167,7 +152,7 @@ export default class FeatureSearchController extends Controller {
             res,
             searchFeaturesSchema.$id,
             serializeDates({
-                features: this.maybeAnonymise(features),
+                features: maybeAnonymiseEventLog(this.flagResolver, features),
                 total,
             }),
         );

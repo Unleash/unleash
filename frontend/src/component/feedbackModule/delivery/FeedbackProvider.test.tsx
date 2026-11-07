@@ -9,6 +9,7 @@ import { testUnleashClient } from 'utils/testUnleashClient';
 import { SURVEY_KIND, SURVEY_VERSION } from '../survey.ts';
 import type { SurveyTrigger } from '../triggers/surveyTrigger.ts';
 import type { PageObserver, Unsubscribe } from '../observers/observePage.ts';
+import type { EventObserver } from '../observers/observeEvents.ts';
 import type { IdentifyUser } from './FeedbackProvider.tsx';
 import { appPath } from '../observers/appPath.ts';
 
@@ -86,9 +87,29 @@ const fakeElementObserver = () => {
     };
 };
 
+const fakeEventObserver = () => {
+    let onEvent: ((name: string) => void) | null = null;
+    let observedNames: string[] | null = null;
+    const observe: EventObserver = (callback, eventNames) => {
+        onEvent = callback;
+        observedNames = eventNames;
+        return () => {
+            onEvent = null;
+            observedNames = null;
+        };
+    };
+    return {
+        observe,
+        dispatch: (name: string) => act(() => onEvent?.(name)),
+        isInstalled: () => onEvent !== null,
+        names: () => observedNames,
+    };
+};
+
 let pageObserver: ReturnType<typeof fakePageObserver>;
 let clickObserver: ReturnType<typeof fakeElementObserver>;
 let appearObserver: ReturnType<typeof fakeElementObserver>;
+let eventObserver: ReturnType<typeof fakeEventObserver>;
 
 const createFlagButton = (): Element => {
     const button = document.createElement('button');
@@ -105,6 +126,12 @@ const CLICK_CREATE_FLAG: SurveyTrigger = {
 const APPEAR_FLAG_CREATED_TOAST: SurveyTrigger = {
     on: 'appear',
     selector: '[data-testid="toast"]',
+};
+
+const EVENT_FLAG_CREATED: SurveyTrigger = { on: 'event', name: 'flag-created' };
+const EVENT_FLAG_ARCHIVED: SurveyTrigger = {
+    on: 'event',
+    name: 'flag-archived',
 };
 
 // Fresh modules, because surveyStorage remembers impressions per page load.
@@ -126,6 +153,7 @@ const loadPage = async () => {
                     observePage={pageObserver.observe}
                     observeClicks={clickObserver.observe}
                     observeAppear={appearObserver.observe}
+                    observeEvents={eventObserver.observe}
                     basePath='/unleash'
                     identifyUser={identifyUser}
                 >
@@ -163,6 +191,7 @@ describe('FeedbackProvider', () => {
         pageObserver = fakePageObserver('/unleash/projects');
         clickObserver = fakeElementObserver();
         appearObserver = fakeElementObserver();
+        eventObserver = fakeEventObserver();
         renderSurvey = await loadPage();
     });
 
@@ -318,19 +347,22 @@ describe('FeedbackProvider', () => {
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
     });
 
-    it('stops observing pages, clicks and appearances on unmount', () => {
+    it('stops observing pages, clicks, appearances and events on unmount', () => {
         const { unmount } = renderSurvey(
             testUnleashClient([
                 surveyFlag('survey-a', 'Survey A', APPEAR_FLAG_CREATED_TOAST),
+                surveyFlag('survey-b', 'Survey B', EVENT_FLAG_CREATED),
             ]),
         );
         expect(appearObserver.isInstalled()).toBe(true);
+        expect(eventObserver.isInstalled()).toBe(true);
 
         unmount();
 
         expect(pageObserver.isInstalled()).toBe(false);
         expect(clickObserver.isInstalled()).toBe(false);
         expect(appearObserver.isInstalled()).toBe(false);
+        expect(eventObserver.isInstalled()).toBe(false);
     });
 
     it('shows a page survey on the page it was opened on when the path matches', async () => {
@@ -530,5 +562,77 @@ describe('FeedbackProvider', () => {
         act(() => client.setFlags([]));
 
         expect(appearObserver.isInstalled()).toBe(false);
+    });
+
+    it('observes appearances only on pages an appear survey can trigger on', async () => {
+        renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', {
+                    ...APPEAR_FLAG_CREATED_TOAST,
+                    path: '/projects/*',
+                }),
+            ]),
+        );
+        expect(appearObserver.isInstalled()).toBe(false);
+
+        pageObserver.navigate('/unleash/projects/default');
+
+        expect(appearObserver.isInstalled()).toBe(true);
+
+        pageObserver.navigate('/unleash/features');
+
+        expect(appearObserver.isInstalled()).toBe(false);
+    });
+
+    it('shows an event survey only once the host app dispatches its event', async () => {
+        renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', EVENT_FLAG_CREATED),
+            ]),
+        );
+        expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
+
+        eventObserver.dispatch('flag-created');
+
+        expect(await screen.findByText('Survey A')).toBeInTheDocument();
+    });
+
+    it('matches an event against the page the user is currently on', async () => {
+        renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', {
+                    ...EVENT_FLAG_CREATED,
+                    path: '/projects/:projectId',
+                }),
+            ]),
+        );
+        eventObserver.dispatch('flag-created');
+        expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
+
+        pageObserver.navigate('/unleash/projects/default');
+        eventObserver.dispatch('flag-created');
+
+        expect(await screen.findByText('Survey A')).toBeInTheDocument();
+    });
+
+    it('observes each event name of the live surveys once', () => {
+        const client = testUnleashClient([
+            surveyFlag('survey-a', 'Survey A', CLICK_CREATE_FLAG),
+        ]);
+        renderSurvey(client);
+        expect(eventObserver.names()).toBeNull();
+
+        act(() =>
+            client.setFlags([
+                surveyFlag('survey-c', 'Survey C', EVENT_FLAG_CREATED),
+                surveyFlag('survey-b', 'Survey B', EVENT_FLAG_ARCHIVED),
+                surveyFlag('survey-a', 'Survey A', EVENT_FLAG_CREATED),
+            ]),
+        );
+
+        expect(eventObserver.names()).toEqual([
+            'flag-archived',
+            'flag-created',
+        ]);
     });
 });

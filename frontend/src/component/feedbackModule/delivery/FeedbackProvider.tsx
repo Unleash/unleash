@@ -24,7 +24,11 @@ import {
     shouldShowSurvey,
 } from './surveyStorage.ts';
 import { submitSurveyResponse } from './submitSurveyResponse.ts';
-import { matchTriggers, type TriggerEvent } from '../triggers/matchTriggers.ts';
+import {
+    matchesPage,
+    matchTriggers,
+    type TriggerEvent,
+} from '../triggers/matchTriggers.ts';
 import {
     observeBrowserPage,
     type PageObserver,
@@ -37,7 +41,12 @@ import {
     type AppearObserver,
     observeBrowserAppear,
 } from '../observers/observeAppear.ts';
+import {
+    type EventObserver,
+    observeBrowserEvents,
+} from '../observers/observeEvents.ts';
 import { basePath as appBasePath } from 'utils/formatPath';
+import { unique } from 'utils/unique';
 
 interface FeedbackContextValue {
     survey: Survey | null;
@@ -61,6 +70,13 @@ const findEligibleSurvey = (
         shouldShowSurvey(flagName),
     ) ?? null;
 
+const customEventNames = (surveys: Survey[]): string[] =>
+    unique(
+        surveys.flatMap(({ trigger }) =>
+            trigger.on === 'event' ? [trigger.name] : [],
+        ),
+    ).toSorted();
+
 export type IdentifyUser = (context: IContext) => string | undefined;
 
 interface FeedbackProviderProps {
@@ -69,6 +85,7 @@ interface FeedbackProviderProps {
     observePage?: PageObserver;
     observeClicks?: ClickObserver;
     observeAppear?: AppearObserver;
+    observeEvents?: EventObserver;
     basePath?: string;
 }
 
@@ -78,6 +95,7 @@ export const FeedbackProvider = ({
     observePage = observeBrowserPage,
     observeClicks = observeBrowserClicks,
     observeAppear = observeBrowserAppear,
+    observeEvents = observeBrowserEvents,
     basePath = appBasePath,
 }: FeedbackProviderProps) => {
     const flags = useFlags();
@@ -123,12 +141,29 @@ export const FeedbackProvider = ({
 
     const waitsForAppearance =
         survey === null &&
-        surveys.some(({ trigger }) => trigger.on === 'appear');
+        path !== null &&
+        surveys.some(
+            ({ trigger }) =>
+                trigger.on === 'appear' && matchesPage(trigger, path),
+        );
     useEffect(() => {
         if (waitsForAppearance) {
             return observeAppear(showSurveyOnAppear);
         }
     }, [observeAppear, waitsForAppearance]);
+
+    const showSurveyOnEvent = useEffectEvent((name: string) => {
+        if (path !== null) {
+            showSurveyOn({ on: 'event', path, name });
+        }
+    });
+
+    const eventNames = useMemo(() => customEventNames(surveys), [surveys]);
+    useEffect(() => {
+        if (eventNames.length > 0) {
+            return observeEvents(showSurveyOnEvent, eventNames);
+        }
+    }, [observeEvents, eventNames]);
 
     const flagName = survey?.flagName;
     useEffect(() => {

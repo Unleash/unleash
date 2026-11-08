@@ -23,6 +23,51 @@ describe('constraintValidator', () => {
             expect(valid).toBe(false);
             expect(message).toContain('Comma');
         });
+
+        test('accepts finite decimals and scientific notation', () => {
+            expect(validate('1.5')).toEqual([true, '']);
+            expect(validate('-2')).toEqual([true, '']);
+            expect(validate('1e3')).toEqual([true, '']);
+            expect(validate('-1.5e-3')).toEqual([true, '']);
+            expect(validate('1e308')).toEqual([true, '']);
+        });
+
+        test('rejects non-finite values', () => {
+            for (const value of [
+                'Infinity',
+                '+Infinity',
+                '-Infinity',
+                '1e309',
+                '-1e309',
+            ]) {
+                const [valid, message] = validate(value);
+                expect(valid, value).toBe(false);
+                expect(message, value).toBe('Value must be a number');
+            }
+        });
+    });
+
+    describe('other number operators', () => {
+        test('rejects non-finite values for NUM_GT', () => {
+            const validate = constraintValidator('NUM_GT');
+            expect(validate('Infinity')[0]).toBe(false);
+            expect(validate('-Infinity')[0]).toBe(false);
+            expect(validate('1e309')[0]).toBe(false);
+            expect(validate('-1e309')[0]).toBe(false);
+        });
+
+        test('still accepts finite values for NUM_GT', () => {
+            const validate = constraintValidator('NUM_GT');
+            expect(validate('1.5')).toEqual([true, '']);
+            expect(validate('1e3')).toEqual([true, '']);
+        });
+
+        test('keeps comma hint for NUM_GT', () => {
+            const validate = constraintValidator('NUM_GT');
+            const [valid, message] = validate('3,14');
+            expect(valid).toBe(false);
+            expect(message).toContain('Comma');
+        });
     });
 
     describe('semver operator', () => {

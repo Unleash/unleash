@@ -53,6 +53,11 @@ interface FeedbackContextValue {
 
 const FeedbackContext = createContext<FeedbackContextValue | null>(null);
 
+interface TriggeredSurvey {
+    survey: Survey;
+    triggerOccurredAt: number;
+}
+
 const parseSurveys = (flags: IToggle[]): Survey[] =>
     flags
         .toSorted((a, b) => a.name.localeCompare(b.name))
@@ -66,6 +71,22 @@ const findEligibleSurvey = (
     matchTriggers(event, surveys).find(({ flagName }) =>
         shouldShowSurvey(flagName),
     ) ?? null;
+
+const triggerSurvey = (survey: Survey): TriggeredSurvey => ({
+    survey,
+    triggerOccurredAt: Date.now(),
+});
+
+const triggerPageSurvey = (
+    surveys: Survey[],
+    path: string | null,
+): TriggeredSurvey | null => {
+    if (path === null) {
+        return null;
+    }
+    const pageSurvey = findEligibleSurvey(surveys, { on: 'page', path });
+    return pageSurvey === null ? null : triggerSurvey(pageSurvey);
+};
 
 const customEventNames = (surveys: Survey[]): string[] =>
     unique(
@@ -107,26 +128,37 @@ export const FeedbackProvider = ({
     const surveys = useMemo(() => parseSurveys(flags), [flags]);
     const client = useUnleashClient();
     const [path, setPath] = useState<string | null>(null);
+    const [storedTriggered, setTriggered] = useState<TriggeredSurvey | null>(
+        null,
+    );
     const [shownSurvey, setShownSurvey] = useState<Survey | null>(null);
 
     useEffect(() => observePage(setPath, basePath), [observePage, basePath]);
 
-    const survey =
-        shownSurvey ??
-        (path === null
-            ? null
-            : findEligibleSurvey(surveys, { on: 'page', path }));
-    if (survey !== shownSurvey) {
-        setShownSurvey(survey);
+    const triggered = storedTriggered ?? triggerPageSurvey(surveys, path);
+    if (triggered !== storedTriggered) {
+        setTriggered(triggered);
     }
 
+    useEffect(() => {
+        if (triggered === null) {
+            return;
+        }
+        const { survey, triggerOccurredAt } = triggered;
+        const timer = setTimeout(
+            () => setShownSurvey(survey),
+            triggerOccurredAt + (survey.trigger.delayMs ?? 0) - Date.now(),
+        );
+        return () => clearTimeout(timer);
+    }, [triggered]);
+
     const showSurveyOn = (event: TriggerEvent) => {
-        if (survey !== null) {
+        if (shownSurvey !== null) {
             return;
         }
         const triggeredSurvey = findEligibleSurvey(surveys, event);
         if (triggeredSurvey !== null) {
-            setShownSurvey((shown) => shown ?? triggeredSurvey);
+            setTriggered(triggerSurvey(triggeredSurvey));
         }
     };
 
@@ -145,7 +177,7 @@ export const FeedbackProvider = ({
     });
 
     const waitsForAppearance =
-        survey === null &&
+        shownSurvey === null &&
         path !== null &&
         surveys.some(
             ({ trigger }) =>
@@ -165,7 +197,7 @@ export const FeedbackProvider = ({
 
     const eventNames = useMemo(() => customEventNames(surveys), [surveys]);
 
-    const flagName = survey?.flagName;
+    const flagName = shownSurvey?.flagName;
     useEffect(() => {
         if (flagName) {
             recordSurveyImpression(flagName);
@@ -173,28 +205,31 @@ export const FeedbackProvider = ({
     }, [flagName]);
 
     const submit = (answers: SurveyAnswers) => {
-        if (!survey) {
+        if (!shownSurvey) {
             return;
         }
-        recordSurveyInteraction(survey.flagName);
+        recordSurveyInteraction(shownSurvey.flagName);
         submitSurveyResponse({
-            flagName: survey.flagName,
-            submitBase: survey.submitBase,
-            environmentId: survey.environmentId,
+            flagName: shownSurvey.flagName,
+            submitBase: shownSurvey.submitBase,
+            environmentId: shownSurvey.environmentId,
             respondentId: identifyUser(client.getContext()),
             answers,
         }).catch(() => {});
     };
 
     const dismiss = () => {
-        if (survey) {
-            recordSurveyInteraction(survey.flagName);
+        if (shownSurvey) {
+            recordSurveyInteraction(shownSurvey.flagName);
         }
+        setTriggered(null);
         setShownSurvey(null);
     };
 
     return (
-        <FeedbackContext.Provider value={{ survey, submit, dismiss }}>
+        <FeedbackContext.Provider
+            value={{ survey: shownSurvey, submit, dismiss }}
+        >
             {eventNames.map((name) => (
                 <SurveyEventListener
                     key={name}

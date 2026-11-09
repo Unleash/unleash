@@ -18,6 +18,11 @@ const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
 const SUBMIT_BASE = 'https://hosted.example.com/hosted';
 
+const DELAY_MS = 5000;
+
+const runPendingSurveyTimers = () =>
+    act(() => new Promise((resolve) => setTimeout(resolve, 0)));
+
 const surveyFlag = (
     name: string,
     title: string,
@@ -225,6 +230,7 @@ describe('FeedbackProvider', () => {
         }
 
         renderSurvey(client);
+        await runPendingSurveyTimers();
 
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
     });
@@ -295,6 +301,7 @@ describe('FeedbackProvider', () => {
 
         unmount();
         renderSurvey(client);
+        await runPendingSurveyTimers();
 
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
     });
@@ -322,10 +329,12 @@ describe('FeedbackProvider', () => {
         await userEvent.click(
             await screen.findByRole('button', { name: 'Close' }),
         );
+        await runPendingSurveyTimers();
 
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
         unmount();
         renderSurvey(client);
+        await runPendingSurveyTimers();
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
     });
 
@@ -429,11 +438,16 @@ describe('FeedbackProvider', () => {
     });
 
     it('does not show a dismissed page survey again on a later matching page', async () => {
+        vi.useFakeTimers({ toFake: ['Date'] });
         renderSurvey(
             testUnleashClient([
                 surveyFlag('survey-a', 'Survey A', {
                     on: 'page',
                     path: '/projects/*',
+                }),
+                surveyFlag('survey-b', 'Survey B', {
+                    on: 'page',
+                    path: '/projects/other',
                 }),
             ]),
         );
@@ -441,16 +455,26 @@ describe('FeedbackProvider', () => {
         await userEvent.click(
             await screen.findByRole('button', { name: 'Close' }),
         );
+        vi.setSystemTime(Date.now() + SEVEN_DAYS_MS + 1);
 
         pageObserver.navigate('/unleash/projects/other');
 
+        expect(await screen.findByText('Survey B')).toBeInTheDocument();
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
     });
 
-    it('shows a click survey only once the user clicks a matching element', async () => {
+    it.each([
+        { delay: 'no delay', delayMs: undefined },
+        { delay: 'a zero delay', delayMs: 0 },
+    ])('shows a click survey with $delay as soon as the user clicks a matching element', async ({
+        delayMs,
+    }) => {
         renderSurvey(
             testUnleashClient([
-                surveyFlag('survey-a', 'Survey A', CLICK_CREATE_FLAG),
+                surveyFlag('survey-a', 'Survey A', {
+                    ...CLICK_CREATE_FLAG,
+                    delayMs,
+                }),
             ]),
         );
 
@@ -487,6 +511,7 @@ describe('FeedbackProvider', () => {
         await screen.findByText('Survey B');
 
         clickObserver.emit(createFlagButton());
+        await runPendingSurveyTimers();
 
         expect(screen.getByText('Survey B')).toBeInTheDocument();
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
@@ -504,6 +529,7 @@ describe('FeedbackProvider', () => {
         );
 
         clickObserver.emit(createFlagButton());
+        await runPendingSurveyTimers();
 
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
     });
@@ -586,6 +612,7 @@ describe('FeedbackProvider', () => {
             ]),
         );
         dispatchEvent('flag-created');
+        await runPendingSurveyTimers();
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
 
         pageObserver.navigate('/unleash/projects/default');
@@ -610,5 +637,72 @@ describe('FeedbackProvider', () => {
         dispatchEvent('flag-archived');
 
         expect(await screen.findByText('Survey B')).toBeInTheDocument();
+    });
+
+    describe('delayed surveys', () => {
+        beforeEach(() => {
+            vi.useFakeTimers({
+                toFake: ['setTimeout', 'clearTimeout', 'Date'],
+            });
+        });
+
+        it('shows a click survey only once its delay has passed since the click', () => {
+            renderSurvey(
+                testUnleashClient([
+                    surveyFlag('survey-a', 'Survey A', {
+                        ...CLICK_CREATE_FLAG,
+                        delayMs: DELAY_MS,
+                    }),
+                ]),
+            );
+
+            clickObserver.emit(createFlagButton());
+            act(() => vi.advanceTimersByTime(DELAY_MS - 1));
+
+            expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
+
+            act(() => vi.advanceTimersByTime(1));
+
+            expect(screen.getByText('Survey A')).toBeInTheDocument();
+        });
+
+        it('shows a delayed page survey even when the user has left the page', () => {
+            renderSurvey(
+                testUnleashClient([
+                    surveyFlag('survey-a', 'Survey A', {
+                        on: 'page',
+                        path: '/projects',
+                        delayMs: DELAY_MS,
+                    }),
+                ]),
+            );
+
+            pageObserver.navigate('/unleash/features');
+            act(() => vi.advanceTimersByTime(DELAY_MS));
+
+            expect(screen.getByText('Survey A')).toBeInTheDocument();
+        });
+
+        it('lets a later trigger take over from a delayed survey', () => {
+            renderSurvey(
+                testUnleashClient([
+                    surveyFlag('survey-a', 'Survey A', {
+                        on: 'page',
+                        delayMs: DELAY_MS,
+                    }),
+                    surveyFlag('survey-b', 'Survey B', CLICK_CREATE_FLAG),
+                ]),
+            );
+
+            clickObserver.emit(createFlagButton());
+            act(() => vi.advanceTimersByTime(0));
+
+            expect(screen.getByText('Survey B')).toBeInTheDocument();
+
+            act(() => vi.advanceTimersByTime(DELAY_MS));
+
+            expect(screen.getByText('Survey B')).toBeInTheDocument();
+            expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
+        });
     });
 });

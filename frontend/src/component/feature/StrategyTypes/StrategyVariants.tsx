@@ -252,7 +252,6 @@ export const StrategyVariants = <T extends StrategyFormState>({
                             value={variant.id}
                             name={variant.name}
                             weight={variant.weight}
-                            payload={variant.payload}
                             color={variantColor(index)}
                             locked={variant.weightType === WeightType.FIX}
                         />

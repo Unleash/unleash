@@ -115,6 +115,7 @@ export interface IServerOption {
     cdnPrefix?: string;
     edgeUrl?: string;
     unleashUrl: string;
+    slackAppBrokerUrl: string;
     logRocketAppId?: string;
     hubspotPortalId?: string;
     serverMetrics: boolean;

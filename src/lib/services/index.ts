@@ -62,6 +62,7 @@ import {
     type WithTransactional,
     withTransactional,
 } from '../db/transaction.js';
+import { SlackAppInstallService } from '../addons/slack-app-install-service.js';
 import {
     createChangeRequestAccessReadModel,
     createFakeChangeRequestAccessService,
@@ -301,6 +302,11 @@ export const createServices = (
     );
     const sessionService = new SessionService(stores, config);
     const settingService = new SettingService(stores, config, eventService);
+    const slackAppInstallService = new SlackAppInstallService(
+        { addonService },
+        config,
+        Date.now,
+    );
     const userService = db
         ? withTransactional((db) => createUserService(db, config), db)
         : withFakeTransactional(
@@ -568,6 +574,7 @@ export const createServices = (
         accessService,
         accountService,
         addonService,
+        slackAppInstallService,
         eventAnnouncerService,
         featureToggleService,
         featureTypeService,
@@ -716,6 +723,7 @@ export interface IUnleashServices {
     accessService: AccessService;
     accountService: AccountService;
     addonService: AddonService;
+    slackAppInstallService: SlackAppInstallService;
     apiTokenService: ApiTokenService;
     apiTokenV2Service: ReadOnlyApiTokenV2Service;
     transactionalApiTokenV2Service: WithTransactional<AdminApiTokenV2Service>;

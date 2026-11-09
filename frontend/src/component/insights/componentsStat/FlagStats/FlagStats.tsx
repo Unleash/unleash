@@ -1,6 +1,6 @@
 import Icon from '@mui/material/Icon';
 import { Box, Typography, styled } from '@mui/material';
-import { useId } from 'hooks/useId';
+import { useId } from 'react';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';

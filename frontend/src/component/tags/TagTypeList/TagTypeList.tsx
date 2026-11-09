@@ -41,8 +41,9 @@ import { useTracking } from 'hooks/useTracking';
 import {
     deleteTagTypeTracking,
     searchTagTypesTracking,
+    tagsTableTracking,
 } from '../tagsTracking.ts';
-import { useUiFlag } from 'hooks/useUiFlag';
+import { useTrackedSorting } from 'hooks/useTrackedSorting';
 
 type TagTypeRow = {
     name: string;
@@ -114,7 +115,6 @@ export const TagTypeList = () => {
     const { tagTypes, refetch, loading } = useTagTypes();
     const { setToastData, setToastApiError } = useToast();
     const trackSearchTagTypes = useTracking(searchTagTypesTracking);
-    const tagManagementViaUi = useUiFlag('tagManagementViaUi');
 
     const data = useMemo<TagTypeRow[]>(() => {
         if (loading) {
@@ -246,28 +246,19 @@ export const TagTypeList = () => {
         [navigate],
     );
 
-    const initialState = useMemo(
-        () => ({
-            sorting: [{ id: 'name', desc: false }],
-        }),
-        [],
+    const { sorting, onSortingChange } = useTrackedSorting(
+        [{ id: 'name', desc: false }],
+        tagsTableTracking,
     );
 
-    const columnVisibility = useMemo(
-        () => ({
-            description: false,
-            usedInProjects: Boolean(tagManagementViaUi),
-            valueCount: Boolean(tagManagementViaUi),
-        }),
-        [tagManagementViaUi],
-    );
+    const columnVisibility = { description: false };
 
     const table = useReactTable({
         columns,
         data,
-        initialState,
-        state: { globalFilter, columnVisibility },
+        state: { globalFilter, columnVisibility, sorting },
         onGlobalFilterChange: setGlobalFilter,
+        onSortingChange,
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),

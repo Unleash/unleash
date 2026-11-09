@@ -1,5 +1,6 @@
-import { minutesToMilliseconds } from 'date-fns';
+import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import dbInit, { type ITestDb } from '../../helpers/database-init.js';
+import { DEFAULT_SESSION_TTL_HOURS } from '../../../../lib/sessions/session-limits.js';
 import {
     type IUnleashTest,
     setupAppWithAuth,
@@ -50,7 +51,7 @@ test('answers with what is left of the idle window', async () => {
     expect(body.expiresInMs).toBe(minutesToMilliseconds(IDLE_MINUTES));
 });
 
-test('answers 200 with nothing to report while the flag is off', async () => {
+test('answers with what is left of the max age while the flag is off', async () => {
     app = await appWith(false);
     await signIn('keep-alive-off@getunleash.io');
 
@@ -58,7 +59,9 @@ test('answers 200 with nothing to report while the flag is off', async () => {
         .post('/api/admin/session/keep-alive')
         .expect(200);
 
-    expect(body.expiresInMs).toBeUndefined();
+    const ttlMs = hoursToMilliseconds(DEFAULT_SESSION_TTL_HOURS);
+    expect(body.expiresInMs).toBeLessThanOrEqual(ttlMs);
+    expect(body.expiresInMs).toBeGreaterThan(ttlMs - minutesToMilliseconds(1));
 });
 
 test('needs a session of its own to renew', async () => {

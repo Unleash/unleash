@@ -45,7 +45,9 @@ export class SchedulerService {
         scheduledFunction: () => Promise<unknown>,
         timeMs: number,
         id: string,
-        jitter = randomJitter(2 * 1000, 30 * 1000, timeMs),
+        {
+            initialDelayMs = randomJitter(2 * 1000, 30 * 1000, timeMs),
+        }: { initialDelayMs?: number } = {},
     ): Promise<void> {
         if (this.stopping) {
             return;
@@ -73,20 +75,22 @@ export class SchedulerService {
             return promise;
         };
 
-        // scheduled run
-        this.intervalIds.push(
-            setInterval(() => {
-                void runScheduledFunctionWithEvent();
-            }, timeMs).unref(),
-        );
+        const startInterval = () => {
+            this.intervalIds.push(
+                setInterval(() => {
+                    void runScheduledFunctionWithEvent();
+                }, timeMs).unref(),
+            );
+        };
 
-        // initial run with jitter
-        if (jitter) {
+        if (initialDelayMs) {
             const timeoutId = setTimeout(() => {
+                startInterval();
                 void runScheduledFunctionWithEvent();
-            }, jitter);
+            }, initialDelayMs);
             this.intervalIds.push(timeoutId);
         } else {
+            startInterval();
             await runScheduledFunctionWithEvent();
         }
     }

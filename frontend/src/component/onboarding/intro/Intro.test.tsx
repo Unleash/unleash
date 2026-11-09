@@ -237,7 +237,7 @@ test('finishes after the three core steps when advanced steps are disabled', () 
         />,
     );
 
-    const stepper = screen.getByTestId('QUICK_TOUR_INTRO_STEPPER');
+    const stepper = screen.getByTestId('STEPPER');
     expect(within(stepper).getByText('Rollout')).toBeInTheDocument();
     expect(within(stepper).getByText('Targeting')).toBeInTheDocument();
     expect(within(stepper).getByText('Experiments')).toBeInTheDocument();
@@ -261,7 +261,7 @@ test('navigates back to a completed step from the stepper', () => {
     next();
     expect(screen.getByText('Run experiments')).toBeInTheDocument();
 
-    const stepper = screen.getByTestId('QUICK_TOUR_INTRO_STEPPER');
+    const stepper = screen.getByTestId('STEPPER');
     fireEvent.click(within(stepper).getByText('Rollout'));
     expect(
         screen.getByText('Start by toggling the flag in production'),

@@ -32,7 +32,6 @@ beforeAll(async () => {
                 flags: {
                     strictSchemaValidation: true,
                     extendedUsageMetrics: true,
-                    totalUsageMetrics: true,
                 },
             },
         },

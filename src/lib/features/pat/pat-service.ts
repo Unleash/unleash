@@ -8,14 +8,12 @@ import {
 import type { Logger } from '../../logger.js';
 import type { AccountTokenForAudit, IPatStore } from './pat-store-type.js';
 import { getTokenExpiryWarning } from './token-expiry-warning.js';
-import crypto from 'crypto';
 import BadDataError from '../../error/bad-data-error.js';
 import NameExistsError from '../../error/name-exists-error.js';
 import { OperationDeniedError } from '../../error/operation-denied-error.js';
 import { PAT_LIMIT } from '../../util/constants.js';
 import type EventService from '../events/event-service.js';
 import type { CreatePatSchema, PatSchema } from '../../openapi/index.js';
-import type { PersistedAccountTokenCredential } from './pat-store-type.js';
 import {
     AuthorizationTokenKind,
     createTokenV2Credential,
@@ -54,8 +52,13 @@ export default class PatService {
         pat: CreatePatSchema,
         ownerId: number,
         auditUser: IAuditUser,
+        clockOverride: Date = new Date(),
     ): Promise<PatSchema> {
-        const createdToken = await this.createAccountToken(pat, ownerId);
+        const createdToken = await this.createAccountToken(
+            pat,
+            ownerId,
+            clockOverride,
+        );
 
         await this.eventService.storeEvent(
             new PatCreatedEvent({
@@ -75,23 +78,20 @@ export default class PatService {
     async createAccountToken(
         token: CreatePatSchema,
         ownerId: number,
+        clockOverride: Date = new Date(),
     ): Promise<CreatedAccountToken> {
-        await this.validatePat(token, ownerId);
+        await this.validatePat(token, ownerId, clockOverride);
 
-        const secure = this.config.flagResolver.isEnabled(
-            'secureAccountTokenStorage',
+        const { secret, selector, verifier } = createTokenV2Credential({
+            kind: AuthorizationTokenKind.ACCOUNT_ACCESS,
+        });
+        const newPat = await this.patStore.create(
+            token,
+            { selector, verifier },
+            ownerId,
         );
-        const { credential, secret } = this.generateToken(secure);
-        const newPat = await this.patStore.create(token, credential, ownerId);
 
-        return credential.selector
-            ? {
-                  ...newPat,
-                  secret,
-                  secure: true,
-                  selector: credential.selector,
-              }
-            : { ...newPat, secret, secure: false };
+        return { ...newPat, secret, secure: true, selector };
     }
 
     async getAll(
@@ -141,12 +141,13 @@ export default class PatService {
     async validatePat(
         { description, expiresAt }: CreatePatSchema,
         ownerId: number,
+        clockOverride: Date = new Date(),
     ): Promise<void> {
         if (!description) {
             throw new BadDataError('PAT description cannot be empty.');
         }
 
-        if (new Date(expiresAt) < new Date()) {
+        if (new Date(expiresAt) < clockOverride) {
             throw new BadDataError('The expiry date should be in future.');
         }
 
@@ -164,31 +165,6 @@ export default class PatService {
         ) {
             throw new NameExistsError('PAT description already exists.');
         }
-    }
-
-    private generateToken(secure: boolean): {
-        secret: string;
-        credential: PersistedAccountTokenCredential;
-    } {
-        if (secure) {
-            const credential = createTokenV2Credential({
-                kind: AuthorizationTokenKind.ACCOUNT_ACCESS,
-            });
-            return {
-                secret: credential.secret,
-                credential: {
-                    selector: credential.selector,
-                    verifier: credential.verifier,
-                },
-            };
-        }
-
-        const randomStr = crypto.randomBytes(28).toString('hex');
-        const secret = `user:${randomStr}`;
-        return {
-            secret,
-            credential: { secret },
-        };
     }
 
     private toAuditData(

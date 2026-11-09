@@ -6,6 +6,7 @@
 import type { AddonParameterSchema } from './addonParameterSchema.ts';
 import type { AddonTypeSchemaAlertsItem } from './addonTypeSchemaAlertsItem.ts';
 import type { AddonTypeSchemaInstallation } from './addonTypeSchemaInstallation.ts';
+import type { AddonTypeSchemaServerInstallation } from './addonTypeSchemaServerInstallation.ts';
 import type { TagTypeSchema } from './tagTypeSchema.ts';
 
 /**
@@ -22,8 +23,12 @@ export interface AddonTypeSchema {
     displayName: string;
     /** A URL to where you can find more information about using this addon type. */
     documentationUrl: string;
+    /** This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. Whether the events of this addon type are independent of environments, so that no environment filter is offered. */
+    environmentIndependent?: boolean;
     /** All the [event types](https://docs.getunleash.io/concepts/events#event-types) that are available for this addon provider. */
     events?: string[];
+    /** This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. Whether every addon of this type listens to all of its `events`. Hides filter from the form. */
+    fixedEvents?: boolean;
     /** A long description of how to use this addon type. This will be displayed on the top of configuration page. Can contain markdown. */
     howTo?: string;
     /** The installation configuration for this addon type. */
@@ -32,6 +37,8 @@ export interface AddonTypeSchema {
     name: string;
     /** The addon provider's parameters. Use these to configure an addon of this provider type. Items with `required: true` must be provided. */
     parameters?: AddonParameterSchema[];
+    /** This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. An installation that Unleash handles itself: the install button opens `path` in the same tab, with the non-sensitive parameters filled in the form as `parameters[name]` query parameters. */
+    serverInstallation?: AddonTypeSchemaServerInstallation;
     /** A list of [Unleash tag types](https://docs.getunleash.io/concepts/feature-flags#tags) that this addon uses. These tags will be added to the Unleash instance when an addon of this type is created. */
     tagTypes?: TagTypeSchema[];
 }

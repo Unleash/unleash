@@ -2,7 +2,7 @@ import type React from 'react';
 import { FormControlLabel, Switch } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import StrategyInputList from '../StrategyInputList/StrategyInputList.tsx';
-import ConditionalRolloutSlider from '../RolloutSlider/ConditionalRolloutSlider.tsx';
+import LegacyRolloutSlider from '../RolloutSlider/LegacyRolloutSlider.tsx';
 import type {
     StrategyFormParameters,
     IStrategyParameter,
@@ -56,7 +56,7 @@ export const StrategyParameter = ({
     if (type === 'percentage') {
         return (
             <div>
-                <ConditionalRolloutSlider
+                <LegacyRolloutSlider
                     name={name}
                     onChange={onChangePercentage}
                     value={parseParameterNumber(parameters[name])}

@@ -159,6 +159,7 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                         'gravatar.com',
                         'europe-west3-metrics-304612.cloudfunctions.net',
                         'app.unleash-hosted.com',
+                        '*.app.unleash-hosted.com',
                         'hosted.edge.getunleash.io',
                         'uxtweak.unleashsandbox.com',
                         ...flightRecorderSrc,

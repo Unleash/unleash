@@ -1,7 +1,7 @@
 import Add from '@mui/icons-material/Add';
 import { styled } from '@mui/material';
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react';
-import { ValueChip } from './ValueList.tsx';
+import { ValueChip } from './LegacyValueChip.tsx';
 import { AddValuesPopover, type OnAddActions } from './AddValuesPopover.tsx';
 import type { ConstraintValidatorOutput } from './ConstraintValidatorOutput.ts';
 

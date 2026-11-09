@@ -14,8 +14,8 @@ export interface SubmitSignupDataSchema {
     companyName?: string;
     /** The role of the user within the company. */
     companyRole?: string;
-    /** A list of email addresses to invite. */
-    inviteEmails?: string[];
+    /** How the user heard about Unleash. */
+    hearAboutUs?: string;
     /** The user's name. */
     name?: string;
     /** The user's new password. */

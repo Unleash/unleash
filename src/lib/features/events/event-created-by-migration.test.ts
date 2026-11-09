@@ -13,6 +13,7 @@ import { DEFAULT_ENV } from '../../server-impl.js';
 let db: ITestDb;
 
 const _config: IUnleashConfig = createTestConfig();
+const eventBus = new EventEmitter();
 
 beforeAll(async () => {
     db = await dbInit('events_test', getLogger);
@@ -25,7 +26,7 @@ afterAll(async () => {
 });
 
 test('sets created_by_user_id on events with user username/email set as created_by', async () => {
-    const store = new EventStore(db.rawDatabase, getLogger);
+    const store = new EventStore(db.rawDatabase, eventBus, getLogger);
 
     await db.rawDatabase('users').insert({ username: 'test1' });
     await db.rawDatabase('events').insert({
@@ -55,7 +56,7 @@ test('sets created_by_user_id on events with user username/email set as created_
 });
 
 test('sets created_by_user_id on a mix of events and created_bys', async () => {
-    const store = new EventStore(db.rawDatabase, getLogger);
+    const store = new EventStore(db.rawDatabase, eventBus, getLogger);
 
     await db.rawDatabase('users').insert({ username: 'test2' });
 
@@ -126,7 +127,7 @@ test('sets created_by_user_id on a mix of events and created_bys', async () => {
 });
 
 test('emits events with details on amount of updated rows', async () => {
-    const _store = new EventStore(db.rawDatabase, getLogger);
+    const _store = new EventStore(db.rawDatabase, eventBus, getLogger);
 
     const _eventBus = new EventEmitter();
     const config = createTestConfig();

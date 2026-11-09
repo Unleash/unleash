@@ -137,6 +137,10 @@ export class FrontendApiService {
                 token as ApiUser,
             );
 
+        metrics = token.appName
+            ? { ...metrics, appName: token.appName }
+            : metrics;
+
         await this.services.clientMetricsServiceV2.registerClientMetrics(
             metrics,
             ip,

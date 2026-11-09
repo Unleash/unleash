@@ -1,41 +1,44 @@
-import { useEffect, useMemo } from 'react';
+import { type RefObject, useEffect, useMemo } from 'react';
 import { useIsAppleDevice } from './useIsAppleDevice.js';
+import { isHiddenByVisibleDialog } from 'utils/isHiddenByVisibleDialog.js';
 
 export const useKeyboardShortcut = (
     {
         key,
         modifiers = [],
         preventDefault = false,
+        anchorRefs,
     }: {
         key: string;
         modifiers?: Array<'ctrl' | 'alt' | 'shift'>;
         preventDefault?: boolean;
+        anchorRefs?: Array<RefObject<Element | null>>;
     },
     callback: () => void,
 ) => {
     const isAppleDevice = useIsAppleDevice();
     useEffect(() => {
         const onKeyDown = (event: KeyboardEvent) => {
-            if (key !== event.key) {
+            if (key.toLowerCase() !== event.key.toLowerCase()) {
                 return;
             }
-            if (modifiers.includes('ctrl')) {
-                if (isAppleDevice) {
-                    if (!event.metaKey) {
-                        return;
-                    }
-                } else {
-                    if (!event.ctrlKey) {
-                        return;
-                    }
-                }
-            }
-            if (modifiers.includes('alt') && !event.altKey) {
+            if (
+                anchorRefs?.every((ref) => isHiddenByVisibleDialog(ref.current))
+            ) {
                 return;
             }
-            if (modifiers.includes('shift') && !event.shiftKey) {
+
+            const ctrlOrMetaKey = isAppleDevice ? event.metaKey : event.ctrlKey;
+            if (modifiers.includes('ctrl') !== ctrlOrMetaKey) {
                 return;
             }
+            if (modifiers.includes('alt') !== event.altKey) {
+                return;
+            }
+            if (modifiers.includes('shift') !== event.shiftKey) {
+                return;
+            }
+
             if (preventDefault) {
                 event.preventDefault();
             }
@@ -48,7 +51,7 @@ export const useKeyboardShortcut = (
         return () => {
             window.removeEventListener('keydown', onKeyDown);
         };
-    }, [isAppleDevice, key, modifiers, preventDefault, callback]);
+    }, [isAppleDevice, key, modifiers, preventDefault, anchorRefs, callback]);
 
     const formattedModifiers = useMemo(
         () =>
@@ -63,7 +66,7 @@ export const useKeyboardShortcut = (
         [isAppleDevice, modifiers],
     );
 
-    const hotkeyDescription = useMemo(
+    return useMemo(
         () =>
             [
                 ...formattedModifiers,
@@ -71,6 +74,4 @@ export const useKeyboardShortcut = (
             ].join('+'),
         [formattedModifiers, key],
     );
-
-    return hotkeyDescription;
 };

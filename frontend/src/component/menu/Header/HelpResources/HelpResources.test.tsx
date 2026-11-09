@@ -1,4 +1,4 @@
-import { type FC, useEffect } from 'react';
+import { type FC, useContext, useEffect } from 'react';
 import { expect, test, vi } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { screen, waitFor } from '@testing-library/react';
@@ -10,7 +10,10 @@ import {
     useHelpButtonHint,
 } from './HelpButtonHintContext.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { FloatingOnboardingChecklistContext } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistContext.tsx';
+import {
+    FloatingOnboardingChecklistContext,
+    FloatingOnboardingChecklistProvider,
+} from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistContext.tsx';
 import type { FloatingOnboardingChecklistContextValue } from 'component/onboarding/floatingChecklist/useChecklistContextValue.ts';
 import {
     ONBOARDING_CHECKLIST_ELIGIBILITY_DECIDED_SPLASH_ID,
@@ -72,6 +75,7 @@ vi.mock('hooks/useEventTracker', () => ({
 const openIntroMock = vi.fn();
 vi.mock('component/onboarding/intro/IntroProvider.tsx', () => ({
     useIntro: () => ({ open: openIntroMock }),
+    ONBOARDING_INTRO_FINISHED_SPLASH_ID: 'intro-finished',
 }));
 
 const withLearningLab = () =>
@@ -218,6 +222,51 @@ test('shows Get started with progress badge when the user is already known to be
     const item = await screen.findByRole('menuitem', { name: /Get started/ });
     expect(item).toBeInTheDocument();
     expect(item).toHaveTextContent('1/4');
+});
+
+test('opens the closed dashboard V2 checklist from Help', async () => {
+    window.localStorage.clear();
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: { dashboardV2: true },
+    });
+    mockCheapGatePassingWithSplash({
+        [ONBOARDING_CHECKLIST_ELIGIBILITY_DECIDED_SPLASH_ID]: true,
+        [ONBOARDING_CHECKLIST_ELIGIBLE_SPLASH_ID]: true,
+    });
+    testServerRoute(server, '/api/admin/projects/default/overview', {
+        name: 'Default',
+        environments: [],
+        onboardingStatus: { status: 'onboarding-started' },
+    });
+    const ChecklistStatus = () => {
+        const checklist = useContext(FloatingOnboardingChecklistContext);
+        return (
+            <span>
+                {checklist
+                    ? checklist.dismissed
+                        ? 'Checklist closed'
+                        : 'Checklist open'
+                    : 'Loading checklist'}
+            </span>
+        );
+    };
+    render(
+        <FloatingOnboardingChecklistProvider>
+            <HelpResources />
+            <ChecklistStatus />
+        </FloatingOnboardingChecklistProvider>,
+        { permissions: [{ permission: ADMIN }], route: '/personal' },
+    );
+    expect(await screen.findByText('Checklist closed')).toBeInTheDocument();
+
+    await userEvent.click(
+        screen.getByRole('button', { name: 'Help and resources' }),
+    );
+    await userEvent.click(
+        await screen.findByRole('menuitem', { name: /Get started/ }),
+    );
+
+    expect(await screen.findByText('Checklist open')).toBeInTheDocument();
 });
 
 test("hides Get started until the user's eligibility is known", async () => {

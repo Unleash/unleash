@@ -1,22 +1,40 @@
 import type React from 'react';
+import { useId, useMemo, useRef, useState } from 'react';
 import type { ISegment } from 'interfaces/segment';
-import {
-    AutocompleteBox,
-    type IAutocompleteBoxOption,
-} from 'component/common/AutocompleteBox/AutocompleteBox';
+import { SelectPopover } from 'component/common/SelectPopover/SelectPopover.tsx';
 import { FeatureStrategySegmentList } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentList';
 import { SegmentDocsStrategyWarning } from 'component/segments/SegmentDocs';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
-import { Box, styled, Typography } from '@mui/material';
+import { Box, Button, styled, Typography } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { RecentlyUsedSegments } from './RecentlyUsedSegments/RecentlyUsedSegments.tsx';
-import { useRecentlyUsedSegments } from './RecentlyUsedSegments/useRecentlyUsedSegments.ts';
+
+const pluralize = (count: number, noun: string) =>
+    `${count} ${noun}${count === 1 ? '' : 's'}`;
 
 interface IFeatureStrategySegmentProps {
     segments: ISegment[];
     setSegments: React.Dispatch<React.SetStateAction<ISegment[]>>;
     availableSegments: ISegment[];
 }
+
+const StyledBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1),
+}));
+
+const StyledRow = styled(Box)({
+    display: 'flex',
+    justifyContent: 'space-between',
+});
+
+const StyledTitle = styled('h3')(({ theme }) => ({
+    margin: 0,
+    fontSize: 'inherit',
+    fontWeight: theme.typography.fontWeightMedium,
+    color: theme.palette.text.secondary,
+}));
 
 const StyledHelpIconBox = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -30,83 +48,99 @@ export const FeatureStrategySegment = ({
     setSegments: setSelectedSegments,
     availableSegments,
 }: IFeatureStrategySegmentProps) => {
+    const titleId = useId();
+    const addSegmentButtonRef = useRef<HTMLButtonElement>(null);
+    const [addSegmentAnchor, setAddSegmentAnchor] =
+        useState<HTMLButtonElement | null>(null);
     const { strategySegmentsLimit } = useSegmentLimits();
-    const { items: recentlyUsedSegmentIds } = useRecentlyUsedSegments();
-    const availableRecentlyUsedSegments = availableSegments.filter(
-        (segment) =>
-            recentlyUsedSegmentIds.includes(segment.id) &&
-            !selectedSegments.find((selected) => selected.id === segment.id),
-    );
 
     const atStrategySegmentsLimit: boolean = Boolean(
         strategySegmentsLimit &&
             selectedSegments.length >= strategySegmentsLimit,
     );
 
-    const unusedSegments = availableSegments.filter((segment) => {
-        return !selectedSegments.find((selected) => selected.id === segment.id);
-    });
+    const availableSegmentsById = useMemo(
+        () =>
+            new Map(
+                availableSegments.map((segment) => [
+                    String(segment.id),
+                    segment,
+                ]),
+            ),
+        [availableSegments],
+    );
 
-    const autocompleteOptions = unusedSegments.map((segment) => ({
+    const segmentOptions = availableSegments.map((segment) => ({
         value: String(segment.id),
         label: segment.name,
+        detail: pluralize(segment.constraints?.length ?? 0, 'rule'),
     }));
 
-    const onChange = ([option]: IAutocompleteBoxOption[]) => {
-        const selectedSegment = availableSegments.find((segment) => {
-            return String(segment.id) === option.value;
-        });
-        if (selectedSegment) {
-            setSelectedSegments((prev) => [...prev, selectedSegment]);
-        }
+    const onSegmentsChange = (keys: string[]) => {
+        const newSegments = keys
+            .map((key) => availableSegmentsById.get(key))
+            .filter((segment): segment is ISegment => Boolean(segment));
+        setSelectedSegments(newSegments);
     };
 
     return (
-        <>
-            <StyledHelpIconBox>
-                <Typography>Segments</Typography>
-                <HelpIcon
-                    htmlTooltip
-                    tooltip={
-                        <Box>
-                            <Typography variant='body2'>
-                                Segments are reusable sets of constraints that
-                                can be defined once and reused across feature
-                                toggle configurations. You can create a segment
-                                on the global or the project level. Read more
-                                about segments{' '}
-                                <a
-                                    href='https://docs.getunleash.io/concepts/segments'
-                                    target='_blank'
-                                    rel='noopener noreferrer'
-                                >
-                                    here
-                                </a>
-                            </Typography>
-                        </Box>
+        <StyledBox role='group' aria-labelledby={titleId}>
+            <StyledRow>
+                <StyledHelpIconBox>
+                    <StyledTitle id={titleId}>Segments</StyledTitle>
+                    <HelpIcon
+                        htmlTooltip
+                        tooltip={
+                            <Box>
+                                <Typography variant='body2'>
+                                    Segments are reusable sets of constraints
+                                    that can be defined once and reused across
+                                    feature toggle configurations. You can
+                                    create a segment on the global or the
+                                    project level. Read more about segments{' '}
+                                    <a
+                                        href='https://docs.getunleash.io/concepts/segments'
+                                        target='_blank'
+                                        rel='noopener noreferrer'
+                                    >
+                                        here
+                                    </a>
+                                </Typography>
+                            </Box>
+                        }
+                    />
+                </StyledHelpIconBox>
+                <Button
+                    ref={addSegmentButtonRef}
+                    variant='outlined'
+                    size='medium'
+                    startIcon={<AddIcon />}
+                    disabled={atStrategySegmentsLimit}
+                    onClick={() =>
+                        setAddSegmentAnchor(addSegmentButtonRef.current)
                     }
+                >
+                    Add segment
+                </Button>
+                <SelectPopover
+                    open={Boolean(addSegmentAnchor)}
+                    anchorEl={addSegmentAnchor}
+                    onClose={() => setAddSegmentAnchor(null)}
+                    options={segmentOptions}
+                    multiple
+                    selected={selectedSegments.map((segment) =>
+                        String(segment.id),
+                    )}
+                    onChange={onSegmentsChange}
+                    searchPlaceholderText='Search segments'
+                    horizontalAlign='right'
                 />
-            </StyledHelpIconBox>
-
+            </StyledRow>
             {atStrategySegmentsLimit && <SegmentDocsStrategyWarning />}
-            <AutocompleteBox
-                label='Select segments'
-                options={autocompleteOptions}
-                onChange={onChange}
-                disabled={atStrategySegmentsLimit}
-                icon={null}
-                width={'175px'}
-            />
             <FeatureStrategySegmentList
                 segments={selectedSegments}
                 setSegments={setSelectedSegments}
             />
-            {availableRecentlyUsedSegments.length > 0 ? (
-                <RecentlyUsedSegments
-                    setSegments={setSelectedSegments}
-                    segments={availableRecentlyUsedSegments}
-                />
-            ) : null}
-        </>
+        </StyledBox>
     );
 };

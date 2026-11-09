@@ -1,7 +1,7 @@
 import joi from 'joi';
 import type { Response } from 'express';
 import type { Logger } from '../logger.js';
-import { UnleashError } from '../error/unleash-error.js';
+import { GenericUnleashError, UnleashError } from '../error/unleash-error.js';
 import { fromLegacyError } from '../error/from-legacy-error.js';
 import createError from 'http-errors';
 
@@ -52,6 +52,15 @@ export const handleErrors: (
             `I encountered an error that wasn't an instance of the \`UnleashError\` type. The original error was: ${format(
                 error,
             )}. It was mapped to ${format(finalError.toJSON())}`,
+        );
+    }
+
+    if (
+        finalError instanceof GenericUnleashError &&
+        finalError.internalMessage
+    ) {
+        logger.error(
+            `${finalError.name} (id: ${finalError.id}): ${finalError.internalMessage}`,
         );
     }
 

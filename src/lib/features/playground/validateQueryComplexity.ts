@@ -18,3 +18,14 @@ export const validateQueryComplexity = (
         throw new BadDataError(reason + action);
     }
 };
+
+export const validateContextComplexity = (
+    contextCombinationsCount: number,
+    limit = MAX_COMPLEXITY,
+): void => {
+    if (contextCombinationsCount > limit) {
+        throw new BadDataError(
+            `Rejecting evaluation as the context would expand into ${contextCombinationsCount} combinations exceeding ${limit} limit. Please reduce the number of comma separated values in the context fields.`,
+        );
+    }
+};

@@ -1,11 +1,10 @@
 import type React from 'react';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { TextField, Box } from '@mui/material';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { useUiConfigApi } from 'hooks/api/actions/useUiConfigApi/useUiConfigApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { useId } from 'hooks/useId';
 import { ADMIN, UPDATE_CORS } from '@server/types/permissions';
 
 interface ICorsFormProps {

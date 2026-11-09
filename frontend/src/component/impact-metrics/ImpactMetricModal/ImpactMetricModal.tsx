@@ -193,7 +193,7 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
     return (
         <StyledDialog open={open} onClose={onClose}>
             <FormTemplate
-                compact
+                layout='compact'
                 disablePadding
                 description={sidebarDescription}
                 showLink={false}

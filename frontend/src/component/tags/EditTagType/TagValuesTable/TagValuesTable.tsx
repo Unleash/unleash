@@ -17,7 +17,10 @@ import {
 } from 'component/common/Table';
 import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import {
+    DELETE_TAG_TYPE,
+    UPDATE_FEATURE,
+} from 'component/providers/AccessProvider/permissions';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import { useTagValues } from 'hooks/api/getters/useTagValues/useTagValues';
 import { refetchTagTypes } from 'hooks/api/getters/useTagTypes/useTagTypes';
@@ -28,7 +31,11 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { TagValueCell } from './TagValueCell.tsx';
 import { DeleteTagValueDialog } from './TagValueDialogs.tsx';
 import { TagValueUsageCell } from './TagValueUsageCell.tsx';
-import { openTagValueEditorTracking } from '../../tagsTracking.ts';
+import {
+    tagsTableTracking,
+    openTagValueEditorTracking,
+} from '../../tagsTracking.ts';
+import { useTrackedSorting } from 'hooks/useTrackedSorting';
 
 const StyledSection = styled('section')(({ theme }) => ({
     marginTop: theme.spacing(4),
@@ -77,6 +84,16 @@ const TagValuesTableComponent = ({ tagType }: { tagType: string }) => {
     // Tanstack breaks ties by row index, in both directions, so presorting
     // by value keeps tied values in ascending order whichever way usage sorts.
     const data = useMemo(() => [...tagValues].sort(compareValues), [tagValues]);
+    const { sorting, onSortingChange } = useTrackedSorting(
+        [{ id: 'value', desc: false }],
+        tagsTableTracking,
+    );
+
+    const isExistingValue = useCallback(
+        (value: string) =>
+            tagValues.some((tagValue) => tagValue.value === value),
+        [tagValues],
+    );
 
     const refetchUsage = useCallback(() => {
         refetch();
@@ -114,6 +131,7 @@ const TagValuesTableComponent = ({ tagType }: { tagType: string }) => {
                             refetchUsage();
                             stopEditing();
                         }}
+                        isExistingValue={isExistingValue}
                     />
                 ),
                 sortingFn: (a, b) => compareValues(a.original, b.original),
@@ -131,7 +149,7 @@ const TagValuesTableComponent = ({ tagType }: { tagType: string }) => {
                 cell: ({ row: { original } }) => (
                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                         <PermissionIconButton
-                            permission={UPDATE_FEATURE}
+                            permission={[UPDATE_FEATURE, DELETE_TAG_TYPE]}
                             tooltipProps={{ title: 'Delete tag value' }}
                             onClick={() =>
                                 setAction({
@@ -154,6 +172,7 @@ const TagValuesTableComponent = ({ tagType }: { tagType: string }) => {
             trackOpenTagValueEditor,
             stopEditing,
             refetchUsage,
+            isExistingValue,
         ],
     );
 
@@ -168,7 +187,8 @@ const TagValuesTableComponent = ({ tagType }: { tagType: string }) => {
     const table = useReactTable({
         columns,
         data,
-        initialState: { sorting: [{ id: 'value', desc: false }] },
+        state: { sorting },
+        onSortingChange,
         getRowId: ({ value }) => value,
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),

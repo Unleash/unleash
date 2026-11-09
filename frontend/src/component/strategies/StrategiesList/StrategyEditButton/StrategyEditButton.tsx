@@ -1,11 +1,10 @@
-import type { FC } from 'react';
+import { useId, type FC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import Edit from '@mui/icons-material/Edit';
 import { IconButton, Tooltip } from '@mui/material';
 import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import type { IStrategy } from 'interfaces/strategy';
-import { useId } from 'hooks/useId';
 
 interface IStrategyEditButtonProps {
     strategy: IStrategy;

@@ -147,6 +147,22 @@ export class FakeAccessStore implements IAccessStore {
         throw new Error('Method not implemented.');
     }
 
+    bulkClearPublicSignupUserTokens(userIds: number[]) {
+        throw new Error('Method not implemented.');
+    }
+
+    bulkClearUserPersonalAccessTokens(userIds: number[]): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    bulkUnlinkUserGroups(userIds: number[]): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    bulkUnlinkUserRoles(userIds: number[]): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
     async getRolesForUserId(userId: number): Promise<IRoleWithProject[]> {
         const roleId = this.userToRoleMap.get(userId);
         const found =

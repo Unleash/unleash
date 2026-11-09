@@ -2,12 +2,10 @@ import type { Knex } from 'knex';
 import type EventEmitter from 'events';
 import metricsHelper from '../../util/metrics-helper.js';
 import { DB_TIME } from '../../metric-events.js';
-import type { LogProvider } from '../../logger.js';
 import type {
     FeatureSearchEnvironment,
     IFeatureSearchOverview,
     IFeatureSearchStore,
-    IFlagResolver,
     StageName,
 } from '../../types/index.js';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
@@ -39,12 +37,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
 
     private readonly timer: Function;
 
-    constructor(
-        db: Db,
-        eventBus: EventEmitter,
-        _getLogger: LogProvider,
-        _flagResolver: IFlagResolver,
-    ) {
+    constructor(db: Db, eventBus: EventEmitter) {
         this.db = db;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
@@ -420,9 +413,20 @@ class FeatureSearchStore implements IFeatureSearchStore {
         queryBuilder
             .leftJoin(
                 this.db
-                    .select('feature_name', 'environment')
+                    .select(
+                        'feature_strategies.feature_name',
+                        'feature_strategies.environment',
+                    )
                     .from('feature_strategies')
-                    .groupBy('feature_name', 'environment')
+                    .innerJoin(
+                        'paginated_features',
+                        'paginated_features.feature_name',
+                        'feature_strategies.feature_name',
+                    )
+                    .groupBy(
+                        'feature_strategies.feature_name',
+                        'feature_strategies.environment',
+                    )
                     .where(function () {
                         this.whereNull('disabled').orWhere('disabled', false);
                     })
@@ -441,9 +445,20 @@ class FeatureSearchStore implements IFeatureSearchStore {
             )
             .leftJoin(
                 this.db
-                    .select('feature_name', 'environment')
+                    .select(
+                        'feature_strategies.feature_name',
+                        'feature_strategies.environment',
+                    )
                     .from('feature_strategies')
-                    .groupBy('feature_name', 'environment')
+                    .innerJoin(
+                        'paginated_features',
+                        'paginated_features.feature_name',
+                        'feature_strategies.feature_name',
+                    )
+                    .groupBy(
+                        'feature_strategies.feature_name',
+                        'feature_strategies.environment',
+                    )
                     .as('has_strategies'),
                 function () {
                     this.on(
@@ -467,6 +482,16 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         qb.select('release_plan_definition_id')
                             .count('* as total_milestones')
                             .from('milestones')
+                            .innerJoin(
+                                'release_plan_definitions',
+                                'release_plan_definitions.id',
+                                'milestones.release_plan_definition_id',
+                            )
+                            .innerJoin(
+                                'paginated_features',
+                                'paginated_features.feature_name',
+                                'release_plan_definitions.feature_name',
+                            )
                             .groupBy('release_plan_definition_id');
                     })
                     .select([
@@ -477,6 +502,11 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'active_milestone.name AS milestone_name',
                     ])
                     .from('release_plan_definitions AS rpd')
+                    .innerJoin(
+                        'paginated_features',
+                        'paginated_features.feature_name',
+                        'rpd.feature_name',
+                    )
                     .join(
                         'total_milestones',
                         'total_milestones.release_plan_definition_id',
@@ -516,6 +546,11 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'change_requests AS cr',
                         'cre.change_request_id',
                         'cr.id',
+                    )
+                    .innerJoin(
+                        'paginated_features',
+                        'paginated_features.feature_name',
+                        'cre.feature',
                     )
                     .select('cre.feature')
                     .select(

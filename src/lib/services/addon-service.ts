@@ -382,6 +382,25 @@ export default class AddonService {
         return this.filterSensitiveFields(result);
     }
 
+    async syncAddonParameters(
+        id: number,
+        auditUser: IAuditUser,
+    ): Promise<IAddon> {
+        const addonConfig = await this.addonStore.get(id);
+        if (addonConfig === undefined) {
+            throw new NotFoundError();
+        }
+        const addon = this.addonProviders[addonConfig.provider];
+        const newParameters = await addon.syncParameters(
+            addonConfig.parameters,
+        );
+        const newAddonConfig = this.filterSensitiveFields({
+            ...addonConfig,
+            parameters: newParameters,
+        });
+        return await this.updateAddon(id, newAddonConfig, auditUser);
+    }
+
     async removeAddon(
         id: number,
         auditUser: IAuditUser,

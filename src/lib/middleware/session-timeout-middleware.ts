@@ -1,12 +1,10 @@
 import type { NextFunction, Request, RequestHandler, Response } from 'express';
 import type { IUnleashConfig } from '../types/option.js';
-import UnauthorizedError from '../error/unauthorized-error.js';
+import { SessionEndedError } from '../error/session-ended-error.js';
 import { resolveSessionLimits } from '../sessions/session-limits.js';
 import { sessionCookieOptions } from '../sessions/session-cookie.js';
-import {
-    evaluateSession,
-    type SessionTimeoutReason,
-} from '../sessions/session-deadlines.js';
+import { evaluateSession } from '../sessions/session-deadlines.js';
+import type { SessionTimeoutReason } from '../types/session-timeout-reason.js';
 
 type TimeoutConfig = Pick<
     IUnleashConfig,
@@ -25,6 +23,9 @@ export const sessionTimeoutMiddleware = (
         'lib/middleware/session-timeout-middleware.ts',
     );
     const limits = resolveSessionLimits(config.session);
+    // the flag gates the idle window only. The max age is enforced either way:
+    // with the flag off it is the one deadline, with it on it is the ceiling.
+    const maxAgeOnly = { ...limits, idleTimeoutMs: 0 };
 
     const endSession = (
         session: Request['session'],
@@ -50,7 +51,7 @@ export const sessionTimeoutMiddleware = (
                 sessionCookieOptions(config),
             );
 
-            if (reason === 'idled' && config.session.clearSiteDataOnLogout) {
+            if (reason === 'idle' && config.session.clearSiteDataOnLogout) {
                 // idle-timeout: unattended screen, clear its data, not only session
                 res.set('Clear-Site-Data', '"cookies", "storage"');
             }
@@ -59,9 +60,7 @@ export const sessionTimeoutMiddleware = (
                 `Ended the session of user ${userId} past its ${reason} limit.`,
             );
 
-            const error = new UnauthorizedError(
-                'Your session has ended. Please log in again.',
-            );
+            const error = new SessionEndedError(reason);
             res.status(error.statusCode).json(error);
         });
     };
@@ -69,21 +68,26 @@ export const sessionTimeoutMiddleware = (
     return (req, res, next) => {
         const { session } = req;
 
-        // check before the flag: SDK endpoints never carry a session - cheap check
+        // SDK endpoints never carry a session - cheapest check first
         if (!session?.user) {
             next();
             return;
         }
 
-        if (!config.flagResolver.isEnabled('sessionTimeouts')) {
-            next();
-            return;
+        const stamp = Date.now();
+
+        // pods from before startSession() mint sessions with no start, and an
+        // empty one is no start either. A start we cannot read is different: it
+        // ends the session below. Drop this once those pods cannot be running
+        if (!session.authenticatedAt) {
+            session.authenticatedAt = new Date(stamp).toISOString();
         }
 
-        const stamp = Date.now();
         const verdict = evaluateSession(
             session,
-            limits,
+            config.flagResolver.isEnabled('sessionTimeouts')
+                ? limits
+                : maxAgeOnly,
             renewsIdleWindow(req),
             stamp,
         );
@@ -96,6 +100,8 @@ export const sessionTimeoutMiddleware = (
         if (verdict.shouldRenew) {
             session.lastInteractionAt = new Date(stamp).toISOString();
         }
+
+        session.cookie.maxAge = verdict.hardExpiresInMs;
 
         res.locals.sessionExpiresInMs = verdict.expiresInMs;
 

@@ -5,6 +5,7 @@ const { ValidationError } = pkg;
 import { CLIENT } from './permissions.js';
 
 export interface IApiUserData {
+    appName?: string;
     permissions?: string[];
     projects?: string[];
     project?: string;
@@ -15,6 +16,7 @@ export interface IApiUserData {
 }
 
 export interface IApiUser {
+    appName?: string;
     internalAdminTokenUserId?: number; // user associated to an admin token
     username: string;
     permissions: string[];
@@ -25,6 +27,7 @@ export interface IApiUser {
 }
 
 export class ApiUser implements IApiUser {
+    readonly appName?: string;
     readonly isAPI: boolean = true;
 
     readonly permissions: string[];
@@ -47,11 +50,13 @@ export class ApiUser implements IApiUser {
         type,
         secret,
         tokenName,
+        appName,
     }: IApiUserData) {
         if (!tokenName) {
             throw new ValidationError('tokenName is required', [], undefined);
         }
         this.username = tokenName;
+        this.appName = appName;
         this.permissions = permissions;
         this.environment = environment;
         this.type = type;

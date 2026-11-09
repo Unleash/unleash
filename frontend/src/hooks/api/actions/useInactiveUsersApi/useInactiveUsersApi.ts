@@ -17,5 +17,13 @@ export const useInactiveUsersApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
-    return { deleteInactiveUsers, errors, loading };
+    const bulkDeleteInactiveUsers = async () => {
+        const path = `api/admin/user-admin/inactive/delete`;
+        const req = createRequest(path, {
+            method: 'DELETE',
+        });
+        return makeRequest(req.caller, req.id);
+    };
+
+    return { deleteInactiveUsers, bulkDeleteInactiveUsers, errors, loading };
 };

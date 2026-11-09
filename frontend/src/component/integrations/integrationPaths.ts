@@ -15,3 +15,5 @@ export const formatIntegrationCreatePath = (
 
 export const formatIntegrationApiPath = (projectId?: string): string =>
     projectId ? `api/admin/projects/${projectId}/addons` : 'api/admin/addons';
+
+export const integrationActionsApiPath = 'api/admin/integrations';

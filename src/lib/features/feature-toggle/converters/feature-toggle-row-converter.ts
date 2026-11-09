@@ -4,7 +4,6 @@ import type {
     IFeatureToggleClient,
     IStrategyConfig,
     IFeatureToggleQuery,
-    IFlagResolver,
     IFeatureToggleListItem,
 } from '../../../types/index.js';
 
@@ -13,8 +12,6 @@ import { sortStrategies } from '../../../util/sortStrategies.js';
 import type { FeatureConfigurationClient } from '../types/feature-toggle-strategies-store-type.js';
 
 export class FeatureToggleRowConverter {
-    constructor(_flagResolver: IFlagResolver) {}
-
     isUnseenStrategyRow = (
         feature: PartialDeep<IFeatureToggleClient>,
         row: Record<string, any>,
@@ -37,6 +34,18 @@ export class FeatureToggleRowConverter {
             !feature.tags?.some(
                 (tag) =>
                     tag?.type === row.tag_type && tag?.value === row.tag_value,
+            )
+        );
+    };
+
+    isNewDependency = (
+        feature: PartialDeep<IFeatureToggleClient>,
+        row: Record<string, any>,
+    ): boolean => {
+        return (
+            row.parent &&
+            !feature.dependencies?.some(
+                (dependency) => dependency?.feature === row.parent,
             )
         );
     };
@@ -198,7 +207,7 @@ export class FeatureToggleRowConverter {
 
             feature = this.createBaseFeature(r, feature, featureQuery);
 
-            if (r.parent) {
+            if (this.isNewDependency(feature, r)) {
                 feature.dependencies = feature.dependencies || [];
                 feature.dependencies.push({
                     feature: r.parent,

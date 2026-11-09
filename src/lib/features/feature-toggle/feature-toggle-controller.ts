@@ -51,6 +51,7 @@ import type {
 import { querySchema } from '../../schema/feature-schema.js';
 import type { BatchStaleSchema } from '../../openapi/spec/batch-stale-schema.js';
 import type { WithTransactional } from '../../db/transaction.js';
+import type { PayloadSchemaService } from '../payload-schema/payload-schema-service.js';
 import { BadDataError } from '../../error/index.js';
 import { anonymise } from '../../util/index.js';
 import { throwOnInvalidSchema } from '../../openapi/validate.js';
@@ -108,12 +109,15 @@ type ProjectFeaturesServices = Pick<
     | 'openApiService'
     | 'transactionalFeatureToggleService'
     | 'featureTagService'
+    | 'payloadSchemaService'
 >;
 
 export default class ProjectFeaturesController extends Controller {
     private featureService: FeatureToggleService;
 
     private featureTagService: FeatureTagService;
+
+    private payloadSchemaService: PayloadSchemaService;
 
     private transactionalFeatureToggleService: WithTransactional<FeatureToggleService>;
 
@@ -130,6 +134,7 @@ export default class ProjectFeaturesController extends Controller {
             openApiService,
             transactionalFeatureToggleService,
             featureTagService,
+            payloadSchemaService,
         }: ProjectFeaturesServices,
     ) {
         super(config);
@@ -138,6 +143,7 @@ export default class ProjectFeaturesController extends Controller {
             transactionalFeatureToggleService;
         this.openApiService = openApiService;
         this.featureTagService = featureTagService;
+        this.payloadSchemaService = payloadSchemaService;
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('/admin-api/project/features.ts');
 
@@ -177,7 +183,7 @@ export default class ProjectFeaturesController extends Controller {
                     release: { stable: '4.13.0' },
                     operationId: 'toggleFeatureEnvironmentOff',
                     responses: {
-                        200: createResponseSchema('featureSchema'),
+                        200: emptyResponse,
                         ...getStandardResponses(400, 401, 403, 404),
                     },
                 }),
@@ -199,7 +205,7 @@ export default class ProjectFeaturesController extends Controller {
                     release: { stable: '4.13.0' },
                     operationId: 'toggleFeatureEnvironmentOn',
                     responses: {
-                        200: createResponseSchema('featureSchema'),
+                        200: emptyResponse,
                         ...getStandardResponses(400, 401, 403, 404),
                     },
                 }),
@@ -425,6 +431,17 @@ export default class ProjectFeaturesController extends Controller {
                     tags: ['Features'],
                     release: { stable: '4.12.0' },
                     operationId: 'getFeatures',
+                    parameters: [
+                        {
+                            name: 'view',
+                            in: 'query',
+                            required: false,
+                            description:
+                                'Experimental: `core` returns a lightweight version of each feature with `environments` empty and `favorite` set to `false`; it cannot be combined with the `tag` or `namePrefix` filters. Omit it to get the full feature overview. This parameter may change or be removed in a future release.',
+                            schema: { type: 'string', enum: ['core'] },
+                            example: 'core',
+                        },
+                    ],
                     responses: {
                         200: createResponseSchema('projectFeaturesSchema'),
                         ...getStandardResponses(400, 401, 403),
@@ -618,10 +635,33 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async getFeatures(
-        req: IAuthRequest<ProjectParam, any, any, AdminFeaturesQuerySchema>,
+        req: IAuthRequest<
+            ProjectParam,
+            any,
+            any,
+            AdminFeaturesQuerySchema & { view?: 'core' }
+        >,
         res: Response<ProjectFeaturesSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
+
+        if (req.query.view === 'core') {
+            if (req.query.tag || req.query.namePrefix) {
+                throw new BadDataError(
+                    'The core view cannot be combined with the tag or namePrefix filters',
+                );
+            }
+            const features =
+                await this.featureService.getProjectFeaturesCore(projectId);
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                projectFeaturesSchema.$id,
+                { version: 2, features: serializeDates(features) },
+            );
+            return;
+        }
+
         const query = await this.prepQuery(req.query, projectId);
         const features = await this.featureService.getFeatureOverview({
             ...query,
@@ -772,6 +812,14 @@ export default class ProjectFeaturesController extends Controller {
         const responseData = {
             ...maybeAnonymized,
             stale: maybeAnonymized.stale || false,
+            ...(this.flagResolver.isEnabled('payloadSchemas')
+                ? {
+                      payloadSchema:
+                          await this.payloadSchemaService.getPayloadSchema(
+                              featureName,
+                          ),
+                  }
+                : {}),
         };
         this.openApiService.respondWithValidation(
             200,

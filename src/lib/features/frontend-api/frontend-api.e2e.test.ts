@@ -381,6 +381,7 @@ test('should store frontend api client metrics', async () => {
                 lastHourUsage: [],
                 maturity: 'stable',
                 seenApplications: [],
+                totalUsage: [],
                 version: 1,
             });
         });
@@ -431,6 +432,7 @@ test('should store frontend api client metrics', async () => {
                 ],
                 maturity: 'stable',
                 seenApplications: [appName],
+                totalUsage: [{ environment: DEFAULT_ENV, yes: 3, no: 30 }],
                 version: 1,
             });
         });

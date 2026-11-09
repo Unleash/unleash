@@ -135,8 +135,9 @@ export const Search = ({
     const hotkey = useKeyboardShortcut(
         {
             modifiers: ['ctrl', 'shift'],
-            key: 'K',
+            key: 'k',
             preventDefault: true,
+            anchorRefs: [searchContainerRef],
         },
         () => {
             usedHotkeyRef.current = true;
@@ -168,17 +169,24 @@ export const Search = ({
         usedHotkeyRef.current = false;
     }, [showSuggestions, trackEvent]);
 
-    useKeyboardShortcut({ key: 'Escape' }, () => {
-        if (searchContainerRef.current?.contains(document.activeElement)) {
-            searchInputRef.current?.blur();
-        }
-    });
+    useKeyboardShortcut(
+        { key: 'Escape', anchorRefs: [searchContainerRef] },
+        () => {
+            if (searchContainerRef.current?.contains(document.activeElement)) {
+                searchInputRef.current?.blur();
+            }
+        },
+    );
     const placeholder = `${customPlaceholder ?? 'Search'} (${hotkey})`;
 
     useOnClickOutside([searchContainerRef], hideSuggestions);
     useOnBlur(searchContainerRef, hideSuggestions);
 
     useEffect(() => {
+        const userIsTyping = document.activeElement === searchInputRef.current;
+        if (userIsTyping) {
+            return;
+        }
         setValue(initialValue);
     }, [initialValue]);
 

@@ -17,29 +17,46 @@ import React from 'react';
 import { type ReactNode, useState } from 'react';
 import MobileGuidanceBG from 'assets/img/mobileGuidanceBg.svg?react';
 import {
+    fitContainerHeightSelector,
     formTemplateFixedSidebarWidth,
     formTemplateFormWidth,
+    formTemplatePinnedFooterMediaQuery,
     formTemplateSidebarWidth,
 } from './FormTemplate.styles';
 import { relative } from 'themes/themeStyles';
 import { ApiCommandBlock } from './ApiCommandBlock.tsx';
 import { apiCommandTrackingProps } from './apiCommandTrackingProps.ts';
 
-interface ICreateProps {
+export type FormTemplateLayout = 'modal' | 'compact' | 'page';
+
+type ModalProps = {
+    layout: 'modal';
+    /**
+     * Make the template as tall as its container instead of its content, so
+     * the content can choose what scrolls. The sidebar scrolls on its own. On
+     * short viewports, such as at high zoom, the template grows with its
+     * content as usual.
+     */
+    fitContainerHeight?: boolean;
+};
+
+type NonModalProps = {
+    layout?: 'page' | 'compact';
+    fitContainerHeight?: never;
+};
+
+type FormTemplateProps = {
     title?: ReactNode;
     description: ReactNode;
     documentationLink?: string;
-    documentationIcon?: ReactNode;
     documentationLinkLabel?: string;
     loading?: boolean;
-    modal?: boolean;
     disablePadding?: boolean;
     compactPadding?: boolean;
     showDescription?: boolean;
     showLink?: boolean;
     formatApiCode?: () => string;
     footer?: ReactNode;
-    compact?: boolean;
     showGuidance?: boolean;
     useFixedSidebar?: boolean;
     sidebarWidth?: string;
@@ -51,21 +68,30 @@ interface ICreateProps {
      */
     sidebar?: ReactNode;
     children?: React.ReactNode;
-}
+} & (ModalProps | NonModalProps);
 
-const StyledContainer = styled('section', {
-    shouldForwardProp: (prop) =>
-        !['modal', 'compact'].includes(prop.toString()),
-})<{ modal?: boolean; compact?: boolean }>(({ theme, modal, compact }) => ({
-    minHeight: modal ? '100vh' : compact ? 'unset' : '80vh',
-    borderRadius: modal ? 0 : theme.spacing(2),
+const StyledContainer = styled('section')(({ theme }) => ({
+    borderRadius: theme.spacing(2),
     width: '100%',
     display: 'flex',
     margin: '0 auto',
-    overflow: modal || compact ? 'unset' : 'hidden',
     [theme.breakpoints.down(1100)]: {
         flexDirection: 'column',
-        minHeight: 0,
+    },
+    '&[data-layout="page"]': {
+        minHeight: '80vh',
+        overflow: 'hidden',
+        [theme.breakpoints.down(1100)]: {
+            minHeight: 0,
+        },
+    },
+    '&[data-layout="modal"]': {
+        minHeight: '100vh',
+        borderRadius: 0,
+        [`&${fitContainerHeightSelector}`]: {
+            '& > aside': { overflowY: 'auto' },
+            [formTemplatePinnedFooterMediaQuery]: { height: '100%' },
+        },
     },
 }));
 
@@ -83,6 +109,12 @@ const StyledMobileGuidanceWrapper = styled('div', {
               },
           }
         : {}),
+    [`${fitContainerHeightSelector} & aside`]: {
+        [formTemplatePinnedFooterMediaQuery]: {
+            maxHeight: '25vh',
+            overflowY: 'auto',
+        },
+    },
 }));
 
 const StyledMain = styled('div', {
@@ -96,6 +128,7 @@ const StyledMain = styled('div', {
     [theme.breakpoints.down(1100)]: {
         width: '100%',
     },
+    [`${fitContainerHeightSelector} &`]: { minHeight: 0 },
 }));
 
 const StyledFormContent = styled('div', {
@@ -121,6 +154,7 @@ const StyledFormContent = styled('div', {
             flexDirection: 'column',
             flexGrow: 1,
             padding,
+            [`${fitContainerHeightSelector} &`]: { overflowY: 'auto' },
             [theme.breakpoints.down('lg')]: {
                 padding: paddingLgDown,
                 '--form-content-padding': paddingLgDown,
@@ -236,26 +270,25 @@ const StyledDocumentationLink = styled('a')(({ theme }) => ({
     },
 }));
 
-const FormTemplate: React.FC<ICreateProps> = ({
+const FormTemplate: React.FC<FormTemplateProps> = ({
     title,
     description,
     children,
     documentationLink,
-    documentationIcon,
     documentationLinkLabel,
     loading,
-    modal,
+    layout = 'page',
     formatApiCode,
     disablePadding,
     compactPadding = false,
     showDescription = true,
     showLink = true,
     footer,
-    compact,
     showGuidance = true,
     useFixedSidebar,
     sidebarWidth,
     sidebar,
+    fitContainerHeight,
 }) => {
     const { setToastData } = useToast();
     const { trackEvent } = useEventTracker();
@@ -300,7 +333,10 @@ const FormTemplate: React.FC<ICreateProps> = ({
     const SidebarComponent = useFixedSidebar ? FixedGuidance : Guidance;
 
     return (
-        <StyledContainer modal={modal} compact={compact}>
+        <StyledContainer
+            data-layout={layout}
+            data-fit-container-height={fitContainerHeight}
+        >
             <ConditionallyRender
                 condition={showGuidance && smallScreen}
                 show={
@@ -309,7 +345,6 @@ const FormTemplate: React.FC<ICreateProps> = ({
                     >
                         <MobileGuidance
                             description={description}
-                            documentationIcon={documentationIcon}
                             documentationLink={documentationLink}
                             documentationLinkLabel={documentationLinkLabel}
                         />
@@ -360,7 +395,6 @@ const FormTemplate: React.FC<ICreateProps> = ({
                         </StyledSidebar>
                     ) : (
                         <SidebarComponent
-                            documentationIcon={documentationIcon}
                             description={description}
                             documentationLink={documentationLink}
                             documentationLinkLabel={documentationLinkLabel}
@@ -383,7 +417,6 @@ const FormTemplate: React.FC<ICreateProps> = ({
 interface IMobileGuidance {
     description: ReactNode;
     documentationLink?: string;
-    documentationIcon?: ReactNode;
     documentationLinkLabel?: string;
 }
 
@@ -391,7 +424,6 @@ const MobileGuidance = ({
     description,
     documentationLink,
     documentationLinkLabel,
-    documentationIcon,
 }: IMobileGuidance) => {
     const [open, setOpen] = useState(false);
 
@@ -410,7 +442,6 @@ const MobileGuidance = ({
             </Tooltip>
             <Collapse in={open} timeout={500}>
                 <Guidance
-                    documentationIcon={documentationIcon}
                     description={description}
                     documentationLink={documentationLink}
                     documentationLinkLabel={documentationLinkLabel}
@@ -422,7 +453,6 @@ const MobileGuidance = ({
 
 interface IGuidanceProps {
     description: ReactNode;
-    documentationIcon?: ReactNode;
     documentationLink?: string;
     documentationLinkLabel?: string;
     showDescription?: boolean;
@@ -438,19 +468,12 @@ const GuidanceContent: React.FC<
     description,
     children,
     documentationLink,
-    documentationIcon,
     documentationLinkLabel = 'Learn more',
     showDescription = true,
     showLink = true,
     fixedDocumentationHeight,
 }) => {
     const { trackEvent } = useEventTracker();
-
-    const StyledDocumentationIconWrapper = styled('div')({
-        height: '2rem',
-        display: 'grid',
-        placeItems: 'center',
-    });
 
     const StyledDocumentationWrapper = styled('div')({
         height: fixedDocumentationHeight,
@@ -468,14 +491,6 @@ const GuidanceContent: React.FC<
                     condition={showDescription}
                     show={
                         <StyledDescriptionCard>
-                            <ConditionallyRender
-                                condition={!!documentationIcon}
-                                show={
-                                    <StyledDocumentationIconWrapper>
-                                        {documentationIcon}
-                                    </StyledDocumentationIconWrapper>
-                                }
-                            />
                             <StyledDescription>{description}</StyledDescription>
                         </StyledDescriptionCard>
                     }

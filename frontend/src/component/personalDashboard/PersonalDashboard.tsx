@@ -25,6 +25,9 @@ import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
 import { AccordionContent } from './SharedComponents.tsx';
 import { Link } from 'react-router';
 import { useWelcomeDialogContext } from './WelcomeDialogContext.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ProjectCardsPanel } from './ProjectCardsPanel.tsx';
+import { RecentFlagsPanel } from './RecentFlagsPanel.tsx';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -278,6 +281,7 @@ export const PersonalDashboard = () => {
     const trackDashboard = useTracking(personalDashboardTracking);
     const { setWelcomeDialog } = useWelcomeDialogContext();
     const { isOss } = useUiConfig();
+    const dashboardV2 = useUiFlag('dashboardV2');
 
     const name = user?.name || '';
 
@@ -321,9 +325,9 @@ export const PersonalDashboard = () => {
 
             <EventTimelinePanel />
 
-            <ProjectPanel />
+            {dashboardV2 ? <ProjectCardsPanel /> : <ProjectPanel />}
 
-            <FlagPanel />
+            {dashboardV2 ? <RecentFlagsPanel /> : <FlagPanel />}
         </MainContent>
     );
 };

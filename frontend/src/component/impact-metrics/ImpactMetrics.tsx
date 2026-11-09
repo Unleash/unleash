@@ -5,7 +5,6 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader.tsx';
 import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { ImpactMetricModal } from './ImpactMetricModal/ImpactMetricModal.tsx';
 import { ChartItem } from './ChartItem.tsx';
-import { PlausibleChartItem } from './PlausibleChartItem.tsx';
 import { GridLayoutWrapper, type GridItem } from './GridLayoutWrapper.tsx';
 import { useImpactMetricsState } from './hooks/useImpactMetricsState.ts';
 import { ImpactMetricsEmptyState } from './ImpactMetricsEmptyState.tsx';
@@ -14,7 +13,6 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton.tsx';
 import { ADMIN } from '../providers/AccessProvider/permissions.ts';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useEventTracker } from 'hooks/useEventTracker.ts';
 
 const _StyledDragHandle = styled(Box)(({ theme }) => ({
@@ -34,7 +32,6 @@ export const ImpactMetrics: FC = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [editingChart, setEditingChart] = useState<ChartConfig | undefined>();
     const { setToastApiError } = useToast();
-    const plausibleMetricsEnabled = useUiFlag('plausibleMetrics');
     const { trackEvent } = useEventTracker();
     const {
         charts,
@@ -92,19 +89,7 @@ export const ImpactMetrics: FC = () => {
     );
 
     const gridItems: GridItem[] = useMemo(() => {
-        const items: GridItem[] = [];
-
-        if (plausibleMetricsEnabled) {
-            const plausibleChartItem: GridItem = {
-                id: 'plausible-analytics',
-                component: <PlausibleChartItem />,
-                w: 6,
-                h: 2,
-            };
-            items.push(plausibleChartItem);
-        }
-
-        const impactMetricsItems: GridItem[] = charts.map((config, _index) => {
+        return charts.map((config, _index) => {
             const existingLayout = layout?.find((item) => item.i === config.id);
             return {
                 id: config.id,
@@ -125,15 +110,7 @@ export const ImpactMetrics: FC = () => {
                 maxH: 8,
             };
         });
-
-        return [...items, ...impactMetricsItems];
-    }, [
-        charts,
-        layout,
-        handleEditChart,
-        handleDeleteChart,
-        plausibleMetricsEnabled,
-    ]);
+    }, [charts, layout, handleEditChart, handleDeleteChart]);
 
     const hasError = metadataError || settingsError;
     const isLoading = metadataLoading || settingsLoading;

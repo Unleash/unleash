@@ -25,7 +25,6 @@ import type { IReleasePlan } from 'interfaces/releasePlans';
 import { EnvironmentAccordionBody } from './EnvironmentAccordionBody/EnvironmentAccordionBody.tsx';
 import type { StrategySetupScreen } from 'component/feature/FeatureStrategy/strategyActionsTracking.ts';
 import { FeatureStrategyMenuButton } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenuButton.tsx';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useEventTracker } from 'hooks/useEventTracker';
 import { TestConfigurationSidebar } from './TestConfiguration/TestConfigurationSidebar.tsx';
 
@@ -94,7 +93,6 @@ export const FeatureOverviewEnvironment = ({
         useState<StrategySetupScreen>('cards');
     const [isStrategyMenuDialogOpen, setIsStrategyMenuDialogOpen] =
         useState<boolean>(false);
-    const playgroundPerFlag = useUiFlag('playgroundPerFlag');
     const [isTestConfigurationOpen, setIsTestConfigurationOpen] =
         useState<boolean>(false);
     const { trackEvent } = useEventTracker();
@@ -185,24 +183,22 @@ export const FeatureOverviewEnvironment = ({
                     </StyledEnvironmentAccordionContainer>
                     <StyledAccordionFooter>
                         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                            {playgroundPerFlag ? (
-                                <Button
-                                    variant='outlined'
-                                    onClick={(event) => {
-                                        event.stopPropagation();
-                                        trackEvent('playground', {
-                                            props: {
-                                                eventType:
-                                                    'test-configuration-opened',
-                                                environment: environment.name,
-                                            },
-                                        });
-                                        setIsTestConfigurationOpen(true);
-                                    }}
-                                >
-                                    Try configuration
-                                </Button>
-                            ) : null}
+                            <Button
+                                variant='outlined'
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    trackEvent('playground', {
+                                        props: {
+                                            eventType:
+                                                'test-configuration-opened',
+                                            environment: environment.name,
+                                        },
+                                    });
+                                    setIsTestConfigurationOpen(true);
+                                }}
+                            >
+                                Try configuration
+                            </Button>
                             <Box
                                 sx={{
                                     ml: 'auto',
@@ -232,16 +228,14 @@ export const FeatureOverviewEnvironment = ({
                     </StyledAccordionFooter>
                 </NewStyledAccordionDetails>
             </StyledAccordion>
-            {playgroundPerFlag ? (
-                <TestConfigurationSidebar
-                    open={isTestConfigurationOpen}
-                    onClose={() => setIsTestConfigurationOpen(false)}
-                    projectId={projectId}
-                    featureId={featureId}
-                    environmentId={environment.name}
-                    strategies={environment.strategies}
-                />
-            ) : null}
+            <TestConfigurationSidebar
+                open={isTestConfigurationOpen}
+                onClose={() => setIsTestConfigurationOpen(false)}
+                projectId={projectId}
+                featureId={featureId}
+                environmentId={environment.name}
+                strategies={environment.strategies}
+            />
         </StyledFeatureOverviewEnvironment>
     );
 };

@@ -1,5 +1,7 @@
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import FormTemplate, {
+    type FormTemplateLayout,
+} from 'component/common/FormTemplate/FormTemplate';
 import { useContextForm } from '../hooks/useContextForm.ts';
 import { ContextForm } from '../ContextForm/ContextForm.tsx';
 import { CREATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
@@ -18,7 +20,7 @@ import { createContextFieldTracking } from 'component/context/contextFieldTracki
 interface ICreateContextProps {
     onSubmit: () => void;
     onCancel: () => void;
-    modal?: boolean;
+    layout?: FormTemplateLayout;
     /**
      * When set, the form starts out as a copy of this context field. Only
      * the name differs, so the user doesn't have to retype long lists of
@@ -30,7 +32,7 @@ interface ICreateContextProps {
 export const CreateUnleashContext = ({
     onSubmit,
     onCancel,
-    modal,
+    layout,
     cloneFrom,
 }: ICreateContextProps) => {
     const { setToastData, setToastApiError } = useToast();
@@ -117,7 +119,7 @@ export const CreateUnleashContext = ({
             documentationLink='https://docs.getunleash.io/concepts/unleash-context#custom-context-fields'
             documentationLinkLabel='Context fields documentation'
             formatApiCode={formatApiCode}
-            modal={modal}
+            layout={layout}
         >
             <ContextForm
                 errors={errors}

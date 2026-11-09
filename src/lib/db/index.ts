@@ -77,7 +77,7 @@ export const createStores = (
     db: Db,
 ): IUnleashStores => {
     const { getLogger, eventBus } = config;
-    const eventStore = new EventStore(db, getLogger);
+    const eventStore = new EventStore(db, eventBus, getLogger);
 
     return {
         eventStore,
@@ -174,12 +174,7 @@ export const createStores = (
         privateProjectStore: new PrivateProjectStore(db, getLogger),
         dependentFeaturesStore: new DependentFeaturesStore(db),
         lastSeenStore: new LastSeenStore(db, eventBus, getLogger),
-        featureSearchStore: new FeatureSearchStore(
-            db,
-            eventBus,
-            getLogger,
-            config.flagResolver,
-        ),
+        featureSearchStore: new FeatureSearchStore(db, eventBus),
         inactiveUsersStore: new InactiveUsersStore(db, eventBus, getLogger),
         trafficDataUsageStore: new TrafficDataUsageStore(db, getLogger),
         segmentReadModel: new SegmentReadModel(db),

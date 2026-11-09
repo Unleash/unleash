@@ -8,7 +8,7 @@ type ArchiveFeatureChange = {
 export const ArchiveFeatureChange: FC<ArchiveFeatureChange> = ({ actions }) => (
     <ChangeItemWrapper>
         <ChangeItemInfo>
-            <Action color='error.main'>Archiving flag</Action>
+            <Action sx={{ color: 'error.main' }}>Archiving flag</Action>
             {actions}
         </ChangeItemInfo>
     </ChangeItemWrapper>

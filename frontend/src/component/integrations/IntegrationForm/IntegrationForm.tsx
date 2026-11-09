@@ -13,7 +13,6 @@ import { trim } from 'component/common/util';
 import type { AddonSchema, AddonTypeSchema } from 'openapi';
 import { IntegrationParameters } from './IntegrationParameters/IntegrationParameters.tsx';
 import {
-    type KeyValuePair,
     kvpsToEditableForm,
     kvpsToStorageForm,
     getKvpsForParam,
@@ -21,6 +20,7 @@ import {
     validateKeys,
 } from './IntegrationParameters/IntegrationParameter/KvpParameterUtils.ts';
 import { IntegrationInstall } from './IntegrationInstall/IntegrationInstall.tsx';
+import { IntegrationServerInstall } from './IntegrationServerInstall/IntegrationServerInstall.tsx';
 import cloneDeep from 'lodash.clonedeep';
 import { useNavigate } from 'react-router';
 import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
@@ -29,7 +29,9 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { IntegrationMultiSelector } from './IntegrationMultiSelector/IntegrationMultiSelector.tsx';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import FormTemplate, {
+    type FormTemplateLayout,
+} from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import {
@@ -79,14 +81,28 @@ type IntegrationFormProps = {
     editMode: boolean;
     addon: AddonSchema | Omit<AddonSchema, 'id'>;
     deprecated?: boolean;
-    modal?: boolean;
+    layout?: FormTemplateLayout;
 };
 
+const eventsFor = (
+    provider: AddonTypeSchema | undefined,
+    stored: string[],
+): string[] => (provider?.fixedEvents ? (provider.events ?? []) : stored);
+
+const environmentsFor = (
+    provider: AddonTypeSchema | undefined,
+    stored?: string[],
+): string[] | undefined => (provider?.environmentIndependent ? [] : stored);
+
 const toFormValues =
-    (providerParams: AddonTypeSchema['parameters']) =>
-    <T extends Pick<AddonSchema, 'parameters'>>(values: T): T => ({
+    (provider?: AddonTypeSchema) =>
+    <T extends Pick<AddonSchema, 'parameters' | 'events' | 'environments'>>(
+        values: T,
+    ): T => ({
         ...values,
-        parameters: kvpsToEditableForm(providerParams)(values.parameters),
+        events: eventsFor(provider, values.events),
+        environments: environmentsFor(provider, values.environments),
+        parameters: kvpsToEditableForm(provider?.parameters)(values.parameters),
     });
 
 const toApiValues =
@@ -102,7 +118,7 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
     addon: initialValues,
     fetch,
     deprecated,
-    modal,
+    layout,
 }) => {
     const projectId = useOptionalPathParam('projectId');
     const { createAddon, updateAddon } = useAddonsApi();
@@ -126,8 +142,10 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
         .sort((a, b) => a.label.localeCompare(b.label));
     const { uiConfig } = useUiConfig();
     const [formValues, setFormValues] = useState(() =>
-        toFormValues(provider?.parameters)(initialValues),
+        toFormValues(provider)(initialValues),
     );
+    const fixedEvents = Boolean(provider?.fixedEvents);
+    const environmentIndependent = Boolean(provider?.environmentIndependent);
     const [errors, setErrors] = useState<{
         containsErrors: boolean;
         parameters: Record<string, string>;
@@ -142,6 +160,10 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
     });
     const [eventsModalOpen, setEventsModalOpen] = useState(false);
     const { isAdmin } = useContext(AccessContext);
+
+    const selectedProjects = projectId
+        ? [projectId]
+        : (formValues.projects ?? []);
 
     const submitText = editMode ? 'Update' : 'Create';
     const url = `${uiConfig.unleashUrl}/${formatIntegrationApiPath(projectId)}${
@@ -163,13 +185,13 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: addon is a new object every render; reset only when a different addon loads
     useEffect(() => {
-        setFormValues(toFormValues(provider?.parameters)(initialValues));
+        setFormValues(toFormValues(provider)(initialValues));
     }, [initialValues.description, initialValues.provider]);
 
     useEffect(() => {
         if (provider && !formValues.provider) {
             setFormValues(
-                toFormValues(provider?.parameters)({
+                toFormValues(provider)({
                     ...initialValues,
                     provider: provider.name,
                 }),
@@ -208,10 +230,14 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
             );
         };
 
-    const setParameterKvps = (param: string) => (kvps: KeyValuePair[]) => {
+    const setStructuredParameter = (param: string) => (value: unknown) => {
         setFormValues(
             produce((draft) => {
-                draft.parameters[param] = kvps;
+                if (value === undefined) {
+                    delete draft.parameters[param];
+                } else {
+                    draft.parameters[param] = value;
+                }
             }),
         );
     };
@@ -339,12 +365,13 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
         description,
         documentationUrl = 'https://docs.getunleash.io/integrate',
         installation,
+        serverInstallation,
         alerts,
     } = provider ? provider : ({} as Partial<AddonTypeSchema>);
 
     return (
         <FormTemplate
-            modal={modal}
+            layout={layout}
             description={description || ''}
             documentationLink={documentationUrl}
             documentationLinkLabel={`${
@@ -432,13 +459,24 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                                 />
                             )}
                         />
+                        {serverInstallation ? (
+                            <IntegrationServerInstall
+                                path={serverInstallation.path}
+                                title={serverInstallation.title}
+                                helpText={serverInstallation.helpText}
+                                parameters={formValues.parameters}
+                                definitions={provider?.parameters}
+                                projectId={projectId}
+                            />
+                        ) : null}
                         <IntegrationParameters
                             provider={provider}
                             config={formValues as AddonSchema}
                             parametersErrors={errors.parameters}
                             editMode={editMode}
                             setParameterValue={setParameterValue}
-                            setParameterKvps={setParameterKvps}
+                            setStructuredParameter={setStructuredParameter}
+                            projects={selectedProjects}
                         />
                     </StyledRaisedSection>
                     <FormGroup title='Configuration'>
@@ -457,17 +495,22 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                             />
                         </div>
 
-                        <div>
-                            <IntegrationMultiSelector
-                                options={selectableEvents || []}
-                                selectedItems={formValues.events}
-                                onChange={setEventValues}
-                                entityName='event'
-                                error={errors.events}
-                                description='Select which events you want your integration to be notified about.'
-                                required
-                            />
-                        </div>
+                        <ConditionallyRender
+                            condition={!fixedEvents}
+                            show={
+                                <div>
+                                    <IntegrationMultiSelector
+                                        options={selectableEvents || []}
+                                        selectedItems={formValues.events}
+                                        onChange={setEventValues}
+                                        entityName='event'
+                                        error={errors.events}
+                                        description='Select which events you want your integration to be notified about.'
+                                        required
+                                    />
+                                </div>
+                            }
+                        />
                         <ConditionallyRender
                             condition={!projectId}
                             show={
@@ -485,16 +528,23 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                                 </div>
                             }
                         />
-                        <div>
-                            <IntegrationMultiSelector
-                                options={selectableEnvironments}
-                                selectedItems={formValues.environments || []}
-                                onChange={setEnvironments}
-                                entityName='environment'
-                                description='Selecting environment(s) will filter events, so that your integration only receives events related to those specific environments. Global events that are not specific to an environment will still be received.'
-                                note='If no environments are selected, the integration will receive events from all environments.'
-                            />
-                        </div>
+                        <ConditionallyRender
+                            condition={!environmentIndependent}
+                            show={
+                                <div>
+                                    <IntegrationMultiSelector
+                                        options={selectableEnvironments}
+                                        selectedItems={
+                                            formValues.environments || []
+                                        }
+                                        onChange={setEnvironments}
+                                        entityName='environment'
+                                        description='Selecting environment(s) will filter events, so that your integration only receives events related to those specific environments. Global events that are not specific to an environment will still be received.'
+                                        note='If no environments are selected, the integration will receive events from all environments.'
+                                    />
+                                </div>
+                            }
+                        />
                     </FormGroup>
                     <ConditionallyRender
                         condition={editMode}

@@ -25,6 +25,7 @@ import type {
     MetricsTranslator,
 } from '../impact/metrics-translator.js';
 import type { ClientMetricsSchema } from '../../../server-impl.js';
+import ApiUser from '../../../types/api-user.js';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;
@@ -143,6 +144,11 @@ export default class ClientMetricsController extends Controller {
                     sdkFlavorVersion,
                     ...metricsData
                 } = data;
+                // Only single-consumer reporting has authenticated attribution.
+                // Bulk forwarding may combine many consumers behind an Edge credential.
+                if (user instanceof ApiUser && user.appName) {
+                    metricsData.appName = user.appName;
+                }
                 const environment =
                     this.metricsV2.resolveMetricsEnvironment(user);
 
@@ -205,6 +211,8 @@ export default class ClientMetricsController extends Controller {
             const { body, user } = req;
             const clientIp = extractClientIp(req);
             const { metrics, applications, impactMetrics, seenTokens } = body;
+            // Edge can aggregate multiple consumers behind one credential.
+            // No per-item token identity is available here, so retain reported appNames.
             const promises: Promise<void>[] = [];
 
             // when an app omits its `environment` and

@@ -1,5 +1,6 @@
 import { type FC, useState } from 'react';
 import {
+    Divider,
     List,
     ListItem,
     ListItemButton,
@@ -38,6 +39,8 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ExtraActions } from './ExtraActions.tsx';
 import { archiveFlagTracking } from 'component/feature/flagActionsTracking';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { PayloadSchemaRow } from '../PayloadSchema/PayloadSchemaRow.tsx';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -64,6 +67,24 @@ const StyledBody = styled('div')({
     display: 'flex',
     flexDirection: 'column',
 });
+
+const StyledResourcesContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1),
+}));
+
+const StyledResourcesHeader = styled('div')({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+});
+
+const StyledCaptionText = styled('p')(({ theme }) => ({
+    ...theme.typography.caption,
+    color: theme.palette.text.secondary,
+}));
 
 export const StyledMetaDataItem = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -138,8 +159,7 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
                 <ListItem
                     secondaryAction={
                         <ExtraActions
-                            capabilityId='link'
-                            feature={feature}
+                            tooltipTitle={'Link actions'}
                             onEdit={() => {
                                 setEditLink(link);
                             }}
@@ -193,29 +213,21 @@ const FeatureLinks: FC<FeatureLinksProps> = ({ links, project, feature }) => {
     );
 
     const emptyStateContent = (
-        <>
-            <StyledTitle>Add links</StyledTitle>
-            <StyledMetaDataItem>
-                Gather relevant links for external resources such as issue
-                trackers, code repositories or analytics tooling
-            </StyledMetaDataItem>
-            <div>{addLinkButton}</div>
-        </>
-    );
-
-    const linksContent = (
-        <>
-            <StyledTitle>Resources</StyledTitle>
-            {renderLinkItems()}
-            <div>{addLinkButton}</div>
-        </>
+        <StyledCaptionText>
+            Gather relevant links for external resources such as issue trackers,
+            code repositories or analytics tooling
+        </StyledCaptionText>
     );
 
     return (
         <>
-            <StyledMetaDataContainer>
-                {links.length === 0 ? emptyStateContent : linksContent}
-            </StyledMetaDataContainer>
+            <StyledResourcesContainer>
+                <StyledResourcesHeader>
+                    <StyledTitle>Resources</StyledTitle>
+                    {addLinkButton}
+                </StyledResourcesHeader>
+                {links.length === 0 ? emptyStateContent : renderLinkItems()}
+            </StyledResourcesContainer>
 
             <AddLinkDialogue
                 project={project}
@@ -249,24 +261,23 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
     const { project, description, type } = feature;
 
     const showDependentFeatures = useShowDependentFeatures(project);
+    const payloadSchemasEnabled = useUiFlag('payloadSchemas');
 
     return (
         <>
-            <FeatureLinks
-                links={feature.links || []}
-                project={feature.project}
-                feature={feature.name}
-            />
             <StyledMetaDataContainer>
                 <div>
                     <StyledTitle>Flag details</StyledTitle>
                     {description ? (
                         <StyledMetaDataItem data-loading>
-                            <StyledMetaDataItemText>
-                                <Truncator arrow lines={5} title={description}>
-                                    {description}
-                                </Truncator>
-                            </StyledMetaDataItemText>
+                            <Truncator
+                                arrow
+                                lines={2}
+                                title={description}
+                                expandable
+                            >
+                                {description}
+                            </Truncator>
                         </StyledMetaDataItem>
                     ) : null}
                 </div>
@@ -335,16 +346,32 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                     {showDependentFeatures ? (
                         <DependencyRow feature={feature} />
                     ) : null}
+                    {payloadSchemasEnabled ? (
+                        <PayloadSchemaRow
+                            projectId={project}
+                            featureId={feature.name}
+                        />
+                    ) : null}
                     <TagRow feature={feature} />
-                    {onEnvironmentVisibilityChange ? (
+                </StyledBody>
+                <Divider />
+                <FeatureLinks
+                    links={feature.links || []}
+                    project={feature.project}
+                    feature={feature.name}
+                />
+                {onEnvironmentVisibilityChange ? (
+                    <>
+                        <Divider />
                         <EnvironmentVisibilityMenu
                             environments={feature.environments || []}
                             hiddenEnvironments={hiddenEnvironments || []}
                             onChange={onEnvironmentVisibilityChange}
                         />
-                    ) : null}
-                </StyledBody>
+                    </>
+                ) : null}
             </StyledMetaDataContainer>
+
             {feature.children.length > 0 ? (
                 <FeatureArchiveNotAllowedDialog
                     features={feature.children}

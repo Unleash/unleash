@@ -5,6 +5,7 @@ import { createServices } from '../../services/index.js';
 import { createTestConfig } from '../../../test/config/test-config.js';
 import { describe } from 'vitest';
 import createStores from '../../../test/fixtures/store.js';
+import { createFakePlaygroundService } from './createPlaygroundService.js';
 
 import getApp from '../../app.js';
 import {
@@ -85,5 +86,38 @@ describe('the playground API', () => {
             ),
             testParams,
         );
+    });
+});
+
+describe('the single flag playground API', () => {
+    it('is not found while the playgroundFeatureEvaluation flag is off', async () => {
+        const stores = createStores();
+        const config = createTestConfig({
+            experimental: { flags: { playgroundFeatureEvaluation: false } },
+        });
+        const { playgroundService, playgroundReadModel } =
+            createFakePlaygroundService(config);
+        playgroundReadModel.features = [
+            {
+                name: 'existing-flag',
+                type: 'release',
+                enabled: true,
+                project: 'default',
+                stale: false,
+                strategies: [
+                    { name: 'default', parameters: {}, constraints: [] },
+                ],
+                variants: [],
+            },
+        ];
+        const app = await getApp(config, stores, {
+            ...createServices(stores, config),
+            playgroundService,
+        });
+
+        await supertest(app)
+            .post('/api/admin/playground/features/existing-flag')
+            .send({ environment: 'development', context: { appName: 'test' } })
+            .expect(404);
     });
 });

@@ -1,7 +1,6 @@
 import type { Operator } from 'constants/operators';
-import type { IFeatureVariant } from './featureToggle.js';
 import { constraintId } from 'constants/constraintId.js';
-import type { ParametersSchema } from 'openapi/index.js';
+import type { ParametersSchema, StrategyVariantSchema } from 'openapi/index.js';
 
 export interface IFeatureStrategy {
     id: string;
@@ -11,7 +10,7 @@ export interface IFeatureStrategy {
     title?: string;
     constraints: IConstraint[];
     parameters: ParametersSchema;
-    variants?: IFeatureVariant[];
+    variants?: StrategyVariantSchema[];
     featureName?: string;
     projectId?: string;
     environment?: string;
@@ -21,7 +20,10 @@ export interface IFeatureStrategy {
 }
 
 export type StrategyFormParameters = Partial<ParametersSchema>;
-export type StrategyFormState = Omit<Partial<IFeatureStrategy>, 'parameters'> &
+export type StrategyFormState = Omit<
+    Partial<IFeatureStrategy>,
+    'parameters' | 'environment' | 'featureName' | 'projectId'
+> &
     Required<Pick<IFeatureStrategy, 'name'>> & {
         parameters?: StrategyFormParameters;
     };

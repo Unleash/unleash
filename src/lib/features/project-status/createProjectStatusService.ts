@@ -23,7 +23,7 @@ export const createProjectStatusService = (
     db: Db,
     config: IUnleashConfig,
 ): ProjectStatusService => {
-    const eventStore = new EventStore(db, config.getLogger);
+    const eventStore = new EventStore(db, config.eventBus, config.getLogger);
     const projectStore = new ProjectStore(db, config.eventBus, config);
     const apiTokenStore = new ApiTokenStore(
         db,

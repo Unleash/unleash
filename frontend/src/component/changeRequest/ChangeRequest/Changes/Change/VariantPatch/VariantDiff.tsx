@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
-import type { IFeatureVariant } from 'interfaces/featureToggle';
+import type { VariantSchema } from 'openapi';
 
 const StyledCodeSection = styled('div')(({ theme }) => ({
     overflowX: 'auto',
@@ -14,11 +14,11 @@ const StyledCodeSection = styled('div')(({ theme }) => ({
 }));
 
 interface IDiffProps {
-    preData: IFeatureVariant[];
-    data: IFeatureVariant[];
+    preData: VariantSchema[];
+    data: VariantSchema[];
 }
 
-const variantsArrayToObject = (variants: IFeatureVariant[]) =>
+const variantsArrayToObject = (variants: VariantSchema[]) =>
     variants.reduce(
         (object, { name, ...variant }) => ({ ...object, [name]: variant }),
         {},

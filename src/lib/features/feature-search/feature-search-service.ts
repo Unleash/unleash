@@ -108,6 +108,14 @@ export class FeatureSearchService {
             }
         });
 
+        if (params.featureNames) {
+            queryParams.push({
+                field: 'features.name',
+                operator: 'IS_ANY_OF',
+                values: params.featureNames,
+            });
+        }
+
         const accessibleProjects =
             await this.privateProjectChecker.getUserAccessibleProjects(
                 params.userId,

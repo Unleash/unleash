@@ -4,7 +4,6 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -68,7 +67,6 @@ export const RemoteMcpAdmin = () => {
 };
 
 const RemoteMcpPage = () => {
-    const feedbackOptInAvailable = useUiFlag('remoteMcpFeedback');
     const { settings, loading, refetch } = useRemoteMcpSettings();
     const { setRemoteMcpSettings, loading: saving } = useRemoteMcpSettingsApi();
     const { setToastData, setToastApiError } = useToast();
@@ -93,11 +91,7 @@ const RemoteMcpPage = () => {
 
     const handleSave = async () => {
         try {
-            await setRemoteMcpSettings(
-                feedbackOptInAvailable
-                    ? { enabled, feedbackOptIn }
-                    : { enabled },
-            );
+            await setRemoteMcpSettings({ enabled, feedbackOptIn });
             trackEvent('remote-mcp', {
                 props: { eventType: enabled ? 'enabled' : 'disabled' },
             });
@@ -144,13 +138,11 @@ const RemoteMcpPage = () => {
                     onChange={setEnabled}
                     disabled={loading || saving}
                 />
-                {feedbackOptInAvailable ? (
-                    <RemoteMcpFeedbackToggle
-                        feedbackOptIn={feedbackOptIn}
-                        onChange={setFeedbackOptIn}
-                        disabled={!enabled || loading || saving}
-                    />
-                ) : null}
+                <RemoteMcpFeedbackToggle
+                    feedbackOptIn={feedbackOptIn}
+                    onChange={setFeedbackOptIn}
+                    disabled={!enabled || loading || saving}
+                />
                 <Footer>
                     <Button
                         onClick={handleCancel}

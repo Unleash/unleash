@@ -1,0 +1,77 @@
+import { expect, test } from 'vitest';
+import { useState } from 'react';
+import { screen, fireEvent } from '@testing-library/react';
+import { LegacyFlexibleStrategy } from './LegacyFlexibleStrategy.tsx';
+import { render } from 'utils/testRenderer';
+
+test('manipulates the rollout slider', async () => {
+    const Wrapper = () => {
+        const [parameters, setParameters] = useState({
+            groupId: 'testid',
+            rollout: '0',
+            stickiness: 'default',
+        });
+
+        const updateParameter = (parameter: string, value: string) => {
+            setParameters((prevParameters) => ({
+                ...prevParameters,
+                [parameter]: value,
+            }));
+        };
+
+        return (
+            <LegacyFlexibleStrategy
+                parameters={parameters}
+                updateParameter={updateParameter}
+            />
+        );
+    };
+
+    render(<Wrapper />);
+
+    const slider = await screen.findByRole('slider', { name: /rollout/i });
+    const groupIdInput = await screen.findByLabelText('groupId');
+
+    expect(slider).toHaveValue('0');
+    expect(groupIdInput).toHaveValue('testid');
+
+    fireEvent.change(slider, { target: { value: '50' } });
+    fireEvent.change(groupIdInput, { target: { value: 'newGroupId' } });
+
+    expect(slider).toHaveValue('50');
+    expect(groupIdInput).toHaveValue('newGroupId');
+});
+
+test('displays groupId error', async () => {
+    render(
+        <LegacyFlexibleStrategy
+            parameters={{
+                rollout: '50',
+                stickiness: 'default',
+            }}
+            updateParameter={() => {}}
+            errors={
+                {
+                    getFormError: () => 'Field required test',
+                } as any
+            }
+        />,
+    );
+
+    const errorText = await screen.findByText('Field required test');
+    expect(errorText).toBeInTheDocument();
+});
+
+test('renders without crashing when stickiness/groupId is not provided', () => {
+    render(
+        <LegacyFlexibleStrategy
+            parameters={{
+                rollout: '50',
+            }}
+            updateParameter={() => {}}
+        />,
+    );
+
+    const slider = screen.getByRole('slider', { name: /rollout/i });
+    expect(slider).toBeInTheDocument();
+});

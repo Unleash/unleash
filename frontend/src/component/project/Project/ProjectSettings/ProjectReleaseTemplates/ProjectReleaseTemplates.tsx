@@ -83,7 +83,7 @@ export const ProjectReleaseTemplates = () => {
                             onClose={closeModal}
                             label='Create release template'
                         >
-                            <CreateReleasePlanTemplate modal />
+                            <CreateReleasePlanTemplate layout='modal' />
                         </SidebarModal>
                     }
                 />
@@ -95,7 +95,7 @@ export const ProjectReleaseTemplates = () => {
                             onClose={closeModal}
                             label='Edit release template'
                         >
-                            <EditReleasePlanTemplate modal />
+                            <EditReleasePlanTemplate layout='modal' />
                         </SidebarModal>
                     }
                 />

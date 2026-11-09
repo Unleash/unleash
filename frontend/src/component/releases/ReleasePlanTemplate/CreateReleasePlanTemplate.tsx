@@ -27,6 +27,7 @@ import { releaseTemplateScopeProps } from 'component/releases/releaseTemplateSco
 import { automationCounts } from 'component/releases/automationCounts';
 import { formatValidationErrors } from './formatValidationErrors.ts';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import type { FormTemplateLayout } from 'component/common/FormTemplate/FormTemplate';
 
 const StyledButtonContainer = styled('div')(() => ({
     marginTop: 'auto',
@@ -38,7 +39,11 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
 }));
 
-export const CreateReleasePlanTemplate = ({ modal }: { modal?: boolean }) => {
+export const CreateReleasePlanTemplate = ({
+    layout,
+}: {
+    layout?: FormTemplateLayout;
+}) => {
     const projectId = useOptionalPathParam('projectId');
     const { uiConfig, isEnterprise } = useUiConfig();
     const { setToastApiError, setToastData } = useToast();
@@ -162,7 +167,7 @@ export const CreateReleasePlanTemplate = ({ modal }: { modal?: boolean }) => {
             formTitle='Create release template'
             formatApiCode={formatApiCode}
             handleSubmit={handleSubmit}
-            modal={modal}
+            layout={layout}
             Limit={
                 !canCreateMore && (
                     <Limit

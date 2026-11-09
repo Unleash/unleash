@@ -228,6 +228,14 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
+    "enterprise": true,
+    "flag": "feedbackModule",
+    "menu": {},
+    "path": "/surveys/create",
+    "title": "Create survey",
+    "type": "protected",
+  },
+  {
     "flag": "feedbackPosting",
     "menu": {},
     "path": "/feedback",

@@ -121,7 +121,7 @@ export const BannerModal = ({ banner, open, setOpen }: IBannerModalProps) => {
         >
             <FormTemplate
                 loading={loading}
-                modal
+                layout='modal'
                 title={title}
                 description='Banners allow you to display messages to other users inside your Unleash instance.'
                 documentationLink='https://docs.getunleash.io/concepts/banners'

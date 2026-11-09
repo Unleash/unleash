@@ -32,7 +32,7 @@ export const ProjectContextFields = () => {
                         tracking={createContextFieldTracking}
                     >
                         <CreateUnleashContext
-                            modal
+                            layout='modal'
                             onSubmit={() => navigate(GO_BACK)}
                             onCancel={() => navigate(GO_BACK)}
                         />
@@ -49,7 +49,7 @@ export const ProjectContextFields = () => {
                         tracking={createContextFieldTracking}
                     >
                         <CloneContext
-                            modal
+                            layout='modal'
                             onSubmit={() => navigate(GO_BACK)}
                             onCancel={() => navigate(GO_BACK)}
                         />
@@ -65,7 +65,7 @@ export const ProjectContextFields = () => {
                         label='Edit context field'
                         tracking={editContextFieldTracking}
                     >
-                        <EditContext modal />
+                        <EditContext layout='modal' />
                     </SidebarModal>
                 }
             />

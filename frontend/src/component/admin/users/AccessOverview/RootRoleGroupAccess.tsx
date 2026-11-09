@@ -54,7 +54,7 @@ export const RootRoleGroupAccess = ({ groups }: { groups: IGroup[] }) => {
     return (
         <Box>
             <Typography variant='body1'>Groups</Typography>
-            <Typography variant='body2' color='text.secondary'>
+            <Typography variant='body2' sx={{ color: 'text.secondary' }}>
                 The group an user is a part of might affect the root access
             </Typography>
             <StyledGroupList>

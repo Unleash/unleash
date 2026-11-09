@@ -36,9 +36,6 @@ const openDeleteDialog = async (usage: {
     usedInProjects: number;
     valueCount: number;
 }) => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: { tagManagementViaUi: true },
-    });
     testServerRoute(server, '/api/admin/tag-types', {
         version: 1,
         tagTypes: [{ name: 'team', ...usage }],
@@ -85,4 +82,23 @@ test('describes no impact when deleting a tag type without values', async () => 
     });
 
     expect(dialog).not.toHaveTextContent('This will delete');
+});
+
+test('sorts tag types by name in reverse when the name header is clicked', async () => {
+    testServerRoute(server, '/api/admin/tag-types', {
+        version: 1,
+        tagTypes: [{ name: 'beta' }, { name: 'alpha' }],
+    });
+    renderWithProviders(<TagTypeList />, {
+        permissions: [{ permission: ADMIN }],
+    });
+    await screen.findByText('alpha');
+
+    await userEvent.click(screen.getByRole('button', { name: /Name/ }));
+
+    const names = screen
+        .getAllByRole('row')
+        .slice(1)
+        .map((row) => within(row).getByText(/^(alpha|beta)$/).textContent);
+    expect(names).toEqual(['beta', 'alpha']);
 });

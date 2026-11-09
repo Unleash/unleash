@@ -20,6 +20,14 @@ export type ProjectForUi = {
     cleanupCount?: number;
 };
 
+export type ProjectCore = {
+    id: string;
+    name: string;
+    description?: string;
+    createdAt: Date;
+    archivedAt?: Date;
+};
+
 export type ProjectForInsights = {
     id: string;
     technicalDebt: number;
@@ -42,6 +50,7 @@ export interface IProjectReadModel {
     getProjectsForInsights(
         query?: IProjectQuery,
     ): Promise<ProjectForInsights[]>;
+    getProjectsCore(query?: IProjectQuery): Promise<ProjectCore[]>;
     getFeatureProject(
         featureName: string,
     ): Promise<{ project: string; createdAt: Date } | null>;

@@ -80,10 +80,13 @@ export default class TagService {
         auditUser: IAuditUser,
     ): Promise<ITag> {
         const existing = await this.tagStore.getTag(tag.type, tag.value);
-        const renamed = await this.validate({
+        const renamed = (await tagSchema.validateAsync({
             type: existing.type,
             value: newValue.trim(),
-        });
+        })) as ITag;
+        if (renamed.value === existing.value) {
+            return existing;
+        }
         await this.tagStore.renameTag(existing, renamed.value);
         await this.eventService.storeEvent(
             new TagUpdatedEvent({

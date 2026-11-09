@@ -62,6 +62,7 @@ import {
     type WithTransactional,
     withTransactional,
 } from '../db/transaction.js';
+import { SlackAppInstallService } from '../addons/slack-app-install-service.js';
 import {
     createChangeRequestAccessReadModel,
     createFakeChangeRequestAccessService,
@@ -86,6 +87,7 @@ import {
     createFeatureLinkService,
     createFeatureToggleService,
     createProjectService,
+    createSegmentService,
     createUserSubscriptionsService,
 } from '../features/index.js';
 import EventAnnouncerService from './event-announcer-service.js';
@@ -157,6 +159,11 @@ import {
     createFakePersonalDashboardService,
     createPersonalDashboardService,
 } from '../features/personal-dashboard/createPersonalDashboardService.js';
+import type { UserRecentFlagsService } from '../features/user-recent-flags/user-recent-flags-service.js';
+import {
+    createFakeUserRecentFlagsService,
+    createUserRecentFlagsService,
+} from '../features/user-recent-flags/createUserRecentFlagsService.js';
 import {
     createFakeProjectStatusService,
     createProjectStatusService,
@@ -178,6 +185,11 @@ import type {
 import type { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType.js';
 import { UnknownFlagsService } from '../features/metrics/unknown-flags/unknown-flags-service.js';
 import type FeatureLinkService from '../features/feature-links/feature-link-service.js';
+import {
+    createFakePayloadSchemaService,
+    createPayloadSchemaService,
+} from '../features/payload-schema/createPayloadSchemaService.js';
+import type { PayloadSchemaService } from '../features/payload-schema/payload-schema-service.js';
 import { createUserService } from '../features/users/createUserService.js';
 import { UiConfigService } from '../ui-config/ui-config-service.js';
 import { ResourceLimitsService } from '../features/resource-limits/resource-limits-service.js';
@@ -290,6 +302,11 @@ export const createServices = (
     );
     const sessionService = new SessionService(stores, config);
     const settingService = new SettingService(stores, config, eventService);
+    const slackAppInstallService = new SlackAppInstallService(
+        { addonService },
+        config,
+        Date.now,
+    );
     const userService = db
         ? withTransactional((db) => createUserService(db, config), db)
         : withFakeTransactional(
@@ -332,6 +349,9 @@ export const createServices = (
         resourceLimitsService,
         constraintValidator,
     );
+    const transactionalSegmentService = db
+        ? withTransactional((db) => createSegmentService(db, config), db)
+        : withFakeTransactional(segmentService);
 
     const clientInstanceService = new ClientInstanceService(
         stores,
@@ -400,6 +420,10 @@ export const createServices = (
 
     const featureLinkService = transactionalFeatureLinkService;
 
+    const payloadSchemaService = db
+        ? createPayloadSchemaService(db)
+        : createFakePayloadSchemaService();
+
     const featureToggleService = db
         ? withTransactional((db) => createFeatureToggleService(db, config), db)
         : withFakeTransactional(
@@ -425,7 +449,7 @@ export const createServices = (
     const clientSpecService = new ClientSpecService(config);
     const playgroundService = db
         ? createPlaygroundService(db, config)
-        : createFakePlaygroundService(config);
+        : createFakePlaygroundService(config).playgroundService;
 
     const configurationRevisionService =
         ConfigurationRevisionService.getInstance(stores, config);
@@ -451,10 +475,20 @@ export const createServices = (
 
     const edgeService = db
         ? withTransactional(
-              (db) => createTransactionalEdgeService(db, config),
+              (db) =>
+                  createTransactionalEdgeService(db, config, {
+                      apiTokenService,
+                      apiTokenV2Service,
+                  }),
               db,
           )
-        : withFakeTransactional(createFakeEdgeService(config));
+        : withFakeTransactional(
+              createFakeEdgeService(config, {
+                  apiTokenService,
+                  apiTokenV2Service,
+                  transactionalApiTokenV2Service,
+              }),
+          );
 
     const patService = db
         ? createPatService(db, config)
@@ -509,6 +543,18 @@ export const createServices = (
         ? createPersonalDashboardService(db, config, stores)
         : createFakePersonalDashboardService(config);
 
+    const userRecentFlagsService = db
+        ? createUserRecentFlagsService(
+              db,
+              config,
+              featureSearchService,
+              privateProjectChecker,
+          )
+        : createFakeUserRecentFlagsService(
+              featureSearchService,
+              privateProjectChecker,
+          );
+
     const transactionalUserSubscriptionsService = db
         ? withTransactional(createUserSubscriptionsService(config), db)
         : withFakeTransactional(createFakeUserSubscriptionsService(config));
@@ -528,6 +574,7 @@ export const createServices = (
         accessService,
         accountService,
         addonService,
+        slackAppInstallService,
         eventAnnouncerService,
         featureToggleService,
         featureTypeService,
@@ -560,6 +607,7 @@ export const createServices = (
         projectHealthService,
         userSplashService,
         segmentService,
+        transactionalSegmentService,
         openApiService,
         clientSpecService,
         playgroundService,
@@ -592,12 +640,14 @@ export const createServices = (
         integrationEventsService,
         onboardingService,
         personalDashboardService,
+        userRecentFlagsService,
         projectStatusService,
         transactionalUserSubscriptionsService,
         uniqueConnectionService,
         featureLifecycleReadModel,
         transactionalFeatureLinkService,
         featureLinkService,
+        payloadSchemaService,
         unknownFlagsService,
         uiConfigService,
         resourceLimitsService,
@@ -673,6 +723,7 @@ export interface IUnleashServices {
     accessService: AccessService;
     accountService: AccountService;
     addonService: AddonService;
+    slackAppInstallService: SlackAppInstallService;
     apiTokenService: ApiTokenService;
     apiTokenV2Service: ReadOnlyApiTokenV2Service;
     transactionalApiTokenV2Service: WithTransactional<AdminApiTokenV2Service>;
@@ -709,6 +760,7 @@ export interface IUnleashServices {
     versionService: VersionService;
     userSplashService: UserSplashService;
     segmentService: ISegmentService;
+    transactionalSegmentService: WithTransactional<ISegmentService>;
     openApiService: OpenApiService;
     clientSpecService: ClientSpecService;
     patService: PatService;
@@ -737,12 +789,14 @@ export interface IUnleashServices {
     integrationEventsService: IntegrationEventsService;
     onboardingService: OnboardingService;
     personalDashboardService: PersonalDashboardService;
+    userRecentFlagsService: UserRecentFlagsService;
     projectStatusService: ProjectStatusService;
     transactionalUserSubscriptionsService: WithTransactional<UserSubscriptionsService>;
     uniqueConnectionService: UniqueConnectionService;
     featureLifecycleReadModel: IFeatureLifecycleReadModel;
     transactionalFeatureLinkService: WithTransactional<FeatureLinkService>;
     featureLinkService: FeatureLinkService;
+    payloadSchemaService: PayloadSchemaService;
     unknownFlagsService: UnknownFlagsService;
     uiConfigService: UiConfigService;
     resourceLimitsService: ResourceLimitsService;

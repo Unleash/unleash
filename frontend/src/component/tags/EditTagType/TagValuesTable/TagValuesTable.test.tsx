@@ -4,7 +4,10 @@ import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import type { TagValuesUsageSchemaTagValuesItem } from 'openapi';
-import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import {
+    DELETE_TAG_TYPE,
+    UPDATE_TAG_TYPE,
+} from 'component/providers/AccessProvider/permissions';
 import ToastRenderer from 'component/common/ToastRenderer/ToastRenderer';
 import { TagValuesTable } from './TagValuesTable.tsx';
 
@@ -135,7 +138,12 @@ const renderWithPermission = () =>
             <TagValuesTable tagType='team' />
             <ToastRenderer />
         </>,
-        { permissions: [{ permission: UPDATE_FEATURE }] },
+        {
+            permissions: [
+                { permission: UPDATE_TAG_TYPE },
+                { permission: DELETE_TAG_TYPE },
+            ],
+        },
     );
 
 const clickInRow = async (value: string, button: string) => {
@@ -216,14 +224,44 @@ test('renames a tag value after confirming', async () => {
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
 });
 
-test('closes the editor without confirming when the new value is blank', async () => {
+test.each([
+    ['blank', '  ', 'Value cannot be empty or whitespace'],
+    ['too short', ' a ', 'Value must be between 2 and 50 characters'],
+    ['single emoji', '🚀', 'Value must be between 2 and 50 characters'],
+    ['too long', 'a'.repeat(51), 'Value must be between 2 and 50 characters'],
+    [
+        'too long emoji',
+        '🚀'.repeat(51),
+        'Value must be between 2 and 50 characters',
+    ],
+])('explains why a %s value cannot be saved until it is edited', async (_, value, message) => {
     setupTagValues([tagValue({ value: 'old' })]);
     renderWithPermission();
 
     await clickInRow('old', 'Rename tag value');
     const input = screen.getByRole('textbox', { name: 'New value for old' });
     await userEvent.clear(input);
-    await userEvent.type(input, '  {Enter}');
+    await userEvent.type(input, `${value}{Enter}`);
+
+    expect(input).toHaveAccessibleDescription(message);
+    expect(input).toBeInvalid();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+    await userEvent.type(input, 'x');
+
+    expect(input).toBeValid();
+    expect(screen.queryByText(message)).not.toBeInTheDocument();
+});
+
+test('closes the editor without confirming when the value is unchanged', async () => {
+    setupTagValues([tagValue({ value: 'old' })]);
+    renderWithPermission();
+
+    await clickInRow('old', 'Rename tag value');
+    await userEvent.type(
+        screen.getByRole('textbox', { name: 'New value for old' }),
+        ' {Enter}',
+    );
 
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -282,31 +320,58 @@ test('keeps the field open when the rename is cancelled in the dialog', async ()
     ).toHaveValue('old-changed');
 });
 
-test('keeps the rename open when the new value already exists', async () => {
-    setupTagValues([tagValue({ value: 'old' })]);
-    testServerRoute(
-        server,
-        '/api/admin/tags/team/old/rename',
-        { message: 'A tag with this value already exists' },
-        'post',
-        409,
-    );
+test('merges into an existing value after confirming', async () => {
+    setupTagValues([
+        tagValue({ value: 'old', usedInActiveFeatures: 2 }),
+        tagValue({ value: 'existing', usedInActiveFeatures: 1 }),
+    ]);
     renderWithPermission();
 
     await clickInRow('old', 'Rename tag value');
     const input = screen.getByRole('textbox', { name: 'New value for old' });
     await userEvent.clear(input);
-    await userEvent.type(input, 'taken{Enter}');
-    const dialog = await screen.findByRole('dialog');
-    const confirm = within(dialog).getByRole('button', { name: 'Rename' });
-    await userEvent.click(confirm);
+    await userEvent.type(input, 'existing{Enter}');
 
-    await screen.findByText('A tag with this value already exists');
-    expect(dialog).toBeInTheDocument();
+    const dialog = await screen.findByRole('dialog', {
+        name: 'Merge tag values?',
+    });
+    expect(dialog).toHaveTextContent(
+        "team:existing already exists, so team:old will be merged into it and deleted. 2 active flags, plus any in private projects you can't see, will get team:existing instead.",
+    );
+
+    const { requests } = testServerRoute(
+        server,
+        '/api/admin/tags/team/old/rename',
+        {},
+        'post',
+    );
+    setupTagValues([tagValue({ value: 'existing', usedInActiveFeatures: 3 })]);
+    await userEvent.click(
+        within(dialog).getByRole('button', { name: 'Merge' }),
+    );
+
+    await screen.findByText('Tag values merged');
+    await waitFor(() =>
+        expect(screen.queryByText('old')).not.toBeInTheDocument(),
+    );
+    expect(requests).toEqual([{ value: 'existing' }]);
+});
+
+test('explains merging a value that no visible active flag uses', async () => {
+    setupTagValues([
+        tagValue({ value: 'old' }),
+        tagValue({ value: 'existing' }),
+    ]);
+    renderWithPermission();
+
+    await clickInRow('old', 'Rename tag value');
+    const input = screen.getByRole('textbox', { name: 'New value for old' });
+    await userEvent.clear(input);
+    await userEvent.type(input, 'existing{Enter}');
+
     expect(
-        screen.getByRole('textbox', {
-            name: 'New value for old',
-            hidden: true,
-        }),
-    ).toHaveValue('taken');
+        await screen.findByRole('dialog', { name: 'Merge tag values?' }),
+    ).toHaveTextContent(
+        "It isn't added to any active flags that you have access to. Flags you don't have access to will get team:existing instead, if any.",
+    );
 });

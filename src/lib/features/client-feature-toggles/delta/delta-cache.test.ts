@@ -32,10 +32,8 @@ describe('RevisionCache', () => {
             features: [
                 {
                     name: 'test-flag',
-                    type: 'release',
                     enabled: false,
                     project: 'default',
-                    stale: false,
                     strategies: [
                         {
                             name: 'flexibleRollout',
@@ -49,15 +47,12 @@ describe('RevisionCache', () => {
                         },
                     ],
                     variants: [],
-                    description: null,
                     impressionData: false,
                 },
                 {
                     name: 'my-feature-flag',
-                    type: 'release',
                     enabled: true,
                     project: 'default',
-                    stale: false,
                     strategies: [
                         {
                             name: 'flexibleRollout',
@@ -71,7 +66,6 @@ describe('RevisionCache', () => {
                         },
                     ],
                     variants: [],
-                    description: null,
                     impressionData: false,
                 },
             ],
@@ -94,10 +88,8 @@ describe('RevisionCache', () => {
                 eventId: 2,
                 feature: {
                     name: 'my-feature-flag',
-                    type: 'release',
                     enabled: true,
                     project: 'default',
-                    stale: false,
                     strategies: [
                         {
                             name: 'flexibleRollout',
@@ -111,7 +103,6 @@ describe('RevisionCache', () => {
                         },
                     ],
                     variants: [],
-                    description: null,
                     impressionData: false,
                 },
                 type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
@@ -129,10 +120,8 @@ describe('RevisionCache', () => {
                 type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
                 feature: {
                     name: 'another-feature-flag',
-                    type: 'release',
                     enabled: true,
                     project: 'default',
-                    stale: false,
                     strategies: [
                         {
                             name: 'flexibleRollout',
@@ -145,7 +134,6 @@ describe('RevisionCache', () => {
                         },
                     ],
                     variants: [],
-                    description: null,
                     impressionData: false,
                 },
             },
@@ -210,13 +198,10 @@ describe('RevisionCache', () => {
             features: [
                 {
                     name: 'base-flag',
-                    type: 'release',
                     enabled: true,
                     project: 'streaming-deltas',
-                    stale: false,
                     strategies: [],
                     variants: [],
-                    description: null,
                     impressionData: false,
                 },
             ],
@@ -233,10 +218,7 @@ describe('RevisionCache', () => {
                 impressionData: false,
                 enabled: false,
                 name: 'streaming-test',
-                description: null,
                 project: 'streaming-deltas',
-                stale: false,
-                type: 'release',
                 variants: [],
                 strategies: [],
             },
@@ -254,10 +236,7 @@ describe('RevisionCache', () => {
                 impressionData: false,
                 enabled: true,
                 name: 'streaming-test',
-                description: null,
                 project: 'streaming-deltas',
-                stale: false,
-                type: 'release',
                 variants: [],
                 strategies: [{ name: 'new-strategy', parameters: {} }],
             },

@@ -93,13 +93,20 @@
       "includes": [
         "frontend/src/**",
         "!frontend/src/component/common/GeneralSelect/**",
-        "!frontend/src/component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/ConstraintOperatorSelect.tsx"
+        "!frontend/src/component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/LegacyConstraintOperatorSelect.tsx"
       ],
       "plugins": ["./floating-label.grit"]
     },
     {
       "includes": ["frontend/src/**"],
-      "plugins": ["./tracking-shape.grit"]
+      "plugins": ["./tracking-shape.grit"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noNodejsModules": "error"
+          }
+        }
+      }
     },
     {
       "includes": [
@@ -153,7 +160,7 @@
         "frontend/src/component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate.tsx",
         "frontend/src/component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit.tsx",
         "frontend/src/component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm.tsx",
-        "frontend/src/component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBody.tsx",
+        "frontend/src/component/feature/FeatureStrategy/FeatureStrategyForm/LegacyStrategyFormBody.tsx",
         "frontend/src/component/feature/FeatureToggleList/FeatureToggleListTable.tsx",
         "frontend/src/component/feature/FeatureToggleList/FeaturesOverviewLifecycleFilters/FeaturesOverviewToggleFilters.tsx",
         "frontend/src/component/feature/FeatureView/FeatureMetrics/FeatureExposureMetrics.tsx",
@@ -173,8 +180,7 @@
         "frontend/src/component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx",
         "frontend/src/component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm.tsx",
         "frontend/src/component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/FeatureEnvironmentVariants.tsx",
-        "frontend/src/component/feature/StrategyTypes/NewStrategyVariants.tsx",
-        "frontend/src/component/feature/StrategyTypes/StrategyVariants.tsx",
+        "frontend/src/component/feature/StrategyTypes/LegacyStrategyVariants.tsx",
         "frontend/src/component/filter/Filters/Filters.tsx",
         "frontend/src/component/impact-metrics/ImpactMetrics.tsx",
         "frontend/src/component/impact-metrics/MultimetricChart/useChartPlotArea.ts",

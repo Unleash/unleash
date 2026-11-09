@@ -33,3 +33,5 @@ export * from './constantTimeCompare.js';
 export * from '../features/metrics/client-metrics/collapseHourlyMetrics.js';
 export * from '../features/playground/offline-unleash-client.js';
 export * from './batchExecute.js';
+
+export { reservedObjectPropertyNames } from './reserved-object-property-names.js';

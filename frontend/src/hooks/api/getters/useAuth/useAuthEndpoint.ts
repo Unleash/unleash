@@ -71,8 +71,35 @@ export const useAuthEndpoint = (): IUseAuthEndpointOutput => {
     };
 };
 
-const fetchAuthStatus = (): Promise<AuthEndpointResponse> => {
-    return fetch(USER_ENDPOINT_PATH).then((res) => res.json());
+// fetches the auth status with retry logic for session termination
+const fetchAuthStatus = async (): Promise<AuthEndpointResponse> => {
+    let response = await fetch(USER_ENDPOINT_PATH).then((res) => res.json());
+
+    const isValid =
+        response &&
+        typeof response === 'object' &&
+        ('user' in response || 'type' in response);
+
+    if (isValid) {
+        return response;
+    }
+
+    // retry once if session ended
+    if (response?.name === 'SessionEndedError') {
+        response = await fetch(USER_ENDPOINT_PATH).then((res) => res.json());
+
+        if (
+            response &&
+            typeof response === 'object' &&
+            ('user' in response || 'type' in response)
+        ) {
+            return response;
+        }
+    }
+
+    throw new Error('Failed to fetch auth status', {
+        cause: response,
+    });
 };
 
 const swrConfig = {

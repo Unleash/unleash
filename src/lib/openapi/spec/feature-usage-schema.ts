@@ -43,7 +43,7 @@ export const featureUsageSchema = {
         },
         totalUsage: {
             description:
-                'Total usage per environment, accumulated over the metrics retention period and sorted by environment name. This is an experimental field and may change',
+                'Total usage per environment, accumulated over the metrics retention period and sorted by environment name.',
             type: 'array',
             items: {
                 $ref: '#/components/schemas/featureEnvironmentTotalUsageSchema',

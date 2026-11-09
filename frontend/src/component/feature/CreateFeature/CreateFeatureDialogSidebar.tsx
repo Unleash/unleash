@@ -3,13 +3,14 @@ import { IconButton, styled } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import { ApiCommandBlock } from 'component/common/FormTemplate/ApiCommandBlock';
+import { dialogHeaderHeight } from 'themes/themeStyles';
 import useToast from 'hooks/useToast';
 
 const StyledSidebarHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    height: theme.spacing(8),
+    height: dialogHeaderHeight(theme),
     margin: theme.spacing(-4, -4, 0, -4),
     padding: theme.spacing(0, 2),
     borderBottom: `1px solid ${theme.palette.divider}`,

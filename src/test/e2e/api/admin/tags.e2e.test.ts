@@ -16,7 +16,6 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
-                    tagManagementViaUi: true,
                 },
             },
         },
@@ -82,6 +81,20 @@ test('Can create a tag', async () =>
         .expect((res) => {
             expect(res.status).toBe(201);
         }));
+
+test('creates a tag with a non-ASCII value', async () => {
+    const { headers } = await app.request
+        .post('/api/admin/tags')
+        .send({ type: 'simple', value: 'zażółć 🚀' })
+        .expect(201);
+
+    expect(headers.location).toBe(
+        `tags/simple/${encodeURIComponent('zażółć 🚀')}`,
+    );
+    await app.request
+        .get(`/api/admin/tags/simple/${encodeURIComponent('zażółć 🚀')}`)
+        .expect(200);
+});
 
 test('Can validate a tag', async () =>
     app.request
@@ -218,6 +231,28 @@ test('Can bulk remove tags', async () => {
         .expect(200);
 });
 
+test('Can add the same new tag twice in one request', async () => {
+    const tag = { type: 'simple', value: 'TeamBlue' };
+    await app.createFeature('duplicate.tag.feature');
+    await app.request.get('/api/admin/tags/simple/TeamBlue').expect(404);
+
+    await app.request
+        .put('/api/admin/projects/default/tags')
+        .send({
+            features: ['duplicate.tag.feature'],
+            tags: {
+                addedTags: [tag, tag],
+                removedTags: [],
+            },
+        })
+        .expect(200);
+
+    const res = await app.request.get(
+        '/api/admin/features/duplicate.tag.feature/tags',
+    );
+    expect(res.body).toMatchObject({ tags: [tag] });
+});
+
 test('backward compatibility: the API should return invalid tag names if they exist', async () => {
     const tag = { value: '  ', type: 'simple' };
     await db.stores.tagStore.createTag(tag);
@@ -322,6 +357,37 @@ test('renames a tag to a value with non-ASCII characters', async () => {
     expect(body.tag).toEqual({ type: 'simple', value: 'zażółć gęślą jaźń' });
 });
 
+test('counts an emoji as one character towards the maximum length', async () => {
+    await db.stores.tagStore.createTag({ type: 'simple', value: 'short' });
+
+    const { body } = await app.request
+        .post('/api/admin/tags/simple/short/rename')
+        .send({ value: '🛸'.repeat(50) })
+        .expect(200);
+
+    expect(body.tag.value).toBe('🛸'.repeat(50));
+});
+
+test.each([
+    ['blank', '   '],
+    ['too short', ' a '],
+    ['single emoji', '🚀'],
+    ['too long', 'a'.repeat(51)],
+    ['too long emoji', '🚀'.repeat(51)],
+])('rejects renaming a tag to a %s value', async (reason, value) => {
+    const tag = { type: 'simple', value: `invalid-${reason}` };
+    await db.stores.tagStore.createTag(tag);
+
+    await app.request
+        .post(`/api/admin/tags/simple/${encodeURIComponent(tag.value)}/rename`)
+        .send({ value })
+        .expect(400);
+
+    await app.request
+        .get(`/api/admin/tags/simple/${encodeURIComponent(tag.value)}`)
+        .expect(200);
+});
+
 test('keeps the creation date of a renamed tag', async () => {
     const createdAt = new Date('2020-01-01T00:00:00Z');
     await db.stores.tagStore.createTag({ type: 'simple', value: 'old-tag' });
@@ -342,14 +408,84 @@ test('keeps the creation date of a renamed tag', async () => {
     expect(renamed).toEqual({ created_at: createdAt });
 });
 
-test('cannot rename a tag to a value that already exists', async () => {
-    await db.stores.tagStore.createTag({ type: 'simple', value: 'first' });
-    await db.stores.tagStore.createTag({ type: 'simple', value: 'second' });
+test('merges a tag into an existing value when renamed to it', async () => {
+    const createdAt = new Date('2020-01-01T00:00:00Z');
+    const source = { type: 'simple', value: 'merge-from' };
+    const target = { type: 'simple', value: 'merge-into' };
+    await db.stores.tagStore.createTag(source);
+    await db.stores.tagStore.createTag(target);
+    await db
+        .rawDatabase('tags')
+        .where(target)
+        .update({ created_at: createdAt });
+    await app.createFeature('merge.only-source');
+    await app.createFeature('merge.both');
+    await app.createFeature('merge.only-target');
+    await db.stores.featureTagStore.tagFeature(
+        'merge.only-source',
+        source,
+        -1337,
+    );
+    await db.stores.featureTagStore.tagFeature('merge.both', source, -1337);
+    await db.stores.featureTagStore.tagFeature('merge.both', target, -1337);
+    await db.stores.featureTagStore.tagFeature(
+        'merge.only-target',
+        target,
+        -1337,
+    );
 
-    await app.request
-        .post('/api/admin/tags/simple/first/rename')
-        .send({ value: 'second' })
-        .expect(409);
+    const { body } = await app.request
+        .post('/api/admin/tags/simple/merge-from/rename')
+        .send({ value: 'merge-into' })
+        .expect(200);
+
+    expect(body.tag).toEqual(target);
+    await app.request.get('/api/admin/tags/simple/merge-from').expect(404);
+    for (const feature of [
+        'merge.only-source',
+        'merge.both',
+        'merge.only-target',
+    ]) {
+        const { body: featureTags } = await app.request
+            .get(`/api/admin/features/${feature}/tags`)
+            .expect(200);
+        expect(featureTags.tags).toMatchObject([target]);
+    }
+    const merged = await db
+        .rawDatabase('tags')
+        .where(target)
+        .first('created_at');
+    expect(merged).toEqual({ created_at: createdAt });
+
+    const events = await db
+        .rawDatabase('events')
+        .where({ type: 'tag-updated' })
+        .whereRaw(`pre_data->>'value' = ?`, [source.value])
+        .select('data', 'pre_data');
+    expect(events).toEqual([{ data: target, pre_data: source }]);
+});
+
+test('renaming a tag to its own value changes nothing', async () => {
+    const tag = { type: 'simple', value: 'unchanged' };
+    await db.stores.tagStore.createTag(tag);
+    await app.createFeature('unchanged.feature');
+    await db.stores.featureTagStore.tagFeature('unchanged.feature', tag, -1337);
+
+    const { body } = await app.request
+        .post('/api/admin/tags/simple/unchanged/rename')
+        .send({ value: ' unchanged ' })
+        .expect(200);
+
+    expect(body.tag).toEqual(tag);
+    const { body: featureTags } = await app.request
+        .get('/api/admin/features/unchanged.feature/tags')
+        .expect(200);
+    expect(featureTags.tags).toMatchObject([tag]);
+    const events = await db
+        .rawDatabase('events')
+        .where({ type: 'tag-updated' })
+        .whereRaw(`pre_data->>'value' = ?`, [tag.value]);
+    expect(events).toEqual([]);
 });
 
 test('cannot rename a tag that does not exist', async () => {

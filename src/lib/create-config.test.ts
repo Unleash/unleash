@@ -1,5 +1,6 @@
 import { createConfig, resolveIsOss } from './create-config.js';
 import { ApiTokenType } from './types/model.js';
+import { DEFAULT_SESSION_IDLE_TIMEOUT_MINUTES } from './sessions/session-limits.js';
 
 beforeEach(() => {
     delete process.env.INIT_BACKEND_API_TOKENS;
@@ -583,4 +584,46 @@ test('falls back to the default lead times when the configuration is invalid', (
     const config = createConfig({});
     expect(config.tokenExpiryNotificationDays).toEqual([14, 3]);
     delete process.env.TOKEN_EXPIRY_NOTIFICATION_DAYS;
+});
+
+describe('session idle timeout', () => {
+    const sessionOf = () =>
+        createConfig({
+            db: {
+                host: 'localhost',
+                port: 4242,
+                user: 'unleash',
+                password: 'password',
+                database: 'unleash_db',
+            },
+            server: { port: 4242 },
+        }).session;
+
+    afterEach(() => {
+        delete process.env.SESSION_IDLE_TIMEOUT_MINUTES;
+    });
+
+    test('defaults to 15 minutes, which the sessionTimeouts flag still has to turn on', () => {
+        expect(sessionOf().idleTimeoutMinutes).toBe(
+            DEFAULT_SESSION_IDLE_TIMEOUT_MINUTES,
+        );
+    });
+
+    test('SESSION_IDLE_TIMEOUT_MINUTES overrides the default', () => {
+        process.env.SESSION_IDLE_TIMEOUT_MINUTES = '45';
+
+        expect(sessionOf().idleTimeoutMinutes).toBe(45);
+    });
+
+    test('an explicit 0 turns the idle window off', () => {
+        process.env.SESSION_IDLE_TIMEOUT_MINUTES = '0';
+
+        expect(sessionOf().idleTimeoutMinutes).toBe(0);
+    });
+
+    test('a negative value reads as off, not as a deadline in the past', () => {
+        process.env.SESSION_IDLE_TIMEOUT_MINUTES = '-5';
+
+        expect(sessionOf().idleTimeoutMinutes).toBe(0);
+    });
 });

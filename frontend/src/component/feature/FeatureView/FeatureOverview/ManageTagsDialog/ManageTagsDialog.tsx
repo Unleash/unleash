@@ -1,5 +1,5 @@
 import {
-    type AutocompleteChangeReason,
+    type AutocompleteProps,
     type AutocompleteValue,
     styled,
     Typography,
@@ -16,9 +16,13 @@ import { type TagOption, TagsInput } from './TagsInput.tsx';
 import { TagTypeSelect } from './TagTypeSelect.tsx';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import useTags from 'hooks/api/getters/useTags/useTags';
-import cloneDeep from 'lodash.clonedeep';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
 import useTagTypes from 'hooks/api/getters/useTagTypes/useTagTypes';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import {
+    createTagValueTracking,
+    editFlagTagsTracking,
+} from './flagTagsTracking.ts';
 
 interface IManageTagsProps {
     open: boolean;
@@ -48,13 +52,27 @@ const optionsToTags = (options: TagOption[], type: string): ITag[] => {
     });
 };
 
+const isSameTag = (a: ITag, b: ITag) =>
+    a.value === b.value && a.type === b.type;
+
+const difference = (selected: ITag[], existing: ITag[], type: string) => {
+    const ofType = (tag: ITag) => tag.type === type;
+    const added = selected
+        .filter(ofType)
+        .filter((tag) => !existing.some((other) => isSameTag(tag, other)));
+    const removed = existing
+        .filter(ofType)
+        .filter((tag) => !selected.some((other) => isSameTag(tag, other)));
+    return { added, removed };
+};
+
 export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
     const { tagTypes } = useTagTypes();
     const featureId = useRequiredPathParam('featureId');
     const { createTag } = useTagApi();
     const { updateFeatureTags, loading: featureLoading } = useFeatureApi();
     const { tags, refetch, loading: tagsLoading } = useFeatureTags(featureId);
-    const { setToastData } = useToast();
+    const { setToastData, setToastApiError } = useToast();
     const initialTagType =
         tagTypes && tagTypes.length > 0
             ? tagTypes[0]
@@ -67,9 +85,7 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
 
     const loading = featureLoading || tagsLoading;
 
-    const [differenceCount, setDifferenceCount] = useState(0);
-
-    const { trackEvent } = useEventTracker();
+    const trackCreateTagValue = useTracking(createTagValueTracking);
 
     const [selectedTagOptions, setSelectedTagOptions] = useState<TagOption[]>(
         tagsToOptions(tags.filter((tag) => tag.type === tagType.name)),
@@ -89,57 +105,20 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
         }
     }, [JSON.stringify(tags), tagType, open]);
 
+    const { added, removed } = useMemo(
+        () =>
+            difference(
+                optionsToTags(selectedTagOptions, tagType.name),
+                tags,
+                tagType.name,
+            ),
+        [selectedTagOptions, tags, tagType.name],
+    );
+    const differenceCount = added.length + removed.length;
+
     const onCancel = () => {
         setOpen(false);
         setSelectedTagOptions([]);
-    };
-
-    function difference(array1: ITag[], array2: ITag[]) {
-        const added = array1
-            .filter((tag) => tag.type === tagType.name)
-            .filter(
-                (element) =>
-                    !array2.find(
-                        (e2) =>
-                            element.value === e2.value &&
-                            element.type === e2.type,
-                    ),
-            );
-        const removed = array2
-            .filter((tag) => tag.type === tagType.name)
-            .filter(
-                (element) =>
-                    !array1.find(
-                        (e2) =>
-                            element.value === e2.value &&
-                            element.type === e2.type,
-                    ),
-            );
-        setDifferenceCount(added.length + removed.length);
-        return { added, removed };
-    }
-
-    const realOptions = (allOptions: TagOption[]) => {
-        return allOptions.filter(
-            (tagOption) => !tagOption.title.startsWith('Create'),
-        );
-    };
-
-    const updateTags = async (added: ITag[], removed: ITag[]) => {
-        try {
-            await updateFeatureTags(featureId, {
-                addedTags: added,
-                removedTags: removed,
-            });
-            await refetch();
-            return true;
-        } catch (_error: unknown) {
-            setToastData({
-                type: 'error',
-                text: 'Failed to update tags',
-            });
-            return false;
-        }
     };
 
     const _getToastText = (addedCount: number, removedCount: number) => {
@@ -161,33 +140,16 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
         return result;
     };
 
-    const onSubmit = async (evt: React.SyntheticEvent) => {
-        evt.preventDefault();
-        const selectedTags: ITag[] = optionsToTags(
-            realOptions(selectedTagOptions),
-            tagType.name,
-        );
-        const { added, removed } = difference(selectedTags, tags);
-        if (differenceCount > 0) {
-            const updated = await updateTags(added, removed);
-            if (updated) {
-                trackEvent('flag-tags', {
-                    props: {
-                        eventType: 'tags-updated',
-                        tagType: tagType.name,
-                        addedCount: added.length,
-                        removedCount: removed.length,
-                        totalTags: tags.length + added.length - removed.length,
-                    },
-                });
-            }
-            differenceCount > 0 &&
-                setToastData({
-                    type: 'success',
-                    text: `Updated flag tags`,
-                });
-        }
-        setDifferenceCount(0);
+    const onSubmit = async () => {
+        await updateFeatureTags(featureId, {
+            addedTags: added,
+            removedTags: removed,
+        });
+        await refetch();
+        setToastData({
+            type: 'success',
+            text: `Updated flag tags`,
+        });
         setSelectedTagOptions([]);
         setOpen(false);
     };
@@ -200,54 +162,39 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
             event.preventDefault();
             setTagType(value);
             setSelectedTagOptions([]);
-            setDifferenceCount(0);
         }
     };
 
-    const handleInputChange = (
-        _event: React.SyntheticEvent,
-        newValue: AutocompleteValue<
-            TagOption | string,
-            true,
-            undefined,
-            undefined
-        >,
-        reason: AutocompleteChangeReason,
-    ) => {
-        const clone = cloneDeep(newValue) as TagOption[];
-        if (reason === 'selectOption') {
-            newValue.forEach((value, index) => {
-                if (
-                    typeof value !== 'string' &&
-                    value.inputValue &&
-                    value.inputValue !== ''
-                ) {
-                    const payload = {
-                        value: value.inputValue,
-                        type: tagType.name,
-                    };
-                    createTag(payload).then(() => {
-                        trackEvent('flag-tags', {
-                            props: {
-                                eventType: 'tag-created',
-                                tagType: tagType.name,
-                            },
-                        });
-                        refetchAllTags();
-                    });
-                    value.title = value.inputValue;
-                    value.inputValue = '';
-                    clone[index] = value;
-                }
+    const createNewTagOnTheFly = (value: string) =>
+        trackCreateTagValue
+            .mutation(() => createTag({ value, type: tagType.name }))
+            .then(() => {
+                refetchAllTags();
+                setSelectedTagOptions((prev) =>
+                    prev.some(({ title }) => title === value)
+                        ? prev
+                        : [...prev, { title: value }],
+                );
+            })
+            .catch((error: unknown) => {
+                setToastApiError(formatUnknownError(error));
             });
-        }
-        const selectedTags: ITag[] = optionsToTags(
-            realOptions(clone),
-            tagType.name,
-        );
 
-        difference(selectedTags, tags);
-        setSelectedTagOptions(clone);
+    const handleInputChange: AutocompleteProps<
+        TagOption,
+        true,
+        false,
+        false
+    >['onChange'] = (_event, newValue, reason, selected) => {
+        const option = selected?.option;
+        if (reason === 'selectOption' && option?.inputValue) {
+            // The "Create new value" option's title is its label, not the
+            // value, so only select the value once it exists.
+            setSelectedTagOptions(newValue.filter((value) => value !== option));
+            createNewTagOnTheFly(option.inputValue);
+            return;
+        }
+        setSelectedTagOptions(newValue);
     };
 
     const formId = 'add-tag-form';
@@ -258,7 +205,13 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
             secondaryButtonText='Cancel'
             primaryButtonText='Save tags'
             title='Update feature flag tags'
-            onClick={onSubmit}
+            onSubmit={onSubmit}
+            onError={(error) => setToastApiError(formatUnknownError(error))}
+            tracking={editFlagTagsTracking({
+                addedCount: added.length,
+                removedCount: removed.length,
+                tagCount: tags.length + added.length - removed.length,
+            })}
             disabledPrimaryButton={loading || differenceCount === 0}
             onClose={onCancel}
             formId={formId}
@@ -269,7 +222,7 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
                 >
                     Tags allow you to group features together
                 </Typography>
-                <form id={formId} onSubmit={onSubmit}>
+                <form id={formId} onSubmit={(event) => event.preventDefault()}>
                     <StyledDialogFormContent>
                         <TagTypeSelect
                             options={tagTypes}

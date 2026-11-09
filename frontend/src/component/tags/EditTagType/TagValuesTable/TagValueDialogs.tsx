@@ -69,7 +69,47 @@ export const DeleteTagValueDialog = ({
 type TagValueRename = {
     tagValue: TagValuesUsageSchemaTagValuesItem;
     newValue: string;
+    kind: 'rename' | 'merge';
 };
+
+const MergeTagValueText = ({
+    tagType,
+    rename: { tagValue, newValue },
+    flagsAffected,
+}: {
+    tagType: string;
+    rename: TagValueRename;
+    flagsAffected: number;
+}) => (
+    <>
+        <strong>
+            {tagType}:{newValue}
+        </strong>{' '}
+        already exists, so{' '}
+        <strong>
+            {tagType}:{tagValue.value}
+        </strong>{' '}
+        will be merged into it and deleted.{' '}
+        {flagsAffected ? (
+            <>
+                <strong>
+                    {flagsAffected} active{' '}
+                    {flagsAffected === 1 ? 'flag' : 'flags'}
+                </strong>
+                , plus any in private projects you can't see, will get {tagType}
+                :{newValue} instead.
+            </>
+        ) : (
+            <>
+                It isn't added to any active flags that you have access to.
+                Flags you don't have access to will get {tagType}:{newValue}{' '}
+                instead, if any.
+            </>
+        )}{' '}
+        Any integrations relying on {tagType}:{tagValue.value} will stop
+        working. This can't be undone.
+    </>
+);
 
 interface IRenameTagValueDialogProps {
     tagType: string;
@@ -89,16 +129,26 @@ export const RenameTagValueDialog = ({
     const flagsAffected = rename?.tagValue.usedInActiveFeatures ?? 0;
     return (
         <Dialogue
-            title='Rename tag value?'
+            title={
+                rename?.kind === 'merge'
+                    ? 'Merge tag values?'
+                    : 'Rename tag value?'
+            }
             open={Boolean(rename)}
-            primaryButtonText='Rename'
+            primaryButtonText={rename?.kind === 'merge' ? 'Merge' : 'Rename'}
             secondaryButtonText='Cancel'
             onSubmit={onSubmit}
             onError={onError}
             tracking={editTagValueTracking}
             onClose={onClose}
         >
-            {rename ? (
+            {rename?.kind === 'merge' ? (
+                <MergeTagValueText
+                    tagType={tagType}
+                    rename={rename}
+                    flagsAffected={flagsAffected}
+                />
+            ) : rename ? (
                 <>
                     <strong>
                         {tagType}:{rename.tagValue.value}
@@ -125,8 +175,7 @@ export const RenameTagValueDialog = ({
                             don't have access to, if any.
                         </>
                     )}{' '}
-                    Any integrations relying on this tag need updating, or they
-                    may add it back.
+                    Any integrations relying on this tag will stop working.
                 </>
             ) : null}
         </Dialogue>

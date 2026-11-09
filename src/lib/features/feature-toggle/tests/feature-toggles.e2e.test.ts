@@ -93,6 +93,7 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
+                    perFlagLifetime: true,
                 },
             },
         },
@@ -360,6 +361,34 @@ test('Can get features for project', async () => {
                 ),
             ).toBeTruthy();
         });
+});
+
+test('core view omits environments and other derived flag fields', async () => {
+    await app.request
+        .post('/api/admin/projects/default/features')
+        .send({ name: 'core-view-flag' })
+        .expect(201);
+
+    const { body } = await app.request
+        .get('/api/admin/projects/default/features?view=core')
+        .expect(200);
+    await app.request
+        .get('/api/admin/projects/default/features?view=core&namePrefix=core')
+        .expect(400);
+
+    const flag = body.features.find(
+        (feature) => feature.name === 'core-view-flag',
+    );
+    expect(flag).toEqual({
+        name: 'core-view-flag',
+        type: 'release',
+        description: null,
+        stale: false,
+        favorite: false,
+        impressionData: false,
+        createdAt: expect.any(String),
+        environments: [],
+    });
 });
 
 test('Can enable/disable environment for feature with strategies', async () => {
@@ -752,6 +781,90 @@ test('Should update feature flag', async () => {
     expect(flag.description).toBe('updated');
     expect(flag.type).toBe('kill-switch');
     expect(flag.archived).toBeFalsy();
+});
+
+test('Should not report a flag update as saved when its event fails to store', async () => {
+    const url = '/api/admin/projects/default/features';
+    const name = 'new.flag.update.event.failure';
+    await app.createFeature({ name, description: 'before' });
+    // events.created_by holds 255 characters; a token name has no limit
+    const token = await app.services.apiTokenService.createApiTokenWithProjects(
+        {
+            type: ApiTokenType.ADMIN,
+            projects: ['*'],
+            environment: '*',
+            tokenName: 'x'.repeat(256),
+        },
+    );
+
+    const res = await app.request
+        .put(`${url}/${name}`)
+        .set('Authorization', token.secret)
+        .send({ description: 'after' });
+
+    const { body: flag } = await app.request.get(`${url}/${name}`);
+    expect(flag.description).toBe('before');
+    const { body: events } = await app.getRecordedEvents({
+        feature: `IS:${name}`,
+        type: `IS:${FEATURE_METADATA_UPDATED}`,
+    });
+    expect(events.total).toBe(0);
+    // a change that rolled back must not be answered with 200
+    expect(res.status).toBe(500);
+});
+
+describe('expectedLifetimeEndsAt on the flag payload', () => {
+    const url = '/api/admin/projects/default/features';
+    const createdAt = new Date('2026-01-01T00:00:00.000Z');
+
+    const createAndFetch = async (
+        name: string,
+        flag: { type: string; lifetimeDays?: number },
+    ) => {
+        await app.request
+            .post(url)
+            .send({ name, ...flag })
+            .expect(201);
+        await db
+            .rawDatabase('features')
+            .where({ name })
+            .update({ created_at: createdAt });
+        const { body } = await app.request.get(`${url}/${name}`).expect(200);
+        return body;
+    };
+
+    test("is the creation date plus the flag's lifetime", async () => {
+        const flag = await createAndFetch('lifetime.own', {
+            type: 'release',
+            lifetimeDays: 30,
+        });
+
+        expect(flag).toMatchObject({
+            createdAt: '2026-01-01T00:00:00.000Z',
+            expectedLifetimeEndsAt: '2026-01-31T00:00:00.000Z',
+        });
+        expect(flag).not.toHaveProperty('lifetimeDays');
+    });
+
+    test("is the creation date plus the type's lifetime when the flag has none", async () => {
+        const flag = await createAndFetch('lifetime.from-type', {
+            type: 'release',
+        });
+
+        expect(flag).toMatchObject({
+            createdAt: '2026-01-01T00:00:00.000Z',
+            expectedLifetimeEndsAt: '2026-02-10T00:00:00.000Z', // default lifetime of a release type is 40 days
+        });
+    });
+
+    test('is null for a permanent flag', async () => {
+        const flag = await createAndFetch('lifetime.permanent', {
+            type: 'release',
+            lifetimeDays: 0,
+        });
+
+        expect(flag).toMatchObject({ expectedLifetimeEndsAt: null });
+    });
 });
 
 test('Should not change name of feature flag', async () => {
@@ -2530,6 +2643,54 @@ test('should reject invalid constraint values for multi-valued constraints', asy
         .put(`${featureStrategiesPath}/${strategy.id}`)
         .send(mockStrategy(['a']))
         .expect(200);
+});
+
+test('rejects a strategy with a NUL character in a text column (title) or a jsonb column (constraints)', async () => {
+    const project = await db.stores.projectStore.create({
+        id: randomId(),
+        name: randomId(),
+        description: '',
+        mode: 'open',
+    });
+
+    const flag = await db.stores.featureToggleStore.create(project.id, {
+        name: randomId(),
+        impressionData: true,
+        createdByUserId: 9999,
+    });
+
+    const featureStrategiesPath = `/api/admin/projects/${project.id}/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`;
+
+    const nulCharacterMessage =
+        'The request contains the NUL character (\\u0000), which cannot be stored.';
+
+    await app.request
+        .post(featureStrategiesPath)
+        .send({
+            name: 'flexibleRollout',
+            title: 'VISA_114\u0000',
+        })
+        .expect(400)
+        .expect((res) =>
+            expect(res.body.details[0].message).toBe(nulCharacterMessage),
+        );
+
+    await app.request
+        .post(featureStrategiesPath)
+        .send({
+            name: 'flexibleRollout',
+            constraints: [
+                {
+                    contextName: 'userId',
+                    operator: 'IN',
+                    values: ['VISA_114\u0000'],
+                },
+            ],
+        })
+        .expect(400)
+        .expect((res) =>
+            expect(res.body.details[0].message).toBe(nulCharacterMessage),
+        );
 });
 
 test('should add default constraint values for single-valued constraints', async () => {

@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { styled } from '@mui/material';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import FormTemplate, {
+    type FormTemplateLayout,
+} from 'component/common/FormTemplate/FormTemplate';
 import ApiTokenForm from '../ApiTokenForm/ApiTokenForm.tsx';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
@@ -32,7 +34,7 @@ import {
 
 const pageTitle = 'Create API token';
 interface ICreateApiTokenProps {
-    modal?: boolean;
+    layout?: FormTemplateLayout;
 }
 
 const StyledLimit = styled(Limit)(({ theme }) => ({
@@ -52,7 +54,7 @@ const useApiTokenLimit = () => {
     };
 };
 
-export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
+export const CreateApiToken = ({ layout }: ICreateApiTokenProps) => {
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
@@ -136,7 +138,7 @@ export const CreateApiToken = ({ modal = false }: ICreateApiTokenProps) => {
         <FormTemplate
             loading={loadingCreateToken}
             title={pageTitle}
-            modal={modal}
+            layout={layout}
             description='Unleash SDKs use API tokens to authenticate with the Unleash API. An SDK must be configured with a token of the corresponding type, so they can fetch feature flags and post usage metrics.'
             documentationLink='https://docs.getunleash.io/concepts/api-tokens-and-client-keys'
             documentationLinkLabel='API tokens documentation'

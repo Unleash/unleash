@@ -7,7 +7,7 @@ import {
     iconButtonSizes,
     subtleOutlinedButton,
 } from './controls.js';
-import { focusable } from 'themes/themeStyles';
+import { focusable, switchFocusOutlineOffset } from 'themes/themeStyles';
 
 export const baseTheme = {
     breakpoints: {
@@ -604,6 +604,9 @@ export const lightTheme = createTheme({
                             color: theme.palette.action.disabled,
                         },
                 }),
+                switchBase: {
+                    '&.Mui-focusVisible': switchFocusOutlineOffset,
+                },
             },
         },
 

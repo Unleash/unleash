@@ -1,4 +1,10 @@
-import { Typography, Button, useTheme, useMediaQuery } from '@mui/material';
+import {
+    Typography,
+    Button,
+    styled,
+    useTheme,
+    useMediaQuery,
+} from '@mui/material';
 import { EventDiff } from 'component/events/EventDiff/EventDiff';
 import {
     fadeInBottomEnter,
@@ -7,8 +13,22 @@ import {
 import AnimateOnMount from 'component/common/AnimateOnMount/AnimateOnMount';
 import { useMemo } from 'react';
 
+const DiffContainer = styled('div')(({ theme }) => ({
+    maxHeight: theme.spacing(40),
+    overflowY: 'auto',
+    marginBottom: theme.spacing(2),
+}));
+
+const Actions = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-end',
+    gap: theme.spacing(1),
+    marginBottom: theme.spacing(2),
+}));
+
 interface IStaleDataNotification {
     refresh: () => void;
+    dismiss: () => void;
     afterSubmitAction: () => void;
     data: unknown;
     cache: unknown;
@@ -17,6 +37,7 @@ interface IStaleDataNotification {
 
 export const StaleDataNotification = ({
     refresh,
+    dismiss,
     show,
     afterSubmitAction,
     data,
@@ -57,18 +78,22 @@ export const StaleDataNotification = ({
                 refresh your data? This may happen if someone has been making
                 changes to the data while you were working.
             </Typography>
-            <EventDiff entry={{ preData: cache, data }} />
-            <Button
-                sx={{ mb: 2 }}
-                variant='contained'
-                color='primary'
-                onClick={() => {
-                    refresh();
-                    afterSubmitAction();
-                }}
-            >
-                Refresh data
-            </Button>
+            <DiffContainer>
+                <EventDiff entry={{ preData: cache, data }} />
+            </DiffContainer>
+            <Actions>
+                <Button onClick={dismiss}>Dismiss</Button>
+                <Button
+                    variant='contained'
+                    color='primary'
+                    onClick={() => {
+                        refresh();
+                        afterSubmitAction();
+                    }}
+                >
+                    Refresh data
+                </Button>
+            </Actions>
         </AnimateOnMount>
     );
 };

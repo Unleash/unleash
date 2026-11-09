@@ -52,6 +52,7 @@ import {
     getVariantValue,
     isDefined,
     parseEnvVarBoolean,
+    parseEnvVarNumber,
     randomId,
 } from './util/index.js';
 import type {
@@ -168,6 +169,7 @@ import {
 } from './util/metrics/index.js';
 import FakeEventStore from '../test/fixtures/fake-event-store.js';
 import { FakeAccountStore } from '../test/fixtures/fake-account-store.js';
+import FakePatStore from './features/pat/fake-pat-store.js';
 import type { Subscriber } from './features/user-subscriptions/user-subscriptions-read-model-type.js';
 import { UserSubscriptionsReadModel } from './features/user-subscriptions/user-subscriptions-read-model.js';
 import { AccountStore } from './db/account-store.js';
@@ -361,10 +363,12 @@ export async function createApp(
     };
 
     if (config.import.file) {
-        await services.importService.importFromFile(
-            config.import.file,
-            config.import.project,
-            config.import.environment,
+        await services.importService.transactional((service) =>
+            service.importFromFile(
+                config.import.file,
+                config.import.project,
+                config.import.environment,
+            ),
         );
     }
 
@@ -372,8 +376,10 @@ export async function createApp(
         config.environmentEnableOverrides &&
         config.environmentEnableOverrides?.length > 0
     ) {
-        await services.environmentService.overrideEnabledProjects(
-            config.environmentEnableOverrides,
+        const environmentEnableOverrides = config.environmentEnableOverrides;
+        await services.transactionalEnvironmentService.transactional(
+            (service) =>
+                service.overrideEnabledProjects(environmentEnableOverrides),
         );
     }
 
@@ -503,6 +509,7 @@ export {
     defaultToRow,
     isDefined,
     parseEnvVarBoolean,
+    parseEnvVarNumber,
     querySchema,
     basePaginationParameters,
     migrateDb,
@@ -547,6 +554,7 @@ export {
     FakeUserSubscriptionsReadModel,
     AccountStore,
     FakeAccountStore,
+    FakePatStore,
     FakePrivateProjectChecker,
     FakeChangeRequestAccessReadModel,
     createFakeProjectReadModel,

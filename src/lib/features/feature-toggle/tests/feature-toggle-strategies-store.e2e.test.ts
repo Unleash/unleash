@@ -8,6 +8,7 @@ import type {
     IConstraint,
     IFeatureStrategiesReadModel,
     IProjectStore,
+    IStrategyVariant,
     IUnleashStores,
 } from '../../../types/index.js';
 import { DEFAULT_ENV, randomId } from '../../../util/index.js';
@@ -398,4 +399,63 @@ test('a flag is permanent when its lifetime is 0 or its type has none', async ()
     expect(
         await featureToggleStore.getLifetime('flag-with-permanent-type'),
     ).toEqual({ type: 'permanent' });
+});
+
+const strategyWithVariants = (feature: string, variants: IStrategyVariant[]) =>
+    featureStrategiesStore.createStrategyFeatureEnv({
+        strategyName: 'flexibleRollout',
+        projectId: 'default',
+        environment: DEFAULT_ENV,
+        featureName: feature,
+        constraints: [],
+        parameters: {},
+        variants,
+    });
+
+const variant = (
+    name: string,
+    payload?: IStrategyVariant['payload'],
+): IStrategyVariant => ({
+    name,
+    weight: 1000,
+    weightType: 'variable',
+    stickiness: 'default',
+    payload,
+});
+
+test('a json variant payload is reported with the strategy and variant it belongs to', async () => {
+    const strategy = await strategyWithVariants(featureName, [
+        variant('blue', { type: 'json', value: '{"color":"blue"}' }),
+    ]);
+
+    const payloads =
+        await featureStrategiesReadModel.getVariantJsonPayloads(featureName);
+
+    expect(payloads).toEqual([
+        {
+            strategyId: strategy.id,
+            variantName: 'blue',
+            value: '{"color":"blue"}',
+        },
+    ]);
+});
+
+test('non-json payloads and payloads of other flags are not reported', async () => {
+    const otherFeatureName = randomId();
+    await featureToggleStore.create('default', {
+        name: otherFeatureName,
+        createdByUserId: 9999,
+    });
+    await strategyWithVariants(featureName, [
+        variant('plain', { type: 'string', value: 'not json' }),
+        variant('bare'),
+    ]);
+    await strategyWithVariants(otherFeatureName, [
+        variant('green', { type: 'json', value: '{"color":"green"}' }),
+    ]);
+
+    const payloads =
+        await featureStrategiesReadModel.getVariantJsonPayloads(featureName);
+
+    expect(payloads).toEqual([]);
 });

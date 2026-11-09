@@ -44,7 +44,10 @@ import type { ISegmentReadModel } from '../features/segment/segment-read-model-t
 import type { IProjectOwnersReadModel } from '../features/project/project-owners-read-model.type.js';
 import type { IFeatureLifecycleStore } from '../features/feature-lifecycle/feature-lifecycle-store-type.js';
 import type { IProjectFlagCreatorsReadModel } from '../features/project/project-flag-creators-read-model.type.js';
-import type { IFeatureStrategiesReadModel } from '../features/feature-toggle/types/feature-strategies-read-model-type.js';
+import type {
+    IFeatureStrategiesReadModel,
+    StrategyVariantJsonPayload,
+} from '../features/feature-toggle/types/feature-strategies-read-model-type.js';
 import type { IFeatureLifecycleReadModel } from '../features/feature-lifecycle/feature-lifecycle-read-model-type.js';
 import type { ILargestResourcesReadModel } from '../features/metrics/sizes/largest-resources-read-model-type.js';
 import type { IntegrationEventsStore } from '../features/integration-events/integration-events-store.js';
@@ -186,6 +189,7 @@ export {
     type IFeatureLifecycleStore,
     type IProjectFlagCreatorsReadModel,
     type IFeatureStrategiesReadModel,
+    type StrategyVariantJsonPayload,
     type IFeatureLifecycleReadModel,
     type ILargestResourcesReadModel,
     type IFeatureCollaboratorsReadModel,

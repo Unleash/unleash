@@ -250,6 +250,7 @@ test('should collect metrics for feature flag size', async () => {
 describe('feature label on max/largest feature metrics', () => {
     beforeEach(() => {
         stores.featureStrategiesReadModel = {
+            getVariantJsonPayloads: async () => [],
             getMaxFeatureEnvironmentStrategies: async () => ({
                 feature: 'secretFlag',
                 environment: 'production',

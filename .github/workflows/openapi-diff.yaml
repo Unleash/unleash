@@ -176,13 +176,21 @@ jobs:
         if: github.event_name != 'pull_request'
         run: cat openapi-diff.txt
       - name: Comment on PR with OpenAPI diff
-        if: github.event_name == 'pull_request'
+        # Dependabot and fork PRs get a read-only GITHUB_TOKEN and can't comment;
+        # the diff is still visible as annotations from the step above.
+        if: >-
+          github.event_name == 'pull_request' &&
+          github.actor != 'dependabot[bot]' &&
+          github.event.pull_request.head.repo.full_name == github.repository
         uses: actions/github-script@v9
         with:
           script: |
             const fs = require('fs');
             const diff = fs.readFileSync('openapi-diff.txt', 'utf8');
-            const diffLines = diff.split('\n').filter(line => line.trim() !== '' && !line.startsWith('#')).length;
+            const diffLines = diff
+              .split('\n')
+              .filter(line => line.trim() !== '' && !line.startsWith('#') && line.trim() !== 'No changes detected')
+              .length;
             const marker = '[//]: # (OpenAPI diff - used to identify the comment)';
             // Get all comments on the PR
             const { data: comments } = await github.rest.issues.listComments({

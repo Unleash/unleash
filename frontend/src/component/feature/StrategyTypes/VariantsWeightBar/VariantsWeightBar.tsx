@@ -1,17 +1,13 @@
-import { type HTMLAttributes, memo } from 'react';
+import { type HTMLAttributes, memo, type PointerEvent, useRef } from 'react';
 import type { IFeatureVariantEdit } from '../../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
 import { alpha, Slider, styled } from '@mui/material';
 import DragIndicator from '@mui/icons-material/DragIndicator';
 import { focusOutline } from 'themes/themeStyles';
 import {
+    splitPositionsFromWeights,
     TOTAL_WEIGHT,
-    weightsFromDraggedPositions,
+    weightsFromDraggedHandle,
 } from '../variantWeights.ts';
-
-const cumulativeWeights = (weights: number[]) =>
-    weights.map((_, index) =>
-        weights.slice(0, index + 1).reduce((sum, weight) => sum + weight, 0),
-    );
 
 const Bar = styled('div', {
     shouldForwardProp: (prop) => prop !== 'hasError',
@@ -99,6 +95,13 @@ const GripThumb = ({
     );
 };
 
+const ignorePressesOutsideHandles = (event: PointerEvent<HTMLElement>) => {
+    const pressedHandle = (event.target as HTMLElement).closest('[data-index]'); // MUI attribute for each handle
+    if (!pressedHandle) {
+        event.preventDefault();
+    }
+};
+
 type BarVariant = Pick<IFeatureVariantEdit, 'id' | 'name' | 'weight'> & {
     color: string;
     locked: boolean;
@@ -116,7 +119,8 @@ const VariantsWeightBarComponent = ({
     onWeightsChange,
 }: VariantsWeightBarProps) => {
     const weights = variants.map((variant) => variant.weight);
-    const splitPositions = cumulativeWeights(weights).slice(0, -1);
+    const splitPositions = splitPositionsFromWeights(weights);
+    const draggedHandleIndexRef = useRef<number | null>(null);
 
     const hiddenHandleIndexes = splitPositions.flatMap((_, handleIndex) => {
         const variantLeftOfHandle = variants[handleIndex];
@@ -125,23 +129,23 @@ const VariantsWeightBarComponent = ({
             ? [handleIndex]
             : [];
     });
-    const changeSplitPositions = (value: number | number[]) => {
+    const changeSplitPositions = (
+        value: number | number[],
+        activeHandleIndex: number,
+    ) => {
         const nextSplitPositions = Array.isArray(value) ? value : [value];
+        const draggedHandleIndex =
+            draggedHandleIndexRef.current ?? activeHandleIndex;
+        draggedHandleIndexRef.current = draggedHandleIndex;
         const lockedIndexes = variants.flatMap((variant, index) =>
             variant.locked ? [index] : [],
         );
-        const nextWeights = weightsFromDraggedPositions({
+        const nextWeights = weightsFromDraggedHandle({
             previousWeights: weights,
             splitPositions: nextSplitPositions,
+            draggedHandleIndex,
             lockedIndexes,
         });
-        const changesLockedWeight = variants.some(
-            (variant, index) =>
-                variant.locked && nextWeights[index] !== weights[index],
-        );
-        if (changesLockedWeight) {
-            return;
-        }
         onWeightsChange(nextWeights);
     };
 
@@ -164,6 +168,7 @@ const VariantsWeightBarComponent = ({
             </Segments>
             {variants.length > 1 ? (
                 <HandleSlider
+                    onPointerDown={ignorePressesOutsideHandles} // only adjust weights by dragging handles
                     value={splitPositions}
                     min={0}
                     max={TOTAL_WEIGHT}
@@ -180,7 +185,12 @@ const VariantsWeightBarComponent = ({
                     getAriaValueText={(splitPosition) =>
                         `${splitPosition / 10}%`
                     }
-                    onChange={(_, value) => changeSplitPositions(value)}
+                    onChange={(_, value, activeHandleIndex) =>
+                        changeSplitPositions(value, activeHandleIndex)
+                    }
+                    onChangeCommitted={() => {
+                        draggedHandleIndexRef.current = null;
+                    }}
                 />
             ) : null}
         </Bar>

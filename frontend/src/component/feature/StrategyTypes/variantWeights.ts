@@ -3,11 +3,14 @@ import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/Feature
 
 export const TOTAL_WEIGHT = 1000;
 
-const weightsFromSplitPositions = (splitPositions: number[]): number[] => {
-    const segmentStarts = [0, ...splitPositions];
-    const segmentEnds = [...splitPositions, TOTAL_WEIGHT];
-    return segmentStarts.map((start, index) => segmentEnds[index] - start);
-};
+export const splitPositionsFromWeights = (weights: number[]): number[] =>
+    weights
+        .slice(0, -1)
+        .map((_, index) =>
+            weights
+                .slice(0, index + 1)
+                .reduce((sum, weight) => sum + weight, 0),
+        );
 
 export const absorbWeightChange = ({
     weights,
@@ -69,10 +72,24 @@ const roundChangedWeights = ({
         return nextWeights;
     }
 
-    const roundedWeights = nextWeights.map((weight, index) =>
-        changedIndexes.includes(index) ? Math.round(weight / 10) * 10 : weight,
-    );
     const lastChangedIndex = changedIndexes[changedIndexes.length - 1];
+    const changedTotal = changedIndexes.reduce(
+        (sum, index) => sum + nextWeights[index],
+        0,
+    );
+    const roundedWeights = nextWeights.map((weight, index) =>
+        changedIndexes.includes(index) && index !== lastChangedIndex
+            ? Math.round(weight / 10) * 10
+            : weight,
+    );
+    const roundedChangedTotal = changedIndexes
+        .filter((index) => index !== lastChangedIndex)
+        .reduce((sum, index) => sum + roundedWeights[index], 0);
+    const lastChangedComplement = changedTotal - roundedChangedTotal;
+    roundedWeights[lastChangedIndex] = Math.max(lastChangedComplement, 0);
+    if (lastChangedComplement >= 0) {
+        return roundedWeights;
+    }
     return absorbWeightChange({
         weights: roundedWeights,
         changedIndex: lastChangedIndex,
@@ -80,16 +97,38 @@ const roundChangedWeights = ({
     });
 };
 
-export const weightsFromDraggedPositions = ({
+export const weightsFromDraggedHandle = ({
     previousWeights,
     splitPositions,
+    draggedHandleIndex,
     lockedIndexes = [],
 }: {
     previousWeights: number[];
     splitPositions: number[]; // the handle positions (e.g. 850 puts a handle 85% of the way across the bar)
+    draggedHandleIndex: number;
     lockedIndexes?: number[];
 }): number[] => {
-    const nextWeights = weightsFromSplitPositions(splitPositions);
+    const previousPositions = splitPositionsFromWeights(previousWeights);
+    const unDraggedPositions = previousPositions.filter(
+        (_, index) => index !== draggedHandleIndex,
+    );
+    const draggedPosition =
+        splitPositions.find(
+            (position, index) => position !== unDraggedPositions[index],
+        ) ?? previousPositions[draggedHandleIndex];
+
+    const growingVariantIndex = draggedHandleIndex;
+    const shrinkingVariantIndex = draggedHandleIndex + 1;
+    const draggedDelta =
+        draggedPosition - previousPositions[draggedHandleIndex];
+    const appliedDelta = Math.min(
+        Math.max(draggedDelta, -previousWeights[growingVariantIndex]),
+        previousWeights[shrinkingVariantIndex],
+    );
+
+    const nextWeights = [...previousWeights];
+    nextWeights[growingVariantIndex] += appliedDelta;
+    nextWeights[shrinkingVariantIndex] -= appliedDelta;
     return roundChangedWeights({ previousWeights, nextWeights, lockedIndexes });
 };
 

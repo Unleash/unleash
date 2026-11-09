@@ -60,7 +60,6 @@ export const PercentageDonut = ({
 
     return (
         <StyledContainer>
-            {/* biome-ignore lint/a11y/noSvgWithoutTitle: should be in a figure with figcaption */}
             <svg viewBox={`0 0 ${d} ${d}`} style={style} aria-hidden>
                 <circle
                     r={r}

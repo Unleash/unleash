@@ -305,26 +305,26 @@ test('a read leaves the session signed in without renewing it', async () => {
 });
 
 describe('the hard max age applies whether the flag is on or off', () => {
-    test.each([
-        true,
-        false,
-    ])('the ceiling counts from sign-in rather than sliding forward on every request (flag on: %s)', async (flagEnabled) => {
-        const { agent } = await signedIn({ flagEnabled });
-        // signed in an hour ago, so 47 of the 48 hours are left
-        await agent.post('/rewind?login=3600000').expect(200);
+    test.each([true, false])(
+        'the ceiling counts from sign-in rather than sliding forward on every request (flag on: %s)',
+        async (flagEnabled) => {
+            const { agent } = await signedIn({ flagEnabled });
+            // signed in an hour ago, so 47 of the 48 hours are left
+            await agent.post('/rewind?login=3600000').expect(200);
 
-        const first = await agent.get('/api/admin/projects').expect(200);
-        await agent.get('/api/admin/projects').expect(200);
-        const second = await agent.get('/api/admin/projects').expect(200);
+            const first = await agent.get('/api/admin/projects').expect(200);
+            await agent.get('/api/admin/projects').expect(200);
+            const second = await agent.get('/api/admin/projects').expect(200);
 
-        expect(hoursFromNow(first.body.cookieExpires)).toBeCloseTo(47, 1);
-        expect(
-            Math.abs(
-                new Date(second.body.cookieExpires).getTime() -
-                    new Date(first.body.cookieExpires).getTime(),
-            ),
-        ).toBeLessThan(1000);
-    });
+            expect(hoursFromNow(first.body.cookieExpires)).toBeCloseTo(47, 1);
+            expect(
+                Math.abs(
+                    new Date(second.body.cookieExpires).getTime() -
+                        new Date(first.body.cookieExpires).getTime(),
+                ),
+            ).toBeLessThan(1000);
+        },
+    );
 
     test('a session past its max age ends with the flag off, like any other', async () => {
         const { agent, storedSessions } = await signedIn({

@@ -61,54 +61,54 @@ test('with flag set client api should return 403 if user object is set and token
     expect(res.status).toHaveBeenCalledWith(403);
 });
 
-test.each([
-    'user:asdkjsdhg3',
-    '*:*.asdf',
-])('%s PAT format tokens with client api cause middleware to return 403 when flag is set', async (rejectedToken) => {
-    const localConfig = createTestConfig({
-        getLogger,
-        authentication: {
-            enableApiToken: true,
-            type: IAuthType.HOSTED,
-        },
-        experimental: {
-            flags: {
-                allowDeprecatedApiTokenMiddleware: false,
+test.each(['user:asdkjsdhg3', '*:*.asdf'])(
+    '%s PAT format tokens with client api cause middleware to return 403 when flag is set',
+    async (rejectedToken) => {
+        const localConfig = createTestConfig({
+            getLogger,
+            authentication: {
+                enableApiToken: true,
+                type: IAuthType.HOSTED,
             },
-        },
-    });
+            experimental: {
+                flags: {
+                    allowDeprecatedApiTokenMiddleware: false,
+                },
+            },
+        });
 
-    const apiTokenService = {
-        getUserForToken: vi.fn(),
-    } as unknown as ApiTokenService;
-    const apiTokenV2Service = {
-        getUserForToken: vi.fn(),
-    } as unknown as ReadOnlyApiTokenV2Service;
+        const apiTokenService = {
+            getUserForToken: vi.fn(),
+        } as unknown as ApiTokenService;
+        const apiTokenV2Service = {
+            getUserForToken: vi.fn(),
+        } as unknown as ReadOnlyApiTokenV2Service;
 
-    const func = backendApiAccessMiddleware(localConfig, {
-        apiTokenService,
-        apiTokenV2Service,
-    });
+        const func = backendApiAccessMiddleware(localConfig, {
+            apiTokenService,
+            apiTokenV2Service,
+        });
 
-    const cb = vi.fn();
-    const res = {
-        status: vi.fn().mockReturnValue({ send: vi.fn() }),
-    };
+        const cb = vi.fn();
+        const res = {
+            status: vi.fn().mockReturnValue({ send: vi.fn() }),
+        };
 
-    const req = {
-        header: vi.fn().mockReturnValue(rejectedToken),
-        user: undefined,
-        path: '/api/client/metrics',
-    };
+        const req = {
+            header: vi.fn().mockReturnValue(rejectedToken),
+            user: undefined,
+            path: '/api/client/metrics',
+        };
 
-    await func(req, res, cb);
+        await func(req, res, cb);
 
-    expect(apiTokenService.getUserForToken).not.toHaveBeenCalled();
-    expect(req.header).toHaveBeenCalled();
-    expect(res.status).toHaveBeenCalledWith(403);
-    expect(cb).not.toHaveBeenCalled();
-    expect(req.user).toBeFalsy();
-});
+        expect(apiTokenService.getUserForToken).not.toHaveBeenCalled();
+        expect(req.header).toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(403);
+        expect(cb).not.toHaveBeenCalled();
+        expect(req.user).toBeFalsy();
+    },
+);
 
 test('uses the V2 verifier for V2 token format', async () => {
     const localConfig = createTestConfig({

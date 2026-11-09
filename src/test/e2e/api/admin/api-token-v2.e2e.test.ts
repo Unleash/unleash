@@ -352,114 +352,122 @@ describe('application associations', () => {
         }
     });
 
-    test.each([
-        true,
-        false,
-    ])('direct backend reporting uses stored identity when linked: %s', async (linked) => {
-        const token = await create({
-            appName: linked ? 'configured-app' : undefined,
-        });
-        const reportedName = linked ? 'ignored-sdk-name' : 'unlinked-sdk-name';
-        const expected = linked ? 'configured-app' : reportedName;
-        const registration = {
-            appName: reportedName,
-            instanceId: `backend-${linked}`,
-            strategies: ['default'],
-            sdkVersion: 'unleash-client-test:1.0',
-            interval: 10,
-            started: Date.now(),
-        };
-        await app.request
-            .post('/api/client/register')
-            .set('Authorization', token.secret)
-            .send(registration)
-            .expect(202);
-        const now = new Date().toISOString();
-        await app.request
-            .post('/api/client/metrics')
-            .set('Authorization', token.secret)
-            .send({
+    test.each([true, false])(
+        'direct backend reporting uses stored identity when linked: %s',
+        async (linked) => {
+            const token = await create({
+                appName: linked ? 'configured-app' : undefined,
+            });
+            const reportedName = linked
+                ? 'ignored-sdk-name'
+                : 'unlinked-sdk-name';
+            const expected = linked ? 'configured-app' : reportedName;
+            const registration = {
                 appName: reportedName,
-                instanceId: registration.instanceId,
-                bucket: {
-                    start: now,
-                    stop: now,
-                    toggles: { 'associated-flag': { yes: 5, no: 2 } },
-                },
-            })
-            .expect(202);
-        await app.services.clientInstanceService.bulkAdd();
-        await app.services.clientMetricsServiceV2.bulkAdd();
-        expect(await db.stores.clientApplicationsStore.exists(expected)).toBe(
-            true,
-        );
-        const instances =
-            await db.stores.clientInstanceStore.getByAppName(expected);
-        expect(
-            instances.some(
-                (instance) => instance.instanceId === registration.instanceId,
-            ),
-        ).toBe(true);
-        const metrics = await db.stores.clientMetricsStoreV2.getAll({
-            app_name: expected,
-        });
-        expect(metrics).toContainEqual(
-            expect.objectContaining({
-                featureName: 'associated-flag',
-                yes: 5,
-                no: 2,
-            }),
-        );
-        if (linked)
+                instanceId: `backend-${linked}`,
+                strategies: ['default'],
+                sdkVersion: 'unleash-client-test:1.0',
+                interval: 10,
+                started: Date.now(),
+            };
+            await app.request
+                .post('/api/client/register')
+                .set('Authorization', token.secret)
+                .send(registration)
+                .expect(202);
+            const now = new Date().toISOString();
+            await app.request
+                .post('/api/client/metrics')
+                .set('Authorization', token.secret)
+                .send({
+                    appName: reportedName,
+                    instanceId: registration.instanceId,
+                    bucket: {
+                        start: now,
+                        stop: now,
+                        toggles: { 'associated-flag': { yes: 5, no: 2 } },
+                    },
+                })
+                .expect(202);
+            await app.services.clientInstanceService.bulkAdd();
+            await app.services.clientMetricsServiceV2.bulkAdd();
             expect(
-                await db.stores.clientApplicationsStore.exists(reportedName),
-            ).toBe(false);
-    });
+                await db.stores.clientApplicationsStore.exists(expected),
+            ).toBe(true);
+            const instances =
+                await db.stores.clientInstanceStore.getByAppName(expected);
+            expect(
+                instances.some(
+                    (instance) =>
+                        instance.instanceId === registration.instanceId,
+                ),
+            ).toBe(true);
+            const metrics = await db.stores.clientMetricsStoreV2.getAll({
+                app_name: expected,
+            });
+            expect(metrics).toContainEqual(
+                expect.objectContaining({
+                    featureName: 'associated-flag',
+                    yes: 5,
+                    no: 2,
+                }),
+            );
+            if (linked)
+                expect(
+                    await db.stores.clientApplicationsStore.exists(
+                        reportedName,
+                    ),
+                ).toBe(false);
+        },
+    );
 
-    test.each([
-        true,
-        false,
-    ])('frontend reporting uses stored identity when linked: %s', async (linked) => {
-        const token = await create({
-            type: ApiTokenType.FRONTEND,
-            appName: linked ? 'configured-app' : undefined,
-        });
-        const now = new Date().toISOString();
-        const reportedName = linked
-            ? 'ignored-frontend-name'
-            : 'unlinked-frontend-name';
-        await app.request
-            .post('/api/frontend/client/metrics')
-            .set('Authorization', token.secret)
-            .set('unleash-sdk', 'javascript:1.0')
-            .send({
-                appName: reportedName,
-                instanceId: `frontend-${linked}`,
-                bucket: {
-                    start: now,
-                    stop: now,
-                    toggles: { 'associated-flag': { yes: 3, no: 1 } },
-                },
-            })
-            .expect(200);
-        await app.services.clientInstanceService.bulkAdd();
-        await app.services.clientMetricsServiceV2.bulkAdd();
-        const expected = linked ? 'configured-app' : reportedName;
-        const metrics = await db.stores.clientMetricsStoreV2.getAll({
-            app_name: expected,
-        });
-        expect(
-            metrics.some(
-                (metric) =>
-                    metric.featureName === 'associated-flag' && metric.yes >= 3,
-            ),
-        ).toBe(true);
-        expect(
-            (await db.stores.clientInstanceStore.getByAppName(expected)).some(
-                (instance) => instance.instanceId === `frontend-${linked}`,
-            ),
-        ).toBe(true);
-    });
+    test.each([true, false])(
+        'frontend reporting uses stored identity when linked: %s',
+        async (linked) => {
+            const token = await create({
+                type: ApiTokenType.FRONTEND,
+                appName: linked ? 'configured-app' : undefined,
+            });
+            const now = new Date().toISOString();
+            const reportedName = linked
+                ? 'ignored-frontend-name'
+                : 'unlinked-frontend-name';
+            await app.request
+                .post('/api/frontend/client/metrics')
+                .set('Authorization', token.secret)
+                .set('unleash-sdk', 'javascript:1.0')
+                .send({
+                    appName: reportedName,
+                    instanceId: `frontend-${linked}`,
+                    bucket: {
+                        start: now,
+                        stop: now,
+                        toggles: { 'associated-flag': { yes: 3, no: 1 } },
+                    },
+                })
+                .expect(200);
+            await app.services.clientInstanceService.bulkAdd();
+            await app.services.clientMetricsServiceV2.bulkAdd();
+            const expected = linked ? 'configured-app' : reportedName;
+            const metrics = await db.stores.clientMetricsStoreV2.getAll({
+                app_name: expected,
+            });
+            expect(
+                metrics.some(
+                    (metric) =>
+                        metric.featureName === 'associated-flag' &&
+                        metric.yes >= 3,
+                ),
+            ).toBe(true);
+            expect(
+                (
+                    await db.stores.clientInstanceStore.getByAppName(expected)
+                ).some(
+                    (instance) => instance.instanceId === `frontend-${linked}`,
+                ),
+            ).toBe(true);
+        },
+    );
 
     test('Edge bulk forwarding preserves consumer names instead of attributing aggregates to its credential', async () => {
         const token = await create();

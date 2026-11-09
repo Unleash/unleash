@@ -86,61 +86,64 @@ test.each([
     'feature-uncompleted',
     'feature-stale-on',
     'feature-stale-off',
-] as const)('configuration filter ignores %s but retains audit history', async (type) => {
-    await eventStore.store({
-        type: FEATURE_CREATED,
-        featureName: 'polling-feature',
-        project: 'default',
-        createdBy: 'test',
-        createdByUserId: testAudit.id,
-        ip: testAudit.ip,
-    });
-    const baseline = await eventStore.getMaxRevisionId();
-    await eventStore.store({
-        type,
-        featureName: 'polling-feature',
-        project: 'default',
-        createdBy: 'test',
-        createdByUserId: testAudit.id,
-        ip: testAudit.ip,
-    });
-    const events = await eventStore.getAll();
-    const metadataEvent = events.find((event) => event.type === type)!;
-    expect(metadataEvent.id).toBeGreaterThan(baseline);
-    for (const environment of [undefined, 'development', 'production']) {
-        expect(await eventStore.getMaxRevisionId(baseline, environment)).toBe(
-            baseline,
-        );
-    }
-    expect(
-        await eventStore.getRevisionRange(baseline, metadataEvent.id),
-    ).toEqual([]);
-    expect(
-        (
-            await eventStore.getDeltaRevisionState('development')
-        ).projectRevisions.get('default'),
-    ).toBe(baseline);
+] as const)(
+    'configuration filter ignores %s but retains audit history',
+    async (type) => {
+        await eventStore.store({
+            type: FEATURE_CREATED,
+            featureName: 'polling-feature',
+            project: 'default',
+            createdBy: 'test',
+            createdByUserId: testAudit.id,
+            ip: testAudit.ip,
+        });
+        const baseline = await eventStore.getMaxRevisionId();
+        await eventStore.store({
+            type,
+            featureName: 'polling-feature',
+            project: 'default',
+            createdBy: 'test',
+            createdByUserId: testAudit.id,
+            ip: testAudit.ip,
+        });
+        const events = await eventStore.getAll();
+        const metadataEvent = events.find((event) => event.type === type)!;
+        expect(metadataEvent.id).toBeGreaterThan(baseline);
+        for (const environment of [undefined, 'development', 'production']) {
+            expect(
+                await eventStore.getMaxRevisionId(baseline, environment),
+            ).toBe(baseline);
+        }
+        expect(
+            await eventStore.getRevisionRange(baseline, metadataEvent.id),
+        ).toEqual([]);
+        expect(
+            (
+                await eventStore.getDeltaRevisionState('development')
+            ).projectRevisions.get('default'),
+        ).toBe(baseline);
 
-    await eventStore.store({
-        type: FEATURE_UPDATED,
-        featureName: 'polling-feature',
-        project: 'default',
-        createdBy: testAudit.username,
-        createdByUserId: testAudit.id,
-        ip: testAudit.ip,
-        data: { enabled: true },
-    });
-    const configurationRevision = await eventStore.getMaxRevisionId();
-    expect(configurationRevision).toBeGreaterThan(metadataEvent.id);
-    expect(
-        await eventStore.getRevisionRange(baseline, configurationRevision),
-    ).toEqual([
-        expect.objectContaining({
+        await eventStore.store({
             type: FEATURE_UPDATED,
-            id: configurationRevision,
-        }),
-    ]);
-});
+            featureName: 'polling-feature',
+            project: 'default',
+            createdBy: testAudit.username,
+            createdByUserId: testAudit.id,
+            ip: testAudit.ip,
+            data: { enabled: true },
+        });
+        const configurationRevision = await eventStore.getMaxRevisionId();
+        expect(configurationRevision).toBeGreaterThan(metadataEvent.id);
+        expect(
+            await eventStore.getRevisionRange(baseline, configurationRevision),
+        ).toEqual([
+            expect.objectContaining({
+                type: FEATURE_UPDATED,
+                id: configurationRevision,
+            }),
+        ]);
+    },
+);
 
 test.each([
     'feature-created',
@@ -987,26 +990,28 @@ describe('a failed event write', () => {
         batchStore: (store: EventStore) => store.batchStore([event]),
     };
 
-    test.each(
-        Object.entries(writes),
-    )('%s rethrows it inside a transaction', async (_, write) => {
-        const eventStoreService = withTransactional(
-            (db) => new EventStore(db, eventBus, getLogger),
-            db.rawDatabase,
-        );
+    test.each(Object.entries(writes))(
+        '%s rethrows it inside a transaction',
+        async (_, write) => {
+            const eventStoreService = withTransactional(
+                (db) => new EventStore(db, eventBus, getLogger),
+                db.rawDatabase,
+            );
 
-        await expect(eventStoreService.transactional(write)).rejects.toThrow(
-            'value too long',
-        );
-    });
+            await expect(
+                eventStoreService.transactional(write),
+            ).rejects.toThrow('value too long');
+        },
+    );
 
-    test.each(
-        Object.entries(writes),
-    )('%s swallows it outside a transaction', async (_, write) => {
-        await expect(
-            write(new EventStore(db.rawDatabase, eventBus, getLogger)),
-        ).resolves.toBeUndefined();
-    });
+    test.each(Object.entries(writes))(
+        '%s swallows it outside a transaction',
+        async (_, write) => {
+            await expect(
+                write(new EventStore(db.rawDatabase, eventBus, getLogger)),
+            ).resolves.toBeUndefined();
+        },
+    );
 });
 
 test('reports each write on the bus it was given', async () => {

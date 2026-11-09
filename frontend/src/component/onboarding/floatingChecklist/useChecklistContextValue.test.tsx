@@ -162,17 +162,20 @@ test('stays visible on next load after the user reopens a dismissed checklist', 
     expect(await screen.findByTestId('dismissed')).toHaveTextContent('n');
 });
 
-test.each([
-    '/personal',
-    '/projects/default',
-])('starts closed on %s when dashboard V2 is enabled', async (route) => {
-    mockEligibleUser({ dashboardV2: true });
-    mockProjectOverview('onboarding-started');
+test.each(['/personal', '/projects/default'])(
+    'starts closed on %s when dashboard V2 is enabled',
+    async (route) => {
+        mockEligibleUser({ dashboardV2: true });
+        mockProjectOverview('onboarding-started');
 
-    render(<TestComponent />, { permissions: [{ permission: ADMIN }], route });
+        render(<TestComponent />, {
+            permissions: [{ permission: ADMIN }],
+            route,
+        });
 
-    expect(await screen.findByTestId('dismissed')).toHaveTextContent('y');
-});
+        expect(await screen.findByTestId('dismissed')).toHaveTextContent('y');
+    },
+);
 
 test('opening the checklist keeps it open across project and dashboard page loads', async () => {
     seedState({ completed: { flag: true } });

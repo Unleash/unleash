@@ -350,37 +350,40 @@ describe('rate limit policies', () => {
         ['/api/proxy', '/api/frontend'],
         ['/api/client/features', '/api/proxy'],
         ['/api/frontend', '/api/proxy'],
-    ])('keeps the rate-limit buckets for %s and %s independent', async (firstPath, secondPath) => {
-        const config = createTestConfig({
-            rateLimiting: {
-                tokenAuthenticationMaxPerMinute: 1,
-                sdkApiMaxPerMinute: 1,
-            },
-        });
-        const app = express();
-        app.use(createRateLimitMiddleware(config, 'afterAuthentication'));
-        app.use((_req, res) => res.sendStatus(200));
-        const agent = supertest(app);
-        const authorization =
-            authorizationValues[AuthorizationTokenKind.API_TOKEN];
+    ])(
+        'keeps the rate-limit buckets for %s and %s independent',
+        async (firstPath, secondPath) => {
+            const config = createTestConfig({
+                rateLimiting: {
+                    tokenAuthenticationMaxPerMinute: 1,
+                    sdkApiMaxPerMinute: 1,
+                },
+            });
+            const app = express();
+            app.use(createRateLimitMiddleware(config, 'afterAuthentication'));
+            app.use((_req, res) => res.sendStatus(200));
+            const agent = supertest(app);
+            const authorization =
+                authorizationValues[AuthorizationTokenKind.API_TOKEN];
 
-        await agent
-            .get(firstPath)
-            .set('Authorization', authorization)
-            .expect(200);
-        await agent
-            .get(secondPath)
-            .set('Authorization', authorization)
-            .expect(200);
-        await agent
-            .get(firstPath)
-            .set('Authorization', authorization)
-            .expect(429);
-        await agent
-            .get(secondPath)
-            .set('Authorization', authorization)
-            .expect(429);
-    });
+            await agent
+                .get(firstPath)
+                .set('Authorization', authorization)
+                .expect(200);
+            await agent
+                .get(secondPath)
+                .set('Authorization', authorization)
+                .expect(200);
+            await agent
+                .get(firstPath)
+                .set('Authorization', authorization)
+                .expect(429);
+            await agent
+                .get(secondPath)
+                .set('Authorization', authorization)
+                .expect(429);
+        },
+    );
 });
 
 const request = (

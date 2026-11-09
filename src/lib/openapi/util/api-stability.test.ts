@@ -39,12 +39,12 @@ test.each([
         release: { beta: '6', stable: '7' } as const,
         expected: 'stable',
     },
-])(`${currentVersion} with $release should be $expected`, ({
-    release,
-    expected,
-}) => {
-    expect(calculateStability(release, currentVersion)).toBe(expected);
-});
+])(
+    `${currentVersion} with $release should be $expected`,
+    ({ release, expected }) => {
+        expect(calculateStability(release, currentVersion)).toBe(expected);
+    },
+);
 
 test.each([
     {
@@ -56,13 +56,14 @@ test.each([
     {
         release: { beta: '6', stable: '7' } as const,
     },
-])(`defaults to stable when current version is invalid and $release`, ({
-    release,
-}) => {
-    expect(calculateStability(release, 'invalid-current-version')).toBe(
-        'stable',
-    );
-});
+])(
+    `defaults to stable when current version is invalid and $release`,
+    ({ release }) => {
+        expect(calculateStability(release, 'invalid-current-version')).toBe(
+            'stable',
+        );
+    },
+);
 
 test.each([
     ['7.6.0', 'stable'],
@@ -70,9 +71,12 @@ test.each([
     ['8.0.99', 'stable'],
     ['8.1.0', 'alpha'],
     ['8.2.0', 'alpha'],
-] as const)('%s returns %s for legacy endpoints without release milestones', (version, expected) => {
-    expect(calculateStability(undefined, version)).toBe(expected);
-});
+] as const)(
+    '%s returns %s for legacy endpoints without release milestones',
+    (version, expected) => {
+        expect(calculateStability(undefined, version)).toBe(expected);
+    },
+);
 
 test.each([
     {
@@ -99,12 +103,12 @@ test.each([
         release: { beta: '7' } as const,
         expected: 'beta',
     },
-])(`${currentVersion} returns $expected with $release`, ({
-    release,
-    expected,
-}) => {
-    expect(calculateStability(release, currentVersion)).toBe(expected);
-});
+])(
+    `${currentVersion} returns $expected with $release`,
+    ({ release, expected }) => {
+        expect(calculateStability(release, currentVersion)).toBe(expected);
+    },
+);
 
 test.each([
     {
@@ -131,12 +135,12 @@ test.each([
         release: { stable: '7' } as const,
         expected: 'stable',
     },
-])(`${currentVersion} returns $expected with $release`, ({
-    release,
-    expected,
-}) => {
-    expect(calculateStability(release, currentVersion)).toBe(expected);
-});
+])(
+    `${currentVersion} returns $expected with $release`,
+    ({ release, expected }) => {
+        expect(calculateStability(release, currentVersion)).toBe(expected);
+    },
+);
 
 test(`${currentVersion} returns alpha when explicit alpha is set`, () => {
     const alphaOnly = {
@@ -158,9 +162,9 @@ test.each([
         release: { beta: '8', stable: '7' } as const,
         expected: 'stable',
     },
-])(`${currentVersion} treats invalid beta/stable ordering as stable-only cutoff. $release should be $expected`, ({
-    release,
-    expected,
-}) => {
-    expect(calculateStability(release, currentVersion)).toBe(expected);
-});
+])(
+    `${currentVersion} treats invalid beta/stable ordering as stable-only cutoff. $release should be $expected`,
+    ({ release, expected }) => {
+        expect(calculateStability(release, currentVersion)).toBe(expected);
+    },
+);

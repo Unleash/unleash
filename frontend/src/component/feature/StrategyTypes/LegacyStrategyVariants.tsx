@@ -148,7 +148,7 @@ export const LegacyStrategyVariants = <T extends StrategyFormState>({
                                     target='_blank'
                                     rel='noopener noreferrer'
                                 >
-                                    here
+                                    in the documentation
                                 </a>
                             </Typography>
                         </Box>

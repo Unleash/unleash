@@ -128,45 +128,45 @@ describe('New Relic integration', () => {
         partialEvent: Partial<IEvent>;
         partialParameters?: Partial<INewRelicParameters>;
         test: String;
-    }>)('Should call New Relic Event API for $test', async ({
-        partialEvent,
-        partialParameters,
-    }) => {
-        const event = {
-            ...defaultEvent,
-            ...partialEvent,
-        };
+    }>)(
+        'Should call New Relic Event API for $test',
+        async ({ partialEvent, partialParameters }) => {
+            const event = {
+                ...defaultEvent,
+                ...partialEvent,
+            };
 
-        const parameters = {
-            ...defaultParameters,
-            ...partialParameters,
-        };
+            const parameters = {
+                ...defaultParameters,
+                ...partialParameters,
+            };
 
-        const handleEvent = makeAddHandleEvent(event, parameters);
+            const handleEvent = makeAddHandleEvent(event, parameters);
 
-        let body: any;
-        nock('http://fakeurl')
-            .post('/')
-            .matchHeader('Content-Type', 'application/json')
-            .matchHeader('Api-Key', parameters.licenseKey)
-            .matchHeader('Content-Encoding', 'gzip')
-            .reply(200, (_uri, requestBody) => {
-                body = requestBody;
-                return [200, 'OK'];
-            });
-        await handleEvent();
-        expect(nock.isDone()).toBe(true);
+            let body: any;
+            nock('http://fakeurl')
+                .post('/')
+                .matchHeader('Content-Type', 'application/json')
+                .matchHeader('Api-Key', parameters.licenseKey)
+                .matchHeader('Content-Encoding', 'gzip')
+                .reply(200, (_uri, requestBody) => {
+                    body = requestBody;
+                    return [200, 'OK'];
+                });
+            await handleEvent();
+            expect(nock.isDone()).toBe(true);
 
-        const jsonBody = body;
+            const jsonBody = body;
 
-        expect(jsonBody.eventType).toBe('UnleashServiceEvent');
-        expect(jsonBody.unleashEventType).toBe(event.type);
-        expect(jsonBody.featureName).toBe(event.data.name);
-        expect(jsonBody.environment).toBe(event.environment);
-        expect(jsonBody.createdBy).toBe(event.createdBy);
-        expect(jsonBody.createdByUserId).toBe(event.createdByUserId);
-        expect(jsonBody.createdAt).toBe(event.createdAt.getTime());
-    });
+            expect(jsonBody.eventType).toBe('UnleashServiceEvent');
+            expect(jsonBody.unleashEventType).toBe(event.type);
+            expect(jsonBody.featureName).toBe(event.data.name);
+            expect(jsonBody.environment).toBe(event.environment);
+            expect(jsonBody.createdBy).toBe(event.createdBy);
+            expect(jsonBody.createdByUserId).toBe(event.createdByUserId);
+            expect(jsonBody.createdAt).toBe(event.createdAt.getTime());
+        },
+    );
 
     test('Should call registerEvent', async () => {
         const handleEvent = makeAddHandleEvent(defaultEvent, defaultParameters);

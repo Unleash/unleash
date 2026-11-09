@@ -91,25 +91,26 @@ describe('formatConstraintText', () => {
         ],
     ];
 
-    test.each(
-        operatorMappings,
-    )('renders %s as %s (%s when inverted)', (operator, expected, expectedInverted) => {
-        const constraint = baseConstraint({ operator, value: 'asdf' });
+    test.each(operatorMappings)(
+        'renders %s as %s (%s when inverted)',
+        (operator, expected, expectedInverted) => {
+            const constraint = baseConstraint({ operator, value: 'asdf' });
 
-        expect(formatConstraintText(constraint, locationSettings)).toBe(
-            expected,
-        );
+            expect(formatConstraintText(constraint, locationSettings)).toBe(
+                expected,
+            );
 
-        const invertedConstraint = baseConstraint({
-            operator,
-            value: 'asdf',
-            inverted: true,
-        });
+            const invertedConstraint = baseConstraint({
+                operator,
+                value: 'asdf',
+                inverted: true,
+            });
 
-        expect(formatConstraintText(invertedConstraint, locationSettings)).toBe(
-            expectedInverted,
-        );
-    });
+            expect(
+                formatConstraintText(invertedConstraint, locationSettings),
+            ).toBe(expectedInverted);
+        },
+    );
 
     test('joins multiple values with a comma', () => {
         const constraint = baseConstraint({
@@ -236,20 +237,21 @@ describe('formatConstraintText', () => {
             ],
         ];
 
-        test.each(
-            cases,
-        )('formats %s / %s (inverted: %s) as "%s"', (contextName, operator, inverted, expected) => {
-            const constraint = baseConstraint({
-                contextName,
-                operator,
-                value,
-                inverted,
-            });
+        test.each(cases)(
+            'formats %s / %s (inverted: %s) as "%s"',
+            (contextName, operator, inverted, expected) => {
+                const constraint = baseConstraint({
+                    contextName,
+                    operator,
+                    value,
+                    inverted,
+                });
 
-            expect(formatConstraintText(constraint, locationSettings)).toBe(
-                expected,
-            );
-        });
+                expect(formatConstraintText(constraint, locationSettings)).toBe(
+                    expected,
+                );
+            },
+        );
 
         test('uses the given locale when formatting a currentTime value', () => {
             const constraint = baseConstraint({

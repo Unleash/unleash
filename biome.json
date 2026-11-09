@@ -1,9 +1,9 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.16/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.6.4/schema.json",
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "a11y": {
         "useSemanticElements": "off",
         "useKeyWithClickEvents": "off",
@@ -15,6 +15,7 @@
         "noUnusedImports": "warn",
         "useJsxKeyInIterable": "off",
         "useHookAtTopLevel": "off",
+        "noComponentHookFactories": "off",
         "noUnusedFunctionParameters": "off",
         "noUnusedVariables": "warn"
       },
@@ -24,7 +25,8 @@
         "useOptionalChain": "warn",
         "noStaticOnlyClass": "off",
         "noForEach": "off",
-        "noUselessFragments": "off"
+        "noUselessFragments": "off",
+        "useMathMinMax": "off"
       },
       "style": {
         "noNonNullAssertion": "off",
@@ -43,7 +45,8 @@
         "noArrayIndexKey": "off",
         "noThenProperty": "off",
         "noExportsInTest": "off",
-        "noNonNullAssertedOptionalChain": "off"
+        "noNonNullAssertedOptionalChain": "off",
+        "noIdenticalTestTitle": "off"
       },
       "performance": {
         "noAccumulatingSpread": "off",
@@ -312,7 +315,12 @@
       "!package.json",
       "!frontend/package.json",
       "!src/migrations/package.json",
-      "!**/.vite"
+      "!**/.vite",
+      "!**/*.svg",
+      "!**/*.yaml",
+      "!**/*.yml",
+      "!**/*.scss",
+      "!**/*.md"
     ]
   }
 }

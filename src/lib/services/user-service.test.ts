@@ -21,56 +21,55 @@ const config: IUnleashConfig = createTestConfig();
 
 const systemUser = new User({ id: -1, username: 'system' });
 
-test.each([
-    undefined,
-    'test-unleash@example.com',
-    'top-level-domain@jp',
-])('Should create new user with email %s', async (email?: string) => {
-    const userStore = new UserStoreMock();
-    const accessService = new AccessServiceMock();
-    const resetTokenStore = new FakeResetTokenStore();
-    const resetTokenService = new ResetTokenService(
-        { resetTokenStore },
-        config,
-    );
-    const sessionStore = new FakeSessionStore();
-    const sessionService = new SessionService({ sessionStore }, config);
-    const emailService = new EmailService(config);
-    const eventService = createFakeEventsService(config);
-    const settingService = new SettingService(
-        {
-            settingStore: new FakeSettingStore(),
-        },
-        config,
-        eventService,
-    );
-    const resourceLimitsService = new ResourceLimitsService(config);
+test.each([undefined, 'test-unleash@example.com', 'top-level-domain@jp'])(
+    'Should create new user with email %s',
+    async (email?: string) => {
+        const userStore = new UserStoreMock();
+        const accessService = new AccessServiceMock();
+        const resetTokenStore = new FakeResetTokenStore();
+        const resetTokenService = new ResetTokenService(
+            { resetTokenStore },
+            config,
+        );
+        const sessionStore = new FakeSessionStore();
+        const sessionService = new SessionService({ sessionStore }, config);
+        const emailService = new EmailService(config);
+        const eventService = createFakeEventsService(config);
+        const settingService = new SettingService(
+            {
+                settingStore: new FakeSettingStore(),
+            },
+            config,
+            eventService,
+        );
+        const resourceLimitsService = new ResourceLimitsService(config);
 
-    const service = new UserService({ userStore }, config, {
-        accessService,
-        resetTokenService,
-        emailService,
-        eventService,
-        sessionService,
-        settingService,
-        resourceLimitsService,
-    });
-    const user = await service.createUser(
-        {
-            username: 'test',
-            rootRole: 1,
-            email,
-        },
-        extractAuditInfoFromUser(systemUser),
-    );
-    const storedUser = await userStore.get(user.id);
-    const allUsers = await userStore.getAll();
+        const service = new UserService({ userStore }, config, {
+            accessService,
+            resetTokenService,
+            emailService,
+            eventService,
+            sessionService,
+            settingService,
+            resourceLimitsService,
+        });
+        const user = await service.createUser(
+            {
+                username: 'test',
+                rootRole: 1,
+                email,
+            },
+            extractAuditInfoFromUser(systemUser),
+        );
+        const storedUser = await userStore.get(user.id);
+        const allUsers = await userStore.getAll();
 
-    expect(user.id).toBeTruthy();
-    expect(user.username).toBe('test');
-    expect(allUsers.length).toBe(1);
-    expect(storedUser.username).toBe('test');
-});
+        expect(user.id).toBeTruthy();
+        expect(user.username).toBe('test');
+        expect(allUsers.length).toBe(1);
+        expect(storedUser.username).toBe('test');
+    },
+);
 
 describe('Default admin initialization', () => {
     const DEFAULT_ADMIN_USERNAME = 'admin';

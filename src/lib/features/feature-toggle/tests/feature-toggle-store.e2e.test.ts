@@ -105,46 +105,49 @@ describe('potentially_stale marking', () => {
         [7, ['operational']],
         [40, ['operational', 'release', 'experiment']],
         [10000, ['operational', 'release', 'experiment']],
-    ])('it marks toggles based on their type (days elapsed: %s)', async (daysElapsed, expectedMarkedFeatures) => {
-        const features: FeatureToggleInsert[] = [
-            'release',
-            'experiment',
-            'operational',
-            'kill-switch',
-            'permission',
-        ].map((type) => ({ name: type, type, createdByUserId: 9999 }));
-        await Promise.all(
-            features.map((feature) =>
-                featureToggleStore.create('default', feature),
-            ),
-        );
-
-        for (const feature of expectedMarkedFeatures) {
-            expect(await featureToggleStore.get(feature)).toBeTruthy();
-        }
-
-        const markedToggles =
-            await featureToggleStore.updatePotentiallyStaleFeatures(
-                getFutureTimestamp(daysElapsed),
+    ])(
+        'it marks toggles based on their type (days elapsed: %s)',
+        async (daysElapsed, expectedMarkedFeatures) => {
+            const features: FeatureToggleInsert[] = [
+                'release',
+                'experiment',
+                'operational',
+                'kill-switch',
+                'permission',
+            ].map((type) => ({ name: type, type, createdByUserId: 9999 }));
+            await Promise.all(
+                features.map((feature) =>
+                    featureToggleStore.create('default', feature),
+                ),
             );
 
-        expect(markedToggles).toEqual(
-            expect.arrayContaining(
-                expectedMarkedFeatures.map((name: string) => ({
-                    name,
-                    potentiallyStale: true,
-                    project: 'default',
-                })),
-            ),
-        );
-        expect(markedToggles.length).toEqual(expectedMarkedFeatures.length);
+            for (const feature of expectedMarkedFeatures) {
+                expect(await featureToggleStore.get(feature)).toBeTruthy();
+            }
 
-        for (const feature of expectedMarkedFeatures) {
-            expect(
-                await featureToggleStore.isPotentiallyStale(feature),
-            ).toBeTruthy();
-        }
-    });
+            const markedToggles =
+                await featureToggleStore.updatePotentiallyStaleFeatures(
+                    getFutureTimestamp(daysElapsed),
+                );
+
+            expect(markedToggles).toEqual(
+                expect.arrayContaining(
+                    expectedMarkedFeatures.map((name: string) => ({
+                        name,
+                        potentiallyStale: true,
+                        project: 'default',
+                    })),
+                ),
+            );
+            expect(markedToggles.length).toEqual(expectedMarkedFeatures.length);
+
+            for (const feature of expectedMarkedFeatures) {
+                expect(
+                    await featureToggleStore.isPotentiallyStale(feature),
+                ).toBeTruthy();
+            }
+        },
+    );
     test('a lifetime value on the flag takes precedence over the lifetime of its type', async () => {
         await featureToggleStore.create('default', {
             name: 'release-flag',

@@ -90,26 +90,26 @@ describe('applying strategy changes', () => {
             expectedTransitionCondition:
                 basePlan.milestones[0].transitionCondition,
         },
-    ])('should apply strategy and progression changes correctly when $when', ({
-        progressionChanges,
-        expectedTransitionCondition,
-    }) => {
-        const result = applyReleasePlanChanges(basePlan, [
-            ...progressionChanges,
-            strategyChange,
-        ]);
+    ])(
+        'should apply strategy and progression changes correctly when $when',
+        ({ progressionChanges, expectedTransitionCondition }) => {
+            const result = applyReleasePlanChanges(basePlan, [
+                ...progressionChanges,
+                strategyChange,
+            ]);
 
-        const updatedStrategy = result.milestones[0].strategies[0];
-        expect(updatedStrategy).not.toHaveProperty('snapshot');
+            const updatedStrategy = result.milestones[0].strategies[0];
+            expect(updatedStrategy).not.toHaveProperty('snapshot');
 
-        const { snapshot: _, ...expectedState } = strategyChange.payload;
-        expect(updatedStrategy).toMatchObject(expectedState);
+            const { snapshot: _, ...expectedState } = strategyChange.payload;
+            expect(updatedStrategy).toMatchObject(expectedState);
 
-        expect(result.milestones).toMatchObject([
-            {
-                transitionCondition: expectedTransitionCondition,
-                strategies: [expectedState],
-            },
-        ]);
-    });
+            expect(result.milestones).toMatchObject([
+                {
+                    transitionCondition: expectedTransitionCondition,
+                    strategies: [expectedState],
+                },
+            ]);
+        },
+    );
 });

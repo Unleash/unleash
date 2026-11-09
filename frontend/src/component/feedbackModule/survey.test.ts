@@ -304,23 +304,23 @@ describe('parseSurveyPayload', () => {
         });
     });
 
-    it.each([
-        'appear',
-        'click',
-    ])('reads an %s trigger with a selector, text and page pattern', (on) => {
-        const trigger = {
-            on,
-            selector: '[data-testid="create-flag"]',
-            text: 'Create flag',
-            path: '/projects/:projectId',
-        };
-        const survey = parseSurveyPayload(
-            'survey-x',
-            payload({ ...validSurvey, trigger }),
-        );
+    it.each(['appear', 'click'])(
+        'reads an %s trigger with a selector, text and page pattern',
+        (on) => {
+            const trigger = {
+                on,
+                selector: '[data-testid="create-flag"]',
+                text: 'Create flag',
+                path: '/projects/:projectId',
+            };
+            const survey = parseSurveyPayload(
+                'survey-x',
+                payload({ ...validSurvey, trigger }),
+            );
 
-        expect(survey?.trigger).toStrictEqual(trigger);
-    });
+            expect(survey?.trigger).toStrictEqual(trigger);
+        },
+    );
 
     it('reads a custom event trigger with a page pattern', () => {
         const trigger = {

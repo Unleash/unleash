@@ -10,8 +10,6 @@ import {
     type Operator,
     semVerOperators,
     stringOperators,
-    SEMVER_GTE,
-    SEMVER_LTE,
 } from 'constants/operators';
 import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -128,19 +126,11 @@ export const ProjectActionsFilterItem = ({
     const [showCaseSensitiveButton, setShowCaseSensitiveButton] =
         useState(false);
 
-    const isSemverGteOperatorsEnabled = useUiFlag(
-        'semverGteConstraintOperators',
-    );
-
     const validOperators = [
         ...inOperators,
         ...stringOperators,
         ...numOperators,
-        ...semVerOperators.filter(
-            (op) =>
-                isSemverGteOperatorsEnabled ||
-                (op !== SEMVER_GTE && op !== SEMVER_LTE),
-        ),
+        ...semVerOperators,
     ];
 
     const semverBuildMetadata = useUiFlag('semverBuildMetadata');

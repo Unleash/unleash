@@ -91,7 +91,7 @@ export const SignalEndpointsSignalsModal = ({
         >
             <FormTemplate
                 loading={loading && signalEndpointSignals.length === 0}
-                modal
+                layout='modal'
                 description=''
                 documentationLink=''
                 documentationLinkLabel=''

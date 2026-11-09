@@ -18,7 +18,7 @@ export interface FeatureUsageSchema {
     maturity: string;
     /** A list of applications seen using this feature */
     seenApplications: string[];
-    /** Total usage per environment, accumulated over the metrics retention period and sorted by environment name. This is an experimental field and may change */
+    /** Total usage per environment, accumulated over the metrics retention period and sorted by environment name. */
     totalUsage?: FeatureEnvironmentTotalUsageSchema[];
     /**
      * The version of this schema

@@ -28,6 +28,11 @@ export interface ISegmentService {
         environment: string;
     }): Promise<void>;
 
+    validateProjectCanAccessSegments(
+        projectId: string,
+        segmentIds?: number[],
+    ): Promise<void>;
+
     get(id: number, userId?: number): Promise<ISegment>;
 
     /**

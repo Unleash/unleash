@@ -11,7 +11,7 @@ export const sessionKeepAliveSchema = {
             type: 'integer',
             minimum: 0,
             description:
-                'Milliseconds until the session ends, whichever of the idle window and the maximum age runs out first. Reporting activity moves the idle one; nothing moves the maximum age. Omitted when the instance is enforcing neither, in which case there is nothing to count down to.',
+                'Milliseconds until the session ends, whichever of the idle window and the maximum age runs out first. Reporting activity moves the idle one; nothing moves the maximum age, which is counted down whether or not an idle window is configured.',
             example: 900000,
         },
     },

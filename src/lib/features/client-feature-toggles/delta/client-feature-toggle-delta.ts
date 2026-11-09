@@ -561,6 +561,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
     private async initEnvironmentDelta(environment: string) {
         const { features, segments, revisionState } =
             await this.readHydrationSnapshot(environment);
+        const isFirstEnvironment = Object.keys(this.delta).length === 0;
 
         const maxRevision = getVisibleRevision(revisionState);
         this.delta[environment] = new DeltaCache({
@@ -569,7 +570,9 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             features,
             segments,
         });
-        this.lastDeltaProcessedRevisionId = maxRevision;
+        if (isFirstEnvironment) {
+            this.lastDeltaProcessedRevisionId = maxRevision;
+        }
         this.visibleRevisions[environment] = revisionState;
         deltaRevisionIdMetric.labels({ environment }).set(maxRevision);
     }

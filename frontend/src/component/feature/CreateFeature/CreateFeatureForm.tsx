@@ -2,7 +2,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import { type FormEvent, useMemo, useState } from 'react';
+import { type FormEvent, useEffect, useId, useMemo, useState } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router';
 import {
@@ -10,21 +10,21 @@ import {
     Dialog,
     styled,
     type SxProps,
-    TextField,
     type Theme,
 } from '@mui/material';
-import FlagIcon from '@mui/icons-material/Flag';
 import { hoursToMilliseconds } from 'date-fns';
-import { RELEASE } from 'constants/featureToggleTypes';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { Limit } from 'component/common/Limit/Limit';
 import { CreateFeatureDialogSidebar } from './CreateFeatureDialogSidebar.tsx';
 import { FlagTypeFieldset } from './FlagTypeFieldset.tsx';
 import { LifetimeFieldset } from './LifetimeFieldset.tsx';
+import { NamingPatternHint } from './NamingPatternHint.tsx';
+import { OptionalSettingsFieldset } from './OptionalSettingsFieldset.tsx';
 import { defaultLifetimeFor } from './flagTypes.ts';
 import { Section } from './CreateFeatureForm.styles.ts';
 import useFeatureForm, {
     type FeatureFormInitialData,
+    type Lifetime,
 } from 'component/feature/hooks/useFeatureForm';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useGlobalFeatureSearch } from 'component/feature/FeatureToggleList/useGlobalFeatureSearch';
@@ -33,15 +33,27 @@ import useProjectOverview, {
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import type { CreateFeatureSchemaType } from 'openapi';
 import { HeaderBreadcrumb } from 'component/common/DialogFormTemplate/HeaderBreadcrumb.tsx';
-import { NamingPatternInfo } from 'component/common/DialogFormTemplate/NamingPatternInfo.tsx';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import type { CreateFeatureDialogProps } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/CreateFeatureDialog.tsx';
 import { useFlagLimits } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/useFlagLimits.tsx';
 import { useFeatureCreatedFeedback } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/hooks/useFeatureCreatedFeedback.ts';
 import { useLocalStorageState } from 'hooks/useLocalStorageState.ts';
+import { useTracking } from 'hooks/useTracking';
+import {
+    type DialogDismissMethod,
+    dismissMethodFromCloseReason,
+    type TrackingProps,
+} from 'utils/trackingEvents';
+import {
+    createFlagSubmitProps,
+    createFlagTracking,
+} from './flagCreationTracking.ts';
 import { INPUT_ERROR_TEXT } from 'utils/testIds';
+import { BorderlessInput } from 'component/common/Input/BorderlessInput';
 
 const draftExpiry = hoursToMilliseconds(1);
+
+type FlagDraft = FeatureFormInitialData & { lifetimeChosenByUser?: boolean };
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -82,22 +94,7 @@ const FormActions = styled(Section)(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const underlineOnlyWhenFocused = {
-    '&::before, &:hover:not(.Mui-disabled)::before': { borderBottom: 'none' },
-    '&::after': { borderBottomWidth: 1 },
-};
-
-const nameInputStyles: SxProps<Theme> = {
-    p: 0,
-    pb: 0.5,
-    fontSize: 'h1.fontSize',
-    lineHeight: 1.4,
-    '&::placeholder': { color: 'text.primary', opacity: 0.55 },
-};
-
 const descriptionInputStyles: SxProps<Theme> = {
-    p: 0,
-    pb: 0.5,
     fontSize: (theme) => theme.typography.pxToRem(16),
     color: 'text.secondary',
     '&::placeholder': { color: 'text.secondary', opacity: 0.8 },
@@ -114,16 +111,15 @@ export const CreateFeatureForm = ({
     const openFeatureCreatedFeedback = useFeatureCreatedFeedback();
 
     const [storedFlagConfig, setStoredFlagConfig] =
-        useLocalStorageState<FeatureFormInitialData>(
+        useLocalStorageState<FlagDraft>(
             'flag-creation-dialog',
             {},
             draftExpiry,
         );
 
     const {
-        type,
-        setType,
         tags,
+        setTags,
         name,
         setName,
         project,
@@ -132,34 +128,35 @@ export const CreateFeatureForm = ({
         setDescription,
         validateToggleName,
         impressionData,
-        lifetimeDays,
-        setLifetimeDays,
+        setImpressionData,
+        lifetime,
+        setLifetime,
         getTogglePayload,
         clearErrors,
         errors,
-    } = useFeatureForm({
-        ...storedFlagConfig,
-        lifetimeDays:
-            storedFlagConfig.lifetimeDays ??
-            defaultLifetimeFor(storedFlagConfig.type ?? RELEASE),
-    });
+    } = useFeatureForm(storedFlagConfig);
     const { createFeatureToggle, loading } = useFeatureApi();
 
-    const [lifetimeChosenByUser, setLifetimeChosenByUser] = useState(false);
+    const [type, setType] = useState(storedFlagConfig.type);
+    const [typeError, setTypeError] = useState<string>();
+    const [lifetimeChosenByUser, setLifetimeChosenByUser] = useState(
+        storedFlagConfig.lifetimeChosenByUser ?? false,
+    );
 
     const selectType = (nextType: CreateFeatureSchemaType) => {
         setType(nextType);
+        setTypeError(undefined);
         if (!lifetimeChosenByUser) {
-            setLifetimeDays(defaultLifetimeFor(nextType));
+            setLifetime(defaultLifetimeFor(nextType));
         }
     };
 
-    const selectLifetime = (days: number) => {
-        setLifetimeDays(days);
+    const selectLifetime = (nextLifetime: Lifetime) => {
+        setLifetime(nextLifetime);
         setLifetimeChosenByUser(true);
     };
 
-    const flagPayload = getTogglePayload();
+    const flagPayload = { ...getTogglePayload(), type };
 
     const formatApiCode = () => {
         return `curl --location --request POST '${
@@ -173,12 +170,20 @@ export const CreateFeatureForm = ({
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         clearErrors();
+        setTypeError(type ? undefined : 'Choose a flag type');
         const validToggleName = await validateToggleName();
 
-        if (validToggleName) {
-            const payload = getTogglePayload();
+        if (validToggleName && type) {
             try {
-                await createFeatureToggle(project, payload);
+                await trackCreateFlag.mutation(
+                    () => createFeatureToggle(project, flagPayload),
+                    createFlagSubmitProps({
+                        type,
+                        lifetime,
+                        lifetimeDays: flagPayload.lifetimeDays,
+                        lifetimeChosenByUser,
+                    }),
+                );
                 navigate(`/projects/${project}/features/${name}`);
                 setToastData({
                     text: 'Flag created successfully',
@@ -191,6 +196,8 @@ export const CreateFeatureForm = ({
             } catch (error) {
                 setToastApiError(formatUnknownError(error));
             }
+        } else {
+            trackCreateFlag.validationFailed();
         }
     };
 
@@ -198,6 +205,10 @@ export const CreateFeatureForm = ({
         useGlobalFeatureSearch(1);
 
     const { project: projectInfo } = useProjectOverview(project);
+    const projectFlagNaming = projectInfo.featureNaming?.pattern
+        ? projectInfo.featureNaming
+        : undefined;
+    const namingPatternHintId = useId();
 
     const { globalFlagLimitReached, projectFlagLimitReached, limitMessage } =
         useFlagLimits({
@@ -211,6 +222,22 @@ export const CreateFeatureForm = ({
             },
         });
 
+    const blockedProps: TrackingProps = globalFlagLimitReached
+        ? { blockedBy: 'limit', scope: 'global' }
+        : projectFlagLimitReached
+          ? { blockedBy: 'limit', scope: 'project' }
+          : {};
+    const trackCreateFlag = useTracking({
+        ...createFlagTracking,
+        props: { variant: 'per-flag-lifetime', ...blockedProps },
+    });
+
+    useEffect(() => {
+        if (open && !loadingTotalFlagCount) {
+            trackCreateFlag('opened');
+        }
+    }, [open, loadingTotalFlagCount, trackCreateFlag]);
+
     const { projects } = useProjects();
 
     const currentProjectName = useMemo(() => {
@@ -220,14 +247,16 @@ export const CreateFeatureForm = ({
         return projectObject?.name;
     }, [project, projects]);
 
-    const onDialogClose = () => {
+    const onDialogClose = (method: DialogDismissMethod) => {
+        trackCreateFlag('dismissed', { method });
         setStoredFlagConfig({
             name,
             tags,
             impressionData,
             type,
             description,
-            lifetimeDays,
+            lifetime,
+            lifetimeChosenByUser,
         });
         onClose();
     };
@@ -244,12 +273,16 @@ export const CreateFeatureForm = ({
     };
 
     return (
-        <StyledDialog open={open} onClose={onDialogClose}>
+        <StyledDialog
+            open={open}
+            onClose={(_, reason) =>
+                onDialogClose(dismissMethodFromCloseReason(reason))
+            }
+        >
             <FormTemplate
-                compact
+                layout='compact'
                 disablePadding
                 description='Feature flags are at the core of Unleash. Use them to control your feature rollouts.'
-                documentationIcon={<FlagIcon />}
                 documentationLink='https://docs.getunleash.io/concepts/feature-flags'
                 documentationLinkLabel='Feature flags documentation'
                 formatApiCode={formatApiCode}
@@ -257,7 +290,7 @@ export const CreateFeatureForm = ({
                 sidebar={
                     <CreateFeatureDialogSidebar
                         apiCommand={formatApiCode()}
-                        onClose={onDialogClose}
+                        onClose={() => onDialogClose('close-icon')}
                     />
                 }
             >
@@ -278,14 +311,11 @@ export const CreateFeatureForm = ({
                     />
 
                     <Fields>
-                        <TextField
+                        <BorderlessInput
                             variant='standard'
-                            placeholder='Enter-flag-name'
-                            aria-required
-                            aria-details={
-                                projectInfo.featureNaming?.pattern
-                                    ? 'naming-pattern-info'
-                                    : undefined
+                            placeholder={
+                                projectInfo.featureNaming?.example ||
+                                'Enter-flag-name'
                             }
                             value={name}
                             onChange={(e) => setName(e.target.value)}
@@ -297,10 +327,15 @@ export const CreateFeatureForm = ({
                             onFocus={clearErrors}
                             autoFocus
                             slotProps={{
-                                input: { sx: underlineOnlyWhenFocused },
                                 htmlInput: {
                                     'aria-label': 'Feature flag name',
-                                    sx: nameInputStyles,
+                                    'aria-required': true,
+                                    ...(projectFlagNaming &&
+                                        !errors.name && {
+                                            'aria-describedby':
+                                                namingPatternHintId,
+                                        }),
+                                    sx: (theme) => theme.typography.h1,
                                 },
                                 formHelperText: {
                                     'data-testid': INPUT_ERROR_TEXT,
@@ -310,12 +345,13 @@ export const CreateFeatureForm = ({
                             data-testid='FORM_NAME_INPUT'
                             fullWidth
                         />
-                        {projectInfo.featureNaming?.pattern ? (
-                            <NamingPatternInfo
-                                naming={projectInfo.featureNaming}
+                        {projectFlagNaming ? (
+                            <NamingPatternHint
+                                id={namingPatternHintId}
+                                naming={projectFlagNaming}
                             />
                         ) : null}
-                        <TextField
+                        <BorderlessInput
                             variant='standard'
                             placeholder='Add a line about what it does (optional)'
                             multiline
@@ -323,7 +359,6 @@ export const CreateFeatureForm = ({
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             slotProps={{
-                                input: { sx: underlineOnlyWhenFocused },
                                 htmlInput: {
                                     'aria-label': 'Description',
                                     sx: descriptionInputStyles,
@@ -334,11 +369,22 @@ export const CreateFeatureForm = ({
                         />
                     </Fields>
 
-                    <FlagTypeFieldset type={type} onChange={selectType} />
+                    <FlagTypeFieldset
+                        type={type}
+                        error={typeError}
+                        onChange={selectType}
+                    />
 
                     <LifetimeFieldset
-                        lifetimeDays={lifetimeDays}
+                        lifetime={lifetime}
                         onChange={selectLifetime}
+                    />
+
+                    <OptionalSettingsFieldset
+                        tags={tags}
+                        onTagsChange={setTags}
+                        impressionData={impressionData}
+                        onImpressionDataChange={setImpressionData}
                     />
 
                     <BottomSection>
@@ -350,7 +396,9 @@ export const CreateFeatureForm = ({
                     </BottomSection>
 
                     <FormActions>
-                        <Button onClick={onDialogClose}>Cancel</Button>
+                        <Button onClick={() => onDialogClose('cancel-button')}>
+                            Cancel
+                        </Button>
                         <CreateButton
                             data-testid='FORM_CREATE_BUTTON'
                             name='flag'

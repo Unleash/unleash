@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { Button, styled } from '@mui/material';
 import { UserProfileContent } from './UserProfileContent/UserProfileContent.tsx';
 import type { IUser } from 'interfaces/user';
-import { useId } from 'hooks/useId';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';

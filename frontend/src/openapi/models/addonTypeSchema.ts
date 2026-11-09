@@ -23,8 +23,12 @@ export interface AddonTypeSchema {
     displayName: string;
     /** A URL to where you can find more information about using this addon type. */
     documentationUrl: string;
+    /** This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. Whether the events of this addon type are independent of environments, so that no environment filter is offered. */
+    environmentIndependent?: boolean;
     /** All the [event types](https://docs.getunleash.io/concepts/events#event-types) that are available for this addon provider. */
     events?: string[];
+    /** This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. Whether every addon of this type listens to all of its `events`. Hides filter from the form. */
+    fixedEvents?: boolean;
     /** A long description of how to use this addon type. This will be displayed on the top of configuration page. Can contain markdown. */
     howTo?: string;
     /** The installation configuration for this addon type. */

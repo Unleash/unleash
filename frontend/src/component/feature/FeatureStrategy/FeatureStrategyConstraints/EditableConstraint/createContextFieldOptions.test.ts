@@ -1,22 +1,22 @@
 import { expect, it } from 'vitest';
-import { IN } from 'constants/operators';
+import type { ILegalValue } from 'interfaces/context';
 import { createContextFieldOptions } from './createContextFieldOptions';
 
-const contextField = (name: string, project?: string) => ({
+const contextField = (
+    name: string,
+    project?: string,
+    legalValues?: ILegalValue[],
+) => ({
     name,
     description: '',
     createdAt: '',
     sortOrder: 0,
     stickiness: false,
     project,
+    legalValues,
 });
 
 it('groups options by project and global', () => {
-    const localConstraint = {
-        contextName: 'a',
-        operator: IN,
-        values: new Set<string>(),
-    };
     const context = [
         contextField('a'),
         contextField('b'),
@@ -24,81 +24,86 @@ it('groups options by project and global', () => {
         contextField('d', 'project1'),
     ];
 
-    const options = createContextFieldOptions(localConstraint, context);
+    const options = createContextFieldOptions(context, 'a');
 
     expect(options).toEqual([
         {
             groupHeader: 'Project context fields',
             options: [
-                { key: 'c', label: 'c' },
-                { key: 'd', label: 'd' },
+                { value: 'c', label: 'c' },
+                { value: 'd', label: 'd' },
             ],
         },
         {
             groupHeader: 'Global context fields',
             options: [
-                { key: 'a', label: 'a' },
-                { key: 'b', label: 'b' },
+                { value: 'a', label: 'a' },
+                { value: 'b', label: 'b' },
             ],
         },
     ]);
 });
 
 it('does not include empty groups', () => {
-    const localConstraint = {
-        contextName: 'a',
-        operator: IN,
-        values: new Set<string>(),
-    };
     const onlyGlobalContext = [contextField('a')];
     const onlyProjectContext = [contextField('a', 'project1')];
 
-    const onlyGlobalOptions = createContextFieldOptions(
-        localConstraint,
-        onlyGlobalContext,
-    );
+    const onlyGlobalOptions = createContextFieldOptions(onlyGlobalContext, 'a');
 
     expect(onlyGlobalOptions).toEqual([
         {
             groupHeader: 'Global context fields',
-            options: [{ key: 'a', label: 'a' }],
+            options: [{ value: 'a', label: 'a' }],
         },
     ]);
 
     const onlyProjectOptions = createContextFieldOptions(
-        localConstraint,
         onlyProjectContext,
+        'a',
     );
 
     expect(onlyProjectOptions).toEqual([
         {
             groupHeader: 'Project context fields',
-            options: [{ key: 'a', label: 'a' }],
+            options: [{ value: 'a', label: 'a' }],
         },
     ]);
 });
 
 it('puts deleted context fields in its own group', () => {
-    const localConstraint = {
-        contextName: 'a',
-        operator: IN,
-        values: new Set<string>(),
-    };
     const onlyGlobalContext = [contextField('b')];
 
-    const options = createContextFieldOptions(
-        localConstraint,
-        onlyGlobalContext,
-    );
+    const options = createContextFieldOptions(onlyGlobalContext, 'a');
 
     expect(options).toEqual([
         {
             groupHeader: 'Global context fields',
-            options: [{ key: 'b', label: 'b' }],
+            options: [{ value: 'b', label: 'b' }],
         },
         {
             groupHeader: 'Deleted context fields',
-            options: [{ key: 'a', label: 'a' }],
+            options: [{ value: 'a', label: 'a' }],
+        },
+    ]);
+});
+
+it('shows a legal values count for fields with legal values', () => {
+    const context = [
+        contextField('a', undefined, [{ value: '1' }, { value: '2' }]),
+        contextField('b', undefined, [{ value: '1' }]),
+        contextField('c'),
+    ];
+
+    const options = createContextFieldOptions(context, 'a');
+
+    expect(options).toEqual([
+        {
+            groupHeader: 'Global context fields',
+            options: [
+                { value: 'a', label: 'a', detail: '2 legal values' },
+                { value: 'b', label: 'b', detail: '1 legal value' },
+                { value: 'c', label: 'c' },
+            ],
         },
     ]);
 });

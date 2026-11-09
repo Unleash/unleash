@@ -66,10 +66,8 @@ export type UiFlags = {
     strategyVariant?: boolean;
     doraMetrics?: boolean;
     dependentFeatures?: boolean;
-    newStrategyConfiguration?: boolean;
     signals?: boolean;
     automatedActions?: boolean;
-    releaseTemplatesAutomations?: boolean;
     celebrateUnleash?: boolean;
     enableLicense?: boolean;
     feedbackComments?: Variant;
@@ -91,7 +89,6 @@ export type UiFlags = {
     oidcPkceSupport?: boolean;
     extendedUsageMetrics?: boolean;
     regexConstraintOperator?: boolean;
-    semverGteConstraintOperators?: boolean;
     signupDialog?: boolean;
     enterpriseEdgeTokensList?: boolean;
     impactMetricsFlagPage?: boolean;
@@ -102,22 +99,20 @@ export type UiFlags = {
     learningLab?: Variant;
     flightRecorderFrontend?: Variant;
     searchDocsWidget?: boolean;
-    exposureBasedAutomation?: boolean;
     semverBuildMetadata?: boolean;
-    slackIntegrationProjectLevel?: boolean;
-    editableInstanceName?: boolean;
     helpMenuRelocationHint?: boolean;
     ipConstraintOperator?: boolean;
-    playgroundPerFlag?: boolean;
     githubIntegration?: boolean;
-    tagManagementViaUi?: boolean;
-    newUserInviteFlow?: boolean;
     integrationParamKvpEditor?: boolean;
     perFlagLifetime?: boolean;
-    remoteMcpFeedback?: boolean;
     sessionTimeouts?: boolean;
     payloadSchemas?: boolean;
     singlePageStrategyForm?: boolean;
+    feedbackModule?: boolean;
+    feedbackModuleDisplaySurvey?: boolean;
+    playgroundFeatureEvaluation?: boolean;
+    dashboardV2?: boolean;
+    changeRequestSubmitRedirect?: boolean;
 };
 
 export interface IVersionInfo {

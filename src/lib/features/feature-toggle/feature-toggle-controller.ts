@@ -431,6 +431,17 @@ export default class ProjectFeaturesController extends Controller {
                     tags: ['Features'],
                     release: { stable: '4.12.0' },
                     operationId: 'getFeatures',
+                    parameters: [
+                        {
+                            name: 'view',
+                            in: 'query',
+                            required: false,
+                            description:
+                                'Experimental: `core` returns a lightweight version of each feature with `environments` empty and `favorite` set to `false`; it cannot be combined with the `tag` or `namePrefix` filters. Omit it to get the full feature overview. This parameter may change or be removed in a future release.',
+                            schema: { type: 'string', enum: ['core'] },
+                            example: 'core',
+                        },
+                    ],
                     responses: {
                         200: createResponseSchema('projectFeaturesSchema'),
                         ...getStandardResponses(400, 401, 403),
@@ -624,10 +635,33 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async getFeatures(
-        req: IAuthRequest<ProjectParam, any, any, AdminFeaturesQuerySchema>,
+        req: IAuthRequest<
+            ProjectParam,
+            any,
+            any,
+            AdminFeaturesQuerySchema & { view?: 'core' }
+        >,
         res: Response<ProjectFeaturesSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
+
+        if (req.query.view === 'core') {
+            if (req.query.tag || req.query.namePrefix) {
+                throw new BadDataError(
+                    'The core view cannot be combined with the tag or namePrefix filters',
+                );
+            }
+            const features =
+                await this.featureService.getProjectFeaturesCore(projectId);
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                projectFeaturesSchema.$id,
+                { version: 2, features: serializeDates(features) },
+            );
+            return;
+        }
+
         const query = await this.prepQuery(req.query, projectId);
         const features = await this.featureService.getFeatureOverview({
             ...query,

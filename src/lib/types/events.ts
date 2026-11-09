@@ -19,7 +19,6 @@ import {
     API_TOKEN_UPDATED,
     DEFAULT_STRATEGY_UPDATED,
     DROP_ENVIRONMENTS,
-    DROP_FEATURE_TAGS,
     DROP_FEATURES,
     DROP_PROJECTS,
     DROP_STRATEGIES,
@@ -1583,17 +1582,6 @@ export class DropEnvironmentsEvent extends BaseEvent {
     }) {
         super(DROP_ENVIRONMENTS, eventData.auditUser);
         this.data = { name: 'all-environments' };
-    }
-}
-
-export class DropFeatureTagsEvent extends BaseEvent {
-    readonly data: any;
-
-    constructor(eventData: {
-        auditUser: IAuditUser;
-    }) {
-        super(DROP_FEATURE_TAGS, eventData.auditUser);
-        this.data = { name: 'all-feature-tags' };
     }
 }
 

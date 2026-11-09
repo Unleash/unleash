@@ -29,8 +29,6 @@ import {
     getStandardResponses,
 } from '../../openapi/util/standard-responses.js';
 import type { WithTransactional } from '../../db/transaction.js';
-import type { IFlagResolver } from '../../types/experimental.js';
-import { requireFeatureEnabled } from '../../middleware/conditional-middleware.js';
 import {
     basePaginationParameters,
     type BasePaginationParameters,
@@ -40,6 +38,7 @@ import {
     type TagValuesUsageSchema,
 } from '../../openapi/spec/tag-values-usage-schema.js';
 import { normalizeQueryParams } from '../feature-search/search-utils.js';
+import { extractUserId } from '../../util/index.js';
 
 const version = 1;
 
@@ -47,8 +46,6 @@ class TagTypeController extends Controller {
     private tagTypeService: WithTransactional<TagTypeService>;
 
     private openApiService: OpenApiService;
-
-    private flagResolver: IFlagResolver;
 
     constructor(
         config: IUnleashConfig,
@@ -63,7 +60,6 @@ class TagTypeController extends Controller {
         super(config);
         this.tagTypeService = transactionalTagTypeService;
         this.openApiService = openApiService;
-        this.flagResolver = config.flagResolver;
         this.route({
             method: 'get',
             path: '',
@@ -149,13 +145,9 @@ class TagTypeController extends Controller {
             handler: this.getTagValuesWithUsage,
             permission: NONE,
             middleware: [
-                requireFeatureEnabled(
-                    config.flagResolver,
-                    'tagManagementViaUi',
-                ),
                 openApiService.validPath({
                     tags: ['Tags'],
-                    release: { alpha: true },
+                    release: { stable: '8.3.0' },
                     operationId: 'getTagValuesWithUsage',
                     summary: 'Get the values of a tag type with their usage',
                     description:
@@ -216,9 +208,9 @@ class TagTypeController extends Controller {
         req: IAuthRequest,
         res: Response<TagTypesSchema>,
     ): Promise<void> {
-        const tagTypes = this.flagResolver.isEnabled('tagManagementViaUi')
-            ? await this.tagTypeService.getAllWithUsage(req.user.id)
-            : await this.tagTypeService.getAll();
+        const tagTypes = await this.tagTypeService.getAllWithUsage(
+            extractUserId(req),
+        );
         res.json({ version, tagTypes });
     }
 
@@ -295,7 +287,7 @@ class TagTypeController extends Controller {
             await this.tagTypeService.getValuesWithUsage(
                 req.params.name,
                 { limit, offset },
-                req.user.id,
+                extractUserId(req),
             );
         this.openApiService.respondWithValidation(
             200,

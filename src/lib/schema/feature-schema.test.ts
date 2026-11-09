@@ -1,8 +1,52 @@
 import {
     constraintSchema,
     featureSchema,
+    featureMetadataSchema,
+    featureNameSchema,
     querySchema,
 } from './feature-schema.js';
+
+describe.each([
+    ['feature', featureSchema],
+    ['feature metadata', featureMetadataSchema],
+    ['feature name', featureNameSchema],
+])('%s validation', (_label, schema) => {
+    test.each([
+        'some/name',
+        'some name',
+        'some?name',
+        'some#name',
+        'some%name',
+        '.',
+        '..',
+    ])('rejects URL-unsafe name %s', (name) => {
+        const { error } = schema.validate({ name });
+        expect(error?.details[0].message).toBe('"name" must be URL friendly');
+    });
+
+    test.each([
+        '__proto__',
+        'constructor',
+        'prototype',
+        ...Object.getOwnPropertyNames(Object.prototype).filter(
+            (name) => !['__proto__', 'constructor'].includes(name),
+        ),
+    ])('rejects reserved name %s', (name) => {
+        const { error } = schema.validate({ name });
+        expect(error?.details[0].message).toBe(
+            '"name" must not be a reserved JavaScript property name',
+        );
+    });
+
+    test.each([
+        'app.name',
+        'my-constructor',
+        'prototype-enabled',
+        'Constructor',
+    ])('allows name %s', (name) => {
+        expect(schema.validate({ name }).error).toBeUndefined();
+    });
+});
 
 test('should require URL friendly name', () => {
     const toggle = {

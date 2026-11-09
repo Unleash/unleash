@@ -10,7 +10,7 @@ const StyledStatusRow = styled('div')(({ theme }) => ({
 export const LabelDiscoveryLoading: FC = () => (
     <StyledStatusRow>
         <CircularProgress size={16} />
-        <Typography variant='body2' color='text.secondary'>
+        <Typography variant='body2' sx={{ color: 'text.secondary' }}>
             Discovering labels for this metric…
         </Typography>
     </StyledStatusRow>
@@ -18,7 +18,7 @@ export const LabelDiscoveryLoading: FC = () => (
 
 export const LabelDiscoveryError: FC = () => (
     <StyledStatusRow>
-        <Typography variant='body2' color='text.secondary'>
+        <Typography variant='body2' sx={{ color: 'text.secondary' }}>
             Could not load labels for this metric.
         </Typography>
     </StyledStatusRow>

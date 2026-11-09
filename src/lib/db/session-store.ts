@@ -62,6 +62,17 @@ export default class SessionStore implements ISessionStore {
             .del();
     }
 
+    async deleteSessionsForUsers(userIds: number[]): Promise<void> {
+        if (!userIds || userIds.length === 0) {
+            return;
+        }
+        await this.db<ISessionRow>(TABLE)
+            .whereRaw(`(sess -> 'user' ->> 'id')::int = ANY(?::int[])`, [
+                userIds,
+            ])
+            .del();
+    }
+
     async deleteSessionsForUserExcept(
         userId: number,
         keepSid: string,

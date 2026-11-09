@@ -51,3 +51,9 @@ export const testServerRoute = (
     );
     return { requests };
 };
+
+export const badRequest = (message: string) => ({
+    name: 'BadDataError',
+    message,
+    details: [{ message }],
+});

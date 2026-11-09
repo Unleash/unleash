@@ -1,7 +1,9 @@
 import { promisify } from 'util';
-import type { Request } from 'express';
+import type { Request, Response } from 'express';
 import type { SessionData } from 'express-session';
 import type { IUser } from '../types/user.js';
+import type { IUnleashConfig } from '../types/option.js';
+import { sessionCookieOptions } from './session-cookie.js';
 
 export type SessionUser = Omit<IUser, 'isAPI'> & { isAPI?: boolean };
 
@@ -23,6 +25,33 @@ declare module 'express-session' {
 }
 
 export type SessionExtras = Pick<SessionData, 'logoutUrl' | 'auth'>;
+
+export type EndSessionConfig = Pick<
+    IUnleashConfig,
+    'session' | 'server' | 'secureHeaders' | 'getLogger'
+>;
+
+export const endSession = async (
+    req: Request<any, any, any, any>,
+    res: Response,
+    config: EndSessionConfig,
+): Promise<void> => {
+    try {
+        if (req.session) {
+            await promisify(req.session.destroy).bind(req.session)();
+        }
+    } catch (error) {
+        config
+            .getLogger('/sessions/session-lifecycle.ts')
+            .warn('Could not delete the stored session', error);
+    }
+
+    res.clearCookie(config.session.cookieName, sessionCookieOptions(config));
+
+    if (config.session.clearSiteDataOnLogout) {
+        res.set('Clear-Site-Data', '"cookies", "storage"');
+    }
+};
 
 export const startSession = async (
     req: Request<any, any, any, any>,

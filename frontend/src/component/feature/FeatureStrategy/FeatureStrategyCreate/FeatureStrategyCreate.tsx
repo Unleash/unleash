@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
@@ -19,10 +19,7 @@ import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/perm
 import { useFormErrors } from 'hooks/useFormErrors';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
-import { useCollaborateData } from 'hooks/useCollaborateData';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import type { IFeatureToggle } from 'interfaces/featureToggle';
-import { comparisonModerator } from '../featureStrategy.utils';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
@@ -35,6 +32,8 @@ import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-repla
 import type { CreateFeatureStrategySchema } from 'openapi/index.ts';
 import { summarizeStrategy } from '../summarizeStrategy.ts';
 import { createStrategyTracking } from '../strategyActionsTracking.ts';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { withIncompleteConstraintsDiscarded } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 
 const useStrategyLimit = (strategyCount: number) => {
     const { uiConfig } = useUiConfig();
@@ -49,6 +48,7 @@ const useStrategyLimit = (strategyCount: number) => {
 };
 
 export const FeatureStrategyCreate = () => {
+    const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const environmentId = useRequiredQueryParam('environmentId');
@@ -79,34 +79,10 @@ export const FeatureStrategyCreate = () => {
     );
     const strategyCount = featureEnvironment?.strategies.length || 0;
     const { limit, limitReached } = useStrategyLimit(strategyCount);
-    const ref = useRef<IFeatureToggle>(feature);
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
     const trackCreateStrategy = useTracking(createStrategyTracking);
-
-    const { data, staleDataNotification, forceRefreshCache } =
-        useCollaborateData<IFeatureToggle>(
-            {
-                unleashGetter: useFeature,
-                params: [projectId, featureId],
-                dataKey: 'feature',
-                refetchFunctionKey: 'refetchFeature',
-                options: {},
-            },
-            feature,
-            {
-                afterSubmitAction: refetchFeature,
-            },
-            comparisonModerator,
-        );
-
-    useEffect(() => {
-        if (ref.current.name === '' && feature.name) {
-            forceRefreshCache(feature);
-            ref.current = feature;
-        }
-    }, [feature.name]);
 
     useEffect(() => {
         if (shouldUseDefaultStrategy) {
@@ -167,7 +143,11 @@ export const FeatureStrategyCreate = () => {
         refetchChangeRequests();
     };
 
-    const payload = createStrategyPayload(strategy);
+    const payload = createStrategyPayload(
+        singlePageStrategyForm
+            ? withIncompleteConstraintsDiscarded(strategy)
+            : strategy,
+    );
 
     const onSubmit = async () => {
         const viaChangeRequest = isChangeRequestConfigured(environmentId);
@@ -187,13 +167,14 @@ export const FeatureStrategyCreate = () => {
         }
     };
 
-    const emptyFeature = !data?.project;
+    const emptyFeature = !feature.project;
 
     if (emptyFeature) return null;
 
     return (
         <FormTemplate
-            modal
+            layout='modal'
+            fitContainerHeight={singlePageStrategyForm}
             description={featureStrategyHelp}
             documentationLink={featureStrategyDocsLink}
             documentationLinkLabel={featureStrategyDocsLinkLabel}
@@ -209,7 +190,7 @@ export const FeatureStrategyCreate = () => {
             }
         >
             <FeatureStrategyForm
-                feature={data}
+                feature={feature}
                 strategy={strategy}
                 setStrategy={setStrategy}
                 environmentId={environmentId}
@@ -230,7 +211,6 @@ export const FeatureStrategyCreate = () => {
                 }
                 disabled={limitReached}
             />
-            {staleDataNotification}
         </FormTemplate>
     );
 };

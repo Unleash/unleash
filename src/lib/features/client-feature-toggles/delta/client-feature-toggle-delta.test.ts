@@ -1188,6 +1188,101 @@ describe('ClientFeatureToggleDelta bootstrap behavior', () => {
         });
     });
 
+    test('hydrating another environment does not skip unprocessed events for already initialized environments', async () => {
+        let currentRevisionId = 100;
+        let developmentEnabled = false;
+        const events = [
+            {
+                id: 101,
+                type: 'feature-strategy-update',
+                featureName: 'first',
+                project: 'default',
+                environment: 'development',
+            },
+            {
+                id: 102,
+                type: 'feature-strategy-update',
+                featureName: 'first',
+                project: 'default',
+                environment: 'production',
+            },
+        ];
+        const delta = createDeltaWithTestSnapshot(
+            {
+                getAll: async ({ environment }: { environment: string }) => [
+                    {
+                        name: 'first',
+                        project: 'default',
+                        enabled:
+                            environment === 'development'
+                                ? developmentEnabled
+                                : true,
+                    },
+                ],
+            } as any,
+            {
+                getAllForClientIds: async () => [],
+            } as any,
+            {
+                getDeltaRevisionState: async (environment: string) => ({
+                    projectRevisions: new Map([
+                        [
+                            'default',
+                            environment === 'production'
+                                ? currentRevisionId
+                                : 100,
+                        ],
+                    ]),
+                    maxReferencedSegmentRevision: 0,
+                    segmentRevisions: new Map(),
+                }),
+                getRevisionRange: async (from: number, to: number) =>
+                    events.filter((event) => event.id > from && event.id <= to),
+                getMaxRevisionId: async () => currentRevisionId,
+            } as any,
+            {
+                on: () => undefined,
+            } as any,
+            {
+                isEnabled: (name: string) => name === 'deltaApi',
+            } as any,
+            createDeltaConfig(),
+        );
+
+        await delta.getDelta(undefined, {
+            environment: 'development',
+            project: ['default'],
+        } as any);
+
+        developmentEnabled = true;
+        currentRevisionId = 102;
+        await delta.getDelta(undefined, {
+            environment: 'production',
+            project: ['default'],
+        } as any);
+
+        await delta.onUpdateRevisionEvent();
+
+        const developmentResult = await delta.getDelta(100, {
+            environment: 'development',
+            project: ['default'],
+        } as any);
+
+        expect(developmentResult).toEqual({
+            events: [
+                {
+                    eventId: 101,
+                    type: 'feature-updated',
+                    feature: {
+                        name: 'first',
+                        project: 'default',
+                        enabled: true,
+                    },
+                },
+            ],
+        });
+    });
+
     test('feature project move emits feature-removed for old project and feature-updated for new project', async () => {
         let currentRevisionId = 1;
         const delta = createDeltaWithTestSnapshot(

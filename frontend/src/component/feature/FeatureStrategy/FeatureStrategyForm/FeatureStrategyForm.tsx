@@ -9,9 +9,12 @@ import type {
 import { FeatureStrategyEnabled } from './FeatureStrategyEnabled/FeatureStrategyEnabled.tsx';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-
+import { useUiFlag } from 'hooks/useUiFlag';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
-import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
+import {
+    constraintHasValues,
+    useConstraintsValidation,
+} from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import type { IFormErrors } from 'hooks/useFormErrors';
 import { validateParameterValue } from 'utils/validateParameterValue';
@@ -24,12 +27,10 @@ import {
 import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit.tsx';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled.tsx';
 import { useTracking } from 'hooks/useTracking';
 import type { Tracking } from 'utils/trackingEvents';
 import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests.tsx';
-
-import { StrategyFormBody } from './StrategyFormBody.tsx';
+import { StrategyFormBodySelector } from './StrategyFormBodySelector.tsx';
 import type { ParametersSchema } from 'openapi/index.ts';
 
 export interface IFeatureStrategyFormProps<T extends StrategyFormState> {
@@ -58,6 +59,17 @@ const StyledAlertBox = styled(Box)(({ theme }) => ({
     },
 }));
 
+const StyledIncompleteConstraintsNote = styled('span')(({ theme }) => ({
+    flexGrow: 1,
+    display: 'flex',
+    alignItems: 'center',
+    color: theme.palette.warning.dark,
+    fontSize: theme.typography.body2.fontSize,
+}));
+
+const incompleteConstraintsNote = (count: number): string =>
+    `${count} constraint${count === 1 ? '' : 's'} without values will be discarded unless you fill ${count === 1 ? 'it' : 'them'} in.`;
+
 export const FeatureStrategyForm = <T extends StrategyFormState>({
     feature,
     environmentId,
@@ -75,8 +87,16 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
     tracking,
 }: IFeatureStrategyFormProps<T>) => {
     const trackStrategyForm = useTracking(tracking);
+    const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
     const [showProdGuard, setShowProdGuard] = useState(false);
-    const hasValidConstraints = useConstraintsValidation(strategy.constraints);
+    const hasValidConstraints = useConstraintsValidation(strategy.constraints, {
+        ignoreIncompleteConstraints: singlePageStrategyForm,
+    });
+    const incompleteConstraints = singlePageStrategyForm
+        ? (strategy.constraints ?? []).filter(
+              (constraint) => !constraintHasValues(constraint),
+          )
+        : [];
     const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
     const { strategyDefinition } = useStrategy(strategy.name);
 
@@ -102,6 +122,15 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
         foundEnvironment?.type === 'production' && isOss();
 
     const navigate = useNavigate();
+
+    const useNewStatusContent = useUiFlag('singlePageStrategyForm');
+    const envIsEnabled =
+        feature.environments.find((environment) => {
+            return environment.name === environmentId;
+        })?.enabled ?? false;
+    const environmentDisabledText = envIsEnabled
+        ? null
+        : `This flag is disabled in ${environmentId}, so changes won't take effect until you enable the environment.`;
 
     const { error: uiConfigError, loading: uiConfigLoading } = useUiConfig();
 
@@ -173,7 +202,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
     ) : null;
 
     return (
-        <StrategyFormBody
+        <StrategyFormBodySelector
             strategy={strategy}
             setStrategy={setStrategy}
             strategyDefinition={strategyDefinition}
@@ -185,26 +214,17 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                     <StyledAlertBox>{changeRequestAlert}</StyledAlertBox>
                 ) : null
             }
-            generalTabExtras={
-                <>
-                    <FeatureStrategyEnabledDisabled
-                        enabled={!strategy?.disabled}
-                        onToggleEnabled={() =>
-                            setStrategy((strategyState) => ({
-                                ...strategyState,
-                                disabled: !strategyState.disabled,
-                            }))
-                        }
+            allowEnableDisable
+            statusContent={
+                changeRequestsEnabled ? null : useNewStatusContent ? (
+                    environmentDisabledText
+                ) : (
+                    <FeatureStrategyEnabled
+                        projectId={feature.project}
+                        featureId={feature.name}
+                        environmentId={environmentId}
                     />
-
-                    {changeRequestsEnabled ? null : (
-                        <FeatureStrategyEnabled
-                            projectId={feature.project}
-                            featureId={feature.name}
-                            environmentId={environmentId}
-                        />
-                    )}
-                </>
+                )
             }
             onSubmit={onSubmitWithValidation}
             beforeFooter={
@@ -214,6 +234,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                             flex: 1,
                             display: 'flex',
                             alignItems: 'flex-end',
+                            ':empty': { display: 'none' },
                         }}
                     >
                         {Limit}
@@ -225,6 +246,19 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                 </>
             }
         >
+            {incompleteConstraints.length > 0 ? (
+                <StyledIncompleteConstraintsNote>
+                    {incompleteConstraintsNote(incompleteConstraints.length)}
+                </StyledIncompleteConstraintsNote>
+            ) : null}
+            <Button
+                type='button'
+                color='primary'
+                onClick={onCancelWithTracking}
+                disabled={loading}
+            >
+                Cancel
+            </Button>
             <PermissionButton
                 permission={permission}
                 projectId={feature.project}
@@ -244,14 +278,6 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                     ? changeRequestButtonText
                     : 'Save strategy'}
             </PermissionButton>
-            <Button
-                type='button'
-                color='primary'
-                onClick={onCancelWithTracking}
-                disabled={loading}
-            >
-                Cancel
-            </Button>
             <FeatureStrategyProdGuard
                 open={showProdGuard}
                 onClose={() => setShowProdGuard(false)}
@@ -259,6 +285,6 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                 loading={loading}
                 label='Save strategy'
             />
-        </StrategyFormBody>
+        </StrategyFormBodySelector>
     );
 };

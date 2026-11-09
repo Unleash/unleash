@@ -1,4 +1,5 @@
 import type {
+    FlagLifetime,
     IFeatureToggleStore,
     IFeatureToggleStoreQuery,
 } from '../types/feature-toggle-store-type.js';
@@ -115,7 +116,12 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         project: string,
         data: FeatureToggleInsert,
     ): Promise<FeatureToggle> {
-        const inserted: FeatureToggle = { ...data, project };
+        const inserted: FeatureToggle = {
+            ...data,
+            project,
+            type: data.type ?? 'release',
+            createdAt: data.createdAt ?? new Date(),
+        };
         this.features.push(inserted);
         return inserted;
     }
@@ -182,7 +188,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     ): Promise<FeatureConfigurationClient[]> {
         return this.features.filter(
             (feature) => feature,
-        ) as FeatureConfigurationClient[];
+        ) as unknown as FeatureConfigurationClient[];
     }
 
     async update(
@@ -192,8 +198,13 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         const exists = await this.exists(data.name);
         if (exists) {
             const id = this.features.findIndex((f) => f.name === data.name);
-            const old = this.features.find((f) => f.name === data.name);
-            const updated = { project, ...old, ...data };
+            const old = this.features[id];
+            const updated: FeatureToggle = {
+                ...old,
+                ...data,
+                project,
+                type: data.type ?? old.type,
+            };
             this.features.splice(id, 1);
             this.features.push(updated);
             return updated;
@@ -246,6 +257,16 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
 
     isPotentiallyStale(): Promise<boolean> {
         throw new Error('Method not implemented.');
+    }
+
+    async getLifetime(featureName: string): Promise<FlagLifetime | undefined> {
+        const feature = this.features.find((f) => f.name === featureName);
+        if (!feature) {
+            return undefined;
+        }
+        return feature.lifetimeDays
+            ? { type: 'expiring', days: feature.lifetimeDays }
+            : { type: 'permanent' };
     }
 
     async getFeatureTypeCounts(

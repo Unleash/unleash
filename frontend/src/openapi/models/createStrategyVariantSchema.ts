@@ -7,7 +7,7 @@ import type { CreateStrategyVariantSchemaPayload } from './createStrategyVariant
 import type { CreateStrategyVariantSchemaWeightType } from './createStrategyVariantSchemaWeightType.ts';
 
 /**
- * This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. A strategy variant allows you to attach any data to strategies instead of only returning `true`/`false`. Strategy variants take precedence over feature variants.
+ * Strategy variants allow you to attach any data to strategies instead of only returning `true`/`false`. Strategy variants take precedence over environment-level variants.
  */
 export interface CreateStrategyVariantSchema {
     /** The variant name. Must be unique for this feature flag */

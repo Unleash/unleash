@@ -48,6 +48,7 @@ const resolveContextDefinition = (
 
 export type LegalValueData = {
     legalValues: ILegalValue[];
+    remainingLegalValues: ILegalValue[];
     deletedLegalValues?: Set<string>;
     invalidLegalValues?: Set<string>;
 };
@@ -57,6 +58,7 @@ type EditableConstraintState = {
     validator: (...values: string[]) => ConstraintValidationResult;
     legalValueData?: LegalValueData;
     constraint: EditableConstraint;
+    selectedValues: Set<string>;
     invertedDisabled: boolean;
 };
 
@@ -138,13 +140,34 @@ export const useEditableConstraint = (
         return undefined;
     }, [baseValidator, contextDefinition.legalValues]);
 
-    const legalValueData = contextDefinition.legalValues?.length
-        ? {
-              legalValues: contextDefinition.legalValues,
-              invalidLegalValues,
-              deletedLegalValues,
-          }
-        : undefined;
+    const selectedValues = useMemo(
+        () =>
+            isMultiValueConstraint(localConstraint)
+                ? localConstraint.values
+                : new Set(localConstraint.value ? [localConstraint.value] : []),
+        [localConstraint],
+    );
+
+    const legalValueData = useMemo(
+        () =>
+            contextDefinition.legalValues?.length
+                ? {
+                      legalValues: contextDefinition.legalValues,
+                      remainingLegalValues:
+                          contextDefinition.legalValues.filter(
+                              (legal) => !selectedValues.has(legal.value),
+                          ),
+                      invalidLegalValues,
+                      deletedLegalValues,
+                  }
+                : undefined,
+        [
+            contextDefinition.legalValues,
+            selectedValues,
+            invalidLegalValues,
+            deletedLegalValues,
+        ],
+    );
 
     const invertedDisabled = invertedToggleDisabled(localConstraint);
 
@@ -153,6 +176,7 @@ export const useEditableConstraint = (
         constraint: localConstraint,
         validator,
         legalValueData,
+        selectedValues,
         invertedDisabled,
     } as EditableConstraintState;
 };

@@ -25,7 +25,9 @@ test('stop drains a running job and prevents further executions', async () => {
     const { scheduler } = createScheduler();
     const pending = Promise.withResolvers<void>();
     const job = vi.fn(() => pending.promise);
-    const initialRun = scheduler.schedule(job, 10, 'job', 0);
+    const initialRun = scheduler.schedule(job, 10, 'job', {
+        initialDelayMs: 0,
+    });
     await vi.advanceTimersByTimeAsync(0);
     expect(job).toHaveBeenCalledTimes(1);
 
@@ -38,17 +40,17 @@ test('stop drains a running job and prevents further executions', async () => {
     pending.resolve();
     await Promise.all([initialRun, shutdown]);
     expect(stopped).toHaveBeenCalledTimes(1);
-    await scheduler.schedule(job, 10, 'another-job', 0);
+    await scheduler.schedule(job, 10, 'another-job', { initialDelayMs: 0 });
     await vi.advanceTimersByTimeAsync(100);
     expect(job).toHaveBeenCalledTimes(1);
     expect(vi.getTimerCount()).toBe(0);
 });
 
-test('stop cancels the initial jitter timer and recurring timer', async () => {
+test('stop cancels the initial delay timer and recurring timer', async () => {
     vi.useFakeTimers();
     const { scheduler } = createScheduler();
     const job = vi.fn(async () => {});
-    await scheduler.schedule(job, 100, 'job', 50);
+    await scheduler.schedule(job, 100, 'job', { initialDelayMs: 50 });
     await scheduler.stop();
     await vi.advanceTimersByTimeAsync(200);
     expect(job).not.toHaveBeenCalled();
@@ -61,7 +63,9 @@ test('stop waits for a pending maintenance check without starting its job', asyn
     const pending = Promise.withResolvers<boolean>();
     maintenanceStatus.isMaintenanceMode.mockReturnValue(pending.promise);
     const job = vi.fn(async () => {});
-    const initialRun = scheduler.schedule(job, 100, 'job', 0);
+    const initialRun = scheduler.schedule(job, 100, 'job', {
+        initialDelayMs: 0,
+    });
     const stopped = vi.fn();
     const shutdown = scheduler.stop().then(stopped);
     await vi.advanceTimersByTimeAsync(0);
@@ -72,7 +76,7 @@ test('stop waits for a pending maintenance check without starting its job', asyn
     expect(stopped).toHaveBeenCalledTimes(1);
 });
 
-test('jittered job failures are logged and timed, and shutdown still completes', async () => {
+test('delayed job failures are logged and timed, and shutdown still completes', async () => {
     vi.useFakeTimers();
     const { scheduler, eventBus, error } = createScheduler();
     const failure = new Error('job failed');
@@ -84,7 +88,7 @@ test('jittered job failures are logged and timed, and shutdown still completes',
         },
         100,
         'job',
-        10,
+        { initialDelayMs: 10 },
     );
     await vi.advanceTimersByTimeAsync(10);
     await scheduler.stop();

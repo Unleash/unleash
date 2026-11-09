@@ -40,6 +40,7 @@ import type {
     AdminApiTokenV2Service,
     ReadOnlyApiTokenV2Service,
 } from '../../../features/apitokensv2/api-token-v2-service.js';
+import { canReadApiToken } from '../api-token-permissions.js';
 
 interface ProjectTokenParam {
     token: string;
@@ -169,11 +170,16 @@ export class ProjectApiTokenController extends Controller {
 
         await this.projectService.getProject(projectId); // Validates that the project exists
         const projectTokens = await this.accessibleTokens(user, projectId);
+        const permissions =
+            await this.accessService.getPermissionsForUser(user);
+        const readableTokens = projectTokens.filter((token) =>
+            canReadApiToken(permissions, token),
+        );
         this.openApiService.respondWithValidation(
             200,
             res,
             apiTokensSchema.$id,
-            { tokens: serializeDates(projectTokens) },
+            { tokens: serializeDates(readableTokens) },
         );
     }
 
@@ -197,27 +203,15 @@ export class ProjectApiTokenController extends Controller {
             );
         }
         const tokenData = { ...createToken, projects: [projectId] };
-        let token: IApiToken;
-        if (this.config.flagResolver.isEnabled('secureTokenStorage')) {
-            const tokenV2 =
-                await this.transactionalApiTokenV2Service.transactional(
-                    (service) =>
-                        service.create(
-                            { ...tokenData, userCreated: true },
-                            req.audit,
-                        ),
-                );
-            const { selector: _selector, ...tokenWithSecret } = tokenV2;
-            token = {
-                ...tokenWithSecret,
-                project: tokenV2.projects.join(','),
-            };
-        } else {
-            token = await this.apiTokenService.createApiTokenWithProjects(
-                tokenData,
-                req.audit,
-            );
-        }
+        const tokenV2 = await this.transactionalApiTokenV2Service.transactional(
+            (service) =>
+                service.create({ ...tokenData, userCreated: true }, req.audit),
+        );
+        const { selector: _selector, ...tokenWithSecret } = tokenV2;
+        const token: IApiToken = {
+            ...tokenWithSecret,
+            project: tokenV2.projects.join(','),
+        };
         this.openApiService.respondWithValidation(
             201,
             res,

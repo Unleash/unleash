@@ -58,6 +58,11 @@ export interface UiConfigSchema {
     resourceLimits?: ResourceLimitsSchema;
     /** Whether the SAML configuration is set through environment variables or not. */
     samlConfiguredThroughEnv?: boolean;
+    /**
+     * How often the admin UI should report that the user is still active, in seconds. `0` means it should not: either the instance has no idle timeout or the feature is off.
+     * @minimum 0
+     */
+    sessionKeepAliveIntervalSeconds?: number;
     /** The slogan to display in the UI footer. */
     slogan?: string;
     /** Whether the internal `/_stories` component gallery route is enabled. Controlled by the `ENABLE_STORIES_PAGE` environment variable. */

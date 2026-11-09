@@ -181,7 +181,6 @@ export const adminRoutes: INavigationMenuItem[] = [
         path: '/admin/instance-name',
         title: 'Instance name',
         menu: { adminSettings: true },
-        flag: 'editableInstanceName',
         deployment: 'cloud',
         group: 'instance',
     },

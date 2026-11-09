@@ -3,7 +3,7 @@ import type {
     IChangeRequestUpdateSegment,
     IChangeRequestUpdateStrategy,
 } from 'component/changeRequest/changeRequest.types';
-import type { IFeatureVariant } from 'interfaces/featureToggle';
+import type { VariantSchema } from 'openapi';
 import type { ISegment } from 'interfaces/segment';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { dequal as isEqual } from 'dequal';
@@ -109,7 +109,7 @@ function getChangesThatWouldBeOverwritten<T>(
 }
 
 export function getEnvVariantChangesThatWouldBeOverwritten(
-    currentVariantConfig: IFeatureVariant[] | undefined,
+    currentVariantConfig: VariantSchema[] | undefined,
     change: IChangeRequestPatchVariant,
 ): ChangesThatWouldBeOverwritten | null {
     const { snapshot } = change.payload;

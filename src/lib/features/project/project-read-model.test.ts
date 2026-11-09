@@ -87,6 +87,20 @@ test("it doesn't count flags multiple times when they have multiple events assoc
     expect(insightsQuery).toMatchObject([{ id: projectId, featureCount: 1 }]);
 });
 
+test('core listing honours the archived filter', async () => {
+    await projectStore.create({ id: 'active', name: 'Active' });
+    await projectStore.create({ id: 'retired', name: 'Retired' });
+    await projectStore.archive('retired');
+
+    const activeProjects = await projectReadModel.getProjectsCore();
+    const archivedProjects = await projectReadModel.getProjectsCore({
+        archived: true,
+    });
+
+    expect(activeProjects).toMatchObject([{ id: 'active' }]);
+    expect(archivedProjects).toMatchObject([{ id: 'retired' }]);
+});
+
 test('it uses the last flag change for an flag in the project as lastUpdated', async () => {
     const projectId = 'project';
     const flagName = 'flag';

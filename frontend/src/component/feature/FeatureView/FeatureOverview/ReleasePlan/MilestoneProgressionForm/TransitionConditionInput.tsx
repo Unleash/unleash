@@ -6,7 +6,6 @@ import {
     type SelectChangeEvent,
 } from '@mui/material';
 import type { TransitionUnit } from '../hooks/useTransitionConditionInput.ts';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledInputGroup = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -48,8 +47,6 @@ export const TransitionConditionInput = ({
     disabled,
     error,
 }: TransitionConditionInputProps) => {
-    const exposureBasedAutomationEnabled = useUiFlag('exposureBasedAutomation');
-
     return (
         <StyledInputGroup>
             <TextField
@@ -89,14 +86,9 @@ export const TransitionConditionInput = ({
                 <MenuItem value='days' onKeyDown={stopEnterPropagation}>
                     Days
                 </MenuItem>
-                {exposureBasedAutomationEnabled || unit === 'exposures' ? (
-                    <MenuItem
-                        value='exposures'
-                        onKeyDown={stopEnterPropagation}
-                    >
-                        Exposures
-                    </MenuItem>
-                ) : null}
+                <MenuItem value='exposures' onKeyDown={stopEnterPropagation}>
+                    Exposures
+                </MenuItem>
             </StyledSelect>
         </StyledInputGroup>
     );

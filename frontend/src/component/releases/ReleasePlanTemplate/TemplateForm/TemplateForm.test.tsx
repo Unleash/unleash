@@ -12,14 +12,6 @@ import { TemplateForm } from './TemplateForm.tsx';
 
 const server = testServerSetup();
 
-const setAutomationsFlag = (enabled: boolean) =>
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            releaseTemplatesAutomations: enabled,
-            exposureBasedAutomation: enabled,
-        },
-    });
-
 const defaultMilestone = (
     overrides: Partial<IExtendedMilestonePayload> = {},
 ): IExtendedMilestonePayload => ({
@@ -105,7 +97,7 @@ const renderTemplateForm = ({
 
 describe('milestone automations', () => {
     beforeEach(() => {
-        setAutomationsFlag(true);
+        testServerRoute(server, '/api/admin/ui-config', {});
     });
 
     test('shows automate this transition only on milestones that have a next one', async () => {

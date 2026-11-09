@@ -1,6 +1,7 @@
 import { useEffect, useSyncExternalStore } from 'react';
 import type { IVariant, UnleashClient } from 'unleash-proxy-client';
 import type { UiFlags } from 'interfaces/uiConfig';
+import { IS_DEV } from 'constants/env';
 
 // feature_enabled is the parent feature's state, which is not the same as the
 // variant's own `enabled` (see flag-resolver.ts getAll). The server may send it
@@ -53,15 +54,6 @@ export const applyOverrides = (
 
     return overrides.isEnabled(flag) || false;
 };
-
-// DEV leads because it is a build-time define, so this folds to `false` in a
-// build and the toolbar tree-shakes out entirely -- verified for both `vite
-// build` and `vite build --mode development`. MODE excludes vitest, and
-// import.meta.hot is a runtime backstop for any build that leaves DEV true.
-const TOOLBAR_ENABLED =
-    import.meta.env.DEV &&
-    import.meta.env.MODE !== 'test' &&
-    Boolean(import.meta.hot);
 
 export const changesFlagValues = (event: { type: string }) =>
     event.type !== 'sdk_updated';
@@ -134,13 +126,13 @@ export const useUiFlagOverrides = (flagsFromConfig: UiFlags) => {
 
     // The flag source reads this on evaluation, so it has to be current before
     // the effect below runs.
-    if (TOOLBAR_ENABLED) {
+    if (IS_DEV) {
         flags = flagsFromConfig;
     }
 
     // The branch sits outside the effect callback so that a production build
     // folds it to `noop` and drops initToolbar, and with it the dynamic imports.
-    useEffect(TOOLBAR_ENABLED ? startToolbar : noop, []);
+    useEffect(IS_DEV ? startToolbar : noop, []);
 
-    return TOOLBAR_ENABLED ? client : undefined;
+    return IS_DEV ? client : undefined;
 };

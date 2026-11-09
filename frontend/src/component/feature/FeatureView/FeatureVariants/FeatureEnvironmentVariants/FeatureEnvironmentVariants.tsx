@@ -10,10 +10,8 @@ import { updateWeight } from 'component/common/util';
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from 'component/providers/AccessProvider/permissions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import type {
-    IFeatureEnvironmentWithCrEnabled,
-    IFeatureVariant,
-} from 'interfaces/featureToggle';
+import type { IFeatureEnvironmentWithCrEnabled } from 'interfaces/featureToggle';
+import type { VariantSchema } from 'openapi';
 import { useMemo, useState } from 'react';
 import { EnvironmentVariantsModal } from './EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
 import { EnvironmentVariantsCard } from './EnvironmentVariantsCard/EnvironmentVariantsCard.tsx';
@@ -67,15 +65,15 @@ export const FeatureEnvironmentVariants = () => {
     );
 
     const createPatch = (
-        variants: IFeatureVariant[],
-        newVariants: IFeatureVariant[],
+        variants: VariantSchema[],
+        newVariants: VariantSchema[],
     ) => {
         return jsonpatch.compare(variants, newVariants);
     };
 
     const getApiPayload = (
-        variants: IFeatureVariant[],
-        newVariants: IFeatureVariant[],
+        variants: VariantSchema[],
+        newVariants: VariantSchema[],
     ): {
         patch: jsonpatch.Operation[];
         error?: string;
@@ -88,7 +86,7 @@ export const FeatureEnvironmentVariants = () => {
         }
     };
 
-    const getCrPayload = (variants: IFeatureVariant[]) => ({
+    const getCrPayload = (variants: VariantSchema[]) => ({
         feature: featureId,
         action: 'patchVariant' as const,
         payload: { variants },
@@ -96,7 +94,7 @@ export const FeatureEnvironmentVariants = () => {
 
     const updateVariants = async (
         environment: IFeatureEnvironmentWithCrEnabled,
-        variants: IFeatureVariant[],
+        variants: VariantSchema[],
     ) => {
         if (environment.crEnabled) {
             await addChange(
@@ -133,7 +131,7 @@ export const FeatureEnvironmentVariants = () => {
     };
 
     const pushToEnvironments = async (
-        variants: IFeatureVariant[],
+        variants: VariantSchema[],
         selected: IFeatureEnvironmentWithCrEnabled[],
     ) => {
         try {
@@ -196,7 +194,7 @@ export const FeatureEnvironmentVariants = () => {
         setModalOpen(true);
     };
 
-    const onVariantsConfirm = async (updatedVariants: IFeatureVariant[]) => {
+    const onVariantsConfirm = async (updatedVariants: VariantSchema[]) => {
         if (selectedEnvironment) {
             try {
                 await updateVariants(selectedEnvironment, updatedVariants);

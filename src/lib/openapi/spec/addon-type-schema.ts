@@ -162,7 +162,7 @@ export const addonTypeSchema = {
                 path: {
                     type: 'string',
                     description:
-                        'The path of the installation, relative to the addons API of the integration, globally or in its project.',
+                        "The path of the installation, relative to `/api/admin/integrations`. On a project's integrations page the button adds the project as a `project` query parameter.",
                     example: 'github/app-manifest',
                 },
                 title: {
@@ -179,6 +179,18 @@ export const addonTypeSchema = {
                         'Fill in the organization below, then click Install & connect.',
                 },
             },
+        },
+        fixedEvents: {
+            type: 'boolean',
+            description:
+                "This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. Whether every addon of this type listens to all of its `events`. Hides filter from the form.",
+            example: true,
+        },
+        environmentIndependent: {
+            type: 'boolean',
+            description:
+                "This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. Whether the events of this addon type are independent of environments, so that no environment filter is offered.",
+            example: true,
         },
         alerts: {
             type: 'array',

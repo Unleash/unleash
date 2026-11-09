@@ -13,7 +13,7 @@ export const createClientFeatureToggleDelta = (
 ): ClientFeatureToggleDelta => {
     const { getLogger, eventBus, flagResolver } = config;
 
-    const eventStore = new EventStore(db, getLogger);
+    const eventStore = new EventStore(db, eventBus, getLogger);
 
     const clientFeatureToggleDeltaReadModel =
         new ClientFeatureToggleDeltaReadModel(db, eventBus);

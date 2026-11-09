@@ -6,6 +6,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { EditableConstraint } from './EditableConstraint';
 import type { IConstraint } from 'interfaces/strategy';
 import type { IUnleashContextDefinition } from 'interfaces/context';
+import { formatDateYMDHMS } from 'utils/formatDate';
 
 const server = testServerSetup();
 
@@ -26,31 +27,8 @@ const setupApi = ({
 };
 
 describe('EditableConstraint', () => {
-    describe('REGEX constraint with an existing invalid value', () => {
-        test('opens the regex editor and shows a validation error', async () => {
-            setupApi();
-
-            const constraint: IConstraint = {
-                contextName: 'appName',
-                operator: 'REGEX',
-                value: '[invalid',
-            };
-
-            render(
-                <EditableConstraint
-                    constraint={constraint}
-                    onDelete={noOp}
-                    onUpdate={noOp}
-                />,
-            );
-
-            await screen.findByTestId('CONSTRAINT_VALUES_INPUT');
-            await screen.findByText(/value must be a valid RE2 regex/i);
-        });
-    });
-
     describe('REGEX constraint with an existing valid value', () => {
-        test('opens the regex editor when operator changes away from and back to REGEX', async () => {
+        test('shows the add value button after operator changes away from and back to REGEX, and opens the editor on click', async () => {
             setupApi();
 
             const constraint: IConstraint = {
@@ -74,24 +52,237 @@ describe('EditableConstraint', () => {
             ).not.toBeInTheDocument();
 
             // Change operator away from REGEX (this clears the value)
-            fireEvent.mouseDown(
-                screen.getByRole('combobox', { name: /operator/i }),
-            );
-            fireEvent.click(
-                await screen.findByRole('option', { name: /is one of/i }),
-            );
+            fireEvent.click(screen.getByRole('button', { name: 'Operator' }));
+            fireEvent.click(await screen.findByText(/is one of/i));
 
             // Change operator back to REGEX
-            fireEvent.mouseDown(
-                screen.getByRole('combobox', { name: /operator/i }),
-            );
-            fireEvent.click(
-                await screen.findByRole('option', { name: /matches regex/i }),
+            fireEvent.click(screen.getByRole('button', { name: 'Operator' }));
+            fireEvent.click(await screen.findByText(/matches regex/i));
+
+            const addValueButton = await screen.findByRole('button', {
+                name: 'Add value',
+            });
+            expect(
+                screen.queryByTestId('CONSTRAINT_VALUES_INPUT'),
+            ).not.toBeInTheDocument();
+
+            fireEvent.click(addValueButton);
+
+            await screen.findByTestId('CONSTRAINT_VALUES_INPUT');
+            expect(
+                screen.queryByRole('button', { name: 'Add value' }),
+            ).not.toBeInTheDocument();
+        });
+    });
+
+    describe('editing an existing single value via its pill', () => {
+        test('clicking the value pill opens the editor prefilled with the current value, and submitting replaces it', async () => {
+            setupApi();
+
+            render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'appName',
+                        operator: 'NUM_EQ',
+                        value: '42',
+                    }}
+                    onDelete={noOp}
+                    onUpdate={noOp}
+                />,
             );
 
-            // The editor should open automatically because the value was
-            // cleared when the operator changed.
-            await screen.findByTestId('CONSTRAINT_VALUES_INPUT');
+            const chip = await screen.findByText('42');
+            expect(
+                screen.queryByTestId('CONSTRAINT_VALUES_INPUT'),
+            ).not.toBeInTheDocument();
+
+            fireEvent.click(chip);
+
+            const input = (await screen.findByLabelText(
+                'Constraint Value',
+            )) as HTMLInputElement;
+            expect(input).toHaveValue('42');
+            // the pill is hidden while its value is being edited
+            expect(screen.queryByText('42')).not.toBeInTheDocument();
+
+            await userEvent.clear(input);
+            await userEvent.type(input, '99');
+            fireEvent.keyDown(input, { key: 'Enter' });
+
+            const chipAfterSubmit = await screen.findByText('99');
+            expect(screen.queryByText('42')).not.toBeInTheDocument();
+            expect(
+                screen.queryByTestId('CONSTRAINT_VALUES_INPUT'),
+            ).not.toBeInTheDocument();
+            await waitFor(() => {
+                expect(chipAfterSubmit.closest('.MuiChip-root')).toHaveFocus();
+            });
+        });
+    });
+
+    describe('inline value input', () => {
+        test('keeps an unsubmitted draft selected after an accidental close, commits it via keyboard "Add" without losing focus, and clears it on operator change', async () => {
+            setupApi();
+
+            render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'appName',
+                        operator: 'IN',
+                        values: [],
+                    }}
+                    onDelete={noOp}
+                    onUpdate={noOp}
+                />,
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            let input = (await screen.findByLabelText(
+                'Constraint Value',
+            )) as HTMLInputElement;
+            await userEvent.type(input, 'draft-value');
+            fireEvent.keyDown(input, { key: 'Escape' });
+            expect(
+                screen.queryByTestId('CONSTRAINT_VALUES_INPUT'),
+            ).not.toBeInTheDocument();
+            expect(
+                screen.getByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            ).toHaveFocus();
+
+            fireEvent.click(screen.getByTestId('CONSTRAINT_ADD_VALUES_BUTTON'));
+            input = (await screen.findByLabelText(
+                'Constraint Value',
+            )) as HTMLInputElement;
+            expect(input).toHaveValue('draft-value');
+            expect(input.selectionStart).toBe(0);
+            expect(input.selectionEnd).toBe('draft-value'.length);
+
+            await userEvent.tab();
+            expect(
+                screen.getByTestId('CONSTRAINT_VALUES_ADD_BUTTON'),
+            ).toHaveFocus();
+            await userEvent.keyboard('{Enter}');
+            await screen.findByText('draft-value');
+            expect(input).toHaveValue('');
+            expect(input).toHaveFocus();
+
+            await userEvent.type(input, 'leftover');
+            fireEvent.keyDown(input, { key: 'Escape' });
+
+            fireEvent.click(screen.getByRole('button', { name: 'Operator' }));
+            fireEvent.click(await screen.findByText(/is not one of/i));
+
+            fireEvent.click(screen.getByTestId('CONSTRAINT_ADD_VALUES_BUTTON'));
+            input = await screen.findByLabelText('Constraint Value');
+            expect(input).toHaveValue('');
+        });
+
+        test('moves focus to the new chip after adding a value via keyboard "Add" on a single-value constraint, and back to the add value button once it\'s deleted', async () => {
+            setupApi();
+
+            const { container } = render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'appName',
+                        operator: 'NUM_EQ',
+                    }}
+                    onDelete={noOp}
+                    onUpdate={noOp}
+                />,
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            const input = await screen.findByLabelText('Constraint Value');
+            await userEvent.type(input, '42');
+
+            const addButton = screen.getByTestId(
+                'CONSTRAINT_VALUES_ADD_BUTTON',
+            );
+            addButton.focus();
+            fireEvent.click(addButton);
+
+            const chip = await screen.findByText('42');
+            await waitFor(() => {
+                expect(chip.closest('.MuiChip-root')).toHaveFocus();
+            });
+
+            const deleteIcon = container.querySelector('.MuiChip-deleteIcon');
+            expect(deleteIcon).not.toBeNull();
+            fireEvent.click(deleteIcon as Element);
+
+            const newAddButton = await screen.findByTestId(
+                'CONSTRAINT_ADD_VALUES_BUTTON',
+            );
+            await waitFor(() => {
+                expect(newAddButton).toHaveFocus();
+            });
+        });
+
+        test('moves focus to the add value button after deleting the last chip', async () => {
+            setupApi();
+
+            const { container } = render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'appName',
+                        operator: 'IN',
+                        values: ['only-value'],
+                    }}
+                    onDelete={noOp}
+                    onUpdate={noOp}
+                />,
+            );
+
+            await screen.findByText('only-value');
+            const deleteIcon = container.querySelector('.MuiChip-deleteIcon');
+            expect(deleteIcon).not.toBeNull();
+            fireEvent.click(deleteIcon as Element);
+
+            const addButton = await screen.findByTestId(
+                'CONSTRAINT_ADD_VALUES_BUTTON',
+            );
+            expect(addButton).toHaveFocus();
+        });
+
+        test('moves focus to the new chip after picking a single legal value', async () => {
+            setupApi({
+                contextFields: [
+                    {
+                        name: 'appName',
+                        legalValues: [{ value: '1' }, { value: '2' }],
+                    },
+                ],
+            });
+
+            render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'appName',
+                        operator: 'NUM_EQ',
+                    }}
+                    onDelete={noOp}
+                    onUpdate={noOp}
+                />,
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            await waitFor(() => {
+                expect(screen.queryAllByRole('option').length).toBeGreaterThan(
+                    0,
+                );
+            });
+            fireEvent.click(screen.getByRole('option', { name: '1' }));
+
+            const chip = await screen.findByText('1');
+            await waitFor(() => {
+                expect(chip.closest('.MuiChip-root')).toHaveFocus();
+            });
         });
     });
 
@@ -125,22 +316,16 @@ describe('EditableConstraint', () => {
                 />,
             );
 
-            fireEvent.mouseDown(
-                await screen.findByRole('combobox', { name: /operator/i }),
-            );
             fireEvent.click(
-                await screen.findByRole('option', { name: /is an IP in/i }),
+                await screen.findByRole('button', { name: 'Operator' }),
             );
-
-            await screen.findByText(
-                /IP constraints require these SDK versions/,
-            );
+            fireEvent.click(await screen.findByText(/is an IP in/i));
 
             fireEvent.click(
                 await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
             );
             await screen.findByText(
-                'IP addresses or CIDR ranges, for example 192.168.1.1 or 10.0.0.0/8',
+                /IP addresses or CIDR ranges, for example 192\.168\.1\.1 or\s*10\.0\.0\.0\/8\. IP constraints need a recent SDK\./,
             );
             await userEvent.type(
                 await screen.findByLabelText('Constraint Value'),
@@ -200,7 +385,7 @@ describe('EditableConstraint', () => {
             expect(chip).toHaveTextContent('10.0.0.0/8');
         });
 
-        test('prevents selecting legal values that are invalid for the operator', async () => {
+        test('prevents selecting legal values that are invalid for the operator, and moves focus to the add value button on Escape', async () => {
             setupApi({
                 contextFields: [
                     {
@@ -227,17 +412,29 @@ describe('EditableConstraint', () => {
                 />,
             );
 
-            expect(
-                await screen.findByRole('checkbox', { name: 'not-an-ip-10' }),
-            ).toBeDisabled();
-            expect(
-                screen.getByRole('checkbox', { name: '10.0.0.0/8' }),
-            ).toBeEnabled();
-            screen.getByText(
-                'Values that are not valid for your chosen operator have been disabled.',
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
             );
+            await waitFor(() => {
+                expect(screen.queryAllByRole('option').length).toBeGreaterThan(
+                    0,
+                );
+            });
 
-            await userEvent.type(screen.getByLabelText('Search'), '10{Enter}');
+            expect(
+                screen.getByRole('option', { name: 'not-an-ip-10' }),
+            ).toHaveAttribute('aria-disabled', 'true');
+            expect(
+                screen.getByRole('option', { name: '10.0.0.0/8' }),
+            ).not.toHaveAttribute('aria-disabled', 'true');
+
+            const callsBeforeDisabledClick = onUpdate.mock.calls.length;
+            fireEvent.click(
+                screen.getByRole('option', { name: 'not-an-ip-10' }),
+            );
+            expect(onUpdate.mock.calls.length).toBe(callsBeforeDisabledClick);
+
+            fireEvent.click(screen.getByRole('option', { name: '10.0.0.0/8' }));
 
             await waitFor(() => {
                 expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
@@ -246,8 +443,9 @@ describe('EditableConstraint', () => {
                 });
             });
 
-            await userEvent.clear(screen.getByLabelText('Search'));
-            fireEvent.click(screen.getByRole('button', { name: 'Select all' }));
+            fireEvent.click(
+                screen.getByRole('option', { name: '192.168.1.1' }),
+            );
 
             await waitFor(() => {
                 expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
@@ -255,10 +453,17 @@ describe('EditableConstraint', () => {
                     values: ['10.0.0.0/8', '192.168.1.1'],
                 });
             });
-            screen.getByRole('button', { name: 'Unselect all' });
+
+            fireEvent.keyDown(screen.getByLabelText('Constraint Value'), {
+                key: 'Escape',
+            });
+            expect(screen.queryByLabelText('Constraint Value')).toBeNull();
+            expect(
+                screen.getByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            ).toHaveFocus();
         });
 
-        test('disables select all when no legal value is valid for the operator', async () => {
+        test('shows legal values as disabled when none are valid for the operator', async () => {
             setupApi({
                 contextFields: [
                     {
@@ -280,9 +485,428 @@ describe('EditableConstraint', () => {
                 />,
             );
 
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            await waitFor(() => {
+                expect(screen.queryAllByRole('option').length).toBeGreaterThan(
+                    0,
+                );
+            });
+
             expect(
-                await screen.findByRole('button', { name: 'Select all' }),
-            ).toBeDisabled();
+                screen.getByRole('option', { name: 'not-an-ip' }),
+            ).toHaveAttribute('aria-disabled', 'true');
+        });
+
+        test('adds multiple legal values pasted as a comma-separated list, rejects values not in the legal set, and keeps the popover open once all values are selected', async () => {
+            setupApi({
+                contextFields: [
+                    {
+                        name: 'ipAddress',
+                        legalValues: [
+                            { value: '10.0.0.0/8' },
+                            { value: '192.168.1.1' },
+                            { value: '172.16.0.0/12' },
+                        ],
+                    },
+                ],
+            });
+            const onUpdate = vi.fn();
+
+            render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'ipAddress',
+                        operator: 'IN_CIDR',
+                        values: [],
+                    }}
+                    onDelete={vi.fn()}
+                    onUpdate={onUpdate}
+                />,
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            const input = await screen.findByLabelText('Constraint Value');
+            await waitFor(() => {
+                expect(screen.queryAllByRole('option').length).toBeGreaterThan(
+                    0,
+                );
+            });
+
+            await userEvent.type(input, '10.0.0.0/8,192.168.1.1');
+            fireEvent.keyDown(input, { key: 'Enter' });
+
+            await waitFor(() => {
+                expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
+                    operator: 'IN_CIDR',
+                    values: ['10.0.0.0/8', '192.168.1.1'],
+                });
+            });
+
+            await userEvent.type(input, '8.8.8.8');
+            fireEvent.keyDown(input, { key: 'Enter' });
+
+            expect(
+                await screen.findByText(
+                    '"8.8.8.8" is not a legal value for this field.',
+                ),
+            ).toBeInTheDocument();
+
+            // Picking the last remaining legal value (172.16.0.0/12) selects
+            // every legal value, but the popover stays open so the selection
+            // can still be edited (e.g. via "Unselect all").
+            await userEvent.clear(input);
+            fireEvent.click(
+                screen.getByRole('option', { name: '172.16.0.0/12' }),
+            );
+
+            await waitFor(() => {
+                expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
+                    operator: 'IN_CIDR',
+                    values: ['10.0.0.0/8', '192.168.1.1', '172.16.0.0/12'],
+                });
+            });
+
+            expect(input).toBeInTheDocument();
+            expect(
+                screen.getByRole('button', { name: 'Unselect all' }),
+            ).toBeInTheDocument();
+        });
+
+        test('typing a prefix toggles the auto-highlighted match, via Enter or the "Add" button, without raising a stale "not a legal value" error', async () => {
+            setupApi({
+                contextFields: [
+                    {
+                        name: 'ipAddress',
+                        legalValues: [
+                            { value: '10.0.0.0/8' },
+                            { value: '192.168.1.1' },
+                        ],
+                    },
+                ],
+            });
+            const onUpdate = vi.fn();
+
+            render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'ipAddress',
+                        operator: 'IN_CIDR',
+                        values: [],
+                    }}
+                    onDelete={vi.fn()}
+                    onUpdate={onUpdate}
+                />,
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            const input = await screen.findByLabelText('Constraint Value');
+            await waitFor(() => {
+                expect(screen.queryAllByRole('option').length).toBeGreaterThan(
+                    0,
+                );
+            });
+
+            await userEvent.type(input, '10.');
+            fireEvent.keyDown(input, { key: 'Enter' });
+
+            await waitFor(() => {
+                expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
+                    operator: 'IN_CIDR',
+                    values: ['10.0.0.0/8'],
+                });
+            });
+
+            expect(input).toHaveValue('');
+            expect(
+                screen.queryByText(/is not a legal value/),
+            ).not.toBeInTheDocument();
+
+            // The "Add" button must match this, not fall back to a literal
+            // submit of "192." (which isn't itself a legal value).
+            await userEvent.type(input, '192.');
+            fireEvent.click(screen.getByTestId('CONSTRAINT_VALUES_ADD_BUTTON'));
+
+            await waitFor(() => {
+                expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
+                    operator: 'IN_CIDR',
+                    values: ['10.0.0.0/8', '192.168.1.1'],
+                });
+            });
+            expect(
+                screen.queryByText(/is not a legal value/),
+            ).not.toBeInTheDocument();
+        });
+
+        test('arrow keys visibly move the highlight between legal value options', async () => {
+            setupApi({
+                contextFields: [
+                    {
+                        name: 'ipAddress',
+                        legalValues: [
+                            { value: '10.0.0.0/8' },
+                            { value: '192.168.1.1' },
+                        ],
+                    },
+                ],
+            });
+
+            render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'ipAddress',
+                        operator: 'IN_CIDR',
+                        values: [],
+                    }}
+                    onDelete={vi.fn()}
+                    onUpdate={vi.fn()}
+                />,
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            const input = await screen.findByLabelText('Constraint Value');
+            await waitFor(() => {
+                expect(screen.queryAllByRole('option').length).toBeGreaterThan(
+                    0,
+                );
+            });
+
+            fireEvent.keyDown(input, { key: 'ArrowDown' });
+
+            await waitFor(() => {
+                const option = screen.getByRole('option', {
+                    name: '192.168.1.1',
+                });
+                expect(option).toHaveClass('Mui-focused');
+                expect(getComputedStyle(option).backgroundColor).not.toBe('');
+                expect(getComputedStyle(option).backgroundColor).not.toBe(
+                    'rgba(0, 0, 0, 0)',
+                );
+            });
+
+            // Highlighting an option via arrow keys is virtual (focus stays
+            // on the input), so Tab must still reach "Select all" normally.
+            await userEvent.tab();
+            expect(
+                screen.getByTestId('CONSTRAINT_VALUES_SELECT_ALL'),
+            ).toHaveFocus();
+            expect(input).toBeInTheDocument();
+        });
+
+        test('tabs from the input through the "Add" button to "Select all" without closing the popover', async () => {
+            setupApi({
+                contextFields: [
+                    {
+                        name: 'ipAddress',
+                        legalValues: [
+                            { value: '10.0.0.0/8' },
+                            { value: '192.168.1.1' },
+                        ],
+                    },
+                ],
+            });
+
+            render(
+                <EditableConstraint
+                    constraint={{
+                        contextName: 'ipAddress',
+                        operator: 'IN_CIDR',
+                        values: [],
+                    }}
+                    onDelete={vi.fn()}
+                    onUpdate={vi.fn()}
+                />,
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            const input = await screen.findByLabelText('Constraint Value');
+            await waitFor(() => {
+                expect(screen.queryAllByRole('option').length).toBeGreaterThan(
+                    0,
+                );
+            });
+
+            // With no typed value, "Add" is disabled and skipped by Tab.
+            await userEvent.tab();
+            expect(
+                screen.getByTestId('CONSTRAINT_VALUES_SELECT_ALL'),
+            ).toHaveFocus();
+            expect(input).toBeInTheDocument();
+
+            input.focus();
+            await userEvent.type(input, '10.0.0.0/8');
+            await userEvent.tab();
+            expect(
+                screen.getByTestId('CONSTRAINT_VALUES_ADD_BUTTON'),
+            ).toHaveFocus();
+
+            await userEvent.tab();
+            expect(
+                screen.getByTestId('CONSTRAINT_VALUES_SELECT_ALL'),
+            ).toHaveFocus();
+            expect(input).toBeInTheDocument();
+        });
+    });
+
+    describe('DATE_AFTER constraint', () => {
+        const dateConstraint: IConstraint = {
+            contextName: 'appName',
+            operator: 'DATE_AFTER',
+            value: '',
+        };
+
+        test('opens a popover with an expanded calendar, and adds a date picked from it as a chip labeled with a human-readable date', async () => {
+            setupApi();
+            const onUpdate = vi.fn();
+
+            render(
+                <EditableConstraint
+                    constraint={dateConstraint}
+                    onDelete={noOp}
+                    onUpdate={onUpdate}
+                />,
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+
+            expect(await screen.findByRole('grid')).toBeInTheDocument();
+            expect(
+                document.querySelector('input[type="datetime-local"]'),
+            ).not.toBeInTheDocument();
+            expect(
+                screen.getByText(/shown in your local time zone/i),
+            ).toBeInTheDocument();
+
+            // submitting with no date picked shows a date-specific error,
+            // not the generic empty-value message
+            fireEvent.keyDown(document.activeElement!, { key: 'Enter' });
+            expect(
+                screen.getByText('The value must be a complete date with time'),
+            ).toBeInTheDocument();
+            expect(
+                screen.queryByText('Value cannot be empty or whitespace'),
+            ).not.toBeInTheDocument();
+
+            const today = await screen.findByRole('gridcell', {
+                current: 'date',
+            });
+            fireEvent.click(today);
+            fireEvent.click(screen.getByTestId('CONSTRAINT_VALUES_DONE'));
+
+            await waitFor(() => {
+                expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
+                    operator: 'DATE_AFTER',
+                });
+            });
+
+            const isoValue = onUpdate.mock.lastCall?.[0].value as string;
+            const expectedLabel = formatDateYMDHMS(
+                isoValue,
+                navigator.language,
+            );
+            expect(screen.getByText(expectedLabel)).toBeInTheDocument();
+            expect(screen.queryByText(isoValue)).not.toBeInTheDocument();
+            expect(
+                screen.queryByTestId('CONSTRAINT_VALUES_INPUT'),
+            ).not.toBeInTheDocument();
+        });
+
+        test('Enter does not submit while still on the day/hours steps, only once the minutes step is reached', async () => {
+            setupApi();
+            const onUpdate = vi.fn();
+
+            render(
+                <EditableConstraint
+                    constraint={dateConstraint}
+                    onDelete={noOp}
+                    onUpdate={onUpdate}
+                />,
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            const baselineCalls = onUpdate.mock.calls.length;
+
+            const today = await screen.findByRole('gridcell', {
+                current: 'date',
+            });
+            fireEvent.click(today);
+
+            // picking a day auto-advances straight to the hours view
+            fireEvent.keyDown(screen.getByRole('listbox'), { key: 'Enter' });
+            expect(onUpdate.mock.calls.length).toBe(baselineCalls);
+
+            // advance from hours to minutes, the last step
+            fireEvent.click(
+                screen.getByRole('button', { name: /open next view/i }),
+            );
+            fireEvent.keyDown(screen.getByRole('listbox'), { key: 'Enter' });
+
+            await waitFor(() => {
+                expect(onUpdate.mock.calls.length).toBeGreaterThan(
+                    baselineCalls,
+                );
+            });
+            expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
+                operator: 'DATE_AFTER',
+            });
+        });
+
+        test('the trigger is a native-like segmented field: each date/time part is its own control, adjustable with arrow keys', async () => {
+            setupApi();
+            const onUpdate = vi.fn();
+
+            render(
+                <EditableConstraint
+                    constraint={dateConstraint}
+                    onDelete={noOp}
+                    onUpdate={onUpdate}
+                />,
+            );
+
+            fireEvent.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            );
+            const sections = screen.getAllByRole('spinbutton');
+            // section order/12h-vs-24h follows the resolved locale; jsdom
+            // defaults to en-US (Month/Day/Year order, 12h clock)
+            expect(sections.map((s) => s.getAttribute('aria-label'))).toEqual([
+                'Month',
+                'Day',
+                'Year',
+                'Hours',
+                'Minutes',
+                'Meridiem',
+            ]);
+
+            for (const section of sections) {
+                await userEvent.click(section);
+                await userEvent.keyboard('{ArrowUp}');
+            }
+            fireEvent.click(screen.getByTestId('CONSTRAINT_VALUES_DONE'));
+
+            await waitFor(() => {
+                expect(onUpdate.mock.lastCall?.[0]).toMatchObject({
+                    operator: 'DATE_AFTER',
+                });
+            });
+            expect(onUpdate.mock.lastCall?.[0].value).toBe(
+                new Date(
+                    `${new Date().getFullYear()}-01-01T01:00`,
+                ).toISOString(),
+            );
         });
     });
 });

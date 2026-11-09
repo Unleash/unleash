@@ -84,9 +84,13 @@ export default class RegisterController extends Controller {
         const clientIp = extractClientIp(req);
         const environment = this.resolveEnvironment(user); // derived from the API token only
         data.projects = this.resolveProject(user);
+        const registration =
+            user instanceof ApiUser && user.appName
+                ? { ...data, appName: user.appName }
+                : data;
 
         await this.clientInstanceService.registerBackendClient(
-            data,
+            registration,
             clientIp,
             environment,
         );

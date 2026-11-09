@@ -16,7 +16,6 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
-                    tagManagementViaUi: true,
                 },
             },
         },
@@ -82,6 +81,20 @@ test('Can create a tag', async () =>
         .expect((res) => {
             expect(res.status).toBe(201);
         }));
+
+test('creates a tag with a non-ASCII value', async () => {
+    const { headers } = await app.request
+        .post('/api/admin/tags')
+        .send({ type: 'simple', value: 'zażółć 🚀' })
+        .expect(201);
+
+    expect(headers.location).toBe(
+        `tags/simple/${encodeURIComponent('zażółć 🚀')}`,
+    );
+    await app.request
+        .get(`/api/admin/tags/simple/${encodeURIComponent('zażółć 🚀')}`)
+        .expect(200);
+});
 
 test('Can validate a tag', async () =>
     app.request
@@ -218,6 +231,28 @@ test('Can bulk remove tags', async () => {
         .expect(200);
 });
 
+test('Can add the same new tag twice in one request', async () => {
+    const tag = { type: 'simple', value: 'TeamBlue' };
+    await app.createFeature('duplicate.tag.feature');
+    await app.request.get('/api/admin/tags/simple/TeamBlue').expect(404);
+
+    await app.request
+        .put('/api/admin/projects/default/tags')
+        .send({
+            features: ['duplicate.tag.feature'],
+            tags: {
+                addedTags: [tag, tag],
+                removedTags: [],
+            },
+        })
+        .expect(200);
+
+    const res = await app.request.get(
+        '/api/admin/features/duplicate.tag.feature/tags',
+    );
+    expect(res.body).toMatchObject({ tags: [tag] });
+});
+
 test('backward compatibility: the API should return invalid tag names if they exist', async () => {
     const tag = { value: '  ', type: 'simple' };
     await db.stores.tagStore.createTag(tag);
@@ -320,6 +355,37 @@ test('renames a tag to a value with non-ASCII characters', async () => {
         .expect(200);
 
     expect(body.tag).toEqual({ type: 'simple', value: 'zażółć gęślą jaźń' });
+});
+
+test('counts an emoji as one character towards the maximum length', async () => {
+    await db.stores.tagStore.createTag({ type: 'simple', value: 'short' });
+
+    const { body } = await app.request
+        .post('/api/admin/tags/simple/short/rename')
+        .send({ value: '🛸'.repeat(50) })
+        .expect(200);
+
+    expect(body.tag.value).toBe('🛸'.repeat(50));
+});
+
+test.each([
+    ['blank', '   '],
+    ['too short', ' a '],
+    ['single emoji', '🚀'],
+    ['too long', 'a'.repeat(51)],
+    ['too long emoji', '🚀'.repeat(51)],
+])('rejects renaming a tag to a %s value', async (reason, value) => {
+    const tag = { type: 'simple', value: `invalid-${reason}` };
+    await db.stores.tagStore.createTag(tag);
+
+    await app.request
+        .post(`/api/admin/tags/simple/${encodeURIComponent(tag.value)}/rename`)
+        .send({ value })
+        .expect(400);
+
+    await app.request
+        .get(`/api/admin/tags/simple/${encodeURIComponent(tag.value)}`)
+        .expect(200);
 });
 
 test('keeps the creation date of a renamed tag', async () => {

@@ -144,6 +144,30 @@ const createRateLimitRules = (config: IUnleashConfig): RateLimitRule[] => {
             },
         },
         {
+            pathPrefixes: ['/feedback'],
+            methods: ['POST'],
+            beforeAuthentication: {
+                ...perMinute,
+                limit: config.rateLimiting.feedbackMaxPerMinute,
+            },
+        },
+        {
+            pathPrefixes: ['/api/admin/playground'],
+            methods: ['POST'],
+            afterAuthentication: {
+                ...perMinute,
+                limit: config.rateLimiting.playgroundMaxPerMinute,
+            },
+        },
+        {
+            pathPrefixes: ['/api/admin/mcp'],
+            methods: ['POST'],
+            afterAuthentication: {
+                ...perMinute,
+                limit: config.rateLimiting.mcpMaxPerMinute,
+            },
+        },
+        {
             pathPrefixes: ['/api/admin/user-admin'],
             methods: ['POST'],
             afterAuthentication: {

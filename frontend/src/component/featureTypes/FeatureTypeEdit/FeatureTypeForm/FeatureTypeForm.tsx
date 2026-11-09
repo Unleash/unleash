@@ -118,7 +118,7 @@ export const FeatureTypeForm: FC<FeatureTypeFormProps> = ({
 
     return (
         <FormTemplate
-            modal
+            layout='modal'
             title={
                 loading
                     ? 'Edit flag type'

@@ -1,7 +1,9 @@
 import Input from 'component/common/Input/Input';
 import { Alert, Box, styled, Typography, useTheme } from '@mui/material';
 import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import FormTemplate, {
+    type FormTemplateLayout,
+} from 'component/common/FormTemplate/FormTemplate';
 import { TemplateFormDescription } from './TemplateFormDescription.tsx';
 import { MilestoneList } from './MilestoneList/MilestoneList.tsx';
 import type { IExtendedMilestonePayload } from 'component/releases/hooks/useTemplateForm';
@@ -48,7 +50,7 @@ interface ITemplateFormProps {
     formatApiCode: () => string;
     handleSubmit: (e: React.FormEvent) => void;
     loading?: boolean;
-    modal?: boolean;
+    layout?: FormTemplateLayout;
     Limit?: React.ReactNode;
     children?: React.ReactNode;
 }
@@ -67,7 +69,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
     archived,
     formatApiCode,
     handleSubmit,
-    modal,
+    layout,
     Limit,
     children,
 }) => {
@@ -86,7 +88,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
             title={formTitle}
             description={<TemplateFormDescription />}
             formatApiCode={formatApiCode}
-            modal={modal}
+            layout={layout}
         >
             {archived && (
                 <Alert severity='warning'>

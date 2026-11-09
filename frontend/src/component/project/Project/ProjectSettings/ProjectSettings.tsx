@@ -51,7 +51,6 @@ export const ProjectSettings = () => {
         projectId,
     );
     const showReleaseTemplatesTab = isEnterprise() && canManageReleaseTemplates;
-    const showIntegrationsTab = useUiFlag('slackIntegrationProjectLevel');
 
     const paidTabs = (...tabs: ITab[]) =>
         isPro() || isEnterprise() ? tabs : [];
@@ -95,14 +94,10 @@ export const ProjectSettings = () => {
             id: 'default-strategy',
             label: 'Default strategy',
         },
-        ...(showIntegrationsTab
-            ? [
-                  {
-                      id: 'integrations',
-                      label: 'Integrations',
-                  },
-              ]
-            : []),
+        {
+            id: 'integrations',
+            label: 'Integrations',
+        },
         ...paidTabs({
             id: 'change-requests',
             label: 'Change requests',
@@ -168,12 +163,10 @@ export const ProjectSettings = () => {
                     element={<ProjectDefaultStrategySettings />}
                 />
                 <Route path='actions/*' element={<ProjectActions />} />
-                {showIntegrationsTab ? (
-                    <Route
-                        path='integrations/*'
-                        element={<ProjectIntegrations />}
-                    />
-                ) : null}
+                <Route
+                    path='integrations/*'
+                    element={<ProjectIntegrations />}
+                />
                 <Route
                     path='*'
                     element={<Navigate replace to={toTabPath(tabs[0].id)} />}

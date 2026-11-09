@@ -412,6 +412,9 @@ export class UserService {
     }
 
     async deleteUser(userId: number, auditUser: IAuditUser): Promise<void> {
+        if (!(await this.store.exists(userId))) {
+            return;
+        }
         const user = await this.getUser(userId);
         await this.accessService.wipeUserPermissions(userId);
         await this.sessionService.deleteSessionsForUser(userId);
@@ -424,6 +427,32 @@ export class UserService {
                 auditUser,
             }),
         );
+    }
+
+    async deleteInactiveUsers(
+        numberOfDaysToBeInactive: number,
+        auditUser: IAuditUser,
+    ): Promise<void> {
+        const usersDeleted = await this.store.deleteInactiveUsers(
+            numberOfDaysToBeInactive,
+            auditUser.id,
+        );
+        // Note: after deletion we can't get the role for the user. This is a simplification
+        const viewerRole = await this.accessService.getPredefinedRole(
+            RoleName.VIEWER,
+        );
+        const userIds = usersDeleted.map((user) => user.id);
+        await this.accessService.bulkWipeUserPermissions(userIds);
+        await this.sessionService.deleteSessionsForUsers(userIds);
+        if (usersDeleted.length > 0) {
+            const deletions = usersDeleted.map((user) => {
+                return new UserDeletedEvent({
+                    deletedUser: { ...user, rootRole: viewerRole.id },
+                    auditUser,
+                });
+            });
+            await this.eventService.storeEventsOrThrow([...deletions]);
+        }
     }
 
     async deleteScimUsers(auditUser: IAuditUser): Promise<void> {

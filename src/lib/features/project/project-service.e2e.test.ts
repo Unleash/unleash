@@ -33,7 +33,7 @@ import { extractAuditInfoFromUser } from '../../util/index.js';
 import { ApiTokenType } from '../../types/model.js';
 import { createApiTokenService } from '../api-tokens/createApiTokenService.js';
 import type User from '../../types/user.js';
-import { beforeAll, expect, test, beforeEach, afterAll } from 'vitest';
+import { beforeAll, expect, test, beforeEach, afterAll, vi } from 'vitest';
 let stores: IUnleashStores;
 let db: ITestDb;
 
@@ -2175,6 +2175,78 @@ test('should get correct amount of project members for current and past window',
     expect(result.updates.projectMembersAddedCurrentWindow).toBe(6); // 5 members + 1 owner
     expect(result.updates.projectActivityCurrentWindow).toBe(2);
     expect(result.updates.projectActivityPastWindow).toBe(0);
+});
+
+const setUpStatusJob = async (projectIds: string[]) => {
+    for (const id of projectIds) {
+        await projectService.createProject({ id, name: id }, user, auditUser);
+    }
+    const logs = { info: [] as unknown[][], error: [] as unknown[][] };
+    const service = createProjectService(
+        db.rawDatabase,
+        createTestConfig({
+            getLogger: () => ({
+                ...getLogger(),
+                info: (...args: unknown[]) => logs.info.push(args),
+                error: (...args: unknown[]) => logs.error.push(args),
+            }),
+        }),
+    );
+    const statsRows = () =>
+        db
+            .rawDatabase('project_stats')
+            .whereIn('project', projectIds)
+            .orderBy('project')
+            .pluck('project');
+    return { service, logs, statsRows };
+};
+
+test('status job skips a project deleted mid-run and updates the others', async () => {
+    const { service, logs, statsRows } = await setUpStatusJob([
+        'stats-before',
+        'stats-deleted',
+        'stats-after',
+    ]);
+    // Delete the project after the job has listed it but before the upsert.
+    const getStatusUpdates = service.getStatusUpdates.bind(service);
+    vi.spyOn(service, 'getStatusUpdates').mockImplementation(async (id) => {
+        const result = await getStatusUpdates(id);
+        if (id === 'stats-deleted') {
+            await stores.projectStore.delete(id);
+        }
+        return result;
+    });
+
+    await service.statusJob();
+
+    expect(await statsRows()).toEqual(['stats-after', 'stats-before']);
+    expect(logs.info).toContainEqual([
+        'Skipping project stats for deleted project stats-deleted',
+    ]);
+    expect(logs.error).toEqual([]);
+});
+
+test('status job logs a failing project and updates the others', async () => {
+    const { service, logs, statsRows } = await setUpStatusJob([
+        'stats-fail-a',
+        'stats-fail-b',
+    ]);
+    const getStatusUpdates = service.getStatusUpdates.bind(service);
+    const failure = new Error('stats query failed');
+    vi.spyOn(service, 'getStatusUpdates').mockImplementation(async (id) => {
+        if (id === 'stats-fail-a') {
+            throw failure;
+        }
+        return getStatusUpdates(id);
+    });
+
+    await service.statusJob();
+
+    expect(await statsRows()).toEqual(['stats-fail-b']);
+    expect(logs.error).toContainEqual([
+        'Failed to update project stats for project stats-fail-a',
+        failure,
+    ]);
 });
 
 describe('feature flag naming patterns', () => {

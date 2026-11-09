@@ -1,5 +1,7 @@
 import type EventEmitter from 'events';
 import NotFoundError from '../error/notfound-error.js';
+import BadDataError from '../error/bad-data-error.js';
+import { FOREIGN_KEY_VIOLATION } from '../error/db-error.js';
 import type {
     IClientApplication,
     IClientApplications,
@@ -374,7 +376,22 @@ export default class ClientApplicationsStore
 
     async delete(key: string): Promise<void> {
         const stopTimer = this.timer('delete');
-        await this.db(TABLE).where('app_name', key).del();
+        await this.db(TABLE)
+            .where('app_name', key)
+            .del()
+            .catch((error) => {
+                // PostgreSQL 18+ reports ON DELETE RESTRICT as 23001;
+                // older versions report a foreign-key violation instead.
+                if (
+                    error.code === FOREIGN_KEY_VIOLATION ||
+                    error.code === '23001'
+                ) {
+                    throw new BadDataError(
+                        'Application cannot be deleted while it is in use',
+                    );
+                }
+                throw error;
+            });
         stopTimer();
     }
 
@@ -571,6 +588,13 @@ export default class ClientApplicationsStore
         const stopTimer = this.timer('removeInactiveApplications');
         const rows = await this.db(TABLE)
             .whereRaw("seen_at < now() - interval '30 days'")
+            .whereNotExists(
+                this.db('api_tokens_v2')
+                    .select(1)
+                    .whereRaw(
+                        'api_tokens_v2.application = client_applications.app_name',
+                    ),
+            )
             .del();
         stopTimer();
         if (rows > 0) {

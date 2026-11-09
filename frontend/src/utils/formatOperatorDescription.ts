@@ -48,8 +48,35 @@ const invertedConstraintOperatorDescriptions: Record<Operator, string> = {
     SEMVER_EQ: 'is a SemVer not equal to',
     SEMVER_GT: 'is a SemVer not greater than',
     SEMVER_LT: 'is a SemVer not less than',
-    SEMVER_GTE: 'is a SemVer not greater than or equal to',
-    SEMVER_LTE: 'is a SemVer not less than or equal to',
+    SEMVER_GTE: 'is a SemVer less than',
+    SEMVER_LTE: 'is a SemVer greater than',
     REGEX: 'does not match regex',
     IN_CIDR: 'is an IP not in',
+};
+
+export const operatorExplanations: Record<Operator, string> = {
+    IN: 'Exact match on any value you list.',
+    NOT_IN: 'No match on any value you list.',
+    STR_CONTAINS: 'The value appears anywhere in the field.',
+    STR_STARTS_WITH: 'ada@ matches ada@gmail.com.',
+    STR_ENDS_WITH:
+        '@gmail.com matches ada@gmail.com – handy for whole domains.',
+
+    NUM_EQ: 'Exactly this number.',
+    NUM_GT: 'Above this number.',
+    NUM_GTE: 'Above or equal to this number.',
+    NUM_LT: 'Below this number.',
+    NUM_LTE: 'Below or equal to this number.',
+
+    DATE_BEFORE: 'Before this date.',
+    DATE_AFTER: 'After this date.',
+
+    SEMVER_EQ: 'Exactly this version.',
+    SEMVER_GT: 'Releases newer than this version.',
+    SEMVER_LT: 'Releases older than this version.',
+    SEMVER_GTE: 'This version and newer releases.',
+    SEMVER_LTE: 'This version and older releases.',
+
+    REGEX: 'Matches values against a regular expression',
+    IN_CIDR: 'Matches IP addresses within this CIDR range',
 };

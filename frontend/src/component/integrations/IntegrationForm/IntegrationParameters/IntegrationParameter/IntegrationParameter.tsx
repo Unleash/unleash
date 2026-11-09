@@ -19,13 +19,20 @@ const customEditors: Record<string, FC<IIntegrationParameterProps>> = {
     'github:appNameRepoMap': GithubAppNameRepoMap,
 };
 
+const hiddenParameters: Record<string, (config: AddonSchema) => boolean> = {
+    'github:repositories': () => true,
+    'github:appNameRepoMap': (config) => !config.id,
+};
+
 export const IntegrationParameter = ({
     setParameterValue,
     setStructuredParameter,
     ...props
 }: IIntegrationParameterProps) => {
-    const CustomEditor =
-        customEditors[`${props.config.provider}:${props.definition.name}`];
+    const key = `${props.config.provider}:${props.definition.name}`;
+    if (hiddenParameters[key]?.(props.config)) return null;
+
+    const CustomEditor = customEditors[key];
 
     return (
         <StyledAddonParameterContainer>

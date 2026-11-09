@@ -85,7 +85,8 @@ export interface FeatureToggleDTO {
 
 export interface FeatureToggle extends FeatureToggleDTO {
     project: string;
-    createdAt?: Date;
+    type: string;
+    createdAt: Date;
 }
 
 export interface IFeatureToggleListItem extends FeatureToggle {
@@ -137,6 +138,7 @@ export interface FeatureToggleView extends FeatureToggleWithEnvironment {
     lifecycle: IFeatureLifecycleStage | undefined;
     collaborators?: { users: Collaborator[] };
     links: Omit<IFeatureLink, 'feature'>[];
+    expectedLifetimeEndsAt?: Date | null;
 }
 
 export interface IEnvironmentDetail extends IEnvironmentBase {
@@ -223,6 +225,7 @@ export interface IApiTokenCreate {
 
 export interface IApiToken
     extends Omit<IApiTokenCreate, 'alias' | 'createdByUserId'> {
+    appName?: string;
     createdAt: Date;
     seenAt?: Date;
     environment: string;
@@ -282,6 +285,17 @@ export interface IEnvironmentOverview extends IEnvironmentBase {
     hasEnabledStrategies?: boolean;
     yes?: number;
     no?: number;
+}
+
+export interface IFeatureOverviewCore {
+    name: string;
+    type: string;
+    description: string | null;
+    stale: boolean;
+    favorite: false;
+    impressionData: boolean;
+    createdAt: Date;
+    environments: [];
 }
 
 export interface IFeatureOverview {
@@ -454,6 +468,8 @@ export interface IAddonDefinition {
     tagTypes?: ITagType[];
     installation?: IAddonInstallation;
     serverInstallation?: IAddonServerInstallation;
+    fixedEvents?: boolean;
+    environmentIndependent?: boolean;
     alerts?: IAddonAlert[];
     howTo?: string;
 }
@@ -471,7 +487,6 @@ export interface IAddonInstallation {
 
 // Experimental: may change or be removed.
 export interface IAddonServerInstallation {
-    // Relative to the integration's addons API.
     path: string;
     title?: string;
     helpText?: string;

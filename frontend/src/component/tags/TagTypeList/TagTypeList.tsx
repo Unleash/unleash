@@ -44,7 +44,6 @@ import {
     tagsTableTracking,
 } from '../tagsTracking.ts';
 import { useTrackedSorting } from 'hooks/useTrackedSorting';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 type TagTypeRow = {
     name: string;
@@ -116,7 +115,6 @@ export const TagTypeList = () => {
     const { tagTypes, refetch, loading } = useTagTypes();
     const { setToastData, setToastApiError } = useToast();
     const trackSearchTagTypes = useTracking(searchTagTypesTracking);
-    const tagManagementViaUi = useUiFlag('tagManagementViaUi');
 
     const data = useMemo<TagTypeRow[]>(() => {
         if (loading) {
@@ -253,14 +251,7 @@ export const TagTypeList = () => {
         tagsTableTracking,
     );
 
-    const columnVisibility = useMemo(
-        () => ({
-            description: false,
-            usedInProjects: Boolean(tagManagementViaUi),
-            valueCount: Boolean(tagManagementViaUi),
-        }),
-        [tagManagementViaUi],
-    );
+    const columnVisibility = { description: false };
 
     const table = useReactTable({
         columns,

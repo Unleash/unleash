@@ -3,17 +3,18 @@ import useContext from 'hooks/api/getters/useContext/useContext';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 import { CreateUnleashContext } from '../CreateUnleashContext/CreateUnleashContext.tsx';
+import type { FormTemplateLayout } from 'component/common/FormTemplate/FormTemplate';
 
 type CloneContextProps = {
     onSubmit: () => void;
     onCancel: () => void;
-    modal?: boolean;
+    layout?: FormTemplateLayout;
 };
 
 export const CloneContext: FC<CloneContextProps> = ({
     onSubmit,
     onCancel,
-    modal,
+    layout,
 }) => {
     const projectId = useOptionalPathParam('projectId');
     const name = useRequiredPathParam('name');
@@ -32,7 +33,7 @@ export const CloneContext: FC<CloneContextProps> = ({
 
     return (
         <CreateUnleashContext
-            modal={modal}
+            layout={layout}
             onSubmit={onSubmit}
             onCancel={onCancel}
             cloneFrom={context}

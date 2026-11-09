@@ -23,11 +23,6 @@ beforeEach(() => {
         authentication: {
             enableApiToken: true,
         },
-        experimental: {
-            flags: {
-                secureTokenStorage: true,
-            },
-        },
     });
 });
 
@@ -157,16 +152,11 @@ test('uses the V2 verifier for V2 token format', async () => {
     expect(req.user).toBe(apiUser);
 });
 
-test('uses the V2 verifier for V2 token format when secure token storage is disabled', async () => {
+test('uses the V2 verifier for V2 token format', async () => {
     const localConfig = createTestConfig({
         getLogger,
         authentication: {
             enableApiToken: true,
-        },
-        experimental: {
-            flags: {
-                secureTokenStorage: false,
-            },
         },
     });
     const apiUser = new ApiUser({

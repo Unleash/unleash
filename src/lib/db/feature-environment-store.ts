@@ -202,20 +202,22 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
     async disconnectFeatures(
         environment: string,
         project: string,
-    ): Promise<void> {
+    ): Promise<{ feature_name: string; enabled: boolean }[]> {
         const stopTimer = this.timer('disconnectFeatures');
         const featureSelector = this.db('features')
             .where({ project })
             .select('name');
-        await this.db(T.featureEnvs)
+        const disconnected = await this.db(T.featureEnvs)
             .where({ environment })
             .andWhere('feature_name', 'IN', featureSelector)
-            .del();
+            .del()
+            .returning(['feature_name', 'enabled']);
         await this.db('feature_strategies').where({
             environment,
             project_name: project,
         });
         stopTimer();
+        return disconnected;
     }
 
     async featureHasEnvironment(

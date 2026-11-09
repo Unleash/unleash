@@ -48,10 +48,16 @@ export const useCollaborateData = <Type,>(
     const { data, refetch } = formatUnleashGetter<Type>(getterOptions);
     const [cache, setCache] = useState<Type | null>(initialData || null);
     const [dataModified, setDataModified] = useState(false);
+    const [dismissed, setDismissed] = useState(false);
 
     const forceRefreshCache = (data: Type) => {
         setDataModified(false);
         setCache(data);
+    };
+
+    const dismiss = () => {
+        setDataModified(false);
+        setDismissed(true);
     };
 
     const formatDequalData = (data: Type | null) => {
@@ -76,7 +82,7 @@ export const useCollaborateData = <Type,>(
 
         const equal = dequal(formatDequalData(cache), formatDequalData(data));
 
-        if (!equal) {
+        if (!equal && !dismissed) {
             setDataModified(true);
         }
     }, [data]);
@@ -89,6 +95,7 @@ export const useCollaborateData = <Type,>(
                 cache={formatDequalData(cache)}
                 data={formatDequalData(data)}
                 refresh={() => forceRefreshCache(data)}
+                dismiss={dismiss}
                 show={dataModified}
                 afterSubmitAction={notificationOptions.afterSubmitAction}
             />

@@ -98,8 +98,9 @@ export const EnvironmentChangeRequest: FC<{
                     reviewers.map((reviewer) => reviewer.id),
                 );
             }
-        } catch (_e) {
+        } catch (e) {
             setDisabled(false);
+            throw e;
         }
     };
 

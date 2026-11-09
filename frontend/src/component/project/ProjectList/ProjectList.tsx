@@ -7,14 +7,12 @@ import ApiError from 'component/common/ApiError/ApiError';
 import { styled, useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
-import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import { ProjectGroup } from './ProjectGroup.tsx';
 import { ProjectsListSort } from './ProjectsListSort/ProjectsListSort.tsx';
 import { useProjectsListState } from './hooks/useProjectsListState.ts';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { ProjectCreationButton } from './ProjectCreationButton/ProjectCreationButton.tsx';
-import { useGroupedProjects } from './hooks/useGroupedProjects.ts';
-import { useProjectsSearchAndSort } from './hooks/useProjectsSearchAndSort.ts';
+import { useMyProjects } from './hooks/useMyProjects.ts';
 import { ProjectArchiveLink } from './ProjectArchiveLink/ProjectArchiveLink.tsx';
 import { ProjectsListHeader } from './ProjectsListHeader/ProjectsListHeader.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -57,22 +55,13 @@ export const ProjectList = () => {
     const showViewToggleButton = !(isOss() || forceListView);
     const safeView = forceListView ? 'list' : state.view;
 
-    const myProfileProjects = new Set(useProfile().profile?.projects || []);
-
     const setSearchValue = useCallback(
         (value: string) => setState({ query: value || undefined }),
         [setState],
     );
 
-    const sortedProjects = useProjectsSearchAndSort(
-        projects,
-        state.query,
-        state.sortBy,
-    );
-    const groupedProjects = useGroupedProjects(
-        sortedProjects,
-        myProfileProjects,
-    );
+    const groupedProjects = useMyProjects(projects, state.query, state.sortBy);
+    const { sortedProjects } = groupedProjects;
 
     const projectCount =
         sortedProjects.length < projects.length

@@ -13,6 +13,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import Add from '@mui/icons-material/Add';
 import type { TagSchema } from 'openapi';
 import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField';
+import { hasValidTagValueLength } from 'component/tags/tagValueLength';
 
 import type { JSX } from 'react';
 
@@ -107,7 +108,7 @@ export const TagsInput = ({
             (option) => inputValue === option.title,
         );
 
-        if (inputValue.length >= 2 && !isExisting) {
+        if (hasValidTagValueLength(inputValue) && !isExisting) {
             filtered.push({
                 inputValue,
                 title: `Create new value "${inputValue}"`,

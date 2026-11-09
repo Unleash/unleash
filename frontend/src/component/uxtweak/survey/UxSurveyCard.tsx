@@ -281,8 +281,7 @@ export const UxSurveyCard = ({
                         {survey.intro ? (
                             <Typography
                                 variant='body2'
-                                color='text.secondary'
-                                sx={{ mt: 1 }}
+                                sx={{ mt: 1, color: 'text.secondary' }}
                             >
                                 {survey.intro}
                             </Typography>

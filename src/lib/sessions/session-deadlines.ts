@@ -1,11 +1,15 @@
 import type { SessionData } from 'express-session';
 import type { ISessionLimits } from './session-limits.js';
-
-export type SessionTimeoutReason = 'idled' | 'max-aged' | 'unknown-start';
+import type { SessionTimeoutReason } from '../types/session-timeout-reason.js';
 
 export type SessionVerdict =
     | { action: 'end'; reason: SessionTimeoutReason }
-    | { action: 'continue'; shouldRenew: boolean; expiresInMs: number };
+    | {
+          action: 'continue';
+          shouldRenew: boolean;
+          expiresInMs: number;
+          hardExpiresInMs: number;
+      };
 
 const parse = (value: string | undefined): number | undefined => {
     if (!value) return undefined;
@@ -23,15 +27,15 @@ export const evaluateSession = (
     const startedAt = parse(session.authenticatedAt);
 
     if (startedAt === undefined) {
-        // a session started before timeouts shipped or session broken -> end it
-        return { action: 'end', reason: 'unknown-start' };
+        // a start we cannot read is a session we cannot reason about -> end it
+        return { action: 'end', reason: 'unknown_start' };
     }
 
     // cap in case of fast clocks
     const authenticatedAt = Math.min(startedAt, now);
 
     if (now >= authenticatedAt + hardMaxAgeMs) {
-        return { action: 'end', reason: 'max-aged' };
+        return { action: 'end', reason: 'max_age' };
     }
 
     const absoluteExpiresInMs = authenticatedAt + hardMaxAgeMs - now;
@@ -41,6 +45,7 @@ export const evaluateSession = (
             action: 'continue',
             shouldRenew: false,
             expiresInMs: absoluteExpiresInMs,
+            hardExpiresInMs: absoluteExpiresInMs,
         };
     }
 
@@ -50,7 +55,7 @@ export const evaluateSession = (
     );
 
     if (now >= idleSince + idleTimeoutMs) {
-        return { action: 'end', reason: 'idled' };
+        return { action: 'end', reason: 'idle' };
     }
 
     // renewing restarts the idle window, so the deadline moves with it
@@ -62,5 +67,6 @@ export const evaluateSession = (
         action: 'continue',
         shouldRenew: isUserActivity,
         expiresInMs: Math.min(absoluteExpiresInMs, idleExpiresInMs),
+        hardExpiresInMs: absoluteExpiresInMs,
     };
 };

@@ -77,7 +77,7 @@ export const createStores = (
     db: Db,
 ): IUnleashStores => {
     const { getLogger, eventBus } = config;
-    const eventStore = new EventStore(db, getLogger);
+    const eventStore = new EventStore(db, eventBus, getLogger);
 
     return {
         eventStore,

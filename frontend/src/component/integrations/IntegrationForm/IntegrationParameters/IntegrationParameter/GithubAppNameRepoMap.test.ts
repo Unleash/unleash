@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { toAppNameRepoMap, toMappings } from './GithubAppNameRepoMap';
+import {
+    normalizeRepositories,
+    toAppNameRepoMap,
+    toMappings,
+    toRepositories,
+} from './GithubAppNameRepoMap';
 
 describe('reading the stored mappings', () => {
     it('groups rows by project and app name', () => {
@@ -74,5 +79,31 @@ describe('writing the mappings back', () => {
         ];
 
         expect(toMappings(toAppNameRepoMap(stored))).toEqual(stored);
+    });
+});
+
+describe('entering repositories', () => {
+    it('trims, drops empty entries and removes duplicates', () => {
+        expect(normalizeRepositories([' a ', 'b', '', 'a', '  '])).toEqual([
+            'a',
+            'b',
+        ]);
+    });
+});
+
+describe('reading the synced repositories', () => {
+    it('sorts and removes duplicates', () => {
+        expect(toRepositories(['web', 'api', 'web'])).toEqual(['api', 'web']);
+    });
+
+    it('skips entries that are not strings', () => {
+        expect(toRepositories(['web', 1, null, { name: 'api' }])).toEqual([
+            'web',
+        ]);
+    });
+
+    it('treats anything that is not an array as empty', () => {
+        expect(toRepositories(undefined)).toEqual([]);
+        expect(toRepositories('web')).toEqual([]);
     });
 });

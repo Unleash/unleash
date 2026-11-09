@@ -14,11 +14,32 @@ import type { IApplicationOverview } from './models.js';
 
 import { vi } from 'vitest';
 import { CLIENT_REGISTER } from '../../../events/index.js';
+import createStores from '../../../../test/fixtures/store.js';
 
 let config: IUnleashConfig;
 beforeAll(() => {
     config = createTestConfig({});
 });
+test('failed application deletion leaves instance records untouched', async () => {
+    const stores = createStores();
+    const error = new Error('Application cannot be deleted while it is in use');
+    vi.spyOn(stores.clientApplicationsStore, 'delete').mockRejectedValue(error);
+    const deleteInstances = vi.spyOn(
+        stores.clientInstanceStore,
+        'deleteForApplication',
+    );
+    const service = new ClientInstanceService(
+        stores,
+        config,
+        new FakePrivateProjectChecker(),
+    );
+
+    await expect(service.deleteApplication('referenced-app')).rejects.toBe(
+        error,
+    );
+    expect(deleteInstances).not.toHaveBeenCalled();
+});
+
 test('Multiple registrations of same appname and instanceid within same time period should only cause one registration', async () => {
     const appStoreSpy = vi.fn();
     const bulkSpy = vi.fn();

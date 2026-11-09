@@ -8,7 +8,6 @@ import { MilestoneCard } from './MilestoneCard/MilestoneCard.tsx';
 import { MilestoneAutomationForm } from './MilestoneCard/MilestoneAutomationForm.tsx';
 import { automationErrorKey } from 'component/releases/hooks/useTemplateForm';
 import { isValidAutomation } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/utils/isValidAutomation';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 interface IMilestoneListProps {
     milestones: IReleasePlanMilestonePayload[];
@@ -34,9 +33,6 @@ export const MilestoneList = ({
     clearError,
     milestoneChanged,
 }: IMilestoneListProps) => {
-    const templatesAutomationsEnabled = useUiFlag(
-        'releaseTemplatesAutomations',
-    );
     const onMoveItem: OnMoveItem = useCallback(
         async ({ dragIndex, dropIndex, event, draggedElement }) => {
             if (event.type === 'drop') {
@@ -105,7 +101,7 @@ export const MilestoneList = ({
                             removable={milestones.length > 1}
                             onDeleteMilestone={onDeleteMilestone(milestone.id)}
                         />
-                        {templatesAutomationsEnabled && !isLast ? (
+                        {!isLast ? (
                             <MilestoneAutomationForm
                                 milestoneName={milestone.name}
                                 transitionCondition={

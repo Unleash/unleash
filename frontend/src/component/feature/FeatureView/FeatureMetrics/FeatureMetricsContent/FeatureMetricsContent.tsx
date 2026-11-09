@@ -2,8 +2,7 @@ import { FeatureMetricsTable } from '../FeatureMetricsTable/FeatureMetricsTable.
 import type { IFeatureMetricsRaw } from 'interfaces/featureToggle';
 import { FeatureMetricsStatsRaw } from '../FeatureMetricsStats/FeatureMetricsStatsRaw.tsx';
 import { Box, Typography } from '@mui/material';
-import { useId } from 'hooks/useId';
-import React, { Suspense } from 'react';
+import React, { Suspense, useId } from 'react';
 
 interface IFeatureMetricsContentProps {
     metrics: IFeatureMetricsRaw[];

@@ -111,6 +111,14 @@ describe('useProjectsSearchAndSort', () => {
             'C - Koala - 2024-01-20',
             'A - Eagle - 2024-01-10',
         ]);
+        expect(projects.map(({ id }) => id)).toEqual([
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+        ]);
     });
 
     it('should return projects sorted by last reported flag usage in descending order', () => {

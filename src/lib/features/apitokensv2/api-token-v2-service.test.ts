@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 import { ApiTokenType } from '../../types/model.js';
 import { SYSTEM_USER_AUDIT } from '../../types/index.js';
 import type EventService from '../events/event-service.js';
@@ -13,13 +13,15 @@ import {
     type ApiTokenV2Credential,
 } from '../../authentication/authorization-token.js';
 import FakeEnvironmentStore from '../project-environments/fake-environment-store.js';
+import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
+import FakeClientApplicationsStore from '../../../test/fixtures/fake-client-applications-store.js';
+import { ExceedsLimitError } from '../../error/exceeds-limit-error.js';
 import { createFakeApiTokenV2Service } from './api-token-v2-service.js';
 import {
     ApiTokenDeletedEvent,
     createTestConfig,
     type IUnleashStores,
 } from '../../server-impl.js';
-import type { IFlagResolver } from '../../types/experimental.js';
 
 class FakeApiTokenV2Store implements IApiTokenV2Store {
     stored?: ApiTokenV2WithVerifier;
@@ -121,23 +123,19 @@ const tokenInput: CreateApiTokenV2 = {
     userCreated: true,
 };
 
-let currentUsePromiseTokenCache = false;
-
-const createService = (stores?: Partial<IUnleashStores>) => {
+const createService = (
+    stores?: Partial<IUnleashStores>,
+    apiTokenLimit?: number,
+) => {
     const eventService = {
         storeEvent: vi.fn(),
         storeEvents: vi.fn(),
         storeEventsOrThrow: vi.fn(),
     } as unknown as EventService;
-    const config = {
-        ...createTestConfig(),
-        flagResolver: {
-            isEnabled: (flag) =>
-                flag === 'usePromiseTokenCache'
-                    ? currentUsePromiseTokenCache
-                    : true,
-        } as IFlagResolver,
-    };
+    const config = createTestConfig();
+    if (apiTokenLimit !== undefined) {
+        config.resourceLimits.apiTokens = apiTokenLimit;
+    }
     return {
         eventService,
         service: createFakeApiTokenV2Service(config, stores, {
@@ -146,13 +144,119 @@ const createService = (stores?: Partial<IUnleashStores>) => {
     };
 };
 
-describe.each([
-    false,
-    true,
-])('ApiTokenV2Service (usePromiseTokenCache=%s)', (usePromiseTokenCache) => {
-    beforeEach(() => {
-        currentUsePromiseTokenCache = usePromiseTokenCache;
+describe('ApiTokenV2Service', () => {
+    test.each([
+        false,
+        true,
+    ])('does not disclose application existence or database details when the existence check returns %s', async (applicationExists) => {
+        const apiTokenV2Store = new FakeApiTokenV2Store();
+        const environmentStore = new FakeEnvironmentStore();
+        const clientApplicationsStore = new FakeClientApplicationsStore();
+        await environmentStore.create({
+            enabled: true,
+            protected: false,
+            sortOrder: 0,
+            type: 'production',
+            name: 'production',
+        });
+        vi.spyOn(clientApplicationsStore, 'exists').mockResolvedValue(
+            applicationExists,
+        );
+        const create = vi.spyOn(apiTokenV2Store, 'create').mockRejectedValue({
+            code: '23503',
+            constraint: 'api_tokens_v2_application_fkey',
+            detail: 'Key (application)=(private-application) is not present in table client_applications',
+        });
+        const { service, eventService } = createService({
+            apiTokenV2Store,
+            environmentStore,
+            clientApplicationsStore,
+        });
+
+        await expect(
+            service.create(
+                { ...tokenInput, appName: 'private-application' },
+                SYSTEM_USER_AUDIT,
+            ),
+        ).rejects.toMatchObject({
+            name: 'BadDataError',
+            message:
+                'Request validation failed: your request body or params contain invalid data: Unable to associate token with the requested Application',
+            details: [
+                {
+                    message:
+                        'Unable to associate token with the requested Application',
+                },
+            ],
+        });
+        expect(create).toHaveBeenCalledTimes(applicationExists ? 1 : 0);
+        expect(eventService.storeEventsOrThrow).not.toHaveBeenCalled();
     });
+
+    test.each([
+        ApiTokenType.BACKEND,
+        ApiTokenType.CLIENT,
+        ApiTokenType.FRONTEND,
+    ] as const)('allows application associations for %s tokens', async (type) => {
+        const apiTokenV2Store = new FakeApiTokenV2Store();
+        const environmentStore = new FakeEnvironmentStore();
+        const clientApplicationsStore = new FakeClientApplicationsStore();
+        await environmentStore.create({
+            enabled: true,
+            protected: false,
+            sortOrder: 0,
+            type: 'production',
+            name: 'production',
+        });
+        await clientApplicationsStore.upsert({ appName: 'associated-app' });
+        const { service } = createService({
+            apiTokenV2Store,
+            environmentStore,
+            clientApplicationsStore,
+        });
+
+        const token = await service.create(
+            { ...tokenInput, type, appName: 'associated-app' },
+            SYSTEM_USER_AUDIT,
+        );
+
+        expect(token.appName).toBe('associated-app');
+        expect(apiTokenV2Store.stored?.type).toBe(type);
+        const { service: limitedService } = createService(
+            { apiTokenV2Store, environmentStore, clientApplicationsStore },
+            1,
+        );
+        await expect(
+            limitedService.create(
+                { ...tokenInput, type, appName: 'associated-app' },
+                SYSTEM_USER_AUDIT,
+            ),
+        ).rejects.toBeInstanceOf(ExceedsLimitError);
+    });
+
+    test('rejects application associations for Admin tokens before persistence', async () => {
+        const apiTokenV2Store = new FakeApiTokenV2Store();
+        const { service, eventService } = createService({ apiTokenV2Store });
+
+        await expect(
+            service.create(
+                // @ts-expect-error Admin tokens cannot carry appName, even for internal callers.
+                {
+                    ...tokenInput,
+                    type: ApiTokenType.ADMIN,
+                    projects: ['*'],
+                    environment: '*',
+                    appName: 'associated-app',
+                },
+                SYSTEM_USER_AUDIT,
+            ),
+        ).rejects.toThrow(
+            'Admin tokens cannot be associated with an Application',
+        );
+        expect(apiTokenV2Store.stored).toBeUndefined();
+        expect(eventService.storeEventsOrThrow).not.toHaveBeenCalled();
+    });
+
     test('stores a verifier rather than the generated credential', async () => {
         const apiTokenV2Store = new FakeApiTokenV2Store();
         const environmentStore = new FakeEnvironmentStore();
@@ -193,7 +297,12 @@ describe.each([
             apiTokenV2Store,
         });
         const token = await service.create(tokenInput, SYSTEM_USER_AUDIT);
-        await service.fetchActiveTokens(); // the token is now cached
+        await service.getTokenWithCache({
+            kind: AuthorizationTokenKind.API_TOKEN,
+            version: 'v2',
+            secret: token.secret,
+            selector: token.selector,
+        });
         apiTokenV2Store.reapStoredToken = true;
 
         // The scheduler runs the delete inside a transaction and then tells
@@ -201,7 +310,7 @@ describe.each([
         service.invalidateCache(deleted.map((token) => token.selector));
 
         // Without that the token keeps authenticating from memory even though
-        // its row is gone, until the next refresh a minute later.
+        // its row is gone, until revision polling invalidates it.
         await expect(
             service.getTokenWithCache({
                 kind: AuthorizationTokenKind.API_TOKEN,
@@ -307,7 +416,7 @@ describe.each([
         expect(apiTokenV2Store.getBySelectorCalls).toBe(1);
     });
 
-    test('periodic refresh only warms the legacy cache', async () => {
+    test('loads tokens on demand without a periodic refresh', async () => {
         const apiTokenV2Store = new FakeApiTokenV2Store();
         const environmentStore = new FakeEnvironmentStore();
         await environmentStore.create({
@@ -322,8 +431,6 @@ describe.each([
             apiTokenV2Store,
         });
         const token = await service.create(tokenInput, SYSTEM_USER_AUDIT);
-
-        await service.fetchActiveTokens();
 
         await expect(
             service.getTokenWithCache({
@@ -333,12 +440,11 @@ describe.each([
                 selector: token.selector,
             }),
         ).resolves.toMatchObject({ secret: token.selector });
-        expect(apiTokenV2Store.getBySelectorCalls).toBe(
-            usePromiseTokenCache ? 1 : 0,
-        );
+        expect(apiTokenV2Store.getBySelectorCalls).toBe(1);
     });
 
-    test('periodic refresh only evicts from the legacy cache', async () => {
+    test('revision polling invalidates tokens deleted by another instance', async () => {
+        const eventStore = new FakeEventStore();
         const apiTokenV2Store = new FakeApiTokenV2Store();
         const environmentStore = new FakeEnvironmentStore();
         await environmentStore.create({
@@ -351,7 +457,9 @@ describe.each([
         const { service } = createService({
             environmentStore,
             apiTokenV2Store,
+            eventStore,
         });
+        await service.initialize();
         const token = await service.create(tokenInput, SYSTEM_USER_AUDIT);
         const credential: ApiTokenV2Credential = {
             kind: AuthorizationTokenKind.API_TOKEN,
@@ -360,23 +468,24 @@ describe.each([
             selector: token.selector,
         };
 
-        await service.fetchActiveTokens();
         await expect(
             service.getTokenWithCache(credential),
         ).resolves.toBeDefined();
 
         await apiTokenV2Store.delete(token.selector);
-        await service.fetchActiveTokens();
-
-        if (usePromiseTokenCache) {
-            await expect(
-                service.getTokenWithCache(credential),
-            ).resolves.toBeDefined();
-        } else {
-            await expect(
-                service.getTokenWithCache(credential),
-            ).resolves.toBeUndefined();
-        }
+        await eventStore.store(
+            new ApiTokenDeletedEvent({
+                apiToken: { ...token, project: '*', tokenVersion: 2 },
+                auditUser: SYSTEM_USER_AUDIT,
+            }),
+        );
+        await expect(
+            service.getTokenWithCache(credential),
+        ).resolves.toBeDefined();
+        await service.pollTokenChanges();
+        await expect(
+            service.getTokenWithCache(credential),
+        ).resolves.toBeUndefined();
     });
 
     test('rejects expired credentials', async () => {
@@ -570,7 +679,6 @@ describe.each([
 });
 
 test('serves cached tokens even after deletion in the backing store (until invalidated/evicted)', async () => {
-    currentUsePromiseTokenCache = true;
     const apiTokenV2Store = new FakeApiTokenV2Store();
     const environmentStore = new FakeEnvironmentStore();
     await environmentStore.create({

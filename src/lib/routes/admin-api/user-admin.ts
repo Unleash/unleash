@@ -696,7 +696,9 @@ export default class UserAdminController extends Controller {
     ): Promise<void> {
         const { id } = req.params;
 
-        await this.userService.deleteUser(+id, req.audit);
+        await this.userService.transactional((txUserService) =>
+            txUserService.deleteUser(Number(id), req.audit),
+        );
         res.status(200).send();
     }
 
@@ -815,7 +817,9 @@ export default class UserAdminController extends Controller {
 
     async deleteScimUsers(req: IAuthRequest, res: Response): Promise<void> {
         const { audit } = req;
-        await this.userService.deleteScimUsers(audit);
+        await this.userService.transactional((txUserService) =>
+            txUserService.deleteScimUsers(audit),
+        );
         res.status(200).send();
     }
 }

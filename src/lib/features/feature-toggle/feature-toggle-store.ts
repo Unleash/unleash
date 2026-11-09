@@ -10,7 +10,10 @@ import type {
     IFeatureToggleQuery,
     IVariant,
 } from '../../types/model.js';
-import type { IFeatureToggleStore } from './types/feature-toggle-store-type.js';
+import type {
+    FlagLifetime,
+    IFeatureToggleStore,
+} from './types/feature-toggle-store-type.js';
 import type { Db } from '../../db/db.js';
 import type { LastSeenInput } from '../metrics/last-seen/last-seen-service.js';
 import { NameExistsError } from '../../error/index.js';
@@ -45,16 +48,19 @@ const FEATURE_COLUMNS = [
 export interface FeaturesTable {
     name: string;
     description: string | null;
-    type?: string;
+    type: string;
     stale?: boolean | null;
     project: string;
-    created_at?: Date;
+    created_at: Date;
     impression_data?: boolean | null;
     archived?: boolean;
     archived_at?: Date | null;
     created_by_user_id?: number;
     lifetime_days?: number | null;
 }
+
+type FeaturesInsertRow = Omit<FeaturesTable, 'type' | 'created_at'> &
+    Partial<Pick<FeaturesTable, 'type' | 'created_at'>>;
 
 export interface FeatureToggleInsert
     extends Omit<FeatureToggleDTO, 'createdByUserId'> {
@@ -98,9 +104,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     ) {
         this.db = db;
         this.logger = getLogger('feature-toggle-store.ts');
-        this.featureToggleRowConverter = new FeatureToggleRowConverter(
-            flagResolver,
-        );
+        this.featureToggleRowConverter = new FeatureToggleRowConverter();
         this.flagResolver = flagResolver;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
@@ -434,7 +438,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return sortedVariants;
     }
 
-    insertToRow(project: string, data: FeatureToggleInsert): FeaturesTable {
+    insertToRow(project: string, data: FeatureToggleInsert): FeaturesInsertRow {
         const row = {
             name: data.name,
             description: data.description || null,
@@ -457,7 +461,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     dtoToUpdateRow(
         project: string,
         data: FeatureToggleDTO,
-    ): Omit<FeaturesTable, 'created_by_user_id'> {
+    ): Omit<FeaturesInsertRow, 'created_by_user_id' | 'created_at'> {
         const row = {
             name: data.name,
             description: data.description || null,
@@ -696,6 +700,23 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .where({ name: featureName });
 
         return result?.potentially_stale ?? false;
+    }
+
+    async getLifetime(featureName: string): Promise<FlagLifetime | undefined> {
+        const result = await this.db(TABLE)
+            .leftJoin('feature_types', 'feature_types.id', 'features.type')
+            .where('features.name', featureName)
+            .first(
+                this.db.raw(
+                    'COALESCE(features.lifetime_days, feature_types.lifetime_days) AS lifetime_days',
+                ),
+            );
+        if (!result) {
+            return undefined;
+        }
+        return result.lifetime_days
+            ? { type: 'expiring', days: result.lifetime_days }
+            : { type: 'permanent' };
     }
 
     async setCreatedByUserId(batchSize: number): Promise<number | undefined> {

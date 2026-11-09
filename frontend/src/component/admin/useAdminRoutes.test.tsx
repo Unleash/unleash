@@ -19,7 +19,7 @@ const AdminRoutesProbe = () => {
 
 test('/admin/instance-name is hidden outside cloud (self-hosted enterprise and OSS)', async () => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: { UNLEASH_CLOUD: false, editableInstanceName: true },
+        flags: { UNLEASH_CLOUD: false },
     });
     testServerRoute(server, '/api/instance/status', {});
 
@@ -29,9 +29,9 @@ test('/admin/instance-name is hidden outside cloud (self-hosted enterprise and O
     expect(screen.queryByText('/admin/instance-name')).not.toBeInTheDocument();
 });
 
-test('/admin/instance-name is visible on cloud when the feature flag is enabled', async () => {
+test('/admin/instance-name is visible on cloud', async () => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: { UNLEASH_CLOUD: true, editableInstanceName: true },
+        flags: { UNLEASH_CLOUD: true },
     });
     testServerRoute(server, '/api/instance/status', {});
 

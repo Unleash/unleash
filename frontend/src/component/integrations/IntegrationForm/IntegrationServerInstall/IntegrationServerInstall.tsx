@@ -3,7 +3,7 @@ import { Alert, Box, Button, styled } from '@mui/material';
 import type { AddonSchema, AddonTypeSchema } from 'openapi';
 import useQueryParams from 'hooks/useQueryParams';
 import { formatApiPath } from 'utils/formatPath';
-import { formatIntegrationApiPath } from '../../integrationPaths.ts';
+import { integrationActionsApiPath } from '../../integrationPaths.ts';
 
 export interface IIntegrationServerInstallProps {
     path: string;
@@ -21,11 +21,12 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 
 // Sensitive parameters are left out, since they would end up in the URL.
-const nonSensitiveParameters = (
+const installQuery = (
     parameters: AddonSchema['parameters'],
     definitions: AddonTypeSchema['parameters'] = [],
-): URLSearchParams =>
-    new URLSearchParams(
+    projectId?: string,
+): URLSearchParams => {
+    const query = new URLSearchParams(
         definitions.flatMap(({ name, sensitive }) => {
             const value = parameters[name];
             return !sensitive && typeof value === 'string'
@@ -33,6 +34,11 @@ const nonSensitiveParameters = (
                 : [];
         }),
     );
+    if (projectId) {
+        query.set('project', projectId);
+    }
+    return query;
+};
 
 export const IntegrationServerInstall = ({
     path,
@@ -60,7 +66,7 @@ export const IntegrationServerInstall = ({
                     <Button
                         variant='contained'
                         href={formatApiPath(
-                            `${formatIntegrationApiPath(projectId)}/${path}?${nonSensitiveParameters(parameters, definitions)}`,
+                            `${integrationActionsApiPath}/${path}?${installQuery(parameters, definitions, projectId)}`,
                         )}
                     >
                         Install&nbsp;&amp;&nbsp;connect

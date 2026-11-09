@@ -16,7 +16,7 @@ import {
     type IChangeSchema,
     useChangeRequestApi,
 } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { comparisonModerator } from 'component/feature/FeatureStrategy/featureStrategy.utils';
+import { strategyComparisonModerator } from 'component/feature/FeatureStrategy/featureStrategy.utils';
 import type {
     ChangeRequestAddStrategy,
     ChangeRequestEditStrategy,
@@ -32,6 +32,7 @@ import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-repla
 import { getChangeStrategyName } from 'utils/getChangeStrategyName.ts';
 import { editChangeTracking } from 'component/changeRequest/changeRequestTracking';
 import { useTracking } from 'hooks/useTracking';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IEditChangeProps {
     change:
@@ -68,6 +69,7 @@ export const EditChange = ({
     onClose,
     featureId,
 }: IEditChangeProps) => {
+    const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
     const projectId = useRequiredPathParam('projectId');
     const { editChange } = useChangeRequestApi();
     const editTracking = editChangeTracking(change);
@@ -91,6 +93,12 @@ export const EditChange = ({
 
     const ref = useRef<IFeatureToggle>(feature);
 
+    const watchNothing = () => undefined;
+    const staleComparison =
+        change.action === 'addStrategy'
+            ? watchNothing
+            : strategyComparisonModerator(environment, change.payload.id);
+
     const { data, staleDataNotification, forceRefreshCache } =
         useCollaborateData<IFeatureToggle>(
             {
@@ -104,7 +112,7 @@ export const EditChange = ({
             {
                 afterSubmitAction: refetchFeature,
             },
-            comparisonModerator,
+            staleComparison,
         );
 
     useEffect(() => {
@@ -147,7 +155,8 @@ export const EditChange = ({
             }}
         >
             <FormTemplate
-                modal
+                layout='modal'
+                fitContainerHeight={singlePageStrategyForm}
                 disablePadding
                 description={featureStrategyHelp}
                 documentationLink={featureStrategyDocsLink}

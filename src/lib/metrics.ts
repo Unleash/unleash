@@ -120,6 +120,10 @@ export function registerPrometheusMetrics(
     const { eventStore, environmentStore } = stores;
     const { flagResolver } = config;
     const dbMetrics = new DbMetricsMonitor(config);
+    const featureLabel = (feature: string): string =>
+        flagResolver.isEnabled('redactFeatureLabelInMetrics')
+            ? 'redacted'
+            : feature;
 
     const cachedEnvironments: () => Promise<IEnvironment[]> = memoizee(
         async () => environmentStore.getAll(),
@@ -208,7 +212,7 @@ export function registerPrometheusMetrics(
             value: result.count,
             labels: {
                 environment: result.environment,
-                feature: result.feature,
+                feature: featureLabel(result.feature),
             },
         }),
     });
@@ -221,7 +225,7 @@ export function registerPrometheusMetrics(
             stores.featureStrategiesReadModel.getMaxFeatureStrategies(),
         map: (result) => ({
             value: result.count,
-            labels: { feature: result.feature },
+            labels: { feature: featureLabel(result.feature) },
         }),
     });
 
@@ -234,7 +238,7 @@ export function registerPrometheusMetrics(
             value: result.count,
             labels: {
                 environment: result.environment,
-                feature: result.feature,
+                feature: featureLabel(result.feature),
             },
         }),
     });
@@ -249,7 +253,7 @@ export function registerPrometheusMetrics(
             value: result.count,
             labels: {
                 environment: result.environment,
-                feature: result.feature,
+                feature: featureLabel(result.feature),
             },
         }),
     });
@@ -257,7 +261,7 @@ export function registerPrometheusMetrics(
     dbMetrics.registerGaugeDbMetric({
         name: 'largest_project_environment_size',
         help: 'The largest project environment size (bytes) based on strategies, constraints, variants and parameters',
-        labelNames: ['project', 'environment'],
+        labelNames: ['environment'],
         query: () =>
             stores.largestResourcesReadModel.getLargestProjectEnvironments(1),
         map: (results) => {
@@ -265,7 +269,6 @@ export function registerPrometheusMetrics(
             return {
                 value: result.size,
                 labels: {
-                    project: result.project,
                     environment: result.environment,
                 },
             };
@@ -282,7 +285,7 @@ export function registerPrometheusMetrics(
             return {
                 value: result.size,
                 labels: {
-                    feature: result.feature,
+                    feature: featureLabel(result.feature),
                     environment: result.environment,
                 },
             };
@@ -580,6 +583,12 @@ export function registerPrometheusMetrics(
         .set(config.rateLimiting.passwordResetMaxPerMinute);
     rateLimits
         .labels({
+            endpoint: '/feedback',
+            method: 'POST',
+        })
+        .set(config.rateLimiting.feedbackMaxPerMinute);
+    rateLimits
+        .labels({
             endpoint: '/api/signal-endpoint/:name',
             method: 'POST',
         })
@@ -643,21 +652,6 @@ export function registerPrometheusMetrics(
     });
 
     dbMetrics.registerGaugeDbMetric({
-        name: 'feature_lifecycle_stage_duration',
-        labelNames: ['stage', 'project_id'],
-        help: 'Duration of feature lifecycle stages',
-        query: () => stores.featureLifecycleReadModel.getAllWithStageDuration(),
-        map: (result) =>
-            result.map((stageResult) => ({
-                value: stageResult.duration,
-                labels: {
-                    project_id: stageResult.project,
-                    stage: stageResult.stage,
-                },
-            })),
-    });
-
-    dbMetrics.registerGaugeDbMetric({
         name: 'onboarding_duration',
         labelNames: ['event'],
         help: 'firstLogin, secondLogin, firstFeatureFlag, firstPreLive, firstLive from first user creation',
@@ -671,41 +665,6 @@ export function registerPrometheusMetrics(
                         event: key,
                     },
                 })),
-    });
-
-    dbMetrics.registerGaugeDbMetric({
-        name: 'project_onboarding_duration',
-        labelNames: ['event', 'project'],
-        help: 'firstFeatureFlag, firstPreLive, firstLive from project creation',
-        query: () => stores.onboardingReadModel.getProjectsOnboardingMetrics(),
-        map: (projectsOnboardingMetrics) =>
-            projectsOnboardingMetrics.flatMap(
-                ({ project, ...projectMetrics }) =>
-                    Object.keys(projectMetrics)
-                        .filter((key) => Number.isInteger(projectMetrics[key]))
-                        .map((key) => ({
-                            value: projectMetrics[key],
-                            labels: {
-                                event: key,
-                                project,
-                            },
-                        })),
-            ),
-    });
-
-    dbMetrics.registerGaugeDbMetric({
-        name: 'feature_lifecycle_stage_count_by_project',
-        help: 'Count features in a given stage by project id',
-        labelNames: ['stage', 'project_id'],
-        query: () => stores.featureLifecycleReadModel.getStageCountByProject(),
-        map: (result) =>
-            result.map((stageResult) => ({
-                value: stageResult.count,
-                labels: {
-                    project_id: stageResult.project,
-                    stage: stageResult.stage,
-                },
-            })),
     });
 
     dbMetrics.registerGaugeDbMetric({
@@ -738,8 +697,7 @@ export function registerPrometheusMetrics(
 
     const projectEnvironmentsDisabled = createCounter({
         name: 'project_environments_disabled',
-        help: 'How many "environment disabled" events we have received for each project',
-        labelNames: ['project_id'],
+        help: 'How many "environment disabled" events we have received',
     });
 
     const orphanedTokensTotal = createGauge({
@@ -772,6 +730,12 @@ export function registerPrometheusMetrics(
         name: 'request_origin_counter',
         help: 'Number of authenticated requests, including origin information.',
         labelNames: ['type', 'method', 'source'],
+    });
+
+    const eventStoreWrites = createCounter({
+        name: 'event_store_writes_total',
+        help: 'Event writes attempted by the event store, by event type and whether the write ran inside a transaction.',
+        labelNames: ['type', 'transaction'],
     });
 
     const resourceLimit = createGauge({
@@ -974,6 +938,14 @@ export function registerPrometheusMetrics(
                 method,
                 source: source || 'unknown',
             });
+        },
+    );
+
+    events.onMetricEvent(
+        eventBus,
+        events.EVENT_STORE_WRITE,
+        ({ type, transaction }) => {
+            eventStoreWrites.increment({ type, transaction });
         },
     );
 
@@ -1239,8 +1211,8 @@ export function registerPrometheusMetrics(
         }
     });
 
-    eventStore.on(PROJECT_ENVIRONMENT_REMOVED, ({ project }) => {
-        projectEnvironmentsDisabled.increment({ project_id: project });
+    eventStore.on(PROJECT_ENVIRONMENT_REMOVED, () => {
+        projectEnvironmentsDisabled.inc();
     });
 
     eventBus.on(events.ADDON_EVENTS_HANDLED, ({ result, destination }) => {

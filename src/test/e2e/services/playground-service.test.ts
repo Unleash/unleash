@@ -1,5 +1,5 @@
-import {
-    type PlaygroundFeatureEvaluationResult,
+import type {
+    PlaygroundFeatureEvaluationResult,
     PlaygroundService,
 } from '../../../lib/features/playground/playground-service.js';
 import { clientFeaturesAndSegments } from '../../arbitraries.js';
@@ -8,21 +8,16 @@ import fc from 'fast-check';
 import { createTestConfig } from '../../config/test-config.js';
 import dbInit, { type ITestDb } from '../helpers/database-init.js';
 import type { IUnleashStores } from '../../../lib/types/stores.js';
-import {
-    type FeatureToggle,
-    type ISegment,
-    WeightType,
-} from '../../../lib/types/model.js';
+import { seedDatabaseForPlaygroundTest } from '../helpers/seed-playground.js';
 import type { PlaygroundFeatureSchema } from '../../../lib/openapi/spec/playground-feature-schema.js';
 import type { ClientFeatureSchema } from '../../../lib/openapi/spec/client-feature-schema.js';
 import type { SdkContextSchema } from '../../../lib/openapi/spec/sdk-context-schema.js';
 import type { SegmentSchema } from '../../../lib/openapi/spec/segment-schema.js';
 import { playgroundStrategyEvaluation } from '../../../lib/openapi/spec/playground-strategy-schema.js';
 import type { PlaygroundSegmentSchema } from '../../../lib/openapi/spec/playground-segment-schema.js';
-import { createPrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker.js';
-import { createFeatureToggleService } from '../../../lib/features/index.js';
-import { SegmentReadModel } from '../../../lib/features/segment/segment-read-model.js';
+import { createPlaygroundService } from '../../../lib/features/index.js';
 import { DEFAULT_ENV } from '../../../lib/server-impl.js';
+import { SYSTEM_USER_ID } from '../../../lib/types/core.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -32,24 +27,7 @@ beforeAll(async () => {
     const config = createTestConfig();
     db = await dbInit('playground_service_serial', config.getLogger);
     stores = db.stores;
-    const privateProjectChecker = createPrivateProjectChecker(
-        db.rawDatabase,
-        config,
-    );
-    const segmentReadModel = new SegmentReadModel(db.rawDatabase);
-
-    const featureToggleService = createFeatureToggleService(
-        db.rawDatabase,
-        config,
-    );
-    service = new PlaygroundService(
-        config,
-        {
-            featureToggleService,
-            privateProjectChecker,
-        },
-        segmentReadModel,
-    );
+    service = createPlaygroundService(db.rawDatabase, config);
 });
 
 afterAll(async () => {
@@ -71,116 +49,6 @@ const testParams = {
     markInterruptAsFailure: false, // When set to false, timeout during initial cases will not be considered as a failure
 };
 
-const mapSegmentSchemaToISegment = (
-    segment: SegmentSchema,
-    index?: number,
-): ISegment => ({
-    ...segment,
-    name: segment.name || `test-segment ${index ?? 'unnumbered'}`,
-    createdAt: new Date(),
-    description: '',
-    project: undefined,
-});
-
-export const seedDatabaseForPlaygroundTest = async (
-    database: ITestDb,
-    features: ClientFeatureSchema[],
-    environment: string,
-    segments?: SegmentSchema[],
-): Promise<FeatureToggle[]> => {
-    if (segments) {
-        await Promise.all(
-            segments.map(async (segment, index) =>
-                database.stores.segmentStore.create(
-                    mapSegmentSchemaToISegment(segment, index),
-                    { username: 'test' },
-                ),
-            ),
-        );
-    }
-
-    return Promise.all(
-        features.map(async (feature) => {
-            // create environment if necessary
-            await database.stores.environmentStore
-                .create({
-                    name: environment,
-                    type: 'development',
-                    enabled: true,
-                })
-                .catch(() => {
-                    // purposefully left empty: env creation may fail if the
-                    // env already exists, and because of the async nature
-                    // of things, this is the easiest way to make it work.
-                });
-
-            // create feature
-            const toggle = await database.stores.featureToggleStore.create(
-                feature.project!,
-                {
-                    ...feature,
-                    createdAt: undefined,
-                    variants: [],
-                    description: undefined,
-                    impressionData: false,
-                    createdByUserId: 9999,
-                },
-            );
-
-            // enable/disable the feature in environment
-            await database.stores.featureEnvironmentStore.addEnvironmentToFeature(
-                feature.name,
-                environment,
-                feature.enabled,
-            );
-
-            await database.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
-                feature.name,
-                environment,
-                [
-                    ...(feature.variants ?? []).map((variant) => ({
-                        ...variant,
-                        weightType: WeightType.VARIABLE,
-                        stickiness: 'default',
-                    })),
-                ],
-            );
-
-            // assign strategies
-            await Promise.all(
-                (feature.strategies || []).map(
-                    async ({ segments: strategySegments, ...strategy }) => {
-                        await database.stores.featureStrategiesStore.createStrategyFeatureEnv(
-                            {
-                                parameters: {},
-                                constraints: [],
-                                ...strategy,
-                                featureName: feature.name,
-                                environment,
-                                strategyName: strategy.name,
-                                projectId: feature.project!,
-                            },
-                        );
-
-                        if (strategySegments) {
-                            await Promise.all(
-                                strategySegments.map((segmentId) =>
-                                    database.stores.segmentStore.addToStrategy(
-                                        segmentId,
-                                        strategy.id!,
-                                    ),
-                                ),
-                            );
-                        }
-                    },
-                ),
-            );
-
-            return toggle;
-        }),
-    );
-};
-
 describe('the playground service (e2e)', () => {
     const insertAndEvaluateFeatures = async ({
         features,
@@ -200,6 +68,7 @@ describe('the playground service (e2e)', () => {
             projects,
             env,
             context,
+            SYSTEM_USER_ID,
         );
 
         return serviceFeatures;

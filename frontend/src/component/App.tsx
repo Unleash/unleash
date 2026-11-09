@@ -1,4 +1,5 @@
-import { Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { Route, Routes, useLocation } from 'react-router';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeedbackNPS } from 'component/feedback/FeedbackNPS/FeedbackNPS';
@@ -32,6 +33,10 @@ import { IntroProvider } from './onboarding/intro/IntroProvider.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { UxTweakWidgets } from './uxtweak/UxTweakWidgets.tsx';
 
+const FeedbackModule = lazy(
+    () => import('./feedbackModule/delivery/FeedbackModule.tsx'),
+);
+
 const StyledContainer = styled('div')(() => ({
     '& ul': {
         margin: 0,
@@ -58,6 +63,7 @@ export const App = () => {
 
     const isLoggedIn = Boolean(user?.id);
     const uxTweakSurveysEnabled = useUiFlag('uxTweakSurveys');
+    const displaySurveyEnabled = useUiFlag('feedbackModuleDisplaySurvey');
 
     const location = useLocation();
     useLastViewedPage(location);
@@ -126,6 +132,16 @@ export const App = () => {
 
                                         {isLoggedIn && uxTweakSurveysEnabled ? (
                                             <UxTweakWidgets />
+                                        ) : null}
+
+                                        {isLoggedIn && displaySurveyEnabled ? (
+                                            <ErrorBoundary
+                                                fallbackRender={() => null}
+                                            >
+                                                <Suspense fallback={null}>
+                                                    <FeedbackModule />
+                                                </Suspense>
+                                            </ErrorBoundary>
                                         ) : null}
 
                                         <SplashOverlay />

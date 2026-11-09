@@ -43,7 +43,7 @@ export const PayloadSchemaSidebar = () => {
 
     return (
         <FormTemplate
-            modal
+            layout='modal'
             title='Edit payload schema'
             description="A JSON Schema (draft 2020-12) that the payloads of this flag's variants have to match."
             documentationLink='https://json-schema.org/learn/getting-started-step-by-step'

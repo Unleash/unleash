@@ -1,7 +1,10 @@
 import pgs from 'pg-connection-string';
 const { parse } = pgs;
 import merge from 'deepmerge';
-import { DEFAULT_SESSION_TTL_HOURS } from './sessions/session-limits.js';
+import {
+    DEFAULT_SESSION_IDLE_TIMEOUT_MINUTES,
+    DEFAULT_SESSION_TTL_HOURS,
+} from './sessions/session-limits.js';
 import { readFileSync, existsSync } from 'fs';
 import {
     type IAuthOption,
@@ -181,6 +184,20 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
         process.env.ADMIN_API_RATE_LIMIT_PER_MINUTE,
         6000,
     );
+    const feedbackMaxPerMinute = parseEnvVarNumber(
+        process.env.FEEDBACK_RATE_LIMIT_PER_MINUTE,
+        60,
+    );
+
+    const playgroundMaxPerMinute = parseEnvVarNumber(
+        process.env.PLAYGROUND_RATE_LIMIT_PER_MINUTE,
+        30,
+    );
+
+    const mcpMaxPerMinute = parseEnvVarNumber(
+        process.env.MCP_RATE_LIMIT_PER_MINUTE,
+        600,
+    );
 
     const defaultRateLimitOptions: IRateLimiting = {
         createUserMaxPerMinute,
@@ -191,6 +208,9 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
         tokenAuthenticationMaxPerMinute,
         sdkApiMaxPerMinute,
         adminApiMaxPerMinute,
+        feedbackMaxPerMinute,
+        playgroundMaxPerMinute,
+        mcpMaxPerMinute,
     };
     return mergeAll([defaultRateLimitOptions, options.rateLimiting || {}]);
 }
@@ -296,9 +316,11 @@ const defaultSessionOption = (isEnterprise: boolean): ISessionOption => ({
         process.env.SESSION_TTL_HOURS,
         DEFAULT_SESSION_TTL_HOURS,
     ),
-    // optional. number <=0 : "OFF"
     idleTimeoutMinutes: Math.max(
-        parseEnvVarNumber(process.env.SESSION_IDLE_TIMEOUT_MINUTES, 0),
+        parseEnvVarNumber(
+            process.env.SESSION_IDLE_TIMEOUT_MINUTES,
+            DEFAULT_SESSION_IDLE_TIMEOUT_MINUTES,
+        ),
         0,
     ),
     clearSiteDataOnLogout: parseEnvVarBoolean(
@@ -326,6 +348,9 @@ const defaultServerOption: IServerOption = {
     cdnPrefix: process.env.CDN_PREFIX,
     edgeUrl: process.env.EDGE_URL,
     unleashUrl: process.env.UNLEASH_URL || 'http://localhost:4242',
+    slackAppBrokerUrl:
+        process.env.UNLEASH_SLACK_APP_BROKER_URL ||
+        'https://app-for-slack.getunleash.io',
     logRocketAppId: process.env.LOGROCKET_APP_ID,
     hubspotPortalId: process.env.HUBSPOT_PORTAL_ID,
     serverMetrics: true,

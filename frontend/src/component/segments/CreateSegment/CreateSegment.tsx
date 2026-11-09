@@ -1,7 +1,9 @@
 import type React from 'react';
 import { useContext } from 'react';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import FormTemplate, {
+    type FormTemplateLayout,
+} from 'component/common/FormTemplate/FormTemplate';
 import {
     CREATE_SEGMENT,
     UPDATE_PROJECT_SEGMENT,
@@ -27,10 +29,10 @@ import { segmentTrackingProps } from 'component/segments/segmentTrackingProps';
 import { createSegmentTracking } from 'component/segments/segmentTrackingProps';
 
 interface ICreateSegmentProps {
-    modal?: boolean;
+    layout?: FormTemplateLayout;
 }
 
-export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
+export const CreateSegment = ({ layout }: ICreateSegmentProps) => {
     const projectId = useOptionalPathParam('projectId');
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
@@ -104,7 +106,7 @@ export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
     return (
         <FormTemplate
             loading={loading}
-            modal={modal}
+            layout={layout}
             title='Create segment'
             description={segmentsFormDescription}
             documentationLink={segmentsDocsLink}

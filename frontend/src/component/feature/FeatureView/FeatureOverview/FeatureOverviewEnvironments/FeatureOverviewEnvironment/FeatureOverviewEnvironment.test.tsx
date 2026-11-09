@@ -72,27 +72,8 @@ const setupOssEndpoints = () => {
     });
 };
 
-const setupPlaygroundPerFlagEndpoints = () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        versionInfo: {
-            current: {},
-        },
-        flags: {
-            playgroundPerFlag: true,
-        },
-        resourceLimits: {
-            featureEnvironmentStrategies: 30,
-        },
-    });
-    testServerRoute(server, '/api/admin/environments/project/default', {
-        environments: [
-            {
-                name: 'production',
-                enabled: true,
-                type: 'production',
-            },
-        ],
-    });
+const setupTryConfigurationEndpoints = () => {
+    setupOssEndpoints();
     testServerRoute(server, '/api/admin/context', [{ name: 'appName' }]);
 };
 
@@ -281,8 +262,8 @@ describe('FeatureOverviewEnvironment', () => {
     });
 
     describe('Try configuration', () => {
-        test('opens the drawer when the flag is on', async () => {
-            setupPlaygroundPerFlagEndpoints();
+        test('opens the drawer', async () => {
+            setupTryConfigurationEndpoints();
             const user = userEvent.setup();
             renderRoute(
                 <FeatureOverviewEnvironment

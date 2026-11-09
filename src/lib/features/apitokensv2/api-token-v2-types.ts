@@ -1,6 +1,7 @@
 import type { ApiTokenType } from '../../types/model.js';
 
 export interface ApiTokenV2 {
+    appName?: string;
     selector: string;
     tokenName: string;
     type: ApiTokenType;
@@ -12,14 +13,16 @@ export interface ApiTokenV2 {
     secure: boolean;
 }
 
-export interface CreateApiTokenV2 {
+export type CreateApiTokenV2 = {
     tokenName: string;
-    type: ApiTokenType;
     projects: string[];
     environment: string;
     expiresAt?: Date;
     userCreated: boolean;
-}
+} & (
+    | { type: ApiTokenType.ADMIN; appName?: never }
+    | { type: Exclude<ApiTokenType, ApiTokenType.ADMIN>; appName?: string }
+);
 
 export interface ApiTokenV2WithSecret extends ApiTokenV2 {
     secret: string;
@@ -39,7 +42,7 @@ export interface IApiTokenV2Store {
         selector: string,
     ): Promise<ApiTokenV2WithVerifier | undefined>;
     getAllActive(): Promise<ApiTokenV2WithVerifier[]>;
-    getUserDefinedTokens(): Promise<ApiTokenV2[]>;
+    getUserDefinedTokens(appName?: string): Promise<ApiTokenV2[]>;
     setExpiry(
         selector: string,
         expiresAt: Date,

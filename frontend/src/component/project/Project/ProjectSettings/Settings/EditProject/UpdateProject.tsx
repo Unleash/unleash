@@ -136,7 +136,7 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
                 documentationLinkLabel='Projects documentation'
                 formatApiCode={formatProjectApiCode}
                 compactPadding
-                compact
+                layout='compact'
             >
                 <StyledFormContainer>
                     <ProjectForm

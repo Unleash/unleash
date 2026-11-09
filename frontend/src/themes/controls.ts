@@ -1,5 +1,8 @@
 import type { Components, Theme } from '@mui/material/styles';
-import { focusOutline } from './themeStyles';
+// noinspection ES6UnusedImports
+import type {} from '@mui/x-date-pickers/themeAugmentation'; // pulls the MuiPickers* keys into the Components<Theme> type
+import { focusOutline, switchBaseIconFocusOutlineOffset } from './themeStyles';
+import { IS_DEV } from 'constants/env';
 
 /**
  * Design system v2 — shared sizing and behavior for controls
@@ -235,6 +238,31 @@ export const outlinedInputSizing = (ownerState?: { size?: unknown }) => {
 };
 
 /**
+ * Control-scale sizing for DateField/DateTimeField (MuiPickersOutlinedInput/MuiPickersInputBase).
+ */
+export const pickersInputSizing = (ownerState?: { size?: unknown }) => {
+    const size = sizeOf(ownerState?.size);
+    return {
+        '& .MuiPickersOutlinedInput-root': {
+            height: controlHeights[size],
+            fontSize: controlFontSizes[size],
+            padding: `0 ${controlPaddingX[size]}px`,
+        },
+        '& .MuiPickersInputBase-sectionsContainer': {
+            padding: 0,
+            alignItems: 'center',
+        },
+    };
+};
+
+const pickersCalendarCell = {
+    width: 28,
+    height: 28,
+    margin: '1px',
+    fontSize: '0.75rem',
+};
+
+/**
  * Component overrides shared verbatim by the light and dark themes.
  * Spread FIRST in each theme's `components` object — keys also defined
  * by a theme (MuiButton, MuiTab, …) intentionally win over this fragment
@@ -250,6 +278,24 @@ export const controlOverrides: Components<Theme> = {
         styleOverrides: {
             root: ({ theme }) => ({
                 '&.Mui-focusVisible': focusOutline(theme),
+            }),
+        },
+    },
+
+    MuiRadio: {
+        styleOverrides: {
+            root: {
+                '&.Mui-focusVisible': switchBaseIconFocusOutlineOffset,
+            },
+        },
+    },
+    MuiCheckbox: {
+        styleOverrides: {
+            root: ({ theme }) => ({
+                '&.Mui-focusVisible': {
+                    ...switchBaseIconFocusOutlineOffset,
+                    borderRadius: theme.spacing(2),
+                },
             }),
         },
     },
@@ -307,6 +353,68 @@ export const controlOverrides: Components<Theme> = {
         },
     },
 
+    // Matches the compact control scale used everywhere else (small/medium/
+    // large), instead of MUI's default 36px day cells. The overflow:visible
+    // overrides undo MUI's animation-clip, which with no slack left also cuts
+    // off focus rings flush against the top edge.
+    MuiDateCalendar: {
+        styleOverrides: {
+            root: {
+                height: 'auto',
+                minHeight: 'auto',
+            },
+        },
+    },
+    MuiPickersCalendarHeader: {
+        styleOverrides: {
+            root: ({ theme }) => ({
+                paddingLeft: theme.spacing(1.5),
+                paddingRight: theme.spacing(1),
+                minHeight: 32,
+            }),
+            labelContainer: {
+                overflow: 'visible',
+            },
+        },
+    },
+    MuiDayCalendar: {
+        styleOverrides: {
+            slideTransition: {
+                minHeight: 6 * 30 + 6,
+            },
+            monthContainer: {
+                overflow: 'visible',
+                paddingTop: '3px',
+                paddingBottom: '3px',
+            },
+            header: ({ theme }) => ({
+                height: 30,
+                margin: 0,
+                justifyContent: 'space-between',
+                paddingLeft: theme.spacing(1),
+                paddingRight: theme.spacing(1),
+            }),
+            weekContainer: ({ theme }) => ({
+                height: 30,
+                margin: 0,
+                justifyContent: 'space-between',
+                paddingLeft: theme.spacing(1),
+                paddingRight: theme.spacing(1),
+            }),
+            weekDayLabel: pickersCalendarCell,
+            weekNumberLabel: pickersCalendarCell,
+            weekNumber: {
+                ...pickersCalendarCell,
+                fontWeight: 'bold',
+            },
+        },
+    },
+    MuiPickersDay: {
+        styleOverrides: {
+            root: pickersCalendarCell,
+        },
+    },
+
     MuiInputLabel: {
         styleOverrides: {
             root: ({ ownerState }) => {
@@ -325,6 +433,14 @@ export const controlOverrides: Components<Theme> = {
                     },
                 };
             },
+        },
+    },
+
+    // The dev toolbar lives outside any Modal's DOM, so Modal's focus trap otherwise steals focus back from it.
+    // Applies to Dialog/Popover/Menu/Drawer as well - they all render Modal internally.
+    MuiModal: {
+        defaultProps: {
+            disableEnforceFocus: IS_DEV,
         },
     },
 };

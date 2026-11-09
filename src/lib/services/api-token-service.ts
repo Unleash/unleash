@@ -12,6 +12,7 @@ import {
 import type { IApiTokenStore } from '../types/stores/api-token-store.js';
 import { FOREIGN_KEY_VIOLATION } from '../error/db-error.js';
 import BadDataError from '../error/bad-data-error.js';
+import InvalidOperationError from '../error/invalid-operation-error.js';
 import type { IEnvironmentStore } from '../features/project-environments/environment-store-type.js';
 import {
     ADMIN_TOKEN_USER,
@@ -108,13 +109,10 @@ export class ApiTokenService {
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('/services/api-token-service.ts');
 
-        // Assigned before fetchActiveTokens() below, which now emits on it.
         this.eventBus = config.eventBus;
 
         this.tokensBySecret = createTokenCache<IApiToken>(TOKEN_CACHE_NAME, {
-            flagResolver: this.flagResolver,
             eventBus: this.eventBus,
-            logger: this.logger,
         });
 
         // Deprecated aliases come from the embedded-proxy migration. The
@@ -124,9 +122,7 @@ export class ApiTokenService {
         this.tokensByAlias = createTokenCache<IApiToken>(
             `${TOKEN_CACHE_NAME}-by-alias`,
             {
-                flagResolver: this.flagResolver,
                 eventBus: this.eventBus,
-                logger: this.logger,
             },
         );
     }
@@ -139,8 +135,7 @@ export class ApiTokenService {
             this.replaceActiveTokens(await this.store.getAllActive());
         } catch (e) {
             // This refresh is what bounds how long a revoked token keeps
-            // working. The scheduler logs job failures, but v1 and v2 share one
-            // job id, so name the cache here.
+            // working. Name the cache when logging a refresh failure.
             this.logger.error(
                 `Failed to refresh cache ${TOKEN_CACHE_NAME}; it is now serving stale tokens until the next successful refresh`,
                 e,
@@ -322,7 +317,16 @@ export class ApiTokenService {
     public async delete(secret: string, auditUser: IAuditUser): Promise<void> {
         if (await this.store.exists(secret)) {
             const token = (await this.store.get(secret))!;
-            await this.store.delete(secret);
+            try {
+                await this.store.delete(secret);
+            } catch (error) {
+                if (error.constraint === 'edge_api_tokens_token_value_fkey') {
+                    throw new InvalidOperationError(
+                        'This token is managed by Enterprise Edge and cannot be deleted.',
+                    );
+                }
+                throw error;
+            }
             await this.eventService.storeEvent(
                 new ApiTokenDeletedEvent({
                     auditUser,

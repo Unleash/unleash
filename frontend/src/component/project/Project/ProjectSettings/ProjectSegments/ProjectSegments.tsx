@@ -30,7 +30,7 @@ export const ProjectSegments = () => {
                         label='Create segment'
                         tracking={createSegmentTracking}
                     >
-                        <CreateSegment modal />
+                        <CreateSegment layout='modal' />
                     </SidebarModal>
                 }
             />
@@ -43,7 +43,7 @@ export const ProjectSegments = () => {
                         label='Edit segment'
                         tracking={editSegmentTracking}
                     >
-                        <EditSegment modal />
+                        <EditSegment layout='modal' />
                     </SidebarModal>
                 }
             />

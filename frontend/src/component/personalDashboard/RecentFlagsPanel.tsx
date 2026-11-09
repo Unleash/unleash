@@ -24,7 +24,7 @@ import useToast from 'hooks/useToast';
 import { useEventTracker } from 'hooks/useEventTracker';
 import type { RemoteData } from './RemoteData.ts';
 
-const RECENT_FLAGS_LIMIT = 20;
+const RECENT_FLAGS_LIMIT = 25;
 
 const Panel = styled('section')(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,

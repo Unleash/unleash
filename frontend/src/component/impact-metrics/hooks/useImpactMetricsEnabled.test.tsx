@@ -34,24 +34,27 @@ test.each<[Availability | undefined, MetricSource | undefined, boolean]>([
     ['full', 'external', true],
     ['unconfigured', 'internal', false],
     ['disabled', 'external', false],
-])('%s availability, %s source requested -> %s', async (impactMetrics, source, expected) => {
-    testServerRoute(server, '/api/admin/ui-config', { impactMetrics });
+])(
+    '%s availability, %s source requested -> %s',
+    async (impactMetrics, source, expected) => {
+        testServerRoute(server, '/api/admin/ui-config', { impactMetrics });
 
-    const { result } = renderHook(
-        () => {
-            const { uiConfig, loading, error } = useUiConfig();
-            return {
-                loading,
-                error,
-                availability: uiConfig.impactMetrics,
-                enabled: useImpactMetricsEnabled(source),
-            };
-        },
-        { wrapper },
-    );
+        const { result } = renderHook(
+            () => {
+                const { uiConfig, loading, error } = useUiConfig();
+                return {
+                    loading,
+                    error,
+                    availability: uiConfig.impactMetrics,
+                    enabled: useImpactMetricsEnabled(source),
+                };
+            },
+            { wrapper },
+        );
 
-    await waitFor(() => expect(result.current.loading).toBe(false));
-    expect(result.current.error).toBeUndefined();
-    expect(result.current.availability).toBe(impactMetrics);
-    expect(result.current.enabled).toBe(expected);
-});
+        await waitFor(() => expect(result.current.loading).toBe(false));
+        expect(result.current.error).toBeUndefined();
+        expect(result.current.availability).toBe(impactMetrics);
+        expect(result.current.enabled).toBe(expected);
+    },
+);

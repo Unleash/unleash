@@ -181,14 +181,15 @@ test.each<{ when: string; variants: Record<string, number>[] }>([
         when: 'only the earlier metric has them',
         variants: [{ toString: 1, constructor: 2 }, { red: 1 }],
     },
-])('counts variants named after built-in object properties when $when', ({
-    variants,
-}) => {
-    const collapsed = collapseHourlyMetrics(
-        variants.map((v) => metricWithVariants(v)),
-    );
+])(
+    'counts variants named after built-in object properties when $when',
+    ({ variants }) => {
+        const collapsed = collapseHourlyMetrics(
+            variants.map((v) => metricWithVariants(v)),
+        );
 
-    expect(collapsed).toMatchObject([
-        { variants: { red: 1, toString: 1, constructor: 2 } },
-    ]);
-});
+        expect(collapsed).toMatchObject([
+            { variants: { red: 1, toString: 1, constructor: 2 } },
+        ]);
+    },
+);

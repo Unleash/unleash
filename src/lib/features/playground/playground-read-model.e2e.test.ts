@@ -66,33 +66,33 @@ describe('getFeatureWithParents', () => {
         { child: '2024', parent: '2025' },
         { child: '2025', parent: '2024' },
         { child: '10', parent: '9' },
-    ])('orders parent $parent before flag $child', async ({
-        child,
-        parent,
-    }) => {
-        await createFlag(child);
-        await createStrategy(child);
-        await createStrategy(child);
-        await createFlag(parent);
-        await stores.dependentFeaturesStore.upsert({
-            parent,
-            child,
-            enabled: true,
-        });
+    ])(
+        'orders parent $parent before flag $child',
+        async ({ child, parent }) => {
+            await createFlag(child);
+            await createStrategy(child);
+            await createStrategy(child);
+            await createFlag(parent);
+            await stores.dependentFeaturesStore.upsert({
+                parent,
+                child,
+                enabled: true,
+            });
 
-        const features = await readModel.getFeatureWithParents(
-            child,
-            'development',
-        );
+            const features = await readModel.getFeatureWithParents(
+                child,
+                'development',
+            );
 
-        expect(features).toMatchObject([
-            { name: parent },
-            {
-                name: child,
-                dependencies: [{ feature: parent, enabled: true }],
-            },
-        ]);
-    });
+            expect(features).toMatchObject([
+                { name: parent },
+                {
+                    name: child,
+                    dependencies: [{ feature: parent, enabled: true }],
+                },
+            ]);
+        },
+    );
 
     test('uses the state of the requested environment', async () => {
         await createFlag('flag');

@@ -145,94 +145,99 @@ const createService = (
 };
 
 describe('ApiTokenV2Service', () => {
-    test.each([
-        false,
-        true,
-    ])('does not disclose application existence or database details when the existence check returns %s', async (applicationExists) => {
-        const apiTokenV2Store = new FakeApiTokenV2Store();
-        const environmentStore = new FakeEnvironmentStore();
-        const clientApplicationsStore = new FakeClientApplicationsStore();
-        await environmentStore.create({
-            enabled: true,
-            protected: false,
-            sortOrder: 0,
-            type: 'production',
-            name: 'production',
-        });
-        vi.spyOn(clientApplicationsStore, 'exists').mockResolvedValue(
-            applicationExists,
-        );
-        const create = vi.spyOn(apiTokenV2Store, 'create').mockRejectedValue({
-            code: '23503',
-            constraint: 'api_tokens_v2_application_fkey',
-            detail: 'Key (application)=(private-application) is not present in table client_applications',
-        });
-        const { service, eventService } = createService({
-            apiTokenV2Store,
-            environmentStore,
-            clientApplicationsStore,
-        });
+    test.each([false, true])(
+        'does not disclose application existence or database details when the existence check returns %s',
+        async (applicationExists) => {
+            const apiTokenV2Store = new FakeApiTokenV2Store();
+            const environmentStore = new FakeEnvironmentStore();
+            const clientApplicationsStore = new FakeClientApplicationsStore();
+            await environmentStore.create({
+                enabled: true,
+                protected: false,
+                sortOrder: 0,
+                type: 'production',
+                name: 'production',
+            });
+            vi.spyOn(clientApplicationsStore, 'exists').mockResolvedValue(
+                applicationExists,
+            );
+            const create = vi
+                .spyOn(apiTokenV2Store, 'create')
+                .mockRejectedValue({
+                    code: '23503',
+                    constraint: 'api_tokens_v2_application_fkey',
+                    detail: 'Key (application)=(private-application) is not present in table client_applications',
+                });
+            const { service, eventService } = createService({
+                apiTokenV2Store,
+                environmentStore,
+                clientApplicationsStore,
+            });
 
-        await expect(
-            service.create(
-                { ...tokenInput, appName: 'private-application' },
-                SYSTEM_USER_AUDIT,
-            ),
-        ).rejects.toMatchObject({
-            name: 'BadDataError',
-            message:
-                'Request validation failed: your request body or params contain invalid data: Unable to associate token with the requested Application',
-            details: [
-                {
-                    message:
-                        'Unable to associate token with the requested Application',
-                },
-            ],
-        });
-        expect(create).toHaveBeenCalledTimes(applicationExists ? 1 : 0);
-        expect(eventService.storeEventsOrThrow).not.toHaveBeenCalled();
-    });
+            await expect(
+                service.create(
+                    { ...tokenInput, appName: 'private-application' },
+                    SYSTEM_USER_AUDIT,
+                ),
+            ).rejects.toMatchObject({
+                name: 'BadDataError',
+                message:
+                    'Request validation failed: your request body or params contain invalid data: Unable to associate token with the requested Application',
+                details: [
+                    {
+                        message:
+                            'Unable to associate token with the requested Application',
+                    },
+                ],
+            });
+            expect(create).toHaveBeenCalledTimes(applicationExists ? 1 : 0);
+            expect(eventService.storeEventsOrThrow).not.toHaveBeenCalled();
+        },
+    );
 
     test.each([
         ApiTokenType.BACKEND,
         ApiTokenType.CLIENT,
         ApiTokenType.FRONTEND,
-    ] as const)('allows application associations for %s tokens', async (type) => {
-        const apiTokenV2Store = new FakeApiTokenV2Store();
-        const environmentStore = new FakeEnvironmentStore();
-        const clientApplicationsStore = new FakeClientApplicationsStore();
-        await environmentStore.create({
-            enabled: true,
-            protected: false,
-            sortOrder: 0,
-            type: 'production',
-            name: 'production',
-        });
-        await clientApplicationsStore.upsert({ appName: 'associated-app' });
-        const { service } = createService({
-            apiTokenV2Store,
-            environmentStore,
-            clientApplicationsStore,
-        });
+    ] as const)(
+        'allows application associations for %s tokens',
+        async (type) => {
+            const apiTokenV2Store = new FakeApiTokenV2Store();
+            const environmentStore = new FakeEnvironmentStore();
+            const clientApplicationsStore = new FakeClientApplicationsStore();
+            await environmentStore.create({
+                enabled: true,
+                protected: false,
+                sortOrder: 0,
+                type: 'production',
+                name: 'production',
+            });
+            await clientApplicationsStore.upsert({ appName: 'associated-app' });
+            const { service } = createService({
+                apiTokenV2Store,
+                environmentStore,
+                clientApplicationsStore,
+            });
 
-        const token = await service.create(
-            { ...tokenInput, type, appName: 'associated-app' },
-            SYSTEM_USER_AUDIT,
-        );
-
-        expect(token.appName).toBe('associated-app');
-        expect(apiTokenV2Store.stored?.type).toBe(type);
-        const { service: limitedService } = createService(
-            { apiTokenV2Store, environmentStore, clientApplicationsStore },
-            1,
-        );
-        await expect(
-            limitedService.create(
+            const token = await service.create(
                 { ...tokenInput, type, appName: 'associated-app' },
                 SYSTEM_USER_AUDIT,
-            ),
-        ).rejects.toBeInstanceOf(ExceedsLimitError);
-    });
+            );
+
+            expect(token.appName).toBe('associated-app');
+            expect(apiTokenV2Store.stored?.type).toBe(type);
+            const { service: limitedService } = createService(
+                { apiTokenV2Store, environmentStore, clientApplicationsStore },
+                1,
+            );
+            await expect(
+                limitedService.create(
+                    { ...tokenInput, type, appName: 'associated-app' },
+                    SYSTEM_USER_AUDIT,
+                ),
+            ).rejects.toBeInstanceOf(ExceedsLimitError);
+        },
+    );
 
     test('rejects application associations for Admin tokens before persistence', async () => {
         const apiTokenV2Store = new FakeApiTokenV2Store();

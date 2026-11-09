@@ -65,51 +65,54 @@ describe('ClientApplicationsStore', () => {
         );
     });
 
-    test.each([
-        false,
-        true,
-    ])('referenced applications survive cleanup and reject deletion, expired token: %s', async (expired) => {
-        const appName = `protected-application-${expired}`;
-        const selector = `protected-token-${expired}`;
-        await service.upsert({ appName });
-        await db.stores.apiTokenV2Store.create(
-            {
-                tokenName: 'protect-application',
-                type: ApiTokenType.BACKEND,
-                projects: ['default'],
-                environment: 'production',
-                userCreated: true,
-                appName: appName,
-                ...(expired ? { expiresAt: subDays(new Date(), 1) } : {}),
-            },
-            selector,
-            'verifier',
-        );
-        await db
-            .rawDatabase('client_applications')
-            .where({ app_name: appName })
-            .update({ seen_at: subDays(new Date(), 40) });
+    test.each([false, true])(
+        'referenced applications survive cleanup and reject deletion, expired token: %s',
+        async (expired) => {
+            const appName = `protected-application-${expired}`;
+            const selector = `protected-token-${expired}`;
+            await service.upsert({ appName });
+            await db.stores.apiTokenV2Store.create(
+                {
+                    tokenName: 'protect-application',
+                    type: ApiTokenType.BACKEND,
+                    projects: ['default'],
+                    environment: 'production',
+                    userCreated: true,
+                    appName: appName,
+                    ...(expired ? { expiresAt: subDays(new Date(), 1) } : {}),
+                },
+                selector,
+                'verifier',
+            );
+            await db
+                .rawDatabase('client_applications')
+                .where({ app_name: appName })
+                .update({ seen_at: subDays(new Date(), 40) });
 
-        await service.removeInactiveApplications();
-        expect(await service.exists(appName)).toBe(true);
-        const deletion = service.delete(appName);
-        await expect(deletion).rejects.toMatchObject({
-            name: 'BadDataError',
-            statusCode: 400,
-            details: [
-                { message: 'Application cannot be deleted while it is in use' },
-            ],
-        });
-        await expect(deletion).rejects.not.toHaveProperty('code');
-        await expect(deletion).rejects.not.toHaveProperty('constraint');
-        expect(
-            await db.stores.apiTokenV2Store.getBySelector(selector),
-        ).toBeDefined();
+            await service.removeInactiveApplications();
+            expect(await service.exists(appName)).toBe(true);
+            const deletion = service.delete(appName);
+            await expect(deletion).rejects.toMatchObject({
+                name: 'BadDataError',
+                statusCode: 400,
+                details: [
+                    {
+                        message:
+                            'Application cannot be deleted while it is in use',
+                    },
+                ],
+            });
+            await expect(deletion).rejects.not.toHaveProperty('code');
+            await expect(deletion).rejects.not.toHaveProperty('constraint');
+            expect(
+                await db.stores.apiTokenV2Store.getBySelector(selector),
+            ).toBeDefined();
 
-        await db.stores.apiTokenV2Store.delete(selector);
-        await service.delete(appName);
-        expect(await service.exists(appName)).toBe(false);
-    });
+            await db.stores.apiTokenV2Store.delete(selector);
+            await service.delete(appName);
+            expect(await service.exists(appName)).toBe(false);
+        },
+    );
 
     test('bulkUpsert keeps the latest observation for an application', async () => {
         const appName = 'coalesced-application';

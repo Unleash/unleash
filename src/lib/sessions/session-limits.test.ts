@@ -52,9 +52,12 @@ describe('session limits', () => {
         ],
         ['a third past the cap is capped', { idleTimeoutMinutes: 15 }, 60],
         ['however long the window gets', { idleTimeoutMinutes: 480 }, 60],
-    ])('asks for a third of the idle window, capped at a minute: %s', (_name, overrides, expected) => {
-        expect(resolveKeepAliveIntervalSeconds(options(overrides))).toBe(
-            expected,
-        );
-    });
+    ])(
+        'asks for a third of the idle window, capped at a minute: %s',
+        (_name, overrides, expected) => {
+            expect(resolveKeepAliveIntervalSeconds(options(overrides))).toBe(
+                expected,
+            );
+        },
+    );
 });

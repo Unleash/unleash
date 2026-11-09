@@ -96,19 +96,24 @@ describe('SurveyCard', () => {
     it.each([
         ['missing', null],
         ['empty', ''],
-    ])('opens on the first question when the title and description are %s', (_, value) => {
-        renderCard({ survey: { ...survey, title: value, description: value } });
+    ])(
+        'opens on the first question when the title and description are %s',
+        (_, value) => {
+            renderCard({
+                survey: { ...survey, title: value, description: value },
+            });
 
-        expect(screen.getByText('Rate this page')).toBeInTheDocument();
-        expect(screen.getByRole('progressbar')).toHaveAttribute(
-            'aria-valuetext',
-            'Step 1 of 2',
-        );
-        expect(
-            screen.queryByRole('button', { name: 'Back' }),
-        ).not.toBeInTheDocument();
-        expect(document.body).toHaveFocus();
-    });
+            expect(screen.getByText('Rate this page')).toBeInTheDocument();
+            expect(screen.getByRole('progressbar')).toHaveAttribute(
+                'aria-valuetext',
+                'Step 1 of 2',
+            );
+            expect(
+                screen.queryByRole('button', { name: 'Back' }),
+            ).not.toBeInTheDocument();
+            expect(document.body).toHaveFocus();
+        },
+    );
 
     it('goes back to the first question, not an intro, when the survey has no title or description', async () => {
         renderCard({ survey: { ...survey, title: null, description: null } });

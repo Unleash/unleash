@@ -197,50 +197,53 @@ describe('feature 304 api client', () => {
         ['production', prodTokenSecret],
         ['project-scoped', devDefaultProjectTokenSecret],
         ['all-environments', allEnvsTokenSecret],
-    ])('potentially-stale transition preserves polling configuration (%s)', async (scope, token) => {
-        const name = `potentially-stale-${scope}`;
-        await app.createFeature(name);
-        // Age the flag, then run the actual scheduled service.
-        await db
-            .rawDatabase('features')
-            .where({ name })
-            .update({
-                created_at: new Date('2000-01-01T00:00:00Z'),
-                lifetime_days: 1,
-                potentially_stale: false,
-            });
-        await app.services.configurationRevisionService.updateMaxRevisionId();
-        const before = await app.request
-            .get('/api/client/features')
-            .set('Authorization', token)
-            .expect(200);
+    ])(
+        'potentially-stale transition preserves polling configuration (%s)',
+        async (scope, token) => {
+            const name = `potentially-stale-${scope}`;
+            await app.createFeature(name);
+            // Age the flag, then run the actual scheduled service.
+            await db
+                .rawDatabase('features')
+                .where({ name })
+                .update({
+                    created_at: new Date('2000-01-01T00:00:00Z'),
+                    lifetime_days: 1,
+                    potentially_stale: false,
+                });
+            await app.services.configurationRevisionService.updateMaxRevisionId();
+            const before = await app.request
+                .get('/api/client/features')
+                .set('Authorization', token)
+                .expect(200);
 
-        await runScheduledJob(app, 'updatePotentiallyStaleFeatures');
-        expect(
-            await db.stores.featureToggleStore.isPotentiallyStale(name),
-        ).toBe(true);
-        expect(await db.stores.eventStore.getEvents()).toEqual(
-            expect.arrayContaining([
-                expect.objectContaining({
-                    featureName: name,
-                    type: 'feature-potentially-stale-on',
-                    groupType: 'transaction',
-                }),
-            ]),
-        );
-        await app.services.configurationRevisionService.updateMaxRevisionId();
-        // Bypass the HTTP payload cache to verify configuration is unchanged.
-        expect(
-            await app.services.clientFeatureToggleService.getClientFeatures(
-                before.body.query,
-            ),
-        ).toEqual(before.body.features);
-        await app.request
-            .get('/api/client/features')
-            .set('Authorization', token)
-            .set('If-None-Match', before.headers.etag)
-            .expect(304);
-    });
+            await runScheduledJob(app, 'updatePotentiallyStaleFeatures');
+            expect(
+                await db.stores.featureToggleStore.isPotentiallyStale(name),
+            ).toBe(true);
+            expect(await db.stores.eventStore.getEvents()).toEqual(
+                expect.arrayContaining([
+                    expect.objectContaining({
+                        featureName: name,
+                        type: 'feature-potentially-stale-on',
+                        groupType: 'transaction',
+                    }),
+                ]),
+            );
+            await app.services.configurationRevisionService.updateMaxRevisionId();
+            // Bypass the HTTP payload cache to verify configuration is unchanged.
+            expect(
+                await app.services.clientFeatureToggleService.getClientFeatures(
+                    before.body.query,
+                ),
+            ).toEqual(before.body.features);
+            await app.request
+                .get('/api/client/features')
+                .set('Authorization', token)
+                .set('If-None-Match', before.headers.etag)
+                .expect(304);
+        },
+    );
 
     test('potentially-stale filtering preserves delta hydration and subsequent configuration updates', async () => {
         const name = 'metadata-delta-regression';
@@ -352,89 +355,90 @@ describe('feature 304 api client', () => {
         ).toMatchObject(changes);
     });
 
-    test.each([
-        true,
-        false,
-    ])('stale=%s does not invalidate polling', async (stale) => {
-        const name = `stale-polling-${stale}`;
-        await app.createFeature(name);
-        await app.services.featureToggleService.updateStale(
-            name,
-            !stale,
-            TEST_AUDIT_USER,
-        );
-        await app.services.configurationRevisionService.updateMaxRevisionId();
-        const before = await app.request
-            .get('/api/client/features')
-            .set('Authorization', devTokenSecret)
-            .expect(200);
-
-        await app.services.featureToggleService.updateStale(
-            name,
-            stale,
-            TEST_AUDIT_USER,
-        );
-        expect((await db.stores.featureToggleStore.get(name))!.stale).toBe(
-            stale,
-        );
-        const features =
-            await app.services.clientFeatureToggleService.getClientFeatures(
-                before.body.query,
-            );
-        expect(
-            features.map(({ stale: _stale, ...feature }) => feature),
-        ).toEqual(
-            before.body.features.map(
-                ({ stale: _stale, ...feature }: { stale?: boolean }) => feature,
-            ),
-        );
-        await app.services.configurationRevisionService.updateMaxRevisionId();
-        await app.request
-            .get('/api/client/features')
-            .set('Authorization', devTokenSecret)
-            .set('If-None-Match', before.headers.etag)
-            .expect(304);
-    });
-
-    test.each([
-        'feature-completed',
-        'feature-uncompleted',
-    ] as const)('%s preserves polling configuration', async (type) => {
-        const name = `metadata-${type}`;
-        const complete = () =>
-            app.services.featureLifecycleService.featureCompleted(
+    test.each([true, false])(
+        'stale=%s does not invalidate polling',
+        async (stale) => {
+            const name = `stale-polling-${stale}`;
+            await app.createFeature(name);
+            await app.services.featureToggleService.updateStale(
                 name,
-                'default',
-                { status: 'kept' },
+                !stale,
                 TEST_AUDIT_USER,
             );
-        await app.createFeature(name);
-        if (type === 'feature-uncompleted') await complete();
-        await app.services.configurationRevisionService.updateMaxRevisionId();
-        const before = await app.request
-            .get('/api/client/features')
-            .set('Authorization', devTokenSecret)
-            .expect(200);
+            await app.services.configurationRevisionService.updateMaxRevisionId();
+            const before = await app.request
+                .get('/api/client/features')
+                .set('Authorization', devTokenSecret)
+                .expect(200);
 
-        if (type === 'feature-completed') await complete();
-        else
-            await app.services.featureLifecycleService.featureUncompleted(
+            await app.services.featureToggleService.updateStale(
                 name,
-                'default',
+                stale,
                 TEST_AUDIT_USER,
             );
-        await app.services.configurationRevisionService.updateMaxRevisionId();
-        expect(
-            await app.services.clientFeatureToggleService.getClientFeatures(
-                before.body.query,
-            ),
-        ).toEqual(before.body.features);
-        await app.request
-            .get('/api/client/features')
-            .set('Authorization', devTokenSecret)
-            .set('If-None-Match', before.headers.etag)
-            .expect(304);
-    });
+            expect((await db.stores.featureToggleStore.get(name))!.stale).toBe(
+                stale,
+            );
+            const features =
+                await app.services.clientFeatureToggleService.getClientFeatures(
+                    before.body.query,
+                );
+            expect(
+                features.map(({ stale: _stale, ...feature }) => feature),
+            ).toEqual(
+                before.body.features.map(
+                    ({ stale: _stale, ...feature }: { stale?: boolean }) =>
+                        feature,
+                ),
+            );
+            await app.services.configurationRevisionService.updateMaxRevisionId();
+            await app.request
+                .get('/api/client/features')
+                .set('Authorization', devTokenSecret)
+                .set('If-None-Match', before.headers.etag)
+                .expect(304);
+        },
+    );
+
+    test.each(['feature-completed', 'feature-uncompleted'] as const)(
+        '%s preserves polling configuration',
+        async (type) => {
+            const name = `metadata-${type}`;
+            const complete = () =>
+                app.services.featureLifecycleService.featureCompleted(
+                    name,
+                    'default',
+                    { status: 'kept' },
+                    TEST_AUDIT_USER,
+                );
+            await app.createFeature(name);
+            if (type === 'feature-uncompleted') await complete();
+            await app.services.configurationRevisionService.updateMaxRevisionId();
+            const before = await app.request
+                .get('/api/client/features')
+                .set('Authorization', devTokenSecret)
+                .expect(200);
+
+            if (type === 'feature-completed') await complete();
+            else
+                await app.services.featureLifecycleService.featureUncompleted(
+                    name,
+                    'default',
+                    TEST_AUDIT_USER,
+                );
+            await app.services.configurationRevisionService.updateMaxRevisionId();
+            expect(
+                await app.services.clientFeatureToggleService.getClientFeatures(
+                    before.body.query,
+                ),
+            ).toEqual(before.body.features);
+            await app.request
+                .get('/api/client/features')
+                .set('Authorization', devTokenSecret)
+                .set('If-None-Match', before.headers.etag)
+                .expect(304);
+        },
+    );
 
     test('all-env token has its own etag and caches correctly', async () => {
         const prod = await app.request

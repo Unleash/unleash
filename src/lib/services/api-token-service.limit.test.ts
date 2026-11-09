@@ -50,36 +50,40 @@ test.each([
     ApiTokenType.CLIENT,
     ApiTokenType.BACKEND,
     ApiTokenType.FRONTEND,
-])("Should prevent you from creating %s tokens when you're already at the limit", async (tokenType) => {
-    const limit = 1;
-    const service = createServiceWithLimit(limit);
-    const auditUser = {
-        id: 1,
-        username: 'audit user',
-        ip: '127.0.0.1',
-    };
+])(
+    "Should prevent you from creating %s tokens when you're already at the limit",
+    async (tokenType) => {
+        const limit = 1;
+        const service = createServiceWithLimit(limit);
+        const auditUser = {
+            id: 1,
+            username: 'audit user',
+            ip: '127.0.0.1',
+        };
 
-    await service.createApiTokenWithProjects(
-        {
-            tokenName: `token-1-${tokenType}`,
-            type: ApiTokenType.CLIENT,
-            environment: 'production',
-            projects: ['*'],
-        },
-        auditUser,
-    );
-
-    const environment = tokenType === ApiTokenType.ADMIN ? '*' : 'production';
-
-    await expect(
-        service.createApiTokenWithProjects(
+        await service.createApiTokenWithProjects(
             {
-                tokenName: 'exceeds-limit',
-                type: tokenType,
-                environment,
+                tokenName: `token-1-${tokenType}`,
+                type: ApiTokenType.CLIENT,
+                environment: 'production',
                 projects: ['*'],
             },
             auditUser,
-        ),
-    ).rejects.toThrow(ExceedsLimitError);
-});
+        );
+
+        const environment =
+            tokenType === ApiTokenType.ADMIN ? '*' : 'production';
+
+        await expect(
+            service.createApiTokenWithProjects(
+                {
+                    tokenName: 'exceeds-limit',
+                    type: tokenType,
+                    environment,
+                    projects: ['*'],
+                },
+                auditUser,
+            ),
+        ).rejects.toThrow(ExceedsLimitError);
+    },
+);

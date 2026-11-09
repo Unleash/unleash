@@ -66,19 +66,17 @@ describe('observeAppear', () => {
         expect(appeared).toEqual([]);
     });
 
-    it.each([
-        'script',
-        'style',
-        'template',
-        'noscript',
-    ])('does not report a %s element', async (tag) => {
-        const appeared = subscribe();
+    it.each(['script', 'style', 'template', 'noscript'])(
+        'does not report a %s element',
+        async (tag) => {
+            const appeared = subscribe();
 
-        append(`<${tag}></${tag}>`);
-        await nextMutationBatch();
+            append(`<${tag}></${tag}>`);
+            await nextMutationBatch();
 
-        expect(appeared).toEqual([]);
-    });
+            expect(appeared).toEqual([]);
+        },
+    );
 
     it.each([
         ['a hidden element', '<div hidden>Flag created</div>'],

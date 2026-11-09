@@ -81,32 +81,32 @@ describe('validateTriggerDraft', () => {
         expect(hasTriggerErrors(errors)).toBe(false);
     });
 
-    it.each([
-        'appear',
-        'click',
-    ] as const)('reports a missing selector and text on an %s trigger', (on) => {
-        const errors = validateTriggerDraft({
-            ...customDraft,
-            on,
-        });
+    it.each(['appear', 'click'] as const)(
+        'reports a missing selector and text on an %s trigger',
+        (on) => {
+            const errors = validateTriggerDraft({
+                ...customDraft,
+                on,
+            });
 
-        expect(errors.selector).toBe('Enter a CSS selector, text or both');
-        expect(hasTriggerErrors(errors)).toBe(true);
-    });
+            expect(errors.selector).toBe('Enter a CSS selector, text or both');
+            expect(hasTriggerErrors(errors)).toBe(true);
+        },
+    );
 
-    it.each([
-        '',
-        ' ',
-    ])('reports an event name of %j on an event trigger', (eventName) => {
-        const errors = validateTriggerDraft({
-            ...customDraft,
-            on: 'event',
-            eventName,
-        });
+    it.each(['', ' '])(
+        'reports an event name of %j on an event trigger',
+        (eventName) => {
+            const errors = validateTriggerDraft({
+                ...customDraft,
+                on: 'event',
+                eventName,
+            });
 
-        expect(errors.eventName).toBe('Enter an event name');
-        expect(hasTriggerErrors(errors)).toBe(true);
-    });
+            expect(errors.eventName).toBe('Enter an event name');
+            expect(hasTriggerErrors(errors)).toBe(true);
+        },
+    );
 
     it('accepts an event trigger with a name', () => {
         const errors = validateTriggerDraft({

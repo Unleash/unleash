@@ -36,11 +36,12 @@ describe('buildFlagUsageSnippet', () => {
 });
 
 describe('every SDK snippet has a flag usage section', () => {
-    it.each(
-        Object.entries(codeRenderSnippets),
-    )('%s has a non-empty flag usage snippet', (_sdkName, snippet) => {
-        const result = buildFlagUsageSnippet(snippet, 'test-flag');
-        expect(result).not.toBeNull();
-        expect(result!.trim()).not.toBe('');
-    });
+    it.each(Object.entries(codeRenderSnippets))(
+        '%s has a non-empty flag usage snippet',
+        (_sdkName, snippet) => {
+            const result = buildFlagUsageSnippet(snippet, 'test-flag');
+            expect(result).not.toBeNull();
+            expect(result!.trim()).not.toBe('');
+        },
+    );
 });

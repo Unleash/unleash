@@ -64,29 +64,29 @@ describe('ConstraintOperatorSelect', () => {
     test.each([
         { inverted: false, option: 'does not match' },
         { inverted: true, option: 'matches' },
-    ])('toggles inversion when clicking $option', async ({
-        inverted,
-        option,
-    }) => {
-        setupApi();
-        const onToggleInverted = vi.fn();
+    ])(
+        'toggles inversion when clicking $option',
+        async ({ inverted, option }) => {
+            setupApi();
+            const onToggleInverted = vi.fn();
 
-        render(
-            <ConstraintOperatorSelect
-                contextName='appName'
-                options={['IN', 'NOT_IN']}
-                value='IN'
-                onChange={vi.fn()}
-                inverted={inverted}
-                onToggleInverted={onToggleInverted}
-            />,
-        );
+            render(
+                <ConstraintOperatorSelect
+                    contextName='appName'
+                    options={['IN', 'NOT_IN']}
+                    value='IN'
+                    onChange={vi.fn()}
+                    inverted={inverted}
+                    onToggleInverted={onToggleInverted}
+                />,
+            );
 
-        await openPopover();
-        fireEvent.click(screen.getByRole('radio', { name: option }));
+            await openPopover();
+            fireEvent.click(screen.getByRole('radio', { name: option }));
 
-        expect(onToggleInverted).toHaveBeenCalledTimes(1);
-    });
+            expect(onToggleInverted).toHaveBeenCalledTimes(1);
+        },
+    );
 
     test('disables the match options and shows the reason when inversion is unsupported', async () => {
         setupApi();

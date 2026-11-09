@@ -80,7 +80,7 @@ export const FeatureStrategySegment = ({
                                     target='_blank'
                                     rel='noopener noreferrer'
                                 >
-                                    here
+                                    in the documentation
                                 </a>
                             </Typography>
                         </Box>

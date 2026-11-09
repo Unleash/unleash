@@ -64,21 +64,24 @@ describe('event log date filters', () => {
             '2026-09-10',
         ],
         ['UTC', '2026-09-11T01:30:00Z', '2025-09-11', '2026-09-11'],
-    ])('uses UTC default dates in %s at %s', (timeZone, now, startDate, endDate) => {
-        vi.stubEnv('TZ', timeZone);
-        vi.useFakeTimers();
-        vi.setSystemTime(new Date(now));
+    ])(
+        'uses UTC default dates in %s at %s',
+        (timeZone, now, startDate, endDate) => {
+            vi.stubEnv('TZ', timeZone);
+            vi.useFakeTimers();
+            vi.setSystemTime(new Date(now));
 
-        renderEventLogSearch();
+            renderEventLogSearch();
 
-        expect(useEventSearch).toHaveBeenLastCalledWith(
-            expect.objectContaining({
-                from: `IS:${startDate}`,
-                to: `IS:${endDate}`,
-            }),
-            expect.anything(),
-        );
-    });
+            expect(useEventSearch).toHaveBeenLastCalledWith(
+                expect.objectContaining({
+                    from: `IS:${startDate}`,
+                    to: `IS:${endDate}`,
+                }),
+                expect.anything(),
+            );
+        },
+    );
 
     test('preserves an explicit date range from the URL', () => {
         vi.stubEnv('TZ', 'America/Los_Angeles');

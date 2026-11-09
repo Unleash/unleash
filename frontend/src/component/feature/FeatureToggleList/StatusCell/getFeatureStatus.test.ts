@@ -166,153 +166,155 @@ describe('getFeatureStatus', () => {
         });
     });
 
-    describe.each([
-        'live',
-        'completed',
-    ] as const)("'%s' stage (Production / Cleanup)", (stage) => {
-        it('has no production environments', () => {
-            expect(
-                getFeatureStatus({
-                    environments: [devEnvEnabled],
-                    lifecycle: lifecycle(stage),
-                }),
-            ).toEqual({ type: 'noProductionEnvironments' });
-        });
-
-        it('is paused when the single production environment is disabled', () => {
-            expect(
-                getFeatureStatus({
-                    environments: [prodEnvDisabled],
-                    lifecycle: lifecycle(stage),
-                }),
-            ).toEqual({ type: 'paused', environment: 'production' });
-        });
-
-        it('is paused when none of several production environments is enabled', () => {
-            expect(
-                getFeatureStatus({
-                    environments: [
-                        { ...prodEnvDisabled, name: 'production-eu' },
-                        { ...prodEnvDisabled, name: 'production-us' },
-                    ],
-                    lifecycle: lifecycle(stage),
-                }),
-            ).toEqual({ type: 'paused', environment: 'production' });
-        });
-
-        it('is partially enabled in production', () => {
-            expect(
-                getFeatureStatus({
-                    environments: [
-                        { ...prodEnvEnabled, name: 'production-eu' },
-                        { ...prodEnvDisabled, name: 'production-us' },
-                        { ...prodEnvEnabled, name: 'production-apac' },
-                    ],
-                    lifecycle: lifecycle(stage),
-                }),
-            ).toEqual({
-                type: 'partialProduction',
-                enabledEnvironments: ['production-eu', 'production-apac'],
-                disabledEnvironments: ['production-us'],
+    describe.each(['live', 'completed'] as const)(
+        "'%s' stage (Production / Cleanup)",
+        (stage) => {
+            it('has no production environments', () => {
+                expect(
+                    getFeatureStatus({
+                        environments: [devEnvEnabled],
+                        lifecycle: lifecycle(stage),
+                    }),
+                ).toEqual({ type: 'noProductionEnvironments' });
             });
-        });
 
-        it('is not partial when every production environment is enabled', () => {
-            expect(
-                getFeatureStatus({
-                    environments: [
-                        { ...prodEnvEnabled, name: 'production-eu' },
-                        { ...prodEnvEnabled, name: 'production-us' },
-                    ],
-                    lifecycle: lifecycle(stage),
-                }),
-            ).toEqual({ type: 'ok' });
-        });
-
-        it('has no production strategies', () => {
-            expect(
-                getFeatureStatus({
-                    environments: [{ ...prodEnvEnabled, hasStrategies: false }],
-                    lifecycle: lifecycle(stage),
-                }),
-            ).toEqual({ type: 'noStrategies', environment: 'production' });
-        });
-
-        it('prefers "no strategies" over "paused" for a disabled production environment without strategies', () => {
-            expect(
-                getFeatureStatus({
-                    environments: [prodEnvDisabledNoStrategies],
-                    lifecycle: lifecycle(stage),
-                }),
-            ).toEqual({ type: 'noStrategies', environment: 'production' });
-        });
-
-        it('is ok for an enabled production environment with strategies and no release plan', () => {
-            expect(
-                getFeatureStatus({
-                    environments: [prodEnvEnabled],
-                    lifecycle: lifecycle(stage),
-                }),
-            ).toEqual({ type: 'ok' });
-        });
-
-        it('reports the active milestone with a name', () => {
-            expect(
-                getFeatureStatus({
-                    environments: [
-                        {
-                            ...prodEnvEnabled,
-                            totalMilestones: 2,
-                            milestoneOrder: 0,
-                            milestoneName: 'First step',
-                        },
-                    ],
-                    lifecycle: lifecycle(stage),
-                }),
-            ).toEqual({
-                type: 'milestone',
-                name: 'First step',
-                order: 1,
-                total: 2,
+            it('is paused when the single production environment is disabled', () => {
+                expect(
+                    getFeatureStatus({
+                        environments: [prodEnvDisabled],
+                        lifecycle: lifecycle(stage),
+                    }),
+                ).toEqual({ type: 'paused', environment: 'production' });
             });
-        });
 
-        it('reports the active milestone without a name', () => {
-            expect(
-                getFeatureStatus({
-                    environments: [
-                        {
-                            ...prodEnvEnabled,
-                            totalMilestones: 3,
-                            milestoneOrder: 1,
-                        },
-                    ],
-                    lifecycle: lifecycle(stage),
-                }),
-            ).toEqual({
-                type: 'milestone',
-                name: null,
-                order: 2,
-                total: 3,
+            it('is paused when none of several production environments is enabled', () => {
+                expect(
+                    getFeatureStatus({
+                        environments: [
+                            { ...prodEnvDisabled, name: 'production-eu' },
+                            { ...prodEnvDisabled, name: 'production-us' },
+                        ],
+                        lifecycle: lifecycle(stage),
+                    }),
+                ).toEqual({ type: 'paused', environment: 'production' });
             });
-        });
 
-        it('does not report a milestone for a disabled production environment', () => {
-            expect(
-                getFeatureStatus({
-                    environments: [
-                        {
-                            ...prodEnvDisabled,
-                            totalMilestones: 2,
-                            milestoneOrder: 0,
-                            milestoneName: 'First step',
-                        },
-                    ],
-                    lifecycle: lifecycle(stage),
-                }),
-            ).toEqual({ type: 'paused', environment: 'production' });
-        });
-    });
+            it('is partially enabled in production', () => {
+                expect(
+                    getFeatureStatus({
+                        environments: [
+                            { ...prodEnvEnabled, name: 'production-eu' },
+                            { ...prodEnvDisabled, name: 'production-us' },
+                            { ...prodEnvEnabled, name: 'production-apac' },
+                        ],
+                        lifecycle: lifecycle(stage),
+                    }),
+                ).toEqual({
+                    type: 'partialProduction',
+                    enabledEnvironments: ['production-eu', 'production-apac'],
+                    disabledEnvironments: ['production-us'],
+                });
+            });
+
+            it('is not partial when every production environment is enabled', () => {
+                expect(
+                    getFeatureStatus({
+                        environments: [
+                            { ...prodEnvEnabled, name: 'production-eu' },
+                            { ...prodEnvEnabled, name: 'production-us' },
+                        ],
+                        lifecycle: lifecycle(stage),
+                    }),
+                ).toEqual({ type: 'ok' });
+            });
+
+            it('has no production strategies', () => {
+                expect(
+                    getFeatureStatus({
+                        environments: [
+                            { ...prodEnvEnabled, hasStrategies: false },
+                        ],
+                        lifecycle: lifecycle(stage),
+                    }),
+                ).toEqual({ type: 'noStrategies', environment: 'production' });
+            });
+
+            it('prefers "no strategies" over "paused" for a disabled production environment without strategies', () => {
+                expect(
+                    getFeatureStatus({
+                        environments: [prodEnvDisabledNoStrategies],
+                        lifecycle: lifecycle(stage),
+                    }),
+                ).toEqual({ type: 'noStrategies', environment: 'production' });
+            });
+
+            it('is ok for an enabled production environment with strategies and no release plan', () => {
+                expect(
+                    getFeatureStatus({
+                        environments: [prodEnvEnabled],
+                        lifecycle: lifecycle(stage),
+                    }),
+                ).toEqual({ type: 'ok' });
+            });
+
+            it('reports the active milestone with a name', () => {
+                expect(
+                    getFeatureStatus({
+                        environments: [
+                            {
+                                ...prodEnvEnabled,
+                                totalMilestones: 2,
+                                milestoneOrder: 0,
+                                milestoneName: 'First step',
+                            },
+                        ],
+                        lifecycle: lifecycle(stage),
+                    }),
+                ).toEqual({
+                    type: 'milestone',
+                    name: 'First step',
+                    order: 1,
+                    total: 2,
+                });
+            });
+
+            it('reports the active milestone without a name', () => {
+                expect(
+                    getFeatureStatus({
+                        environments: [
+                            {
+                                ...prodEnvEnabled,
+                                totalMilestones: 3,
+                                milestoneOrder: 1,
+                            },
+                        ],
+                        lifecycle: lifecycle(stage),
+                    }),
+                ).toEqual({
+                    type: 'milestone',
+                    name: null,
+                    order: 2,
+                    total: 3,
+                });
+            });
+
+            it('does not report a milestone for a disabled production environment', () => {
+                expect(
+                    getFeatureStatus({
+                        environments: [
+                            {
+                                ...prodEnvDisabled,
+                                totalMilestones: 2,
+                                milestoneOrder: 0,
+                                milestoneName: 'First step',
+                            },
+                        ],
+                        lifecycle: lifecycle(stage),
+                    }),
+                ).toEqual({ type: 'paused', environment: 'production' });
+            });
+        },
+    );
 
     it('is ok for archived flags', () => {
         expect(

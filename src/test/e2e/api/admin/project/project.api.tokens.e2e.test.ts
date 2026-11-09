@@ -92,25 +92,24 @@ describe('project API tokens and legacy token compatibility', () => {
             .expect(404);
     });
 
-    test.each([
-        'client',
-        'frontend',
-        'backend',
-    ])('creates new %s token', async (type) => {
-        const { body, status } = await app.request
-            .post('/api/admin/projects/default/api-tokens')
-            .send({
-                tokenName: `default-${type}`,
-                type,
-                projects: ['default'],
-                environment: DEFAULT_ENV,
-            })
-            .set('Content-Type', 'application/json');
-        expect(status).toBe(201);
-        expect(body.tokenName).toBe(`default-${type}`);
-        expect(body.secret).toMatch(/^default:development\.v2_/);
-        expect(await db.stores.apiTokenStore.getAll()).toEqual([]);
-    });
+    test.each(['client', 'frontend', 'backend'])(
+        'creates new %s token',
+        async (type) => {
+            const { body, status } = await app.request
+                .post('/api/admin/projects/default/api-tokens')
+                .send({
+                    tokenName: `default-${type}`,
+                    type,
+                    projects: ['default'],
+                    environment: DEFAULT_ENV,
+                })
+                .set('Content-Type', 'application/json');
+            expect(status).toBe(201);
+            expect(body.tokenName).toBe(`default-${type}`);
+            expect(body.secret).toMatch(/^default:development\.v2_/);
+            expect(await db.stores.apiTokenStore.getAll()).toEqual([]);
+        },
+    );
 
     test('Deletes existing tokens', async () => {
         const tokenSecret = 'random-secret';

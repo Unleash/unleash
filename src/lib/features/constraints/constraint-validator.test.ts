@@ -76,26 +76,25 @@ describe('ConstraintValidator - validateConstraints', () => {
             expect(result[0].operator).toBe('SEMVER_EQ');
         });
 
-        test.each([
-            '1.2.3-beta.1',
-            '1.2.3+4000',
-            '1.2.3-beta.1+build.5',
-        ])('validates a semver operator constraint with the value %s', async (value) => {
-            const { validator } = createValidator();
-            const constraints: IConstraint[] = [
-                {
-                    contextName: 'someField',
-                    operator: 'SEMVER_EQ',
-                    value,
-                    values: [],
-                },
-            ];
+        test.each(['1.2.3-beta.1', '1.2.3+4000', '1.2.3-beta.1+build.5'])(
+            'validates a semver operator constraint with the value %s',
+            async (value) => {
+                const { validator } = createValidator();
+                const constraints: IConstraint[] = [
+                    {
+                        contextName: 'someField',
+                        operator: 'SEMVER_EQ',
+                        value,
+                        values: [],
+                    },
+                ];
 
-            const result = await validator.validateConstraints(constraints);
+                const result = await validator.validateConstraints(constraints);
 
-            expect(result).toHaveLength(1);
-            expect(result[0].value).toBe(value);
-        });
+                expect(result).toHaveLength(1);
+                expect(result[0].value).toBe(value);
+            },
+        );
 
         test('validates a date operator constraint', async () => {
             const { validator } = createValidator();

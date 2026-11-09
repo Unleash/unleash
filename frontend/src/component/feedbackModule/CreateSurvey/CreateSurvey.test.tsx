@@ -163,18 +163,21 @@ describe('CreateSurvey', () => {
     it.each([
         ['the tag', { tagStatus: 500 }],
         ['the strategy', { strategyStatus: 500 }],
-    ])('opens the flag with a warning when %s cannot be added', async (_, failure) => {
-        setupApi(failure);
-        renderPage();
+    ])(
+        'opens the flag with a warning when %s cannot be added',
+        async (_, failure) => {
+            setupApi(failure);
+            renderPage();
 
-        await goToSettings();
-        await submitSurvey();
+            await goToSettings();
+            await submitSurvey();
 
-        await screen.findByText('Flag page for default/survey-onboarding');
-        await screen.findByText(
-            'Survey created, but some steps failed. Make sure the strategy is set up and the role:survey tag is applied.',
-        );
-    });
+            await screen.findByText('Flag page for default/survey-onboarding');
+            await screen.findByText(
+                'Survey created, but some steps failed. Make sure the strategy is set up and the role:survey tag is applied.',
+            );
+        },
+    );
 
     it('sends survey responses to this instance', async () => {
         const { addStrategy } = setupApi();

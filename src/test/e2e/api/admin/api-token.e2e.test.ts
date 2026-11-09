@@ -100,43 +100,43 @@ test('update client token with expiry', async () => {
         });
 });
 
-test.each([
-    'client',
-    'backend',
-])('creates a lot of backend tokens from type %s', async (type) => {
-    const requests: any[] = [];
+test.each(['client', 'backend'])(
+    'creates a lot of backend tokens from type %s',
+    async (type) => {
+        const requests: any[] = [];
 
-    for (let i = 0; i < 10; i++) {
-        requests.push(
-            app.request
-                .post('/api/admin/api-tokens')
-                .send({
-                    tokenName: 'default-client',
-                    type,
-                })
-                .set('Content-Type', 'application/json')
-                .expect(201),
-        );
-    }
-    await Promise.all(requests);
-    expect.assertions(4);
-    await app.request
-        .get('/api/admin/api-tokens')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.tokens.length).toBe(10);
-            expect(res.body.tokens[2].type).toBe(type);
-        });
-    await app.request
-        .get('/api/admin/api-tokens/default-client')
-        .expect('Content-Type', /json/)
-        .expect(200)
-        .expect((res) => {
-            expect(res.body.tokens.length).toBe(10);
-            expect(res.body.tokens[2].type).toBe(type);
-        });
-});
+        for (let i = 0; i < 10; i++) {
+            requests.push(
+                app.request
+                    .post('/api/admin/api-tokens')
+                    .send({
+                        tokenName: 'default-client',
+                        type,
+                    })
+                    .set('Content-Type', 'application/json')
+                    .expect(201),
+            );
+        }
+        await Promise.all(requests);
+        expect.assertions(4);
+        await app.request
+            .get('/api/admin/api-tokens')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.tokens.length).toBe(10);
+                expect(res.body.tokens[2].type).toBe(type);
+            });
+        await app.request
+            .get('/api/admin/api-tokens/default-client')
+            .expect('Content-Type', /json/)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.tokens.length).toBe(10);
+                expect(res.body.tokens[2].type).toBe(type);
+            });
+    },
+);
 
 test('removes api token', async () => {
     const tokenSecret = '*:environment.random-secret';
@@ -190,47 +190,47 @@ test('refuses to remove an api token Enterprise Edge created', async () => {
     expect(body.message).toMatch(/Enterprise Edge/);
 });
 
-test.each([
-    'client',
-    'backend',
-])('creates new %s token: project & environment defaults to "*"', async (type) => {
-    await app.request
-        .post('/api/admin/api-tokens')
-        .send({
-            tokenName: 'default-client',
-            type,
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201)
-        .expect((res) => {
-            expect(res.body.type).toBe(type);
-            expect(res.body.secret.length > 16).toBe(true);
-            expect(res.body.environment).toBe(DEFAULT_ENV);
-            expect(res.body.projects[0]).toBe(ALL);
-        });
-});
+test.each(['client', 'backend'])(
+    'creates new %s token: project & environment defaults to "*"',
+    async (type) => {
+        await app.request
+            .post('/api/admin/api-tokens')
+            .send({
+                tokenName: 'default-client',
+                type,
+            })
+            .set('Content-Type', 'application/json')
+            .expect(201)
+            .expect((res) => {
+                expect(res.body.type).toBe(type);
+                expect(res.body.secret.length > 16).toBe(true);
+                expect(res.body.environment).toBe(DEFAULT_ENV);
+                expect(res.body.projects[0]).toBe(ALL);
+            });
+    },
+);
 
-test.each([
-    'client',
-    'backend',
-])('creates new %s token with project & environment set', async (type) => {
-    await app.request
-        .post('/api/admin/api-tokens')
-        .send({
-            tokenName: 'default-client',
-            type,
-            projects: ['default'],
-            environment: DEFAULT_ENV,
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201)
-        .expect((res) => {
-            expect(res.body.type).toBe(type);
-            expect(res.body.secret.length > 16).toBe(true);
-            expect(res.body.environment).toBe(DEFAULT_ENV);
-            expect(res.body.projects[0]).toBe('default');
-        });
-});
+test.each(['client', 'backend'])(
+    'creates new %s token with project & environment set',
+    async (type) => {
+        await app.request
+            .post('/api/admin/api-tokens')
+            .send({
+                tokenName: 'default-client',
+                type,
+                projects: ['default'],
+                environment: DEFAULT_ENV,
+            })
+            .set('Content-Type', 'application/json')
+            .expect(201)
+            .expect((res) => {
+                expect(res.body.type).toBe(type);
+                expect(res.body.secret.length > 16).toBe(true);
+                expect(res.body.environment).toBe(DEFAULT_ENV);
+                expect(res.body.projects[0]).toBe('default');
+            });
+    },
+);
 
 test('should prefix default token with "*:*."', async () => {
     return app.request

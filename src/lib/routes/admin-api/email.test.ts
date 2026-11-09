@@ -86,16 +86,16 @@ const xssCases = [
     },
 ] as const;
 
-test.each(xssCases)('html preview escapes XSS payload for $template', async ({
-    template,
-    query,
-}) => {
-    const { request, base } = await getSetup();
-    const res = await request
-        .get(`${base}/api/admin/email/preview/html/${template}?${query}`)
-        .expect(200)
-        .expect('Content-Type', /html/);
+test.each(xssCases)(
+    'html preview escapes XSS payload for $template',
+    async ({ template, query }) => {
+        const { request, base } = await getSetup();
+        const res = await request
+            .get(`${base}/api/admin/email/preview/html/${template}?${query}`)
+            .expect(200)
+            .expect('Content-Type', /html/);
 
-    expect(res.text).not.toContain('<script>alert(');
-    expect(res.text).toContain('&lt;script&gt;alert(');
-});
+        expect(res.text).not.toContain('<script>alert(');
+        expect(res.text).toContain('&lt;script&gt;alert(');
+    },
+);

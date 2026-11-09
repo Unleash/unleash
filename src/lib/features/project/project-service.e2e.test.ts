@@ -2610,20 +2610,19 @@ describe('automatic ID generation for create project', () => {
         expect(project3.id).toBe('some-name-2');
     });
 
-    test.each([
-        '',
-        undefined,
-        '     ',
-    ])('An id with the value `%s` is treated as missing (and the id is based on the name)', async (id) => {
-        const name = randomId();
-        const project = await projectService.createProject(
-            { name, id },
-            user,
-            auditUser,
-        );
+    test.each(['', undefined, '     '])(
+        'An id with the value `%s` is treated as missing (and the id is based on the name)',
+        async (id) => {
+            const name = randomId();
+            const project = await projectService.createProject(
+                { name, id },
+                user,
+                auditUser,
+            );
 
-        expect(project.id).toBe(name);
-    });
+            expect(project.id).toBe(name);
+        },
+    );
 
     test('Projects with long names get ids capped at 90 characters and then suffixed', async () => {
         const name = Array.from({ length: 200 })
@@ -2662,30 +2661,32 @@ describe('automatic ID generation for create project', () => {
     describe('backwards compatibility', () => {
         const featureFlag = 'createProjectWithEnvironmentConfig';
 
-        test.each([
-            true,
-            false,
-        ])('if the ID is present in the input, it is used as the ID regardless of the feature flag states. Flag state: %s', async (flagState) => {
-            const id = randomId();
-            // @ts-expect-error - we're just checking that the same
-            // thing happens regardless of flag state
-            projectService.flagResolver.isEnabled = (flagToCheck: string) => {
-                if (flagToCheck === featureFlag) {
-                    return flagState;
-                } else {
-                    return false;
-                }
-            };
-            const project = await projectService.createProject(
-                {
-                    name: id,
-                    id,
-                },
-                user,
-                auditUser,
-            );
+        test.each([true, false])(
+            'if the ID is present in the input, it is used as the ID regardless of the feature flag states. Flag state: %s',
+            async (flagState) => {
+                const id = randomId();
+                // @ts-expect-error - we're just checking that the same
+                // thing happens regardless of flag state
+                projectService.flagResolver.isEnabled = (
+                    flagToCheck: string,
+                ) => {
+                    if (flagToCheck === featureFlag) {
+                        return flagState;
+                    } else {
+                        return false;
+                    }
+                };
+                const project = await projectService.createProject(
+                    {
+                        name: id,
+                        id,
+                    },
+                    user,
+                    auditUser,
+                );
 
-            expect(project.id).toBe(id);
-        });
+                expect(project.id).toBe(id);
+            },
+        );
     });
 });

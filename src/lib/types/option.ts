@@ -115,6 +115,7 @@ export interface IServerOption {
     cdnPrefix?: string;
     edgeUrl?: string;
     unleashUrl: string;
+    slackAppBrokerUrl: string;
     logRocketAppId?: string;
     hubspotPortalId?: string;
     serverMetrics: boolean;
@@ -286,6 +287,7 @@ export interface IRateLimiting {
     adminApiMaxPerMinute: number;
     feedbackMaxPerMinute: number;
     playgroundMaxPerMinute: number;
+    mcpMaxPerMinute: number;
 }
 
 export interface IUnleashConfig {

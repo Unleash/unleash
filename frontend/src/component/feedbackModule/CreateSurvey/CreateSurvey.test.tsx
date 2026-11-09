@@ -110,6 +110,22 @@ const goToCustomTrigger = async () => {
     );
 };
 
+const goToCondition = async (condition: string) => {
+    await goToCustomTrigger();
+    await userEvent.click(
+        await screen.findByRole('combobox', { name: 'Show the survey when' }),
+    );
+    await userEvent.click(
+        await screen.findByRole('option', { name: condition }),
+    );
+};
+
+const goToClickTrigger = () => goToCondition('The user clicks an element');
+
+const goToAppearTrigger = () => goToCondition('An element appears on the page');
+
+const goToEventTrigger = () => goToCondition('Your app sends an event');
+
 const goToSettings = async () => {
     await goToTrigger();
     await clickNext();
@@ -417,7 +433,7 @@ describe('CreateSurvey', () => {
         ).toHaveValue(1);
     });
 
-    it('sends the page entered as the trigger', async () => {
+    it('sends the page, delay and occurrence entered as the trigger', async () => {
         const { addStrategy } = setupApi();
         renderPage();
 
@@ -426,6 +442,14 @@ describe('CreateSurvey', () => {
             screen.getByLabelText('Page'),
             '/projects/:projectId',
         );
+        const delay = screen.getByLabelText('Delay in milliseconds');
+        await userEvent.clear(delay);
+        await userEvent.type(delay, '2000');
+        const occurrence = screen.getByLabelText(
+            'Show after the condition is met this many times',
+        );
+        await userEvent.clear(occurrence);
+        await userEvent.type(occurrence, '3');
         await clickNext();
         await submitSurvey();
 
@@ -433,6 +457,8 @@ describe('CreateSurvey', () => {
         expect(sentSurvey(addStrategy).trigger).toEqual({
             on: 'page',
             path: '/projects/:projectId',
+            delayMs: 2000,
+            onOccurrence: 3,
         });
     });
 
@@ -476,6 +502,28 @@ describe('CreateSurvey', () => {
         expect(screen.queryByLabelText('Flag name')).not.toBeInTheDocument();
     });
 
+    it('does not move on to the settings without a delay and occurrence', async () => {
+        setupApi();
+        renderPage();
+
+        await goToCustomTrigger();
+        await userEvent.clear(screen.getByLabelText('Delay in milliseconds'));
+        await userEvent.clear(
+            screen.getByLabelText(
+                'Show after the condition is met this many times',
+            ),
+        );
+        await clickNext();
+
+        await screen.findByText(
+            'Enter a whole number of milliseconds, 0 or more',
+        );
+        expect(
+            screen.getByText('Enter a whole number, 1 or more'),
+        ).toBeInTheDocument();
+        expect(screen.queryByLabelText('Flag name')).not.toBeInTheDocument();
+    });
+
     it('ignores the page pattern when the survey shows whenever it is enabled', async () => {
         setupApi();
         renderPage();
@@ -493,6 +541,137 @@ describe('CreateSurvey', () => {
         await clickNext();
 
         expect(await screen.findByLabelText('Flag name')).toBeInTheDocument();
+    });
+
+    it('sends the element entered as the click trigger', async () => {
+        const { addStrategy } = setupApi();
+        renderPage();
+
+        await goToClickTrigger();
+        await userEvent.type(
+            screen.getByLabelText('Page'),
+            '/projects/:projectId',
+        );
+        await userEvent.type(
+            screen.getByLabelText('CSS selector'),
+            '[[data-testid="create-flag"]',
+        );
+        await userEvent.type(screen.getByLabelText('Text'), 'Create flag');
+        await clickNext();
+        await submitSurvey();
+
+        await screen.findByText('Survey created');
+        expect(sentSurvey(addStrategy).trigger).toEqual({
+            on: 'click',
+            selector: '[data-testid="create-flag"]',
+            text: 'Create flag',
+            path: '/projects/:projectId',
+            delayMs: 0,
+            onOccurrence: 1,
+        });
+    });
+
+    it('warns about matching the clicked element by text alone', async () => {
+        setupApi();
+        renderPage();
+        const warning =
+            'Matching by text alone checks every element on the page and can slow it down. Add a CSS selector where you can.';
+
+        await goToClickTrigger();
+        expect(screen.queryByText(warning)).not.toBeInTheDocument();
+
+        await userEvent.type(screen.getByLabelText('Text'), 'Create flag');
+        expect(screen.getByText(warning)).toBeInTheDocument();
+
+        await userEvent.type(screen.getByLabelText('CSS selector'), 'button');
+        expect(screen.queryByText(warning)).not.toBeInTheDocument();
+    });
+
+    it('sends the element entered as the appear trigger', async () => {
+        const { addStrategy } = setupApi();
+        renderPage();
+
+        await goToAppearTrigger();
+        await userEvent.type(
+            screen.getByLabelText('CSS selector'),
+            '[[role="alert"]',
+        );
+        await userEvent.type(screen.getByLabelText('Text'), 'Flag created');
+        await clickNext();
+        await submitSurvey();
+
+        await screen.findByText('Survey created');
+        expect(sentSurvey(addStrategy).trigger).toMatchObject({
+            on: 'appear',
+            selector: '[role="alert"]',
+            text: 'Flag created',
+        });
+    });
+
+    it('does not move on to the settings with an invalid CSS selector', async () => {
+        setupApi();
+        renderPage();
+
+        await goToClickTrigger();
+        await userEvent.type(screen.getByLabelText('CSS selector'), 'button[[');
+        await clickNext();
+
+        await screen.findByText('This is not a valid CSS selector');
+        expect(screen.queryByLabelText('Flag name')).not.toBeInTheDocument();
+    });
+
+    it('sends the event entered as the event trigger', async () => {
+        const { addStrategy } = setupApi();
+        renderPage();
+
+        await goToEventTrigger();
+        await userEvent.type(
+            screen.getByLabelText('Event name'),
+            'flag-created',
+        );
+        await clickNext();
+        await submitSurvey();
+
+        await screen.findByText('Survey created');
+        expect(sentSurvey(addStrategy).trigger).toEqual({
+            on: 'event',
+            name: 'flag-created',
+            delayMs: 0,
+            onOccurrence: 1,
+        });
+    });
+
+    it('shows how to send an example event until one is entered', async () => {
+        setupApi();
+        renderPage();
+
+        await goToEventTrigger();
+        expect(
+            screen.getByText(
+                `document.dispatchEvent(new CustomEvent("flag-created"));`,
+            ),
+        ).toBeInTheDocument();
+
+        await userEvent.type(
+            screen.getByLabelText('Event name'),
+            ' survey-ready ',
+        );
+        expect(
+            screen.getByText(
+                `document.dispatchEvent(new CustomEvent("survey-ready"));`,
+            ),
+        ).toBeInTheDocument();
+    });
+
+    it('does not move on to the settings without an event name', async () => {
+        setupApi();
+        renderPage();
+
+        await goToEventTrigger();
+        await clickNext();
+
+        await screen.findByText('Enter an event name');
+        expect(screen.queryByLabelText('Flag name')).not.toBeInTheDocument();
     });
 
     it('does not create the survey in a project the user cannot create flags in', async () => {

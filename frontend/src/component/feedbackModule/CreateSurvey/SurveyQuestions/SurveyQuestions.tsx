@@ -71,7 +71,10 @@ export const SurveyQuestions = ({
                     Add question
                 </Button>
                 {isFull ? (
-                    <Typography variant='body2' color='text.secondary'>
+                    <Typography
+                        variant='body2'
+                        sx={{ color: 'text.secondary' }}
+                    >
                         {`A survey can have up to ${MAX_QUESTIONS} questions.`}
                     </Typography>
                 ) : null}

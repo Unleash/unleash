@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest';
 import { PersonalDashboard } from './PersonalDashboard.tsx';
 import { render } from 'utils/testRenderer';
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { WelcomeDialogProvider } from './WelcomeDialogProvider.tsx';
 
@@ -175,23 +175,35 @@ test('Render personal dashboard for a new project', async () => {
     );
 });
 
-test('Render projects as cards with dashboardV2', async () => {
-    const projects = ['first', 'second', 'third', 'fourth'].map((name) => ({
-        id: name,
-        name,
-    }));
+test('lists my projects in the order the projects page shows when sorted by last updated', async () => {
     testServerRoute(server, '/api/admin/ui-config', {
         flags: { dashboardV2: true },
     });
     testServerRoute(server, '/api/admin/user', {
         user: { name: 'Unleash User' },
     });
+    testServerRoute(server, '/api/admin/user/profile', {
+        projects: ['member-b', 'member-a'],
+    });
     testServerRoute(server, '/api/admin/personal-dashboard', {
-        projects,
         flags: [],
     });
     testServerRoute(server, '/api/admin/projects', {
-        projects: [...projects].reverse(),
+        projects: [
+            {
+                id: 'member-a',
+                name: 'member-a',
+                createdAt: '2024-01-01T00:00:00.000Z',
+            },
+            { id: 'not-mine', name: 'not-mine' },
+            {
+                id: 'member-b',
+                name: 'member-b',
+                createdAt: '2023-01-01T00:00:00.000Z',
+                lastUpdatedAt: '2024-06-01T00:00:00.000Z',
+            },
+            { id: 'favorite', name: 'zz-favorite', favorite: true },
+        ],
     });
 
     render(
@@ -200,6 +212,66 @@ test('Render projects as cards with dashboardV2', async () => {
         </WelcomeDialogProvider>,
     );
 
-    const firstCard = await screen.findByRole('link', { name: /first/ });
-    expect(firstCard).toHaveAttribute('href', '/projects/first');
+    const panel = await screen.findByRole('region', { name: 'My projects' });
+    await within(panel).findByRole('link', { name: /zz-favorite/ });
+    const cardLinks = within(panel)
+        .getAllByRole('link')
+        .map((link) => link.getAttribute('href'))
+        .filter((href) => href?.startsWith('/projects/'));
+    expect(cardLinks).toEqual([
+        '/projects/favorite',
+        '/projects/member-b',
+        '/projects/member-a',
+    ]);
+});
+
+const renderRecentFlagsPanel = () => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: { dashboardV2: true },
+    });
+
+    render(
+        <WelcomeDialogProvider>
+            <PersonalDashboard />
+        </WelcomeDialogProvider>,
+    );
+
+    return screen.findByRole('region', { name: 'Recent feature flags' });
+};
+
+test('lists the flags I recently worked on', async () => {
+    testServerRoute(server, '/api/admin/user/recent-flags', {
+        flags: [{ name: 'recent-flag', project: 'projectId' }],
+    });
+
+    const panel = await renderRecentFlagsPanel();
+
+    const flagLink = await within(panel).findByRole('link', {
+        name: 'recent-flag',
+    });
+    expect(flagLink.getAttribute('href')).toBe(
+        '/projects/projectId/features/recent-flag',
+    );
+});
+
+test('hides the link to all flags when I have not worked on any flags', async () => {
+    testServerRoute(server, '/api/admin/user/recent-flags', { flags: [] });
+
+    const panel = await renderRecentFlagsPanel();
+
+    await within(panel).findByText('You don’t have any flags here yet.');
+    expect(
+        within(panel).queryByRole('link', { name: 'View all flags' }),
+    ).not.toBeInTheDocument();
+});
+
+test('keeps the link to all flags when recent flags fail to load', async () => {
+    testServerRoute(server, '/api/admin/user/recent-flags', {}, 'get', 500);
+
+    const panel = await renderRecentFlagsPanel();
+
+    await within(panel).findByText("We couldn't load your feature flags.");
+    expect(
+        within(panel).getByRole('link', { name: 'View all flags' }),
+    ).toBeInTheDocument();
 });

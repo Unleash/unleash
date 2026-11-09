@@ -62,6 +62,7 @@ import {
     type WithTransactional,
     withTransactional,
 } from '../db/transaction.js';
+import { SlackAppInstallService } from '../addons/slack-app-install-service.js';
 import {
     createChangeRequestAccessReadModel,
     createFakeChangeRequestAccessService,
@@ -158,6 +159,11 @@ import {
     createFakePersonalDashboardService,
     createPersonalDashboardService,
 } from '../features/personal-dashboard/createPersonalDashboardService.js';
+import type { UserRecentFlagsService } from '../features/user-recent-flags/user-recent-flags-service.js';
+import {
+    createFakeUserRecentFlagsService,
+    createUserRecentFlagsService,
+} from '../features/user-recent-flags/createUserRecentFlagsService.js';
 import {
     createFakeProjectStatusService,
     createProjectStatusService,
@@ -296,6 +302,11 @@ export const createServices = (
     );
     const sessionService = new SessionService(stores, config);
     const settingService = new SettingService(stores, config, eventService);
+    const slackAppInstallService = new SlackAppInstallService(
+        { addonService },
+        config,
+        Date.now,
+    );
     const userService = db
         ? withTransactional((db) => createUserService(db, config), db)
         : withFakeTransactional(
@@ -532,6 +543,18 @@ export const createServices = (
         ? createPersonalDashboardService(db, config, stores)
         : createFakePersonalDashboardService(config);
 
+    const userRecentFlagsService = db
+        ? createUserRecentFlagsService(
+              db,
+              config,
+              featureSearchService,
+              privateProjectChecker,
+          )
+        : createFakeUserRecentFlagsService(
+              featureSearchService,
+              privateProjectChecker,
+          );
+
     const transactionalUserSubscriptionsService = db
         ? withTransactional(createUserSubscriptionsService(config), db)
         : withFakeTransactional(createFakeUserSubscriptionsService(config));
@@ -551,6 +574,7 @@ export const createServices = (
         accessService,
         accountService,
         addonService,
+        slackAppInstallService,
         eventAnnouncerService,
         featureToggleService,
         featureTypeService,
@@ -616,6 +640,7 @@ export const createServices = (
         integrationEventsService,
         onboardingService,
         personalDashboardService,
+        userRecentFlagsService,
         projectStatusService,
         transactionalUserSubscriptionsService,
         uniqueConnectionService,
@@ -698,6 +723,7 @@ export interface IUnleashServices {
     accessService: AccessService;
     accountService: AccountService;
     addonService: AddonService;
+    slackAppInstallService: SlackAppInstallService;
     apiTokenService: ApiTokenService;
     apiTokenV2Service: ReadOnlyApiTokenV2Service;
     transactionalApiTokenV2Service: WithTransactional<AdminApiTokenV2Service>;
@@ -763,6 +789,7 @@ export interface IUnleashServices {
     integrationEventsService: IntegrationEventsService;
     onboardingService: OnboardingService;
     personalDashboardService: PersonalDashboardService;
+    userRecentFlagsService: UserRecentFlagsService;
     projectStatusService: ProjectStatusService;
     transactionalUserSubscriptionsService: WithTransactional<UserSubscriptionsService>;
     uniqueConnectionService: UniqueConnectionService;

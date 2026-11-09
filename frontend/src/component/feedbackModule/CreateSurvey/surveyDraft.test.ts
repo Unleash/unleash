@@ -10,6 +10,7 @@ import {
     validateSurveyDraft,
     withType,
 } from './surveyDraft.ts';
+import { initialTriggerDraft } from './triggerDraft.ts';
 
 const draftQuestion = (
     fields: Partial<Pick<QuestionDraft, 'id' | 'prompt' | 'required'>> = {},
@@ -33,7 +34,7 @@ const draftWith = (questions: QuestionDraft[]): SurveyDraft => ({
     title: 'Survey',
     description: '',
     questions,
-    trigger: { mode: 'always', on: 'page', path: '' },
+    trigger: initialTriggerDraft(),
 });
 
 const delivered = (surveyJson: string) => ({
@@ -105,21 +106,97 @@ describe('toSurveyJson', () => {
     it.each([
         [
             'every page when shown whenever enabled',
-            'always',
-            ' /projects ',
+            { mode: 'always', path: ' /projects ' },
             { on: 'page' },
         ],
-        ['every page when no page is entered', 'custom', ' ', { on: 'page' }],
+        [
+            'every page when no page is entered',
+            { mode: 'custom', path: ' ' },
+            { on: 'page', delayMs: 500, onOccurrence: 3 },
+        ],
         [
             'the page entered, trimmed',
-            'custom',
-            ' /projects/:projectId ',
-            { on: 'page', path: '/projects/:projectId' },
+            { mode: 'custom', path: ' /projects/:projectId ' },
+            {
+                on: 'page',
+                path: '/projects/:projectId',
+                delayMs: 500,
+                onOccurrence: 3,
+            },
         ],
-    ] as const)('triggers on %s', (_, mode, path, expected) => {
+        [
+            'a click on an element matched by selector and text, trimmed',
+            {
+                mode: 'custom',
+                on: 'click',
+                path: ' /projects/:projectId ',
+                selector: ' button ',
+                text: ' Create flag ',
+            },
+            {
+                on: 'click',
+                selector: 'button',
+                text: 'Create flag',
+                path: '/projects/:projectId',
+                delayMs: 500,
+                onOccurrence: 3,
+            },
+        ],
+        [
+            'an element appearing',
+            { mode: 'custom', on: 'appear', selector: '[role="alert"]' },
+            {
+                on: 'appear',
+                selector: '[role="alert"]',
+                delayMs: 500,
+                onOccurrence: 3,
+            },
+        ],
+        [
+            'a click on an element matched by selector alone',
+            { mode: 'custom', on: 'click', selector: 'button', text: ' ' },
+            {
+                on: 'click',
+                selector: 'button',
+                delayMs: 500,
+                onOccurrence: 3,
+            },
+        ],
+        [
+            'a click on an element matched by text alone',
+            { mode: 'custom', on: 'click', text: 'Create flag' },
+            {
+                on: 'click',
+                text: 'Create flag',
+                delayMs: 500,
+                onOccurrence: 3,
+            },
+        ],
+        [
+            'the event named, trimmed',
+            {
+                mode: 'custom',
+                on: 'event',
+                path: ' /projects/:projectId ',
+                eventName: ' flag-created ',
+            },
+            {
+                on: 'event',
+                name: 'flag-created',
+                path: '/projects/:projectId',
+                delayMs: 500,
+                onOccurrence: 3,
+            },
+        ],
+    ] as const)('triggers on %s', (_, trigger, expected) => {
         const draft: SurveyDraft = {
             ...draftWith([draftQuestion()]),
-            trigger: { mode, on: 'page', path },
+            trigger: {
+                ...initialTriggerDraft(),
+                delayMs: '500',
+                onOccurrence: '3',
+                ...trigger,
+            },
         };
 
         expect(JSON.parse(toSurveyJson(draft)).trigger).toEqual(expected);

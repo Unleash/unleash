@@ -288,6 +288,54 @@ describe('parseSurveyPayload', () => {
         expect(survey?.trigger).toStrictEqual({ on: 'page' });
     });
 
+    it('reads the delay and occurrence of a trigger', () => {
+        const survey = parseSurveyPayload(
+            'survey-x',
+            payload({
+                ...validSurvey,
+                trigger: { on: 'page', delayMs: 0, onOccurrence: 3 },
+            }),
+        );
+
+        expect(survey?.trigger).toStrictEqual({
+            on: 'page',
+            delayMs: 0,
+            onOccurrence: 3,
+        });
+    });
+
+    it.each([
+        'appear',
+        'click',
+    ])('reads an %s trigger with a selector, text and page pattern', (on) => {
+        const trigger = {
+            on,
+            selector: '[data-testid="create-flag"]',
+            text: 'Create flag',
+            path: '/projects/:projectId',
+        };
+        const survey = parseSurveyPayload(
+            'survey-x',
+            payload({ ...validSurvey, trigger }),
+        );
+
+        expect(survey?.trigger).toStrictEqual(trigger);
+    });
+
+    it('reads a custom event trigger with a page pattern', () => {
+        const trigger = {
+            on: 'event',
+            name: 'flag-created',
+            path: '/projects/:projectId',
+        };
+        const survey = parseSurveyPayload(
+            'survey-x',
+            payload({ ...validSurvey, trigger }),
+        );
+
+        expect(survey?.trigger).toStrictEqual(trigger);
+    });
+
     it('drops unknown trigger fields', () => {
         const survey = parseSurveyPayload(
             'survey-x',
@@ -306,10 +354,24 @@ describe('parseSurveyPayload', () => {
     it.each([
         ['is not an object', 'page'],
         ['is null', null],
-        ['has an unknown condition', { on: 'click' }],
+        ['has an unknown condition', { on: 'scroll' }],
+        ['clicks without a selector or text', { on: 'click' }],
+        ['appears without a selector or text', { on: 'appear' }],
+        ['listens for an event without a name', { on: 'event' }],
+        ['listens for an event with an empty name', { on: 'event', name: '' }],
+        ['listens for an event with a blank name', { on: 'event', name: '  ' }],
+        [
+            'listens for an event with a non-string name',
+            { on: 'event', name: 42 },
+        ],
         ['has no condition', { path: '/projects' }],
         ['has a non-string path', { on: 'page', path: 42 }],
         ['has an invalid path pattern', { on: 'page', path: '/projects/(' }],
+        ['has a negative delay', { on: 'page', delayMs: -1 }],
+        ['has a fractional delay', { on: 'page', delayMs: 1.5 }],
+        ['has a non-number delay', { on: 'page', delayMs: '500' }],
+        ['has a zero occurrence', { on: 'page', onOccurrence: 0 }],
+        ['has a fractional occurrence', { on: 'page', onOccurrence: 1.5 }],
     ])('rejects a survey whose trigger %s', (_, trigger) => {
         expect(
             parseSurveyPayload(

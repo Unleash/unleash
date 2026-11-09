@@ -23,6 +23,7 @@ describe('rate limit policies', () => {
                 sdkApiMaxPerMinute: 106,
                 feedbackMaxPerMinute: 61,
                 playgroundMaxPerMinute: 62,
+                mcpMaxPerMinute: 63,
             },
             metricsRateLimiting: {
                 clientMetricsMaxPerMinute: 101,
@@ -86,6 +87,20 @@ describe('rate limit policies', () => {
                 'afterAuthentication',
             ),
         ).toEqual([{ windowMs: 60_000, limit: 62 }]);
+        expect(
+            matchingOptions(
+                config,
+                request('/api/admin/mcp'),
+                'afterAuthentication',
+            ),
+        ).toEqual([{ windowMs: 60_000, limit: 63 }]);
+        expect(
+            matchingOptions(
+                config,
+                request('/api/admin/mcp/oauth/token'),
+                'afterAuthentication',
+            ),
+        ).toEqual([{ windowMs: 60_000, limit: 63 }]);
         expect(
             matchingOptions(
                 config,
@@ -183,6 +198,41 @@ describe('rate limit policies', () => {
             matchingOptions(
                 createTestConfig(),
                 request('/api/signal-endpoint/example'),
+                'afterAuthentication',
+            ),
+        ).toEqual([{ windowMs: 1_000, limit: 1 }]);
+    });
+
+    test('matches paths case-insensitively, like Express routing', () => {
+        const config = createTestConfig({
+            rateLimiting: { simpleLoginMaxPerMinute: 11 },
+        });
+
+        for (const path of [
+            '/Auth/simple/login',
+            '/AUTH/SIMPLE/login',
+            '/auth/Simple',
+        ]) {
+            expect(
+                matchingOptions(config, request(path), 'beforeAuthentication'),
+            ).toEqual([{ windowMs: 60_000, limit: 11 }]);
+        }
+        expect(
+            matchingOptions(
+                config,
+                request('/Auth/Reset/Password-Email'),
+                'beforeAuthentication',
+            ),
+        ).toEqual([
+            {
+                windowMs: 60_000,
+                limit: config.rateLimiting.passwordResetMaxPerMinute,
+            },
+        ]);
+        expect(
+            matchingOptions(
+                config,
+                request('/API/Signal-Endpoint/example'),
                 'afterAuthentication',
             ),
         ).toEqual([{ windowMs: 1_000, limit: 1 }]);
@@ -365,6 +415,21 @@ describe('rate limit policies', () => {
             .get(secondPath)
             .set('Authorization', authorization)
             .expect(429);
+    });
+
+    test('case variants of the login path share the login limit', async () => {
+        const config = createTestConfig({
+            rateLimiting: { simpleLoginMaxPerMinute: 2 },
+        });
+        const app = express();
+        app.use(createRateLimitMiddleware(config, 'beforeAuthentication'));
+        app.post('/auth/simple/login', (_req, res) => res.sendStatus(401));
+        const agent = supertest(app);
+
+        await agent.post('/auth/simple/login').expect(401);
+        await agent.post('/Auth/simple/login').expect(401);
+        await agent.post('/AUTH/SIMPLE/login').expect(429);
+        await agent.post('/Auth/simple/login').expect(429);
     });
 });
 

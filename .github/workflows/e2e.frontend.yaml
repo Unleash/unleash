@@ -5,119 +5,12 @@ on:
       working-directory:
         type: string
         default: '.'
-    secrets:
-      UNLEASH_TEST_LICENSE:
-        required: false
-      FRONTEND_TEST_LICENSE:
-        required: false
-# If two events are triggered within a short time in the same PR, cancel the run of the oldest event
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
 
 jobs:
-  e2e-build:
-    runs-on: ubuntu-latest
-    env:
-      WORK_DIR: ${{ inputs.working-directory || '.' }}
-    defaults:
-      run:
-        working-directory: ${{ inputs.working-directory || '.' }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - uses: pnpm/action-setup@v5
-      - name: Use Node.js 22.x
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22.x
-          cache: 'pnpm'
-          cache-dependency-path: ${{ inputs.working-directory || '.' }}/pnpm-lock.yaml
-      - name: Cache Cypress binary
-        id: cache-cypress
-        uses: actions/cache@v5
-        with:
-          path: ~/.cache/Cypress
-          key: cypress-${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml', inputs.working-directory || '.')) }}
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Build static frontend
-        run: pnpm --dir frontend build
-      - name: Upload frontend build
-        uses: actions/upload-artifact@v7
-        with:
-          name: frontend-build
-          path: ${{ env.WORK_DIR }}/frontend/build
-          retention-days: 1
-
   e2e:
-    needs: e2e-build
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-    env:
-      WORK_DIR: ${{ inputs.working-directory || '.' }}
-    defaults:
-      run:
-        working-directory: ${{ inputs.working-directory || '.' }}
-    strategy:
-      fail-fast: false
-      matrix:
-        test:
-          - enterprise/feature.spec.ts
-          - enterprise/groups.spec.ts
-          - enterprise/projects/access.spec.ts
-          - oss/segments/segments.spec.ts
-          - oss/feature/feature.spec.ts
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-      - uses: pnpm/action-setup@v5
-      - name: Use Node.js 22.x
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22.x
-          cache: 'pnpm'
-          cache-dependency-path: ${{ inputs.working-directory || '.' }}/pnpm-lock.yaml
-      - name: Download frontend build
-        uses: actions/download-artifact@v8
-        with:
-          name: frontend-build
-          path: ${{ env.WORK_DIR }}/frontend/build
-      - name: Restore Cypress binary
-        uses: actions/cache/restore@v5
-        with:
-          path: ~/.cache/Cypress
-          key: cypress-${{ runner.os }}-${{ hashFiles(format('{0}/pnpm-lock.yaml', inputs.working-directory || '.')) }}
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Start Unleash test instance
+      - name: Explain frontend E2E ownership
         run: |
-          docker compose -f .github/docker-compose.test.yml up -d --wait -t 90
-        env:
-          UNLEASH_TEST_LICENSE: ${{ secrets.UNLEASH_TEST_LICENSE || secrets.FRONTEND_TEST_LICENSE }}
-          FRONTEND_TEST_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
-      - name: Run Cypress
-        uses: cypress-io/github-action@v7.4.5
-        with:
-          working-directory: ${{ env.WORK_DIR }}/frontend
-          env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
-          config: baseUrl=http://localhost:3000
-          spec: cypress/${{ matrix.test }}
-          install: false
-      - name: Dump Unleash test instance logs
-        if: failure()
-        run: docker compose -f .github/docker-compose.test.yml logs --no-color --timestamps
-      - name: Set artifact name
-        if: always()
-        id: artifact-name
-        run: echo "name=cypress-artifacts-$(echo '${{ matrix.test }}' | tr '/' '-')" >> $GITHUB_OUTPUT
-      - name: Upload Cypress artifacts
-        uses: actions/upload-artifact@v7
-        if: failure()
-        with:
-          name: ${{ steps.artifact-name.outputs.name }}
-          path: |
-            ${{ env.WORK_DIR }}/frontend/cypress/screenshots
-            ${{ env.WORK_DIR }}/frontend/cypress/videos
-          if-no-files-found: ignore
-          retention-days: 3
+          echo "Frontend E2E tests run in bricks-software/unleash-enterprise."
+          echo "Frontend E2E tests run in bricks-software/unleash-enterprise against its OSS subtree. This compatibility check does not execute tests." >> "$GITHUB_STEP_SUMMARY"

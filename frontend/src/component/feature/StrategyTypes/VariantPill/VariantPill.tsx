@@ -1,17 +1,15 @@
-import {
-    styled,
-    Tab,
-    type TabProps,
-    Typography,
-    useTheme,
-} from '@mui/material';
-import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
-import type { StrategyVariantSchema } from 'openapi';
+import { memo } from 'react';
+import { styled, Tab, type TabProps } from '@mui/material';
+import Lock from '@mui/icons-material/Lock';
+import { Truncator } from 'component/common/Truncator/Truncator';
 
 const Pill = styled(Tab)(({ theme }) => ({
     minHeight: 0,
     minWidth: 0,
     padding: theme.spacing(0.75, 1.5),
+    [theme.breakpoints.down('md')]: {
+        padding: theme.spacing(0.75, 1.5),
+    },
     background: theme.palette.background.paper,
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusExtraLarge,
@@ -48,128 +46,45 @@ const Weight = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const TooltipBody = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(1),
-    minWidth: theme.spacing(30),
+const LockMark = styled(Lock)(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
+    color: theme.palette.text.secondary,
 }));
-
-const TooltipTitle = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-}));
-
-const PayloadRow = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-}));
-
-const Chip = styled('span')(({ theme }) => ({
-    background: theme.palette.background.elevation2,
-    borderRadius: theme.shape.borderRadiusLarge,
-    padding: theme.spacing(0.25, 1),
-}));
-
-const PayloadType = styled(Chip)(({ theme }) => ({
-    fontWeight: theme.typography.fontWeightBold,
-}));
-
-const PayloadValue = styled('code', {
-    shouldForwardProp: (prop) => prop !== 'multiline',
-})<{ multiline: boolean }>(({ theme, multiline }) => ({
-    background: theme.palette.background.elevation2,
-    borderRadius: theme.shape.borderRadiusLarge,
-    padding: theme.spacing(0.25, 1),
-    whiteSpace: 'pre-wrap',
-    flexBasis: multiline ? '100%' : 'auto',
-}));
-
-type VariantSummaryProps = {
-    name: string;
-    weight: number;
-    payload?: StrategyVariantSchema['payload'];
-    color: string;
-};
-
-const VariantSummary = ({
-    name,
-    weight,
-    payload,
-    color,
-}: VariantSummaryProps) => (
-    <TooltipBody>
-        <TooltipTitle>
-            <Dot aria-hidden color={color} />
-            <Typography variant='subtitle2'>
-                {name ? `${weight / 10}% - ${name}` : `${weight / 10}%`}
-            </Typography>
-        </TooltipTitle>
-        <PayloadRow>
-            {payload?.value ? (
-                <>
-                    <PayloadType>{payload.type}</PayloadType>
-                    payload:
-                    <PayloadValue multiline={payload.value.includes('\n')}>
-                        {payload.value}
-                    </PayloadValue>
-                </>
-            ) : (
-                <>
-                    payload:
-                    <Chip>not set</Chip>
-                </>
-            )}
-        </PayloadRow>
-    </TooltipBody>
-);
 
 type VariantPillProps = Omit<TabProps, 'label' | 'icon'> & {
     name: string;
     weight: number;
-    payload?: StrategyVariantSchema['payload'];
     color: string;
+    locked?: boolean;
 };
 
-export const VariantPill = ({
+export const VariantPill = memo(function VariantPill({
     name,
     weight,
-    payload,
     color,
+    locked,
     ...tabProps
-}: VariantPillProps) => {
-    const theme = useTheme();
-
+}: VariantPillProps) {
     return (
-        <HtmlTooltip
-            title={
-                <VariantSummary
-                    name={name}
-                    weight={weight}
-                    payload={payload}
-                    color={color}
-                />
-            }
-            maxHeight={theme.spacing(30)}
-            placement='top'
-            describeChild
-            arrow
-        >
-            <Pill
-                {...tabProps}
-                icon={<Dot aria-hidden color={color} />}
-                iconPosition='start'
-                label={
-                    <Label>
+        <Pill
+            {...tabProps}
+            icon={<Dot aria-hidden color={color} />}
+            iconPosition='start'
+            label={
+                <Label>
+                    <Truncator
+                        component='span'
+                        sx={(theme) => ({
+                            maxWidth: theme.spacing(20),
+                            lineHeight: 'normal',
+                        })}
+                    >
                         {name}
-                        <Weight>{weight / 10}%</Weight>
-                    </Label>
-                }
-            />
-        </HtmlTooltip>
+                    </Truncator>
+                    <Weight>{weight / 10}%</Weight>
+                    {locked ? <LockMark titleAccess='Locked weight' /> : null}
+                </Label>
+            }
+        />
     );
-};
+});

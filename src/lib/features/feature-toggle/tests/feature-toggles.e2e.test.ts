@@ -3213,6 +3213,39 @@ test('Should batch stale features', async () => {
         )
         .expect(200);
     expect(body.stale).toBeTruthy();
+
+    const { body: recorded } = await app.getRecordedEvents({
+        feature: `IS_ANY_OF:${staledFeatureName1},${staledFeatureName2}`,
+        type: `IS:${FEATURE_STALE_ON}`,
+    });
+    // one transaction for the whole batch
+    expect(new Set(recorded.events.map((event) => event.groupId)).size).toBe(1);
+});
+
+test('Should not report a bulk stale change as saved when its event fails to store', async () => {
+    const name = 'flag.bulk.stale.event.failure';
+    await app.createFeature(name);
+    // events.created_by holds 255 characters; a token name has no limit
+    const token = await app.services.apiTokenService.createApiTokenWithProjects(
+        {
+            type: ApiTokenType.ADMIN,
+            projects: ['*'],
+            environment: '*',
+            tokenName: 'x'.repeat(256),
+        },
+    );
+
+    const res = await app.request
+        .post(`/api/admin/projects/${DEFAULT_PROJECT}/stale`)
+        .set('Authorization', token.secret)
+        .send({ features: [name], stale: true });
+
+    const { body: flag } = await app.request.get(
+        `/api/admin/projects/${DEFAULT_PROJECT}/features/${name}`,
+    );
+    expect(flag.stale).toBeFalsy();
+    // a change that rolled back must not be answered with 202
+    expect(res.status).toBe(500);
 });
 
 test('should return disabled strategies', async () => {

@@ -7,6 +7,10 @@ import { http, HttpResponse } from 'msw';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { testUnleashClient } from 'utils/testUnleashClient';
 import { SURVEY_KIND, SURVEY_VERSION } from '../survey.ts';
+import type { SurveyTrigger } from '../triggers/surveyTrigger.ts';
+import type { PageObserver, Unsubscribe } from '../observers/observePage.ts';
+import type { IdentifyUser } from './FeedbackProvider.tsx';
+import { appPath } from '../observers/appPath.ts';
 
 const server = testServerSetup();
 
@@ -14,7 +18,11 @@ const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
 const SUBMIT_BASE = 'https://hosted.example.com/hosted';
 
-const surveyFlag = (name: string, title: string): IToggle => ({
+const surveyFlag = (
+    name: string,
+    title: string,
+    trigger: SurveyTrigger = { on: 'page' },
+): IToggle => ({
     name,
     enabled: true,
     impressionData: false,
@@ -33,11 +41,82 @@ const surveyFlag = (name: string, title: string): IToggle => ({
                     { id: 'comment', type: 'free-text', prompt: 'Comment' },
                 ],
                 submitBase: SUBMIT_BASE,
-                trigger: { on: 'page' },
+                trigger,
             }),
         },
     },
 });
+
+const fakePageObserver = (initialPathname: string) => {
+    let onPageChange: ((path: string) => void) | null = null;
+    let installedBasePath = '';
+    const observe: PageObserver = (callback, basePath) => {
+        onPageChange = callback;
+        installedBasePath = basePath;
+        callback(appPath(initialPathname, basePath));
+        return () => {
+            onPageChange = null;
+        };
+    };
+    return {
+        observe,
+        navigate: (pathname: string) =>
+            act(() => onPageChange?.(appPath(pathname, installedBasePath))),
+        isInstalled: () => onPageChange !== null,
+    };
+};
+
+const fakeElementObserver = () => {
+    let onElement: ((element: Element) => void) | null = null;
+    const observe = (callback: (element: Element) => void): Unsubscribe => {
+        onElement = callback;
+        return () => {
+            onElement = null;
+        };
+    };
+    return {
+        observe,
+        emit: (...elements: Element[]) =>
+            act(() => {
+                for (const element of elements) {
+                    onElement?.(element);
+                }
+            }),
+        isInstalled: () => onElement !== null,
+    };
+};
+
+const dispatchEvent = (name: string) =>
+    act(() => {
+        document.dispatchEvent(new CustomEvent(name));
+    });
+
+let pageObserver: ReturnType<typeof fakePageObserver>;
+let clickObserver: ReturnType<typeof fakeElementObserver>;
+let appearObserver: ReturnType<typeof fakeElementObserver>;
+
+const createFlagButton = (): Element => {
+    const button = document.createElement('button');
+    button.dataset.testid = 'create-flag';
+    document.body.append(button);
+    return button;
+};
+
+const CLICK_CREATE_FLAG: SurveyTrigger = {
+    on: 'click',
+    selector: '[data-testid="create-flag"]',
+};
+
+const APPEAR_FLAG_CREATED_TOAST: SurveyTrigger = {
+    on: 'appear',
+    selector: '[data-testid="toast"]',
+};
+
+const EVENT_FLAG_CREATED: SurveyTrigger = { on: 'event', name: 'flag-created' };
+const EVENT_FLAG_ARCHIVED: SurveyTrigger = {
+    on: 'event',
+    name: 'flag-archived',
+};
 
 // Fresh modules, because surveyStorage remembers impressions per page load.
 // Load the renderer after the reset too: otherwise its UIProvider would use
@@ -48,10 +127,19 @@ const loadPage = async () => {
     const { FeedbackProvider } = await import('./FeedbackProvider.tsx');
     const { FeedbackSurvey } = await import('./FeedbackSurvey.tsx');
 
-    return (client: UnleashClient) =>
+    return (
+        client: UnleashClient,
+        identifyUser: IdentifyUser = () => undefined,
+    ) =>
         render(
             <FlagProvider unleashClient={client} startClient={false}>
-                <FeedbackProvider>
+                <FeedbackProvider
+                    observePage={pageObserver.observe}
+                    observeClicks={clickObserver.observe}
+                    observeAppear={appearObserver.observe}
+                    basePath='/unleash'
+                    identifyUser={identifyUser}
+                >
                     <FeedbackSurvey />
                 </FeedbackProvider>
             </FlagProvider>,
@@ -83,11 +171,15 @@ const surveyResponsesRoute = () =>
 describe('FeedbackProvider', () => {
     beforeEach(async () => {
         window.localStorage.clear();
+        pageObserver = fakePageObserver('/unleash/projects');
+        clickObserver = fakeElementObserver();
+        appearObserver = fakeElementObserver();
         renderSurvey = await loadPage();
     });
 
     afterEach(() => {
         vi.useRealTimers();
+        document.body.innerHTML = '';
     });
 
     it('shows the first survey by name that has not been interacted with', async () => {
@@ -137,9 +229,11 @@ describe('FeedbackProvider', () => {
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
     });
 
-    it('sends the answers to the server', async () => {
+    it('sends the answers to the server as the identified user', async () => {
         const { requests } = surveyResponsesRoute();
-        renderSurvey(testUnleashClient([surveyFlag('survey-a', 'Survey A')]));
+        const client = testUnleashClient([surveyFlag('survey-a', 'Survey A')]);
+        client.getContext = () => ({ appName: 'test', userId: '7' });
+        renderSurvey(client, ({ userId }) => `user-${userId}`);
 
         await submitComment('Nice');
 
@@ -148,18 +242,19 @@ describe('FeedbackProvider', () => {
                 {
                     surveyVersion: SURVEY_VERSION,
                     environmentId: 'production',
-                    respondentId: 'test-session',
+                    respondentId: 'user-7',
                     answers: { comment: 'Nice' },
                 },
             ]),
         );
     });
 
-    it('leaves out the respondent when the session is not known yet', async () => {
+    it('leaves out the respondent when the user cannot be identified', async () => {
         const { requests } = surveyResponsesRoute();
-        const client = testUnleashClient([surveyFlag('survey-a', 'Survey A')]);
-        client.getContext = () => ({ appName: 'test' });
-        renderSurvey(client);
+        renderSurvey(
+            testUnleashClient([surveyFlag('survey-a', 'Survey A')]),
+            () => undefined,
+        );
 
         await submitComment('Nice');
 
@@ -232,5 +327,288 @@ describe('FeedbackProvider', () => {
         unmount();
         renderSurvey(client);
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
+    });
+
+    it('stops observing pages, clicks and appearances on unmount', () => {
+        const { unmount } = renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', APPEAR_FLAG_CREATED_TOAST),
+            ]),
+        );
+        expect(appearObserver.isInstalled()).toBe(true);
+
+        unmount();
+
+        expect(pageObserver.isInstalled()).toBe(false);
+        expect(clickObserver.isInstalled()).toBe(false);
+        expect(appearObserver.isInstalled()).toBe(false);
+    });
+
+    it('shows a page survey on the page it was opened on when the path matches', async () => {
+        renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', {
+                    on: 'page',
+                    path: '/projects',
+                }),
+            ]),
+        );
+
+        expect(await screen.findByText('Survey A')).toBeInTheDocument();
+    });
+
+    it('shows a page survey once the user navigates to a matching page', async () => {
+        renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', {
+                    on: 'page',
+                    path: '/projects/:projectId',
+                }),
+            ]),
+        );
+        expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
+
+        pageObserver.navigate('/unleash/projects/default');
+
+        expect(await screen.findByText('Survey A')).toBeInTheDocument();
+    });
+
+    it('shows a page survey whose flag arrives after the user reached the page', async () => {
+        const client = testUnleashClient([]);
+        renderSurvey(client);
+
+        act(() =>
+            client.setFlags([
+                surveyFlag('survey-a', 'Survey A', {
+                    on: 'page',
+                    path: '/projects',
+                }),
+            ]),
+        );
+
+        expect(await screen.findByText('Survey A')).toBeInTheDocument();
+    });
+
+    it('shows the first survey by name among those matching the page', async () => {
+        renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-c', 'Survey C', {
+                    on: 'page',
+                    path: '/projects',
+                }),
+                surveyFlag('survey-b', 'Survey B', {
+                    on: 'page',
+                    path: '/(projects|features)',
+                }),
+                surveyFlag('survey-a', 'Survey A', {
+                    on: 'page',
+                    path: '/features',
+                }),
+            ]),
+        );
+
+        expect(await screen.findByText('Survey B')).toBeInTheDocument();
+        expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
+        expect(screen.queryByText('Survey C')).not.toBeInTheDocument();
+    });
+
+    it('keeps the shown survey when the user navigates away', async () => {
+        renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', {
+                    on: 'page',
+                    path: '/projects',
+                }),
+            ]),
+        );
+        await screen.findByText('Survey A');
+
+        pageObserver.navigate('/unleash/features');
+
+        expect(screen.getByText('Survey A')).toBeInTheDocument();
+    });
+
+    it('does not show a dismissed page survey again on a later matching page', async () => {
+        renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', {
+                    on: 'page',
+                    path: '/projects/*',
+                }),
+            ]),
+        );
+        pageObserver.navigate('/unleash/projects/default');
+        await userEvent.click(
+            await screen.findByRole('button', { name: 'Close' }),
+        );
+
+        pageObserver.navigate('/unleash/projects/other');
+
+        expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
+    });
+
+    it('shows a click survey only once the user clicks a matching element', async () => {
+        renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', CLICK_CREATE_FLAG),
+            ]),
+        );
+
+        expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
+
+        clickObserver.emit(createFlagButton());
+
+        expect(await screen.findByText('Survey A')).toBeInTheDocument();
+    });
+
+    it('matches a click against the page the user is currently on', async () => {
+        renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', {
+                    ...CLICK_CREATE_FLAG,
+                    path: '/projects/:projectId',
+                }),
+            ]),
+        );
+        pageObserver.navigate('/unleash/projects/default');
+
+        clickObserver.emit(createFlagButton());
+
+        expect(await screen.findByText('Survey A')).toBeInTheDocument();
+    });
+
+    it('keeps the shown survey when the user clicks a matching element of another survey', async () => {
+        renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', CLICK_CREATE_FLAG),
+                surveyFlag('survey-b', 'Survey B', { on: 'page' }),
+            ]),
+        );
+        await screen.findByText('Survey B');
+
+        clickObserver.emit(createFlagButton());
+
+        expect(screen.getByText('Survey B')).toBeInTheDocument();
+        expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
+    });
+
+    it('does not show a dismissed click survey again on a later click', async () => {
+        renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', CLICK_CREATE_FLAG),
+            ]),
+        );
+        clickObserver.emit(createFlagButton());
+        await userEvent.click(
+            await screen.findByRole('button', { name: 'Close' }),
+        );
+
+        clickObserver.emit(createFlagButton());
+
+        expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
+    });
+
+    it('observes appearances only while no survey is shown', async () => {
+        renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', APPEAR_FLAG_CREATED_TOAST),
+                surveyFlag('survey-b', 'Survey B', { on: 'page' }),
+            ]),
+        );
+        await screen.findByText('Survey B');
+        expect(appearObserver.isInstalled()).toBe(false);
+
+        await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+
+        expect(appearObserver.isInstalled()).toBe(true);
+    });
+
+    it('observes appearances only while a survey waits for one', async () => {
+        const client = testUnleashClient([
+            surveyFlag('survey-a', 'Survey A', CLICK_CREATE_FLAG),
+        ]);
+        renderSurvey(client);
+        expect(appearObserver.isInstalled()).toBe(false);
+
+        act(() =>
+            client.setFlags([
+                surveyFlag('survey-a', 'Survey A', APPEAR_FLAG_CREATED_TOAST),
+            ]),
+        );
+
+        expect(appearObserver.isInstalled()).toBe(true);
+
+        act(() => client.setFlags([]));
+
+        expect(appearObserver.isInstalled()).toBe(false);
+    });
+
+    it('observes appearances only on pages an appear survey can trigger on', async () => {
+        renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', {
+                    ...APPEAR_FLAG_CREATED_TOAST,
+                    path: '/projects/*',
+                }),
+            ]),
+        );
+        expect(appearObserver.isInstalled()).toBe(false);
+
+        pageObserver.navigate('/unleash/projects/default');
+
+        expect(appearObserver.isInstalled()).toBe(true);
+
+        pageObserver.navigate('/unleash/features');
+
+        expect(appearObserver.isInstalled()).toBe(false);
+    });
+
+    it('shows an event survey only once the host app dispatches its event', async () => {
+        renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', EVENT_FLAG_CREATED),
+            ]),
+        );
+        expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
+
+        dispatchEvent('flag-created');
+
+        expect(await screen.findByText('Survey A')).toBeInTheDocument();
+    });
+
+    it('matches an event against the page the user is currently on', async () => {
+        renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', {
+                    ...EVENT_FLAG_CREATED,
+                    path: '/projects/:projectId',
+                }),
+            ]),
+        );
+        dispatchEvent('flag-created');
+        expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
+
+        pageObserver.navigate('/unleash/projects/default');
+        dispatchEvent('flag-created');
+
+        expect(await screen.findByText('Survey A')).toBeInTheDocument();
+    });
+
+    it('observes the events of surveys that arrive after the first render', async () => {
+        const client = testUnleashClient([
+            surveyFlag('survey-a', 'Survey A', CLICK_CREATE_FLAG),
+        ]);
+        renderSurvey(client);
+
+        act(() =>
+            client.setFlags([
+                surveyFlag('survey-c', 'Survey C', EVENT_FLAG_CREATED),
+                surveyFlag('survey-b', 'Survey B', EVENT_FLAG_ARCHIVED),
+                surveyFlag('survey-a', 'Survey A', EVENT_FLAG_CREATED),
+            ]),
+        );
+        dispatchEvent('flag-archived');
+
+        expect(await screen.findByText('Survey B')).toBeInTheDocument();
     });
 });

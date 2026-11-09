@@ -14,7 +14,6 @@ import { ValueListWithOverflow } from './ValueListWithOverflow.tsx';
 import { AddValueInline } from './AddValueInline.tsx';
 import { AddValueButton } from './AddValueButton.tsx';
 import { ToggleConstraintCaseSensitivity } from './ToggleConstraintCaseSensitivity.tsx';
-import { ConstraintDateInput } from './ConstraintDateInput.tsx';
 import {
     type LegalValueData,
     useEditableConstraint,
@@ -23,7 +22,6 @@ import type { IConstraint } from 'interfaces/strategy';
 import {
     type EditableConstraint as EditableConstraintType,
     isCidrConstraint,
-    isDateConstraint,
     isMultiValueConstraint,
 } from './useEditableConstraint/editable-constraint-type.ts';
 import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator.ts';
@@ -32,6 +30,8 @@ import { ContextFieldSelect } from './ContextFieldSelect.tsx';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
 import { formatTargetRange } from './CidrTargetRange.tsx';
 import { getTargetRange } from './useEditableConstraint/ip-address.ts';
+import { formatConstraintValue } from 'utils/formatConstraintValue';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 
 const invertedDisabledMessages: Partial<Record<Operator, string>> = {
     REGEX: 'The REGEX operator does not support inversion',
@@ -100,6 +100,7 @@ const TopRowInput: FC<{
     localConstraint: EditableConstraintType;
     validator: (...values: string[]) => ConstraintValidationResult;
     addValuesButtonRef: React.RefObject<HTMLButtonElement | null>;
+    valueListRef: React.RefObject<ValueListHandle | null>;
     editingOpen: boolean;
     setEditingOpen: (open: boolean) => void;
     toggleValue: (value: string) => void;
@@ -110,6 +111,7 @@ const TopRowInput: FC<{
     localConstraint,
     validator,
     addValuesButtonRef,
+    valueListRef,
     editingOpen,
     setEditingOpen,
     toggleValue,
@@ -122,35 +124,54 @@ const TopRowInput: FC<{
     useEffect(() => {
         if (!editingOpen && pendingButtonFocus.current) {
             pendingButtonFocus.current = false;
-            addValuesButtonRef.current?.focus();
+            // a cancelled edit returns to the chip it was editing; otherwise
+            // (no value yet, or multi-value) the add button is still there
+            if (
+                !isMultiValueConstraint(localConstraint) &&
+                localConstraint.value
+            ) {
+                valueListRef.current?.focusValue(0);
+            } else {
+                addValuesButtonRef.current?.focus();
+            }
         }
-    }, [editingOpen, addValuesButtonRef]);
+    }, [editingOpen, addValuesButtonRef, valueListRef, localConstraint]);
 
-    if (isDateConstraint(localConstraint)) {
-        return (
-            <ConstraintDateInput
-                setValue={addValues}
-                value={localConstraint.value}
-                validator={validator}
-            />
-        );
-    }
+    const existingValue = !isMultiValueConstraint(localConstraint)
+        ? localConstraint.value
+        : undefined;
+    useEffect(() => {
+        if (editingOpen && existingValue) {
+            setDraftValue(existingValue);
+        }
+    }, [editingOpen, existingValue]);
 
-    if (!isMultiValueConstraint(localConstraint) && localConstraint.value) {
+    if (
+        !isMultiValueConstraint(localConstraint) &&
+        localConstraint.value &&
+        !editingOpen
+    ) {
         return null;
     }
+
+    const closeEditor = (shouldManageFocus: boolean) => {
+        if (shouldManageFocus) pendingButtonFocus.current = true;
+        setEditingOpen(false);
+    };
 
     return editingOpen ? (
         <AddValueInline
             localConstraint={localConstraint}
             validator={validator}
-            onAddValues={addValues}
+            onAddValues={(value) => {
+                addValues(value);
+                if (!isMultiValueConstraint(localConstraint)) {
+                    closeEditor(false);
+                }
+            }}
             value={draftValue}
             onChange={setDraftValue}
-            onClose={(shouldManageFocus) => {
-                if (shouldManageFocus) pendingButtonFocus.current = true;
-                setEditingOpen(false);
-            }}
+            onClose={closeEditor}
             selectedValues={selectedValues}
             toggleValue={toggleValue}
             legalValueData={legalValueData}
@@ -192,6 +213,9 @@ export const EditableConstraint: FC<Props> = ({
     const hasSingleValue =
         !isMultiValueConstraint(localConstraint) &&
         Boolean(localConstraint.value);
+    const singleValue = !isMultiValueConstraint(localConstraint)
+        ? localConstraint.value
+        : undefined;
 
     const addValues = useCallback(
         (value: string | string[]) => {
@@ -206,10 +230,10 @@ export const EditableConstraint: FC<Props> = ({
     useEffect(() => {
         if (!pendingValueFocus.current) return;
         pendingValueFocus.current = false;
-        if (hasSingleValue) {
+        if (singleValue) {
             valueListRef.current?.focusValue(0);
         }
-    }, [hasSingleValue]);
+    }, [singleValue]);
 
     // The add button may not be mounted yet (e.g. single-value constraints)
     const pendingDeleteFocus = useRef(false);
@@ -254,6 +278,7 @@ export const EditableConstraint: FC<Props> = ({
     }, [updateConstraint]);
 
     const { context } = useAssignableUnleashContext();
+    const { locationSettings } = useLocationSettings();
 
     const { contextName, operator } = localConstraint;
     const showCaseSensitiveButton =
@@ -276,6 +301,20 @@ export const EditableConstraint: FC<Props> = ({
                   : undefined;
           }
         : undefined;
+
+    const formatValue = (value: string) =>
+        formatConstraintValue(
+            {
+                value,
+                contextName: localConstraint.contextName,
+                operator: localConstraint.operator,
+            },
+            locationSettings,
+        ) ?? value;
+
+    const onEditValue = hasSingleValue ? () => setEditingOpen(true) : undefined;
+    const visibleValues =
+        hasSingleValue && editingOpen ? [] : Array.from(selectedValues);
 
     return (
         <Container>
@@ -330,10 +369,12 @@ export const EditableConstraint: FC<Props> = ({
                     </ConstraintOptions>
                     <ValueListWithOverflow
                         ref={valueListRef}
-                        values={Array.from(selectedValues)}
+                        values={visibleValues}
                         removeValue={removeValue}
                         getValueTitle={valueTitle}
+                        getValueLabel={formatValue}
                         getExternalFocusTarget={() => null}
+                        onEditValue={onEditValue}
                     >
                         <TopRowInput
                             key={operator}
@@ -341,6 +382,7 @@ export const EditableConstraint: FC<Props> = ({
                             addValues={addValues}
                             validator={validator}
                             addValuesButtonRef={addValuesButtonRef}
+                            valueListRef={valueListRef}
                             editingOpen={editingOpen}
                             setEditingOpen={setEditingOpen}
                             toggleValue={toggleValue}

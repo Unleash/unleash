@@ -52,7 +52,7 @@ describe('auditMiddleware testing', () => {
         expect(audit).toBeDefined();
         expect(audit!.id).toBe(-1);
         expect(audit!.username).toBe('unknown');
-        expect(audit!.ip).toBe('::ffff:127.0.0.1');
+        expect(audit!.ip).toBe('127.0.0.1');
     });
     test('If no auth in place, does not add the audit object', async () => {
         const middleware = auditAccessMiddleware(config);
@@ -89,7 +89,7 @@ describe('auditMiddleware testing', () => {
 
         // off by default: header is never read, rest of the audit unaffected
         expect(getAudit()!.userAgent).toBeUndefined();
-        expect(getAudit()!.ip).toBe('::ffff:127.0.0.1');
+        expect(getAudit()!.ip).toBe('127.0.0.1');
         expect(getAudit()!.username).toBe('unknown');
     });
 

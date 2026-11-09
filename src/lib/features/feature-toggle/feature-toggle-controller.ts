@@ -915,11 +915,8 @@ export default class ProjectFeaturesController extends Controller {
         const { features, stale } = req.body;
         const { projectId } = req.params;
 
-        await this.featureService.setToggleStaleness(
-            features,
-            stale,
-            projectId,
-            req.audit,
+        await this.transactionalFeatureToggleService.transactional((service) =>
+            service.setToggleStaleness(features, stale, projectId, req.audit),
         );
         res.status(202).end();
     }

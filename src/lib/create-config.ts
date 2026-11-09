@@ -194,6 +194,11 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
         30,
     );
 
+    const mcpMaxPerMinute = parseEnvVarNumber(
+        process.env.MCP_RATE_LIMIT_PER_MINUTE,
+        600,
+    );
+
     const defaultRateLimitOptions: IRateLimiting = {
         createUserMaxPerMinute,
         simpleLoginMaxPerMinute,
@@ -205,6 +210,7 @@ function loadRateLimitingConfig(options: IUnleashOptions): IRateLimiting {
         adminApiMaxPerMinute,
         feedbackMaxPerMinute,
         playgroundMaxPerMinute,
+        mcpMaxPerMinute,
     };
     return mergeAll([defaultRateLimitOptions, options.rateLimiting || {}]);
 }
@@ -342,6 +348,9 @@ const defaultServerOption: IServerOption = {
     cdnPrefix: process.env.CDN_PREFIX,
     edgeUrl: process.env.EDGE_URL,
     unleashUrl: process.env.UNLEASH_URL || 'http://localhost:4242',
+    slackAppBrokerUrl:
+        process.env.UNLEASH_SLACK_APP_BROKER_URL ||
+        'https://app-for-slack.getunleash.io',
     logRocketAppId: process.env.LOGROCKET_APP_ID,
     hubspotPortalId: process.env.HUBSPOT_PORTAL_ID,
     serverMetrics: true,

@@ -2,7 +2,6 @@ import { useCallback, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { Link } from 'react-router';
 import { Button, styled, Typography } from '@mui/material';
-import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboard';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import useLoading from 'hooks/useLoading';
 import { useEventTracker } from 'hooks/useEventTracker';
@@ -10,6 +9,7 @@ import type { ProjectSchema } from 'openapi';
 import { ProjectCard } from 'component/project/ProjectCard/ProjectCard';
 import { ProjectCreationButton } from 'component/project/ProjectList/ProjectCreationButton/ProjectCreationButton';
 import { loadingData } from 'component/project/ProjectList/loadingData';
+import { useMyProjects } from 'component/project/ProjectList/hooks/useMyProjects';
 import { TablePlaceholder } from 'component/common/Table/TablePlaceholder/TablePlaceholder';
 import type { RemoteData } from './RemoteData.ts';
 
@@ -35,6 +35,17 @@ const PanelTitle = styled('h3')(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,
     fontWeight: theme.typography.fontWeightBold,
     margin: 0,
+}));
+
+const PanelTitleText = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(0.5),
+}));
+
+const PanelSubtitle = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.body2.fontSize,
 }));
 
 const CardGrid = styled('div')(({ theme }) => ({
@@ -95,17 +106,26 @@ export const ProjectCardsPanelView = ({
     const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
     const ref = useLoading(projects.state === 'loading');
     const { gridRef, cardsPerRow } = useCardsPerRow();
+    // A single card looks odd on narrow screens
+    const visibleCount = cardsPerRow === 1 ? 3 : cardsPerRow;
 
     const loadedProjects = projects.state === 'success' ? projects.data : [];
     const visibleProjects = (
         projects.state === 'loading' ? loadingData : loadedProjects
-    ).slice(0, cardsPerRow);
-    const hiddenCount = loadedProjects.length - cardsPerRow;
+    ).slice(0, visibleCount);
+    const hiddenCount = loadedProjects.length - visibleCount;
 
     return (
         <Panel ref={ref} aria-labelledby='projects-panel-header'>
             <PanelHeader>
-                <PanelTitle id='projects-panel-header'>My projects</PanelTitle>
+                <PanelTitleText>
+                    <PanelTitle id='projects-panel-header'>
+                        My projects
+                    </PanelTitle>
+                    <PanelSubtitle>
+                        Projects you recently created, changed or favorited
+                    </PanelSubtitle>
+                </PanelTitleText>
                 <ProjectCreationButton
                     isDialogOpen={isCreateDialogOpen}
                     setIsDialogOpen={setIsCreateDialogOpen}
@@ -158,26 +178,22 @@ export const ProjectCardsPanelView = ({
 
 export const ProjectCardsPanel = () => {
     const {
-        personalDashboard,
-        loading: dashboardLoading,
-        error: dashboardError,
-    } = usePersonalDashboard();
-    const {
         projects: allProjects,
         loading: projectsLoading,
         error: projectsError,
     } = useProjects();
     const { trackEvent } = useEventTracker();
 
-    const projectsById = new Map(allProjects.map((p) => [p.id, p]));
-    const myProjects = (personalDashboard?.projects ?? [])
-        .map(({ id }) => projectsById.get(id))
-        .filter((project): project is ProjectSchema => Boolean(project));
+    const { myProjects, profileLoading, profileError } = useMyProjects(
+        allProjects,
+        undefined,
+        'updated',
+    );
 
-    const error = dashboardError ?? projectsError;
+    const error = profileError ?? projectsError;
     const projects: RemoteData<ProjectSchema[]> = error
         ? { state: 'error', error }
-        : dashboardLoading || projectsLoading
+        : profileLoading || projectsLoading
           ? { state: 'loading' }
           : { state: 'success', data: myProjects };
 

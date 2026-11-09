@@ -2,6 +2,7 @@ import { useId, useState } from 'react';
 import Cancel from '@mui/icons-material/Cancel';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 import {
+    Alert,
     FormControlLabel,
     Radio,
     RadioGroup,
@@ -11,8 +12,12 @@ import {
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Input from 'component/common/Input/Input';
 import { canMatchPages } from '../triggers/pagePattern.ts';
-import type { TriggerCondition } from '../triggers/surveyTrigger.ts';
 import {
+    isElementCondition,
+    type TriggerCondition,
+} from '../triggers/surveyTrigger.ts';
+import {
+    matchesByTextOnly,
     matchPage,
     type PageMatch,
     type TriggerDraft,
@@ -50,7 +55,9 @@ const StyledGuidance = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation1,
     fontSize: theme.typography.body2.fontSize,
     color: theme.palette.text.secondary,
-    '& p, & ul': { margin: 0 },
+    '& p, & ul, & pre': { margin: 0 },
+    '& p + pre, & pre + ul': { marginTop: theme.spacing(1) },
+    '& pre': { whiteSpace: 'pre-wrap', wordBreak: 'break-all' },
     '& ul': { paddingLeft: theme.spacing(2.5) },
     '& li + li': { marginTop: theme.spacing(0.5) },
     '& code': {
@@ -81,7 +88,12 @@ const StyledMatch = styled('div', {
 
 const TRIGGER_OPTIONS: { key: TriggerCondition['on']; label: string }[] = [
     { key: 'page', label: 'The user opens a page' },
+    { key: 'appear', label: 'An element appears on the page' },
+    { key: 'click', label: 'The user clicks an element' },
+    { key: 'event', label: 'Your app sends an event' },
 ];
+
+const EXAMPLE_EVENT_NAME = 'flag-created';
 
 const MATCH_MESSAGES: Record<PageMatch, string> = {
     match: 'Matches. The survey can show on this page.',
@@ -151,67 +163,179 @@ const PageGuidance = ({ page }: { page: string }) => (
     </StyledGuidance>
 );
 
+const SelectorGuidance = () => (
+    <StyledGuidance>
+        <p>
+            <strong>Writing a CSS selector</strong>
+        </p>
+        <ul>
+            <li>
+                Prefer attributes you control, such as{' '}
+                <code>[data-testid="create-flag"]</code> or{' '}
+                <code>#create-flag</code>.
+            </li>
+            <li>
+                Avoid generated class names such as <code>.css-1q2w3e</code>.
+                They can change with every release.
+            </li>
+            <li>
+                Keep the selector short and add text to narrow it down, for
+                example <code>button</code> with the text{' '}
+                <code>Create flag</code>.
+            </li>
+            <li>
+                To check it, open the page, right-click the element, choose
+                Inspect and run <code>document.querySelectorAll('…')</code> in
+                the console. It should list only the elements you mean.
+            </li>
+        </ul>
+    </StyledGuidance>
+);
+
+const EventGuidance = ({ eventName }: { eventName: string }) => (
+    <StyledGuidance>
+        <p>
+            <strong>Sending the event</strong>
+        </p>
+        <p>
+            Dispatch the event on <code>document</code> from your app's code at
+            the moment the survey should show:
+        </p>
+        <pre>
+            <code>
+                {`document.dispatchEvent(new CustomEvent(${JSON.stringify(eventName.trim() || EXAMPLE_EVENT_NAME)}));`}
+            </code>
+        </pre>
+        <ul>
+            <li>
+                The name must match exactly, including upper and lower case.
+            </li>
+            <li>Each dispatch counts as one occurrence.</li>
+            <li>
+                The event stays in the user's browser and is never sent to
+                Unleash.
+            </li>
+        </ul>
+    </StyledGuidance>
+);
+
 interface CustomTriggerProps {
     trigger: TriggerDraft;
     errors: TriggerErrors;
     onChange: (trigger: TriggerDraft) => void;
 }
 
-const CustomTrigger = ({ trigger, errors, onChange }: CustomTriggerProps) => {
-    const [delayMs, setDelayMs] = useState('0');
-    const [occurrence, setOccurrence] = useState('1');
-
-    return (
-        <StyledCard>
-            <StyledHalfWidth>
-                <GeneralSelect
-                    label='Show the survey when'
-                    value={trigger.on}
-                    onChange={(on: TriggerCondition['on']) =>
-                        onChange({ ...trigger, on })
-                    }
-                    options={TRIGGER_OPTIONS}
-                    fullWidth
-                />
-            </StyledHalfWidth>
+const CustomTrigger = ({ trigger, errors, onChange }: CustomTriggerProps) => (
+    <StyledCard>
+        <StyledHalfWidth>
+            <GeneralSelect
+                label='Show the survey when'
+                value={trigger.on}
+                onChange={(on: TriggerCondition['on']) =>
+                    onChange({ ...trigger, on })
+                }
+                options={TRIGGER_OPTIONS}
+                fullWidth
+            />
+        </StyledHalfWidth>
+        <StyledField>
+            <Input
+                label='Page'
+                description='Optional. Leave empty to match every page.'
+                placeholder='/projects/:projectId'
+                value={trigger.path}
+                onChange={(event) =>
+                    onChange({ ...trigger, path: event.target.value })
+                }
+                error={Boolean(errors.path)}
+                errorText={errors.path}
+                fullWidth
+            />
+            <PageGuidance page={trigger.path} />
+        </StyledField>
+        {isElementCondition(trigger.on) ? (
             <StyledField>
                 <Input
-                    label='Page'
-                    description='Optional. Leave empty to match every page.'
-                    placeholder='/projects/:projectId'
-                    value={trigger.path}
+                    label='CSS selector'
+                    placeholder='[data-testid="create-flag"]'
+                    value={trigger.selector}
                     onChange={(event) =>
-                        onChange({ ...trigger, path: event.target.value })
+                        onChange({
+                            ...trigger,
+                            selector: event.target.value,
+                        })
                     }
-                    error={Boolean(errors.path)}
-                    errorText={errors.path}
+                    error={Boolean(errors.selector)}
+                    errorText={errors.selector}
                     fullWidth
                 />
-                <PageGuidance page={trigger.path} />
+                <Input
+                    label='Text'
+                    description='Only matches elements with this text'
+                    value={trigger.text}
+                    onChange={(event) =>
+                        onChange({ ...trigger, text: event.target.value })
+                    }
+                    fullWidth
+                />
+                {matchesByTextOnly(trigger) ? (
+                    <Alert severity='warning'>
+                        Matching by text alone checks every element on the page
+                        and can slow it down. Add a CSS selector where you can.
+                    </Alert>
+                ) : null}
+                <SelectorGuidance />
             </StyledField>
-            <StyledHalfWidth>
+        ) : null}
+        {trigger.on === 'event' ? (
+            <StyledField>
                 <Input
-                    label='Delay in milliseconds'
-                    description='Show the survey this long after the condition is met. 0 means immediately.'
-                    type='number'
-                    value={delayMs}
-                    onChange={(event) => setDelayMs(event.target.value)}
+                    label='Event name'
+                    placeholder={EXAMPLE_EVENT_NAME}
+                    value={trigger.eventName}
+                    onChange={(event) =>
+                        onChange({ ...trigger, eventName: event.target.value })
+                    }
+                    error={Boolean(errors.eventName)}
+                    errorText={errors.eventName}
                     fullWidth
                 />
-            </StyledHalfWidth>
-            <StyledHalfWidth>
-                <Input
-                    label='Show after the condition is met this many times'
-                    description="Counted separately in each user's browser. 1 shows the survey the first time; 3 waits until the third time."
-                    type='number'
-                    value={occurrence}
-                    onChange={(event) => setOccurrence(event.target.value)}
-                    fullWidth
-                />
-            </StyledHalfWidth>
-        </StyledCard>
-    );
-};
+                <EventGuidance eventName={trigger.eventName} />
+            </StyledField>
+        ) : null}
+        <StyledHalfWidth>
+            <Input
+                label='Delay in milliseconds'
+                description='Show the survey this long after the condition is met. 0 means immediately.'
+                type='number'
+                value={trigger.delayMs}
+                onChange={(event) =>
+                    onChange({ ...trigger, delayMs: event.target.value })
+                }
+                error={Boolean(errors.delayMs)}
+                errorText={errors.delayMs}
+                fullWidth
+            />
+        </StyledHalfWidth>
+        <StyledHalfWidth>
+            <Input
+                label='Show after the condition is met this many times'
+                description="Counted separately in each user's browser. 1 shows the survey the first time; 3 waits until the third time."
+                type='number'
+                value={trigger.onOccurrence}
+                onChange={(event) =>
+                    onChange({
+                        ...trigger,
+                        onOccurrence: event.target.value,
+                    })
+                }
+                error={Boolean(errors.onOccurrence)}
+                errorText={errors.onOccurrence}
+                fullWidth
+            />
+        </StyledHalfWidth>
+    </StyledCard>
+);
 
 interface SurveyTriggerStepProps {
     draft: TriggerDraft;

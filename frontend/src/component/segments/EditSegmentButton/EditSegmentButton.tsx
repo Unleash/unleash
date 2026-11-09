@@ -28,7 +28,7 @@ export const EditSegmentButton = ({ segment }: IEditSegmentButtonProps) => {
                 }
             }}
             permission={[UPDATE_SEGMENT, UPDATE_PROJECT_SEGMENT]}
-            projectId={projectId}
+            projectId={segment.project}
             tooltipProps={{ title: 'Edit segment' }}
         >
             <Edit data-loading />

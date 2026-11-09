@@ -164,6 +164,10 @@ export const EditSegment = ({ layout }: IEditSegmentProps) => {
         }
     };
 
+    if (!segment) {
+        return null;
+    }
+
     return (
         <FormTemplate
             loading={loading}
@@ -190,7 +194,7 @@ export const EditSegment = ({ layout }: IEditSegmentProps) => {
             >
                 <UpdateButton
                     permission={[UPDATE_SEGMENT, UPDATE_PROJECT_SEGMENT]}
-                    projectId={projectId}
+                    projectId={segment.project}
                     disabled={!hasValidConstraints || overSegmentValuesLimit}
                     data-testid={SEGMENT_SAVE_BTN_ID}
                 >

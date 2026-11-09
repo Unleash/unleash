@@ -6,7 +6,12 @@ import {
 import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import getLogger from '../../../fixtures/no-logger.js';
 import { CHANGE_REQUEST_CREATED } from '../../../../lib/events/index.js';
-import { CLIENT, DEFAULT_ENV } from '../../../../lib/server-impl.js';
+import {
+    CLIENT,
+    DEFAULT_ENV,
+    type SchedulerService,
+    scheduleServices,
+} from '../../../../lib/server-impl.js';
 import { ApiTokenType } from '../../../../lib/types/model.js';
 import { RoleName, TEST_AUDIT_USER } from '../../../../lib/types/index.js';
 import { createClientFeatureToggleDelta } from '../../../../lib/features/client-feature-toggles/delta/createClientFeatureToggleDelta.js';
@@ -112,6 +117,22 @@ async function initialize({ app, db }: { app: IUnleashTest; db: ITestDb }) {
     adminPat = secret!;
 }
 
+async function runScheduledJob(app: IUnleashTest, id: string) {
+    const jobs = new Map<string, () => Promise<unknown>>();
+    scheduleServices(
+        {
+            ...app.services,
+            schedulerService: {
+                schedule: async (job, _timeMs, jobId) => {
+                    jobs.set(jobId, job);
+                },
+            } as SchedulerService,
+        },
+        app.config,
+    );
+    await jobs.get(id)!();
+}
+
 describe('feature 304 api client', () => {
     let app: IUnleashTest;
     let db: ITestDb;
@@ -194,7 +215,7 @@ describe('feature 304 api client', () => {
             .set('Authorization', token)
             .expect(200);
 
-        await app.services.featureToggleService.updatePotentiallyStaleFeatures();
+        await runScheduledJob(app, 'updatePotentiallyStaleFeatures');
         expect(
             await db.stores.featureToggleStore.isPotentiallyStale(name),
         ).toBe(true);
@@ -203,6 +224,7 @@ describe('feature 304 api client', () => {
                 expect.objectContaining({
                     featureName: name,
                     type: 'feature-potentially-stale-on',
+                    groupType: 'transaction',
                 }),
             ]),
         );

@@ -117,7 +117,7 @@ export const constraintReducer = (
                 action.payload === CURRENT_TIME_CONTEXT_FIELD &&
                 !isDateOperator(state.operator)
             ) {
-                return withValue(new Date().toISOString(), {
+                return withValue(null, {
                     ...state,
                     contextName: action.payload,
                     operator: DATE_AFTER,

@@ -33,6 +33,7 @@ import type { CreateFeatureStrategySchema } from 'openapi/index.ts';
 import { summarizeStrategy } from '../summarizeStrategy.ts';
 import { createStrategyTracking } from '../strategyActionsTracking.ts';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { withIncompleteConstraintsDiscarded } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 
 const useStrategyLimit = (strategyCount: number) => {
     const { uiConfig } = useUiConfig();
@@ -142,7 +143,11 @@ export const FeatureStrategyCreate = () => {
         refetchChangeRequests();
     };
 
-    const payload = createStrategyPayload(strategy);
+    const payload = createStrategyPayload(
+        singlePageStrategyForm
+            ? withIncompleteConstraintsDiscarded(strategy)
+            : strategy,
+    );
 
     const onSubmit = async () => {
         const viaChangeRequest = isChangeRequestConfigured(environmentId);

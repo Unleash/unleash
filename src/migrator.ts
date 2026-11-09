@@ -35,6 +35,7 @@ export async function migrateDb(
             cwd: __dirname,
             config: { custom },
             env: 'custom',
+            throwUncatched: true,
         });
 
         return dbm.up(stopAt);
@@ -56,6 +57,7 @@ export async function requiresMigration({
             cwd: __dirname,
             config: { custom },
             env: 'custom',
+            throwUncatched: true,
         });
 
         const pendingMigrations = await dbm.check();
@@ -75,6 +77,7 @@ export async function resetDb({ db }: IUnleashConfig): Promise<void> {
             cwd: __dirname,
             config: { custom },
             env: 'custom',
+            throwUncatched: true,
         });
 
         return dbm.reset();

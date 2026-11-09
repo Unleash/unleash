@@ -266,6 +266,7 @@ export const SignupDialog = () => {
         companyRole: '',
         companyName: '',
         companyIsNA: false,
+        hearAboutUs: '',
         productUpdatesEmailConsent: false,
     });
     const [step, setStep] = useState(0);

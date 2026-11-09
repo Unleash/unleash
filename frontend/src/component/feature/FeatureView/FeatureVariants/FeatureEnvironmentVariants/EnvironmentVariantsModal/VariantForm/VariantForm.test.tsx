@@ -25,6 +25,7 @@ test('keeps line breaks typed into a string payload', async () => {
             updateVariant={(updated) => {
                 updatedVariant = updated;
             }}
+            changeWeight={() => {}}
             removeVariant={() => {}}
         />,
     );

@@ -49,7 +49,6 @@ type FormTemplateProps = {
     title?: ReactNode;
     description: ReactNode;
     documentationLink?: string;
-    documentationIcon?: ReactNode;
     documentationLinkLabel?: string;
     loading?: boolean;
     disablePadding?: boolean;
@@ -276,7 +275,6 @@ const FormTemplate: React.FC<FormTemplateProps> = ({
     description,
     children,
     documentationLink,
-    documentationIcon,
     documentationLinkLabel,
     loading,
     layout = 'page',
@@ -347,7 +345,6 @@ const FormTemplate: React.FC<FormTemplateProps> = ({
                     >
                         <MobileGuidance
                             description={description}
-                            documentationIcon={documentationIcon}
                             documentationLink={documentationLink}
                             documentationLinkLabel={documentationLinkLabel}
                         />
@@ -398,7 +395,6 @@ const FormTemplate: React.FC<FormTemplateProps> = ({
                         </StyledSidebar>
                     ) : (
                         <SidebarComponent
-                            documentationIcon={documentationIcon}
                             description={description}
                             documentationLink={documentationLink}
                             documentationLinkLabel={documentationLinkLabel}
@@ -421,7 +417,6 @@ const FormTemplate: React.FC<FormTemplateProps> = ({
 interface IMobileGuidance {
     description: ReactNode;
     documentationLink?: string;
-    documentationIcon?: ReactNode;
     documentationLinkLabel?: string;
 }
 
@@ -429,7 +424,6 @@ const MobileGuidance = ({
     description,
     documentationLink,
     documentationLinkLabel,
-    documentationIcon,
 }: IMobileGuidance) => {
     const [open, setOpen] = useState(false);
 
@@ -448,7 +442,6 @@ const MobileGuidance = ({
             </Tooltip>
             <Collapse in={open} timeout={500}>
                 <Guidance
-                    documentationIcon={documentationIcon}
                     description={description}
                     documentationLink={documentationLink}
                     documentationLinkLabel={documentationLinkLabel}
@@ -460,7 +453,6 @@ const MobileGuidance = ({
 
 interface IGuidanceProps {
     description: ReactNode;
-    documentationIcon?: ReactNode;
     documentationLink?: string;
     documentationLinkLabel?: string;
     showDescription?: boolean;
@@ -476,19 +468,12 @@ const GuidanceContent: React.FC<
     description,
     children,
     documentationLink,
-    documentationIcon,
     documentationLinkLabel = 'Learn more',
     showDescription = true,
     showLink = true,
     fixedDocumentationHeight,
 }) => {
     const { trackEvent } = useEventTracker();
-
-    const StyledDocumentationIconWrapper = styled('div')({
-        height: '2rem',
-        display: 'grid',
-        placeItems: 'center',
-    });
 
     const StyledDocumentationWrapper = styled('div')({
         height: fixedDocumentationHeight,
@@ -506,14 +491,6 @@ const GuidanceContent: React.FC<
                     condition={showDescription}
                     show={
                         <StyledDescriptionCard>
-                            <ConditionallyRender
-                                condition={!!documentationIcon}
-                                show={
-                                    <StyledDocumentationIconWrapper>
-                                        {documentationIcon}
-                                    </StyledDocumentationIconWrapper>
-                                }
-                            />
                             <StyledDescription>{description}</StyledDescription>
                         </StyledDescriptionCard>
                     }

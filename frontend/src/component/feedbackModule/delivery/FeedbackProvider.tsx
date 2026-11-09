@@ -41,12 +41,9 @@ import {
     type AppearObserver,
     observeBrowserAppear,
 } from '../observers/observeAppear.ts';
-import {
-    type EventObserver,
-    observeBrowserEvents,
-} from '../observers/observeEvents.ts';
 import { basePath as appBasePath } from 'utils/formatPath';
 import { unique } from 'utils/unique';
+import { useCustomEvent } from 'hooks/useCustomEvent';
 
 interface FeedbackContextValue {
     survey: Survey | null;
@@ -77,6 +74,16 @@ const customEventNames = (surveys: Survey[]): string[] =>
         ),
     ).toSorted();
 
+interface SurveyEventListenerProps {
+    name: string;
+    onEvent: (name: string) => void;
+}
+
+const SurveyEventListener = ({ name, onEvent }: SurveyEventListenerProps) => {
+    useCustomEvent(name, () => onEvent(name));
+    return null;
+};
+
 export type IdentifyUser = (context: IContext) => string | undefined;
 
 interface FeedbackProviderProps {
@@ -85,7 +92,6 @@ interface FeedbackProviderProps {
     observePage?: PageObserver;
     observeClicks?: ClickObserver;
     observeAppear?: AppearObserver;
-    observeEvents?: EventObserver;
     basePath?: string;
 }
 
@@ -95,7 +101,6 @@ export const FeedbackProvider = ({
     observePage = observeBrowserPage,
     observeClicks = observeBrowserClicks,
     observeAppear = observeBrowserAppear,
-    observeEvents = observeBrowserEvents,
     basePath = appBasePath,
 }: FeedbackProviderProps) => {
     const flags = useFlags();
@@ -115,7 +120,7 @@ export const FeedbackProvider = ({
         setShownSurvey(survey);
     }
 
-    const showSurveyOn = useEffectEvent((event: TriggerEvent) => {
+    const showSurveyOn = (event: TriggerEvent) => {
         if (survey !== null) {
             return;
         }
@@ -123,7 +128,7 @@ export const FeedbackProvider = ({
         if (triggeredSurvey !== null) {
             setShownSurvey((shown) => shown ?? triggeredSurvey);
         }
-    });
+    };
 
     const showSurveyOnClick = useEffectEvent((target: Element) => {
         if (path !== null) {
@@ -152,18 +157,13 @@ export const FeedbackProvider = ({
         }
     }, [observeAppear, waitsForAppearance]);
 
-    const showSurveyOnEvent = useEffectEvent((name: string) => {
+    const showSurveyOnEvent = (name: string) => {
         if (path !== null) {
             showSurveyOn({ on: 'event', path, name });
         }
-    });
+    };
 
     const eventNames = useMemo(() => customEventNames(surveys), [surveys]);
-    useEffect(() => {
-        if (eventNames.length > 0) {
-            return observeEvents(showSurveyOnEvent, eventNames);
-        }
-    }, [observeEvents, eventNames]);
 
     const flagName = survey?.flagName;
     useEffect(() => {
@@ -195,6 +195,13 @@ export const FeedbackProvider = ({
 
     return (
         <FeedbackContext.Provider value={{ survey, submit, dismiss }}>
+            {eventNames.map((name) => (
+                <SurveyEventListener
+                    key={name}
+                    name={name}
+                    onEvent={showSurveyOnEvent}
+                />
+            ))}
             {children}
         </FeedbackContext.Provider>
     );

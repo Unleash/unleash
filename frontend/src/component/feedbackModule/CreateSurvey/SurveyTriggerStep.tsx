@@ -198,12 +198,12 @@ const EventGuidance = ({ eventName }: { eventName: string }) => (
             <strong>Sending the event</strong>
         </p>
         <p>
-            Dispatch the event on <code>window</code> from your app's code at
+            Dispatch the event on <code>document</code> from your app's code at
             the moment the survey should show:
         </p>
         <pre>
             <code>
-                {`window.dispatchEvent(new CustomEvent(${JSON.stringify(eventName.trim() || EXAMPLE_EVENT_NAME)}));`}
+                {`document.dispatchEvent(new CustomEvent(${JSON.stringify(eventName.trim() || EXAMPLE_EVENT_NAME)}));`}
             </code>
         </pre>
         <ul>

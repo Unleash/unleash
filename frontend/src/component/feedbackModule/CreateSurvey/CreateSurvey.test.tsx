@@ -648,7 +648,7 @@ describe('CreateSurvey', () => {
         await goToEventTrigger();
         expect(
             screen.getByText(
-                `window.dispatchEvent(new CustomEvent("flag-created"));`,
+                `document.dispatchEvent(new CustomEvent("flag-created"));`,
             ),
         ).toBeInTheDocument();
 
@@ -658,7 +658,7 @@ describe('CreateSurvey', () => {
         );
         expect(
             screen.getByText(
-                `window.dispatchEvent(new CustomEvent("survey-ready"));`,
+                `document.dispatchEvent(new CustomEvent("survey-ready"));`,
             ),
         ).toBeInTheDocument();
     });

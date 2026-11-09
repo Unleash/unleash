@@ -9,7 +9,6 @@ import { testUnleashClient } from 'utils/testUnleashClient';
 import { SURVEY_KIND, SURVEY_VERSION } from '../survey.ts';
 import type { SurveyTrigger } from '../triggers/surveyTrigger.ts';
 import type { PageObserver, Unsubscribe } from '../observers/observePage.ts';
-import type { EventObserver } from '../observers/observeEvents.ts';
 import type { IdentifyUser } from './FeedbackProvider.tsx';
 import { appPath } from '../observers/appPath.ts';
 
@@ -87,29 +86,14 @@ const fakeElementObserver = () => {
     };
 };
 
-const fakeEventObserver = () => {
-    let onEvent: ((name: string) => void) | null = null;
-    let observedNames: string[] | null = null;
-    const observe: EventObserver = (callback, eventNames) => {
-        onEvent = callback;
-        observedNames = eventNames;
-        return () => {
-            onEvent = null;
-            observedNames = null;
-        };
-    };
-    return {
-        observe,
-        dispatch: (name: string) => act(() => onEvent?.(name)),
-        isInstalled: () => onEvent !== null,
-        names: () => observedNames,
-    };
-};
+const dispatchEvent = (name: string) =>
+    act(() => {
+        document.dispatchEvent(new CustomEvent(name));
+    });
 
 let pageObserver: ReturnType<typeof fakePageObserver>;
 let clickObserver: ReturnType<typeof fakeElementObserver>;
 let appearObserver: ReturnType<typeof fakeElementObserver>;
-let eventObserver: ReturnType<typeof fakeEventObserver>;
 
 const createFlagButton = (): Element => {
     const button = document.createElement('button');
@@ -153,7 +137,6 @@ const loadPage = async () => {
                     observePage={pageObserver.observe}
                     observeClicks={clickObserver.observe}
                     observeAppear={appearObserver.observe}
-                    observeEvents={eventObserver.observe}
                     basePath='/unleash'
                     identifyUser={identifyUser}
                 >
@@ -191,7 +174,6 @@ describe('FeedbackProvider', () => {
         pageObserver = fakePageObserver('/unleash/projects');
         clickObserver = fakeElementObserver();
         appearObserver = fakeElementObserver();
-        eventObserver = fakeEventObserver();
         renderSurvey = await loadPage();
     });
 
@@ -347,22 +329,19 @@ describe('FeedbackProvider', () => {
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
     });
 
-    it('stops observing pages, clicks, appearances and events on unmount', () => {
+    it('stops observing pages, clicks and appearances on unmount', () => {
         const { unmount } = renderSurvey(
             testUnleashClient([
                 surveyFlag('survey-a', 'Survey A', APPEAR_FLAG_CREATED_TOAST),
-                surveyFlag('survey-b', 'Survey B', EVENT_FLAG_CREATED),
             ]),
         );
         expect(appearObserver.isInstalled()).toBe(true);
-        expect(eventObserver.isInstalled()).toBe(true);
 
         unmount();
 
         expect(pageObserver.isInstalled()).toBe(false);
         expect(clickObserver.isInstalled()).toBe(false);
         expect(appearObserver.isInstalled()).toBe(false);
-        expect(eventObserver.isInstalled()).toBe(false);
     });
 
     it('shows a page survey on the page it was opened on when the path matches', async () => {
@@ -592,7 +571,7 @@ describe('FeedbackProvider', () => {
         );
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
 
-        eventObserver.dispatch('flag-created');
+        dispatchEvent('flag-created');
 
         expect(await screen.findByText('Survey A')).toBeInTheDocument();
     });
@@ -606,21 +585,20 @@ describe('FeedbackProvider', () => {
                 }),
             ]),
         );
-        eventObserver.dispatch('flag-created');
+        dispatchEvent('flag-created');
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
 
         pageObserver.navigate('/unleash/projects/default');
-        eventObserver.dispatch('flag-created');
+        dispatchEvent('flag-created');
 
         expect(await screen.findByText('Survey A')).toBeInTheDocument();
     });
 
-    it('observes each event name of the live surveys once', () => {
+    it('observes the events of surveys that arrive after the first render', async () => {
         const client = testUnleashClient([
             surveyFlag('survey-a', 'Survey A', CLICK_CREATE_FLAG),
         ]);
         renderSurvey(client);
-        expect(eventObserver.names()).toBeNull();
 
         act(() =>
             client.setFlags([
@@ -629,10 +607,8 @@ describe('FeedbackProvider', () => {
                 surveyFlag('survey-a', 'Survey A', EVENT_FLAG_CREATED),
             ]),
         );
+        dispatchEvent('flag-archived');
 
-        expect(eventObserver.names()).toEqual([
-            'flag-archived',
-            'flag-created',
-        ]);
+        expect(await screen.findByText('Survey B')).toBeInTheDocument();
     });
 });

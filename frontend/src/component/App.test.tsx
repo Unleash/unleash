@@ -1,11 +1,14 @@
+import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
+import { type ScopedMutator, useSWRConfig } from 'swr';
 import FlagProvider from '@unleash/proxy-client-react';
 import { render, settleProviders } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { testUnleashClient } from 'utils/testUnleashClient';
 import { WelcomeDialogProvider } from './personalDashboard/WelcomeDialogProvider.tsx';
 import { App } from './App';
+import { USER_ENDPOINT_PATH } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 // Preload the lazy uxtweak chunk so the anonymous test's absence assertion
 // can't pass by racing React.lazy — with the module already in the cache,
 // a settled tree really has rendered everything it ever would.
@@ -67,7 +70,7 @@ const everyPageSurveyFlag = {
     },
 };
 
-const renderApp = (route: string) =>
+const renderApp = (route: string, sibling?: ReactNode) =>
     render(
         <FlagProvider
             unleashClient={testUnleashClient([everyPageSurveyFlag])}
@@ -75,10 +78,52 @@ const renderApp = (route: string) =>
         >
             <WelcomeDialogProvider>
                 <App />
+                {sibling}
             </WelcomeDialogProvider>
         </FlagProvider>,
         { route },
     );
+
+describe('App after the session ends', () => {
+    it('does not show errors cached while logged out once the user signs back in', async () => {
+        setupSharedRoutes();
+        setupLoggedIn();
+        // stands in for the background refreshes that notice the session ended
+        let revalidate: ScopedMutator | undefined;
+        const CaptureMutate = () => {
+            revalidate = useSWRConfig().mutate;
+            return null;
+        };
+        const refresh = (key: string) =>
+            act(async () => {
+                await revalidate?.(key);
+            });
+        renderApp('/projects', <CaptureMutate />);
+        expect(
+            await screen.findByRole('heading', { name: 'Projects (0)' }),
+        ).toBeInTheDocument();
+
+        setupLoggedOut();
+        testServerRoute(server, '/api/admin/projects', {}, 'get', 401);
+        await refresh('api/admin/projects');
+        await refresh(USER_ENDPOINT_PATH);
+        expect(
+            await screen.findByText('Sign in to your instance'),
+        ).toBeInTheDocument();
+
+        setupLoggedIn();
+        testServerRoute(server, '/api/admin/projects', { projects: [] });
+        await refresh(USER_ENDPOINT_PATH);
+
+        expect(
+            await screen.findByRole('heading', { name: /^Projects/ }),
+        ).toBeInTheDocument();
+        expect(
+            screen.queryByText('Error fetching projects'),
+        ).not.toBeInTheDocument();
+        await settleProviders();
+    });
+});
 
 describe('App research widget gating', () => {
     beforeEach(() => {

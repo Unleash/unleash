@@ -51,7 +51,6 @@ import type {
 import { querySchema } from '../../schema/feature-schema.js';
 import type { BatchStaleSchema } from '../../openapi/spec/batch-stale-schema.js';
 import type { WithTransactional } from '../../db/transaction.js';
-import type { PayloadSchemaService } from '../payload-schema/payload-schema-service.js';
 import { BadDataError } from '../../error/index.js';
 import { anonymise } from '../../util/index.js';
 import { throwOnInvalidSchema } from '../../openapi/validate.js';
@@ -109,15 +108,12 @@ type ProjectFeaturesServices = Pick<
     | 'openApiService'
     | 'transactionalFeatureToggleService'
     | 'featureTagService'
-    | 'payloadSchemaService'
 >;
 
 export default class ProjectFeaturesController extends Controller {
     private featureService: FeatureToggleService;
 
     private featureTagService: FeatureTagService;
-
-    private payloadSchemaService: PayloadSchemaService;
 
     private transactionalFeatureToggleService: WithTransactional<FeatureToggleService>;
 
@@ -134,7 +130,6 @@ export default class ProjectFeaturesController extends Controller {
             openApiService,
             transactionalFeatureToggleService,
             featureTagService,
-            payloadSchemaService,
         }: ProjectFeaturesServices,
     ) {
         super(config);
@@ -143,7 +138,6 @@ export default class ProjectFeaturesController extends Controller {
             transactionalFeatureToggleService;
         this.openApiService = openApiService;
         this.featureTagService = featureTagService;
-        this.payloadSchemaService = payloadSchemaService;
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('/admin-api/project/features.ts');
 
@@ -812,14 +806,6 @@ export default class ProjectFeaturesController extends Controller {
         const responseData = {
             ...maybeAnonymized,
             stale: maybeAnonymized.stale || false,
-            ...(this.flagResolver.isEnabled('payloadSchemas')
-                ? {
-                      payloadSchema:
-                          await this.payloadSchemaService.getPayloadSchema(
-                              featureName,
-                          ),
-                  }
-                : {}),
         };
         this.openApiService.respondWithValidation(
             200,

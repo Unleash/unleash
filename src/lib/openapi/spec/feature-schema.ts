@@ -278,7 +278,7 @@ export const featureSchema = {
             type: 'object',
             additionalProperties: true,
             description:
-                'The JSON Schema document, draft 2020-12, that describes the variant payloads of the flag. Absent when the flag has none. This is an experimental field and may change.',
+                'The JSON Schema document, draft 2020-12, that describes the variant payloads of the flag. Absent when the flag has none. Only present on Unleash Enterprise. This is an experimental field and may change.',
         },
         lifetimeDays: {
             type: 'integer',

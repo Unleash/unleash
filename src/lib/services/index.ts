@@ -185,11 +185,6 @@ import type {
 import type { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType.js';
 import { UnknownFlagsService } from '../features/metrics/unknown-flags/unknown-flags-service.js';
 import type FeatureLinkService from '../features/feature-links/feature-link-service.js';
-import {
-    createFakePayloadSchemaService,
-    createPayloadSchemaService,
-} from '../features/payload-schema/createPayloadSchemaService.js';
-import type { PayloadSchemaService } from '../features/payload-schema/payload-schema-service.js';
 import { createUserService } from '../features/users/createUserService.js';
 import { UiConfigService } from '../ui-config/ui-config-service.js';
 import { ResourceLimitsService } from '../features/resource-limits/resource-limits-service.js';
@@ -420,10 +415,6 @@ export const createServices = (
 
     const featureLinkService = transactionalFeatureLinkService;
 
-    const payloadSchemaService = db
-        ? createPayloadSchemaService(db)
-        : createFakePayloadSchemaService();
-
     const featureToggleService = db
         ? withTransactional((db) => createFeatureToggleService(db, config), db)
         : withFakeTransactional(
@@ -647,7 +638,6 @@ export const createServices = (
         featureLifecycleReadModel,
         transactionalFeatureLinkService,
         featureLinkService,
-        payloadSchemaService,
         unknownFlagsService,
         uiConfigService,
         resourceLimitsService,
@@ -796,7 +786,6 @@ export interface IUnleashServices {
     featureLifecycleReadModel: IFeatureLifecycleReadModel;
     transactionalFeatureLinkService: WithTransactional<FeatureLinkService>;
     featureLinkService: FeatureLinkService;
-    payloadSchemaService: PayloadSchemaService;
     unknownFlagsService: UnknownFlagsService;
     uiConfigService: UiConfigService;
     resourceLimitsService: ResourceLimitsService;

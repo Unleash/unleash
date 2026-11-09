@@ -40,7 +40,8 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { ExtraActions } from './ExtraActions.tsx';
 import { archiveFlagTracking } from 'component/feature/flagActionsTracking';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { PayloadSchemaRow } from '../PayloadSchema/PayloadSchemaRow.tsx';
+import { PayloadSchemaOverview } from '../PayloadSchema/PayloadSchemaOverview.tsx';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -253,6 +254,7 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
 }) => {
     const { locationSettings } = useLocationSettings();
     const navigate = useNavigate();
+    const { isEnterprise } = useUiConfig();
 
     const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
     const [markCompletedDialogueOpen, setMarkCompletedDialogueOpen] =
@@ -261,7 +263,7 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
     const { project, description, type } = feature;
 
     const showDependentFeatures = useShowDependentFeatures(project);
-    const payloadSchemasEnabled = useUiFlag('payloadSchemas');
+    const payloadSchemasEnabled = useUiFlag('payloadSchemas') && isEnterprise();
 
     return (
         <>
@@ -346,15 +348,18 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                     {showDependentFeatures ? (
                         <DependencyRow feature={feature} />
                     ) : null}
-                    {payloadSchemasEnabled ? (
-                        <PayloadSchemaRow
-                            projectId={project}
-                            featureId={feature.name}
-                            hasPayloadSchema={Boolean(feature.payloadSchema)}
-                        />
-                    ) : null}
                     <TagRow feature={feature} />
                 </StyledBody>
+                {payloadSchemasEnabled ? (
+                    <>
+                        <Divider />
+                        <PayloadSchemaOverview
+                            projectId={project}
+                            featureId={feature.name}
+                            payloadSchema={feature.payloadSchema}
+                        />
+                    </>
+                ) : null}
                 <Divider />
                 <FeatureLinks
                     links={feature.links || []}

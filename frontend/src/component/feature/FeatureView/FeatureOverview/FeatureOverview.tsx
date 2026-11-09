@@ -24,6 +24,7 @@ import { FeatureSetupBanner } from './FeatureSetupBanner.tsx';
 import { getFeatureSetupStage } from './getFeatureSetupStage.ts';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { PayloadSchemaSidebar } from './PayloadSchema/PayloadSchemaSidebar.tsx';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -57,7 +58,10 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
     const { hiddenEnvironments, onEnvironmentVisibilityChange } =
         useEnvironmentVisibility();
     const onSidebarClose = () => navigate(featurePath);
-    const payloadSchemasEnabled = useUiFlag('payloadSchemas');
+
+    const { isEnterprise } = useUiConfig();
+    const payloadSchemasEnabled = useUiFlag('payloadSchemas') && isEnterprise();
+
     usePageTitle(featureId);
     const { setLastViewed } = useLastViewedFlags();
     useEffect(() => {

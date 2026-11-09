@@ -60,9 +60,13 @@ const AllFlagsLink = styled(Link)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
 }));
 
-const ProjectCell = styled('div')({
+const ProjectCell = styled('div')(({ theme }) => ({
     minWidth: '180px',
-});
+    [theme.breakpoints.up('xl')]: {
+        width: 'max-content',
+        maxWidth: '300px',
+    },
+}));
 
 const PanelMessage = styled(Typography)(({ theme }) => ({
     padding: theme.spacing(10.75, 2),
@@ -114,7 +118,7 @@ export const RecentFlagsPanelView = ({
             columnHelper.accessor('createdAt', {
                 header: 'Created',
                 cell: ({ getValue }) => <DateCell value={getValue()} />,
-                meta: { width: '1%' },
+                meta: { width: 102 },
             }),
             columnHelper.accessor('lifecycle', {
                 id: 'lifecycle',

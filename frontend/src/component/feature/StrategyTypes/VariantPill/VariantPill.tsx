@@ -8,12 +8,16 @@ import {
 } from '@mui/material';
 import Lock from '@mui/icons-material/Lock';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
+import { Truncator } from 'component/common/Truncator/Truncator';
 import type { StrategyVariantSchema } from 'openapi';
 
 const Pill = styled(Tab)(({ theme }) => ({
     minHeight: 0,
     minWidth: 0,
     padding: theme.spacing(0.75, 1.5),
+    [theme.breakpoints.down('md')]: {
+        padding: theme.spacing(0.75, 1.5),
+    },
     background: theme.palette.background.paper,
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusExtraLarge,
@@ -174,7 +178,15 @@ export const VariantPill = memo(function VariantPill({
                 iconPosition='start'
                 label={
                     <Label>
-                        {name}
+                        <Truncator
+                            component='span'
+                            sx={(theme) => ({
+                                maxWidth: theme.spacing(20),
+                                lineHeight: 'normal',
+                            })}
+                        >
+                            {name}
+                        </Truncator>
                         <Weight>{weight / 10}%</Weight>
                         {locked ? (
                             <LockMark titleAccess='Locked weight' />

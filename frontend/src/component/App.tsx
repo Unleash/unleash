@@ -3,7 +3,6 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Route, Routes, useLocation } from 'react-router';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeedbackNPS } from 'component/feedback/FeedbackNPS/FeedbackNPS';
-import { LayoutPicker } from 'component/layout/LayoutPicker/LayoutPicker';
 import Loader from 'component/common/Loader/Loader';
 import NotFound from 'component/common/NotFound/NotFound';
 import { ProtectedRoute } from 'component/common/ProtectedRoute/ProtectedRoute';
@@ -85,11 +84,15 @@ export const App = () => {
                                     )}
                                     show={<MaintenanceBanner />}
                                 />
-                                <LicenseBanner />
-                                <SecurityBanner />
+                                {isLoggedIn ? (
+                                    <>
+                                        <LicenseBanner />
+                                        <SecurityBanner />
+                                    </>
+                                ) : null}
                                 <MonthsOldVersionBanner />
                                 <ExternalBanners />
-                                <InternalBanners />
+                                {isLoggedIn ? <InternalBanners /> : null}
                                 <StyledContainer>
                                     <IntroProvider>
                                         <ToastRenderer />
@@ -99,16 +102,9 @@ export const App = () => {
                                                     key={route.path}
                                                     path={route.path}
                                                     element={
-                                                        <LayoutPicker
-                                                            isStandalone={
-                                                                route.isStandalone ===
-                                                                true
-                                                            }
-                                                        >
-                                                            <ProtectedRoute
-                                                                route={route}
-                                                            />
-                                                        </LayoutPicker>
+                                                        <ProtectedRoute
+                                                            route={route}
+                                                        />
                                                     }
                                                 />
                                             ))}
@@ -128,27 +124,35 @@ export const App = () => {
                                             />
                                         </Routes>
 
-                                        <FeedbackNPS openUrl='http://feedback.unleash.run' />
+                                        {isLoggedIn ? (
+                                            <>
+                                                <FeedbackNPS openUrl='http://feedback.unleash.run' />
 
-                                        {isLoggedIn && uxTweakSurveysEnabled ? (
-                                            <UxTweakWidgets />
+                                                {uxTweakSurveysEnabled ? (
+                                                    <UxTweakWidgets />
+                                                ) : null}
+
+                                                {displaySurveyEnabled ? (
+                                                    <ErrorBoundary
+                                                        fallbackRender={() =>
+                                                            null
+                                                        }
+                                                    >
+                                                        <Suspense
+                                                            fallback={null}
+                                                        >
+                                                            <FeedbackModule />
+                                                        </Suspense>
+                                                    </ErrorBoundary>
+                                                ) : null}
+
+                                                <SplashOverlay />
+
+                                                <WelcomeDialog />
+
+                                                <SignupDialog />
+                                            </>
                                         ) : null}
-
-                                        {isLoggedIn && displaySurveyEnabled ? (
-                                            <ErrorBoundary
-                                                fallbackRender={() => null}
-                                            >
-                                                <Suspense fallback={null}>
-                                                    <FeedbackModule />
-                                                </Suspense>
-                                            </ErrorBoundary>
-                                        ) : null}
-
-                                        <SplashOverlay />
-
-                                        <WelcomeDialog />
-
-                                        <SignupDialog />
                                     </IntroProvider>
                                 </StyledContainer>
                             </>

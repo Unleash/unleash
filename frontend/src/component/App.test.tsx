@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, onTestFinished } from 'vitest';
 import { act, screen, waitFor } from '@testing-library/react';
 import { type ScopedMutator, useSWRConfig } from 'swr';
 import FlagProvider from '@unleash/proxy-client-react';
@@ -122,6 +122,33 @@ describe('App after the session ends', () => {
             screen.queryByText('Error fetching projects'),
         ).not.toBeInTheDocument();
         await settleProviders();
+    });
+});
+
+describe('App when logged out', () => {
+    it('sends a protected route to login, requesting only what the login page needs', async () => {
+        testServerRoute(server, '/api/admin/ui-config', {
+            versionInfo: { current: { enterprise: '7.0.0' } },
+        });
+        setupLoggedOut();
+        const requested: string[] = [];
+        const track = ({ request }: { request: Request }) => {
+            requested.push(new URL(request.url).pathname);
+        };
+        server.events.on('request:start', track);
+        onTestFinished(() => {
+            server.events.removeListener('request:start', track);
+        });
+
+        renderApp('/projects');
+
+        expect(
+            await screen.findByText('Sign in to your instance'),
+        ).toBeInTheDocument();
+        await settleProviders();
+        expect(new Set(requested)).toEqual(
+            new Set(['/api/admin/user', '/api/admin/ui-config']),
+        );
     });
 });
 

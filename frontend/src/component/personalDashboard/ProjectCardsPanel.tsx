@@ -10,6 +10,7 @@ import { ProjectCard } from 'component/project/ProjectCard/ProjectCard';
 import { ProjectCreationButton } from 'component/project/ProjectList/ProjectCreationButton/ProjectCreationButton';
 import { loadingData } from 'component/project/ProjectList/loadingData';
 import { useMyProjects } from 'component/project/ProjectList/hooks/useMyProjects';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { TablePlaceholder } from 'component/common/Table/TablePlaceholder/TablePlaceholder';
 import type { RemoteData } from './RemoteData.ts';
 
@@ -37,16 +38,10 @@ const PanelTitle = styled('h3')(({ theme }) => ({
     margin: 0,
 }));
 
-const PanelTitleText = styled('div')(({ theme }) => ({
+const PanelTitleRow = styled('div')({
     display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(0.5),
-}));
-
-const PanelSubtitle = styled(Typography)(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    fontSize: theme.typography.body2.fontSize,
-}));
+    alignItems: 'center',
+});
 
 const CardGrid = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -118,14 +113,12 @@ export const ProjectCardsPanelView = ({
     return (
         <Panel ref={ref} aria-labelledby='projects-panel-header'>
             <PanelHeader>
-                <PanelTitleText>
+                <PanelTitleRow>
                     <PanelTitle id='projects-panel-header'>
                         My projects
                     </PanelTitle>
-                    <PanelSubtitle>
-                        Projects you recently created, changed or favorited
-                    </PanelSubtitle>
-                </PanelTitleText>
+                    <HelpIcon tooltip='Favorite projects, projects you own, and projects you are a member of. Most recently updated first.' />
+                </PanelTitleRow>
                 <ProjectCreationButton
                     isDialogOpen={isCreateDialogOpen}
                     setIsDialogOpen={setIsCreateDialogOpen}

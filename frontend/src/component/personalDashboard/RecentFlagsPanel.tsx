@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-table';
 import type { FeatureSchema, FeatureSearchResponseSchema } from 'openapi';
 import { PaginatedTable } from 'component/common/Table';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { FeatureLifecycleCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
@@ -35,9 +36,10 @@ const Panel = styled('section')(({ theme }) => ({
 
 const PanelHeader = styled('div')(({ theme }) => ({
     display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(0.5),
+    alignItems: 'center',
+    minHeight: theme.spacing(4.5),
     padding: theme.spacing(2, 4),
+    boxSizing: 'content-box',
 }));
 
 const PanelTitle = styled('h3')(({ theme }) => ({
@@ -45,11 +47,6 @@ const PanelTitle = styled('h3')(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,
     fontWeight: theme.typography.fontWeightBold,
     margin: 0,
-}));
-
-const PanelSubtitle = styled(Typography)(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    fontSize: theme.typography.body2.fontSize,
 }));
 
 const PanelFooter = styled('div')(({ theme }) => ({
@@ -189,9 +186,7 @@ export const RecentFlagsPanelView = ({
                 <PanelTitle id='recent-flags-panel-header'>
                     Recent feature flags
                 </PanelTitle>
-                <PanelSubtitle>
-                    Flags you recently created or changed
-                </PanelSubtitle>
+                <HelpIcon tooltip='Flags you recently created or changed, sorted by your latest change.' />
             </PanelHeader>
             <div ref={loadingRef}>
                 <PaginatedTable tableInstance={table} />

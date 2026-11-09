@@ -86,6 +86,7 @@ export interface IFeatureToggle {
     };
     collaborators?: CollaboratorData;
     links?: FeatureLink[];
+    payloadSchema?: Record<string, unknown>;
 }
 
 export interface IDependency {

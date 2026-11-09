@@ -17,11 +17,13 @@ const StyledPermissionButton = styled(PermissionButton)(({ theme }) => ({
 interface IPayloadSchemaRowProps {
     projectId: string;
     featureId: string;
+    hasPayloadSchema: boolean;
 }
 
 export const PayloadSchemaRow = ({
     projectId,
     featureId,
+    hasPayloadSchema,
 }: IPayloadSchemaRowProps) => {
     const navigate = useNavigate();
 
@@ -38,7 +40,7 @@ export const PayloadSchemaRow = ({
                         navigate(formatPayloadSchemaPath(projectId, featureId))
                     }
                 >
-                    Edit schema
+                    {hasPayloadSchema ? 'Edit schema' : 'Add schema'}
                 </StyledPermissionButton>
             </StyledMetaDataItemValue>
         </StyledMetaDataItem>

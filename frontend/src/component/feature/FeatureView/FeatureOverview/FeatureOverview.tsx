@@ -171,7 +171,11 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
                             path='payload-schema'
                             element={
                                 <SidebarModal
-                                    label='Edit payload schema'
+                                    label={
+                                        feature.payloadSchema
+                                            ? 'Edit payload schema'
+                                            : 'Add payload schema'
+                                    }
                                     onClose={onSidebarClose}
                                     open
                                 >

@@ -350,6 +350,7 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                         <PayloadSchemaRow
                             projectId={project}
                             featureId={feature.name}
+                            hasPayloadSchema={Boolean(feature.payloadSchema)}
                         />
                     ) : null}
                     <TagRow feature={feature} />

@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { MeteredRequestsSchemaApiDataItem } from './meteredRequestsSchemaApiDataItem';
-import type { MeteredRequestsSchemaDateRange } from './meteredRequestsSchemaDateRange';
-import type { MeteredRequestsSchemaGrouping } from './meteredRequestsSchemaGrouping';
+import type { MeteredRequestsSchemaApiDataItem } from './meteredRequestsSchemaApiDataItem.ts';
+import type { MeteredRequestsSchemaDateRange } from './meteredRequestsSchemaDateRange.ts';
+import type { MeteredRequestsSchemaGrouping } from './meteredRequestsSchemaGrouping.ts';
 
 /**
  * Contains the recorded metered groups requests segmented by day/month

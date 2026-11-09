@@ -1,10 +1,10 @@
+import type { IProjectHealthFeaturesReadModel } from '../../domain/project-health/features-read-model.js';
 import { calculateProjectHealthRating } from '../../domain/project-health/project-health.js';
 import type { ProjectStatusSchema } from '../../openapi/index.js';
 import type {
     IApiTokenStore,
     IEventStore,
     IFeatureToggleStore,
-    IFeatureTypeStore,
     IProjectStore,
     ISegmentStore,
     IUnleashStores,
@@ -19,7 +19,7 @@ export class ProjectStatusService {
     private segmentStore: ISegmentStore;
     private projectLifecycleSummaryReadModel: IProjectLifecycleSummaryReadModel;
     private projectStaleFlagsReadModel: IProjectStaleFlagsReadModel;
-    private featureTypeStore: IFeatureTypeStore;
+    private featuresReadModel: IProjectHealthFeaturesReadModel;
     private featureToggleStore: IFeatureToggleStore;
 
     constructor(
@@ -28,7 +28,6 @@ export class ProjectStatusService {
             projectStore,
             apiTokenStore,
             segmentStore,
-            featureTypeStore,
             featureToggleStore,
         }: Pick<
             IUnleashStores,
@@ -36,11 +35,11 @@ export class ProjectStatusService {
             | 'projectStore'
             | 'apiTokenStore'
             | 'segmentStore'
-            | 'featureTypeStore'
             | 'featureToggleStore'
         >,
         projectLifecycleReadModel: IProjectLifecycleSummaryReadModel,
         projectStaleFlagsReadModel: IProjectStaleFlagsReadModel,
+        featuresReadModel: IProjectHealthFeaturesReadModel,
     ) {
         this.eventStore = eventStore;
         this.projectStore = projectStore;
@@ -48,7 +47,7 @@ export class ProjectStatusService {
         this.segmentStore = segmentStore;
         this.projectLifecycleSummaryReadModel = projectLifecycleReadModel;
         this.projectStaleFlagsReadModel = projectStaleFlagsReadModel;
-        this.featureTypeStore = featureTypeStore;
+        this.featuresReadModel = featuresReadModel;
         this.featureToggleStore = featureToggleStore;
     }
 
@@ -67,7 +66,7 @@ export class ProjectStatusService {
             this.segmentStore.getProjectSegmentCount(projectId),
             this.eventStore.getProjectRecentEventActivity(projectId),
             calculateProjectHealthRating(
-                this.featureTypeStore,
+                this.featuresReadModel,
                 this.featureToggleStore,
             )({ id: projectId }),
             this.projectLifecycleSummaryReadModel.getProjectLifecycleSummary(

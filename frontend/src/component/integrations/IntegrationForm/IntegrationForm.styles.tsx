@@ -1,5 +1,7 @@
-import { Paper, styled } from '@mui/material';
-import { TextField, Typography } from '@mui/material';
+import { Paper, styled, type Theme } from '@mui/material';
+import { Typography } from '@mui/material';
+import Input from 'component/common/Input/Input';
+import { Markdown } from 'component/common/Markdown/Markdown';
 import {
     forwardRef,
     type FC,
@@ -21,11 +23,15 @@ export const StyledAlerts = styled('section')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-export const StyledHelpText = styled('p')(({ theme }) => ({
+const helpTextStyles = ({ theme }: { theme: Theme }) => ({
     marginBottom: theme.spacing(1),
     color: theme.palette.text.secondary,
     fontSize: theme.typography.body2.fontSize,
-}));
+});
+
+export const StyledHelpText = styled('p')(helpTextStyles);
+
+export const MarkdownHelpText = styled(Markdown)(helpTextStyles);
 
 export const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -44,7 +50,7 @@ export const StyledButtonSection = styled('section')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-export const StyledTextField = styled(TextField)(({ theme }) => ({
+export const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
 }));
 
@@ -55,7 +61,7 @@ export const StyledTitle = forwardRef<
     <Typography
         ref={ref}
         component='h4'
-        variant='h4'
+        variant='h3'
         sx={(theme) => ({
             margin: theme.spacing(1, 0),
         })}
@@ -64,19 +70,8 @@ export const StyledTitle = forwardRef<
     </Typography>
 ));
 
-export const StyledAddonParameterContainer = styled('div')({
-    marginTop: '25px',
-});
-
-export const StyledConfigurationSection = styled('section')(({ theme }) => ({
-    borderWidth: '1px',
-    borderStyle: 'solid',
-    borderColor: theme.palette.neutral.border,
-    borderRadius: `${theme.shape.borderRadiusLarge}px`,
-    padding: theme.spacing(3),
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(3),
+export const StyledAddonParameterContainer = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(2),
 }));
 
 export const StyledRaisedSection: FC<ComponentProps<typeof Paper>> = ({

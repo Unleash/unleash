@@ -36,6 +36,7 @@ import {
     type ProjectApplicationsSchema,
 } from '../../openapi/spec/project-applications-schema.js';
 import { projectApplicationsQueryParameters } from '../../openapi/spec/project-applications-query-parameters.js';
+import { projectsViewQueryParameter } from '../../openapi/spec/projects-view-query-parameter.js';
 import { normalizeQueryParams } from '../feature-search/search-utils.js';
 import ProjectInsightsController from '../project-insights/project-insights-controller.js';
 import FeatureLifecycleController from '../feature-lifecycle/feature-lifecycle-controller.js';
@@ -47,6 +48,7 @@ import {
 import ProjectStatusController from '../project-status/project-status-controller.js';
 import FeatureLinkController from '../feature-links/feature-link-controller.js';
 import { ContextController } from '../context/context.js';
+import { ProjectAddonController } from '../../routes/admin-api/project/addon.js';
 
 export default class ProjectController extends Controller {
     private projectService: ProjectService;
@@ -86,6 +88,7 @@ export default class ProjectController extends Controller {
                                 type: 'boolean',
                             },
                         },
+                        projectsViewQueryParameter,
                     ],
                     responses: {
                         200: createResponseSchema('projectsSchema'),
@@ -221,6 +224,7 @@ export default class ProjectController extends Controller {
             '/',
             new ContextController(config, services, 'project').router,
         );
+        this.use('/', new ProjectAddonController(config, services).router);
     }
 
     async getProjects(
@@ -228,12 +232,24 @@ export default class ProjectController extends Controller {
         res: Response<ProjectsSchema>,
     ): Promise<void> {
         const { user } = req;
-        const projects = await this.projectService.getProjects(
-            {
-                id: 'default',
-            },
-            user.id,
-        );
+        const { view } = req.query;
+        const query = { id: 'default' };
+
+        if (view === 'core') {
+            const projects = await this.projectService.getProjectsCore(
+                query,
+                user.id,
+            );
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                projectsSchema.$id,
+                { version: 1, projects: serializeDates(projects) },
+            );
+            return;
+        }
+
+        const projects = await this.projectService.getProjects(query, user.id);
 
         const projectsWithOwners =
             await this.projectService.addOwnersToProjects(projects);

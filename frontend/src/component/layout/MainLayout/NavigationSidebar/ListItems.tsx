@@ -17,7 +17,6 @@ import SignOutIcon from '@mui/icons-material/ExitToApp';
 import type { Theme } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import type { NavigationMode } from './NavigationMode.tsx';
-import { NewFeatureBadge } from 'component/layout/components/NewFeatureBadge/NewFeatureBadge.tsx';
 
 const listItemButtonStyle = (theme: Theme) => ({
     borderRadius: theme.spacing(0.5),
@@ -194,18 +193,8 @@ export const MenuListAccordion: FC<{
     children?: ReactNode;
     mode?: NavigationMode;
     icon?: ReactNode;
-    hasNewChild?: boolean;
     active?: boolean;
-}> = ({
-    title,
-    expanded,
-    mode,
-    icon,
-    onExpandChange,
-    children,
-    active,
-    hasNewChild,
-}) => {
+}> = ({ title, expanded, mode, icon, onExpandChange, children, active }) => {
     return (
         <ListItem disablePadding sx={{ display: 'flex' }}>
             <StyledAccordion
@@ -245,9 +234,6 @@ export const MenuListAccordion: FC<{
                                     <CappedText bold={active}>
                                         {title}
                                     </CappedText>
-                                    {hasNewChild && !expanded ? (
-                                        <NewFeatureBadge />
-                                    ) : null}
                                 </StyledListItemText>
                             </>
                         )}

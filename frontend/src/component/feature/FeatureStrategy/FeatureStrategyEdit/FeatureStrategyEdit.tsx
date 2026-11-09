@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router';
 import useToast from 'hooks/useToast';
 import type {
     IFeatureStrategy,
-    IFeatureStrategyPayload,
     IStrategy,
     StrategyFormState,
 } from 'interfaces/strategy';
@@ -25,69 +24,28 @@ import type {
     IFeatureEnvironment,
     IFeatureToggle,
 } from 'interfaces/featureToggle';
-import { comparisonModerator } from '../featureStrategy.utils';
+import {
+    strategyComparisonModerator,
+    createStrategyPayload,
+} from '../featureStrategy.utils';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
+import { editStrategyTracking as createEditStrategyTracking } from '../strategyActionsTracking.ts';
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
-import {
-    getChangeRequestConflictCreatedData,
-    getChangeRequestConflictCreatedDataFromScheduleData,
-} from './change-request-conflict-data.ts';
+import { changeRequestsUpdatingStrategy } from './changeRequestsUpdatingStrategy.ts';
 import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
+import { summarizeStrategy } from '../summarizeStrategy.ts';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy.ts';
 import { refreshFeatureChangeRequests } from 'utils/refreshAllPendingChangeRequests.ts';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
-
-const useTitleTracking = () => {
-    const [previousTitle, setPreviousTitle] = useState<string>('');
-    const { trackEvent } = useEventTracker();
-
-    const trackTitle = (title: string = '') => {
-        // don't expose the title, just if it was added, removed, or edited
-        if (title === previousTitle) {
-            trackEvent('strategyTitle', {
-                props: {
-                    action: 'none',
-                    on: 'edit',
-                },
-            });
-        }
-        if (previousTitle === '' && title !== '') {
-            trackEvent('strategyTitle', {
-                props: {
-                    action: 'added',
-                    on: 'edit',
-                },
-            });
-        }
-        if (previousTitle !== '' && title === '') {
-            trackEvent('strategyTitle', {
-                props: {
-                    action: 'removed',
-                    on: 'edit',
-                },
-            });
-        }
-        if (previousTitle !== '' && title !== '' && title !== previousTitle) {
-            trackEvent('strategyTitle', {
-                props: {
-                    action: 'edited',
-                    on: 'edit',
-                },
-            });
-        }
-    };
-
-    return {
-        setPreviousTitle,
-        trackTitle,
-    };
-};
+import type { UpdateFeatureStrategySchema } from 'openapi/index.ts';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { withIncompleteConstraintsDiscarded } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 
 const addIdSymbolToConstraints = (strategy?: IFeatureStrategy) => {
     if (!strategy) return;
@@ -98,10 +56,13 @@ const addIdSymbolToConstraints = (strategy?: IFeatureStrategy) => {
 };
 
 export const FeatureStrategyEdit = () => {
+    const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const environmentId = useRequiredQueryParam('environmentId');
     const strategyId = useRequiredQueryParam('strategyId');
+    const [previousStrategyState, setPreviousStrategyState] =
+        useState<StrategyFormState | null>(null);
 
     const [strategy, setStrategy] = useState<StrategyFormState>({
         name: '', // populated in the effect
@@ -125,7 +86,6 @@ export const FeatureStrategyEdit = () => {
     const { refetch: refetchChangeRequests, data: pendingChangeRequests } =
         usePendingChangeRequests(projectId);
     const featureName = useOptionalPathParam('featureId');
-    const { setPreviousTitle } = useTitleTracking();
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
 
@@ -144,7 +104,7 @@ export const FeatureStrategyEdit = () => {
             {
                 afterSubmitAction: refetchFeature,
             },
-            comparisonModerator,
+            strategyComparisonModerator(environmentId, strategyId),
         );
 
     useEffect(() => {
@@ -154,36 +114,20 @@ export const FeatureStrategyEdit = () => {
         }
     }, [feature]);
 
-    const { trackEvent } = useEventTracker();
-    const { changeRequests: scheduledChangeRequestThatUseStrategy } =
+    const viaChangeRequest = isChangeRequestConfigured(environmentId);
+    const editStrategyTracking = createEditStrategyTracking({
+        strategyScope,
+        viaChangeRequest,
+    });
+    const trackEditStrategy = useTracking(editStrategyTracking);
+    const { changeRequests: scheduledChangeRequestsThatUseStrategy } =
         useScheduledChangeRequestsWithStrategy(projectId, strategyId);
-
-    const pendingCrsUsingThisStrategy = getChangeRequestConflictCreatedData(
-        pendingChangeRequests,
-        featureId,
-        strategyId,
-        uiConfig,
-    );
-
-    const scheduledCrsUsingThisStrategy =
-        getChangeRequestConflictCreatedDataFromScheduleData(
-            scheduledChangeRequestThatUseStrategy,
-            uiConfig,
-        );
-
-    const emitConflictsCreatedEvents = (): void =>
-        [
-            ...pendingCrsUsingThisStrategy,
-            ...scheduledCrsUsingThisStrategy,
-        ].forEach((data) => {
-            trackEvent('change_request', {
-                props: {
-                    ...data,
-                    action: 'edit-strategy',
-                    eventType: 'conflict-created',
-                },
-            });
-        });
+    const conflictingChangeRequestCount =
+        changeRequestsUpdatingStrategy(
+            pendingChangeRequests,
+            featureId,
+            strategyId,
+        ).length + (scheduledChangeRequestsThatUseStrategy?.length ?? 0);
 
     useEffect(() => {
         const environmentConfig: IFeatureEnvironment | undefined =
@@ -213,14 +157,14 @@ export const FeatureStrategyEdit = () => {
 
         const constraintsWithId = addIdSymbolToConstraints(savedStrategy);
 
-        const formattedStrategy = {
+        const formattedStrategy: StrategyFormState = {
             ...savedStrategy,
             constraints: constraintsWithId,
-            name: savedStrategy?.name || savedStrategy?.strategyName,
+            name: savedStrategy?.name || savedStrategy?.strategyName || '',
         };
 
         setStrategy((prev) => ({ ...prev, ...formattedStrategy }));
-        setPreviousTitle(savedStrategy?.title || '');
+        setPreviousStrategyState(formattedStrategy);
     }, [strategyId, data]);
 
     useEffect(() => {
@@ -245,9 +189,13 @@ export const FeatureStrategyEdit = () => {
         });
     }, [defaultStickiness, strategyDefinition?.name]);
 
-    const payload = createStrategyPayload(strategy);
+    const payload = createStrategyPayload(
+        singlePageStrategyForm
+            ? withIncompleteConstraintsDiscarded(strategy)
+            : strategy,
+    );
 
-    const onStrategyEdit = async (payload: IFeatureStrategyPayload) => {
+    const onStrategyEdit = async (payload: UpdateFeatureStrategySchema) => {
         const updateFn =
             strategyScope === 'milestone'
                 ? updateMilestoneStrategyOnFeature
@@ -267,7 +215,9 @@ export const FeatureStrategyEdit = () => {
         });
     };
 
-    const onStrategyRequestEdit = async (payload: IFeatureStrategyPayload) => {
+    const onStrategyRequestEdit = async (
+        payload: UpdateFeatureStrategySchema,
+    ) => {
         await addChange(projectId, environmentId, {
             action:
                 strategyScope === 'milestone'
@@ -290,21 +240,18 @@ export const FeatureStrategyEdit = () => {
     };
 
     const onSubmit = async () => {
-        if (strategyScope === 'milestone') {
-            trackEvent('edit-milestone-strategy', {
-                props: {
-                    eventType: 'form submitted',
-                },
-            });
-        }
-
         try {
-            if (isChangeRequestConfigured(environmentId)) {
-                await onStrategyRequestEdit(payload);
-            } else {
-                await onStrategyEdit(payload);
-            }
-            emitConflictsCreatedEvents();
+            await trackEditStrategy.mutation(
+                () =>
+                    viaChangeRequest
+                        ? onStrategyRequestEdit(payload)
+                        : onStrategyEdit(payload),
+                {
+                    previous: summarizeStrategy(previousStrategyState),
+                    current: summarizeStrategy(strategy),
+                    conflictingChangeRequestCount,
+                },
+            );
             refetchFeature();
             navigate(formatFeaturePath(projectId, featureId));
         } catch (error: unknown) {
@@ -320,7 +267,8 @@ export const FeatureStrategyEdit = () => {
 
     return (
         <FormTemplate
-            modal
+            layout='modal'
+            fitContainerHeight={singlePageStrategyForm}
             disablePadding
             description={featureStrategyHelp}
             documentationLink={featureStrategyDocsLink}
@@ -347,24 +295,13 @@ export const FeatureStrategyEdit = () => {
                 loading={loading}
                 permission={UPDATE_FEATURE_STRATEGY}
                 errors={errors}
-                changeRequestsEnabled={isChangeRequestConfigured(environmentId)}
+                changeRequestsEnabled={viaChangeRequest}
+                tracking={editStrategyTracking}
             />
             {staleDataNotification}
         </FormTemplate>
     );
 };
-
-export const createStrategyPayload = (
-    strategy: Partial<IFeatureStrategy>,
-): IFeatureStrategyPayload => ({
-    name: strategy.name,
-    title: strategy.title,
-    constraints: strategy.constraints ?? [],
-    parameters: strategy.parameters ?? {},
-    variants: strategy.variants ?? [],
-    segments: strategy.segments ?? [],
-    disabled: strategy.disabled ?? false,
-});
 
 export const formatFeaturePath = (
     projectId: string,
@@ -392,7 +329,7 @@ type FormatUpdateStrategyApiCodeProps = {
     featureId: string;
     environmentId: string;
     strategyId: string;
-    strategy: Partial<IFeatureStrategy>;
+    strategy: UpdateFeatureStrategySchema;
     strategyDefinition: IStrategy;
     unleashUrl?: string;
 };

@@ -12,6 +12,7 @@ import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -48,6 +49,10 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
     const { setToastData, setToastApiError } = useToast();
     const { defaultStickiness } = useDefaultProjectSettings(id);
     const { trackEvent } = useEventTracker();
+    const trackEditProject = useTracking({
+        event: 'project-settings',
+        type: 'edit-project',
+    });
     const {
         projectId,
         projectName,
@@ -55,13 +60,10 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
         projectStickiness,
         featureLimit,
         setFeatureLimit,
-        setProjectId,
         setProjectName,
         setProjectDesc,
         setProjectStickiness,
         getEditProjectPayload,
-        clearErrors,
-        validateProjectId,
         validateName,
         errors,
     } = useProjectForm(
@@ -94,22 +96,33 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
         e.preventDefault();
         const payload = getEditProjectPayload();
 
+        const changedProps = {
+            nameChanged: projectName !== project.name,
+            descriptionChanged: projectDesc !== (project.description || ''),
+            stickinessChanged: projectStickiness !== defaultStickiness,
+            flagLimitChanged: featureLimit !== String(project.featureLimit),
+        };
         const validName = validateName();
 
         if (validName) {
             try {
-                await editProject(id, payload);
+                await trackEditProject.mutation(
+                    () => editProject(id, payload),
+                    changedProps,
+                );
                 refetch();
                 setToastData({
                     text: 'Project information updated',
                     type: 'success',
                 });
                 if (projectStickiness !== DEFAULT_PROJECT_STICKINESS) {
-                    trackEvent('project_stickiness_set');
+                    trackEvent('project-stickiness-set');
                 }
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
+        } else {
+            trackEditProject.validationFailed(changedProps);
         }
     };
 
@@ -123,14 +136,13 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
                 documentationLinkLabel='Projects documentation'
                 formatApiCode={formatProjectApiCode}
                 compactPadding
-                compact
+                layout='compact'
             >
                 <StyledFormContainer>
                     <ProjectForm
                         errors={errors}
                         handleSubmit={handleEditProject}
                         projectId={projectId}
-                        setProjectId={setProjectId}
                         projectName={projectName}
                         setProjectName={setProjectName}
                         projectStickiness={projectStickiness}
@@ -139,9 +151,6 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
                         featureLimit={featureLimit}
                         projectDesc={projectDesc}
                         setProjectDesc={setProjectDesc}
-                        mode='Edit'
-                        clearErrors={clearErrors}
-                        validateProjectId={validateProjectId}
                     >
                         <PermissionButton
                             type='submit'

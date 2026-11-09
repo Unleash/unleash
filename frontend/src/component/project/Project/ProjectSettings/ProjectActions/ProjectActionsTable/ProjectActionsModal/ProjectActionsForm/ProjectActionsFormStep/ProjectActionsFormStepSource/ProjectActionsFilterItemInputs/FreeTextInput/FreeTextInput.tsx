@@ -27,7 +27,7 @@ const useStyles = makeStyles()((theme) => ({
     },
     inputContainer: {
         display: 'flex',
-        alignItems: 'center',
+        alignItems: 'flex-end',
         [theme.breakpoints.down(700)]: {
             flexDirection: 'column',
             alignItems: 'flex-start',

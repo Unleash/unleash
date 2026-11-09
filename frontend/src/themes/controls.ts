@@ -1,5 +1,8 @@
 import type { Components, Theme } from '@mui/material/styles';
-import { focusOutline } from './themeStyles';
+// noinspection ES6UnusedImports
+import type {} from '@mui/x-date-pickers/themeAugmentation'; // pulls the MuiPickers* keys into the Components<Theme> type
+import { focusOutline, switchBaseIconFocusOutlineOffset } from './themeStyles';
+import { IS_DEV } from 'constants/env';
 
 /**
  * Design system v2 — shared sizing and behavior for controls
@@ -32,6 +35,12 @@ const controlIconSizes: Record<ControlSize, number> = {
     medium: 20,
     large: 24,
 };
+
+const isControlSize = (size: unknown): size is ControlSize =>
+    size === 'small' || size === 'medium' || size === 'large';
+
+const sizeOf = (size: unknown): ControlSize =>
+    isControlSize(size) ? size : 'medium';
 
 /**
  * Button size definitions. Spread into `MuiButton.styleOverrides`
@@ -151,10 +160,10 @@ export const subtleOutlinedButton = (theme: Theme) => ({
         color: theme.palette.primary.main,
         borderColor: theme.palette.divider,
         '&:hover': {
-            // border picks up the primary purple; background uses the light
-            // purple token (secondary.light = purple[50] in light mode)
+            // border picks up the primary purple; background uses the primary
+            // tinted-container token (purple[50] in light mode)
             borderColor: theme.palette.primary.main,
-            backgroundColor: theme.palette.secondary.light,
+            backgroundColor: theme.palette.primary.container,
         },
         // the primary-colored text above out-specifies MUI's disabled color,
         // so restore the disabled text color explicitly
@@ -163,6 +172,95 @@ export const subtleOutlinedButton = (theme: Theme) => ({
         },
     },
 });
+
+/**
+ * Input/select sizing on the shared control scale. Used by the
+ * `MuiOutlinedInput` override below; the dark theme merges it into its
+ * own `MuiOutlinedInput` override (which also sets border colors).
+ */
+export const outlinedInputSizing = (ownerState?: { size?: unknown }) => {
+    const size = sizeOf(ownerState?.size);
+    const height = controlHeights[size];
+    const paddingX = controlPaddingX[size];
+    return {
+        fontSize: controlFontSizes[size],
+        // Fixed control heights. Multiline fields and chip-filled
+        // Autocomplete roots grow, bounded by minHeight instead.
+        '&:not(.MuiInputBase-multiline):not(.MuiAutocomplete-inputRoot)': {
+            height,
+        },
+        '&.MuiAutocomplete-inputRoot': {
+            minHeight: height,
+            paddingTop: 0,
+            paddingBottom: 0,
+            // center the value/tags vertically; without this the zeroed
+            // padding leaves the content stuck to the top of the field
+            alignItems: 'center',
+        },
+        '&:not(.MuiInputBase-multiline) .MuiOutlinedInput-input': {
+            paddingTop: 0,
+            paddingBottom: 0,
+            paddingLeft: paddingX,
+        },
+        // Multiline fields: match the single-line horizontal padding (MUI's
+        // stock multiline padding is different and looks inconsistent), and
+        // read as a distinct box at least two lines tall. The min-height acts
+        // as a floor; fields with explicit rows/minRows still grow beyond it.
+        '&.MuiInputBase-multiline': {
+            paddingTop: 8,
+            paddingBottom: 8,
+            paddingLeft: paddingX,
+            paddingRight: paddingX,
+        },
+        // Floor only: short multiline fields read as a ~2-line box. Fields
+        // with explicit minRows/rows are already taller, so this is a no-op for
+        // them. CRITICAL: exclude the aria-hidden shadow textarea MUI uses to
+        // measure row height — styling it inflates the measured row height and
+        // multiplies the height of minRows fields.
+        '&.MuiInputBase-multiline .MuiInputBase-input:not([aria-hidden])': {
+            minHeight: '4rem',
+        },
+        '& .MuiSelect-select': {
+            display: 'flex',
+            alignItems: 'center',
+            // Fill the field height so the whole control (not just the text) is
+            // the clickable target and shows the pointer cursor. MUI puts the
+            // click handler + `cursor: pointer` on `.MuiSelect-select`; with the
+            // zeroed vertical padding above it would otherwise sit shorter than
+            // the fixed-height field, leaving dead strips top and bottom.
+            height: '100%',
+            boxSizing: 'border-box',
+        },
+        '& .MuiSelect-icon': {
+            fontSize: controlIconSizes[size],
+        },
+    };
+};
+
+/**
+ * Control-scale sizing for DateField/DateTimeField (MuiPickersOutlinedInput/MuiPickersInputBase).
+ */
+export const pickersInputSizing = (ownerState?: { size?: unknown }) => {
+    const size = sizeOf(ownerState?.size);
+    return {
+        '& .MuiPickersOutlinedInput-root': {
+            height: controlHeights[size],
+            fontSize: controlFontSizes[size],
+            padding: `0 ${controlPaddingX[size]}px`,
+        },
+        '& .MuiPickersInputBase-sectionsContainer': {
+            padding: 0,
+            alignItems: 'center',
+        },
+    };
+};
+
+const pickersCalendarCell = {
+    width: 28,
+    height: 28,
+    margin: '1px',
+    fontSize: '0.75rem',
+};
 
 /**
  * Component overrides shared verbatim by the light and dark themes.
@@ -181,6 +279,168 @@ export const controlOverrides: Components<Theme> = {
             root: ({ theme }) => ({
                 '&.Mui-focusVisible': focusOutline(theme),
             }),
+        },
+    },
+
+    MuiRadio: {
+        styleOverrides: {
+            root: {
+                '&.Mui-focusVisible': switchBaseIconFocusOutlineOffset,
+            },
+        },
+    },
+    MuiCheckbox: {
+        styleOverrides: {
+            root: ({ theme }) => ({
+                '&.Mui-focusVisible': {
+                    ...switchBaseIconFocusOutlineOffset,
+                    borderRadius: theme.spacing(2),
+                },
+            }),
+        },
+    },
+
+    // Unsized fields keep today's visual weight (old `small` ≈ new `large`).
+    MuiTextField: {
+        defaultProps: {
+            size: 'large',
+        },
+    },
+
+    MuiOutlinedInput: {
+        styleOverrides: {
+            root: ({ ownerState }) => outlinedInputSizing(ownerState),
+        },
+    },
+
+    // Vertically center the value/tags in Autocompletes. MUI applies an
+    // asymmetric paddingTop to its inputRoot here (outranking a rule coming
+    // from MuiOutlinedInput), which leaves a single selected value sitting
+    // high in the field. Override it at MUI's own injection point.
+    MuiAutocomplete: {
+        styleOverrides: {
+            inputRoot: {
+                alignItems: 'center',
+                paddingTop: 0,
+                paddingBottom: 0,
+                // summary-style selects (no chips): keep the value + input on
+                // one line instead of wrapping the input below a long value
+                '&:not(:has(.MuiChip-root))': {
+                    flexWrap: 'nowrap',
+                },
+                // chip pickers: give symmetric vertical padding so the top/
+                // bottom spacing around the chips stays consistent when they
+                // wrap to multiple lines (otherwise the zeroed padding leaves
+                // wrapped rows flush to the top while a single row reads as
+                // centered). Pairs with the chips' own 3px margin.
+                '&:has(.MuiChip-root)': {
+                    paddingTop: 3,
+                    paddingBottom: 3,
+                },
+            },
+        },
+    },
+
+    // Helper/error text sits flush with the field's left edge. MUI's default
+    // "contained" variant indents it 14px, which breaks the left-alignment
+    // rhythm with the field above it and the label.
+    MuiFormHelperText: {
+        styleOverrides: {
+            contained: {
+                marginLeft: 0,
+                marginRight: 0,
+            },
+        },
+    },
+
+    // Matches the compact control scale used everywhere else (small/medium/
+    // large), instead of MUI's default 36px day cells. The overflow:visible
+    // overrides undo MUI's animation-clip, which with no slack left also cuts
+    // off focus rings flush against the top edge.
+    MuiDateCalendar: {
+        styleOverrides: {
+            root: {
+                height: 'auto',
+                minHeight: 'auto',
+            },
+        },
+    },
+    MuiPickersCalendarHeader: {
+        styleOverrides: {
+            root: ({ theme }) => ({
+                paddingLeft: theme.spacing(1.5),
+                paddingRight: theme.spacing(1),
+                minHeight: 32,
+            }),
+            labelContainer: {
+                overflow: 'visible',
+            },
+        },
+    },
+    MuiDayCalendar: {
+        styleOverrides: {
+            slideTransition: {
+                minHeight: 6 * 30 + 6,
+            },
+            monthContainer: {
+                overflow: 'visible',
+                paddingTop: '3px',
+                paddingBottom: '3px',
+            },
+            header: ({ theme }) => ({
+                height: 30,
+                margin: 0,
+                justifyContent: 'space-between',
+                paddingLeft: theme.spacing(1),
+                paddingRight: theme.spacing(1),
+            }),
+            weekContainer: ({ theme }) => ({
+                height: 30,
+                margin: 0,
+                justifyContent: 'space-between',
+                paddingLeft: theme.spacing(1),
+                paddingRight: theme.spacing(1),
+            }),
+            weekDayLabel: pickersCalendarCell,
+            weekNumberLabel: pickersCalendarCell,
+            weekNumber: {
+                ...pickersCalendarCell,
+                fontWeight: 'bold',
+            },
+        },
+    },
+    MuiPickersDay: {
+        styleOverrides: {
+            root: pickersCalendarCell,
+        },
+    },
+
+    MuiInputLabel: {
+        styleOverrides: {
+            root: ({ ownerState }) => {
+                const size = sizeOf(ownerState?.size);
+                const height = controlHeights[size];
+                const paddingX = controlPaddingX[size];
+                // Approx. rendered line height (px) of the resting label across
+                // the control font sizes (12–14px). Used only to vertically
+                // center the non-floating label inside the (shorter) field.
+                const labelLineHeight = 20;
+                return {
+                    // Center the resting (non-floating) label in the shorter field.
+                    '&.MuiInputLabel-outlined:not(.MuiInputLabel-shrink)': {
+                        fontSize: controlFontSizes[size],
+                        transform: `translate(${paddingX}px, ${Math.round((height - labelLineHeight) / 2)}px) scale(1)`,
+                    },
+                };
+            },
+        },
+    },
+
+    // The dev toolbar lives outside any Modal's DOM, so Modal's focus trap otherwise steals focus back from it.
+    // Applies to Dialog/Popover/Menu/Drawer as well - they all render Modal internally.
+    MuiModal: {
+        defaultProps: {
+            disableEnforceFocus: IS_DEV,
         },
     },
 };

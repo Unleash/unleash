@@ -3,13 +3,11 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSearchResponseSchemaCreatedBy } from './featureSearchResponseSchemaCreatedBy';
-import type { FeatureSearchResponseSchemaDependencyType } from './featureSearchResponseSchemaDependencyType';
-import type { FeatureSearchEnvironmentSchema } from './featureSearchEnvironmentSchema';
-import type { FeatureSearchResponseSchemaLifecycle } from './featureSearchResponseSchemaLifecycle';
-import type { FeatureSearchResponseSchemaStrategiesItem } from './featureSearchResponseSchemaStrategiesItem';
-import type { TagSchema } from './tagSchema';
-import type { VariantSchema } from './variantSchema';
+import type { FeatureSearchEnvironmentSchema } from './featureSearchEnvironmentSchema.ts';
+import type { FeatureSearchResponseSchemaCreatedBy } from './featureSearchResponseSchemaCreatedBy.ts';
+import type { FeatureSearchResponseSchemaDependencyType } from './featureSearchResponseSchemaDependencyType.ts';
+import type { FeatureSearchResponseSchemaLifecycle } from './featureSearchResponseSchemaLifecycle.ts';
+import type { TagSchema } from './tagSchema.ts';
 
 /**
  * A feature flag definition
@@ -43,12 +41,6 @@ export interface FeatureSearchResponseSchema {
     favorite: boolean;
     /** `true` if the impression data collection is enabled for the feature, otherwise `false`. */
     impressionData: boolean;
-    /**
-     * The date when metrics where last collected for the feature. This field was deprecated in v5 and will be removed in a future release, use the one in featureEnvironmentSchema
-     * @deprecated
-     * @nullable
-     */
-    lastSeenAt?: string | null;
     /** Current lifecycle stage of the feature */
     lifecycle?: FeatureSearchResponseSchemaLifecycle;
     /** Unique feature name */
@@ -60,20 +52,10 @@ export interface FeatureSearchResponseSchema {
     /** `true` if the feature is stale based on the age and feature type, otherwise `false`. */
     stale: boolean;
     /**
-     * This is a legacy field that was deprecated in v5
-     * @deprecated
-     */
-    strategies?: FeatureSearchResponseSchemaStrategiesItem[];
-    /**
      * The list of feature tags
      * @nullable
      */
     tags?: TagSchema[] | null;
     /** Type of the flag e.g. experiment, kill-switch, release, operational, permission */
     type: string;
-    /**
-     * The list of feature variants. This field was deprecated in v5
-     * @deprecated
-     */
-    variants?: VariantSchema[];
 }

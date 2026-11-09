@@ -94,24 +94,24 @@ export class FrontendApiService {
         const definitions = client.getFeatureToggleDefinitions() || [];
         const sessionId =
             context.sessionId || crypto.randomBytes(18).toString('hex');
+        const evaluationContext = {
+            ...context,
+            sessionId,
+        };
 
-        const resultDefinitions = definitions
-            .filter((feature) => {
-                const enabled = client.isEnabled(feature.name, {
-                    ...context,
-                    sessionId,
+        const resultDefinitions: FrontendApiFeatureSchema[] = [];
+        for (const feature of definitions) {
+            const variant = client.getVariant(feature.name, evaluationContext);
+            if (variant.feature_enabled) {
+                resultDefinitions.push({
+                    name: feature.name,
+                    enabled: Boolean(feature.enabled),
+                    variant,
+                    impressionData: Boolean(feature.impressionData),
                 });
-                return enabled;
-            })
-            .map((feature) => ({
-                name: feature.name,
-                enabled: Boolean(feature.enabled),
-                variant: client.getVariant(feature.name, {
-                    ...context,
-                    sessionId,
-                }),
-                impressionData: Boolean(feature.impressionData),
-            }));
+            }
+        }
+
         return resultDefinitions;
     }
 
@@ -127,6 +127,8 @@ export class FrontendApiService {
         metrics: ClientMetricsSchema,
         ip: string,
         sdkVersion?: string | string[],
+        sdkFlavor?: string | string[],
+        sdkFlavorVersion?: string | string[],
     ): Promise<void> {
         FrontendApiService.assertExpectedTokenType(token);
 
@@ -135,10 +137,12 @@ export class FrontendApiService {
                 token as ApiUser,
             );
 
+        metrics = token.appName
+            ? { ...metrics, appName: token.appName }
+            : metrics;
+
         await this.services.clientMetricsServiceV2.registerClientMetrics(
-            {
-                ...metrics,
-            },
+            metrics,
             ip,
             environment,
         );
@@ -164,6 +168,12 @@ export class FrontendApiService {
                 sdkType: 'frontend' as const,
                 environment: environment,
                 projects: this.resolveProject(token),
+                sdkFlavor:
+                    typeof sdkFlavor === 'string' ? sdkFlavor : undefined,
+                sdkFlavorVersion:
+                    typeof sdkFlavorVersion === 'string'
+                        ? sdkFlavorVersion
+                        : undefined,
             };
             this.services.clientInstanceService.registerFrontendClient(client);
         }
@@ -209,12 +219,12 @@ export class FrontendApiService {
         return client;
     }
 
-    async deleteClientForFrontendApiToken(secret: string): Promise<void> {
-        const clientPromise = this.clients.get(secret);
+    async deleteClientForFrontendApiToken(tokenKey: string): Promise<void> {
+        const clientPromise = this.clients.get(tokenKey);
         if (clientPromise) {
             const client = await clientPromise;
             client.destroy();
-            this.clients.delete(secret);
+            this.clients.delete(tokenKey);
         }
     }
 

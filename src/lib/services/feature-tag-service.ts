@@ -1,3 +1,4 @@
+import { auditEventFields } from '../util/index.js';
 import NotFoundError from '../error/notfound-error.js';
 import {
     FEATURE_TAGGED,
@@ -20,7 +21,11 @@ import {
     type IUnleashConfig,
     FeatureTaggedEvent,
 } from '../types/index.js';
-import { BadDataError, FOREIGN_KEY_VIOLATION } from '../../lib/error/index.js';
+import {
+    BadDataError,
+    FOREIGN_KEY_VIOLATION,
+    UNIQUE_CONSTRAINT_VIOLATION,
+} from '../../lib/error/index.js';
 import type EventService from '../features/events/event-service.js';
 import type { ITag } from '../tags/index.js';
 import type { Logger } from '../logger.js';
@@ -94,6 +99,7 @@ class FeatureTagService {
     }
 
     async updateTags(
+        projectId: string,
         featureNames: string[],
         addedTags: ITag[],
         removedTags: ITag[],
@@ -101,6 +107,14 @@ class FeatureTagService {
     ): Promise<void> {
         const featureToggles =
             await this.featureToggleStore.getAllByNames(featureNames);
+        const featureTogglesBelongToProject = featureToggles.every(
+            (toggle) => toggle.project === projectId,
+        );
+        if (!featureTogglesBelongToProject) {
+            throw new BadDataError(
+                'Tried to change tags of feature not belonging to project',
+            );
+        }
         await Promise.all(
             addedTags.map((tag) => this.createTagIfNeeded(tag, auditUser)),
         );
@@ -130,12 +144,10 @@ class FeatureTagService {
         const creationEvents = featureToggles.flatMap((featureToggle) =>
             addedTags.map((addedTag) => ({
                 type: FEATURE_TAGGED,
-                createdBy: auditUser.username,
                 featureName: featureToggle.name,
                 project: featureToggle.project,
+                ...auditEventFields(auditUser),
                 data: addedTag,
-                createdByUserId: auditUser.id,
-                ip: auditUser.ip,
             })),
         );
 
@@ -144,10 +156,8 @@ class FeatureTagService {
                 type: FEATURE_UNTAGGED,
                 featureName: featureToggle.name,
                 project: featureToggle.project,
+                ...auditEventFields(auditUser),
                 preData: removedTag,
-                createdBy: auditUser.username,
-                createdByUserId: auditUser.id,
-                ip: auditUser.ip,
             })),
         );
 
@@ -166,9 +176,7 @@ class FeatureTagService {
                     await this.tagStore.createTag(tag);
                     await this.eventService.storeEvent({
                         type: TAG_CREATED,
-                        createdBy: auditUser.username,
-                        createdByUserId: auditUser.id,
-                        ip: auditUser.ip,
+                        ...auditEventFields(auditUser),
                         data: tag,
                     });
                 } catch (err) {
@@ -176,6 +184,9 @@ class FeatureTagService {
                         throw new BadDataError(
                             `Tag type '${tag.type}' does not exist`,
                         );
+                    }
+                    if (err.code !== UNIQUE_CONSTRAINT_VIOLATION) {
+                        throw err;
                     }
                 }
             }
@@ -198,9 +209,7 @@ class FeatureTagService {
         await this.featureTagStore.untagFeature(featureName, tag);
         await this.eventService.storeEvent({
             type: FEATURE_UNTAGGED,
-            createdBy: auditUser.username,
-            createdByUserId: auditUser.id,
-            ip: auditUser.ip,
+            ...auditEventFields(auditUser),
             featureName,
             project: featureToggle.project,
             preData: tag,

@@ -58,6 +58,7 @@ const StyledInputSecondaryDescription = styled('p')(({ theme }) => ({
 const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
     maxWidth: theme.spacing(50),
+    marginBottom: theme.spacing(2),
 }));
 
 const StyledRoleSelect = styled(RoleSelect)(({ theme }) => ({
@@ -268,7 +269,7 @@ export const ServiceAccountModal = ({
         >
             <FormTemplate
                 loading={loading}
-                modal
+                layout='modal'
                 title={editing ? 'Edit service account' : 'New service account'}
                 description='A service account is a special type of account that can only be used to authenticate with the Unleash API. Service accounts can be used to automate tasks.'
                 documentationLink='https://docs.getunleash.io/concepts/service-accounts'
@@ -277,9 +278,6 @@ export const ServiceAccountModal = ({
             >
                 <StyledForm onSubmit={handleSubmit}>
                     <div>
-                        <StyledInputDescription>
-                            What is your new service account name?
-                        </StyledInputDescription>
                         <StyledInput
                             autoFocus
                             label='Service account name'
@@ -289,9 +287,6 @@ export const ServiceAccountModal = ({
                             autoComplete='off'
                             required
                         />
-                        <StyledInputDescription>
-                            What is your new service account username?
-                        </StyledInputDescription>
                         <StyledInput
                             label='Service account username'
                             error={Boolean(errors.username)}
@@ -302,13 +297,15 @@ export const ServiceAccountModal = ({
                             required
                             disabled={editing}
                         />
-                        <StyledInputDescription>
-                            What is your service account allowed to do?
-                        </StyledInputDescription>
                         <StyledRoleSelect
                             roles={roles}
                             value={rootRole}
                             setValue={setRootRole}
+                            description={
+                                <StyledInputDescription>
+                                    What is your service account allowed to do?
+                                </StyledInputDescription>
+                            }
                             required
                         />
                         <ConditionallyRender
@@ -390,7 +387,9 @@ export const ServiceAccountModal = ({
                             }
                             elseShow={
                                 <>
-                                    <StyledInputDescription>
+                                    <StyledInputDescription
+                                        sx={{ marginTop: 4 }}
+                                    >
                                         Service account tokens
                                     </StyledInputDescription>
                                     <ServiceAccountTokens

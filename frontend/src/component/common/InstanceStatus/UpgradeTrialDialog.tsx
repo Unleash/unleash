@@ -18,8 +18,8 @@ const StyledBillingInformation = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusMedium,
     padding: theme.spacing(1.5, 3, 2.5, 3),
-    border: `1px solid ${theme.palette.secondary.border}`,
-    backgroundColor: theme.palette.secondary.light,
+    border: `1px solid ${theme.palette.primary.containerBorder}`,
+    backgroundColor: theme.palette.primary.container,
 }));
 
 const StyledPrice = styled('span')(({ theme }) => ({
@@ -64,7 +64,7 @@ export const UpgradeTrialDialog = ({
 
     useEffect(() => {
         if (dialogOpen) {
-            trackEvent('upgrade_trial_dialog', {
+            trackEvent('upgrade-trial-dialog', {
                 props: {
                     eventType: 'open',
                     userType: isAdmin ? 'admin' : 'non-admin',
@@ -74,7 +74,7 @@ export const UpgradeTrialDialog = ({
     }, [dialogOpen, isAdmin, trackEvent]);
 
     const onClickUpgrade = () => {
-        trackEvent('upgrade_trial_dialog', {
+        trackEvent('upgrade-trial-dialog', {
             props: {
                 eventType: 'upgrade_click',
                 userType: isAdmin ? 'admin' : 'non-admin',
@@ -85,7 +85,7 @@ export const UpgradeTrialDialog = ({
     };
 
     const onClose = () => {
-        trackEvent('upgrade_trial_dialog', {
+        trackEvent('upgrade-trial-dialog', {
             props: {
                 eventType: 'close',
                 userType: isAdmin ? 'admin' : 'non-admin',

@@ -8,11 +8,8 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { calculateVariantWeight } from 'component/common/util';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useSearch } from 'hooks/useSearch';
-import type {
-    IFeatureVariant,
-    IOverride,
-    IPayload,
-} from 'interfaces/featureToggle';
+import type { IOverride, IPayload } from 'interfaces/featureToggle';
+import type { VariantSchema } from 'openapi';
 import { useMemo } from 'react';
 import {
     type ColumnDef,
@@ -26,7 +23,7 @@ import { OverridesCell } from './OverridesCell/OverridesCell.tsx';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 
 interface IEnvironmentVariantsTableProps {
-    variants: IFeatureVariant[];
+    variants: VariantSchema[];
     searchValue?: string;
 }
 
@@ -40,7 +37,7 @@ export const EnvironmentVariantsTable = ({
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isLargeScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
-    const columns = useMemo<ColumnDef<IFeatureVariant, unknown>[]>(
+    const columns = useMemo<ColumnDef<VariantSchema, unknown>[]>(
         () => [
             {
                 id: 'name',

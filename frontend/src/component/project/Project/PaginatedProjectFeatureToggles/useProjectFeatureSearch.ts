@@ -14,6 +14,11 @@ import mapValues from 'lodash.mapvalues';
 import type { SearchFeaturesParams } from 'openapi';
 import { SafeNumberParam } from 'utils/safeNumberParam';
 import { DEFAULT_PAGE_LIMIT } from 'utils/paginationConfig';
+import { useEffect } from 'react';
+import { useTracking } from 'hooks/useTracking';
+import { toggleFilterValueTracking } from 'component/filter/Filters/filtersTracking';
+
+const ARCHIVED = { operator: 'IS', values: ['archived'] };
 
 type Attribute =
     | { key: 'tag'; operator: 'INCLUDE' }
@@ -43,10 +48,24 @@ export const useProjectFeatureSearch = (
         lifecycle: FilterItemParam,
         favorite: FilterItemParam,
     };
-    const [tableState, setTableState] = usePersistentTableState(
+    const [persistedState, setTableState] = usePersistentTableState(
         `${storageKey}-${projectId}`,
         stateConfig,
     );
+
+    // The archived view predates the archived lifecycle filter that replaced
+    // it. Old links and stored table state still carry `archived`, so map it
+    // onto the lifecycle filter on read and clear it from the stored state.
+    const legacyArchivedView = Boolean(persistedState.archived);
+    const tableState = legacyArchivedView
+        ? { ...persistedState, archived: undefined, lifecycle: ARCHIVED }
+        : persistedState;
+
+    useEffect(() => {
+        if (legacyArchivedView) {
+            setTableState({ archived: undefined, lifecycle: ARCHIVED });
+        }
+    }, [legacyArchivedView, setTableState]);
 
     const apiTableState = tableState;
     const { features, total, refetch, loading, initialLoad } = useFeatureSearch(
@@ -77,28 +96,31 @@ export const useProjectFeatureSearchActions = (
     tableState: ReturnType<typeof useProjectFeatureSearch>['tableState'],
     setTableState: ReturnType<typeof useProjectFeatureSearch>['setTableState'],
 ) => {
+    const trackToggleFilterValue = useTracking(toggleFilterValueTracking);
     const onAttributeClick = (attribute: Attribute, value: string) => {
         const attributeState = tableState[attribute.key];
-
-        if (
+        const unchanged =
             attributeState &&
-            attributeState.values.length > 0 &&
-            !attributeState.values.includes(value)
-        ) {
-            setTableState({
-                [attribute.key]: {
-                    operator: attributeState.operator,
-                    values: [...attributeState.values, value],
-                },
-            });
-        } else if (!attributeState) {
-            setTableState({
-                [attribute.key]: {
-                    operator: attribute.operator,
-                    values: [value],
-                },
-            });
+            (attributeState.values.length === 0 ||
+                attributeState.values.includes(value));
+
+        if (unchanged) {
+            return;
         }
+
+        setTableState({
+            [attribute.key]: attributeState
+                ? {
+                      operator: attributeState.operator,
+                      values: [...attributeState.values, value],
+                  }
+                : { operator: attribute.operator, values: [value] },
+        });
+        trackToggleFilterValue('succeeded', {
+            filterKey: attribute.key,
+            method: 'cell',
+            newState: 'selected',
+        });
     };
 
     const onTagClick = (tag: string) =>

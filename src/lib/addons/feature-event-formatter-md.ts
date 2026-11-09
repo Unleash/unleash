@@ -285,7 +285,10 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
                 SEMVER_EQ: 'is a SemVer equal to',
                 SEMVER_GT: 'is a SemVer greater than',
                 SEMVER_LT: 'is a SemVer less than',
+                SEMVER_GTE: 'is a SemVer greater than or equal to',
+                SEMVER_LTE: 'is a SemVer less than or equal to',
                 REGEX: 'matches regex',
+                IN_CIDR: 'is an IP in',
             };
             const formatConstraint = (constraint: IConstraint) => {
                 const val = constraint.hasOwnProperty('value')
@@ -352,11 +355,10 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
             ...formatting,
         };
 
-        Mustache.escape = (text) => text;
-
-        const text = Mustache.render(action, context);
+        const renderContext = { escape: (text: string) => text };
+        const text = Mustache.render(action, context, undefined, renderContext);
         const url = path
-            ? `${this.unleashUrl}${Mustache.render(path, context)}`
+            ? `${this.unleashUrl}${Mustache.render(path, context, undefined, renderContext)}`
             : undefined;
 
         return {

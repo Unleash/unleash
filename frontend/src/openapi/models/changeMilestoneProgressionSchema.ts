@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { TransitionConditionSchema } from './transitionConditionSchema';
+import type { TransitionConditionSchema } from './transitionConditionSchema.ts';
 
 /**
  * Request body to create or update a milestone progression

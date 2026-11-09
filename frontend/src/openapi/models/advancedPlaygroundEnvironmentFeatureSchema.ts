@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SdkFlatContextSchema } from './sdkFlatContextSchema';
-import type { AdvancedPlaygroundEnvironmentFeatureSchemaStrategies } from './advancedPlaygroundEnvironmentFeatureSchemaStrategies';
-import type { AdvancedPlaygroundEnvironmentFeatureSchemaVariant } from './advancedPlaygroundEnvironmentFeatureSchemaVariant';
-import type { VariantSchema } from './variantSchema';
+import type { AdvancedPlaygroundEnvironmentFeatureSchemaStrategies } from './advancedPlaygroundEnvironmentFeatureSchemaStrategies.ts';
+import type { AdvancedPlaygroundEnvironmentFeatureSchemaVariant } from './advancedPlaygroundEnvironmentFeatureSchemaVariant.ts';
+import type { SdkFlatContextSchema } from './sdkFlatContextSchema.ts';
+import type { VariantSchema } from './variantSchema.ts';
 
 /**
  * A simplified feature flag model intended for the Unleash playground.
@@ -16,9 +16,11 @@ export interface AdvancedPlaygroundEnvironmentFeatureSchema {
     context: SdkFlatContextSchema;
     /** The feature's environment. */
     environment: string;
-    /** Whether this feature is enabled or not in the current environment.
-                          If a feature can't be fully evaluated (that is, `strategies.result` is `unknown`),
-                          this will be `false` to align with how client SDKs treat unresolved feature states. */
+    /**
+     * Whether this feature is enabled or not in the current environment.
+     *                           If a feature can't be fully evaluated (that is, `strategies.result` is `unknown`),
+     *                           this will be `false` to align with how client SDKs treat unresolved feature states.
+     */
     isEnabled: boolean;
     /** Whether the feature is active and would be evaluated in the provided environment in a normal SDK context. */
     isEnabledInCurrentEnvironment: boolean;
@@ -29,12 +31,12 @@ export interface AdvancedPlaygroundEnvironmentFeatureSchema {
     /** Feature's applicable strategies and cumulative results of the strategies */
     strategies: AdvancedPlaygroundEnvironmentFeatureSchemaStrategies;
     /**
-   * The feature variant you receive based on the provided context or the _disabled
-                          variant_. If a feature is disabled or doesn't have any
-                          variants, you would get the _disabled variant_.
-                          Otherwise, you'll get one of the feature's defined variants.
-   * @nullable
-   */
+     * The feature variant you receive based on the provided context or the _disabled
+     *                           variant_. If a feature is disabled or doesn't have any
+     *                           variants, you would get the _disabled variant_.
+     *                           Otherwise, you'll get one of the feature's defined variants.
+     * @nullable
+     */
     variant: AdvancedPlaygroundEnvironmentFeatureSchemaVariant;
     /** The feature variants. */
     variants: VariantSchema[];

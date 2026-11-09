@@ -181,6 +181,9 @@ const MetricsSelectors = styled(Box)(({ theme }) => ({
     justifyContent: 'flex-start',
     flexFlow: 'row wrap',
     gap: theme.spacing(2),
+    '&& > *': {
+        width: 'fit-content',
+    },
 }));
 
 const ChartContainer = styled('div')(({ theme }) => ({

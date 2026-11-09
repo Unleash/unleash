@@ -1,4 +1,4 @@
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import type { IUnleashConfig } from '../../types/option.js';
 import type { IUnleashServices } from '../../services/index.js';
 import { NONE } from '../../types/permissions.js';
@@ -18,8 +18,15 @@ import type { AdvancedPlaygroundRequestSchema } from '../../openapi/spec/advance
 import type { AdvancedPlaygroundResponseSchema } from '../../openapi/spec/advanced-playground-response-schema.js';
 import {
     advancedPlaygroundViewModel,
+    playgroundFeatureViewModel,
     playgroundViewModel,
 } from './playground-view-model.js';
+import type { PlaygroundFeatureRequestSchema } from '../../openapi/spec/playground-feature-request-schema.js';
+import {
+    type PlaygroundFeatureResponseSchema,
+    playgroundFeatureResponseSchema,
+} from '../../openapi/spec/playground-feature-response-schema.js';
+import { NotFoundError } from '../../error/index.js';
 import type { IAuthRequest } from '../../routes/unleash-types.js';
 import { extractUserIdFromUser } from '../../util/index.js';
 
@@ -91,16 +98,44 @@ export default class PlaygroundController extends Controller {
                 }),
             ],
         });
+
+        this.route({
+            method: 'post',
+            path: '/features/:featureName',
+            handler: this.evaluateFeature,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    release: { beta: '8.3.0' },
+                    operationId: 'evaluateFeature',
+                    tags: ['Playground'],
+                    responses: {
+                        ...getStandardResponses(400, 401, 404),
+                        200: createResponseSchema(
+                            'playgroundFeatureResponseSchema',
+                        ),
+                    },
+                    requestBody: createRequestSchema(
+                        'playgroundFeatureRequestSchema',
+                    ),
+                    description:
+                        'Use the provided `context` and `environment` to evaluate a single feature flag on this Unleash instance. The project is resolved from the flag name. Returns what the flag evaluates to, together with the input parameters that were provided.',
+                    summary:
+                        'Evaluate a single feature flag against an Unleash context in an environment.',
+                }),
+            ],
+        });
     }
 
     async evaluateContext(
-        req: Request<any, any, PlaygroundRequestSchema>,
+        req: IAuthRequest<any, any, PlaygroundRequestSchema>,
         res: Response<PlaygroundResponseSchema>,
     ): Promise<void> {
         const result = await this.playgroundService.evaluateQuery(
             req.body.projects || '*',
             req.body.environment,
             req.body.context,
+            extractUserIdFromUser(req.user),
         );
         const response: PlaygroundResponseSchema = playgroundViewModel(
             req.body,
@@ -137,5 +172,34 @@ export default class PlaygroundController extends Controller {
             );
 
         res.json(response);
+    }
+
+    async evaluateFeature(
+        req: IAuthRequest<
+            { featureName: string },
+            any,
+            PlaygroundFeatureRequestSchema
+        >,
+        res: Response<PlaygroundFeatureResponseSchema>,
+    ): Promise<void> {
+        if (!this.flagResolver.isEnabled('playgroundFeatureEvaluation')) {
+            throw new NotFoundError();
+        }
+
+        const result = await this.playgroundService.evaluateFeature(
+            req.params.featureName,
+            req.body.environment,
+            req.body.context,
+            extractUserIdFromUser(req.user),
+        );
+        const response: PlaygroundFeatureResponseSchema =
+            playgroundFeatureViewModel(req.body, result);
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            playgroundFeatureResponseSchema.$id,
+            response,
+        );
     }
 }

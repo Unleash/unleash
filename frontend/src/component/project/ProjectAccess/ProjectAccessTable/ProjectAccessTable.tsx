@@ -59,6 +59,11 @@ import {
     PA_EDIT_BUTTON_ID,
     PA_REMOVE_BUTTON_ID,
 } from 'utils/testIds';
+import { useTracking } from 'hooks/useTracking';
+import {
+    removeAccessTracking,
+    viewGroupDetailsTracking,
+} from 'component/project/ProjectAccess/projectAccessTracking';
 
 export type PageQueryType = Partial<
     Record<'sort' | 'order' | 'search', string>
@@ -101,9 +106,11 @@ export const ProjectAccessTable: FC = () => {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const { setToastData } = useToast();
+    const trackViewGroupDetails = useTracking(viewGroupDetailsTracking);
+    const trackRemoveAccess = useTracking(removeAccessTracking);
 
     const { access, refetchProjectAccess } = useProjectAccess(projectId);
-    const { removeUserAccess, removeGroupAccess } = useProjectApi();
+    const { removeUserAccess, removeGroupAccess, loading } = useProjectApi();
     const [removeOpen, setRemoveOpen] = useState(false);
     const [groupOpen, setGroupOpen] = useState(false);
     const [selectedRow, setSelectedRow] = useState<IProjectAccess>();
@@ -144,6 +151,7 @@ export const ProjectAccessTable: FC = () => {
                                 onClick={() => {
                                     setSelectedRow(row);
                                     setGroupOpen(true);
+                                    trackViewGroupDetails('succeeded');
                                 }}
                                 title={String(getValue() ?? '')}
                                 subtitle={`${(row.entity as IGroup).users?.length} users`}
@@ -345,6 +353,11 @@ export const ProjectAccessTable: FC = () => {
         setStoredParams({ id: sortRule.id, desc: sortRule.desc || false });
     }, [sorting, searchValue, setSearchParams]);
 
+    const removeProps = (userOrGroup: IProjectAccess) => ({
+        targetType: userOrGroup.type === ENTITY_TYPE.GROUP ? 'group' : 'user',
+        rolesCount: userOrGroup.entity.roles.length,
+    });
+
     const removeAccess = async (userOrGroup?: IProjectAccess) => {
         if (!userOrGroup) return;
         const { id } = userOrGroup.entity;
@@ -355,11 +368,13 @@ export const ProjectAccessTable: FC = () => {
         }
 
         try {
-            if (userOrGroup.type !== ENTITY_TYPE.GROUP) {
-                await removeUserAccess(projectId, id);
-            } else {
-                await removeGroupAccess(projectId, id);
-            }
+            await trackRemoveAccess.mutation(
+                () =>
+                    userOrGroup.type !== ENTITY_TYPE.GROUP
+                        ? removeUserAccess(projectId, id)
+                        : removeGroupAccess(projectId, id),
+                removeProps(userOrGroup),
+            );
             refetchProjectAccess();
             setToastData({
                 type: 'success',
@@ -382,8 +397,8 @@ export const ProjectAccessTable: FC = () => {
         <PageContent
             header={
                 <PageHeader
-                    secondary
-                    title={`User access (${
+                    variant='h2'
+                    heading={`User access (${
                         rows.length < data.length
                             ? `${rows.length} of ${data.length}`
                             : data.length
@@ -471,6 +486,11 @@ export const ProjectAccessTable: FC = () => {
             </Routes>
             <Dialogue
                 open={removeOpen}
+                tracking={{
+                    ...removeAccessTracking,
+                    props: selectedRow ? removeProps(selectedRow) : undefined,
+                }}
+                disabledPrimaryButton={loading}
                 onClick={() => removeAccess(selectedRow)}
                 onClose={() => {
                     setRemoveOpen(false);

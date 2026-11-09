@@ -105,7 +105,7 @@ export const StyledReviewStatusContainer = styled(Box, {
 
 export const StyledReviewTitle = styled(Typography, {
     shouldForwardProp: styledComponentPropCheck(),
-})<{ color: string }>(({ theme, color }) => ({
+})<{ color?: string }>(({ color }) => ({
     fontWeight: 'bold',
     color,
 }));

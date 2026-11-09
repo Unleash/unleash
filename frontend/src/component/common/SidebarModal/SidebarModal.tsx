@@ -1,8 +1,13 @@
-import type { FC } from 'react';
+import { type FC, useEffect } from 'react';
 import { Modal, Backdrop, styled, IconButton, Tooltip } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Fade from '@mui/material/Fade';
+import { useTracking } from 'hooks/useTracking';
 import { SIDEBAR_MODAL_ID } from 'utils/testIds';
+import {
+    dismissMethodFromCloseReason,
+    type Tracking,
+} from 'utils/trackingEvents';
 import type * as React from 'react';
 
 interface ISidebarModalProps {
@@ -11,6 +16,10 @@ interface ISidebarModalProps {
     label: string;
     onClick?: (e: React.SyntheticEvent) => void;
     children: React.ReactElement<any, any>;
+    /**
+     * Same contract as the tracking prop on Dialogue.
+     */
+    tracking?: Tracking;
 }
 
 const TRANSITION_DURATION = 250;
@@ -44,11 +53,25 @@ export const BaseModal: FC<ISidebarModalProps> = ({
     onClick,
     label,
     children,
+    tracking,
 }) => {
+    const trackModal = useTracking(tracking);
+
+    useEffect(() => {
+        if (open) {
+            trackModal('opened');
+        }
+    }, [open, trackModal]);
+
     return (
         <Modal
             open={open}
-            onClose={onClose}
+            onClose={(_, reason) => {
+                trackModal('dismissed', {
+                    method: dismissMethodFromCloseReason(reason),
+                });
+                onClose();
+            }}
             onClick={onClick}
             closeAfterTransition
             aria-label={label}
@@ -75,11 +98,18 @@ export const SidebarModal: FC<ISidebarModalProps> = (props) => {
 };
 
 export const DynamicSidebarModal: FC<ISidebarModalProps> = (props) => {
+    const trackModal = useTracking(props.tracking);
+
     return (
         <BaseModal {...props}>
             <ModalContentWrapper>
                 <Tooltip title='Close' arrow describeChild>
-                    <StyledIconButton onClick={props.onClose}>
+                    <StyledIconButton
+                        onClick={() => {
+                            trackModal('dismissed', { method: 'close-icon' });
+                            props.onClose();
+                        }}
+                    >
                         <CloseIcon />
                     </StyledIconButton>
                 </Tooltip>

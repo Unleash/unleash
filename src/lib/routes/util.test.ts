@@ -19,4 +19,27 @@ describe('handleErrors', () => {
 
         expect(() => handleErrors(res, logger, error)).not.toThrow();
     });
+
+    it('logs the internal message without sending it to the client', () => {
+        const internalMessage = 'select * from secret_table';
+        let body: unknown;
+        const res = {
+            status: () => res,
+            json: (b: unknown) => {
+                body = b;
+                return res;
+            },
+            end: () => res,
+        } as unknown as Response;
+        const logged: string[] = [];
+        const logger = {
+            debug() {},
+            error: (msg: string) => logged.push(msg),
+        } as unknown as Logger;
+
+        handleErrors(res, logger, new Error(internalMessage));
+
+        expect(logged.some((msg) => msg.includes(internalMessage))).toBe(true);
+        expect(JSON.stringify(body)).not.toContain(internalMessage);
+    });
 });

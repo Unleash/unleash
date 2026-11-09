@@ -20,7 +20,11 @@ import { TokenInfo } from 'component/admin/apiToken/ApiTokenForm/TokenInfo/Token
 import { TokenTypeSelector } from 'component/admin/apiToken/ApiTokenForm/TokenTypeSelector/TokenTypeSelector';
 import { ConfirmToken } from 'component/admin/apiToken/ConfirmToken/ConfirmToken';
 import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
+import {
+    createApiTokenTracking,
+    apiTokenCreationProps,
+} from 'component/common/ApiTokenTable/apiTokenTracking';
 
 const pageTitle = 'Create project API token';
 
@@ -31,6 +35,7 @@ export const CreateProjectApiTokenForm = () => {
     const navigate = useNavigate();
     const [showConfirm, setShowConfirm] = useState(false);
     const [token, setToken] = useState('');
+    const [secure, setSecure] = useState(false);
 
     const {
         getApiTokenPayload,
@@ -49,7 +54,7 @@ export const CreateProjectApiTokenForm = () => {
     const { createToken: createProjectToken, loading } =
         useProjectApiTokensApi();
     const { refetch: refetchProjectTokens } = useProjectApiTokens(projectId);
-    const { trackEvent } = useEventTracker();
+    const trackCreateApiToken = useTracking(createApiTokenTracking);
 
     usePageTitle(pageTitle);
 
@@ -58,24 +63,26 @@ export const CreateProjectApiTokenForm = () => {
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
+
         if (!isValid()) {
+            trackCreateApiToken.validationFailed(
+                apiTokenCreationProps(getApiTokenPayload()),
+            );
             return;
         }
+
         try {
             const payload = getApiTokenPayload();
-
-            await createProjectToken(payload, projectId)
-                .then((res) => res.json())
-                .then((api) => {
-                    scrollToTop();
-                    setToken(api.secret);
-                    setShowConfirm(true);
-                    trackEvent('project_api_tokens', {
-                        props: { eventType: 'api_key_created' },
-                    });
-
-                    refetchProjectTokens();
-                });
+            const api = await trackCreateApiToken.mutation(
+                async () =>
+                    (await createProjectToken(payload, projectId)).json(),
+                apiTokenCreationProps(payload),
+            );
+            scrollToTop();
+            setToken(api.secret);
+            setSecure(api.secure);
+            setShowConfirm(true);
+            refetchProjectTokens();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -101,7 +108,7 @@ export const CreateProjectApiTokenForm = () => {
         <FormTemplate
             loading={loading}
             title={pageTitle}
-            modal
+            layout='modal'
             description="Unleash SDKs use API tokens to authenticate to the Unleash API. Client SDKs need a token with 'client privileges', which allows them to fetch feature flag configurations and post usage metrics."
             documentationLink='https://docs.getunleash.io/concepts/api-tokens-and-client-keys'
             documentationLinkLabel='API tokens documentation'
@@ -116,6 +123,7 @@ export const CreateProjectApiTokenForm = () => {
                         name='token'
                         permission={permission}
                         projectId={projectId}
+                        disabled={loading}
                     />
                 }
             >
@@ -142,6 +150,7 @@ export const CreateProjectApiTokenForm = () => {
                 closeConfirm={closeConfirm}
                 token={token}
                 type={type}
+                secure={secure}
             />
         </FormTemplate>
     );

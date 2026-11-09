@@ -21,7 +21,7 @@ const StyledHeaderMetaInfo = styled('div')(({ theme }) => ({
 }));
 
 const StyledExpandItem = styled('p')(({ theme }) => ({
-    color: theme.palette.secondary.main,
+    color: theme.palette.primary.main,
     margin: theme.spacing(0.25, 0, 0, 0.75),
     fontSize: theme.fontSizes.smallerBody,
 }));

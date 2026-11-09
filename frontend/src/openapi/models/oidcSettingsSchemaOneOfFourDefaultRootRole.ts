@@ -10,7 +10,6 @@
 export type OidcSettingsSchemaOneOfFourDefaultRootRole =
     (typeof OidcSettingsSchemaOneOfFourDefaultRootRole)[keyof typeof OidcSettingsSchemaOneOfFourDefaultRootRole];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const OidcSettingsSchemaOneOfFourDefaultRootRole = {
     Viewer: 'Viewer',
     Editor: 'Editor',

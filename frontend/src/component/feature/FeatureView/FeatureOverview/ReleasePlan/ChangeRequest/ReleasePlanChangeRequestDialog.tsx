@@ -5,7 +5,7 @@ import type {
     IReleasePlanMilestone,
 } from 'interfaces/releasePlans';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
-import { getTimeValueAndUnitFromMinutes } from '../hooks/useMilestoneProgressionForm.js';
+import { getValueAndUnitFromCondition } from '../hooks/useTransitionConditionInput.ts';
 
 const StyledBoldSpan = styled('span')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
@@ -93,10 +93,10 @@ export const ReleasePlanChangeRequestDialog = ({
                         milestone.id === action.payload.targetMilestone,
                 );
 
-                const { value, unit } = getTimeValueAndUnitFromMinutes(
-                    action.payload.transitionCondition.intervalMinutes,
+                const { value, unit } = getValueAndUnitFromCondition(
+                    action.payload.transitionCondition,
                 );
-                const timeInterval = `${value} ${unit}`;
+                const conditionDisplay = `${value} ${unit}`;
 
                 return (
                     <p>
@@ -104,7 +104,8 @@ export const ReleasePlanChangeRequestDialog = ({
                         <StyledBoldSpan>{sourceMilestone?.name}</StyledBoldSpan>{' '}
                         to{' '}
                         <StyledBoldSpan>{targetMilestone?.name}</StyledBoldSpan>{' '}
-                        after <StyledBoldSpan>{timeInterval}</StyledBoldSpan> in{' '}
+                        after{' '}
+                        <StyledBoldSpan>{conditionDisplay}</StyledBoldSpan> in{' '}
                         {environmentId}
                     </p>
                 );

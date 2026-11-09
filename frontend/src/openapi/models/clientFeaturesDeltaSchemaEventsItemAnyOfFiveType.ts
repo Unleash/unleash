@@ -7,7 +7,6 @@
 export type ClientFeaturesDeltaSchemaEventsItemAnyOfFiveType =
     (typeof ClientFeaturesDeltaSchemaEventsItemAnyOfFiveType)[keyof typeof ClientFeaturesDeltaSchemaEventsItemAnyOfFiveType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ClientFeaturesDeltaSchemaEventsItemAnyOfFiveType = {
     'segment-updated': 'segment-updated',
 } as const;

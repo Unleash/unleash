@@ -177,7 +177,7 @@ export default class ProjectFeaturesController extends Controller {
                     release: { stable: '4.13.0' },
                     operationId: 'toggleFeatureEnvironmentOff',
                     responses: {
-                        200: createResponseSchema('featureSchema'),
+                        200: emptyResponse,
                         ...getStandardResponses(400, 401, 403, 404),
                     },
                 }),
@@ -199,7 +199,7 @@ export default class ProjectFeaturesController extends Controller {
                     release: { stable: '4.13.0' },
                     operationId: 'toggleFeatureEnvironmentOn',
                     responses: {
-                        200: createResponseSchema('featureSchema'),
+                        200: emptyResponse,
                         ...getStandardResponses(400, 401, 403, 404),
                     },
                 }),
@@ -425,6 +425,17 @@ export default class ProjectFeaturesController extends Controller {
                     tags: ['Features'],
                     release: { stable: '4.12.0' },
                     operationId: 'getFeatures',
+                    parameters: [
+                        {
+                            name: 'view',
+                            in: 'query',
+                            required: false,
+                            description:
+                                'Experimental: `core` returns a lightweight version of each feature with `environments` empty and `favorite` set to `false`; it cannot be combined with the `tag` or `namePrefix` filters. Omit it to get the full feature overview. This parameter may change or be removed in a future release.',
+                            schema: { type: 'string', enum: ['core'] },
+                            example: 'core',
+                        },
+                    ],
                     responses: {
                         200: createResponseSchema('projectFeaturesSchema'),
                         ...getStandardResponses(400, 401, 403),
@@ -618,10 +629,33 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async getFeatures(
-        req: IAuthRequest<ProjectParam, any, any, AdminFeaturesQuerySchema>,
+        req: IAuthRequest<
+            ProjectParam,
+            any,
+            any,
+            AdminFeaturesQuerySchema & { view?: 'core' }
+        >,
         res: Response<ProjectFeaturesSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
+
+        if (req.query.view === 'core') {
+            if (req.query.tag || req.query.namePrefix) {
+                throw new BadDataError(
+                    'The core view cannot be combined with the tag or namePrefix filters',
+                );
+            }
+            const features =
+                await this.featureService.getProjectFeaturesCore(projectId);
+            this.openApiService.respondWithValidation(
+                200,
+                res,
+                projectFeaturesSchema.$id,
+                { version: 2, features: serializeDates(features) },
+            );
+            return;
+        }
+
         const query = await this.prepQuery(req.query, projectId);
         const features = await this.featureService.getFeatureOverview({
             ...query,
@@ -672,6 +706,11 @@ export default class ProjectFeaturesController extends Controller {
     ): Promise<void> {
         const { projectId, featureName } = req.params;
         const { name, replaceGroupId } = req.body;
+        await this.featureService.validateFeatureBelongsToProject(
+            { featureName, projectId },
+            false,
+        );
+
         const created =
             await this.transactionalFeatureToggleService.transactional(
                 (service) =>
@@ -862,11 +901,8 @@ export default class ProjectFeaturesController extends Controller {
         const { features, stale } = req.body;
         const { projectId } = req.params;
 
-        await this.featureService.setToggleStaleness(
-            features,
-            stale,
-            projectId,
-            req.audit,
+        await this.transactionalFeatureToggleService.transactional((service) =>
+            service.setToggleStaleness(features, stale, projectId, req.audit),
         );
         res.status(202).end();
     }
@@ -1083,7 +1119,6 @@ export default class ProjectFeaturesController extends Controller {
         if (!req.body.segmentIds) {
             req.body.segmentIds = [];
         }
-
         const updatedStrategy =
             await this.transactionalFeatureToggleService.transactional(
                 (service) =>
@@ -1106,7 +1141,16 @@ export default class ProjectFeaturesController extends Controller {
         const { strategyId, projectId, environment, featureName } = req.params;
         const patch = req.body;
         const strategy = await this.featureService.getStrategy(strategyId);
-
+        const strategyBelongsToFeature =
+            await this.featureService.strategyBelongsToFeatureAndProject({
+                strategyId,
+                project: projectId,
+                featureName,
+            });
+        if (!strategyBelongsToFeature) {
+            res.status(403).end();
+            return;
+        }
         const { newDocument } = applyPatch(strategy, patch);
 
         throwOnInvalidSchema(featureStrategySchema.$id, newDocument);
@@ -1131,9 +1175,19 @@ export default class ProjectFeaturesController extends Controller {
         res: Response<FeatureStrategySchema>,
     ): Promise<void> {
         this.logger.info('Getting strategy');
-        const { strategyId } = req.params;
+        const { strategyId, featureName, projectId } = req.params;
         this.logger.info(strategyId);
         const strategy = await this.featureService.getStrategy(strategyId);
+        const strategyBelongsToFeature =
+            await this.featureService.strategyBelongsToFeatureAndProject({
+                strategyId,
+                project: projectId,
+                featureName,
+            });
+        if (!strategyBelongsToFeature) {
+            res.status(403).end();
+            return;
+        }
         res.status(200).json(strategy);
     }
 
@@ -1159,11 +1213,13 @@ export default class ProjectFeaturesController extends Controller {
     }
 
     async updateFeaturesTags(
-        req: IAuthRequest<void, void, TagsBulkAddSchema>,
+        req: IAuthRequest<ProjectParam, void, TagsBulkAddSchema>,
         res: Response<TagSchema>,
     ): Promise<void> {
+        const { projectId } = req.params;
         const { features, tags } = req.body;
         await this.featureTagService.updateTags(
+            projectId,
             features,
             tags.addedTags,
             tags.removedTags,

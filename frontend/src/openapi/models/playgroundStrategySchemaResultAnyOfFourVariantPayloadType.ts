@@ -10,7 +10,6 @@
 export type PlaygroundStrategySchemaResultAnyOfFourVariantPayloadType =
     (typeof PlaygroundStrategySchemaResultAnyOfFourVariantPayloadType)[keyof typeof PlaygroundStrategySchemaResultAnyOfFourVariantPayloadType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PlaygroundStrategySchemaResultAnyOfFourVariantPayloadType = {
     json: 'json',
     csv: 'csv',

@@ -10,7 +10,6 @@
 export type ImpactMetricsConfigSchemaSource =
     (typeof ImpactMetricsConfigSchemaSource)[keyof typeof ImpactMetricsConfigSchemaSource];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ImpactMetricsConfigSchemaSource = {
     internal: 'internal',
     external: 'external',

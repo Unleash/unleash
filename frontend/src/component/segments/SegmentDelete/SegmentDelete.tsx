@@ -3,6 +3,7 @@ import { useStrategiesBySegment } from 'hooks/api/getters/useStrategiesBySegment
 import type { ISegment } from 'interfaces/segment';
 import { SegmentDeleteConfirm } from './SegmentDeleteConfirm/SegmentDeleteConfirm.tsx';
 import { SegmentDeleteUsedSegment } from './SegmentDeleteUsedSegment/SegmentDeleteUsedSegment.tsx';
+import type { Tracking } from 'utils/trackingEvents';
 
 interface ISegmentDeleteProps {
     segment: ISegment;
@@ -10,6 +11,7 @@ interface ISegmentDeleteProps {
     onClose: () => void;
     onRemove: () => void;
     title: string;
+    tracking?: Tracking;
 }
 
 export const SegmentDelete = ({
@@ -18,11 +20,19 @@ export const SegmentDelete = ({
     onClose,
     onRemove,
     title,
+    tracking,
 }: ISegmentDeleteProps) => {
     const { strategies, changeRequestStrategies, loading } =
         useStrategiesBySegment(segment.id);
     const canDeleteSegment =
         strategies?.length === 0 && changeRequestStrategies?.length === 0;
+
+    const brandedTracking = (segmentInUse: boolean) =>
+        tracking && {
+            ...tracking,
+            props: { ...tracking.props, segmentInUse },
+        };
+
     if (loading) {
         return null;
     }
@@ -37,10 +47,12 @@ export const SegmentDelete = ({
                     onClose={onClose}
                     onRemove={onRemove}
                     title={title}
+                    tracking={brandedTracking(false)}
                 />
             }
             elseShow={
                 <SegmentDeleteUsedSegment
+                    tracking={brandedTracking(true)}
                     segment={segment}
                     open={open}
                     onClose={onClose}

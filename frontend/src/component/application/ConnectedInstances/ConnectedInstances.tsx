@@ -34,7 +34,7 @@ const useEnvironments = (application: string) => {
     };
 };
 
-const useTracking = () => {
+const useConnectedInstancesTracking = () => {
     const { trackEvent } = useEventTracker();
     useEffect(() => {
         trackEvent('sdk-reporting', {
@@ -53,7 +53,7 @@ const useTracking = () => {
 };
 
 export const ConnectedInstances: FC = () => {
-    const trackEnvironmentChange = useTracking();
+    const trackEnvironmentChange = useConnectedInstancesTracking();
     const name = useRequiredPathParam('name');
 
     const { currentEnvironment, setCurrentEnvironment, environments } =

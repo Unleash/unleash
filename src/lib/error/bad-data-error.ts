@@ -1,6 +1,5 @@
 import type { ErrorObject } from 'ajv';
 import type { ValidationError } from 'joi';
-import getProp from 'lodash.get';
 import { type ApiErrorSchema, UnleashError } from './unleash-error.js';
 
 type ValidationErrorDescription = {
@@ -128,11 +127,10 @@ export const fromOpenApiValidationError =
     (validationError: ErrorObject): ValidationErrorDescription => {
         const { instancePath, params, message } = validationError;
 
-        const propertyValue = getProp(
-            data,
-            instancePath.split('/').filter(Boolean),
-        );
-
+        const propertyValue = instancePath
+            .split('/')
+            .filter(Boolean)
+            .reduce((value, key) => value?.[key], data);
         switch (validationError.keyword) {
             case 'required':
                 return missingRequiredPropertyMessage(

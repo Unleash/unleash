@@ -2,13 +2,13 @@ import { json, jsonParseLinter } from '@codemirror/lang-json';
 import { linter } from '@codemirror/lint';
 import ErrorIcon from '@mui/icons-material/Error';
 import FormatIndentIncrease from '@mui/icons-material/FormatIndentIncrease';
-import { Box, Button, styled, useTheme } from '@mui/material';
+import { Box, Button, type ButtonProps, styled, useTheme } from '@mui/material';
 import CodeMirror from '@uiw/react-codemirror';
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 type EditorStyle = 'default' | 'sidePanel';
 
-type JSONContent = { text: string } | { json: unknown };
+export type JSONContent = { text: string } | { json: unknown };
 
 type JSONEditorChange = (content: JSONContent) => void;
 
@@ -16,10 +16,12 @@ interface IReactJSONEditorProps {
     content: JSONContent;
     onChange?: JSONEditorChange;
     onBlur?: () => void;
+    placeholder?: string;
     validationError?: string;
     readOnly?: boolean;
     statusBar?: boolean;
     editorStyle?: EditorStyle;
+    formatButtonProps?: ButtonProps;
 }
 
 const StyledEditorWrapper = styled(Box, {
@@ -45,6 +47,9 @@ const StyledEditorWrapper = styled(Box, {
             borderColor: hasError
                 ? theme.palette.error.main
                 : theme.palette.primary.main,
+            boxShadow: `0 0 0 1px ${
+                hasError ? theme.palette.error.main : theme.palette.primary.main
+            }`,
         },
         '& .cm-editor': {
             backgroundColor: theme.palette.background.paper,
@@ -63,6 +68,9 @@ const StyledEditorWrapper = styled(Box, {
             paddingRight: theme.spacing(12),
             paddingBottom: theme.spacing(1),
             minHeight: 'inherit',
+        },
+        '& .cm-placeholder': {
+            color: theme.palette.text.disabled,
         },
         '& .cm-gutters': {
             backgroundColor: theme.palette.background.alternative,
@@ -116,6 +124,7 @@ const StyledEditorWrapper = styled(Box, {
             backgroundColor: 'transparent',
             '&:hover, &:focus-within': {
                 borderColor: 'transparent',
+                boxShadow: 'none',
             },
             '& .cm-editor': {
                 height: '100%',
@@ -154,10 +163,10 @@ const StyledValidationMessage = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     marginTop: theme.spacing(0.75),
     padding: theme.spacing(1, 1.5),
-    border: `1px solid ${theme.palette.error.border}`,
+    border: `1px solid ${theme.palette.error.containerBorder}`,
     borderRadius: theme.shape.borderRadiusMedium,
-    backgroundColor: theme.palette.error.light,
-    color: theme.palette.error.dark,
+    backgroundColor: theme.palette.error.container,
+    color: theme.palette.error.onContainer,
     fontSize: theme.fontSizes.smallBody,
     lineHeight: 1.4,
 }));
@@ -195,10 +204,12 @@ const ReactJSONEditor: FC<IReactJSONEditorProps> = ({
     content,
     onChange,
     onBlur,
+    placeholder,
     validationError: validationErrorProp,
     readOnly = false,
     statusBar = false,
     editorStyle = 'default',
+    formatButtonProps,
 }) => {
     const theme = useTheme();
     const value = useMemo(() => contentToText(content), [content]);
@@ -255,6 +266,7 @@ const ReactJSONEditor: FC<IReactJSONEditorProps> = ({
                         size='medium'
                         variant='outlined'
                         startIcon={<FormatIndentIncrease />}
+                        {...formatButtonProps}
                         onClick={formatJson}
                     >
                         Format
@@ -262,6 +274,7 @@ const ReactJSONEditor: FC<IReactJSONEditorProps> = ({
                 ) : null}
                 <CodeMirror
                     value={value}
+                    placeholder={placeholder}
                     minHeight={minHeight}
                     height={editorStyle === 'sidePanel' ? '100%' : undefined}
                     theme='none'

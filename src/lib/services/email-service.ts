@@ -25,6 +25,41 @@ export enum TemplateFormat {
     PLAIN = 'plain',
 }
 
+/**
+ * Recursively HTML-escape string values in a Mustache view.
+ * Needed when templates use `{{{ }}}` / `{{& }}` and the context may be untrusted.
+ */
+export const escapeMustacheContext = (
+    context: unknown,
+): Record<string, unknown> => {
+    if (
+        context === null ||
+        typeof context !== 'object' ||
+        Array.isArray(context)
+    ) {
+        return {};
+    }
+    return escapeMustacheValue(context) as Record<string, unknown>;
+};
+
+const escapeMustacheValue = (value: unknown): unknown => {
+    if (typeof value === 'string') {
+        return Mustache.escape(value);
+    }
+    if (!value || typeof value !== 'object') {
+        return value;
+    }
+    if (Array.isArray(value)) {
+        return value.map(escapeMustacheValue);
+    }
+    return Object.fromEntries(
+        Object.entries(value).map(([key, nested]) => [
+            key,
+            escapeMustacheValue(nested),
+        ]),
+    );
+};
+
 export enum TransporterType {
     SMTP = 'smtp',
     JSON = 'json',
@@ -86,6 +121,23 @@ export type ChangeRequestScheduleConflictData =
       };
 
 export type TransportProvider = () => Transporter;
+type TokenExpiryEmailContext = {
+    recipientEmail: string;
+    recipientName?: string;
+    tokensUrl: string;
+    tokens: {
+        tokenDescription: string;
+        daysUntilExpiry: number;
+        dayWord: string;
+        serviceAccountName?: string;
+    }[];
+};
+
+const withDayWord = <T extends { daysUntilExpiry: number }>(token: T) => ({
+    ...token,
+    dayWord: token.daysUntilExpiry === 1 ? 'day' : 'days',
+});
+
 export class EmailService {
     private logger: Logger;
     private config: IUnleashConfig;
@@ -547,6 +599,104 @@ export class EmailService {
         });
     }
 
+    async sendPersonalApiTokensExpiryEmail({
+        recipientEmail,
+        recipientName,
+        tokens,
+    }: {
+        recipientEmail: string;
+        recipientName: string;
+        tokens: { tokenDescription: string; daysUntilExpiry: number }[];
+    }): Promise<IEmailEnvelope> {
+        return this.sendTokenExpiryEmail({
+            template: 'personal-api-token-expiry',
+            subject: 'Unleash - your personal API tokens are about to expire',
+            recipientEmail,
+            context: {
+                recipientName,
+                recipientEmail,
+                tokens: tokens.map(withDayWord),
+                tokensUrl: `${this.config.server.unleashUrl}/profile/personal-api-tokens`,
+            },
+        });
+    }
+
+    async sendServiceAccountTokensExpiryEmail({
+        recipientEmail,
+        tokens,
+    }: {
+        recipientEmail: string;
+        tokens: {
+            serviceAccountName: string;
+            tokenDescription: string;
+            daysUntilExpiry: number;
+        }[];
+    }): Promise<IEmailEnvelope> {
+        return this.sendTokenExpiryEmail({
+            template: 'service-account-token-expiry',
+            subject: 'Unleash - service account tokens are about to expire',
+            recipientEmail,
+            context: {
+                recipientEmail,
+                tokens: tokens.map(withDayWord),
+                tokensUrl: `${this.config.server.unleashUrl}/admin/service-accounts`,
+            },
+        });
+    }
+
+    private async sendTokenExpiryEmail({
+        template,
+        subject,
+        recipientEmail,
+        context,
+    }: {
+        template: string;
+        subject: string;
+        recipientEmail: string;
+        context: TokenExpiryEmailContext;
+    }): Promise<IEmailEnvelope> {
+        if (this.configured()) {
+            const bodyHtml = await this.compileTemplate(
+                template,
+                TemplateFormat.HTML,
+                context,
+            );
+            const bodyText = await this.compileTemplate(
+                template,
+                TemplateFormat.PLAIN,
+                context,
+            );
+            const email = {
+                from: this.sender,
+                to: recipientEmail,
+                subject,
+                html: bodyHtml,
+                text: bodyText,
+            };
+            process.nextTick(() => {
+                this.mailer!.sendMail(email).then(
+                    () =>
+                        this.logger.info(`Successfully sent ${template} email`),
+                    (e) =>
+                        this.logger.warn(`Failed to send ${template} email`, e),
+                );
+            });
+            return Promise.resolve(email);
+        }
+        return new Promise((res) => {
+            this.logger.warn(
+                'No mailer is configured. Please read the docs on how to configure an EmailService',
+            );
+            res({
+                from: this.sender,
+                to: recipientEmail,
+                subject,
+                html: '',
+                text: '',
+            });
+        });
+    }
+
     async sendProductivityReportEmail(
         userEmail: string,
         userName: string,
@@ -637,10 +787,14 @@ export class EmailService {
         templateName: string,
         format: TemplateFormat,
         context: unknown,
+        options?: { escapeContext?: boolean },
     ): Promise<string> {
         try {
             const template = this.resolveTemplate(templateName, format);
-            return await Promise.resolve(Mustache.render(template, context));
+            const view = options?.escapeContext
+                ? escapeMustacheContext(context)
+                : context;
+            return await Promise.resolve(Mustache.render(template, view));
         } catch (e) {
             this.logger.info(`Could not find template ${templateName}`);
             return Promise.reject(e);

@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import {
     Box,
     Button,
@@ -26,6 +26,9 @@ import {
 import { useAuthFeedback } from 'hooks/api/getters/useAuth/useAuthFeedback';
 import { useAuthFeedbackApi } from 'hooks/api/actions/useAuthFeedbackApi/useAuthFeedbackApi';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { startSurveyGracePeriod } from 'component/feedbackModule/delivery/surveyStorage';
+import { FeedbackNPSCard } from './FeedbackNPSCard.tsx';
 
 const StyledHeader = styled('h3')(({ theme }) => ({
     margin: 0,
@@ -38,13 +41,30 @@ interface IFeedbackNPSProps {
 }
 
 export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
-    const { showFeedback, setShowFeedback } = useContext(UIContext);
+    const { showFeedback, setShowFeedback, surveyVisible } =
+        useContext(UIContext);
     const { createFeedback, updateFeedback } = useAuthFeedbackApi();
     const { feedback } = useAuthFeedback();
     const [answeredNotNow, setAnsweredNotNow] = useState(false);
     const theme = useTheme();
     const feedbackId = PNPS_FEEDBACK_ID;
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const surveyCardEnabled = useUiFlag('feedbackModuleDisplaySurvey');
+    const npsDue = showFeedback && showNPSFeedback(feedback);
+
+    // PNPS takes priority over feedback module surveys, but never interrupts
+    // one already on screen. In that case it waits for the next trigger.
+    useEffect(() => {
+        if (!surveyCardEnabled || !npsDue) {
+            return;
+        }
+        startSurveyGracePeriod();
+        if (surveyVisible) {
+            setShowFeedback(false);
+        }
+    }, [surveyCardEnabled, npsDue, surveyVisible, setShowFeedback]);
+
+    const open = showFeedback && !surveyVisible;
 
     const animations = useMemo(
         () => ({
@@ -99,9 +119,20 @@ export const FeedbackNPS = ({ openUrl }: IFeedbackNPSProps) => {
         return null;
     }
 
+    if (surveyCardEnabled) {
+        return (
+            <FeedbackNPSCard
+                open={open}
+                onConfirm={onConfirm}
+                onDontShowAgain={onDontShowAgain}
+                onClose={() => setShowFeedback(false)}
+            />
+        );
+    }
+
     return (
         <AnimateOnMount
-            mounted={showFeedback}
+            mounted={open}
             start={animations.start}
             enter={animations.enter}
             leave={animations.leave}

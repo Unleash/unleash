@@ -10,7 +10,6 @@
 export type ImpactMetricsConfigSchemaYAxisMin =
     (typeof ImpactMetricsConfigSchemaYAxisMin)[keyof typeof ImpactMetricsConfigSchemaYAxisMin];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ImpactMetricsConfigSchemaYAxisMin = {
     auto: 'auto',
     zero: 'zero',

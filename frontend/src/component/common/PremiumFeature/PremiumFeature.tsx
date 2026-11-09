@@ -83,6 +83,11 @@ const PremiumFeatures = {
         url: 'https://docs.getunleash.io/concepts/login-history',
         label: 'Login history',
     },
+    'active-sessions': {
+        plan: FeaturePlan.ENTERPRISE,
+        url: 'https://docs.getunleash.io/concepts/login-history',
+        label: 'Active sessions',
+    },
     groups: {
         plan: FeaturePlan.ENTERPRISE,
         url: 'https://docs.getunleash.io/concepts/rbac#user-groups',
@@ -133,6 +138,11 @@ const PremiumFeatures = {
         url: '',
         label: 'Release templates',
     },
+    'remote-mcp': {
+        plan: FeaturePlan.ENTERPRISE,
+        url: 'https://docs.getunleash.io/integrate/mcp#remote-mcp-server',
+        label: 'Remote MCP server',
+    },
 };
 
 type PremiumFeatureType = keyof typeof PremiumFeatures;
@@ -158,13 +168,13 @@ export const PremiumFeature = ({
     const tracker = useEventTracker();
 
     const trackUpgradePlan = () => {
-        tracker.trackEvent('upgrade_plan_clicked', {
+        tracker.trackEvent('upgrade-plan-clicked', {
             props: { feature: label },
         });
     };
 
     const trackReadAbout = () => {
-        tracker.trackEvent('read_about', {
+        tracker.trackEvent('read-about', {
             props: { feature: label },
         });
     };

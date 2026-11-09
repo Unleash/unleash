@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestsSchemaItem } from './changeRequestsSchemaItem';
+import type { ChangeRequestsSchemaItem } from './changeRequestsSchemaItem.ts';
 
 /**
  * A list of change requests

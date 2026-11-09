@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestChangeSchemaScheduleConflictsChangeRequestsItem } from './changeRequestChangeSchemaScheduleConflictsChangeRequestsItem';
+import type { ChangeRequestChangeSchemaScheduleConflictsChangeRequestsItem } from './changeRequestChangeSchemaScheduleConflictsChangeRequestsItem.ts';
 
 /**
  * Information about scheduled change requests that would casue conflicts with this change if applied.

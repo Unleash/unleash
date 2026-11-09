@@ -1,6 +1,8 @@
 import type React from 'react';
 import { type FC, useContext, useMemo, useRef } from 'react';
-import { PlausibleContext } from 'contexts/PlausibleContext';
+import { useLocation } from 'react-router';
+import { createUuid } from 'utils/createUuid';
+import { normalizePath } from 'utils/normalizePath';
 import { FlightRecorderContext } from 'contexts/FlightRecorderContext';
 import {
     EventTrackerContext,
@@ -11,26 +13,31 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 export const EventTrackerProvider: FC<{ children?: React.ReactNode }> = ({
     children,
 }) => {
-    const plausible = useContext(PlausibleContext);
     const flightRecorder = useContext(FlightRecorderContext);
     const { uiConfig } = useUiConfig();
+    const { pathname } = useLocation();
 
-    const plausibleRef = useRef(plausible);
-    plausibleRef.current = plausible;
     const flightRecorderRef = useRef(flightRecorder);
     flightRecorderRef.current = flightRecorder;
     const unleashContextRef = useRef(uiConfig?.unleashContext);
     unleashContextRef.current = uiConfig?.unleashContext;
+    const pathRef = useRef(pathname);
+    pathRef.current = pathname;
 
     const tracker = useMemo<EventTracker>(
         () => ({
             trackEvent: (eventName, options) => {
-                plausibleRef.current?.trackEvent(eventName, options);
                 flightRecorderRef.current?.record({
                     eventType: 'custom',
                     eventName,
                     context: { ...unleashContextRef.current },
-                    payload: options?.props,
+                    payload: {
+                        ...options?.props,
+                        path: normalizePath(pathRef.current),
+                        // Unique per call: repeated user actions must not fold into
+                        // one row via SDK dedupe; impressions still dedupe.
+                        eventId: createUuid(),
+                    },
                 });
             },
         }),

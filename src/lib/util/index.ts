@@ -14,6 +14,8 @@ export * from './time-utils.js';
 export * from './collect-ids.js';
 export * from './parseEnvVar.js';
 export * from './rewriteHTML.js';
+export * from './audit-event-fields.js';
+export * from './sanitize-user-agent.js';
 export * from './extract-user.js';
 export * from './flag-resolver.js';
 export * from './metrics-helper.js';
@@ -31,3 +33,5 @@ export * from './constantTimeCompare.js';
 export * from '../features/metrics/client-metrics/collapseHourlyMetrics.js';
 export * from '../features/playground/offline-unleash-client.js';
 export * from './batchExecute.js';
+
+export { reservedObjectPropertyNames } from './reserved-object-property-names.js';

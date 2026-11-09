@@ -10,7 +10,6 @@
 export type SafeguardTriggerConditionSchemaOperator =
     (typeof SafeguardTriggerConditionSchemaOperator)[keyof typeof SafeguardTriggerConditionSchemaOperator];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SafeguardTriggerConditionSchemaOperator = {
     '>': '>',
     '<': '<',

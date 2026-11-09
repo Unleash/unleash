@@ -19,6 +19,8 @@ const useProjectApiTokensApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    // Tracking lives in CreateProjectApiTokenForm. Onboarding also calls this and we
+    // don't want its generated key counted as a created one.
     const createToken = async (newToken: IApiTokenCreate, project: string) => {
         const path = `api/admin/projects/${project}/api-tokens`;
         const req = createRequest(path, {

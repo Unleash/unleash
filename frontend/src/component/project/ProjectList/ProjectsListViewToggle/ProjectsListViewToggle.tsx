@@ -27,7 +27,7 @@ export const ProjectsListViewToggle = ({
 
     return (
         <Tooltip title={`Switch to ${nextView} view`} arrow>
-            <IconButton size='medium' onClick={() => onSetView(nextView)}>
+            <IconButton size='large' onClick={() => onSetView(nextView)}>
                 {nextView === 'list' ? (
                     <FormatListBulletedIcon />
                 ) : (

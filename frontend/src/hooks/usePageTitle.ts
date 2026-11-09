@@ -2,7 +2,7 @@ import { useEffect, useContext } from 'react';
 import { AnnouncerContext } from 'component/common/Announcer/AnnouncerContext/AnnouncerContext';
 
 export const usePageTitle = (title?: string) => {
-    const { setAnnouncement } = useContext(AnnouncerContext);
+    const { announce } = useContext(AnnouncerContext);
 
     useEffect(() => {
         if (title) {
@@ -15,9 +15,9 @@ export const usePageTitle = (title?: string) => {
 
     useEffect(() => {
         if (title && title !== DEFAULT_PAGE_TITLE) {
-            setAnnouncement(`Navigated to ${title}`);
+            announce(`Navigated to ${title}`);
         }
-    }, [setAnnouncement, title]);
+    }, [announce, title]);
 };
 
 const DEFAULT_PAGE_TITLE = 'Unleash';

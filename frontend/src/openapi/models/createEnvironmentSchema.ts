@@ -24,14 +24,14 @@ export interface CreateEnvironmentSchema {
     /** Defines where in the list of environments to place this environment. The list uses an ascending sort, so lower numbers are shown first. You can change this value later. */
     sortOrder?: number;
     /**
-   * The [type of environment](https://docs.getunleash.io/concepts/environments#environment-types) you would like to create. Unleash officially recognizes the following values:
-- `development`
-- `test`
-- `preproduction`
-- `production`
-
-If you pass a string that is not one of the recognized values, Unleash will accept it, but it will carry no special semantics.
-   * @minLength 1
-   */
+     * The [type of environment](https://docs.getunleash.io/concepts/environments#environment-types) you would like to create. Unleash officially recognizes the following values:
+     * - `development`
+     * - `test`
+     * - `preproduction`
+     * - `production`
+     *
+     * If you pass a string that is not one of the recognized values, Unleash will accept it, but it will carry no special semantics.
+     * @minLength 1
+     */
     type: string;
 }

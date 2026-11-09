@@ -3,14 +3,14 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema';
-import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema';
-import type { ChangeRequestSchemaOneOfFiveCreatedBy } from './changeRequestSchemaOneOfFiveCreatedBy';
-import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema';
-import type { ChangeRequestScheduleSchema } from './changeRequestScheduleSchema';
-import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema';
-import type { ChangeRequestSchemaOneOfFiveState } from './changeRequestSchemaOneOfFiveState';
-import type { ChangeRequestSchemaOneOfFiveStateTimestamps } from './changeRequestSchemaOneOfFiveStateTimestamps';
+import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema.ts';
+import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema.ts';
+import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema.ts';
+import type { ChangeRequestScheduleSchema } from './changeRequestScheduleSchema.ts';
+import type { ChangeRequestSchemaOneOfFiveCreatedBy } from './changeRequestSchemaOneOfFiveCreatedBy.ts';
+import type { ChangeRequestSchemaOneOfFiveState } from './changeRequestSchemaOneOfFiveState.ts';
+import type { ChangeRequestSchemaOneOfFiveStateTimestamps } from './changeRequestSchemaOneOfFiveStateTimestamps.ts';
+import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema.ts';
 
 export type ChangeRequestSchemaOneOfFive = {
     /** A list of approvals that this change request has received. */

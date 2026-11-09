@@ -20,7 +20,8 @@ const strategySchema = joi
                     description: joi.string().allow(null).allow('').optional(),
                     required: joi.boolean(),
                 }),
-            ),
+            )
+            .unique('name', { ignoreUndefined: true }),
     })
     .options({ allowUnknown: false, stripUnknown: true, abortEarly: false });
 export default strategySchema;

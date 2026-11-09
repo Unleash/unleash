@@ -10,7 +10,6 @@
 export type PlaygroundConstraintSchemaOperator =
     (typeof PlaygroundConstraintSchemaOperator)[keyof typeof PlaygroundConstraintSchemaOperator];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PlaygroundConstraintSchemaOperator = {
     NOT_IN: 'NOT_IN',
     IN: 'IN',
@@ -27,5 +26,8 @@ export const PlaygroundConstraintSchemaOperator = {
     SEMVER_EQ: 'SEMVER_EQ',
     SEMVER_GT: 'SEMVER_GT',
     SEMVER_LT: 'SEMVER_LT',
+    SEMVER_GTE: 'SEMVER_GTE',
+    SEMVER_LTE: 'SEMVER_LTE',
     REGEX: 'REGEX',
+    IN_CIDR: 'IN_CIDR',
 } as const;

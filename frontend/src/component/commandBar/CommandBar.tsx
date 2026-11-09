@@ -53,7 +53,7 @@ export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
     wordBreak: 'break-word',
-    border: `1px solid ${theme.palette.neutral.border}`,
+    border: `1px solid ${theme.palette.neutral.containerBorder}`,
 }));
 
 const StyledContainer = styled('div', {
@@ -67,9 +67,7 @@ const StyledContainer = styled('div', {
     flexGrow: 1,
     alignItems: 'center',
     position: 'relative',
-    backgroundColor: compact
-        ? 'transparent'
-        : theme.palette.background.application,
+    backgroundColor: compact ? 'transparent' : theme.palette.background.default,
     maxWidth: active ? '100%' : '400px',
     [theme.breakpoints.down('md')]: {
         maxWidth: '100%',
@@ -97,7 +95,7 @@ const StyledSearch = styled('div')<{ isOpen?: boolean }>(
         // anchors to this box's bottom, from sitting flush.
         height: 40,
         backgroundColor: theme.palette.background.paper,
-        border: `1px solid ${theme.palette.neutral.border}`,
+        border: `1px solid ${theme.palette.neutral.containerBorder}`,
         borderRadius: theme.shape.borderRadiusExtraLarge,
         padding: '3px 5px 3px 12px',
         width: '100%',
@@ -229,6 +227,7 @@ export const CommandBar = () => {
             modifiers: ['ctrl'],
             key: 'k',
             preventDefault: true,
+            anchorRefs: [compactIconRef, searchContainerRef],
         },
         () => {
             if (isCompact) {
@@ -244,16 +243,19 @@ export const CommandBar = () => {
             }
         },
     );
-    useKeyboardShortcut({ key: 'Escape' }, () => {
-        setShowSuggestions(false);
-        if (searchContainerRef.current?.contains(document.activeElement)) {
-            searchInputRef.current?.blur();
-        }
-        if (isCompact && compactExpanded) {
-            setCompactExpanded(false);
-            setValue('');
-        }
-    });
+    useKeyboardShortcut(
+        { key: 'Escape', anchorRefs: [searchContainerRef] },
+        () => {
+            setShowSuggestions(false);
+            if (searchContainerRef.current?.contains(document.activeElement)) {
+                searchInputRef.current?.blur();
+            }
+            if (isCompact && compactExpanded) {
+                setCompactExpanded(false);
+                setValue('');
+            }
+        },
+    );
     const placeholder = `Command menu (${hotkey})`;
 
     const findCommandBarLinksAndSelectedIndex = () => {
@@ -279,6 +281,7 @@ export const CommandBar = () => {
         {
             key: 'ArrowDown',
             preventDefault: true,
+            anchorRefs: [searchContainerRef],
         },
         () => {
             const itemsAndIndex = findCommandBarLinksAndSelectedIndex();
@@ -304,6 +307,7 @@ export const CommandBar = () => {
         {
             key: 'ArrowUp',
             preventDefault: true,
+            anchorRefs: [searchContainerRef],
         },
         () => {
             const itemsAndIndex = findCommandBarLinksAndSelectedIndex();

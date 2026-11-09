@@ -2,7 +2,6 @@ import { styled, Tooltip } from '@mui/material';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { useUserAccessRequests } from 'hooks/api/getters/useUserAccessRequests/useUserAccessRequests';
 import { useHasRootAccess } from 'hooks/useHasAccess';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const Dot = styled('span')(({ theme }) => ({
     width: theme.spacing(0.875),
@@ -47,10 +46,9 @@ const AdminPendingAccessRequestsIndicator = ({
 export const PendingAccessRequestsIndicator = (
     props: PendingAccessRequestsIndicatorProps,
 ) => {
-    const enabled = useUiFlag('accessRequestsMenuIndicator');
     const hasAdminAccess = useHasRootAccess(ADMIN);
 
-    if (!enabled || !hasAdminAccess) {
+    if (!hasAdminAccess) {
         return null;
     }
 

@@ -5,25 +5,30 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
+import type { Tracking } from 'utils/trackingEvents';
 
 interface IChangeRequestDialogueProps {
     isOpen: boolean;
-    onConfirm: () => void;
+    onConfirm: () => Promise<unknown>;
+    onError?: (error: unknown) => void;
     onClose: () => void;
     environment?: string;
     showBanner?: boolean;
     messageComponent: JSX.Element;
     disabled?: boolean;
+    tracking: Tracking;
 }
 
 export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
     isOpen,
     disabled = false,
     onConfirm,
+    onError,
     onClose,
     showBanner,
     environment,
     messageComponent,
+    tracking,
 }) => {
     const projectId = useRequiredPathParam('projectId');
     const { data } = usePendingChangeRequests(projectId);
@@ -43,10 +48,12 @@ export const ChangeRequestDialogue: FC<IChangeRequestDialogueProps> = ({
             primaryButtonText={primaryButtonText}
             secondaryButtonText='Cancel'
             disabledPrimaryButton={disabled}
-            onClick={onConfirm}
+            onSubmit={onConfirm}
+            onError={onError}
             onClose={onClose}
             title='Request changes'
             fullWidth
+            tracking={tracking}
         >
             <ConditionallyRender
                 condition={hasChangeRequestInReviewForEnvironment}

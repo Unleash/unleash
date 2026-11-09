@@ -4,7 +4,10 @@ import type { ImpactMetricsConfigSchema } from 'openapi';
 import type { ChartTimeRange } from 'component/impact-metrics/MultimetricChart/chartConfig';
 import type { MultimetricStepSeries } from 'component/impact-metrics/MultimetricChart/types';
 import type { MultimetricStep } from 'component/impact-metrics/MultimetricChart/MultimetricTotals';
-import type { ImpactMetricsResponse } from './useImpactMetricsData';
+import {
+    type ImpactMetricsResponse,
+    rangeToRefreshInterval,
+} from './useImpactMetricsData';
 
 const SUM_MODES = new Set(['count', 'sum']);
 
@@ -92,7 +95,14 @@ export const useGroupedImpactMetricsData = (
             return responses;
         },
         {
-            refreshInterval: 30_000,
+            refreshInterval:
+                configs.length > 0
+                    ? Math.min(
+                          ...configs.map((config) =>
+                              rangeToRefreshInterval(config.timeRange),
+                          ),
+                      )
+                    : 0,
             revalidateOnFocus: true,
         },
     );

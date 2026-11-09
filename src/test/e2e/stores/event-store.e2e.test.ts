@@ -7,6 +7,7 @@ import {
     FEATURE_TAGGED,
     FEATURE_UPDATED,
     SEGMENT_UPDATED,
+    type IBaseEvent,
     type IEvent,
 } from '../../../lib/events/index.js';
 import {
@@ -27,12 +28,15 @@ import {
     type TransactionUserParams,
 } from '../../../lib/db/transaction.js';
 import { EventStore } from '../../../lib/features/events/event-store.js';
+import { DB_TIME, EVENT_STORE_WRITE } from '../../../lib/metric-events.js';
+import EventEmitter from 'node:events';
 
 import { vi } from 'vitest';
 
 let db: ITestDb;
 let stores: IUnleashStores;
 let eventStore: IEventStore;
+const eventBus = new EventEmitter();
 const TEST_USER_ID = -9999;
 
 const testAudit: IAuditUser = {
@@ -55,6 +59,127 @@ afterAll(async () => {
         await db.destroy();
     }
 });
+
+test('unknown environment-less feature events invalidate conservatively', async () => {
+    const [event] = await db
+        .rawDatabase('events')
+        .insert({
+            type: 'future-configuration-event',
+            feature_name: 'polling-feature',
+            project: 'default',
+            created_by: testAudit.username,
+        })
+        .returning('id');
+    for (const environment of [undefined, 'development', 'production']) {
+        expect(await eventStore.getMaxRevisionId(0, environment)).toBe(
+            event.id,
+        );
+    }
+    expect(await eventStore.getRevisionRange(0, event.id)).toEqual([
+        expect.objectContaining({ type: 'future-configuration-event' }),
+    ]);
+});
+
+test.each([
+    'feature-potentially-stale-on',
+    'feature-completed',
+    'feature-uncompleted',
+    'feature-stale-on',
+    'feature-stale-off',
+] as const)('configuration filter ignores %s but retains audit history', async (type) => {
+    await eventStore.store({
+        type: FEATURE_CREATED,
+        featureName: 'polling-feature',
+        project: 'default',
+        createdBy: 'test',
+        createdByUserId: testAudit.id,
+        ip: testAudit.ip,
+    });
+    const baseline = await eventStore.getMaxRevisionId();
+    await eventStore.store({
+        type,
+        featureName: 'polling-feature',
+        project: 'default',
+        createdBy: 'test',
+        createdByUserId: testAudit.id,
+        ip: testAudit.ip,
+    });
+    const events = await eventStore.getAll();
+    const metadataEvent = events.find((event) => event.type === type)!;
+    expect(metadataEvent.id).toBeGreaterThan(baseline);
+    for (const environment of [undefined, 'development', 'production']) {
+        expect(await eventStore.getMaxRevisionId(baseline, environment)).toBe(
+            baseline,
+        );
+    }
+    expect(
+        await eventStore.getRevisionRange(baseline, metadataEvent.id),
+    ).toEqual([]);
+    expect(
+        (
+            await eventStore.getDeltaRevisionState('development')
+        ).projectRevisions.get('default'),
+    ).toBe(baseline);
+
+    await eventStore.store({
+        type: FEATURE_UPDATED,
+        featureName: 'polling-feature',
+        project: 'default',
+        createdBy: testAudit.username,
+        createdByUserId: testAudit.id,
+        ip: testAudit.ip,
+        data: { enabled: true },
+    });
+    const configurationRevision = await eventStore.getMaxRevisionId();
+    expect(configurationRevision).toBeGreaterThan(metadataEvent.id);
+    expect(
+        await eventStore.getRevisionRange(baseline, configurationRevision),
+    ).toEqual([
+        expect.objectContaining({
+            type: FEATURE_UPDATED,
+            id: configurationRevision,
+        }),
+    ]);
+});
+
+test.each([
+    'feature-created',
+    'feature-updated',
+    'feature-metadata-updated',
+    'feature-strategy-add',
+    'feature-strategy-update',
+    'feature-strategy-remove',
+    'feature-environment-enabled',
+    'feature-environment-disabled',
+    'feature-variants-updated',
+    'feature-environment-variants-updated',
+    'feature-archived',
+    'feature-revived',
+    'feature-deleted',
+    'feature-project-change',
+    'feature-dependency-added',
+    'feature-dependency-removed',
+    'feature-dependencies-removed',
+    'feature-tagged',
+    'feature-untagged',
+    'feature-import',
+    'features-imported',
+    'segment-updated',
+] as const)('polling retains invalidation for %s', async (type) => {
+    await eventStore.store({
+        type,
+        featureName: type === 'segment-updated' ? undefined : 'polling-feature',
+        project: 'default',
+        createdBy: 'test',
+        createdByUserId: testAudit.id,
+        ip: testAudit.ip,
+    });
+    expect(await eventStore.getMaxRevisionId()).toBeGreaterThan(0);
+    expect(await eventStore.getMaxRevisionId()).toBe(
+        Math.max(...(await eventStore.getAll()).map((event) => event.id)),
+    );
+});
+
 test('Should include id and createdAt when saving', async () => {
     vi.useFakeTimers();
     const event1 = {
@@ -229,7 +354,12 @@ test('Should delete all stored events', async () => {
 });
 
 test('Should get all events of type', async () => {
-    const data = { name: 'someName', project: 'test-project' };
+    const data = {
+        name: 'someName',
+        project: 'test-project',
+        type: 'release',
+        createdAt: new Date(),
+    };
     await Promise.all(
         [0, 1, 2, 3, 4, 5].map(async (id) => {
             const event =
@@ -699,7 +829,7 @@ test('Should store and retrieve transaction context fields', async () => {
     };
 
     const eventStoreService = withTransactional(
-        (db) => new EventStore(db, getLogger),
+        (db) => new EventStore(db, eventBus, getLogger),
         db.rawDatabase,
     );
 
@@ -765,7 +895,7 @@ test('Should store transaction context in batch operations', async () => {
     };
 
     const eventStoreService = withTransactional(
-        (db) => new EventStore(db, getLogger),
+        (db) => new EventStore(db, eventBus, getLogger),
         db.rawDatabase,
     );
 
@@ -810,7 +940,7 @@ test('Should store transaction context in batch operations', async () => {
 
 test('Should auto-generate transaction context when none provided', async () => {
     const eventStoreService = withTransactional(
-        (db) => new EventStore(db, getLogger),
+        (db) => new EventStore(db, eventBus, getLogger),
         db.rawDatabase,
     );
 
@@ -842,4 +972,109 @@ test('Should auto-generate transaction context when none provided', async () => 
     expect(storedEvent!.groupId).toBeTruthy();
     expect(typeof storedEvent!.groupId).toBe('string');
     expect(storedEvent!.groupId).toMatch(/^[0-9A-HJKMNP-TV-Z]{26}$/);
+});
+
+describe('a failed event write', () => {
+    const event: IBaseEvent = {
+        type: FEATURE_CREATED,
+        // one character more than events.created_by holds
+        createdBy: 'x'.repeat(256),
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    };
+    const writes = {
+        store: (store: EventStore) => store.store(event),
+        batchStore: (store: EventStore) => store.batchStore([event]),
+    };
+
+    test.each(
+        Object.entries(writes),
+    )('%s rethrows it inside a transaction', async (_, write) => {
+        const eventStoreService = withTransactional(
+            (db) => new EventStore(db, eventBus, getLogger),
+            db.rawDatabase,
+        );
+
+        await expect(eventStoreService.transactional(write)).rejects.toThrow(
+            'value too long',
+        );
+    });
+
+    test.each(
+        Object.entries(writes),
+    )('%s swallows it outside a transaction', async (_, write) => {
+        await expect(
+            write(new EventStore(db.rawDatabase, eventBus, getLogger)),
+        ).resolves.toBeUndefined();
+    });
+});
+
+test('reports each write on the bus it was given', async () => {
+    const event: IBaseEvent = {
+        type: FEATURE_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    };
+    const bus = new EventEmitter();
+    const writes: unknown[] = [];
+    const timings: unknown[] = [];
+    bus.on(EVENT_STORE_WRITE, (write) => writes.push(write));
+    bus.on(DB_TIME, (timing) => timings.push(timing));
+
+    await withTransactional(
+        (trx) => new EventStore(trx, bus, getLogger),
+        db.rawDatabase,
+    ).transactional((transactionalStore) => transactionalStore.store(event));
+    await new EventStore(db.rawDatabase, bus, getLogger).batchStore([event]);
+
+    expect(writes).toEqual([
+        { type: FEATURE_CREATED, transaction: 'inside' },
+        { type: FEATURE_CREATED, transaction: 'outside' },
+    ]);
+    // the query timer should reach the same bus
+    expect(timings).toEqual([
+        expect.objectContaining({ store: 'event', action: 'store' }),
+        expect.objectContaining({ store: 'event', action: 'batchStore' }),
+    ]);
+});
+
+test('persists the user agent when the request had one, and null when it did not', async () => {
+    const withUserAgent: IBaseEvent = {
+        type: FEATURE_CREATED,
+        createdBy: 'test@example.com',
+        createdByUserId: TEST_USER_ID,
+        featureName: 'ua-request-originated',
+        ip: '127.0.0.1',
+        userAgent: 'curl/8.4.0',
+        data: { name: 'ua-request-originated' },
+    };
+    const withoutUserAgent: IBaseEvent = {
+        type: FEATURE_CREATED,
+        createdBy: 'unleash_system_user',
+        createdByUserId: TEST_USER_ID,
+        featureName: 'ua-system-generated',
+        ip: '',
+        data: { name: 'ua-system-generated' },
+    };
+
+    await eventStore.store(withUserAgent);
+    await eventStore.store(withoutUserAgent);
+
+    // The store is the only thing under test here, so read the column directly
+    // rather than through a read path that may not select it.
+    const rows = await db
+        .rawDatabase('events')
+        .select('feature_name', 'user_agent')
+        .whereIn('feature_name', [
+            'ua-request-originated',
+            'ua-system-generated',
+        ]);
+    const byFeature = Object.fromEntries(
+        rows.map((row) => [row.feature_name, row.user_agent]),
+    );
+
+    expect(byFeature['ua-request-originated']).toBe('curl/8.4.0');
+    // null, never '' or a placeholder: "no request behind this event"
+    expect(byFeature['ua-system-generated']).toBeNull();
 });

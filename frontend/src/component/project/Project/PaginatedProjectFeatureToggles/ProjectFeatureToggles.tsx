@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -12,6 +12,7 @@ import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi
 import { MemoizedRowSelectCell } from '../ProjectFeatureToggles/RowSelectCell/RowSelectCell.tsx';
 import { BatchSelectionActionsBar } from 'component/common/BatchSelectionActionsBar/BatchSelectionActionsBar';
 import { ProjectFeaturesBatchActions } from '../ProjectFeatureToggles/ProjectFeaturesBatchActions/ProjectFeaturesBatchActions.tsx';
+import { ArchiveBatchActions } from '../../../archive/ArchiveTable/ArchiveBatchActions.tsx';
 import {
     FeatureLifecycleCell,
     MemoizedFeatureEnvironmentSeenCell,
@@ -20,7 +21,13 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useFeatureToggleSwitch } from '../ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch.tsx';
 import useLoading from 'hooks/useLoading';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
-import { withTableState } from 'utils/withTableState';
+import { useTableState } from 'hooks/useTableState';
+import {
+    toggleColumnTracking,
+    flagsListProps,
+    flagsListTableTracking,
+} from 'component/feature/FeatureToggleList/flagsListTracking';
+import { useTracking } from 'hooks/useTracking';
 import type { FeatureSearchResponseSchema } from 'openapi';
 import {
     ArchivedFeatureToggleCell,
@@ -46,15 +53,15 @@ import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog/Co
 import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding.tsx';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { useEventTracker } from 'hooks/useEventTracker';
-import { ArchivedFeatureActionCell } from '../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureActionCell.tsx';
-import { ArchiveBatchActions } from '../../../archive/ArchiveTable/ArchiveBatchActions.tsx';
 import { ImportModal } from '../Import/ImportModal.tsx';
 import { ProjectCleanupReminder } from './ProjectCleanupReminder/ProjectCleanupReminder.tsx';
-import { formatEnvironmentColumnId } from './formatEnvironmentColumnId.ts';
+import {
+    formatEnvironmentColumnId,
+    trackedColumnName,
+} from 'utils/formatEnvironmentColumnId';
 import { ProjectFeaturesColumnsMenu } from './ProjectFeaturesColumnsMenu/ProjectFeaturesColumnsMenu.tsx';
 import { ProjectFeatureTogglesHeader } from './ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader.tsx';
 import { ProjectFlagsSearch } from './ProjectFlagsSearch/ProjectFlagsSearch.tsx';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 type ProjectFeatureTogglesProps = {
     environments: string[];
@@ -84,24 +91,6 @@ const FilterRow = styled('div')({
     alignItems: 'center',
 });
 
-const LinkToggle = styled('button')(({ theme }) => ({
-    background: 'none',
-    border: 'none',
-    padding: 0,
-    margin: theme.spacing(0, 1.5),
-    marginLeft: 'auto',
-    cursor: 'pointer',
-    color: theme.palette.primary.main,
-    textDecoration: 'underline',
-    fontSize: theme.typography.body2.fontSize,
-    fontWeight: theme.typography.fontWeightMedium,
-    display: 'inline-flex',
-    alignItems: 'center',
-    '&:hover': {
-        textDecoration: 'none',
-    },
-}));
-
 export const ProjectFeatureToggles = ({
     environments: availableEnvironments,
 }: ProjectFeatureTogglesProps) => {
@@ -112,8 +101,6 @@ export const ProjectFeatureToggles = ({
     const [modalOpen, setModalOpen] = useState(false);
     const theme = useTheme();
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('xl'));
-    const archiveInFlagsView = useUiFlag('archiveInFlagsView');
-    const showArchivedLink = !archiveInFlagsView;
 
     const {
         features,
@@ -124,17 +111,6 @@ export const ProjectFeatureToggles = ({
         tableState,
         setTableState,
     } = useProjectFeatureSearch(projectId);
-
-    // The legacy archived view can still be reached through old URLs;
-    // rewrite them to the archived lifecycle filter, which has replaced it.
-    useEffect(() => {
-        if (archiveInFlagsView && tableState.archived) {
-            setTableState({
-                archived: undefined,
-                lifecycle: { operator: 'IS', values: ['archived'] },
-            });
-        }
-    }, [archiveInFlagsView, tableState.archived, setTableState]);
 
     const { onFlagTypeClick, onTagClick, onAvatarClick } =
         useProjectFeatureSearchActions(tableState, setTableState);
@@ -151,11 +127,19 @@ export const ProjectFeatureToggles = ({
         type: tableState.type,
         state: tableState.state,
         createdBy: tableState.createdBy,
-        archived: tableState.archived,
         lifecycle: tableState.lifecycle,
         lastSeenAt: tableState.lastSeenAt,
         favorite: tableState.favorite,
     };
+    const listProps = flagsListProps({
+        filterState,
+        query: tableState.query,
+        total,
+    });
+    const trackToggleColumn = useTracking({
+        ...toggleColumnTracking,
+        props: listProps,
+    });
 
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const onFavorite = useCallback(
@@ -198,29 +182,22 @@ export const ProjectFeatureToggles = ({
 
     const [onboardingFlow, setOnboardingFlow] = useLocalStorageState<
         'visible' | 'closed'
-    >(`onboarding-flow:v1-${projectId}`, 'closed');
+    >(`onboarding-flow:v2-${projectId}`, 'closed');
 
+    const sawOnboardingInProgress = useRef(false);
     useEffect(() => {
-        if (!isPlaceholder && !isOnboarded) {
+        if (isPlaceholder) return;
+        if (!isOnboarded) {
+            sawOnboardingInProgress.current = true;
+        } else if (sawOnboardingInProgress.current) {
             setOnboardingFlow('visible');
         }
     }, [isPlaceholder, isOnboarded]);
 
-    const showNewOnboarding = onboardingFlow === 'visible';
+    const showNewOnboarding = !isOnboarded || onboardingFlow === 'visible';
 
     const showCleanupReminder = !tableState.lastSeenAt && !tableState.lifecycle;
-    const showArchived = Boolean(tableState.archived);
-    const toggleArchived = () => {
-        if (showArchived) {
-            setTableState({ archived: undefined });
-        } else {
-            setTableState({
-                archived: { operator: 'IS', values: ['true'] },
-                lifecycle: undefined,
-            });
-        }
-    };
-    const environments = showArchived ? [] : availableEnvironments;
+    const environments = availableEnvironments;
 
     const columns = useMemo(
         () => [
@@ -278,7 +255,7 @@ export const ProjectFeatureToggles = ({
                 },
             }),
 
-            columnHelper.accessor('lastSeenAt', {
+            columnHelper.accessor((row) => row.environments, {
                 id: 'lastSeenAt',
                 header: 'Last seen',
                 cell: ({ row: { original } }) => (
@@ -380,23 +357,7 @@ export const ProjectFeatureToggles = ({
                 id: 'actions',
                 header: '',
                 cell: ({ row }) =>
-                    tableState.archived ? (
-                        <ArchivedFeatureActionCell
-                            project={projectId}
-                            onRevive={() => {
-                                setShowFeatureReviveDialogue({
-                                    featureId: row.id,
-                                    open: true,
-                                });
-                            }}
-                            onDelete={() => {
-                                setShowFeatureDeleteDialogue({
-                                    featureId: row.id,
-                                    open: true,
-                                });
-                            }}
-                        />
-                    ) : row.original.archivedAt ? (
+                    row.original.archivedAt ? (
                         <ArchivedActionsCell
                             projectId={projectId}
                             onRevive={() => {
@@ -492,18 +453,28 @@ export const ProjectFeatureToggles = ({
     const defaultColumnVisibility = useDefaultColumnVisibility(allColumnIds);
 
     const table = useReactTable(
-        withTableState(tableState, setTableState, {
-            columns,
-            data,
-            enableRowSelection: true,
-            state: {
-                columnVisibility: defaultColumnVisibility,
+        useTableState({
+            tableState,
+            setTableState,
+            options: {
+                columns,
+                data,
+                enableRowSelection: true,
+                state: {
+                    columnVisibility: defaultColumnVisibility,
+                },
+                getRowId,
             },
-            getRowId,
+            tracking: { ...flagsListTableTracking, props: listProps },
         }),
     );
 
     const { columnVisibility, rowSelection } = table.getState();
+
+    const activeFilters = JSON.stringify([filterState, tableState.query]);
+    // reset flag selection on filter changes
+    useEffect(() => table.resetRowSelection(), [activeFilters, table]);
+
     const onToggleColumnVisibility = useCallback(
         (columnId: string) => {
             const isVisible = columnVisibility[columnId];
@@ -518,11 +489,18 @@ export const ProjectFeatureToggles = ({
                         !columnId.includes(','),
                 ),
             });
+            trackToggleColumn('succeeded', {
+                column: trackedColumnName(columnId),
+                newState: isVisible ? 'hidden' : 'shown',
+            });
         },
-        [columnVisibility, setTableState],
+        [columnVisibility, setTableState, trackToggleColumn],
     );
 
     const selectedData = useSelectedData(features, rowSelection);
+    const allSelectedAreArchived =
+        selectedData.length > 0 &&
+        selectedData.every((feature) => feature.archivedAt);
 
     return (
         <Container>
@@ -544,23 +522,7 @@ export const ProjectFeatureToggles = ({
                         isLoading={initialLoad}
                         totalItems={total}
                         environmentsToExport={environments}
-                        actions={
-                            showArchivedLink && (
-                                <LinkToggle
-                                    type='button'
-                                    onClick={toggleArchived}
-                                >
-                                    {showArchived
-                                        ? 'View active flags'
-                                        : 'View archived flags'}
-                                </LinkToggle>
-                            )
-                        }
-                        title={
-                            showArchived
-                                ? 'Archived feature flags'
-                                : 'Feature flags'
-                        }
+                        title='Feature flags'
                     />
                 }
                 bodyClass='noop'
@@ -573,22 +535,12 @@ export const ProjectFeatureToggles = ({
                 >
                     <FiltersContainer>
                         <FilterRow>
-                            {showArchived ? (
-                                <Box sx={{ marginRight: 'auto' }}>
-                                    <ProjectOverviewFilters
-                                        project={projectId}
-                                        onChange={setTableState}
-                                        state={filterState}
-                                    />
-                                </Box>
-                            ) : (
-                                <ProjectLifecycleFilters
-                                    projectId={projectId}
-                                    state={filterState}
-                                    onChange={setTableState}
-                                    total={loading ? undefined : total}
-                                />
-                            )}
+                            <ProjectLifecycleFilters
+                                projectId={projectId}
+                                state={filterState}
+                                onChange={setTableState}
+                                total={loading ? undefined : total}
+                            />
                             {isMediumScreen ? null : (
                                 <ProjectFlagsSearch
                                     searchQuery={tableState.query || ''}
@@ -604,31 +556,30 @@ export const ProjectFeatureToggles = ({
                                 onToggle={onToggleColumnVisibility}
                             />
                         </FilterRow>
-                        {showArchived ? null : (
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <FilterRow>
-                                    <ProjectOverviewFilters
-                                        project={projectId}
-                                        onChange={setTableState}
-                                        state={filterState}
-                                    />
-                                </FilterRow>
-                                <FavoriteIconHeader
-                                    isActive={tableState.favoritesFirst}
-                                    onClick={() =>
-                                        setTableState({
-                                            favoritesFirst:
-                                                !tableState.favoritesFirst,
-                                        })
-                                    }
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <FilterRow>
+                                <ProjectOverviewFilters
+                                    project={projectId}
+                                    onChange={setTableState}
+                                    state={filterState}
                                 />
-                            </Box>
-                        )}
+                            </FilterRow>
+                            <FavoriteIconHeader
+                                scope='project'
+                                isActive={tableState.favoritesFirst}
+                                onClick={() =>
+                                    setTableState({
+                                        favoritesFirst:
+                                            !tableState.favoritesFirst,
+                                    })
+                                }
+                            />
+                        </Box>
                         {isMediumScreen ? (
                             <ProjectFlagsSearch
                                 searchQuery={tableState.query || ''}
@@ -669,14 +620,13 @@ export const ProjectFeatureToggles = ({
                 }
             />
             <BatchSelectionActionsBar count={selectedData.length}>
-                {tableState.archived ? (
+                {allSelectedAreArchived ? (
                     <ArchiveBatchActions
                         selectedIds={Object.keys(rowSelection)}
                         projectId={projectId}
                         onConfirm={() => {
                             refetchWithLifecycleCounts();
                             table.resetRowSelection();
-                            trackArchiveAction('bulk archived');
                         }}
                     />
                 ) : (

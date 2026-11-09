@@ -81,15 +81,25 @@ const EditHeader: FC<{
     willBeDisabled?: boolean;
 }> = ({ wasDisabled = false, willBeDisabled = false }) => {
     if (wasDisabled && willBeDisabled) {
-        return <Action color='text.secondary'>Editing strategy</Action>;
+        return (
+            <Action sx={{ color: 'text.secondary' }}>Editing strategy</Action>
+        );
     }
 
     if (!wasDisabled && willBeDisabled) {
-        return <Action color='error.dark'>Editing strategy</Action>;
+        return (
+            <Action sx={{ color: 'error.onContainer' }}>
+                Editing strategy
+            </Action>
+        );
     }
 
     if (wasDisabled && !willBeDisabled) {
-        return <Action color='success.dark'>Editing strategy</Action>;
+        return (
+            <Action sx={{ color: 'success.onContainer' }}>
+                Editing strategy
+            </Action>
+        );
     }
 
     return <Action>Editing strategy</Action>;
@@ -191,9 +201,14 @@ const StrategyChangeDetails: FC<{
         change.payload.variants || [],
     );
 
+    const name =
+        'name' in change.payload
+            ? change.payload.name
+            : (referenceStrategy?.name ?? '');
+
     return (
         <>
-            <StrategyExecution strategy={change.payload} />
+            <StrategyExecution strategy={{ ...change.payload, name }} />
             {hasVariantDiff ? (
                 <StyledBox>
                     {change.payload.variants?.length ? (

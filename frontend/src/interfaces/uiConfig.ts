@@ -22,6 +22,7 @@ export interface IUiConfig {
     unleashUrl?: string;
     edgeUrl?: string;
     logRocketAppId?: string;
+    hubspotPortalId?: string;
     version: string;
     versionInfo?: IVersionInfo;
     links: ILinks[];
@@ -40,7 +41,9 @@ export interface IUiConfig {
     oidcConfiguredThroughEnv?: boolean;
     samlConfiguredThroughEnv?: boolean;
     maxSessionsCount?: number;
+    sessionKeepAliveIntervalSeconds?: number;
     unleashContext?: IMutableContext;
+    storiesPageEnabled?: boolean;
 }
 
 export type UiFlags = {
@@ -57,12 +60,12 @@ export type UiFlags = {
     notifications?: boolean;
     personalAccessTokensKillSwitch?: boolean;
     demo?: boolean;
+    onboardingIntroTourAdvancedTopics?: boolean;
     interactiveDemoKillSwitch?: boolean;
     advancedPlayground?: boolean;
     strategyVariant?: boolean;
     doraMetrics?: boolean;
     dependentFeatures?: boolean;
-    newStrategyConfiguration?: boolean;
     signals?: boolean;
     automatedActions?: boolean;
     celebrateUnleash?: boolean;
@@ -81,28 +84,35 @@ export type UiFlags = {
     showUserDeviceCount?: boolean;
     consumptionModel?: boolean;
     consumptionModelUI?: boolean;
-    customMetrics?: boolean;
     disableImpactMetrics?: boolean;
     impactViews?: boolean;
-    registerImpactMetrics?: boolean;
-    plausibleMetrics?: boolean;
     oidcPkceSupport?: boolean;
     extendedUsageMetrics?: boolean;
-    newInUnleash?: boolean | Variant;
     regexConstraintOperator?: boolean;
     signupDialog?: boolean;
     enterpriseEdgeTokensList?: boolean;
     impactMetricsFlagPage?: boolean;
+    uxTweakSurveys?: boolean;
     multiMetricChart?: boolean;
     logRocketEnabled?: boolean;
-    newProjectList?: boolean;
-    newModalDesign?: boolean;
-    archiveInFlagsView?: boolean;
-    hideTopmenuDocumentation?: boolean;
+    hubspotChatEnabled?: boolean;
     learningLab?: Variant;
-    accessRequestsNotifications?: boolean;
     flightRecorderFrontend?: Variant;
-    accessRequestsMenuIndicator?: boolean;
+    searchDocsWidget?: boolean;
+    semverBuildMetadata?: boolean;
+    helpMenuRelocationHint?: boolean;
+    ipConstraintOperator?: boolean;
+    githubIntegration?: boolean;
+    integrationParamKvpEditor?: boolean;
+    perFlagLifetime?: boolean;
+    sessionTimeouts?: boolean;
+    payloadSchemas?: boolean;
+    singlePageStrategyForm?: boolean;
+    feedbackModule?: boolean;
+    feedbackModuleDisplaySurvey?: boolean;
+    playgroundFeatureEvaluation?: boolean;
+    dashboardV2?: boolean;
+    changeRequestSubmitRedirect?: boolean;
 };
 
 export interface IVersionInfo {

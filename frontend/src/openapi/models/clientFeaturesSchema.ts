@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ClientFeatureSchema } from './clientFeatureSchema';
-import type { ClientFeaturesQuerySchema } from './clientFeaturesQuerySchema';
-import type { ClientSegmentSchema } from './clientSegmentSchema';
+import type { ClientFeatureSchema } from './clientFeatureSchema.ts';
+import type { ClientFeaturesQuerySchema } from './clientFeaturesQuerySchema.ts';
+import type { ClientSegmentSchema } from './clientSegmentSchema.ts';
 
 /**
  * Configuration data for backend SDKs for evaluating feature flags.

@@ -11,14 +11,14 @@ export const useEnvironmentVisibility = () => {
     const onEnvironmentVisibilityChange = (environment: string) => {
         if (value.includes(environment)) {
             setValue(value.filter((env) => env !== environment));
-            trackEvent('hidden_environment', {
+            trackEvent('hidden-environment', {
                 props: {
                     eventType: `environment unhidden`,
                 },
             });
         } else {
             setValue([...value, environment]);
-            trackEvent('hidden_environment', {
+            trackEvent('hidden-environment', {
                 props: {
                     eventType: `environment hidden`,
                 },

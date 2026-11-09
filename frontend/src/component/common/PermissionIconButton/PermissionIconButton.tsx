@@ -1,13 +1,12 @@
 import { IconButton, type IconButtonProps } from '@mui/material';
 import type React from 'react';
-import type { ReactNode } from 'react';
+import { useId, type ReactNode } from 'react';
 import type { Link } from 'react-router';
 import {
     type ITooltipResolverProps,
     TooltipResolver,
 } from 'component/common/TooltipResolver/TooltipResolver';
 import { formatAccessText } from 'utils/formatAccessText';
-import { useId } from 'hooks/useId';
 import {
     useHasProjectEnvironmentAccess,
     useHasRootAccess,
@@ -37,6 +36,7 @@ interface IButtonProps extends IPermissionIconButtonProps {
 interface ILinkProps extends IPermissionIconButtonProps {
     component: typeof Link;
     to: string;
+    onClick?: (event: React.SyntheticEvent) => void;
 }
 
 const RootPermissionIconButton = (props: IButtonProps | ILinkProps) => {

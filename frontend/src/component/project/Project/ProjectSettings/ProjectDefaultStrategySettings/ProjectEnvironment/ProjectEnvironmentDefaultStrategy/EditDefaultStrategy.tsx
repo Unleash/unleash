@@ -19,10 +19,12 @@ import {
     PROJECT_DEFAULT_STRATEGY_WRITE,
     UPDATE_PROJECT,
 } from '@server/types/permissions';
-import { StrategyFormBody } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBody.tsx';
+import { StrategyFormBodySelector } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBodySelector.tsx';
+import { createStrategyPayload } from 'component/feature/FeatureStrategy/featureStrategy.utils';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export const useDefaultStrategy = (
     projectId: string,
@@ -42,12 +44,13 @@ export const useDefaultStrategy = (
 
     const strategy = project.environments?.find(
         (env) => env.environment === environmentId,
-    )?.defaultStrategy;
+    )?.defaultStrategy as StrategyFormState;
 
     return { defaultStrategyFallback, strategy, refetch };
 };
 
 const EditDefaultStrategy = () => {
+    const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
     const projectId = useRequiredPathParam('projectId');
     const environmentId = useRequiredQueryParam('environmentId');
     const { refetch: refetchProjectOverview } = useProjectOverview(projectId);
@@ -81,7 +84,7 @@ const EditDefaultStrategy = () => {
         try {
             await updateDefaultStrategy(projectId, environmentId, payload);
 
-            trackEvent('default_strategy', {
+            trackEvent('default-strategy', {
                 props: {
                     action: 'edit',
                     hasTitle: Boolean(payload.title),
@@ -102,7 +105,8 @@ const EditDefaultStrategy = () => {
 
     return (
         <FormTemplate
-            modal
+            layout='modal'
+            fitContainerHeight={singlePageStrategyForm}
             disablePadding
             description={projectDefaultStrategyHelp}
             documentationLink={projectDefaultStrategyDocsLink}
@@ -117,7 +121,7 @@ const EditDefaultStrategy = () => {
                 )
             }
         >
-            <StrategyFormBody
+            <StrategyFormBodySelector
                 strategy={strategy}
                 setStrategy={setStrategy}
                 strategyDefinition={strategyDefinition}
@@ -125,6 +129,16 @@ const EditDefaultStrategy = () => {
                 groupIdTooltip='Defaults to the feature flag name if not set.'
                 onSubmit={onSubmit}
             >
+                <Button
+                    type='button'
+                    onClick={() =>
+                        navigate(
+                            `/projects/${projectId}/settings/default-strategy`,
+                        )
+                    }
+                >
+                    Cancel
+                </Button>
                 <PermissionButton
                     permission={[
                         PROJECT_DEFAULT_STRATEGY_WRITE,
@@ -144,36 +158,10 @@ const EditDefaultStrategy = () => {
                 >
                     Save strategy
                 </PermissionButton>
-                <Button
-                    type='button'
-                    onClick={() =>
-                        navigate(
-                            `/projects/${projectId}/settings/default-strategy`,
-                        )
-                    }
-                >
-                    Cancel
-                </Button>
-            </StrategyFormBody>
+            </StrategyFormBodySelector>
         </FormTemplate>
     );
 };
-
-export const createStrategyPayload = (
-    strategy: StrategyFormState,
-): CreateFeatureStrategySchema => ({
-    name: strategy.name,
-    title: strategy.title,
-    constraints: strategy.constraints ?? [],
-    parameters: Object.fromEntries(
-        Object.entries(strategy.parameters ?? {})
-            .filter(([, value]) => value !== undefined)
-            .map(([key, value]) => [key, String(value)]),
-    ),
-    variants: strategy.variants ?? [],
-    segments: strategy.segments ?? [],
-    disabled: strategy.disabled ?? false,
-});
 
 const formatUpdateStrategyApiCode = (
     projectId: string,

@@ -1,4 +1,4 @@
-import { type FC, useEffect } from 'react';
+import { type FC, useEffect, useMemo } from 'react';
 import { Box, styled } from '@mui/material';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ProjectFeatureToggles } from './PaginatedProjectFeatureToggles/ProjectFeatureToggles.tsx';
@@ -43,6 +43,13 @@ const ProjectOverview: FC = () => {
     const { project } = useProjectOverview(projectId, {
         refreshInterval,
     });
+    const environments = useMemo(
+        () =>
+            project.environments?.map(
+                (environment) => environment.environment,
+            ) || [],
+        [project.environments],
+    );
 
     usePageTitle(`Project overview – ${projectName}`);
     const { setLastViewed } = useLastViewedProject();
@@ -58,13 +65,7 @@ const ProjectOverview: FC = () => {
                     show={<OutdatedSdksBanner project={projectId} />}
                 />
                 <StyledProjectToggles>
-                    <ProjectFeatureToggles
-                        environments={
-                            project.environments?.map(
-                                (environment) => environment.environment,
-                            ) || []
-                        }
-                    />
+                    <ProjectFeatureToggles environments={environments} />
                 </StyledProjectToggles>
             </StyledContentContainer>
         </StyledContainer>

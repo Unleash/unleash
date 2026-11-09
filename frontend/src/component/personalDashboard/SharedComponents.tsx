@@ -208,6 +208,6 @@ export const NeutralCircleContainer = styled('span')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: theme.palette.neutral.border,
+    backgroundColor: theme.palette.neutral.containerBorder,
     borderRadius: '50%',
 }));

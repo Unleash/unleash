@@ -54,10 +54,11 @@ const StyledVariantPayload = styled('code')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(0.25, 1),
     fontSize: theme.fontSizes.smallerBody,
+    whiteSpace: 'pre-wrap',
 }));
 
 type SplitPreviewTooltipProps = {
-    variant: StrategyVariantSchema;
+    variant: Pick<StrategyVariantSchema, 'name' | 'weight' | 'payload'>;
     index: number;
     selected?: boolean;
 };

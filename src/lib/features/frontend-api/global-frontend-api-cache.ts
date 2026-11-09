@@ -13,8 +13,13 @@ import {
 } from '../playground/offline-unleash-client.js';
 import { ALL_ENVS, DEFAULT_ENV } from '../../util/constants.js';
 import type { Logger } from '../../logger.js';
+import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service.js';
 import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service.js';
 import type { IClientFeatureToggleReadModel } from './client-feature-toggle-read-model-type.js';
+import {
+    createClientPayloadCanonicalizer,
+    type ClientPayloadCanonicalizer,
+} from '../client-feature-toggles/client-payload-canonicalizer.js';
 
 type Config = Pick<IUnleashConfig, 'getLogger' | 'flagResolver' | 'eventBus'>;
 
@@ -29,7 +34,7 @@ export class GlobalFrontendApiCache extends EventEmitter {
 
     private readonly segmentReadModel: ISegmentReadModel;
 
-    private readonly configurationRevisionService: EventEmitter;
+    private readonly configurationRevisionService: ConfigurationRevisionService;
 
     private featuresByEnvironment: FrontendApiFeatureCache = {};
 
@@ -43,7 +48,7 @@ export class GlobalFrontendApiCache extends EventEmitter {
         config: Config,
         segmentReadModel: ISegmentReadModel,
         clientFeatureToggleReadModel: IClientFeatureToggleReadModel,
-        configurationRevisionService: EventEmitter,
+        configurationRevisionService: ConfigurationRevisionService,
     ) {
         super();
         this.logger = config.getLogger('global-frontend-api-cache.ts');
@@ -105,8 +110,11 @@ export class GlobalFrontendApiCache extends EventEmitter {
     // TODO: fetch only relevant projects/environments based on tokens
     public async refreshData() {
         try {
-            this.featuresByEnvironment = await this.getAllFeatures();
-            this.segments = await this.getAllSegments();
+            await this.configurationRevisionService.initialize();
+            const canonicalizer = createClientPayloadCanonicalizer();
+            this.featuresByEnvironment =
+                await this.getAllFeatures(canonicalizer);
+            this.segments = await this.getAllSegments(canonicalizer);
             if (this.status === 'starting') {
                 this.status = 'ready';
                 this.emit('ready');
@@ -119,13 +127,19 @@ export class GlobalFrontendApiCache extends EventEmitter {
         }
     }
 
-    private async getAllFeatures(): Promise<FrontendApiFeatureCache> {
+    private async getAllFeatures(
+        canonicalizer: ClientPayloadCanonicalizer,
+    ): Promise<FrontendApiFeatureCache> {
         const features = await this.clientFeatureToggleReadModel.getAll();
-        return this.mapFeatures(features);
+        return this.mapFeatures(features, canonicalizer);
     }
 
-    private async getAllSegments(): Promise<Segment[]> {
-        return mapSegmentsForClient(await this.segmentReadModel.getAll());
+    private async getAllSegments(
+        canonicalizer: ClientPayloadCanonicalizer,
+    ): Promise<Segment[]> {
+        return mapSegmentsForClient(await this.segmentReadModel.getAll()).map(
+            canonicalizer.segment,
+        );
     }
 
     private async onUpdateRevisionEvent() {
@@ -141,16 +155,19 @@ export class GlobalFrontendApiCache extends EventEmitter {
 
     private mapFeatures(
         features: Record<string, Record<string, IFeatureToggleClient>>,
+        canonicalizer: ClientPayloadCanonicalizer,
     ): FrontendApiFeatureCache {
         const entries = Object.entries(features).map(([key, value]) => [
             key,
             Object.fromEntries(
                 Object.entries(value).map(([innerKey, innerValue]) => [
                     innerKey,
-                    mapFeatureForClient({
-                        ...innerValue,
-                        stale: innerValue.stale || false,
-                    }),
+                    canonicalizer.feature(
+                        mapFeatureForClient({
+                            ...innerValue,
+                            stale: innerValue.stale || false,
+                        }),
+                    ),
                 ]),
             ),
         ]);

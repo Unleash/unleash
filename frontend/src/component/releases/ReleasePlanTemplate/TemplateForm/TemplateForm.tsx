@@ -1,7 +1,9 @@
 import Input from 'component/common/Input/Input';
-import { Alert, Box, styled, useTheme } from '@mui/material';
+import { Alert, Box, styled, Typography, useTheme } from '@mui/material';
 import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import FormTemplate, {
+    type FormTemplateLayout,
+} from 'component/common/FormTemplate/FormTemplate';
 import { TemplateFormDescription } from './TemplateFormDescription.tsx';
 import { MilestoneList } from './MilestoneList/MilestoneList.tsx';
 import type { IExtendedMilestonePayload } from 'component/releases/hooks/useTemplateForm';
@@ -14,10 +16,6 @@ const StyledInput = styled(Input)(({ theme }) => ({
     },
     marginBottom: theme.spacing(2),
     padding: theme.spacing(0),
-}));
-
-const StyledDescriptionInput = styled(StyledInput)(({ theme }) => ({
-    padding: theme.spacing(2, 5, 1, 1.75),
 }));
 
 const StyledForm = styled('form')(({ theme }) => ({
@@ -46,11 +44,13 @@ interface ITemplateFormProps {
     >;
     errors: { [key: string]: string };
     clearErrors: () => void;
+    clearError: (key: string) => void;
     formTitle: string;
     archived?: boolean;
     formatApiCode: () => string;
     handleSubmit: (e: React.FormEvent) => void;
     loading?: boolean;
+    layout?: FormTemplateLayout;
     Limit?: React.ReactNode;
     children?: React.ReactNode;
 }
@@ -64,10 +64,12 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
     setMilestones,
     errors,
     clearErrors,
+    clearError,
     formTitle,
     archived,
     formatApiCode,
     handleSubmit,
+    layout,
     Limit,
     children,
 }) => {
@@ -86,6 +88,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
             title={formTitle}
             description={<TemplateFormDescription />}
             formatApiCode={formatApiCode}
+            layout={layout}
         >
             {archived && (
                 <Alert severity='warning'>
@@ -96,6 +99,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                 <StyledInput
                     label='Template name'
                     aria-required
+                    sx={{ marginBottom: 2 }}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     error={Boolean(errors.name)}
@@ -104,19 +108,19 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                         delete errors.name;
                     }}
                     autoFocus
-                    slotProps={{
-                        input: {
-                            style: { fontSize: theme.typography.h1.fontSize },
-                        },
-                        inputLabel: {
-                            style: { fontSize: theme.typography.h1.fontSize },
-                        },
-                    }}
-                    size='medium'
                 />
-                <StyledDescriptionInput
-                    label='Template description (optional)'
-                    multiline
+                <StyledInput
+                    label={
+                        <>
+                            Template description{' '}
+                            <Typography
+                                component='span'
+                                sx={{ fontWeight: 'regular' }}
+                            >
+                                (optional)
+                            </Typography>
+                        </>
+                    }
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     slotProps={{
@@ -133,13 +137,14 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                             },
                         },
                     }}
-                    size='small'
+                    size='large'
                 />
                 <MilestoneList
                     milestones={milestones}
                     setMilestones={setMilestones}
                     errors={errors}
                     clearErrors={clearErrors}
+                    clearError={clearError}
                     milestoneChanged={milestoneChanged}
                 />
 

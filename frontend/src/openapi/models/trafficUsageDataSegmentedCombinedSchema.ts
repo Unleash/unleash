@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { TrafficUsageDataSegmentedCombinedSchemaApiDataItem } from './trafficUsageDataSegmentedCombinedSchemaApiDataItem';
-import type { TrafficUsageDataSegmentedCombinedSchemaDateRange } from './trafficUsageDataSegmentedCombinedSchemaDateRange';
-import type { TrafficUsageDataSegmentedCombinedSchemaGrouping } from './trafficUsageDataSegmentedCombinedSchemaGrouping';
+import type { TrafficUsageDataSegmentedCombinedSchemaApiDataItem } from './trafficUsageDataSegmentedCombinedSchemaApiDataItem.ts';
+import type { TrafficUsageDataSegmentedCombinedSchemaDateRange } from './trafficUsageDataSegmentedCombinedSchemaDateRange.ts';
+import type { TrafficUsageDataSegmentedCombinedSchemaGrouping } from './trafficUsageDataSegmentedCombinedSchemaGrouping.ts';
 
 /**
  * Contains the recorded data usage for each API path, segmented by day/month and type of traffic

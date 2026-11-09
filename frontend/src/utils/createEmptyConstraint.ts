@@ -1,6 +1,5 @@
 import { createUuid } from 'utils/createUuid';
 import { constraintId } from 'constants/constraintId';
-import { isDateOperator } from 'constants/operators';
 import type { IConstraintWithId } from 'interfaces/strategy';
 import { operatorsForContext } from 'utils/operatorsForContext';
 
@@ -9,12 +8,10 @@ export const createEmptyConstraint = (
 ): IConstraintWithId => {
     const operator = operatorsForContext(contextName)[0];
 
-    const value = isDateOperator(operator) ? new Date().toISOString() : '';
-
     return {
         contextName,
         operator,
-        value,
+        value: '',
         values: [],
         caseInsensitive: false,
         inverted: false,

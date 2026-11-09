@@ -1,9 +1,9 @@
 import { Typography } from '@mui/material';
+import type { FeatureStrategySchema } from 'openapi';
 import { formatStrategyName } from 'utils/strategyNames';
-import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 
 export interface CopyStrategyMsg {
-    payload?: IFeatureStrategyPayload;
+    payload?: FeatureStrategySchema;
     fromEnvironment?: string;
     environment?: string;
 }

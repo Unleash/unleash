@@ -10,7 +10,6 @@
 export type ActionSetEventSchemaActionSetMatchSource =
     (typeof ActionSetEventSchemaActionSetMatchSource)[keyof typeof ActionSetEventSchemaActionSetMatchSource];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ActionSetEventSchemaActionSetMatchSource = {
     'signal-endpoint': 'signal-endpoint',
 } as const;

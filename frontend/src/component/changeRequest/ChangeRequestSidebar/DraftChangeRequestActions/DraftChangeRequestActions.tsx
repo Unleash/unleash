@@ -3,7 +3,6 @@ import {
     styled,
     Button,
     Checkbox,
-    TextField,
     useTheme,
     type AutocompleteChangeReason,
     type FilterOptionsState,
@@ -11,6 +10,7 @@ import {
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import AutocompleteVirtual from 'component/common/AutocompleteVirtual/AutcompleteVirtual';
+import { FormFieldControlAligner } from 'component/common/FormField/FormField';
 import { caseInsensitiveSearch } from 'utils/search';
 import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 import { changesCount } from '../../changesCount.js';
@@ -79,6 +79,16 @@ const renderValue = (value: AvailableReviewerSchema[]) => (
     </StyledTags>
 );
 
+const StyledActions = styled('div')({
+    display: 'flex',
+    marginLeft: 'auto',
+    alignItems: 'flex-start',
+    '& > :first-child': {
+        width: 'auto',
+        marginBottom: 0,
+    },
+});
+
 export const DraftChangeRequestActions: FC<{
     environmentChangeRequest: ChangeRequestType;
     reviewers: AvailableReviewerSchema[];
@@ -134,10 +144,11 @@ export const DraftChangeRequestActions: FC<{
         );
 
     return (
-        <>
+        <StyledActions>
             <AutocompleteVirtual
+                label={`Reviewers (${reviewers.length})`}
                 sx={{ ml: 'auto', width: theme.spacing(40) }}
-                size='small'
+                size='large'
                 limitTags={3}
                 openOnFocus
                 multiple
@@ -158,32 +169,30 @@ export const DraftChangeRequestActions: FC<{
                 getOptionLabel={(option: AvailableReviewerSchema) =>
                     option.email || option.name || option.username || ''
                 }
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label={`Reviewers (${reviewers.length})`}
-                    />
-                )}
                 renderValue={(value) => renderValue(value)}
                 noOptionsText={isLoading ? 'Loading…' : 'No options'}
             />
-            <SubmitChangeRequestButton
-                onClick={() => onReview(sendToReview)}
-                count={changesCount(environmentChangeRequest)}
-                disabled={disabled}
-            />
+            <FormFieldControlAligner>
+                <SubmitChangeRequestButton
+                    onClick={() => onReview(sendToReview)}
+                    count={changesCount(environmentChangeRequest)}
+                    disabled={disabled}
+                />
+            </FormFieldControlAligner>
 
-            <Button
-                sx={{ ml: 2 }}
-                variant='outlined'
-                disabled={disabled}
-                onClick={() => {
-                    setDisabled(true);
-                    onDiscard(environmentChangeRequest.id);
-                }}
-            >
-                Discard changes
-            </Button>
-        </>
+            <FormFieldControlAligner>
+                <Button
+                    sx={{ ml: 2 }}
+                    variant='outlined'
+                    disabled={disabled}
+                    onClick={() => {
+                        setDisabled(true);
+                        onDiscard(environmentChangeRequest.id);
+                    }}
+                >
+                    Discard changes
+                </Button>
+            </FormFieldControlAligner>
+        </StyledActions>
     );
 };

@@ -159,3 +159,36 @@ test('collapseHourlyMetrics variants', () => {
         },
     ]);
 });
+
+const metricWithVariants = (
+    variants: Record<string, number>,
+): IClientMetricsEnv => ({
+    featureName: 'a',
+    appName: 'x',
+    environment: 'x',
+    timestamp: new Date('2026-01-01T10:15:00Z'),
+    yes: 1,
+    no: 0,
+    variants,
+});
+
+test.each<{ when: string; variants: Record<string, number>[] }>([
+    {
+        when: 'only the later metric has them',
+        variants: [{ red: 1 }, { toString: 1, constructor: 2 }],
+    },
+    {
+        when: 'only the earlier metric has them',
+        variants: [{ toString: 1, constructor: 2 }, { red: 1 }],
+    },
+])('counts variants named after built-in object properties when $when', ({
+    variants,
+}) => {
+    const collapsed = collapseHourlyMetrics(
+        variants.map((v) => metricWithVariants(v)),
+    );
+
+    expect(collapsed).toMatchObject([
+        { variants: { red: 1, toString: 1, constructor: 2 } },
+    ]);
+});

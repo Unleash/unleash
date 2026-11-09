@@ -1,0 +1,54 @@
+import { expect, test } from 'vitest';
+import { render, settleProviders } from 'utils/testRenderer';
+import { screen } from '@testing-library/react';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { useAdminRoutes } from './useAdminRoutes.js';
+
+const server = testServerSetup();
+
+const AdminRoutesProbe = () => {
+    const paths = useAdminRoutes().map((r) => r.path);
+    return (
+        <ul>
+            {paths.map((p) => (
+                <li key={p}>{p}</li>
+            ))}
+        </ul>
+    );
+};
+
+test('/admin/instance-name is hidden outside cloud (self-hosted enterprise and OSS)', async () => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: { UNLEASH_CLOUD: false },
+    });
+    testServerRoute(server, '/api/instance/status', {});
+
+    render(<AdminRoutesProbe />);
+    await settleProviders();
+
+    expect(screen.queryByText('/admin/instance-name')).not.toBeInTheDocument();
+});
+
+test('/admin/instance-name is visible on cloud', async () => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: { UNLEASH_CLOUD: true },
+    });
+    testServerRoute(server, '/api/instance/status', {});
+
+    render(<AdminRoutesProbe />);
+
+    expect(await screen.findByText('/admin/instance-name')).toBeInTheDocument();
+});
+
+test('/admin/license is hidden on cloud', async () => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: { UNLEASH_CLOUD: true, enableLicense: true },
+        versionInfo: { current: { enterprise: 'x.y.z' } },
+    });
+    testServerRoute(server, '/api/instance/status', {});
+
+    render(<AdminRoutesProbe />);
+    await settleProviders();
+
+    expect(screen.queryByText('/admin/license')).not.toBeInTheDocument();
+});

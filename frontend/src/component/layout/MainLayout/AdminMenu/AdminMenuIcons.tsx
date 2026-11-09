@@ -1,4 +1,4 @@
-import type SvgIcon from '@mui/material/SvgIcon/SvgIcon';
+import type SvgIcon from '@mui/material/SvgIcon';
 import HomeIcon from '@mui/icons-material/Home';
 import LaptopIcon from '@mui/icons-material/Laptop';
 import EventNoteIcon from '@mui/icons-material/EventNote';

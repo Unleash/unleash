@@ -2,12 +2,10 @@ import type { Knex } from 'knex';
 import type EventEmitter from 'events';
 import metricsHelper from '../../util/metrics-helper.js';
 import { DB_TIME } from '../../metric-events.js';
-import type { LogProvider } from '../../logger.js';
 import type {
     FeatureSearchEnvironment,
     IFeatureSearchOverview,
     IFeatureSearchStore,
-    IFlagResolver,
     StageName,
 } from '../../types/index.js';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
@@ -19,7 +17,6 @@ import type {
 import { applyGenericQueryParams, applySearchFilters } from './search-utils.js';
 import { generateImageUrl } from '../../util/index.js';
 type Raw<T = any> = Knex.Raw<T>;
-import type { ITag } from '../../tags/index.js';
 
 const sortEnvironments = (overview: IFeatureSearchOverview[]) => {
     return overview.map((data: IFeatureSearchOverview) => ({
@@ -40,12 +37,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
 
     private readonly timer: Function;
 
-    constructor(
-        db: Db,
-        eventBus: EventEmitter,
-        _getLogger: LogProvider,
-        _flagResolver: IFlagResolver,
-    ) {
+    constructor(db: Db, eventBus: EventEmitter) {
         this.db = db;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
@@ -116,10 +108,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     'feature_environments.variants as variants',
                     'environments.type as environment_type',
                     'environments.sort_order as environment_sort_order',
-                    'ft.tag_value as tag_value',
-                    'ft.tag_type as tag_type',
-                    'tag_types.color as tag_type_color',
-                    'segments.name as segment_name',
+                    'feature_segments.segment_names as segment_names',
                     'users.id as user_id',
                     'users.name as user_name',
                     'users.username as user_username',
@@ -150,11 +139,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
 
                 selectColumns = [
                     ...selectColumns,
-                    this.db.raw(`CASE
-                            WHEN dependent_features.parent = features.name THEN 'parent'
-                            WHEN dependent_features.child = features.name THEN 'child'
-                            ELSE null
-                            END AS dependency`),
+                    'feature_dependency.dependency as dependency',
                 ];
 
                 applyQueryParams(query, queryParams);
@@ -190,37 +175,48 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'environments.name',
                     )
                     .leftJoin(
-                        'feature_tag as ft',
-                        'ft.feature_name',
+                        this.db
+                            .select('feature_strategies.feature_name')
+                            .select(
+                                this.db.raw(
+                                    'array_agg(distinct segments.name order by segments.name) as segment_names',
+                                ),
+                            )
+                            .from('feature_strategies')
+                            .innerJoin(
+                                'feature_strategy_segment',
+                                'feature_strategy_segment.feature_strategy_id',
+                                'feature_strategies.id',
+                            )
+                            .innerJoin(
+                                'segments',
+                                'feature_strategy_segment.segment_id',
+                                'segments.id',
+                            )
+                            .groupBy('feature_strategies.feature_name')
+                            .as('feature_segments'),
+                        'feature_segments.feature_name',
                         'features.name',
                     )
-                    .leftJoin('tag_types', 'tag_types.name', 'ft.tag_type')
                     .leftJoin(
-                        'feature_strategies',
-                        'feature_strategies.feature_name',
+                        this.db
+                            .select(
+                                'parent as feature_name',
+                                this.db.raw("'parent' as dependency"),
+                            )
+                            .from('dependent_features')
+                            .unionAll((union) => {
+                                union
+                                    .select(
+                                        'child as feature_name',
+                                        this.db.raw("'child' as dependency"),
+                                    )
+                                    .from('dependent_features');
+                            })
+                            .as('feature_dependency'),
+                        'feature_dependency.feature_name',
                         'features.name',
                     )
-                    .leftJoin(
-                        'feature_strategy_segment',
-                        'feature_strategy_segment.feature_strategy_id',
-                        'feature_strategies.id',
-                    )
-                    .leftJoin(
-                        'segments',
-                        'feature_strategy_segment.segment_id',
-                        'segments.id',
-                    )
-                    .leftJoin('dependent_features', (qb) => {
-                        qb.on(
-                            'dependent_features.parent',
-                            '=',
-                            'features.name',
-                        ).orOn(
-                            'dependent_features.child',
-                            '=',
-                            'features.name',
-                        );
-                    })
                     .leftJoin(
                         'users',
                         'users.id',
@@ -287,6 +283,38 @@ class FeatureSearchStore implements IFeatureSearchStore {
                 'total_features',
                 this.db.raw('select count(*) as total from final_ranks'),
             )
+            .with('paginated_features', (queryBuilder) => {
+                queryBuilder
+                    .select(['feature_name', 'final_rank'])
+                    .from('final_ranks')
+                    .whereBetween('final_rank', [offset + 1, offset + limit]);
+            })
+            .with('feature_tags', (queryBuilder) => {
+                queryBuilder
+                    .select('feature_tag.feature_name')
+                    .select(
+                        this.db.raw(`jsonb_agg(
+                            jsonb_build_object(
+                                'value', feature_tag.tag_value,
+                                'type', feature_tag.tag_type,
+                                'color', tag_types.color
+                            )
+                            order by feature_tag.tag_type, feature_tag.tag_value
+                        ) as tags`),
+                    )
+                    .from('feature_tag')
+                    .innerJoin(
+                        'paginated_features',
+                        'paginated_features.feature_name',
+                        'feature_tag.feature_name',
+                    )
+                    .leftJoin(
+                        'tag_types',
+                        'tag_types.name',
+                        'feature_tag.tag_type',
+                    )
+                    .groupBy('feature_tag.feature_name');
+            })
             .with('metrics', (queryBuilder) => {
                 queryBuilder
                     .sum('yes as yes')
@@ -297,9 +325,9 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     ])
                     .from('client_metrics_env')
                     .innerJoin(
-                        'final_ranks',
+                        'paginated_features',
                         'client_metrics_env.feature_name',
-                        'final_ranks.feature_name',
+                        'paginated_features.feature_name',
                     )
                     .where(
                         'client_metrics_env.timestamp',
@@ -314,19 +342,24 @@ class FeatureSearchStore implements IFeatureSearchStore {
             .select([
                 'ranked_features.*',
                 'total_features.total',
-                'final_ranks.final_rank',
+                'paginated_features.final_rank',
                 'metrics.yes',
                 'metrics.no',
+                'feature_tags.tags',
             ])
             .from('ranked_features')
             .innerJoin(
-                'final_ranks',
+                'paginated_features',
                 'ranked_features.feature_name',
-                'final_ranks.feature_name',
+                'paginated_features.feature_name',
+            )
+            .leftJoin(
+                'feature_tags',
+                'feature_tags.feature_name',
+                'ranked_features.feature_name',
             )
             .joinRaw('CROSS JOIN total_features')
-            .whereBetween('final_rank', [offset + 1, offset + limit])
-            .orderBy('final_rank');
+            .orderBy('paginated_features.final_rank');
 
         this.buildChangeRequestSql(finalQuery);
         this.buildReleasePlanSql(finalQuery);
@@ -380,9 +413,20 @@ class FeatureSearchStore implements IFeatureSearchStore {
         queryBuilder
             .leftJoin(
                 this.db
-                    .select('feature_name', 'environment')
+                    .select(
+                        'feature_strategies.feature_name',
+                        'feature_strategies.environment',
+                    )
                     .from('feature_strategies')
-                    .groupBy('feature_name', 'environment')
+                    .innerJoin(
+                        'paginated_features',
+                        'paginated_features.feature_name',
+                        'feature_strategies.feature_name',
+                    )
+                    .groupBy(
+                        'feature_strategies.feature_name',
+                        'feature_strategies.environment',
+                    )
                     .where(function () {
                         this.whereNull('disabled').orWhere('disabled', false);
                     })
@@ -401,9 +445,20 @@ class FeatureSearchStore implements IFeatureSearchStore {
             )
             .leftJoin(
                 this.db
-                    .select('feature_name', 'environment')
+                    .select(
+                        'feature_strategies.feature_name',
+                        'feature_strategies.environment',
+                    )
                     .from('feature_strategies')
-                    .groupBy('feature_name', 'environment')
+                    .innerJoin(
+                        'paginated_features',
+                        'paginated_features.feature_name',
+                        'feature_strategies.feature_name',
+                    )
+                    .groupBy(
+                        'feature_strategies.feature_name',
+                        'feature_strategies.environment',
+                    )
                     .as('has_strategies'),
                 function () {
                     this.on(
@@ -427,6 +482,16 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         qb.select('release_plan_definition_id')
                             .count('* as total_milestones')
                             .from('milestones')
+                            .innerJoin(
+                                'release_plan_definitions',
+                                'release_plan_definitions.id',
+                                'milestones.release_plan_definition_id',
+                            )
+                            .innerJoin(
+                                'paginated_features',
+                                'paginated_features.feature_name',
+                                'release_plan_definitions.feature_name',
+                            )
                             .groupBy('release_plan_definition_id');
                     })
                     .select([
@@ -437,6 +502,11 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'active_milestone.name AS milestone_name',
                     ])
                     .from('release_plan_definitions AS rpd')
+                    .innerJoin(
+                        'paginated_features',
+                        'paginated_features.feature_name',
+                        'rpd.feature_name',
+                    )
                     .join(
                         'total_milestones',
                         'total_milestones.release_plan_definition_id',
@@ -476,6 +546,11 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'change_requests AS cr',
                         'cre.change_request_id',
                         'cr.id',
+                    )
+                    .innerJoin(
+                        'paginated_features',
+                        'paginated_features.feature_name',
+                        'cre.feature',
                     )
                     .select('cre.feature')
                     .select(
@@ -574,7 +649,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     impressionData: row.impression_data,
                     dependencyType: row.dependency,
                     environments: [],
-                    segments: row.segment_name ? [row.segment_name] : [],
+                    segments: row.segment_names ?? [],
                     createdBy: {
                         id: Number(row.user_id),
                         name: name,
@@ -594,6 +669,9 @@ class FeatureSearchStore implements IFeatureSearchStore {
                           enteredStageAt: row.entered_stage_at,
                       }
                     : undefined;
+                if (row.tags) {
+                    Object.assign(entry, { tags: row.tags });
+                }
                 entriesMap.set(row.feature_name, entry);
                 orderedEntries.push(entry);
             }
@@ -602,56 +680,9 @@ class FeatureSearchStore implements IFeatureSearchStore {
             if (!entry.environments.some((e) => e.name === row.environment)) {
                 entry.environments.push(FeatureSearchStore.getEnvironment(row));
             }
-
-            // Add segment if not already present
-            if (
-                row.segment_name &&
-                !entry.segments.includes(row.segment_name)
-            ) {
-                entry.segments.push(row.segment_name);
-            }
-
-            // Add tag if new
-            if (this.isNewTag(entry, row)) {
-                this.addTag(entry, row);
-            }
         });
 
         return orderedEntries;
-    }
-
-    private addTag(
-        featureToggle: Record<string, any>,
-        row: Record<string, any>,
-    ): void {
-        const tags = featureToggle.tags || [];
-        const newTag = this.rowToTag(row);
-        featureToggle.tags = [...tags, newTag];
-    }
-
-    private rowToTag(r: any): ITag {
-        return {
-            value: r.tag_value,
-            type: r.tag_type,
-            color: r.tag_type_color,
-        };
-    }
-
-    private isTagRow(row: Record<string, any>): boolean {
-        return row.tag_type && row.tag_value;
-    }
-
-    private isNewTag(
-        featureToggle: Record<string, any>,
-        row: Record<string, any>,
-    ): boolean {
-        return (
-            this.isTagRow(row) &&
-            !featureToggle.tags?.some(
-                (tag) =>
-                    tag.type === row.tag_type && tag.value === row.tag_value,
-            )
-        );
     }
 }
 
@@ -882,12 +913,14 @@ const applyQueryParams = (
         tagConditions,
         ['tag_type', 'tag_value'],
         createTagBaseQuery,
+        true,
     );
     applyMultiQueryParams(
         query,
         segmentConditions,
         'segments.name',
         createSegmentBaseQuery,
+        true,
     );
 };
 
@@ -898,6 +931,7 @@ const applyMultiQueryParams = (
     createBaseQuery: (
         values: string[] | string[][],
     ) => (dbSubQuery: Knex.QueryBuilder) => Knex.QueryBuilder,
+    filterByFeatureName = false,
 ): void => {
     queryParams.forEach((param) => {
         const values = param.values
@@ -913,7 +947,9 @@ const applyMultiQueryParams = (
         switch (param.operator) {
             case 'INCLUDE':
             case 'INCLUDE_ANY_OF':
-                if (Array.isArray(fields)) {
+                if (filterByFeatureName) {
+                    query.whereIn('features.name', baseSubQuery);
+                } else if (Array.isArray(fields)) {
                     query.whereIn(fields, values);
                 } else {
                     query.whereIn(

@@ -10,7 +10,6 @@
 export type ActionDefinitionParameterSchemaName =
     (typeof ActionDefinitionParameterSchemaName)[keyof typeof ActionDefinitionParameterSchemaName];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ActionDefinitionParameterSchemaName = {
     project: 'project',
     environment: 'environment',

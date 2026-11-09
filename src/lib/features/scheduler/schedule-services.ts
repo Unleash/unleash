@@ -37,6 +37,9 @@ export const scheduleServices = (
         uniqueConnectionService,
         unknownFlagsService,
         edgeService,
+        apiTokenV2Service,
+        transactionalApiTokenV2Service,
+        transactionalFeatureToggleService,
     } = services;
 
     schedulerService.schedule(
@@ -51,17 +54,26 @@ export const scheduleServices = (
         'storeLastSeen',
     );
 
+    // Plain-text tokens and aliases still rely on full refreshes for revocation.
+    // Secure tokens are invalidated by pollApiTokenV2Changes below.
     schedulerService.schedule(
         apiTokenService.fetchActiveTokens.bind(apiTokenService),
         minutesToMilliseconds(1),
         'fetchActiveTokens',
-        0, // no jitter, we need tokens at startup
+        { initialDelayMs: 0 }, // we need tokens at startup
     );
 
     schedulerService.schedule(
         apiTokenService.updateLastSeen.bind(apiTokenService),
         minutesToMilliseconds(3),
         'updateLastSeen',
+    );
+
+    schedulerService.schedule(
+        apiTokenV2Service.pollTokenChanges.bind(apiTokenV2Service),
+        secondsToMilliseconds(10),
+        'pollApiTokenV2Changes',
+        { initialDelayMs: 0 },
     );
 
     // TODO this works fine for keeping labeledAppCounts up to date, but
@@ -129,9 +141,10 @@ export const scheduleServices = (
     );
 
     schedulerService.schedule(
-        featureToggleService.updatePotentiallyStaleFeatures.bind(
-            featureToggleService,
-        ),
+        () =>
+            transactionalFeatureToggleService.transactional((service) =>
+                service.updatePotentiallyStaleFeatures(),
+            ),
         minutesToMilliseconds(1),
         'updatePotentiallyStaleFeatures',
     );
@@ -149,7 +162,7 @@ export const scheduleServices = (
         frontendApiService.fetchFrontendSettings.bind(frontendApiService),
         minutesToMilliseconds(2),
         'fetchFrontendSettings',
-        0,
+        { initialDelayMs: 0 },
     );
 
     schedulerService.schedule(
@@ -212,5 +225,19 @@ export const scheduleServices = (
         edgeService.deleteExpiredNonces.bind(edgeService),
         hoursToMilliseconds(1),
         'clearExpiredEdgeNonces',
+    );
+    schedulerService.schedule(
+        async () => {
+            const deleted = await transactionalApiTokenV2Service.transactional(
+                // delete + audit events: together
+                (service) => service.deleteSystemCreatedTokensNotSeen(),
+            );
+            // after deletion success, clear cache
+            apiTokenV2Service.invalidateCache(
+                deleted.map((token) => token.selector),
+            );
+        },
+        minutesToMilliseconds(10),
+        'deleteSystemCreatedTokensNotSeen',
     );
 };

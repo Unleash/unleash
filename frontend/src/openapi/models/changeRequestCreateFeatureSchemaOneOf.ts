@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateFeatureSchemaOneOfAction } from './changeRequestCreateFeatureSchemaOneOfAction';
-import type { ChangeRequestCreateFeatureSchemaOneOfPayload } from './changeRequestCreateFeatureSchemaOneOfPayload';
+import type { ChangeRequestCreateFeatureSchemaOneOfAction } from './changeRequestCreateFeatureSchemaOneOfAction.ts';
+import type { ChangeRequestCreateFeatureSchemaOneOfPayload } from './changeRequestCreateFeatureSchemaOneOfPayload.ts';
 
 /**
  * Update the enabled state for a feature.

@@ -12,7 +12,8 @@ import { ActionsContainer } from '../ActionsContainer.tsx';
 import { IMPORT_CONFIGURATION_BUTTON } from 'utils/testIds';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
+import type { Tracking } from 'utils/trackingEvents';
 
 const ImportInfoContainer = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation2,
@@ -31,44 +32,44 @@ const Value = styled('span')(({ theme }) => ({
 }));
 
 const ErrorContainer = styled(Box)(({ theme }) => ({
-    border: `1px solid ${theme.palette.error.border}`,
+    border: `1px solid ${theme.palette.error.containerBorder}`,
     borderRadius: theme.shape.borderRadiusLarge,
     paddingBottom: theme.spacing(2),
 }));
 
 const WarningContainer = styled(Box)(({ theme }) => ({
-    border: `1px solid ${theme.palette.warning.border}`,
+    border: `1px solid ${theme.palette.warning.containerBorder}`,
     borderRadius: theme.shape.borderRadiusLarge,
     paddingBottom: theme.spacing(2),
 }));
 
 const ErrorHeader = styled(Box)(({ theme }) => ({
-    color: theme.palette.error.dark,
-    backgroundColor: theme.palette.error.light,
+    color: theme.palette.error.onContainer,
+    backgroundColor: theme.palette.error.container,
     fontSize: theme.fontSizes.smallBody,
-    borderBottom: `1px solid ${theme.palette.error.border}`,
+    borderBottom: `1px solid ${theme.palette.error.containerBorder}`,
     borderTopLeftRadius: theme.shape.borderRadiusLarge,
     borderTopRightRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(2),
 }));
 
 const WarningHeader = styled(Box)(({ theme }) => ({
-    color: theme.palette.warning.dark,
-    backgroundColor: theme.palette.warning.light,
+    color: theme.palette.warning.onContainer,
+    backgroundColor: theme.palette.warning.container,
     fontSize: theme.fontSizes.smallBody,
-    borderBottom: `1px solid ${theme.palette.warning.border}`,
+    borderBottom: `1px solid ${theme.palette.warning.containerBorder}`,
     borderTopLeftRadius: theme.shape.borderRadiusLarge,
     borderTopRightRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(2),
 }));
 
 const ErrorMessage = styled(Box)(({ theme }) => ({
-    color: theme.palette.error.dark,
+    color: theme.palette.error.onContainer,
     fontSize: theme.fontSizes.smallBody,
 }));
 
 const WarningMessage = styled(Box)(({ theme }) => ({
-    color: theme.palette.warning.dark,
+    color: theme.palette.warning.onContainer,
     fontSize: theme.fontSizes.smallBody,
 }));
 
@@ -77,7 +78,7 @@ const StyledItems = styled('ul')(({ theme }) => ({
     marginBottom: theme.spacing(0),
     paddingLeft: theme.spacing(3),
     paddingBottom: theme.spacing(3),
-    borderBottom: `1px dashed ${theme.palette.neutral.border}`,
+    borderBottom: `1px dashed ${theme.palette.neutral.containerBorder}`,
 }));
 
 const StyledItem = styled('li')(({ theme }) => ({
@@ -91,35 +92,37 @@ export const ValidationStage: FC<{
     onClose: () => void;
     onSubmit: () => void;
     onBack: () => void;
-}> = ({ environment, project, payload, onClose, onBack, onSubmit }) => {
+    tracking: Tracking;
+}> = ({
+    environment,
+    project,
+    payload,
+    onClose,
+    onBack,
+    onSubmit,
+    tracking,
+}) => {
     const { validateImport } = useValidateImportApi();
     const { setToastData } = useToast();
-    const { trackEvent } = useEventTracker();
+    const trackImportFlags = useTracking(tracking);
     const [validationResult, setValidationResult] = useState<IValidationSchema>(
         { errors: [], warnings: [], permissions: [] },
     );
     const [validJSON, setValidJSON] = useState(true);
 
-    const trackValidation = (result: IValidationSchema) => {
-        if (result.errors.length > 0 || result.permissions.length > 0) {
-            trackEvent('export_import', {
-                props: {
-                    eventType: `validation fail`,
-                },
-            });
-        } else {
-            trackEvent('export_import', {
-                props: {
-                    eventType: `validation success`,
-                },
-            });
+    // Counts as a failed import attempt even though nothing was submitted.
+    const onValidated = (result: IValidationSchema) => {
+        if (result.errors.length > 0) {
+            trackImportFlags.validationFailed({ blockedBy: 'conflict' });
+        } else if (result.permissions.length > 0) {
+            trackImportFlags.validationFailed({ blockedBy: 'permission' });
         }
         setValidationResult(result);
     };
 
     useEffect(() => {
         validateImport({ environment, project, data: JSON.parse(payload) })
-            .then(trackValidation)
+            .then(onValidated)
             .catch((error) => {
                 setValidJSON(false);
                 setToastData({

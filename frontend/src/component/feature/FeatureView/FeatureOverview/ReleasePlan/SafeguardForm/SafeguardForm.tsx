@@ -4,7 +4,8 @@ import {
     TextField,
     Box,
     styled,
-    MenuItem,
+    Select,
+    Typography,
 } from '@mui/material';
 import ShieldIcon from '@mui/icons-material/ShieldOutlined';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutlineOutlined';
@@ -13,11 +14,12 @@ import { useEffect, useMemo, useState, type FC } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useNumericStringInput } from 'hooks/useNumericStringInput';
 import { MiniMetricsChartWithTooltip } from './MiniMetricsChartWithTooltip.tsx';
+import { safeguardTriggerWindowLabels } from './safeguardTriggerWindow.ts';
 import {
     useImpactMetricsOptions,
     type ImpactMetric,
 } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
-import { useImpactMetricsData } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
+import { useImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsLabels';
 import { RangeSelector } from 'component/impact-metrics/ImpactMetricModal/ImpactMetricsControls/RangeSelector/RangeSelector';
 import { ModeSelector } from 'component/impact-metrics/ImpactMetricModal/ImpactMetricsControls/ModeSelector/ModeSelector';
 import {
@@ -91,6 +93,7 @@ interface IBaseSafeguardFormProps {
     featureId: string;
     badge?: ReactNode;
     safeguardType?: SafeguardType;
+    typeSelector?: ReactNode;
     headerAction?: ReactNode;
 }
 
@@ -106,7 +109,7 @@ const getInitialValues = (safeguard?: ISafeguard) => ({
         '>') as SafeguardTriggerConditionSchemaOperator,
     threshold: safeguard?.triggerCondition?.threshold || 0,
     timeRange: (safeguard?.impactMetric.timeRange ||
-        'day') as MetricQuerySchemaTimeRange,
+        'hour') as MetricQuerySchemaTimeRange,
 });
 
 const useSafeguardFormValues = (safeguard?: ISafeguard) => {
@@ -179,42 +182,25 @@ const useSafeguardFormMode = (safeguard?: ISafeguard) => {
 
 const useSafeguardMetricsData = (
     metricName: string,
-    timeRange: MetricQuerySchemaTimeRange,
-    aggregationMode: MetricQuerySchemaAggregationMode,
     environment: string,
     source?: MetricSource,
 ) => {
     const { metricOptions, loading } = useImpactMetricsOptions();
-    const { data: metricsData } = useImpactMetricsData(
-        metricName
-            ? {
-                  metricName,
-                  range: timeRange,
-                  aggregationMode: aggregationMode,
-                  source,
-                  mode: 'edit',
-              }
-            : undefined,
-    );
+    const { labels } = useImpactMetricsLabels(metricName, source);
 
     const applicationNames = useMemo(() => {
-        const appNames = metricsData?.labels?.appName || [];
+        const appNames = labels.appName || [];
         return ['*', ...appNames];
-    }, [metricsData?.labels?.appName]);
+    }, [labels.appName]);
 
-    const metricType = getMetricType(
-        metricName,
-        metricsData?.labels?.metric_type,
-    );
+    const metricType = getMetricType(metricName, labels.metric_type);
 
     // External Prometheus metrics may not have an environment label —
     // only filter by environment when the metric actually exposes one.
     // When the label exists, always filter by the current environment even
     // if it's not in the values list — showing unfiltered data from other
     // environments (e.g. development data in production) would be misleading.
-    const metricEnvironment = metricsData?.labels?.environment
-        ? environment
-        : undefined;
+    const metricEnvironment = labels.environment ? environment : undefined;
 
     return {
         metricOptions,
@@ -319,8 +305,6 @@ const useSafeguardFormState = (
     const formMode = useSafeguardFormMode(safeguard);
     const metricsData = useSafeguardMetricsData(
         formValues.metric.metricName,
-        formValues.timeRange,
-        formValues.aggregationMode,
         environment,
         formValues.metric.source,
     );
@@ -399,6 +383,7 @@ interface SafeguardFormBaseProps {
     badge?: ReactNode;
     children?: React.ReactNode;
     safeguardType?: SafeguardType;
+    typeSelector?: ReactNode;
     headerAction?: ReactNode;
 }
 
@@ -406,6 +391,90 @@ const safeguardTypeLabel: Record<SafeguardType, string> = {
     releasePlan: 'Pause automation when',
     featureEnvironment: 'Disable environment when',
 };
+
+const safeguardTypeOptionLabel: Record<SafeguardType, string> = {
+    featureEnvironment: 'Disable environment',
+    releasePlan: 'Pause release plan automation',
+};
+
+const safeguardTypeDescription: Record<SafeguardType, string> = {
+    featureEnvironment:
+        'If your chosen metric crosses its threshold, this flag is turned off in this environment. Existing users stop seeing the flag immediately.',
+    releasePlan:
+        'If your chosen metric crosses its threshold, automatic milestone progression stops. The current milestone keeps serving traffic.',
+};
+
+const StyledTypeSelect = styled(Select)(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
+}));
+
+const safeguardTypes: SafeguardType[] = ['featureEnvironment', 'releasePlan'];
+
+const StyledTypeOptionMenuItem = styled(StyledMenuItem)(({ theme }) => ({
+    whiteSpace: 'normal',
+    alignItems: 'flex-start',
+    paddingTop: theme.spacing(1.25),
+    paddingBottom: theme.spacing(1.25),
+}));
+
+const StyledOptionDescription = styled(Typography)(({ theme }) => ({
+    display: 'block',
+    marginTop: theme.spacing(0.25),
+    color: theme.palette.text.secondary,
+}));
+
+export const safeguardTypeOption = (
+    type: SafeguardType,
+    disabledReason?: string,
+) => (
+    <StyledTypeOptionMenuItem
+        key={type}
+        value={type}
+        disabled={Boolean(disabledReason)}
+    >
+        <Box>
+            <Typography variant='body2'>
+                {safeguardTypeOptionLabel[type]}
+            </Typography>
+            <StyledOptionDescription variant='caption'>
+                {disabledReason ?? safeguardTypeDescription[type]}
+            </StyledOptionDescription>
+        </Box>
+    </StyledTypeOptionMenuItem>
+);
+
+export const SafeguardTypeSelect: FC<{
+    value: SafeguardType;
+    onChange: (type: SafeguardType) => void;
+    children: ReactNode;
+}> = ({ value, onChange, children }) => (
+    <FormControl variant='outlined' size='large'>
+        <StyledTypeSelect
+            value={value}
+            onChange={(e) => {
+                const type = e.target.value as SafeguardType;
+                if (safeguardTypes.includes(type)) {
+                    onChange(type);
+                }
+            }}
+            variant='outlined'
+            size='large'
+            SelectDisplayProps={{ 'aria-label': 'Safeguard action' }}
+            renderValue={(selected) =>
+                safeguardTypeOptionLabel[selected as SafeguardType]
+            }
+            MenuProps={{
+                slotProps: {
+                    paper: {
+                        sx: { maxWidth: (theme) => theme.spacing(45) },
+                    },
+                },
+            }}
+        >
+            {children}
+        </StyledTypeSelect>
+    </FormControl>
+);
 
 const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
     formState,
@@ -416,6 +485,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
     badge,
     children,
     safeguardType = 'releasePlan',
+    typeSelector,
     headerAction,
 }) => {
     const {
@@ -487,9 +557,16 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
         <StyledFormContainer onSubmit={onSubmit} mode={mode}>
             <StyledTopRow>
                 <StyledIcon />
-                <StyledLabel sx={{ mr: 'auto' }}>
-                    {safeguardTypeLabel[safeguardType]}
-                </StyledLabel>
+                {mode === 'create' && typeSelector ? (
+                    <>
+                        {typeSelector}
+                        <StyledLabel sx={{ mr: 'auto' }}>when</StyledLabel>
+                    </>
+                ) : (
+                    <StyledLabel sx={{ mr: 'auto' }}>
+                        {safeguardTypeLabel[safeguardType]}
+                    </StyledLabel>
+                )}
                 {mode === 'display' && badge}
                 {headerAction}
                 {metric.metricName && (
@@ -538,7 +615,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
 
                         <StyledTopRow>
                             <StyledLabel>filtered by</StyledLabel>
-                            <FormControl variant='outlined' size='small'>
+                            <FormControl variant='outlined' size='large'>
                                 <StyledSelect
                                     value={appName}
                                     onChange={(e) =>
@@ -547,7 +624,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                                         )
                                     }
                                     variant='outlined'
-                                    size='small'
+                                    size='large'
                                 >
                                     {applicationNames.map((app) => (
                                         <StyledMenuItem key={app} value={app}>
@@ -571,7 +648,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                     <StyledTopRow sx={{ ml: 0.75 }}>
                         <StyledTopRow>
                             <StyledLabel sx={{ ml: 2.5 }}>is</StyledLabel>
-                            <FormControl variant='outlined' size='small'>
+                            <FormControl variant='outlined' size='large'>
                                 <StyledSelect
                                     value={operator}
                                     onChange={(e) =>
@@ -581,7 +658,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                                         )
                                     }
                                     variant='outlined'
-                                    size='small'
+                                    size='large'
                                 >
                                     <StyledMenuItem value='>'>
                                         More than
@@ -592,7 +669,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                                 </StyledSelect>
                             </FormControl>
 
-                            <FormControl variant='outlined' size='small'>
+                            <FormControl variant='outlined' size='large'>
                                 <TextField
                                     type='number'
                                     value={thresholdInputValue}
@@ -602,7 +679,7 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
                                     onKeyDown={handleThresholdKeyDown}
                                     placeholder='Value'
                                     variant='outlined'
-                                    size='small'
+                                    size='large'
                                     required
                                     slotProps={{
                                         htmlInput: {
@@ -615,17 +692,14 @@ const SafeguardFormBase: FC<SafeguardFormBaseProps> = ({
 
                         <StyledTopRow>
                             <StyledLabel>over</StyledLabel>
-                            {/* Every range has an alert observation window equal to its step. Backend implies the step from the range */}
                             <RangeSelector
                                 value={timeRange}
                                 onChange={handleTimeRangeChange}
                                 label=''
-                            >
-                                <MenuItem value='hour'>Last minute</MenuItem>
-                                <MenuItem value='day'>Last 15 minutes</MenuItem>
-                                <MenuItem value='week'>Last 3 hours</MenuItem>
-                                <MenuItem value='month'>Last day</MenuItem>
-                            </RangeSelector>
+                                options={Object.entries(
+                                    safeguardTriggerWindowLabels,
+                                ).map(([key, label]) => ({ key, label }))}
+                            />
                         </StyledTopRow>
                     </StyledTopRow>
                 </SafeguardConfigurationSection>
@@ -668,6 +742,7 @@ export const SafeguardForm: FC<IBaseSafeguardFormProps> = ({
     featureId,
     badge,
     safeguardType,
+    typeSelector,
     headerAction,
 }) => {
     const formState = useSafeguardFormState(
@@ -686,6 +761,7 @@ export const SafeguardForm: FC<IBaseSafeguardFormProps> = ({
             environment={environment}
             badge={badge}
             safeguardType={safeguardType}
+            typeSelector={typeSelector}
             headerAction={headerAction}
         />
     );

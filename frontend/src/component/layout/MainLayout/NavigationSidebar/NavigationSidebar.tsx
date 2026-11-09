@@ -27,7 +27,7 @@ export const StretchContainer = styled(Box, {
         propName !== 'mode' && propName !== 'admin',
 })<{ mode: string; admin: boolean }>(({ theme, mode, admin }) => ({
     backgroundColor: admin
-        ? theme.palette.background.application
+        ? theme.palette.background.default
         : theme.palette.background.paper,
     borderRight: `1px solid ${theme.palette.divider}`,
     alignSelf: 'stretch',
@@ -53,7 +53,7 @@ const TopContainer = styled(Box, {
     paddingTop: theme.spacing(0.5),
     paddingBottom: theme.spacing(0.5),
     backgroundColor: admin
-        ? theme.palette.background.application
+        ? theme.palette.background.default
         : theme.palette.background.paper,
     zIndex: 2,
 }));
@@ -82,7 +82,7 @@ const BottomContainer = styled(Box, {
     paddingTop: theme.spacing(0.5),
     paddingBottom: theme.spacing(0.5),
     backgroundColor: admin
-        ? theme.palette.background.application
+        ? theme.palette.background.default
         : theme.palette.background.paper,
     borderTop: `1px solid ${theme.palette.divider}`,
     zIndex: 2,

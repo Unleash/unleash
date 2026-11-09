@@ -1,7 +1,8 @@
 import type React from 'react';
-import { FormControlLabel, Switch, TextField } from '@mui/material';
+import { FormControlLabel, Switch } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import Input from 'component/common/Input/Input';
 
 interface SsoGroupSettingsProps {
     ssoType: 'OIDC' | 'SAML';
@@ -71,15 +72,14 @@ export const SsoGroupSettings = ({
                     </p>
                 </Grid>
                 <Grid size={{ md: 6 }}>
-                    <TextField
+                    <Input
                         onChange={updateField}
                         label='Group JSON Path'
                         name='groupJsonPath'
                         value={data.groupJsonPath}
                         disabled={!data.enableGroupSyncing || disabled}
                         style={{ width: '400px' }}
-                        variant='outlined'
-                        size='small'
+                        size='large'
                         required
                     />
                 </Grid>

@@ -7,7 +7,7 @@ import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 const StyledAddTagButton = styled(PermissionButton)(({ theme }) => ({
     lineHeight: theme.typography.body1.lineHeight,
     borderRadius: theme.shape.borderRadiusExtraLarge,
-    background: theme.palette.secondary.light,
+    background: theme.palette.primary.container,
     padding: theme.spacing(0.5, 1.5),
     height: theme.spacing(3.5),
     // Keep the leading "+" small; out-specify the global button start-icon

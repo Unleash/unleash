@@ -30,8 +30,8 @@ const StyledEdgeLevel = styled('div')(({ theme }) => ({
 
 const StyledNode = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
-    border: `1px solid ${theme.palette.secondary.border}`,
-    backgroundColor: theme.palette.secondary.light,
+    border: `1px solid ${theme.palette.primary.containerBorder}`,
+    backgroundColor: theme.palette.primary.container,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -161,7 +161,7 @@ const processEdges = (edges: ConnectedEdge[]): Map<number, AppNameGroup[]> => {
 
 const getGroupHosting = (instances: ConnectedEdge[]) => {
     if (instances.every((i) => i.hosting === 'hosted')) {
-        return { hostingLabel: 'Cloud', hostingColor: 'secondary' } as const;
+        return { hostingLabel: 'Cloud', hostingColor: 'primary' } as const;
     }
     if (instances.every((i) => i.hosting === 'enterprise-self-hosted')) {
         return { hostingLabel: 'Self-hosted', hostingColor: 'info' } as const;
@@ -231,8 +231,8 @@ export const EnterpriseEdgeInstances = ({
                                             sourceAnchor: 'top',
                                             style: {
                                                 strokeColor:
-                                                    theme.palette.secondary
-                                                        .border,
+                                                    theme.palette.primary
+                                                        .containerBorder,
                                             },
                                         }),
                                     )}

@@ -9,7 +9,6 @@
  */
 export type PatchSchemaOp = (typeof PatchSchemaOp)[keyof typeof PatchSchemaOp];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const PatchSchemaOp = {
     add: 'add',
     remove: 'remove',

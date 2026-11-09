@@ -11,6 +11,18 @@ describe('constraintValidator', () => {
             expect(validate('0')).toEqual([true, '']);
             expect(validate('-1')).toEqual([true, '']);
             expect(validate('3.14')).toEqual([true, '']);
+            expect(validate('1e3')).toEqual([true, '']);
+            expect(validate('-2.5e-3')).toEqual([true, '']);
+        });
+
+        test.each([
+            'Infinity',
+            '+Infinity',
+            '-Infinity',
+            '1e309',
+            '-1e309',
+        ])('rejects non-finite number %s', (value) => {
+            expect(validate(value)).toEqual([false, 'Value must be a number']);
         });
 
         test('rejects non-numeric strings', () => {
@@ -33,14 +45,47 @@ describe('constraintValidator', () => {
             expect(validate('0.0.1')).toEqual([true, '']);
         });
 
+        test('accepts prerelease', () => {
+            expect(validate('1.2.3-beta.1')).toEqual([true, '']);
+        });
+
+        test('rejects build metadata by default', () => {
+            expect(validate('1.2.3+4000')[0]).toBe(false);
+            expect(validate('1.2.3-beta.1+build.5')[0]).toBe(false);
+        });
+
         test('rejects invalid semver', () => {
             const [valid] = validate('not-semver');
             expect(valid).toBe(false);
         });
 
         test('rejects unclean semver', () => {
-            const [valid] = validate('v1.2.3');
+            expect(validate('v1.2.3')[0]).toBe(false);
+            expect(validate(' 1.2.3 ')[0]).toBe(false);
+            expect(validate('1.2.3+')[0]).toBe(false);
+        });
+    });
+
+    describe('semver operator with semverBuildMetadata flag', () => {
+        const validate = constraintValidator('SEMVER_EQ', {
+            semverBuildMetadata: true,
+        });
+
+        test('accepts prerelease and build metadata', () => {
+            expect(validate('1.2.3-beta.1')).toEqual([true, '']);
+            expect(validate('1.2.3+4000')).toEqual([true, '']);
+            expect(validate('1.2.3-beta.1+build.5')).toEqual([true, '']);
+        });
+
+        test('rejects invalid semver', () => {
+            const [valid] = validate('not-semver');
             expect(valid).toBe(false);
+        });
+
+        test('rejects unclean semver', () => {
+            expect(validate('v1.2.3')[0]).toBe(false);
+            expect(validate(' 1.2.3 ')[0]).toBe(false);
+            expect(validate('1.2.3+')[0]).toBe(false);
         });
     });
 
@@ -75,6 +120,28 @@ describe('constraintValidator', () => {
             expect(message).toBe(
                 'Value must be a valid RE2 regex. Error parsing regexp: missing closing ]: `[invalid`',
             );
+        });
+    });
+
+    describe('CIDR operator', () => {
+        const validate = constraintValidator('IN_CIDR');
+
+        test('accepts IP addresses and CIDR ranges', () => {
+            expect(
+                validate('192.168.1.1', '10.0.0.0/8', '::1', '2001:db8::/32'),
+            ).toEqual([true, '']);
+        });
+
+        test('rejects values that are not IP addresses or CIDR ranges', () => {
+            expect(validate('not an ip')).toEqual([
+                false,
+                'Value must be IP address or CIDR range.',
+            ]);
+        });
+
+        test('rejects a batch where any value is invalid', () => {
+            const [valid] = validate('192.168.1.1', 'not an ip');
+            expect(valid).toBe(false);
         });
     });
 

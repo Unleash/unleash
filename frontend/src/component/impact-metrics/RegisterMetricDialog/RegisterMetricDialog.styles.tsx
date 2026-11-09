@@ -18,7 +18,7 @@ export const Card = styled('div')(({ theme }) => ({
     position: 'relative',
     border: `1.5px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusLarge,
-    background: theme.palette.background.default,
+    background: theme.palette.background.paper,
     padding: theme.spacing(2),
     transition: 'border-color 150ms ease',
     '&:hover, &:focus-within': {

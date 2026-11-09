@@ -12,10 +12,7 @@ import { randomId } from '../../util/index.js';
 import EnvironmentService from '../project-environments/environment-service.js';
 import IncompatibleProjectError from '../../error/incompatible-project-error.js';
 import type { ApiTokenService, EventService } from '../../services/index.js';
-import {
-    FeatureEnvironmentEvent,
-    type IUnleashConfig,
-} from '../../types/index.js';
+import { FeatureEnvironmentEvent } from '../../types/index.js';
 import { addDays, subDays } from 'date-fns';
 import {
     createAccessService,
@@ -36,7 +33,7 @@ import { extractAuditInfoFromUser } from '../../util/index.js';
 import { ApiTokenType } from '../../types/model.js';
 import { createApiTokenService } from '../api-tokens/createApiTokenService.js';
 import type User from '../../types/user.js';
-import { beforeAll, expect, test, beforeEach, afterAll } from 'vitest';
+import { beforeAll, expect, test, beforeEach, afterAll, vi } from 'vitest';
 let stores: IUnleashStores;
 let db: ITestDb;
 
@@ -142,77 +139,53 @@ describe('should list all projects', () => {
         );
     });
 
-    describe("with 'newProjectList' flag enabled", () => {
-        let flagEnabledConfig: IUnleashConfig;
-        let projectServiceWithFlag: ProjectService;
-        beforeAll(() => {
-            flagEnabledConfig = createTestConfig({
-                getLogger,
-                experimental: { flags: { newProjectList: true } },
-            });
+    test('includes onboarding status', async () => {
+        const project = {
+            id: 'onboarding-status',
+            name: 'Onboarding status project',
+            description: 'Blah',
+            mode: 'open' as const,
+            defaultStickiness: 'default',
+        };
 
-            projectServiceWithFlag = createProjectService(
-                db.rawDatabase,
-                flagEnabledConfig,
-            );
+        await projectService.createProject(project, user, auditUser);
+        const projects = await projectService.getProjects();
+        const projectOnboardingStatus = projects.find(
+            (p) => p.id === project.id,
+        )?.onboardingStatus;
+
+        expect(projectOnboardingStatus).toMatchObject({
+            status: 'onboarding-started',
+        });
+    });
+
+    test('includes cleanupCount', async () => {
+        const project = {
+            id: 'cleanup-count',
+            name: 'Cleanup count project',
+            description: 'Blah',
+            mode: 'open' as const,
+            defaultStickiness: 'default',
+        };
+
+        await projectService.createProject(project, user, auditUser);
+
+        await stores.featureToggleStore.create(project.id, {
+            name: 'cleanup-feature',
+            createdByUserId: user.id,
         });
 
-        test('includes onboarding status', async () => {
-            const project = {
-                id: 'onboarding-status',
-                name: 'Onboarding status project',
-                description: 'Blah',
-                mode: 'open' as const,
-                defaultStickiness: 'default',
-            };
+        await stores.featureLifecycleStore.insert([
+            { feature: 'cleanup-feature', stage: 'initial' },
+            { feature: 'cleanup-feature', stage: 'completed' },
+        ]);
 
-            await projectServiceWithFlag.createProject(
-                project,
-                user,
-                auditUser,
-            );
-            const projects = await projectServiceWithFlag.getProjects();
-            const projectOnboardingStatus = projects.find(
-                (p) => p.id === project.id,
-            )?.onboardingStatus;
+        const projects = await projectService.getProjects();
+        const projectCleanupCount = projects.find(
+            (p) => p.id === project.id,
+        )?.cleanupCount;
 
-            expect(projectOnboardingStatus).toMatchObject({
-                status: 'onboarding-started',
-            });
-        });
-
-        test('includes cleanupCount', async () => {
-            const project = {
-                id: 'cleanup-count',
-                name: 'Cleanup count project',
-                description: 'Blah',
-                mode: 'open' as const,
-                defaultStickiness: 'default',
-            };
-
-            await projectServiceWithFlag.createProject(
-                project,
-                user,
-                auditUser,
-            );
-
-            await stores.featureToggleStore.create(project.id, {
-                name: 'cleanup-feature',
-                createdByUserId: user.id,
-            });
-
-            await stores.featureLifecycleStore.insert([
-                { feature: 'cleanup-feature', stage: 'initial' },
-                { feature: 'cleanup-feature', stage: 'completed' },
-            ]);
-
-            const projects = await projectServiceWithFlag.getProjects();
-            const projectCleanupCount = projects.find(
-                (p) => p.id === project.id,
-            )?.cleanupCount;
-
-            expect(projectCleanupCount).toBe(1);
-        });
+        expect(projectCleanupCount).toBe(1);
     });
 });
 
@@ -2202,6 +2175,78 @@ test('should get correct amount of project members for current and past window',
     expect(result.updates.projectMembersAddedCurrentWindow).toBe(6); // 5 members + 1 owner
     expect(result.updates.projectActivityCurrentWindow).toBe(2);
     expect(result.updates.projectActivityPastWindow).toBe(0);
+});
+
+const setUpStatusJob = async (projectIds: string[]) => {
+    for (const id of projectIds) {
+        await projectService.createProject({ id, name: id }, user, auditUser);
+    }
+    const logs = { info: [] as unknown[][], error: [] as unknown[][] };
+    const service = createProjectService(
+        db.rawDatabase,
+        createTestConfig({
+            getLogger: () => ({
+                ...getLogger(),
+                info: (...args: unknown[]) => logs.info.push(args),
+                error: (...args: unknown[]) => logs.error.push(args),
+            }),
+        }),
+    );
+    const statsRows = () =>
+        db
+            .rawDatabase('project_stats')
+            .whereIn('project', projectIds)
+            .orderBy('project')
+            .pluck('project');
+    return { service, logs, statsRows };
+};
+
+test('status job skips a project deleted mid-run and updates the others', async () => {
+    const { service, logs, statsRows } = await setUpStatusJob([
+        'stats-before',
+        'stats-deleted',
+        'stats-after',
+    ]);
+    // Delete the project after the job has listed it but before the upsert.
+    const getStatusUpdates = service.getStatusUpdates.bind(service);
+    vi.spyOn(service, 'getStatusUpdates').mockImplementation(async (id) => {
+        const result = await getStatusUpdates(id);
+        if (id === 'stats-deleted') {
+            await stores.projectStore.delete(id);
+        }
+        return result;
+    });
+
+    await service.statusJob();
+
+    expect(await statsRows()).toEqual(['stats-after', 'stats-before']);
+    expect(logs.info).toContainEqual([
+        'Skipping project stats for deleted project stats-deleted',
+    ]);
+    expect(logs.error).toEqual([]);
+});
+
+test('status job logs a failing project and updates the others', async () => {
+    const { service, logs, statsRows } = await setUpStatusJob([
+        'stats-fail-a',
+        'stats-fail-b',
+    ]);
+    const getStatusUpdates = service.getStatusUpdates.bind(service);
+    const failure = new Error('stats query failed');
+    vi.spyOn(service, 'getStatusUpdates').mockImplementation(async (id) => {
+        if (id === 'stats-fail-a') {
+            throw failure;
+        }
+        return getStatusUpdates(id);
+    });
+
+    await service.statusJob();
+
+    expect(await statsRows()).toEqual(['stats-fail-b']);
+    expect(logs.error).toContainEqual([
+        'Failed to update project stats for project stats-fail-a',
+        failure,
+    ]);
 });
 
 describe('feature flag naming patterns', () => {

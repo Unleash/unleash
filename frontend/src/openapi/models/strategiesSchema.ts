@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { StrategySchema } from './strategySchema';
-import type { StrategiesSchemaVersion } from './strategiesSchemaVersion';
+import type { StrategiesSchemaVersion } from './strategiesSchemaVersion.ts';
+import type { StrategySchema } from './strategySchema.ts';
 
 /**
  * List of strategies

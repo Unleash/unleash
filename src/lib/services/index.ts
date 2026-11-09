@@ -6,7 +6,6 @@ import HealthService from './health-service.js';
 import ProjectService from '../features/project/project-service.js';
 import ClientInstanceService from '../features/metrics/instance/instance-service.js';
 import ClientMetricsServiceV2 from '../features/metrics/client-metrics/metrics-service-v2.js';
-import { CustomMetricsService } from '../features/metrics/custom/custom-metrics-service.js';
 import TagTypeService from '../features/tag-type/tag-type-service.js';
 import TagService from './tag-service.js';
 import StrategyService from './strategy-service.js';
@@ -25,6 +24,8 @@ import { FeatureToggleService } from '../features/feature-toggle/feature-toggle-
 import EnvironmentService from '../features/project-environments/environment-service.js';
 import FeatureTagService from './feature-tag-service.js';
 import ProjectHealthService from './project-health-service.js';
+import { ProjectHealthFeaturesReadModel } from '../domain/project-health/features-read-model.js';
+import { FakeProjectHealthFeaturesReadModel } from '../domain/project-health/fake-features-read-model.js';
 import UserSplashService from './user-splash-service.js';
 import { SegmentService } from '../features/segment/segment-service.js';
 import { OpenApiService } from './openapi-service.js';
@@ -61,6 +62,7 @@ import {
     type WithTransactional,
     withTransactional,
 } from '../db/transaction.js';
+import { SlackAppInstallService } from '../addons/slack-app-install-service.js';
 import {
     createChangeRequestAccessReadModel,
     createFakeChangeRequestAccessService,
@@ -85,6 +87,7 @@ import {
     createFeatureLinkService,
     createFeatureToggleService,
     createProjectService,
+    createSegmentService,
     createUserSubscriptionsService,
 } from '../features/index.js';
 import EventAnnouncerService from './event-announcer-service.js';
@@ -116,6 +119,7 @@ import {
     createFakeTagTypeService,
     createTagTypeService,
 } from '../features/tag-type/createTagTypeService.js';
+import { createFakeTagService, createTagService } from './createTagService.js';
 import {
     createFakeInstanceStatsService,
     createInstanceStatsService,
@@ -155,6 +159,11 @@ import {
     createFakePersonalDashboardService,
     createPersonalDashboardService,
 } from '../features/personal-dashboard/createPersonalDashboardService.js';
+import type { UserRecentFlagsService } from '../features/user-recent-flags/user-recent-flags-service.js';
+import {
+    createFakeUserRecentFlagsService,
+    createUserRecentFlagsService,
+} from '../features/user-recent-flags/createUserRecentFlagsService.js';
 import {
     createFakeProjectStatusService,
     createProjectStatusService,
@@ -179,16 +188,20 @@ import type FeatureLinkService from '../features/feature-links/feature-link-serv
 import { createUserService } from '../features/users/createUserService.js';
 import { UiConfigService } from '../ui-config/ui-config-service.js';
 import { ResourceLimitsService } from '../features/resource-limits/resource-limits-service.js';
-import {
-    createConstraintsReadModel,
-    createFakeConstraintsReadModel,
-} from '../features/constraints/createConstraintsReadModel.js';
-import type { IConstraintsReadModel } from '../features/constraints/constraints-read-model-type.js';
+import { ConstraintValidator } from '../features/constraints/constraint-validator.js';
+import { FakeConstraintValidator } from '../features/constraints/fake-constraint-validator.js';
+import type { IConstraintValidator } from '../features/constraints/constraint-validator-type.js';
 import {
     createFakeReleasePlanMilestoneStrategyService,
     createReleasePlanMilestoneStrategyService,
 } from '../features/release-plans/createReleasePlanMilestoneStrategyService.js';
 import type { ReleasePlanMilestoneStrategyService } from '../features/release-plans/release-plan-milestone-strategy-service.js';
+import { createApiTokenV2Service } from '../features/apitokensv2/index.js';
+import {
+    createFakeApiTokenV2Service,
+    type AdminApiTokenV2Service,
+    type ReadOnlyApiTokenV2Service,
+} from '../features/apitokensv2/api-token-v2-service.js';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -225,8 +238,16 @@ export const createServices = (
 
     const resourceLimitsService = new ResourceLimitsService(config);
 
-    // Initialize custom metrics service
-    const customMetricsService = new CustomMetricsService(config);
+    const apiTokenV2Service = db
+        ? createApiTokenV2Service(config)(db)
+        : createFakeApiTokenV2Service(config, stores, {
+              eventService,
+              resourceLimitsService,
+          });
+
+    const transactionalApiTokenV2Service = db
+        ? withTransactional(createApiTokenV2Service(config), db)
+        : withFakeTransactional(apiTokenV2Service);
 
     const clientMetricsServiceV2 = new ClientMetricsServiceV2(
         stores,
@@ -241,7 +262,9 @@ export const createServices = (
 
     const transactionalContextService = db
         ? withTransactional(createContextService(config), db)
-        : withFakeTransactional(createFakeContextService(config));
+        : withFakeTransactional(
+              createFakeContextService(config).contextService,
+          );
     const contextService = transactionalContextService;
     const emailService = new EmailService(config);
     const featureTypeService = new FeatureTypeService(
@@ -251,7 +274,12 @@ export const createServices = (
     );
     const resetTokenService = new ResetTokenService(stores, config);
     const strategyService = new StrategyService(stores, config, eventService);
-    const tagService = new TagService(stores, config, eventService);
+    const transactionalTagService = db
+        ? withTransactional(createTagService(config), db)
+        : withFakeTransactional(
+              createFakeTagService(config, stores, eventService),
+          );
+    const tagService = transactionalTagService;
     const transactionalTagTypeService = db
         ? withTransactional(createTagTypeService(config), db)
         : withFakeTransactional(createFakeTagTypeService(config));
@@ -269,6 +297,11 @@ export const createServices = (
     );
     const sessionService = new SessionService(stores, config);
     const settingService = new SettingService(stores, config, eventService);
+    const slackAppInstallService = new SlackAppInstallService(
+        { addonService },
+        config,
+        Date.now,
+    );
     const userService = db
         ? withTransactional((db) => createUserService(db, config), db)
         : withFakeTransactional(
@@ -297,9 +330,9 @@ export const createServices = (
         ? createChangeRequestSegmentUsageReadModel(db)
         : createFakeChangeRequestSegmentUsageReadModel();
 
-    const constraintsReadModel = db
-        ? createConstraintsReadModel(stores.contextFieldStore)
-        : createFakeConstraintsReadModel();
+    const constraintValidator = db
+        ? new ConstraintValidator(stores.contextFieldStore)
+        : new FakeConstraintValidator();
 
     const segmentService = new SegmentService(
         stores,
@@ -309,8 +342,11 @@ export const createServices = (
         eventService,
         privateProjectChecker,
         resourceLimitsService,
-        constraintsReadModel,
+        constraintValidator,
     );
+    const transactionalSegmentService = db
+        ? withTransactional((db) => createSegmentService(db, config), db)
+        : withFakeTransactional(segmentService);
 
     const clientInstanceService = new ClientInstanceService(
         stores,
@@ -354,10 +390,14 @@ export const createServices = (
         ? createProjectStatusService(db, config)
         : createFakeProjectStatusService().projectStatusService;
 
+    const projectHealthFeatureReadModel = db
+        ? new ProjectHealthFeaturesReadModel(db)
+        : new FakeProjectHealthFeaturesReadModel();
     const projectHealthService = new ProjectHealthService(
         stores,
         config,
         projectService,
+        projectHealthFeatureReadModel,
     );
 
     const exportImportService = db
@@ -400,7 +440,7 @@ export const createServices = (
     const clientSpecService = new ClientSpecService(config);
     const playgroundService = db
         ? createPlaygroundService(db, config)
-        : createFakePlaygroundService(config);
+        : createFakePlaygroundService(config).playgroundService;
 
     const configurationRevisionService =
         ConfigurationRevisionService.getInstance(stores, config);
@@ -426,10 +466,20 @@ export const createServices = (
 
     const edgeService = db
         ? withTransactional(
-              (db) => createTransactionalEdgeService(db, config),
+              (db) =>
+                  createTransactionalEdgeService(db, config, {
+                      apiTokenService,
+                      apiTokenV2Service,
+                  }),
               db,
           )
-        : withFakeTransactional(createFakeEdgeService(config));
+        : withFakeTransactional(
+              createFakeEdgeService(config, {
+                  apiTokenService,
+                  apiTokenV2Service,
+                  transactionalApiTokenV2Service,
+              }),
+          );
 
     const patService = db
         ? createPatService(db, config)
@@ -484,6 +534,18 @@ export const createServices = (
         ? createPersonalDashboardService(db, config, stores)
         : createFakePersonalDashboardService(config);
 
+    const userRecentFlagsService = db
+        ? createUserRecentFlagsService(
+              db,
+              config,
+              featureSearchService,
+              privateProjectChecker,
+          )
+        : createFakeUserRecentFlagsService(
+              featureSearchService,
+              privateProjectChecker,
+          );
+
     const transactionalUserSubscriptionsService = db
         ? withTransactional(createUserSubscriptionsService(config), db)
         : withFakeTransactional(createFakeUserSubscriptionsService(config));
@@ -503,6 +565,7 @@ export const createServices = (
         accessService,
         accountService,
         addonService,
+        slackAppInstallService,
         eventAnnouncerService,
         featureToggleService,
         featureTypeService,
@@ -513,13 +576,15 @@ export const createServices = (
         tagTypeService,
         transactionalTagTypeService,
         tagService,
+        transactionalTagService,
         clientInstanceService,
         clientMetricsServiceV2,
-        customMetricsService,
         contextService,
         transactionalContextService,
         versionService,
         apiTokenService,
+        apiTokenV2Service,
+        transactionalApiTokenV2Service,
         emailService,
         userService,
         resetTokenService,
@@ -533,6 +598,7 @@ export const createServices = (
         projectHealthService,
         userSplashService,
         segmentService,
+        transactionalSegmentService,
         openApiService,
         clientSpecService,
         playgroundService,
@@ -565,6 +631,7 @@ export const createServices = (
         integrationEventsService,
         onboardingService,
         personalDashboardService,
+        userRecentFlagsService,
         projectStatusService,
         transactionalUserSubscriptionsService,
         uniqueConnectionService,
@@ -574,7 +641,7 @@ export const createServices = (
         unknownFlagsService,
         uiConfigService,
         resourceLimitsService,
-        constraintsReadModel,
+        constraintValidator,
     };
 };
 
@@ -594,6 +661,7 @@ export {
     EmailService,
     AccessService,
     ApiTokenService,
+    createApiTokenV2Service,
     UserService,
     ResetTokenService,
     SettingService,
@@ -635,6 +703,8 @@ export {
     UiConfigService,
     ResourceLimitsService,
     ConfigurationRevisionService,
+    type AdminApiTokenV2Service,
+    type ReadOnlyApiTokenV2Service,
     type ReleasePlanMilestoneStrategyService,
 };
 
@@ -643,10 +713,12 @@ export interface IUnleashServices {
     accessService: AccessService;
     accountService: AccountService;
     addonService: AddonService;
+    slackAppInstallService: SlackAppInstallService;
     apiTokenService: ApiTokenService;
+    apiTokenV2Service: ReadOnlyApiTokenV2Service;
+    transactionalApiTokenV2Service: WithTransactional<AdminApiTokenV2Service>;
     clientInstanceService: ClientInstanceService;
     clientMetricsServiceV2: ClientMetricsServiceV2;
-    customMetricsService: CustomMetricsService;
     contextService: ContextService;
     transactionalContextService: WithTransactional<ContextService>;
     emailService: EmailService;
@@ -670,6 +742,7 @@ export interface IUnleashServices {
     settingService: SettingService;
     strategyService: StrategyService;
     tagService: TagService;
+    transactionalTagService: WithTransactional<TagService>;
     tagTypeService: TagTypeService;
     transactionalTagTypeService: WithTransactional<TagTypeService>;
     userFeedbackService: UserFeedbackService;
@@ -677,6 +750,7 @@ export interface IUnleashServices {
     versionService: VersionService;
     userSplashService: UserSplashService;
     segmentService: ISegmentService;
+    transactionalSegmentService: WithTransactional<ISegmentService>;
     openApiService: OpenApiService;
     clientSpecService: ClientSpecService;
     patService: PatService;
@@ -705,6 +779,7 @@ export interface IUnleashServices {
     integrationEventsService: IntegrationEventsService;
     onboardingService: OnboardingService;
     personalDashboardService: PersonalDashboardService;
+    userRecentFlagsService: UserRecentFlagsService;
     projectStatusService: ProjectStatusService;
     transactionalUserSubscriptionsService: WithTransactional<UserSubscriptionsService>;
     uniqueConnectionService: UniqueConnectionService;
@@ -714,5 +789,5 @@ export interface IUnleashServices {
     unknownFlagsService: UnknownFlagsService;
     uiConfigService: UiConfigService;
     resourceLimitsService: ResourceLimitsService;
-    constraintsReadModel: IConstraintsReadModel;
+    constraintValidator: IConstraintValidator;
 }

@@ -123,6 +123,26 @@ export default class ClientInstanceService {
         data.createdBy = SYSTEM_USER.username!;
 
         this.updateSeenClient(data);
+
+        // feed client_sdk_versions for frontend SDKs
+        const recordSdkFlavorMetrics = this.flagResolver.isEnabled(
+            'recordSdkFlavorMetrics',
+        );
+
+        if (recordSdkFlavorMetrics && data.sdkVersion?.indexOf(':') > -1) {
+            const [sdkName, sdkVersion] = data.sdkVersion.split(':');
+
+            // gate the whole frontend heartbeat (backend gates only the flavor fields and always emits)
+            const heartbeatEvent: ISdkHeartbeat = {
+                sdkName,
+                sdkVersion,
+                metadata: {
+                    sdkFlavor: data.sdkFlavor,
+                    sdkFlavorVersion: data.sdkFlavorVersion,
+                },
+            };
+            this.eventStore.emit(CLIENT_REGISTER, heartbeatEvent);
+        }
     }
 
     public async registerBackendClient(
@@ -143,6 +163,9 @@ export default class ClientInstanceService {
 
         if (value.sdkVersion && value.sdkVersion.indexOf(':') > -1) {
             const [sdkName, sdkVersion] = value.sdkVersion.split(':');
+            const recordSdkFlavorMetrics = this.flagResolver.isEnabled(
+                'recordSdkFlavorMetrics',
+            );
             const heartbeatEvent: ISdkHeartbeat = {
                 sdkName,
                 sdkVersion,
@@ -151,6 +174,12 @@ export default class ClientInstanceService {
                     platformVersion: data.platformVersion,
                     yggdrasilVersion: data.yggdrasilVersion,
                     specVersion: data.specVersion,
+                    sdkFlavor: recordSdkFlavorMetrics
+                        ? data.sdkFlavor
+                        : undefined,
+                    sdkFlavorVersion: recordSdkFlavorMetrics
+                        ? data.sdkFlavorVersion
+                        : undefined,
                 },
             };
 
@@ -188,7 +217,11 @@ export default class ClientInstanceService {
             this.clientApplicationsStore &&
             this.clientInstanceStore
         ) {
-            const uniqueRegistrations = Object.values(this.seenClients);
+            const pendingClients = this.seenClients;
+            this.seenClients = {};
+            const uniqueRegistrations = Object.values(pendingClients).filter(
+                (client) => Boolean(client.appName),
+            );
             const uniqueApps: Partial<IClientApplication>[] = Object.values(
                 uniqueRegistrations.reduce((soFar, reg) => {
                     let existingProjects = [];
@@ -207,7 +240,6 @@ export default class ClientInstanceService {
                     return soFar;
                 }, {}),
             );
-            this.seenClients = {};
             try {
                 if (uniqueRegistrations.length > 0) {
                     await this.clientApplicationsStore.bulkUpsert(uniqueApps);
@@ -216,6 +248,13 @@ export default class ClientInstanceService {
                     );
                 }
             } catch (err) {
+                // restore on error
+                for (const [key, client] of Object.entries(pendingClients)) {
+                    this.seenClients[key] = {
+                        ...client,
+                        ...this.seenClients[key],
+                    };
+                }
                 this.logger.warn('Failed to register clients', err);
             }
         }
@@ -326,8 +365,8 @@ export default class ClientInstanceService {
     }
 
     async deleteApplication(appName: string): Promise<void> {
-        await this.clientInstanceStore.deleteForApplication(appName);
         await this.clientApplicationsStore.delete(appName);
+        await this.clientInstanceStore.deleteForApplication(appName);
     }
 
     async createApplication(input: IApplication): Promise<void> {

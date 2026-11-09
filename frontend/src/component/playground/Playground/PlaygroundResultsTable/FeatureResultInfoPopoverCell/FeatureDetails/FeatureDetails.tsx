@@ -27,16 +27,19 @@ const StyledTypographyName = styled('h3')(({ theme }) => ({
     margin: 0,
 }));
 
-interface PlaygroundFeatureResultDetailsProps {
+interface FeatureDetailsBodyProps {
     feature: PlaygroundFeatureSchema;
     input?: PlaygroundRequestSchema;
+}
+
+interface PlaygroundFeatureResultDetailsProps extends FeatureDetailsBodyProps {
     onClose: () => void;
 }
-export const FeatureDetails = ({
+
+export const FeatureDetailsBody = ({
     feature,
     input,
-    onClose,
-}: PlaygroundFeatureResultDetailsProps) => {
+}: FeatureDetailsBodyProps) => {
     const theme = useTheme();
 
     const [description, reason, color] = (() => {
@@ -44,7 +47,7 @@ export const FeatureDetails = ({
             return [
                 `This feature flag is True in ${input?.environment} because `,
                 'at least one strategy is True',
-                theme.palette.success.contrastText,
+                theme.palette.success.onContainer,
             ];
 
         if (
@@ -54,7 +57,7 @@ export const FeatureDetails = ({
             return [
                 `This feature flag is False in ${input?.environment} because `,
                 'parent dependency is not satisfied and the environment is disabled',
-                theme.palette.error.contrastText,
+                theme.palette.error.onContainer,
             ];
         }
 
@@ -62,35 +65,35 @@ export const FeatureDetails = ({
             return [
                 `This feature flag is False in ${input?.environment} because `,
                 'the environment is disabled',
-                theme.palette.error.contrastText,
+                theme.palette.error.onContainer,
             ];
 
         if (hasOnlyCustomStrategies(feature))
             return [
                 `This feature flag is Unknown in ${input?.environment} because `,
                 'no strategies could be fully evaluated',
-                theme.palette.warning.contrastText,
+                theme.palette.warning.onContainer,
             ];
 
         if (hasCustomStrategies(feature))
             return [
                 `This feature flag is Unknown in ${input?.environment} because `,
                 'not all strategies could be fully evaluated',
-                theme.palette.warning.contrastText,
+                theme.palette.warning.onContainer,
             ];
 
         if (feature.hasUnsatisfiedDependency) {
             return [
                 `This feature flag is False in ${input?.environment} because `,
                 'parent dependency is not satisfied',
-                theme.palette.error.contrastText,
+                theme.palette.error.onContainer,
             ];
         }
 
         return [
             `This feature flag is False in ${input?.environment} because `,
             'all strategies are either False or could not be fully evaluated',
-            theme.palette.error.contrastText,
+            theme.palette.error.onContainer,
         ];
     })();
 
@@ -102,6 +105,30 @@ export const FeatureDetails = ({
         ? `This feature uses custom strategies. Custom strategies can't be evaluated, so they will be marked accordingly.`
         : undefined;
 
+    return (
+        <>
+            <p>
+                {description}
+                <Typography color={color} component='span'>
+                    {reason}
+                </Typography>
+                .
+            </p>
+            {noValueTxt ? <Alert color={'info'}>{noValueTxt}</Alert> : null}
+            {customStrategiesTxt ? (
+                <Alert severity='warning' color='info'>
+                    {customStrategiesTxt}
+                </Alert>
+            ) : null}
+        </>
+    );
+};
+
+export const FeatureDetails = ({
+    feature,
+    input,
+    onClose,
+}: PlaygroundFeatureResultDetailsProps) => {
     const onCloseClick =
         onClose &&
         ((event: React.SyntheticEvent) => {
@@ -133,19 +160,7 @@ export const FeatureDetails = ({
                     <CloseOutlined />
                 </IconButton>
             </HeaderRow>
-            <p>
-                {description}
-                <Typography color={color} component='span'>
-                    {reason}
-                </Typography>
-                .
-            </p>
-            {noValueTxt ? <Alert color={'info'}>{noValueTxt}</Alert> : null}
-            {customStrategiesTxt ? (
-                <Alert severity='warning' color='info'>
-                    {customStrategiesTxt}
-                </Alert>
-            ) : null}
+            <FeatureDetailsBody feature={feature} input={input} />
         </>
     );
 };

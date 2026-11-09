@@ -1,4 +1,6 @@
+import type { Knex } from 'knex';
 import type { Db } from '../../db/db.js';
+import type { IUnleashConfig } from '../../types/index.js';
 import type {
     BasePersonalProject,
     IPersonalDashboardReadModel,
@@ -15,8 +17,11 @@ type IntermediateProjectResult = Omit<PersonalProject, 'roles'> & {
 export class PersonalDashboardReadModel implements IPersonalDashboardReadModel {
     private db: Db;
 
-    constructor(db: Db) {
+    private isOss: boolean;
+
+    constructor(db: Db, { isOss }: Pick<IUnleashConfig, 'isOss'>) {
         this.db = db;
+        this.isOss = isOss;
     }
 
     async getLatestHealthScores(
@@ -113,17 +118,20 @@ export class PersonalDashboardReadModel implements IPersonalDashboardReadModel {
             .join('features', 'favorite_features.feature', 'features.name')
             .where('favorite_features.user_id', userId)
             .whereNull('features.archived_at')
+            .modify(this.onlyDefaultProjectInOss)
             .select(
                 'features.name as name',
                 'features.type',
                 'features.project',
                 'features.created_at',
             )
-            .union(function () {
-                this.select('name', 'type', 'project', 'created_at')
+            .union((queryBuilder) => {
+                queryBuilder
+                    .select('name', 'type', 'project', 'created_at')
                     .from('features')
                     .where('features.created_by_user_id', userId)
-                    .whereNull('features.archived_at');
+                    .whereNull('features.archived_at')
+                    .modify(this.onlyDefaultProjectInOss);
             })
             .orderBy('created_at', 'desc')
             .limit(100);
@@ -134,4 +142,10 @@ export class PersonalDashboardReadModel implements IPersonalDashboardReadModel {
             project: row.project,
         }));
     }
+
+    private onlyDefaultProjectInOss = (query: Knex.QueryBuilder): void => {
+        if (this.isOss) {
+            query.where('features.project', 'default');
+        }
+    };
 }

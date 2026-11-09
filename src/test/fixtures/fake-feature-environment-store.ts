@@ -68,8 +68,8 @@ export default class FakeFeatureEnvironmentStore
         _environment: string,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         _project: string,
-    ): Promise<void> {
-        return Promise.resolve(undefined);
+    ): Promise<{ feature_name: string; enabled: boolean }[]> {
+        return Promise.resolve([]);
     }
 
     async exists(key: FeatureEnvironmentKey): Promise<boolean> {

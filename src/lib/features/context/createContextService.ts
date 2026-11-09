@@ -45,15 +45,13 @@ export const createContextService =
         );
     };
 
-export const createFakeContextService = (
-    config: IUnleashConfig,
-): ContextService => {
+export const createFakeContextService = (config: IUnleashConfig) => {
     const { getLogger, flagResolver } = config;
     const contextFieldStore = new FakeContextFieldStore();
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
     const eventService = createFakeEventsService(config);
     const privateProjectChecker = new FakePrivateProjectChecker();
-    return new ContextService(
+    const contextService = new ContextService(
         { contextFieldStore, featureStrategiesStore },
         {
             getLogger,
@@ -62,4 +60,5 @@ export const createFakeContextService = (
         eventService,
         privateProjectChecker,
     );
+    return { contextService, eventService };
 };

@@ -1,13 +1,7 @@
-import {
-    Autocomplete,
-    IconButton,
-    TextField,
-    Tooltip,
-    styled,
-} from '@mui/material';
+import { IconButton, Tooltip, styled } from '@mui/material';
 import type { ActionsFilterState } from '../../useProjectActionsForm.ts';
 import Delete from '@mui/icons-material/Delete';
-import Input from 'component/common/Input/Input';
+import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField';
 import { ProjectActionsFormItem } from '../ProjectActionsFormItem.tsx';
 import {
     inOperators,
@@ -24,6 +18,7 @@ import { InvertedOperatorButton } from './StyledToggleButton/InvertedOperatorBut
 import { constraintValidator } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/useEditableConstraint/constraint-validator.ts';
 import { ResolveInput } from './ProjectActionsFilterItemInputs/ResolveInput.tsx';
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledDeleteButton = styled(IconButton)({
     marginRight: '-6px',
@@ -37,7 +32,7 @@ const StyledFilter = styled('div')({
 
 const StyledFilterHeader = styled('div')(({ theme }) => ({
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     gap: theme.spacing(1),
     [theme.breakpoints.down('sm')]: {
         flexDirection: 'column',
@@ -51,6 +46,7 @@ const StyledOperatorOptions = styled('div')(({ theme }) => ({
     display: 'inline-flex',
     flex: 1,
     gap: theme.spacing(1),
+    alignItems: 'flex-end',
 }));
 
 const StyledOperatorSelectWrapper = styled('div')(({ theme }) => ({
@@ -74,10 +70,6 @@ const StyledOperatorButtonWrapper = styled('div')(({ theme }) => ({
 const StyledInputContainer = styled('div')({
     width: '100%',
     flex: 1,
-});
-
-const _StyledInput = styled(Input)({
-    width: '100%',
 });
 
 const StyledResolveInputWrapper = styled('div')(({ theme }) => ({
@@ -141,8 +133,10 @@ export const ProjectActionsFilterItem = ({
         ...semVerOperators,
     ];
 
+    const semverBuildMetadata = useUiFlag('semverBuildMetadata');
+
     const [error, setError] = useState('');
-    const validator = constraintValidator(operator);
+    const validator = constraintValidator(operator, { semverBuildMetadata });
 
     const validate = () => {
         stateChanged({
@@ -215,8 +209,10 @@ export const ProjectActionsFilterItem = ({
             <StyledFilter>
                 <StyledFilterHeader>
                     <StyledInputContainer>
-                        <Autocomplete
+                        <AutocompleteField
                             freeSolo
+                            label='Parameter'
+                            size='large'
                             options={suggestions}
                             value={parameter}
                             onInputChange={(_, parameter) =>
@@ -225,13 +221,6 @@ export const ProjectActionsFilterItem = ({
                                     parameter,
                                 })
                             }
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    size='small'
-                                    label='Parameter'
-                                />
-                            )}
                         />
                     </StyledInputContainer>
                     <StyledOperatorOptions>

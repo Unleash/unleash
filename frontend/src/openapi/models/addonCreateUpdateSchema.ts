@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AddonCreateUpdateSchemaParameters } from './addonCreateUpdateSchemaParameters';
+import type { AddonCreateUpdateSchemaParameters } from './addonCreateUpdateSchemaParameters.ts';
 
 /**
  * Data required to create or update an [Unleash addon](https://docs.getunleash.io/integrate) instance.
@@ -21,17 +21,18 @@ export interface AddonCreateUpdateSchema {
     parameters: AddonCreateUpdateSchemaParameters;
     /** The projects that this addon will listen to events from. An empty list means it will listen to events from **all** projects. */
     projects?: string[];
-    /** The addon provider, such as "webhook" or "slack". This string is **case sensitive** and maps to the provider's `name` property.
-
-The list of all supported providers and their parameters for a specific Unleash instance can be found by making a GET request to the `api/admin/addons` endpoint: the `providers` property of that response will contain all available providers.
-
-The default set of providers can be found in the [addons reference documentation](https://docs.getunleash.io/integrate). The default supported options are:
-- `datadog` for [Datadog](https://docs.getunleash.io/integrate/datadog)
-- `slack-app` for [Slack](https://docs.getunleash.io/integrate/slack-app)
-- `teams` for [Microsoft Teams](https://docs.getunleash.io/integrate/teams)
-- `webhook` for [webhooks](https://docs.getunleash.io/integrate/webhook)
-
-The provider you choose for your addon dictates what properties the `parameters` object needs. Refer to the documentation for each provider for more information.
- */
+    /**
+     * The addon provider, such as "webhook" or "slack". This string is **case sensitive** and maps to the provider's `name` property.
+     *
+     * The list of all supported providers and their parameters for a specific Unleash instance can be found by making a GET request to the `api/admin/addons` endpoint: the `providers` property of that response will contain all available providers.
+     *
+     * The default set of providers can be found in the [addons reference documentation](https://docs.getunleash.io/integrate). The default supported options are:
+     * - `datadog` for [Datadog](https://docs.getunleash.io/integrate/datadog)
+     * - `slack` for [Slack](https://docs.getunleash.io/integrate/slack)
+     * - `teams-workflow` for [Microsoft Teams Workflow](https://docs.getunleash.io/integrate/teams-workflow)
+     * - `webhook` for [webhooks](https://docs.getunleash.io/integrate/webhook)
+     *
+     * The provider you choose for your addon dictates what properties the `parameters` object needs. Refer to the documentation for each provider for more information.
+     */
     provider: string;
 }

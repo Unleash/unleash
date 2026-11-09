@@ -25,12 +25,14 @@ We are in the process of defining ADRs for the back end. At the time of writing 
 * [Naming](/contributing/ADRs/back-end/naming)
 * [Preferred export](/contributing/ADRs/back-end/preferred-export)
 * [Breaking DB changes](/contributing/ADRs/back-end/breaking-db-changes)
+* [SQL and migration standards](/contributing/ADRs/back-end/sql-standards)
 * [POST/PUT API payload](/contributing/ADRs/back-end/POST-PUT-api-payload)
 * [Specificity in database column references](/contributing/ADRs/back-end/specificity-db-columns)
 * [Write model vs Read models](/contributing/ADRs/back-end/write-model-vs-read-models)
 * [Frontend API Design](/contributing/ADRs/back-end/frontend-api-design)
 * [Correct type dependencies](/contributing/ADRs/back-end/correct-type-dependencies)
 * [API Version Tracking and Stability Lifecycle](/contributing/ADRs/back-end/api-version-tracking)
+* [REST API Guidelines](/contributing/ADRs/back-end/rest-api-guidelines)
 
 ## Front-end ADRs
 
@@ -47,4 +49,5 @@ We have created a set of ADRs to help guide the development of the front end:
 * [Preferred folder structure](/contributing/ADRs/front-end/preferred-folder-structure)
 * [Preferred form architecture](/contributing/ADRs/front-end/preferred-form-architecture)
 * [OpenAPI SDK generator](/contributing/ADRs/front-end/sdk-generator)
+* [Tracking user journeys and actions](/contributing/ADRs/front-end/tracking)
 * [Use of conditionals in JSX (refactor of &lt;ConditionallyRender /&gt;)](/contributing/ADRs/front-end/jsx-conditionals)

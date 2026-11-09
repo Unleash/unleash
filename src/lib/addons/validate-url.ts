@@ -36,7 +36,9 @@ const isLocalIpv6: (ip: Address6) => boolean = (ip) => {
         ip.isInSubnet(new Address6('ff00::/8')) ||
         ip.isInSubnet(new Address6('2001:db8::/32')) ||
         ip.isInSubnet(new Address6('2002::/16')) ||
-        ip.isInSubnet(new Address6('64:ff95::/96')) ||
+        ip.isInSubnet(new Address6('2001::/32')) ||
+        ip.isInSubnet(new Address6('64:ff9b::/96')) ||
+        ip.isInSubnet(new Address6('64:ff9b:1::/48')) ||
         ip.isInSubnet(new Address6('::ffff:0:0/96'))
     );
 };

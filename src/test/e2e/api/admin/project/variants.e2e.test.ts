@@ -7,6 +7,7 @@ import getLogger from '../../../../fixtures/no-logger.js';
 import * as jsonpatch from 'fast-json-patch/index.mjs';
 import { type IVariant, WeightType } from '../../../../../lib/types/model.js';
 import { DEFAULT_ENV } from '../../../../../lib/server-impl.js';
+import { FEATURE_ENVIRONMENT_VARIANTS_UPDATED } from '../../../../../lib/events/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -233,4 +234,157 @@ test("Returns proper error if project and/or feature flag doesn't exist", async 
             environments: ['development', 'production'],
         })
         .expect(404);
+});
+
+const originalVariant: IVariant = {
+    name: 'original-variant',
+    stickiness: 'default',
+    weight: 1000,
+    weightType: WeightType.VARIABLE,
+};
+
+const setupFeatureFlag = async (featureName: string) => {
+    await db.stores.featureToggleStore.create('default', {
+        name: featureName,
+        createdByUserId: 9999,
+    });
+    await db.stores.featureEnvironmentStore.addEnvironmentToFeature(
+        featureName,
+        DEFAULT_ENV,
+        true,
+    );
+    await db.stores.featureEnvironmentStore.addVariantsToFeatureEnvironment(
+        featureName,
+        DEFAULT_ENV,
+        [originalVariant],
+    );
+};
+
+const expectVariantsUnchanged = async (featureName: string) => {
+    await app.request
+        .get(
+            `/api/admin/projects/default/features/${featureName}/environments/${DEFAULT_ENV}/variants`,
+        )
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.variants).toHaveLength(1);
+            expect(res.body.variants[0].name).toBe(originalVariant.name);
+        });
+};
+
+test('Stores no variants event when the variants cannot be saved', async () => {
+    const featureName = 'feature-variants-failed-write';
+    // jsonb rejects \u0000
+    const unsavableVariant = {
+        ...originalVariant,
+        name: 'new-variant',
+        payload: { type: 'string', value: 'a\u0000b' },
+    };
+    await setupFeatureFlag(featureName);
+
+    await app.request
+        .put(
+            `/api/admin/projects/default/features/${featureName}/environments/${DEFAULT_ENV}/variants`,
+        )
+        .send([unsavableVariant])
+        .expect(400);
+    await app.request
+        .patch(
+            `/api/admin/projects/default/features/${featureName}/environments/${DEFAULT_ENV}/variants`,
+        )
+        .send([{ op: 'add', path: '/1', value: unsavableVariant }])
+        .expect(400);
+    await app.request
+        .put(
+            `/api/admin/projects/default/features/${featureName}/variants-batch`,
+        )
+        .send({ variants: [unsavableVariant], environments: [DEFAULT_ENV] })
+        .expect(400);
+
+    await expectVariantsUnchanged(featureName);
+    // no variants event should be stored
+    const { body } = await app.getRecordedEvents({
+        feature: `IS:${featureName}`,
+        type: `IS:${FEATURE_ENVIRONMENT_VARIANTS_UPDATED}`,
+    });
+    expect(body.events).toEqual([]);
+});
+
+describe('cross-project variant mutations are rejected', () => {
+    beforeAll(async () => {
+        await db.stores.projectStore.create({
+            id: 'malicious-project',
+            name: 'malicious-project',
+            description: '',
+            mode: 'open',
+        });
+    });
+
+    test('variants-batch cannot overwrite a feature from another project', async () => {
+        const featureName = 'cross-project-variants-batch';
+        await setupFeatureFlag(featureName);
+
+        await app.request
+            .put(
+                `/api/admin/projects/malicious-project/features/${featureName}/variants-batch`,
+            )
+            .send({
+                variants: [
+                    {
+                        name: 'injected-variant',
+                        stickiness: 'default',
+                        weight: 1000,
+                        weightType: WeightType.VARIABLE,
+                    },
+                ],
+                environments: [DEFAULT_ENV],
+            })
+            .expect(404);
+
+        await expectVariantsUnchanged(featureName);
+    });
+
+    test('PUT environment variants cannot overwrite a feature from another project', async () => {
+        const featureName = 'cross-project-variants-put';
+        await setupFeatureFlag(featureName);
+
+        await app.request
+            .put(
+                `/api/admin/projects/malicious-project/features/${featureName}/environments/${DEFAULT_ENV}/variants`,
+            )
+            .send([
+                {
+                    name: 'injected-variant',
+                    stickiness: 'default',
+                    weight: 1000,
+                    weightType: WeightType.VARIABLE,
+                },
+            ])
+            .expect(404);
+
+        await expectVariantsUnchanged(featureName);
+    });
+
+    test('PATCH environment variants cannot overwrite a feature from another project', async () => {
+        const featureName = 'cross-project-variants-patch';
+        await setupFeatureFlag(featureName);
+
+        const patch: IVariant[] = [];
+        const observer = jsonpatch.observe(patch);
+        patch.push({
+            name: 'injected-variant',
+            stickiness: 'default',
+            weight: 1000,
+            weightType: WeightType.VARIABLE,
+        });
+
+        await app.request
+            .patch(
+                `/api/admin/projects/malicious-project/features/${featureName}/environments/${DEFAULT_ENV}/variants`,
+            )
+            .send(jsonpatch.generate(observer))
+            .expect(404);
+
+        await expectVariantsUnchanged(featureName);
+    });
 });

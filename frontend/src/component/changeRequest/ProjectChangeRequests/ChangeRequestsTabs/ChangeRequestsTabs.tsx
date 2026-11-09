@@ -35,6 +35,8 @@ import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColum
 import { useStyles } from './ChangeRequestsTabs.styles';
 import { FeaturesCell } from './FeaturesCell.tsx';
 import { HighlightCell } from '../../../common/Table/cells/HighlightCell/HighlightCell.tsx';
+import { useTracking } from 'hooks/useTracking';
+import { selectChangeRequestTabTracking } from 'component/changeRequest/changeRequestTracking';
 
 export interface IChangeRequestTableProps {
     changeRequests: any[];
@@ -88,6 +90,7 @@ export const ChangeRequestsTabs = ({
     projectId,
 }: IChangeRequestTableProps) => {
     const { classes } = useStyles();
+    const trackSelectTab = useTracking(selectChangeRequestTabTracking);
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -321,7 +324,7 @@ export const ChangeRequestsTabs = ({
             headerClass={classes.header}
             header={
                 <PageHeader
-                    titleElement={
+                    heading={
                         <StyledTabContainer>
                             <Tabs
                                 value={activeTab?.title}
@@ -335,9 +338,17 @@ export const ChangeRequestsTabs = ({
                                         key={tab.title}
                                         label={`${tab.title} (${tab.data.length})`}
                                         value={tab.title}
-                                        onClick={() =>
-                                            setChangeRequestType(tab.type)
-                                        }
+                                        onClick={() => {
+                                            if (
+                                                tab.type === changeRequestType
+                                            ) {
+                                                return;
+                                            }
+                                            trackSelectTab('succeeded', {
+                                                tab: tab.type,
+                                            });
+                                            setChangeRequestType(tab.type);
+                                        }}
                                     />
                                 ))}
                             </Tabs>

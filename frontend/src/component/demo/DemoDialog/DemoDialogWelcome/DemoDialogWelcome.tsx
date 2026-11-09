@@ -10,7 +10,7 @@ const StyledDemoPane = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.neutral.container,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(2),
     margin: theme.spacing(2, 0),

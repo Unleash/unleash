@@ -6,10 +6,9 @@ import {
     StyledProjectCardHeader,
     StyledProjectCardContent,
     StyledProjectCardTitleContainer,
+    StyledProjectCardFooter,
 } from './ProjectCard.styles';
-import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter.tsx';
 import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge.tsx';
-import type { ProjectSchemaOwners } from 'openapi';
 import { formatDateYMDHM } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { parseISO } from 'date-fns';
@@ -30,6 +29,7 @@ import { Truncator } from 'component/common/Truncator/Truncator.tsx';
 const StyledActions = styled(Box)(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
+    marginLeft: 'auto',
 }));
 
 export type ProjectArchiveCardProps = {
@@ -39,7 +39,6 @@ export type ProjectArchiveCardProps = {
     onRevive: () => void;
     onDelete: () => void;
     mode?: string;
-    owners?: ProjectSchemaOwners;
 };
 
 export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
@@ -49,7 +48,6 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
     onRevive,
     onDelete,
     mode,
-    owners,
 }) => {
     const { locationSettings } = useLocationSettings();
     const { searchQuery } = useSearchHighlightContext();
@@ -98,7 +96,7 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
                     </div>
                 </StyledProjectCardContent>
             </StyledProjectCardBody>
-            <ProjectCardFooter id={id} owners={owners}>
+            <StyledProjectCardFooter>
                 <StyledActions>
                     <PermissionIconButton
                         onClick={onRevive}
@@ -120,7 +118,7 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
                         <Delete />
                     </PermissionIconButton>
                 </StyledActions>
-            </ProjectCardFooter>
+            </StyledProjectCardFooter>
         </StyledProjectCard>
     );
 };

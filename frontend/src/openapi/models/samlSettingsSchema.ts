@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SamlSettingsSchemaOneOf } from './samlSettingsSchemaOneOf';
-import type { SamlSettingsSchemaOneOfThree } from './samlSettingsSchemaOneOfThree';
+import type { SamlSettingsSchemaOneOf } from './samlSettingsSchemaOneOf.ts';
+import type { SamlSettingsSchemaOneOfThree } from './samlSettingsSchemaOneOfThree.ts';
 
 /**
  * Settings used to authenticate via SAML

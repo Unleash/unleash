@@ -10,7 +10,6 @@
 export type ChangeRequestStateSchemaOneOfThreeState =
     (typeof ChangeRequestStateSchemaOneOfThreeState)[keyof typeof ChangeRequestStateSchemaOneOfThreeState];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestStateSchemaOneOfThreeState = {
     Scheduled: 'Scheduled',
 } as const;

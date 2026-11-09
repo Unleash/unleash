@@ -58,7 +58,7 @@ export const GroupCardFooter = ({ group }: IGroupCardFooterProps) => {
                                             `/projects/${project}/settings/access`,
                                         );
                                     }}
-                                    color='secondary'
+                                    color='primary'
                                     icon={<TopicOutlinedIcon />}
                                 >
                                     {project}

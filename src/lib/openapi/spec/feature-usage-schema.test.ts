@@ -13,6 +13,13 @@ test('featureUsageSchema', () => {
                 timestamp: new Date(2020, 6, 1, 17, 50, 3).toISOString(),
             },
         ],
+        totalUsage: [
+            {
+                environment: 'some-env',
+                yes: 5000,
+                no: 3200,
+            },
+        ],
         maturity: 'stable',
         seenApplications: [],
     };

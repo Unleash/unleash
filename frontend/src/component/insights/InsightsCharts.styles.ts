@@ -33,7 +33,7 @@ export const StyledWidgetStats = styled(Box)<{
     minWidth: '100%',
     [theme.breakpoints.up('md')]: {
         minWidth: `${width}px`,
-        borderRight: `1px solid ${theme.palette.background.application}`,
+        borderRight: `1px solid ${theme.palette.background.default}`,
     },
 }));
 

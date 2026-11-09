@@ -5,7 +5,10 @@ import {
     parseEnvVarBooleanOrStringVariant,
 } from '../util/index.js';
 import type { MetricFlagContext } from 'unleash-client/lib/impact-metrics/metric-types.js';
-import type { Context } from '../features/playground/feature-evaluator/index.js';
+import type { Context } from 'unleash-client';
+
+// biome-ignore lint/suspicious/noEmptyInterface: extension point for packages that embed unleash-server.
+export interface IFlagKeyOverrides {}
 
 export type IFlagKey =
     | 'accessLogs'
@@ -17,22 +20,18 @@ export type IFlagKey =
     | 'messageBanner'
     | 'strictSchemaValidation'
     | 'personalAccessTokensKillSwitch'
+    | 'sessionTimeouts'
     | 'migrationLock'
     | 'demo'
     | 'interactiveDemoKillSwitch'
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
     | 'disableMetrics'
-    | 'signals'
-    | 'automatedActions'
     | 'celebrateUnleash'
     | 'feedbackPosting'
     | 'extendedUsageMetrics'
     | 'feedbackComments'
-    | 'killScheduledChangeRequestCache'
-    | 'estimateTrafficDataCost'
-    | 'useMemoizedActiveTokens'
-    | 'queryMissingTokens'
+    | 'usePromiseTokenCache'
     | 'disableUpdateMaxRevisionId'
     | 'disablePublishUnannouncedEvents'
     | 'outdatedSdksBanner'
@@ -46,50 +45,59 @@ export type IFlagKey =
     | 'webhookDomainLogging'
     | 'productivityReportEmail'
     | 'productivityReportUnsubscribers'
+    | 'tokenExpiryNotifications'
     | 'showUserDeviceCount'
     | 'memorizeStats'
-    | 'streaming'
-    | 'denyStreamingForNonEdge'
     | 'deltaApi'
+    | 'cacheFeatureSerialization'
     | 'uniqueSdkTracking'
     | 'consumptionModel'
-    | 'consumptionModelUI'
-    | 'customMetrics'
     | 'impactViews'
-    | 'registerImpactMetrics'
     | 'disableImpactMetrics'
     | 'etagByEnv'
-    | 'fetchMode'
     | 'optimizeLifecycle'
-    | 'plausibleMetrics'
-    | 'newInUnleash'
-    | 'oidcPkceSupport'
     | 'flightRecorderSdk'
     | 'flightRecorderAdminEvents'
     | 'flightRecorderFrontend'
     | 'regexConstraintOperator'
-    | 'enterpriseEdgeTokensList'
-    | 'impactMetricsFlagPage'
     | 'userTokenWithClientApiLoggingKillSwitch'
-    | 'disableScimAdminGroupGuard'
     | 'multiMetricChart'
-    | 'elasticEventSync'
     | 'logRocketEnabled'
-    | 'newProjectList'
-    | 'newModalDesign'
-    | 'archiveInFlagsView'
+    | 'hubspotChatEnabled'
     | 'allowDeprecatedApiTokenMiddleware'
-    | 'hideTopmenuDocumentation'
     | 'serviceNowIntegration'
     | 'learningLab'
-    | 'accessRequestsNotifications'
-    | 'accessRequestsMenuIndicator';
+    | 'onboardingIntroTour'
+    | 'onboardingIntroTourAdvancedTopics'
+    | 'secureAccountTokenStorage'
+    | 'recordSdkFlavorMetrics'
+    | 'searchDocsWidget'
+    | 'semverBuildMetadata'
+    | 'auditEventUserAgent'
+    | 'helpMenuRelocationHint'
+    | 'ipConstraintOperator'
+    | 'githubIntegration'
+    | 'integrationParamKvpEditor'
+    | 'perFlagLifetime'
+    | 'payloadSchemas'
+    | 'singlePageStrategyForm'
+    | 'feedbackModule'
+    | 'feedbackModuleDisplaySurvey'
+    | 'feedbackModuleSubmitResponses'
+    | 'playgroundFeatureEvaluation'
+    | 'slackAppAuthV2'
+    | 'redactFeatureLabelInMetrics'
+    | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
 const flags: IFlags = {
     anonymiseEventLog: false,
     enableLicense: false,
+    sessionTimeouts: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SESSION_TIMEOUTS,
+        false,
+    ),
     responseTimeWithAppNameKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_RESPONSE_TIME_WITH_APP_NAME_KILL_SWITCH,
         false,
@@ -120,6 +128,10 @@ const flags: IFlags = {
     ),
     migrationLock: parseEnvVarBoolean(process.env.MIGRATION_LOCK, true),
     demo: parseEnvVarBoolean(process.env.UNLEASH_DEMO, false),
+    onboardingIntroTourAdvancedTopics: parseEnvVarBoolean(
+        process.env.UNLEASH_ONBOARDING_INTRO_TOUR_ADVANCED_TOPICS,
+        false,
+    ),
     interactiveDemoKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_INTERACTIVE_DEMO_KILL_SWITCH,
         false,
@@ -130,14 +142,6 @@ const flags: IFlags = {
     ),
     disableMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_METRICS,
-        false,
-    ),
-    signals: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SIGNALS,
-        false,
-    ),
-    automatedActions: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_AUTOMATED_ACTIONS,
         false,
     ),
     celebrateUnleash: parseEnvVarBoolean(
@@ -173,16 +177,8 @@ const flags: IFlags = {
                 '',
         },
     },
-    useMemoizedActiveTokens: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_MEMOIZED_ACTIVE_TOKENS,
-        false,
-    ),
-    killScheduledChangeRequestCache: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_KILL_SCHEDULED_CHANGE_REQUEST_CACHE,
-        false,
-    ),
-    estimateTrafficDataCost: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ESTIMATE_TRAFFIC_DATA_COST,
+    usePromiseTokenCache: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_USE_PROMISE_TOKEN_CACHE,
         false,
     ),
     disableUpdateMaxRevisionId: parseEnvVarBoolean(
@@ -191,10 +187,6 @@ const flags: IFlags = {
     ),
     disablePublishUnannouncedEvents: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_SCHEDULED_CACHES,
-        false,
-    ),
-    queryMissingTokens: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_QUERY_MISSING_TOKENS,
         false,
     ),
     responseTimeMetricsFix: parseEnvVarBoolean(
@@ -238,12 +230,20 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_PRODUCTIVITY_REPORT_UNSUBSCRIBERS,
         false,
     ),
+    tokenExpiryNotifications: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_TOKEN_EXPIRY_NOTIFICATIONS,
+        false,
+    ),
     showUserDeviceCount: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SHOW_USER_DEVICE_COUNT,
         false,
     ),
     deltaApi: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DELTA_API,
+        false,
+    ),
+    cacheFeatureSerialization: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_CACHE_FEATURE_SERIALIZATION,
         false,
     ),
     uniqueSdkTracking: parseEnvVarBoolean(
@@ -254,50 +254,12 @@ const flags: IFlags = {
         process.env.EXPERIMENTAL_CONSUMPTION_MODEL,
         false,
     ),
-    consumptionModelUI: parseEnvVarBoolean(
-        process.env.EXPERIMENTAL_CONSUMPTION_MODEL_UI,
-        false,
-    ),
     impactViews: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_IMPACT_VIEWS,
         false,
     ),
-    registerImpactMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_REGISTER_IMPACT_METRICS,
-        false,
-    ),
     disableImpactMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DISABLE_IMPACT_METRICS,
-        false,
-    ),
-    streaming: {
-        name: 'disabled',
-        enabled: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_STREAMING,
-            false,
-        ),
-    },
-    denyStreamingForNonEdge: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_STREAMING_DENY_STREAMING_FOR_NON_EDGE,
-        false,
-    ),
-    fetchMode: {
-        name: 'disabled',
-        enabled: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_FETCH_MODE,
-            false,
-        ),
-    },
-    plausibleMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PLAUSIBLE_METRICS,
-        false,
-    ),
-    oidcPkceSupport: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_OIDC_PKCE_SUPPORT,
-        false,
-    ),
-    newInUnleash: parseEnvVarBooleanOrStringVariant(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_IN_UNLEASH,
         false,
     ),
     flightRecorderSdk: parseEnvVarBoolean(
@@ -325,12 +287,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_REGEX_CONSTRAINT_OPERATOR,
         false,
     ),
-    enterpriseEdgeTokensList: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ENTERPRISE_EDGE_TOKENS_LIST,
-        false,
-    ),
-    impactMetricsFlagPage: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_IMPACT_METRICS_FLAG_PAGE,
+    ipConstraintOperator: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_IP_CONSTRAINT_OPERATOR,
         false,
     ),
     userTokenWithClientApiLoggingKillSwitch: parseEnvVarBoolean(
@@ -338,36 +296,16 @@ const flags: IFlags = {
             .UNLEASH_EXPERIMENTAL_USERTOKEN_WITH_CLIENTAPI_LOGGING_KILL_SWITCH,
         false,
     ),
-    disableScimAdminGroupGuard: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DISABLE_SCIM_ADMIN_GROUP_GUARD,
-        false,
-    ),
     multiMetricChart: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MULTI_METRIC_CHART,
-        false,
-    ),
-    elasticEventSync: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ELASTIC_EVENT_SYNC,
         false,
     ),
     logRocketEnabled: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_LOGROCKET_ENABLED,
         false,
     ),
-    newProjectList: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_PROJECT_LIST,
-        false,
-    ),
-    newModalDesign: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_MODAL_DESIGN,
-        false,
-    ),
-    archiveInFlagsView: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ARCHIVE_IN_FLAGS_VIEW,
-        false,
-    ),
-    hideTopmenuDocumentation: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_HIDE_TOPMENU_DOCUMENTATION,
+    hubspotChatEnabled: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_HUBSPOT_CHAT_ENABLED,
         false,
     ),
     learningLab: {
@@ -385,12 +323,72 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_SERVICE_NOW_INTEGRATION,
         false,
     ),
-    accessRequestsNotifications: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ACCESS_REQUESTS_NOTIFICATIONS,
+    recordSdkFlavorMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_RECORD_SDK_FLAVOR_METRICS,
         false,
     ),
-    accessRequestsMenuIndicator: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ACCESS_REQUESTS_MENU_INDICATOR,
+    secureAccountTokenStorage: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SECURE_ACCOUNT_TOKEN,
+        false,
+    ),
+    searchDocsWidget: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SEARCH_DOCS_WIDGET,
+        false,
+    ),
+    semverBuildMetadata: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SEMVER_BUILD_METADATA,
+        false,
+    ),
+    auditEventUserAgent: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_AUDIT_EVENT_USER_AGENT,
+        false,
+    ),
+    helpMenuRelocationHint: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_HELP_MENU_RELOCATION_HINT,
+        false,
+    ),
+    githubIntegration: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_GITHUB_INTEGRATION,
+        false,
+    ),
+    slackAppAuthV2: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SLACK_APP_AUTH_V2,
+        false,
+    ),
+    redactFeatureLabelInMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_REDACT_FEATURE_LABEL_IN_METRICS,
+        false,
+    ),
+    integrationParamKvpEditor: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_INTEGRATION_PARAM_KVP_EDITOR,
+        false,
+    ),
+    perFlagLifetime: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PER_FLAG_LIFETIME,
+        false,
+    ),
+    payloadSchemas: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PAYLOAD_SCHEMAS,
+        false,
+    ),
+    singlePageStrategyForm: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SINGLE_PAGE_STRATEGY_FORM,
+        false,
+    ),
+    feedbackModule: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEEDBACK_MODULE,
+        false,
+    ),
+    feedbackModuleDisplaySurvey: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEEDBACK_MODULE_DISPLAY_SURVEY,
+        false,
+    ),
+    feedbackModuleSubmitResponses: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEEDBACK_MODULE_SUBMIT_RESPONSES,
+        false,
+    ),
+    playgroundFeatureEvaluation: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PLAYGROUND_FEATURE_EVALUATION,
         false,
     ),
 };
@@ -398,6 +396,7 @@ const flags: IFlags = {
 export const defaultExperimentalOptions: IExperimentalOptions = {
     flags,
     externalResolver: {
+        ready: Promise.resolve(),
         isEnabled: (): boolean => false,
         getVariant: () => defaultVariant,
         getStaticContext: () => ({}),
@@ -412,6 +411,7 @@ export interface IExperimentalOptions {
 export interface IFlagContext extends Context {}
 
 export interface IFlagResolver {
+    ready: Promise<void>;
     getAll: (context?: IFlagContext) => IFlags;
     isEnabled: (expName: IFlagKey, context?: IFlagContext) => boolean;
     getVariant: (expName: IFlagKey, context?: IFlagContext) => Variant;
@@ -420,6 +420,7 @@ export interface IFlagResolver {
 }
 
 export interface IExternalFlagResolver {
+    ready?: Promise<void>;
     isEnabled: (flagName: IFlagKey, context?: IFlagContext) => boolean;
     getVariant: (flagName: IFlagKey, context?: IFlagContext) => Variant;
     getStaticContext: () => IFlagContext;

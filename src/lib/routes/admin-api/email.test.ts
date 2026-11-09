@@ -54,3 +54,48 @@ test('Requesting a non-existing template should yield 404', async () => {
         .get(`${base}/api/admin/email/preview/text/some-non-existing-template`)
         .expect(404);
 });
+
+const xssCases = [
+    {
+        template: 'getting-started',
+        query: 'passwordLink=%22%3E%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E',
+    },
+    {
+        template: 'order-environments',
+        query: 'customerId=%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E',
+    },
+    {
+        template: 'productivity-report',
+        query: 'flagsCreatedTrendMessage=%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E',
+    },
+    {
+        template: 'requested-cr-approval',
+        query: 'changeRequestLink=%22%3E%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E',
+    },
+    {
+        template: 'reset-password',
+        query: 'resetLink=%22%3E%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E',
+    },
+    {
+        template: 'scheduled-change-conflict',
+        query: 'conflictingChangeRequestLink=%22%3E%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E',
+    },
+    {
+        template: 'scheduled-execution-failed',
+        query: 'errorMessage=%3Cscript%3Ealert%28%27XSS%27%29%3C%2Fscript%3E',
+    },
+] as const;
+
+test.each(xssCases)('html preview escapes XSS payload for $template', async ({
+    template,
+    query,
+}) => {
+    const { request, base } = await getSetup();
+    const res = await request
+        .get(`${base}/api/admin/email/preview/html/${template}?${query}`)
+        .expect(200)
+        .expect('Content-Type', /html/);
+
+    expect(res.text).not.toContain('<script>alert(');
+    expect(res.text).toContain('&lt;script&gt;alert(');
+});

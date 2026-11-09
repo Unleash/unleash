@@ -22,6 +22,10 @@ const StyledLink = styled('a')(({ theme }) => ({
         left: '0.8rem',
     },
 
+    [`body:not(:has(#${SKIP_NAV_TARGET_ID})) &`]: {
+        display: 'none',
+    },
+
     '&:not(:focus):not(:active)': {
         clip: 'rect(0 0 0 0)',
         clipPath: 'inset(50%)',

@@ -5,6 +5,9 @@ import { Checkbox, FormControlLabel } from '@mui/material';
 import { PRODUCTION } from 'constants/environmentTypes';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { createLocalStorage } from 'utils/createLocalStorage';
+import type { Tracking } from 'utils/trackingEvents';
+import { useTracking } from 'hooks/useTracking';
+import { toggleProdGuardTracking } from './prodGuardTracking';
 
 interface IFeatureStrategyProdGuardProps {
     open: boolean;
@@ -12,6 +15,7 @@ interface IFeatureStrategyProdGuardProps {
     onClose: () => void;
     label: string;
     loading: boolean;
+    tracking?: Tracking;
 }
 
 interface IFeatureStrategyProdGuardSettings {
@@ -24,14 +28,17 @@ export const FeatureStrategyProdGuard = ({
     onClick,
     label,
     loading,
+    tracking,
 }: IFeatureStrategyProdGuardProps) => {
     const { value: settings, setValue: setSettings } =
         getFeatureStrategyProdGuardSettings();
     const [hide, setHide] = useState(settings.hide);
+    const trackToggleProdGuard = useTracking(toggleProdGuardTracking);
 
     const toggleHideSetting = () => {
         setSettings((prev) => ({ hide: !prev.hide }));
         setHide((prev) => !prev);
+        trackToggleProdGuard('succeeded', { hidden: !hide });
     };
 
     return (
@@ -43,6 +50,7 @@ export const FeatureStrategyProdGuard = ({
             onClick={onClick}
             onClose={onClose}
             open={open}
+            tracking={tracking}
         >
             <Alert severity='error'>
                 WARNING. You are about to make changes to a production

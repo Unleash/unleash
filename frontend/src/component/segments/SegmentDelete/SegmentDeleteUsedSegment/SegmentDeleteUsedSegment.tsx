@@ -1,4 +1,5 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
+import type { Tracking } from 'utils/trackingEvents';
 import type { ISegment } from 'interfaces/segment';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { Link } from 'react-router';
@@ -23,6 +24,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 interface ISegmentDeleteUsedSegmentProps {
+    tracking?: Tracking;
     segment: ISegment;
     open: boolean;
     onClose: () => void;
@@ -38,6 +40,7 @@ export const formatChangeRequestPath = (
 };
 
 export const SegmentDeleteUsedSegment = ({
+    tracking,
     segment,
     open,
     onClose,
@@ -56,6 +59,7 @@ export const SegmentDeleteUsedSegment = ({
             open={open}
             primaryButtonText='OK'
             onClick={onClose}
+            tracking={tracking}
         >
             <p>
                 The following feature flags are using the{' '}

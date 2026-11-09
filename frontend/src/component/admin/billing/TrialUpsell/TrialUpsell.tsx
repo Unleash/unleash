@@ -19,8 +19,8 @@ const StyledBillingInformation = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(3),
     borderRadius: theme.shape.borderRadiusMedium,
     padding: theme.spacing(1.5, 4, 1.5, 3),
-    border: `1px solid ${theme.palette.secondary.border}`,
-    backgroundColor: theme.palette.secondary.light,
+    border: `1px solid ${theme.palette.primary.containerBorder}`,
+    backgroundColor: theme.palette.primary.container,
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -65,7 +65,7 @@ export const TrialUpsell = () => {
     const { trackEvent } = useEventTracker();
 
     const onUpgrade = () => {
-        trackEvent('upgrade_trial_billing_page', {
+        trackEvent('upgrade-trial-billing-page', {
             props: {
                 eventType: 'upgrade_click',
             },

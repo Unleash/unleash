@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectApplicationSchema } from './projectApplicationSchema';
+import type { ProjectApplicationSchema } from './projectApplicationSchema.ts';
 
 /**
  * A list of project applications

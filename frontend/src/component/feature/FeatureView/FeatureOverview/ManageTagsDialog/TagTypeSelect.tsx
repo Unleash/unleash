@@ -1,13 +1,12 @@
 import {
-    Autocomplete,
     type AutocompleteProps,
     styled,
-    TextField,
     Typography,
     useTheme,
 } from '@mui/material';
 import type { ITagType } from 'interfaces/tags';
 import type { HTMLAttributes, JSX } from 'react';
+import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField';
 
 interface ITagSelect {
     options: ITagType[];
@@ -29,15 +28,20 @@ export const TagTypeSelect = ({
     const theme = useTheme();
 
     return (
-        <Autocomplete
+        <AutocompleteField
+            label='Tag type'
+            sx={{ width: 500 }}
             disablePortal
             disabled={disabled}
             id='tag-type-select'
-            sx={{ marginTop: (theme) => theme.spacing(2), width: 500 }}
             options={options}
             disableClearable
             value={value}
             getOptionLabel={(option) => option.name}
+            onChange={onChange}
+            slotProps={{
+                listbox: { style: { maxHeight: 200, overflow: 'auto' } },
+            }}
             renderOption={(
                 {
                     key,
@@ -59,13 +63,6 @@ export const TagTypeSelect = ({
                     </Typography>
                 </ListItem>
             )}
-            renderInput={(params) => (
-                <TextField {...params} label='Tag type' value={value} />
-            )}
-            onChange={onChange}
-            slotProps={{
-                listbox: { style: { maxHeight: 200, overflow: 'auto' } },
-            }}
         />
     );
 };

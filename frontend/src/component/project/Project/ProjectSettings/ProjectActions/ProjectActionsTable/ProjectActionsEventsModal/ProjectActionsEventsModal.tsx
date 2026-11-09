@@ -10,11 +10,16 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ProjectActionsEventsStateCell } from './ProjectActionsEventsStateCell.tsx';
 import { ProjectActionsEventsDetails } from './ProjectActionsEventsDetails/ProjectActionsEventsDetails.tsx';
+import { useTracking } from 'hooks/useTracking';
+import {
+    type EventsModalOpenedFrom,
+    viewActionEventsTracking,
+} from '../../projectActionsTracking.ts';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    marginBottom: theme.fontSizes.mainHeader,
+    marginBottom: theme.spacing(2.5),
 }));
 
 const StyledHeaderRow = styled('div')({
@@ -24,9 +29,9 @@ const StyledHeaderRow = styled('div')({
     width: '100%',
 });
 
-const StyledTitle = styled('h1')({
-    fontWeight: 'normal',
-});
+const StyledTitle = styled('h1')(({ theme }) => ({
+    ...theme.typography.h1,
+}));
 
 const StyledForm = styled('form')({
     display: 'flex',
@@ -35,7 +40,7 @@ const StyledForm = styled('form')({
 });
 
 const StyledFailedItemWrapper = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.error.light,
+    backgroundColor: theme.palette.error.container,
 }));
 
 const StyledButtonContainer = styled('div')(({ theme }) => ({
@@ -50,6 +55,7 @@ interface IProjectActionsEventsModalProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     onOpenConfiguration: () => void;
+    openedFrom?: EventsModalOpenedFrom;
 }
 
 export const ProjectActionsEventsModal = ({
@@ -57,9 +63,15 @@ export const ProjectActionsEventsModal = ({
     open,
     setOpen,
     onOpenConfiguration,
+    openedFrom,
 }: IProjectActionsEventsModalProps) => {
     const projectId = useRequiredPathParam('projectId');
     const { locationSettings } = useLocationSettings();
+    const tracking = {
+        ...viewActionEventsTracking,
+        props: { openedFrom },
+    };
+    const trackViewActionEvents = useTracking(tracking);
     const { actionEvents, hasMore, loadMore, loading } = useActionEvents(
         action?.id,
         projectId,
@@ -82,10 +94,11 @@ export const ProjectActionsEventsModal = ({
                 setOpen(false);
             }}
             label={title}
+            tracking={tracking}
         >
             <FormTemplate
                 loading={loading && actionEvents.length === 0}
-                modal
+                layout='modal'
                 description=''
                 documentationLink=''
                 documentationLinkLabel=''
@@ -156,6 +169,9 @@ export const ProjectActionsEventsModal = ({
                     <StyledButtonContainer>
                         <Button
                             onClick={() => {
+                                trackViewActionEvents('dismissed', {
+                                    method: 'cancel-button',
+                                });
                                 setOpen(false);
                             }}
                         >

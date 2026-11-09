@@ -13,6 +13,8 @@ import { MyProjects } from './MyProjects.tsx';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { useEventTracker } from 'hooks/useEventTracker';
 import { useDashboardState } from './useDashboardState.ts';
+import { useTracking } from 'hooks/useTracking';
+import { personalDashboardTracking } from './personalDashboardTracking.ts';
 import { MyFlags } from './MyFlags.tsx';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { fromPersonalDashboardProjectDetailsOutput } from './RemoteData.ts';
@@ -23,6 +25,9 @@ import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
 import { AccordionContent } from './SharedComponents.tsx';
 import { Link } from 'react-router';
 import { useWelcomeDialogContext } from './WelcomeDialogContext.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ProjectCardsPanel } from './ProjectCardsPanel.tsx';
+import { RecentFlagsPanel } from './RecentFlagsPanel.tsx';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -266,21 +271,27 @@ const ProjectPanel = () => {
     );
 };
 
+const sectionState = (expanded: boolean) =>
+    expanded ? 'expanded' : 'collapsed';
+
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
     const { trackEvent } = useEventTracker();
+    const { expandFlags, expandProjects, expandTimeline } = useDashboardState();
+    const trackDashboard = useTracking(personalDashboardTracking);
     const { setWelcomeDialog } = useWelcomeDialogContext();
     const { isOss } = useUiConfig();
+    const dashboardV2 = useUiFlag('dashboardV2');
 
     const name = user?.name || '';
 
     usePageTitle(name ? `Dashboard: ${name}` : 'Dashboard');
 
     useEffect(() => {
-        trackEvent('personal-dashboard', {
-            props: {
-                eventType: 'seen',
-            },
+        trackDashboard('succeeded', {
+            flagsSection: sectionState(expandFlags),
+            projectsSection: sectionState(expandProjects),
+            timelineSection: sectionState(expandTimeline),
         });
     }, []);
 
@@ -289,7 +300,7 @@ export const PersonalDashboard = () => {
             {isOss() && <InfoSection />}
 
             <WelcomeSection>
-                <Typography component='h2' variant='h2'>
+                <Typography component='h2' variant='h1'>
                     Welcome {name}
                 </Typography>
 
@@ -314,9 +325,9 @@ export const PersonalDashboard = () => {
 
             <EventTimelinePanel />
 
-            <ProjectPanel />
+            {dashboardV2 ? <ProjectCardsPanel /> : <ProjectPanel />}
 
-            <FlagPanel />
+            {dashboardV2 ? <RecentFlagsPanel /> : <FlagPanel />}
         </MainContent>
     );
 };

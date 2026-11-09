@@ -1,11 +1,4 @@
-import {
-    Alert,
-    AlertTitle,
-    Button,
-    styled,
-    TextField,
-    Typography,
-} from '@mui/material';
+import { Alert, AlertTitle, Button, styled, Typography } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { type SyntheticEvent, useState } from 'react';
 import { Link } from 'react-router';
@@ -16,6 +9,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import OrDivider from '../common/OrDivider';
 import { AuthPageLayout } from '../common/AuthPageLayout';
 import { AuthSuccessIcon } from '../common/AuthSuccessIcon';
+import Input from 'component/common/Input/Input';
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
     fontSize: theme.typography.h2.fontSize,
@@ -49,8 +43,8 @@ const StyledInfoBox = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     padding: theme.spacing(1.5),
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: theme.palette.info.light,
-    border: `1px solid ${theme.palette.info.border}`,
+    backgroundColor: theme.palette.info.container,
+    border: `1px solid ${theme.palette.info.containerBorder}`,
 }));
 
 const StyledInfoIcon = styled(InfoOutlinedIcon)(({ theme }) => ({
@@ -61,7 +55,7 @@ const StyledInfoIcon = styled(InfoOutlinedIcon)(({ theme }) => ({
 const StyledInfoContent = styled('div')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     lineHeight: '20px',
-    color: theme.palette.info.dark,
+    color: theme.palette.info.onContainer,
 }));
 
 type State = 'initial' | 'loading' | 'attempted' | 'too_many_attempts';
@@ -150,10 +144,10 @@ const ForgottenPassword = () => {
                             </Typography>
                         }
                     />
-                    <TextField
+                    <Input
                         label='Email'
-                        variant='outlined'
-                        size='small'
+                        size='large'
+                        fullWidth
                         type='email'
                         data-testid={FORGOTTEN_PASSWORD_FIELD}
                         value={email}

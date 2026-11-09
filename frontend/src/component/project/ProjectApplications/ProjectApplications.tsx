@@ -17,7 +17,7 @@ import {
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import useLoading from 'hooks/useLoading';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
-import { withTableState } from 'utils/withTableState';
+import { useTableState } from 'hooks/useTableState';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import type { ProjectApplicationSchema } from 'openapi';
 import mapValues from 'lodash.mapvalues';
@@ -32,7 +32,7 @@ import { useNavigate } from 'react-router';
 
 const columnHelper = createColumnHelper<ProjectApplicationSchema>();
 
-const useTracking = () => {
+const useProjectApplicationsTracking = () => {
     const { trackEvent } = useEventTracker();
     useEffect(() => {
         trackEvent('sdk-reporting', {
@@ -51,7 +51,7 @@ const useTracking = () => {
 };
 
 export const ProjectApplications = () => {
-    const trackProjectApplicationClick = useTracking();
+    const trackProjectApplicationClick = useProjectApplicationsTracking();
     const navigate = useNavigate();
 
     const projectId = useRequiredPathParam('projectId');
@@ -149,9 +149,10 @@ export const ProjectApplications = () => {
     );
 
     const table = useReactTable(
-        withTableState(tableState, setTableState, {
-            columns,
-            data: applications,
+        useTableState({
+            tableState,
+            setTableState,
+            options: { columns, data: applications },
         }),
     );
 
@@ -163,6 +164,7 @@ export const ProjectApplications = () => {
             bodyClass='no-padding'
             header={
                 <PageHeader
+                    variant='h2'
                     title='Project applications'
                     actions={
                         <>

@@ -1,4 +1,4 @@
-import type { FC, HTMLAttributes, Key } from 'react';
+import type { HTMLAttributes, Key } from 'react';
 import type { IAutocompleteBoxOption } from '../../../common/AutocompleteBox/AutocompleteBox.tsx';
 import type {
     AutocompleteRenderInputParams,
@@ -11,11 +11,10 @@ import {
     Paper,
     TextField,
     Autocomplete,
-    Typography,
 } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import { StyledHelpText, StyledTitle } from '../IntegrationForm.styles';
+import { FormField } from 'component/common/FormField/FormField';
 
 export interface IIntegrationMultiSelectorProps {
     options: IAutocompleteBoxOption[];
@@ -35,7 +34,7 @@ const StyledCheckbox = styled(Checkbox)(() => ({
 
 const CustomPaper = ({ ...props }) => <Paper elevation={8} {...props} />;
 
-export const IntegrationMultiSelector: FC<IIntegrationMultiSelectorProps> = ({
+export const IntegrationMultiSelector = ({
     options,
     selectedItems,
     onChange,
@@ -45,21 +44,20 @@ export const IntegrationMultiSelector: FC<IIntegrationMultiSelectorProps> = ({
     description,
     note,
     required,
-}) => {
+}: IIntegrationMultiSelectorProps) => {
+    const fieldLabel = (
+        <>
+            {capitalize(`${entityName}s`)}
+            {required ? '*' : ''}
+        </>
+    );
+
     const renderInput = (params: AutocompleteRenderInputParams) => (
         <TextField
             {...params}
             error={Boolean(error)}
             helperText={error || note}
             variant='outlined'
-            label={
-                <>
-                    {capitalize(`${entityName}s`)}
-                    {required ? (
-                        <Typography component='span'>*</Typography>
-                    ) : null}
-                </>
-            }
             placeholder={`Select ${entityName}s to filter by`}
             onFocus={onFocus}
             data-testid={`select-${entityName}-input`}
@@ -84,31 +82,33 @@ export const IntegrationMultiSelector: FC<IIntegrationMultiSelectorProps> = ({
         );
     };
 
+    const control = (
+        <Autocomplete
+            size='large'
+            multiple
+            limitTags={2}
+            options={options}
+            disableCloseOnSelect
+            getOptionLabel={({ label }) => label}
+            fullWidth
+            renderOption={renderOption}
+            renderInput={renderInput}
+            value={options.filter((option) =>
+                selectedItems.includes(option.value),
+            )}
+            onChange={(_, input) => {
+                const state = input.map(({ value }) => value);
+                onChange(state);
+            }}
+            slots={{
+                paper: CustomPaper,
+            }}
+        />
+    );
+
     return (
-        <>
-            <StyledTitle>{capitalize(`${entityName}s`)}</StyledTitle>
-            <StyledHelpText>{description}</StyledHelpText>
-            <Autocomplete
-                size='small'
-                multiple
-                limitTags={2}
-                options={options}
-                disableCloseOnSelect
-                getOptionLabel={({ label }) => label}
-                fullWidth
-                renderOption={renderOption}
-                renderInput={renderInput}
-                value={options.filter((option) =>
-                    selectedItems.includes(option.value),
-                )}
-                onChange={(_, input) => {
-                    const state = input.map(({ value }) => value);
-                    onChange(state);
-                }}
-                slots={{
-                    paper: CustomPaper,
-                }}
-            />
-        </>
+        <FormField label={fieldLabel} description={description}>
+            {control}
+        </FormField>
     );
 };

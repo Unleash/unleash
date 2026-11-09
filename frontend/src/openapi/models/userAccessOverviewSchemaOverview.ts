@@ -3,9 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UserAccessOverviewSchemaOverviewEnvironmentItem } from './userAccessOverviewSchemaOverviewEnvironmentItem';
-import type { UserAccessOverviewSchemaOverviewProjectItem } from './userAccessOverviewSchemaOverviewProjectItem';
-import type { UserAccessOverviewSchemaOverviewRootItem } from './userAccessOverviewSchemaOverviewRootItem';
+import type { GroupItemSchema } from './groupItemSchema.ts';
+import type { UserAccessOverviewSchemaOverviewEnvironmentItem } from './userAccessOverviewSchemaOverviewEnvironmentItem.ts';
+import type { UserAccessOverviewSchemaOverviewProjectItem } from './userAccessOverviewSchemaOverviewProjectItem.ts';
+import type { UserAccessOverviewSchemaOverviewRootItem } from './userAccessOverviewSchemaOverviewRootItem.ts';
 
 /**
  * The access overview (list of permissions) for the user
@@ -13,6 +14,8 @@ import type { UserAccessOverviewSchemaOverviewRootItem } from './userAccessOverv
 export type UserAccessOverviewSchemaOverview = {
     /** The list of environment permissions */
     environment: UserAccessOverviewSchemaOverviewEnvironmentItem[];
+    /** Experimental: The list of groups the user is in */
+    groups: GroupItemSchema[];
     /** The list of project permissions */
     project: UserAccessOverviewSchemaOverviewProjectItem[];
     /** The list of root permissions */

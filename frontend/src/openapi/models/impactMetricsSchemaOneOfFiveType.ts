@@ -10,7 +10,6 @@
 export type ImpactMetricsSchemaOneOfFiveType =
     (typeof ImpactMetricsSchemaOneOfFiveType)[keyof typeof ImpactMetricsSchemaOneOfFiveType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ImpactMetricsSchemaOneOfFiveType = {
     histogram: 'histogram',
 } as const;

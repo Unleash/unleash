@@ -11,6 +11,8 @@ import type {
 import { defaultVariant } from 'unleash-client/lib/variant.js';
 
 export default class FlagResolver implements IFlagResolver {
+    public ready: Promise<void>;
+
     private experiments: IFlags;
 
     private externalResolver: IExternalFlagResolver;
@@ -18,6 +20,7 @@ export default class FlagResolver implements IFlagResolver {
     constructor(expOpt: IExperimentalOptions) {
         this.experiments = expOpt.flags;
         this.externalResolver = expOpt.externalResolver;
+        this.ready = this.externalResolver.ready ?? Promise.resolve();
     }
 
     getAll(context?: IFlagContext): IFlags {

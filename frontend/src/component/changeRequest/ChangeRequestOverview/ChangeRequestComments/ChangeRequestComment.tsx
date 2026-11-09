@@ -13,7 +13,7 @@ const ChangeRequestCommentWrapper = styled(Box)(({ theme }) => ({
 const CommentPaper = styled(Paper)(({ theme }) => ({
     width: '100%',
     padding: theme.spacing(1.5, 3, 2.5, 3),
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.neutral.container,
     borderRadius: theme.shape.borderRadiusLarge,
     borderColor: theme.palette.divider,
 }));

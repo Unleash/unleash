@@ -1,13 +1,6 @@
 import type React from 'react';
-import { type FormEvent, useState } from 'react';
-import {
-    Button,
-    capitalize,
-    Checkbox,
-    Chip,
-    styled,
-    TextField,
-} from '@mui/material';
+import { type FormEvent, useEffect, useState } from 'react';
+import { Button, capitalize, Checkbox, Chip, styled } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
@@ -40,6 +33,11 @@ import type { IUserProjectRole } from '../../../../interfaces/userProjectRoles.t
 import { useCheckProjectPermissions } from 'hooks/useHasAccess';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import AutocompleteVirtual from 'component/common/AutocompleteVirtual/AutcompleteVirtual';
+import { useTracking } from 'hooks/useTracking';
+import {
+    addAccessTracking,
+    editRoleTracking,
+} from 'component/project/ProjectAccess/projectAccessTracking';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -137,6 +135,12 @@ export const ProjectAccessAssign = ({
 
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
+    const tracking = edit ? editRoleTracking : addAccessTracking;
+    const trackAssign = useTracking(tracking);
+    const targetType = selected?.type === ENTITY_TYPE.GROUP ? 'group' : 'user';
+    useEffect(() => {
+        trackAssign('opened', edit ? { targetType } : undefined);
+    }, [trackAssign, edit, targetType]);
 
     const options = [
         ...groups
@@ -219,29 +223,66 @@ export const ProjectAccessAssign = ({
             .map(({ id }) => id),
     };
 
+    // One row per submit gesture; targets are aggregated into counts. Service
+    // accounts go through the same endpoint as users, so they count as users.
+    const accessProps = () => {
+        const roleProps = {
+            rolesCount: selectedRoles.length,
+            roles: selectedRoles.map(({ name }) => name).join(', '),
+        };
+        if (edit) {
+            return {
+                ...roleProps,
+                targetType,
+                groupName:
+                    selected?.type === ENTITY_TYPE.GROUP
+                        ? selected.entity.name
+                        : undefined,
+            };
+        }
+        const selectedGroups = selectedOptions.filter(
+            ({ type }) => type === ENTITY_TYPE.GROUP,
+        );
+        return {
+            ...roleProps,
+            userCount: selectedOptions.length - selectedGroups.length,
+            groupCount: selectedGroups.length,
+            groupNames:
+                selectedGroups.map(({ entity }) => entity.name).join(', ') ||
+                undefined,
+        };
+    };
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (!isValid) return;
+        const props = accessProps();
+
+        if (!isValid) {
+            trackAssign.validationFailed(props);
+            return;
+        }
         try {
-            if (!edit) {
-                await addAccessToProject(projectId, payload);
-            } else if (
-                selected?.type === ENTITY_TYPE.USER ||
-                selected?.type === ENTITY_TYPE.SERVICE_ACCOUNT
-            ) {
-                await setUserRoles(
-                    projectId,
-                    selectedRoles.map(({ id }) => id),
-                    selected.entity.id,
-                );
-            } else if (selected?.type === ENTITY_TYPE.GROUP) {
-                await setGroupRoles(
-                    projectId,
-                    selectedRoles.map(({ id }) => id),
-                    selected.entity.id,
-                );
-            }
+            await trackAssign.mutation(async () => {
+                if (!edit) {
+                    await addAccessToProject(projectId, payload);
+                } else if (
+                    selected?.type === ENTITY_TYPE.USER ||
+                    selected?.type === ENTITY_TYPE.SERVICE_ACCOUNT
+                ) {
+                    await setUserRoles(
+                        projectId,
+                        selectedRoles.map(({ id }) => id),
+                        selected.entity.id,
+                    );
+                } else if (selected?.type === ENTITY_TYPE.GROUP) {
+                    await setGroupRoles(
+                        projectId,
+                        selectedRoles.map(({ id }) => id),
+                        selected.entity.id,
+                    );
+                }
+            }, props);
             refetchProjectAccess();
             navigate(GO_BACK);
             setToastData({
@@ -343,12 +384,13 @@ export const ProjectAccessAssign = ({
     return (
         <SidebarModal
             open
+            tracking={tracking}
             onClose={() => navigate(GO_BACK)}
             label={`${!edit ? 'Assign' : 'Edit'} ${entityType} access`}
         >
             <FormTemplate
                 loading={loading}
-                modal
+                layout='modal'
                 title={`${!edit ? 'Assign' : 'Edit'} ${entityType} access`}
                 description='Custom project roles allow you to fine-tune access rights and permissions within your projects.'
                 documentationLink='https://docs.getunleash.io/concepts/rbac#create-and-assign-a-custom-project-role'
@@ -357,13 +399,16 @@ export const ProjectAccessAssign = ({
             >
                 <StyledForm onSubmit={handleSubmit}>
                     <div>
-                        <StyledInputDescription
-                            data-testid={PA_USERS_GROUPS_TITLE_ID}
-                        >
-                            Select the {entityType}
-                        </StyledInputDescription>
                         <StyledAutocompleteWrapper>
                             <AutocompleteVirtual
+                                label={capitalize(entityType)}
+                                description={
+                                    <StyledInputDescription
+                                        data-testid={PA_USERS_GROUPS_TITLE_ID}
+                                    >
+                                        Select the {entityType}
+                                    </StyledInputDescription>
+                                }
                                 data-testid={PA_USERS_GROUPS_ID}
                                 size={autocompleteSize}
                                 multiple
@@ -435,19 +480,17 @@ export const ProjectAccessAssign = ({
                                     option.type === value.type &&
                                     option.entity.id === value.entity.id
                                 }
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label={capitalize(entityType)}
-                                    />
-                                )}
                             />
                         </StyledAutocompleteWrapper>
-                        <StyledInputDescription>
-                            Select the role to assign for this project
-                        </StyledInputDescription>
                         <StyledAutocompleteWrapper>
                             <MultipleRoleSelect
+                                label='Role'
+                                description={
+                                    <StyledInputDescription>
+                                        Select the role to assign for this
+                                        project
+                                    </StyledInputDescription>
+                                }
                                 data-testid={PA_ROLE_ID}
                                 roles={filteredRoles}
                                 value={selectedRoles}
@@ -462,11 +505,18 @@ export const ProjectAccessAssign = ({
                             type='submit'
                             variant='contained'
                             color='primary'
-                            disabled={!isValid}
+                            disabled={!isValid || loading}
                         >
                             {edit ? 'Save' : `Assign ${entityType}`}
                         </Button>
-                        <StyledCancelButton onClick={() => navigate(GO_BACK)}>
+                        <StyledCancelButton
+                            onClick={() => {
+                                trackAssign('dismissed', {
+                                    method: 'cancel-button',
+                                });
+                                navigate(GO_BACK);
+                            }}
+                        >
                             Cancel
                         </StyledCancelButton>
                     </StyledButtonContainer>

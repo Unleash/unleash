@@ -8,8 +8,6 @@
  * Schema for creating a release plan for a feature flag environment by copying and applying the configuration from a release plan template.
  */
 export interface ReleasePlanTemplateIdSchema {
-    /**
-     * The release plan template's ID. Release template IDs are ulids.
-     */
+    /** The release plan template's ID. Release template IDs are ulids. */
     templateId: string;
 }

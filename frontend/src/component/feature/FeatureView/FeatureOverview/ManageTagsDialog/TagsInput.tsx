@@ -1,10 +1,8 @@
 import {
-    Autocomplete,
     type AutocompleteProps,
     Checkbox,
     createFilterOptions,
     type FilterOptionsState,
-    TextField,
 } from '@mui/material';
 import type React from 'react';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -14,6 +12,8 @@ import type { ITagType } from 'interfaces/tags';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Add from '@mui/icons-material/Add';
 import type { TagSchema } from 'openapi';
+import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField';
+import { hasValidTagValueLength } from 'component/tags/tagValueLength';
 
 import type { JSX } from 'react';
 
@@ -108,7 +108,7 @@ export const TagsInput = ({
             (option) => inputValue === option.title,
         );
 
-        if (inputValue.length >= 2 && !isExisting) {
+        if (hasValidTagValueLength(inputValue) && !isExisting) {
             filtered.push({
                 inputValue,
                 title: `Create new value "${inputValue}"`,
@@ -119,10 +119,12 @@ export const TagsInput = ({
     };
 
     return (
-        <Autocomplete
+        <AutocompleteField
+            label='Select values'
+            placeholder='Select values'
+            sx={{ width: 500 }}
             multiple
             id='checkboxes-tag'
-            sx={{ marginTop: (theme) => theme.spacing(2), width: 500 }}
             disableCloseOnSelect
             options={options}
             value={selectedOptions}
@@ -137,13 +139,6 @@ export const TagsInput = ({
             renderOption={renderOption}
             filterOptions={filterOptions}
             onChange={onChange}
-            renderInput={(params) => (
-                <TextField
-                    {...params}
-                    label='Select values'
-                    placeholder='Select values'
-                />
-            )}
             disabled={disabled}
             slotProps={{
                 listbox: { style: { maxHeight: 200, overflow: 'auto' } },

@@ -47,8 +47,6 @@ import {
 } from '../../openapi/spec/users-groups-base-schema.js';
 import type { IGroup } from '../../types/group.js';
 import type { IFlagResolver } from '../../types/experimental.js';
-import rateLimit from 'express-rate-limit';
-import { minutesToMilliseconds } from 'date-fns';
 import {
     type AdminCountSchema,
     adminCountSchema,
@@ -356,13 +354,6 @@ export default class UserAdminController extends Controller {
                         ),
                         ...getStandardResponses(400, 401, 403),
                     },
-                }),
-                rateLimit({
-                    windowMs: minutesToMilliseconds(1),
-                    max: config.rateLimiting.createUserMaxPerMinute,
-                    validate: false,
-                    standardHeaders: true,
-                    legacyHeaders: false,
                 }),
             ],
         });
@@ -705,7 +696,9 @@ export default class UserAdminController extends Controller {
     ): Promise<void> {
         const { id } = req.params;
 
-        await this.userService.deleteUser(+id, req.audit);
+        await this.userService.transactional((txUserService) =>
+            txUserService.deleteUser(Number(id), req.audit),
+        );
         res.status(200).send();
     }
 
@@ -824,7 +817,9 @@ export default class UserAdminController extends Controller {
 
     async deleteScimUsers(req: IAuthRequest, res: Response): Promise<void> {
         const { audit } = req;
-        await this.userService.deleteScimUsers(audit);
+        await this.userService.transactional((txUserService) =>
+            txUserService.deleteScimUsers(audit),
+        );
         res.status(200).send();
     }
 }

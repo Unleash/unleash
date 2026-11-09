@@ -26,13 +26,13 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 const StyledTooltip = styled('div')(({ theme }) => ({
     '@keyframes pulse': {
         '0%': {
-            boxShadow: `0 0 0 0 ${alpha(theme.palette.spotlight.pulse, 1)}`,
+            boxShadow: `0 0 0 0 ${alpha(theme.palette.primary.main, 1)}`,
         },
         '70%': {
-            boxShadow: `0 0 0 16px ${alpha(theme.palette.spotlight.pulse, 0)}`,
+            boxShadow: `0 0 0 16px ${alpha(theme.palette.primary.main, 0)}`,
         },
         '100%': {
-            boxShadow: `0 0 0 0 ${alpha(theme.palette.spotlight.pulse, 0)}`,
+            boxShadow: `0 0 0 0 ${alpha(theme.palette.primary.main, 0)}`,
         },
     },
     position: 'relative',

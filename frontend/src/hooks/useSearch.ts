@@ -25,12 +25,18 @@ const removeQuotes = (value: string) =>
 // (`@tanstack/react-table`) put accessors under `accessorKey`/`accessorFn` and
 // custom fields under `meta`. These getters read both, so callers can pass
 // either shape during the v7 -> v8 migration.
-const getAccessor = (column: any): unknown =>
+export const getAccessor = (column: any): unknown =>
     column.accessorFn ?? column.accessorKey ?? column.accessor;
-const getSearchable = (column: any): boolean | undefined =>
+export const getSearchable = (column: any): boolean | undefined =>
     column.meta?.searchable ?? column.searchable;
-const getFilterName = (column: any): string | undefined =>
+export const getFilterName = (column: any): string | undefined =>
     column.meta?.filterName ?? column.filterName;
+// Headers can be render functions in both shapes; only a plain string is
+// usable as a label.
+export const getHeaderLabel = (column: any): string | undefined => {
+    const header = column.header ?? column.Header;
+    return typeof header === 'string' ? header : undefined;
+};
 const getFilterBy = (
     column: any,
 ): ((row: any, values: string[]) => boolean) | undefined =>

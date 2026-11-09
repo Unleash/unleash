@@ -9,13 +9,8 @@ import type { IPrivateProjectChecker } from '../../server-impl.js';
 export const createFeatureSearchService =
     (config: IUnleashConfig, privateProjectChecker: IPrivateProjectChecker) =>
     (db: Db): FeatureSearchService => {
-        const { getLogger, eventBus, flagResolver } = config;
-        const featureSearchStore = new FeatureSearchStore(
-            db,
-            eventBus,
-            getLogger,
-            flagResolver,
-        );
+        const { eventBus } = config;
+        const featureSearchStore = new FeatureSearchStore(db, eventBus);
 
         return new FeatureSearchService(
             { featureSearchStore: featureSearchStore },

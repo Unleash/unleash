@@ -3,15 +3,15 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ContextFieldSchema } from './contextFieldSchema';
-import type { FeatureDependenciesSchema } from './featureDependenciesSchema';
-import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
-import type { FeatureSchema } from './featureSchema';
-import type { FeatureStrategySchema } from './featureStrategySchema';
-import type { FeatureTagSchema } from './featureTagSchema';
-import type { FeatureLinksSchema } from './featureLinksSchema';
-import type { ExportResultSchemaSegmentsItem } from './exportResultSchemaSegmentsItem';
-import type { TagTypeSchema } from './tagTypeSchema';
+import type { ContextFieldSchema } from './contextFieldSchema.ts';
+import type { ExportResultSchemaSegmentsItem } from './exportResultSchemaSegmentsItem.ts';
+import type { FeatureDependenciesSchema } from './featureDependenciesSchema.ts';
+import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema.ts';
+import type { FeatureLinksSchema } from './featureLinksSchema.ts';
+import type { FeatureSchema } from './featureSchema.ts';
+import type { FeatureStrategySchema } from './featureStrategySchema.ts';
+import type { FeatureTagSchema } from './featureTagSchema.ts';
+import type { TagTypeSchema } from './tagTypeSchema.ts';
 
 /**
  * The result of the export operation, providing you with the feature flag definitions, strategy definitions and the rest of the elements relevant to the features (tags, environments etc.)

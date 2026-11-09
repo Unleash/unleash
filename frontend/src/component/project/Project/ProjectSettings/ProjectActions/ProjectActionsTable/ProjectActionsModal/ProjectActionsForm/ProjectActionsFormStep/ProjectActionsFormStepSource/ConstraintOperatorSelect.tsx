@@ -2,10 +2,13 @@ import {
     Select,
     MenuItem,
     FormControl,
-    InputLabel,
     type SelectChangeEvent,
     styled,
 } from '@mui/material';
+import {
+    FormField,
+    formFieldLabelId,
+} from 'component/common/FormField/FormField';
 import {
     type Operator,
     stringOperators,
@@ -14,7 +17,7 @@ import {
     numOperators,
     inOperators,
 } from 'constants/operators';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { formatOperatorDescription } from 'utils/formatOperatorDescription';
 
 interface IConstraintOperatorSelectProps {
@@ -24,16 +27,19 @@ interface IConstraintOperatorSelectProps {
 }
 
 const StyledValueContainer = styled('div')(({ theme }) => ({
-    lineHeight: 1.1,
-    marginTop: -2,
-    marginBottom: -10,
+    display: 'flex',
+    alignItems: 'baseline',
+    gap: theme.spacing(1),
+    overflow: 'hidden',
 }));
 
 const StyledLabel = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
+    flexShrink: 0,
 }));
 
 const StyledDescription = styled('div')(({ theme }) => ({
+    minWidth: 0,
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.neutral.main,
     overflow: 'hidden',
@@ -74,12 +80,20 @@ const StyledOptionContainer = styled('div')(({ theme }) => ({
     lineHeight: 1.2,
 }));
 
-export const ConstraintOperatorSelect = ({
+interface OperatorSelectControlProps extends IConstraintOperatorSelectProps {
+    id?: string;
+}
+
+const OperatorSelectControl = ({
     options,
     value,
     onChange,
-}: IConstraintOperatorSelectProps) => {
+    id,
+}: OperatorSelectControlProps) => {
     const [open, setOpen] = useState(false);
+    const generatedId = useId();
+    const controlId = id ?? generatedId;
+    const labelId = formFieldLabelId(controlId);
 
     const onSelectChange = (event: SelectChangeEvent) => {
         onChange(event.target.value as Operator);
@@ -97,12 +111,11 @@ export const ConstraintOperatorSelect = ({
     };
 
     return (
-        <StyledFormInput variant='outlined' size='small' fullWidth>
-            <InputLabel htmlFor='operator-select'>Operator</InputLabel>
+        <StyledFormInput variant='outlined' size='large' fullWidth>
             <Select
-                id='operator-select'
+                id={controlId}
+                labelId={labelId}
                 name='operator'
-                label='Operator'
                 value={value}
                 open={open}
                 onOpen={() => setOpen(true)}
@@ -128,6 +141,20 @@ export const ConstraintOperatorSelect = ({
         </StyledFormInput>
     );
 };
+
+export const ConstraintOperatorSelect = ({
+    options,
+    value,
+    onChange,
+}: IConstraintOperatorSelectProps) => (
+    <FormField label='Operator'>
+        <OperatorSelectControl
+            options={options}
+            value={value}
+            onChange={onChange}
+        />
+    </FormField>
+);
 
 const needSeparatorAbove = (options: Operator[], option: Operator): boolean => {
     if (option === options[0]) {

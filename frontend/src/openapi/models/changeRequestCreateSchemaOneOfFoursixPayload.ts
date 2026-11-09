@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateSafeguardSchema } from './createSafeguardSchema';
+import type { CreateSafeguardSchema } from './createSafeguardSchema.ts';
 
 export type ChangeRequestCreateSchemaOneOfFoursixPayload = {
     /** The ID of the release plan. This ID is an ulid */

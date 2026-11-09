@@ -11,21 +11,19 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import UserProfile from 'component/user/UserProfile';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
-
 import { DrawerMenu } from './DrawerMenu/DrawerMenu.tsx';
-import DarkModeOutlined from '@mui/icons-material/DarkModeOutlined';
-import LightModeOutlined from '@mui/icons-material/LightModeOutlined';
-import { useThemeMode } from 'hooks/useThemeMode';
-import { useUiFlag } from 'hooks/useUiFlag';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton.tsx';
 import { CommandBar } from 'component/commandBar/CommandBar';
 import { HelpResources } from './HelpResources/HelpResources';
+import { SearchDocsButton } from './SearchDocs/SearchDocsButton.tsx';
 import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequestsNotifications/PendingAccessRequestsIndicator';
+import { Link } from 'react-router';
+import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
+import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
+import UnleashLogoWhite from 'assets/img/logoWithWhiteText.svg?react';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
-    backgroundColor: theme.palette.background.application,
+    backgroundColor: theme.palette.background.default,
     padding: theme.spacing(1),
     boxShadow: 'none',
     position: 'relative',
@@ -63,18 +61,26 @@ const StyledNav = styled('nav')({
     flexGrow: 1,
 });
 
-const Header = () => {
-    const { onSetThemeMode } = useThemeMode();
-    const theme = useTheme();
+const StyledLogoLink = styled(Link)(({ theme }) => ({
+    display: 'inline-flex',
+    alignItems: 'center',
+    marginLeft: theme.spacing(1),
+}));
 
+const StyledUnleashLogo = styled(UnleashLogo)({ width: '120px' });
+
+const StyledUnleashLogoWhite = styled(UnleashLogoWhite)({ width: '120px' });
+
+const Header = () => {
+    const theme = useTheme();
     const mediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
-    const hideTopmenuDocumentation = useUiFlag('hideTopmenuDocumentation');
 
     const headerItems = (
         <StyledUserContainer>
             <CommandBar />
+            <SearchDocsButton />
             <Divider
                 orientation='vertical'
                 variant='middle'
@@ -85,40 +91,7 @@ const Header = () => {
                 })}
             />
             <InviteLinkButton />
-            <Tooltip
-                title={
-                    theme.mode === 'dark'
-                        ? 'Switch to light theme'
-                        : 'Switch to dark theme'
-                }
-                arrow
-            >
-                <IconButton onClick={onSetThemeMode} size='large'>
-                    <ConditionallyRender
-                        condition={theme.mode === 'dark'}
-                        show={<DarkModeOutlined />}
-                        elseShow={<LightModeOutlined />}
-                    />
-                </IconButton>
-            </Tooltip>
-            {hideTopmenuDocumentation && <HelpResources />}
-            {!hideTopmenuDocumentation && (
-                <Tooltip title='Documentation' arrow>
-                    <IconButton
-                        component='a'
-                        nativeButton={false}
-                        href='https://docs.getunleash.io/'
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        size='large'
-                        sx={(theme) => ({
-                            marginRight: theme.spacing(1),
-                        })}
-                    >
-                        <MenuBookIcon />
-                    </IconButton>
-                </Tooltip>
-            )}
+            <HelpResources />
             <Divider
                 orientation='vertical'
                 variant='middle'
@@ -166,6 +139,16 @@ const Header = () => {
                             />
                         </Box>
                     </Box>
+                    <StyledLogoLink to='/' aria-label='Home'>
+                        <ThemeMode
+                            darkmode={
+                                <StyledUnleashLogoWhite aria-label='Unleash logo' />
+                            }
+                            lightmode={
+                                <StyledUnleashLogo aria-label='Unleash logo' />
+                            }
+                        />
+                    </StyledLogoLink>
                     <DrawerMenu open={openDrawer} toggleDrawer={toggleDrawer} />
                     {headerItems}
                 </ContainerComponent>

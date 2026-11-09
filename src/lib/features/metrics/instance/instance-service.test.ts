@@ -13,11 +13,33 @@ import FakeFeatureToggleStore from '../../feature-toggle/fakes/fake-feature-togg
 import type { IApplicationOverview } from './models.js';
 
 import { vi } from 'vitest';
+import { CLIENT_REGISTER } from '../../../events/index.js';
+import createStores from '../../../../test/fixtures/store.js';
 
 let config: IUnleashConfig;
 beforeAll(() => {
     config = createTestConfig({});
 });
+test('failed application deletion leaves instance records untouched', async () => {
+    const stores = createStores();
+    const error = new Error('Application cannot be deleted while it is in use');
+    vi.spyOn(stores.clientApplicationsStore, 'delete').mockRejectedValue(error);
+    const deleteInstances = vi.spyOn(
+        stores.clientInstanceStore,
+        'deleteForApplication',
+    );
+    const service = new ClientInstanceService(
+        stores,
+        config,
+        new FakePrivateProjectChecker(),
+    );
+
+    await expect(service.deleteApplication('referenced-app')).rejects.toBe(
+        error,
+    );
+    expect(deleteInstances).not.toHaveBeenCalled();
+});
+
 test('Multiple registrations of same appname and instanceid within same time period should only cause one registration', async () => {
     const appStoreSpy = vi.fn();
     const bulkSpy = vi.fn();
@@ -195,6 +217,109 @@ test('No registrations during a time period will not call stores', async () => {
 
     expect(appStoreSpy).toHaveBeenCalledTimes(0);
     expect(bulkSpy).toHaveBeenCalledTimes(0);
+});
+
+test('restores a failed batch without overwriting newer registrations', async () => {
+    let clientMetrics: ClientInstanceService;
+    const instanceStoreSpy = vi.fn(async () => {
+        await clientMetrics.registerInstance(
+            { appName: 'test-app', instanceId: 'test-instance' },
+            'new-client-ip',
+            'new-environment',
+        );
+        throw new Error('deadlock detected');
+    });
+    clientMetrics = new ClientInstanceService(
+        {
+            clientMetricsStoreV2: new FakeClientMetricsStoreV2(),
+            strategyStore: new FakeStrategiesStore(),
+            featureToggleStore: new FakeFeatureToggleStore(),
+            clientApplicationsStore: { bulkUpsert: vi.fn() } as any,
+            clientInstanceStore: { bulkUpsert: instanceStoreSpy } as any,
+            eventStore: new FakeEventStore(),
+        },
+        config,
+        new FakePrivateProjectChecker(),
+    );
+
+    await clientMetrics.registerInstance(
+        { appName: 'test-app', instanceId: 'test-instance' },
+        'old-client-ip',
+        'old-environment',
+    );
+    await clientMetrics.bulkAdd();
+
+    expect(clientMetrics.seenClients['test-app_test-instance']).toMatchObject({
+        appName: 'test-app',
+        instanceId: 'test-instance',
+        clientIp: 'new-client-ip',
+        environment: 'new-environment',
+    });
+});
+
+test('registrations without an app name are ignored without dropping valid registrations', async () => {
+    const appStoreSpy = vi.fn();
+    const instanceStoreSpy = vi.fn();
+    const clientMetrics = new ClientInstanceService(
+        {
+            clientMetricsStoreV2: new FakeClientMetricsStoreV2(),
+            strategyStore: new FakeStrategiesStore(),
+            featureToggleStore: new FakeFeatureToggleStore(),
+            clientApplicationsStore: { bulkUpsert: appStoreSpy } as any,
+            clientInstanceStore: { bulkUpsert: instanceStoreSpy } as any,
+            eventStore: new FakeEventStore(),
+        },
+        config,
+        new FakePrivateProjectChecker(),
+    );
+
+    await clientMetrics.registerInstance(
+        { appName: '', instanceId: 'invalid-instance' },
+        '127.0.0.1',
+        'default',
+    );
+    await clientMetrics.registerInstance(
+        { appName: 'valid-app', instanceId: 'valid-instance' },
+        '127.0.0.1',
+        'default',
+    );
+
+    await clientMetrics.bulkAdd();
+
+    expect(appStoreSpy).toHaveBeenCalledWith([
+        expect.objectContaining({ appName: 'valid-app' }),
+    ]);
+    expect(instanceStoreSpy).toHaveBeenCalledWith([
+        expect.objectContaining({ appName: 'valid-app' }),
+    ]);
+});
+
+test('a batch containing only registrations without app names does not call stores', async () => {
+    const appStoreSpy = vi.fn();
+    const instanceStoreSpy = vi.fn();
+    const clientMetrics = new ClientInstanceService(
+        {
+            clientMetricsStoreV2: new FakeClientMetricsStoreV2(),
+            strategyStore: new FakeStrategiesStore(),
+            featureToggleStore: new FakeFeatureToggleStore(),
+            clientApplicationsStore: { bulkUpsert: appStoreSpy } as any,
+            clientInstanceStore: { bulkUpsert: instanceStoreSpy } as any,
+            eventStore: new FakeEventStore(),
+        },
+        config,
+        new FakePrivateProjectChecker(),
+    );
+
+    await clientMetrics.registerInstance(
+        { appName: '', instanceId: 'invalid-instance' },
+        '127.0.0.1',
+        'default',
+    );
+
+    await clientMetrics.bulkAdd();
+
+    expect(appStoreSpy).not.toHaveBeenCalled();
+    expect(instanceStoreSpy).not.toHaveBeenCalled();
 });
 
 test('filter out private projects from overview', async () => {
@@ -394,5 +519,141 @@ describe('upserting into `seenClients`', () => {
             environment: 'black',
             metricsCount: 10,
         });
+    });
+
+    test('registerFrontendClient emits an sdk heartbeat with flavor metadata when the flag is enabled', () => {
+        const eventStore = new FakeEventStore();
+        const emitSpy = vi.spyOn(eventStore, 'emit');
+        const flavorConfig = createTestConfig({
+            experimental: { flags: { recordSdkFlavorMetrics: true } },
+        });
+        const instanceService = new ClientInstanceService(
+            { eventStore } as any,
+            flavorConfig,
+            {} as any,
+        );
+
+        instanceService.registerFrontendClient({
+            appName: 'appName',
+            instanceId: 'instanceId',
+            sdkVersion: 'unleash-ios-sdk:2.5.0',
+            sdkType: 'frontend',
+            environment: 'development',
+            sdkFlavor: 'unleash-openfeature-swift-provider',
+            sdkFlavorVersion: '1.2.3',
+        });
+
+        expect(emitSpy).toHaveBeenCalledWith(CLIENT_REGISTER, {
+            sdkName: 'unleash-ios-sdk',
+            sdkVersion: '2.5.0',
+            metadata: {
+                sdkFlavor: 'unleash-openfeature-swift-provider',
+                sdkFlavorVersion: '1.2.3',
+            },
+        });
+    });
+
+    test('registerFrontendClient does not emit a heartbeat when the flag is disabled', () => {
+        const eventStore = new FakeEventStore();
+        const emitSpy = vi.spyOn(eventStore, 'emit');
+        const instanceService = new ClientInstanceService(
+            { eventStore } as any,
+            config, // default config: recordSdkFlavorMetrics is off
+            {} as any,
+        );
+
+        instanceService.registerFrontendClient({
+            appName: 'appName',
+            instanceId: 'instanceId',
+            sdkVersion: 'unleash-ios-sdk:2.5.0',
+            sdkType: 'frontend',
+            environment: 'development',
+            sdkFlavor: 'unleash-openfeature-swift-provider',
+            sdkFlavorVersion: '1.2.3',
+        });
+
+        expect(emitSpy).not.toHaveBeenCalledWith(
+            CLIENT_REGISTER,
+            expect.anything(),
+        );
+    });
+
+    test('registerBackendClient still emits its version heartbeat but strips flavor when the flag is disabled', async () => {
+        const eventStore = new FakeEventStore();
+        const emitSpy = vi.spyOn(eventStore, 'emit');
+        const instanceService = new ClientInstanceService(
+            { eventStore } as any,
+            config, // default config: recordSdkFlavorMetrics is off
+            {} as any,
+        );
+
+        await instanceService.registerBackendClient(
+            {
+                appName: 'appName',
+                instanceId: 'instanceId',
+                sdkVersion: 'unleash-client-node:6.7.0',
+                sdkFlavor: 'unleash-openfeature-node-provider',
+                sdkFlavorVersion: '1.0.1',
+                strategies: ['default'],
+                started: new Date(),
+                interval: 10000,
+            } as any,
+            '127.0.0.1',
+            'development',
+        );
+
+        // Backend always emits the version heartbeat (existing behaviour); only
+        // the flavour fields are gated off.
+        expect(emitSpy).toHaveBeenCalledWith(
+            CLIENT_REGISTER,
+            expect.objectContaining({
+                sdkName: 'unleash-client-node',
+                sdkVersion: '6.7.0',
+                metadata: expect.objectContaining({
+                    sdkFlavor: undefined,
+                    sdkFlavorVersion: undefined,
+                }),
+            }),
+        );
+    });
+
+    test('registerBackendClient includes flavor in the heartbeat when the flag is enabled', async () => {
+        const eventStore = new FakeEventStore();
+        const emitSpy = vi.spyOn(eventStore, 'emit');
+        const flavorConfig = createTestConfig({
+            experimental: { flags: { recordSdkFlavorMetrics: true } },
+        });
+        const instanceService = new ClientInstanceService(
+            { eventStore } as any,
+            flavorConfig,
+            {} as any,
+        );
+
+        await instanceService.registerBackendClient(
+            {
+                appName: 'appName',
+                instanceId: 'instanceId',
+                sdkVersion: 'unleash-client-node:6.7.0',
+                sdkFlavor: 'unleash-openfeature-node-provider',
+                sdkFlavorVersion: '1.0.1',
+                strategies: ['default'],
+                started: new Date(),
+                interval: 10000,
+            } as any,
+            '127.0.0.1',
+            'development',
+        );
+
+        expect(emitSpy).toHaveBeenCalledWith(
+            CLIENT_REGISTER,
+            expect.objectContaining({
+                sdkName: 'unleash-client-node',
+                sdkVersion: '6.7.0',
+                metadata: expect.objectContaining({
+                    sdkFlavor: 'unleash-openfeature-node-provider',
+                    sdkFlavorVersion: '1.0.1',
+                }),
+            }),
+        );
     });
 });

@@ -11,7 +11,7 @@ const StyledIconBox = styled('span')(({ theme }) => ({
     width: theme.spacing(4),
     height: theme.spacing(4),
     borderRadius: theme.shape.borderRadiusMedium,
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,
 }));
 

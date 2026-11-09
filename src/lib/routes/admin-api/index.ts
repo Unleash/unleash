@@ -23,6 +23,7 @@ import ProjectController from '../../features/project/project-controller.js';
 import { EnvironmentsController } from '../../features/environments/environments-controller.js';
 import ConstraintsController from '../../features/constraints/constraints-controller.js';
 import PatController from './user/pat.js';
+import SessionController from './session.js';
 import { PublicSignupController } from './public-signup.js';
 import InstanceAdminController from './instance-admin.js';
 import TelemetryController from './telemetry.js';
@@ -35,9 +36,10 @@ import { InactiveUsersController } from '../../users/inactive/inactive-users-con
 import { UiObservabilityController } from '../../features/ui-observability-controller/ui-observability-controller.js';
 import { SearchApi } from './search/index.js';
 import PersonalDashboardController from '../../features/personal-dashboard/personal-dashboard-controller.js';
+import UserRecentFlagsController from '../../features/user-recent-flags/user-recent-flags-controller.js';
 import FeatureLifecycleCountController from '../../features/feature-lifecycle/feature-lifecycle-count-controller.js';
 import type { IUnleashServices } from '../../services/index.js';
-import CustomMetricsController from '../../features/metrics/custom/custom-metrics-controller.js';
+import FlagCreatorsController from '../../features/project/flag-creators-controller.js';
 
 export class AdminApi extends Controller {
     constructor(
@@ -78,14 +80,18 @@ export class AdminApi extends Controller {
             '/client-metrics',
             new ClientMetricsController(config, services).router,
         );
-        this.app.use(
-            '/custom-metrics',
-            new CustomMetricsController(services, config).router,
-        );
         this.app.use('/user', new UserController(config, services).router);
+        this.app.use(
+            '/session',
+            new SessionController(config, services).router,
+        );
         this.app.use(
             '/user/tokens',
             new PatController(config, services).router,
+        );
+        this.app.use(
+            '/user/recent-flags',
+            new UserRecentFlagsController(config, services).router,
         );
 
         this.app.use(
@@ -176,6 +182,11 @@ export class AdminApi extends Controller {
         );
 
         this.app.use('/search', new SearchApi(config, services, db).router);
+
+        this.app.use(
+            '/flag-creators',
+            new FlagCreatorsController(config, services).router,
+        );
 
         this.app.use(
             '/record-ui-error',

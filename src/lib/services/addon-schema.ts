@@ -9,7 +9,18 @@ export const addonSchema = joi
         description: joi.string().allow(null).allow('').optional(),
         parameters: joi
             .object()
-            .pattern(joi.string(), [joi.string(), joi.number(), joi.boolean()])
+            .pattern(joi.string(), [
+                joi.string(),
+                joi.number(),
+                joi.boolean(),
+                joi
+                    .object()
+                    .pattern(joi.string().trim(), joi.string().allow('')),
+                joi.array().items(joi.string()),
+                joi
+                    .array()
+                    .items(joi.object().pattern(joi.string(), joi.string())),
+            ])
             .optional(),
         events: joi.array().optional().items(joi.string()),
         projects: joi.array().optional().items(joi.string()),

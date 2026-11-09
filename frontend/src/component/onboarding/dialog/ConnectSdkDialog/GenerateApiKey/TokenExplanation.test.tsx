@@ -30,3 +30,11 @@ describe('TokenExplanation', () => {
         expect(screen.getByText('The API key secret')).toBeInTheDocument();
     });
 });
+
+test('treats the API key secret as opaque', () => {
+    render(<TokenExplanation {...props} secret='backend.v2_selector_secret' />);
+
+    expect(screen.getAllByText('backend.v2_selector_secret')).not.toHaveLength(
+        0,
+    );
+});

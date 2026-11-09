@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express';
 import Controller from '../controller.js';
+import { endSession } from '../../sessions/session-lifecycle.js';
 import type UserService from '../../services/user-service.js';
 import type { IUnleashConfig } from '../../types/option.js';
 import type { IUnleashServices } from '../../services/index.js';
@@ -16,8 +17,6 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses.js';
-import rateLimit from 'express-rate-limit';
-import { minutesToMilliseconds } from 'date-fns';
 
 interface IValidateQuery {
     token: string;
@@ -26,11 +25,6 @@ interface IValidateQuery {
 interface IChangePasswordBody {
     token: string;
     password: string;
-}
-
-interface SessionRequest<PARAMS, QUERY, BODY, K>
-    extends Request<PARAMS, QUERY, BODY, K> {
-    user?;
 }
 
 class ResetPasswordController extends Controller {
@@ -129,13 +123,6 @@ class ResetPasswordController extends Controller {
                         ...getStandardResponses(401, 404, 415),
                     },
                 }),
-                rateLimit({
-                    windowMs: minutesToMilliseconds(1),
-                    max: config.rateLimiting.passwordResetMaxPerMinute,
-                    validate: false,
-                    standardHeaders: true,
-                    legacyHeaders: false,
-                }),
             ],
         });
     }
@@ -163,7 +150,7 @@ class ResetPasswordController extends Controller {
     ): Promise<void> {
         const { token } = req.query;
         const user = await this.userService.getUserForToken(token);
-        await this.logout(req);
+        await endSession(req, res, this.config);
         this.openApiService.respondWithValidation<TokenUserSchema>(
             200,
             res,
@@ -176,16 +163,10 @@ class ResetPasswordController extends Controller {
         req: Request<unknown, unknown, IChangePasswordBody, unknown>,
         res: Response,
     ): Promise<void> {
-        await this.logout(req);
+        await endSession(req, res, this.config);
         const { token, password } = req.body;
         await this.userService.resetPassword(token, password);
         res.status(200).end();
-    }
-
-    private async logout(req: SessionRequest<any, any, any, any>) {
-        if (req.session) {
-            req.session.destroy(() => {});
-        }
     }
 }
 

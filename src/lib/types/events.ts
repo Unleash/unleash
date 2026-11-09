@@ -7,6 +7,7 @@ import type {
 } from './model.js';
 import type { IApiToken } from './model.js';
 import type { IAuditUser, IUserWithRootRole } from './user.js';
+import { auditEventFields } from '../util/audit-event-fields.js';
 import type { ITagType } from '../features/tag-type/tag-type-store-type.js';
 import type { IFeatureAndTag } from './stores/feature-tag-store.js';
 import {
@@ -18,7 +19,6 @@ import {
     API_TOKEN_UPDATED,
     DEFAULT_STRATEGY_UPDATED,
     DROP_ENVIRONMENTS,
-    DROP_FEATURE_TAGS,
     DROP_FEATURES,
     DROP_PROJECTS,
     DROP_STRATEGIES,
@@ -111,6 +111,7 @@ import {
     TAG_TYPE_DELETED,
     TAG_TYPE_IMPORT,
     TAG_TYPE_UPDATED,
+    TAG_UPDATED,
     USER_CREATED,
     USER_DELETED,
     USER_PREFERENCE_UPDATED,
@@ -136,15 +137,23 @@ export class BaseEvent implements IBaseEvent {
 
     readonly ip: string;
 
+    readonly userAgent?: string;
+
     /**
      * @param type the type of the event we're creating.
-     * @param auditUser User info used to track which user performed the action. Includes username (email or username), userId and ip
+     * @param auditUser User info used to track which user performed the action.
+     * Includes username (email or username), userId, ip and
+     * for actions that came from an HTTP request the user agent.
      */
     constructor(type: IEventType, auditUser: IAuditUser) {
+        const { createdBy, createdByUserId, ip, userAgent } =
+            auditEventFields(auditUser);
+
         this.type = type;
-        this.createdBy = auditUser.username || 'unknown';
-        this.createdByUserId = auditUser.id || -1337;
-        this.ip = auditUser.ip || '';
+        this.createdBy = createdBy;
+        this.createdByUserId = createdByUserId;
+        this.ip = ip;
+        this.userAgent = userAgent;
     }
 }
 
@@ -1249,6 +1258,11 @@ export class PublicSignupTokenUserAddedEvent extends BaseEvent {
     }
 }
 
+type ApiTokenEventData = Omit<IApiToken, 'secret'> & {
+    selector?: string;
+    tokenVersion?: 2;
+};
+
 export class ApiTokenCreatedEvent extends BaseEvent {
     readonly data: any;
 
@@ -1257,7 +1271,7 @@ export class ApiTokenCreatedEvent extends BaseEvent {
     readonly project: string;
 
     constructor(eventData: {
-        apiToken: Omit<IApiToken, 'secret'>;
+        apiToken: ApiTokenEventData;
         auditUser: IAuditUser;
     }) {
         super(API_TOKEN_CREATED, eventData.auditUser);
@@ -1275,7 +1289,7 @@ export class ApiTokenDeletedEvent extends BaseEvent {
     readonly project: string;
 
     constructor(eventData: {
-        apiToken: Omit<IApiToken, 'secret'>;
+        apiToken: ApiTokenEventData;
         auditUser: IAuditUser;
     }) {
         super(API_TOKEN_DELETED, eventData.auditUser);
@@ -1295,8 +1309,8 @@ export class ApiTokenUpdatedEvent extends BaseEvent {
     readonly project: string;
 
     constructor(eventData: {
-        previousToken: Omit<IApiToken, 'secret'>;
-        apiToken: Omit<IApiToken, 'secret'>;
+        previousToken: ApiTokenEventData;
+        apiToken: ApiTokenEventData;
         auditUser: IAuditUser;
     }) {
         super(API_TOKEN_UPDATED, eventData.auditUser);
@@ -1446,6 +1460,21 @@ export class TagDeletedEvent extends BaseEvent {
     }
 }
 
+export class TagUpdatedEvent extends BaseEvent {
+    readonly data: any;
+    readonly preData: any;
+
+    constructor(eventData: {
+        auditUser: IAuditUser;
+        data: any;
+        preData: any;
+    }) {
+        super(TAG_UPDATED, eventData.auditUser);
+        this.data = eventData.data;
+        this.preData = eventData.preData;
+    }
+}
+
 export class PatCreatedEvent extends BaseEvent {
     readonly data: any;
 
@@ -1553,17 +1582,6 @@ export class DropEnvironmentsEvent extends BaseEvent {
     }) {
         super(DROP_ENVIRONMENTS, eventData.auditUser);
         this.data = { name: 'all-environments' };
-    }
-}
-
-export class DropFeatureTagsEvent extends BaseEvent {
-    readonly data: any;
-
-    constructor(eventData: {
-        auditUser: IAuditUser;
-    }) {
-        super(DROP_FEATURE_TAGS, eventData.auditUser);
-        this.data = { name: 'all-feature-tags' };
     }
 }
 
@@ -1853,51 +1871,63 @@ export class MilestoneProgressionChangedEvent extends BaseEvent {
 
 export class ReleasePlanTemplateCreatedEvent extends BaseEvent {
     readonly data: any;
+    readonly project?: string;
     constructor(eventData: {
         data: any;
+        project?: string;
         auditUser: IAuditUser;
     }) {
         super(RELEASE_PLAN_TEMPLATE_CREATED, eventData.auditUser);
         this.data = eventData.data;
+        this.project = eventData.project;
     }
 }
 
 export class ReleasePlanTemplateUpdatedEvent extends BaseEvent {
     readonly preData: any;
     readonly data: any;
+    readonly project?: string;
     constructor(eventData: {
         data: any;
         preData: any;
+        project?: string;
         auditUser: IAuditUser;
     }) {
         super(RELEASE_PLAN_TEMPLATE_UPDATED, eventData.auditUser);
         this.data = eventData.data;
         this.preData = eventData.preData;
+        this.project = eventData.project;
     }
 }
 
 export class ReleasePlanTemplateDeletedEvent extends BaseEvent {
     readonly preData: any;
+    readonly project?: string;
     constructor(eventData: {
         preData: any;
+        project?: string;
         auditUser: IAuditUser;
     }) {
         super(RELEASE_PLAN_TEMPLATE_DELETED, eventData.auditUser);
         this.preData = eventData.preData;
+        this.project = eventData.project;
     }
 }
 
 export class ReleasePlanTemplateArchivedEvent extends BaseEvent {
     readonly preData: any;
     readonly data: any;
+    readonly project?: string;
     constructor(eventData: {
         data: any;
         preData: any;
+        project?: string;
         auditUser: IAuditUser;
     }) {
         super(RELEASE_PLAN_TEMPLATE_ARCHIVED, eventData.auditUser);
         this.data = eventData.data;
         this.preData = eventData.preData;
+        this.project = eventData.project;
     }
 }
 

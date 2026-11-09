@@ -14,14 +14,20 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { useReleasePlanTemplatesApi } from 'hooks/api/actions/useReleasePlanTemplatesApi/useReleasePlanTemplatesApi';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
+import { formatReleaseTemplateEditPath } from 'component/releases/releaseTemplatePaths';
+import { releaseTemplateScopeProps } from 'component/releases/releaseTemplateScopeProps';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { apiErrorCategory } from 'utils/apiUtils';
 import { TemplateArchiveDialog } from '../TemplateArchiveDialog.tsx';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Link } from 'react-router';
 import { useEventTracker } from 'hooks/useEventTracker';
-import { RELEASE_PLAN_TEMPLATE_DELETE } from '@server/types/permissions';
+import {
+    RELEASE_PLAN_TEMPLATE_DELETE,
+    UPDATE_PROJECT_RELEASE_TEMPLATE,
+} from '@server/types/permissions';
 import { useHasRootAccess } from 'hooks/useHasAccess';
 
 const StyledActions = styled('div')(({ theme }) => ({
@@ -30,6 +36,8 @@ const StyledActions = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    // Stacks above the card's data-card-action overlay so the menu stays clickable.
+    position: 'relative',
 }));
 
 const StyledPopover = styled(Popover)(({ theme }) => ({
@@ -39,20 +47,28 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
 
 export const ReleasePlanTemplateCardActions = ({
     template,
+    projectId,
 }: {
     template: IReleasePlanTemplate;
+    projectId?: string;
 }) => {
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
-    const { archiveReleasePlanTemplate } = useReleasePlanTemplatesApi();
-    const { refetch } = useReleasePlanTemplates();
+    const { archiveReleasePlanTemplate, loading } =
+        useReleasePlanTemplatesApi(projectId);
+    const { refetch } = useReleasePlanTemplates(projectId);
     const { setToastData, setToastApiError } = useToast();
     const { trackEvent } = useEventTracker();
     const [archiveOpen, setArchiveOpen] = useState(false);
-    const hasArchivePermission = useHasRootAccess(RELEASE_PLAN_TEMPLATE_DELETE);
+    const hasArchivePermission = useHasRootAccess(
+        [RELEASE_PLAN_TEMPLATE_DELETE, UPDATE_PROJECT_RELEASE_TEMPLATE],
+        projectId,
+    );
+    const editPath = formatReleaseTemplateEditPath(template.id, projectId);
+    const scopeProps = releaseTemplateScopeProps(template.project);
     const archiveReleasePlan = useCallback(async () => {
         try {
             await archiveReleasePlanTemplate(template.id);
-            refetch();
+            await refetch();
             setToastData({
                 type: 'success',
                 text: 'Release template archived',
@@ -62,12 +78,20 @@ export const ReleasePlanTemplateCardActions = ({
                 props: {
                     eventType: 'archive-template',
                     template: template.name,
+                    ...scopeProps,
                 },
             });
         } catch (error: unknown) {
+            trackEvent('release-management', {
+                props: {
+                    eventType: 'archive-template-failed',
+                    error: apiErrorCategory(error),
+                    ...scopeProps,
+                },
+            });
             setToastApiError(formatUnknownError(error));
         }
-    }, [setToastApiError, refetch, setToastData, archiveReleasePlanTemplate]);
+    }, [setToastApiError, setToastData, archiveReleasePlanTemplate, refetch]);
 
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -81,12 +105,7 @@ export const ReleasePlanTemplateCardActions = ({
     const menuId = `${id}-menu`;
 
     return (
-        <StyledActions
-            onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-            }}
-        >
+        <StyledActions>
             <Tooltip title='Release template actions' arrow describeChild>
                 <IconButton
                     id={id}
@@ -114,7 +133,7 @@ export const ReleasePlanTemplateCardActions = ({
                         onClick={handleClose}
                         component={Link}
                         nativeButton={false}
-                        to={`/release-templates/edit/${template.id}`}
+                        to={editPath}
                     >
                         <ListItemIcon>
                             <EditIcon />
@@ -145,9 +164,11 @@ export const ReleasePlanTemplateCardActions = ({
             </StyledPopover>
             <TemplateArchiveDialog
                 template={template}
+                projectId={projectId}
                 open={archiveOpen}
                 setOpen={setArchiveOpen}
                 onConfirm={archiveReleasePlan}
+                disabled={loading}
             />
         </StyledActions>
     );

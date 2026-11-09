@@ -13,6 +13,7 @@ type GenericSearchOutput<T> = {
 export function createPaginatedHook<T extends { total?: number }>(
     customFallbackData: T,
     defaultPrefixKey = '',
+    cacheSize = 1,
 ) {
     return (
         params: Record<string, any> = {},
@@ -32,6 +33,7 @@ export function createPaginatedHook<T extends { total?: number }>(
         useClearSWRCache({
             currentKey: KEY,
             clearPrefix: prefix,
+            cacheSize,
         });
 
         const fetcher = async () => {

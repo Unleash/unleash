@@ -152,6 +152,46 @@ export const addonTypeSchema = {
                 },
             },
         },
+        serverInstallation: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['path'],
+            description:
+                "This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. An installation that Unleash handles itself: the install button opens `path` in the same tab, with the non-sensitive parameters filled in the form as `parameters[name]` query parameters.",
+            properties: {
+                path: {
+                    type: 'string',
+                    description:
+                        "The path of the installation, relative to `/api/admin/integrations`. On a project's integrations page the button adds the project as a `project` query parameter.",
+                    example: 'github/app-manifest',
+                },
+                title: {
+                    type: 'string',
+                    description:
+                        'The title of the installation. This will be displayed to the user when installing addons of this type.',
+                    example: 'Create a GitHub App',
+                },
+                helpText: {
+                    type: 'string',
+                    description:
+                        'The help text of the installation. This will be displayed to the user when installing addons of this type.',
+                    example:
+                        'Fill in the organization below, then click Install & connect.',
+                },
+            },
+        },
+        fixedEvents: {
+            type: 'boolean',
+            description:
+                "This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. Whether every addon of this type listens to all of its `events`. Hides filter from the form.",
+            example: true,
+        },
+        environmentIndependent: {
+            type: 'boolean',
+            description:
+                "This is an experimental property. It may change or be removed as we work on it. Please don't depend on it yet. Whether the events of this addon type are independent of environments, so that no environment filter is offered.",
+            example: true,
+        },
         alerts: {
             type: 'array',
             description:

@@ -8,7 +8,8 @@ import { DropdownMenu } from '../DropdownMenu/DropdownMenu.tsx';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
 import { LifecycleChip } from './LifecycleChip.tsx';
 import { FlagsCountBadge } from './FlagsCountBadge.tsx';
-import { useUiFlag } from 'hooks/useUiFlag.ts';
+import { useTracking } from 'hooks/useTracking';
+import { filterLifecycleTracking } from 'component/feature/FeatureToggleList/flagsListTracking';
 
 interface ILifecycleFiltersBaseProps {
     state: FilterItemParamHolder;
@@ -39,17 +40,7 @@ const StyledMinimalChipContainer = styled(Box)(({ theme }) => ({
     width: '100%',
 }));
 
-const oldLifecycleOptions: {
-    label: string;
-    value: LifecycleStage['name'] | null;
-}[] = [
-    { label: 'All lifecycles', value: null },
-    { label: 'Develop', value: 'pre-live' },
-    { label: 'Rollout production', value: 'live' },
-    { label: 'Cleanup', value: 'completed' },
-];
-
-const newLifecycleOptions: {
+const lifecycleOptions: {
     label: string;
     value: LifecycleStage['name'] | null;
 }[] = [
@@ -93,10 +84,7 @@ export const LifecycleFilters = ({
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
     const selectedLifecycle = state.lifecycle?.values?.[0] ?? null;
-    const useNewLifecycleOptions = useUiFlag('archiveInFlagsView');
-    const lifecycleOptions = useNewLifecycleOptions
-        ? newLifecycleOptions
-        : oldLifecycleOptions;
+    const trackFilterLifecycle = useTracking(filterLifecycleTracking);
 
     const isActive = (value: LifecycleStage['name'] | null) => {
         return value === selectedLifecycle;
@@ -116,6 +104,9 @@ export const LifecycleFilters = ({
                 ? { lifecycle: null }
                 : { lifecycle: { operator: 'IS', values: [value] } },
         );
+        if (value !== selectedLifecycle) {
+            trackFilterLifecycle('succeeded', { stage: value ?? 'all' });
+        }
     };
 
     const selectedOption =

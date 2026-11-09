@@ -55,6 +55,7 @@ const tokenRowReducer = (acc, tokenRow) => {
             createdAt: token.created_at,
             alias: token.alias,
             seenAt: token.seen_at,
+            secure: false,
         };
     }
     const currentToken = acc[tokenRow.secret];
@@ -215,6 +216,7 @@ export class ApiTokenStore implements IApiTokenStore {
                 alias: newToken.alias || null,
                 project: newToken.projects?.join(',') || '*',
                 createdAt: row.created_at,
+                secure: false,
             };
         });
         return response;

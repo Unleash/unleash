@@ -1,7 +1,30 @@
-import { EmailService, type TransportProvider } from './email-service.js';
+import {
+    EmailService,
+    TemplateFormat,
+    escapeMustacheContext,
+    type TransportProvider,
+} from './email-service.js';
 import noLoggerProvider from '../../test/fixtures/no-logger.js';
 import type { IUnleashConfig } from '../types/index.js';
 import { vi } from 'vitest';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const mailTemplatesDir = path.resolve(
+    path.dirname(fileURLToPath(import.meta.url)),
+    '../../mailtemplates',
+);
+
+// Plain strings (not { file } objects): vitest truncates `$file` titles to
+// 40 chars, which would hide which template/format failed; `%s` does not.
+const templateFiles = readdirSync(mailTemplatesDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .flatMap((entry) =>
+        ['html', 'plain']
+            .map((format) => `${entry.name}/${entry.name}.${format}.mustache`)
+            .filter((file) => existsSync(path.join(mailTemplatesDir, file))),
+    );
 
 test('Can send reset email', async () => {
     const emailService = new EmailService({
@@ -27,6 +50,23 @@ test('Can send reset email', async () => {
     expect(content.subject).toBe('Unleash - Reset your password');
     expect(content.html.includes(resetLinkUrl)).toBe(true);
     expect(content.text.includes(resetLinkUrl)).toBe(true);
+    expect(content.html).not.toContain('Email not displaying correctly');
+    expect(content.html).not.toContain('*|');
+    expect(content.html).toContain('Reset password</a>');
+    expect(content.html).toContain('Someone has requested a password reset');
+});
+
+test('Mail template regression cases cover all templates', () => {
+    expect(templateFiles).toContain(
+        'reset-password/reset-password.html.mustache',
+    );
+});
+
+test.each(
+    templateFiles,
+)('%s has no unrendered Mailchimp merge tags', (file) => {
+    const content = readFileSync(path.join(mailTemplatesDir, file), 'utf8');
+    expect(content.match(/\*\|[^|\s]+\|\*/g) ?? []).toEqual([]);
 });
 
 test('Can send welcome mail', async () => {
@@ -190,6 +230,94 @@ test('Sets correct color for technical debt', async () => {
     );
 });
 
+test('warns the token owner before their personal API token expires', async () => {
+    const emailService = new EmailService({
+        server: {
+            unleashUrl: 'http://localhost',
+        },
+        email: {
+            host: 'test',
+            port: 587,
+            secure: false,
+            smtpuser: '',
+            smtppass: '',
+            sender: 'noreply@getunleash.ai',
+        },
+        getLogger: noLoggerProvider,
+    } as unknown as IUnleashConfig);
+
+    const content = await emailService.sendPersonalApiTokensExpiryEmail({
+        recipientEmail: 'owner@example.com',
+        recipientName: 'Token Owner',
+        tokens: [
+            { tokenDescription: 'ci-pipeline', daysUntilExpiry: 14 },
+            { tokenDescription: 'local-dev', daysUntilExpiry: 1 },
+        ],
+    });
+
+    expect(content.from).toBe('noreply@getunleash.ai');
+    expect(content.to).toBe('owner@example.com');
+    expect(content.subject).toBe(
+        'Unleash - your personal API tokens are about to expire',
+    );
+    expect(content.html).toContain(
+        '<li><strong>ci-pipeline</strong> expires in <strong>14 days</strong></li><li><strong>local-dev</strong> expires in <strong>1 day</strong></li>',
+    );
+    expect(content.text).toContain(
+        'The following personal API tokens are about to expire:\n- ci-pipeline expires in 14 days\n- local-dev expires in 1 day',
+    );
+    expect(content.text).toContain(
+        'Manage tokens in Unleash: http://localhost/profile/personal-api-tokens',
+    );
+});
+
+test('points admins at the service account whose token is about to expire', async () => {
+    const emailService = new EmailService({
+        server: {
+            unleashUrl: 'http://localhost',
+        },
+        email: {
+            host: 'test',
+            port: 587,
+            secure: false,
+            smtpuser: '',
+            smtppass: '',
+            sender: 'noreply@getunleash.ai',
+        },
+        getLogger: noLoggerProvider,
+    } as unknown as IUnleashConfig);
+
+    const content = await emailService.sendServiceAccountTokensExpiryEmail({
+        recipientEmail: 'admin@example.com',
+        tokens: [
+            {
+                tokenDescription: 'R&D deploy-token',
+                daysUntilExpiry: 1,
+                serviceAccountName: 'deploy-bot',
+            },
+            {
+                tokenDescription: 'sync-token',
+                daysUntilExpiry: 14,
+                serviceAccountName: 'sync-bot',
+            },
+        ],
+    });
+
+    expect(content.to).toBe('admin@example.com');
+    expect(content.subject).toBe(
+        'Unleash - service account tokens are about to expire',
+    );
+    expect(content.html).toContain(
+        '<li><strong>R&amp;D deploy-token</strong> of service account <strong>deploy-bot</strong> expires in <strong>1 day</strong></li><li><strong>sync-token</strong> of service account <strong>sync-bot</strong> expires in <strong>14 days</strong></li>',
+    );
+    expect(content.text).toContain(
+        'The following service account tokens are about to expire:\n- R&D deploy-token of service account deploy-bot expires in 1 day\n- sync-token of service account sync-bot expires in 14 days',
+    );
+    expect(content.text).toContain(
+        'Manage service accounts in Unleash: http://localhost/admin/service-accounts',
+    );
+});
+
 test('Should add optional headers to productivity email', async () => {
     const emailService = new EmailService({
         server: {
@@ -230,5 +358,59 @@ test('Should add optional headers to productivity email', async () => {
 
     expect(productivityMail.headers).toStrictEqual({
         'x-header-name': 'value',
+    });
+});
+
+test('compileTemplate escapeContext HTML-encodes values before triple-stash render', async () => {
+    const emailService = new EmailService({
+        email: {
+            host: 'test',
+            port: 587,
+            secure: false,
+            smtpuser: '',
+            smtppass: '',
+            sender: 'noreply@getunleash.ai',
+        },
+        getLogger: noLoggerProvider,
+    } as unknown as IUnleashConfig);
+
+    const xss = '<script>alert("XSS")</script>';
+    const escaped = await emailService.compileTemplate(
+        'scheduled-execution-failed',
+        TemplateFormat.HTML,
+        { errorMessage: xss },
+        { escapeContext: true },
+    );
+    const raw = await emailService.compileTemplate(
+        'scheduled-execution-failed',
+        TemplateFormat.HTML,
+        { errorMessage: xss },
+    );
+
+    expect(escaped).toContain(
+        '&lt;script&gt;alert(&quot;XSS&quot;)&lt;&#x2F;script&gt;',
+    );
+    expect(escaped).not.toContain('<script>alert("XSS")</script>');
+    expect(raw).toContain('<script>alert("XSS")</script>');
+});
+
+test('escapeMustacheContext escapes nested strings, arrays, and objects', () => {
+    const xss = '<script>x</script>';
+
+    expect(escapeMustacheContext({ a: xss })).toEqual({
+        a: '&lt;script&gt;x&lt;&#x2F;script&gt;',
+    });
+    expect(escapeMustacheContext({ a: [xss, 'ok', xss] })).toEqual({
+        a: [
+            '&lt;script&gt;x&lt;&#x2F;script&gt;',
+            'ok',
+            '&lt;script&gt;x&lt;&#x2F;script&gt;',
+        ],
+    });
+    expect(escapeMustacheContext({ a: { b: xss, c: [xss] } })).toEqual({
+        a: {
+            b: '&lt;script&gt;x&lt;&#x2F;script&gt;',
+            c: ['&lt;script&gt;x&lt;&#x2F;script&gt;'],
+        },
     });
 });

@@ -1,5 +1,5 @@
 import { useId, useMemo, useState, type FC, type JSX } from 'react';
-import { Link } from 'react-router';
+import { QuietLink } from 'component/common/QuietLink';
 import type { ISegment } from 'interfaces/segment';
 import {
     Accordion,
@@ -50,12 +50,8 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     padding: theme.spacing(0.5, 3, 2.5),
 }));
 
-const StyledLink = styled(Link)(({ theme }) => ({
-    textDecoration: 'none',
+const StyledLink = styled(QuietLink)(({ theme }) => ({
     paddingRight: theme.spacing(0.5),
-    '&:hover': {
-        textDecoration: 'underline',
-    },
 }));
 
 const StyledActionsContainer = styled('div')(({ theme }) => ({

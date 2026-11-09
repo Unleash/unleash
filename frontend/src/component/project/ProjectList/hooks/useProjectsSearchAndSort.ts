@@ -13,7 +13,7 @@ export const useProjectsSearchAndSort = (
         return (
             query
                 ? projects.filter((project) => regExp.test(project.name))
-                : projects
+                : [...projects]
         )
             .sort((a, b) => {
                 const aVal = `${a.name || ''}`.toLowerCase();

@@ -1,0 +1,19 @@
+language js
+
+// Flag raw MUI floating labels: a `label` attribute on a TextField/Autocomplete,
+// or an `InputLabel` (the floating label for a Select). Use the top-label wrappers
+// instead: TextField -> Input, Select+InputLabel -> GeneralSelect/SelectField,
+// Autocomplete -> AutocompleteField. Wrappers and flag-off fallbacks are exempted
+// via `overrides` in biome.json.
+or {
+    `<TextField $props />` where {
+        $props <: contains jsx_attribute(name=`label`)
+    },
+    `<TextField $props>$_</TextField>` where {
+        $props <: contains jsx_attribute(name=`label`)
+    },
+    `<InputLabel $props />`,
+    `<InputLabel $props>$_</InputLabel>`
+} as $match where {
+    register_diagnostic(span=$match, message="Floating label on a raw MUI control. Use a top-label wrapper instead: Autocomplete -> component/common/AutocompleteField/AutocompleteField | Select + InputLabel -> component/common/SelectField (or component/common/GeneralSelect/GeneralSelect) | TextField -> component/common/Input/Input", severity="warn")
+}

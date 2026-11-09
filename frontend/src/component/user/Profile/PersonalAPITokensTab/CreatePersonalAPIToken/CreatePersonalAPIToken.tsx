@@ -114,7 +114,7 @@ export const CreatePersonalAPIToken: FC<ICreatePersonalAPITokenProps> = ({
         >
             <FormTemplate
                 loading={loading}
-                modal
+                layout='modal'
                 title='Create personal API token'
                 description='Use personal API tokens to authenticate to the Unleash API as
                 yourself. A personal API token has the same access privileges as

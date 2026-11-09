@@ -3,9 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { EventSchemaDataAnyOf } from './eventSchemaDataAnyOf.ts';
 
 /**
  * Extra associated data related to the event, such as feature flag state, segment configuration, etc., if applicable.
  * @nullable
  */
-export type EventSchemaData = { [key: string]: unknown } | null;
+export type EventSchemaData = EventSchemaDataAnyOf | null;

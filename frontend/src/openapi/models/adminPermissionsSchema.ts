@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AdminPermissionsSchemaPermissions } from './adminPermissionsSchemaPermissions';
-import type { AdminPermissionsSchemaVersion } from './adminPermissionsSchemaVersion';
+import type { AdminPermissionsSchemaPermissions } from './adminPermissionsSchemaPermissions.ts';
+import type { AdminPermissionsSchemaVersion } from './adminPermissionsSchemaVersion.ts';
 
 /**
  * What kind of permissions are available

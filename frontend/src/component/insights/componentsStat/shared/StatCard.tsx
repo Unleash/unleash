@@ -4,7 +4,7 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import Lightbulb from '@mui/icons-material/LightbulbOutlined';
 import { StatsExplanation } from 'component/insights/InsightsCharts.styles';
-import { Link } from 'react-router';
+import { QuietLink } from 'component/common/QuietLink';
 
 const StyledRatioContainer = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation1,
@@ -31,12 +31,8 @@ const StyledInfoIcon = styled(InfoOutlined)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const StyledLink = styled(Link)(({ theme }) => ({
+const StyledLink = styled(QuietLink)(({ theme }) => ({
     color: theme.palette.primary.main,
-    textDecoration: 'none',
-    '&:hover': {
-        textDecoration: 'underline',
-    },
     fontSize: theme.spacing(1.75),
 }));
 

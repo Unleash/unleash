@@ -10,7 +10,6 @@
 export type FeatureSearchResponseSchemaLifecycleStage =
     (typeof FeatureSearchResponseSchemaLifecycleStage)[keyof typeof FeatureSearchResponseSchemaLifecycleStage];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const FeatureSearchResponseSchemaLifecycleStage = {
     initial: 'initial',
     'pre-live': 'pre-live',

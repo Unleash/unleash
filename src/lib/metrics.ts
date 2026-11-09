@@ -120,6 +120,10 @@ export function registerPrometheusMetrics(
     const { eventStore, environmentStore } = stores;
     const { flagResolver } = config;
     const dbMetrics = new DbMetricsMonitor(config);
+    const featureLabel = (feature: string): string =>
+        flagResolver.isEnabled('redactFeatureLabelInMetrics')
+            ? 'redacted'
+            : feature;
 
     const cachedEnvironments: () => Promise<IEnvironment[]> = memoizee(
         async () => environmentStore.getAll(),
@@ -137,6 +141,13 @@ export function registerPrometheusMetrics(
         maxAgeSeconds: 600,
         ageBuckets: 5,
     });
+    const sdkRequestDuration = createHistogram({
+        name: 'http_sdk_request_duration_milliseconds',
+        help: 'Client and Frontend API response time',
+        labelNames: ['path', 'method', 'status'],
+        buckets: [1, 5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000],
+    });
+    const baseUriPath = config.server.baseUriPath || '';
     const schedulerDuration = createSummary({
         name: 'scheduler_duration_seconds',
         help: 'Scheduler duration time',
@@ -201,7 +212,7 @@ export function registerPrometheusMetrics(
             value: result.count,
             labels: {
                 environment: result.environment,
-                feature: result.feature,
+                feature: featureLabel(result.feature),
             },
         }),
     });
@@ -214,7 +225,7 @@ export function registerPrometheusMetrics(
             stores.featureStrategiesReadModel.getMaxFeatureStrategies(),
         map: (result) => ({
             value: result.count,
-            labels: { feature: result.feature },
+            labels: { feature: featureLabel(result.feature) },
         }),
     });
 
@@ -227,7 +238,7 @@ export function registerPrometheusMetrics(
             value: result.count,
             labels: {
                 environment: result.environment,
-                feature: result.feature,
+                feature: featureLabel(result.feature),
             },
         }),
     });
@@ -242,7 +253,7 @@ export function registerPrometheusMetrics(
             value: result.count,
             labels: {
                 environment: result.environment,
-                feature: result.feature,
+                feature: featureLabel(result.feature),
             },
         }),
     });
@@ -250,7 +261,7 @@ export function registerPrometheusMetrics(
     dbMetrics.registerGaugeDbMetric({
         name: 'largest_project_environment_size',
         help: 'The largest project environment size (bytes) based on strategies, constraints, variants and parameters',
-        labelNames: ['project', 'environment'],
+        labelNames: ['environment'],
         query: () =>
             stores.largestResourcesReadModel.getLargestProjectEnvironments(1),
         map: (results) => {
@@ -258,7 +269,6 @@ export function registerPrometheusMetrics(
             return {
                 value: result.size,
                 labels: {
-                    project: result.project,
                     environment: result.environment,
                 },
             };
@@ -275,7 +285,7 @@ export function registerPrometheusMetrics(
             return {
                 value: result.size,
                 labels: {
-                    feature: result.feature,
+                    feature: featureLabel(result.feature),
                     environment: result.environment,
                 },
             };
@@ -503,6 +513,8 @@ export function registerPrometheusMetrics(
             'platform_version',
             'yggdrasil_version',
             'spec_version',
+            'sdk_flavor_name',
+            'sdk_flavor_version',
         ],
     });
 
@@ -571,11 +583,16 @@ export function registerPrometheusMetrics(
         .set(config.rateLimiting.passwordResetMaxPerMinute);
     rateLimits
         .labels({
+            endpoint: '/feedback',
+            method: 'POST',
+        })
+        .set(config.rateLimiting.feedbackMaxPerMinute);
+    rateLimits
+        .labels({
             endpoint: '/api/signal-endpoint/:name',
             method: 'POST',
         })
         .set(config.rateLimiting.callSignalEndpointMaxPerSecond * 60);
-
     const namePrefixUsed = createCounter({
         name: 'nameprefix_count',
         help: 'Count of nameprefix usage in client api',
@@ -605,6 +622,14 @@ export function registerPrometheusMetrics(
     tagsDistinct.set(0);
     projectDistinct.set(0);
 
+    // ── API token cache ──────────────────────────────────────────────────
+    // One counter, labelled `cache` so v1 and v2 stay comparable.
+    //
+    const tokenCacheLookupTotal = createCounter({
+        name: 'token_cache_lookup_total',
+        help: 'API token resolution attempts by cache and outcome. `hit` was served from the in-memory cache, `miss` reached the store, `throttled` was suppressed by the negative cache.',
+        labelNames: ['cache', 'result'],
+    });
     const featureCreatedByMigration = createCounter({
         name: 'feature_created_by_migration_count',
         help: 'Feature createdBy migration count',
@@ -627,21 +652,6 @@ export function registerPrometheusMetrics(
     });
 
     dbMetrics.registerGaugeDbMetric({
-        name: 'feature_lifecycle_stage_duration',
-        labelNames: ['stage', 'project_id'],
-        help: 'Duration of feature lifecycle stages',
-        query: () => stores.featureLifecycleReadModel.getAllWithStageDuration(),
-        map: (result) =>
-            result.map((stageResult) => ({
-                value: stageResult.duration,
-                labels: {
-                    project_id: stageResult.project,
-                    stage: stageResult.stage,
-                },
-            })),
-    });
-
-    dbMetrics.registerGaugeDbMetric({
         name: 'onboarding_duration',
         labelNames: ['event'],
         help: 'firstLogin, secondLogin, firstFeatureFlag, firstPreLive, firstLive from first user creation',
@@ -655,41 +665,6 @@ export function registerPrometheusMetrics(
                         event: key,
                     },
                 })),
-    });
-
-    dbMetrics.registerGaugeDbMetric({
-        name: 'project_onboarding_duration',
-        labelNames: ['event', 'project'],
-        help: 'firstFeatureFlag, firstPreLive, firstLive from project creation',
-        query: () => stores.onboardingReadModel.getProjectsOnboardingMetrics(),
-        map: (projectsOnboardingMetrics) =>
-            projectsOnboardingMetrics.flatMap(
-                ({ project, ...projectMetrics }) =>
-                    Object.keys(projectMetrics)
-                        .filter((key) => Number.isInteger(projectMetrics[key]))
-                        .map((key) => ({
-                            value: projectMetrics[key],
-                            labels: {
-                                event: key,
-                                project,
-                            },
-                        })),
-            ),
-    });
-
-    dbMetrics.registerGaugeDbMetric({
-        name: 'feature_lifecycle_stage_count_by_project',
-        help: 'Count features in a given stage by project id',
-        labelNames: ['stage', 'project_id'],
-        query: () => stores.featureLifecycleReadModel.getStageCountByProject(),
-        map: (result) =>
-            result.map((stageResult) => ({
-                value: stageResult.count,
-                labels: {
-                    project_id: stageResult.project,
-                    stage: stageResult.stage,
-                },
-            })),
     });
 
     dbMetrics.registerGaugeDbMetric({
@@ -722,8 +697,7 @@ export function registerPrometheusMetrics(
 
     const projectEnvironmentsDisabled = createCounter({
         name: 'project_environments_disabled',
-        help: 'How many "environment disabled" events we have received for each project',
-        labelNames: ['project_id'],
+        help: 'How many "environment disabled" events we have received',
     });
 
     const orphanedTokensTotal = createGauge({
@@ -756,6 +730,12 @@ export function registerPrometheusMetrics(
         name: 'request_origin_counter',
         help: 'Number of authenticated requests, including origin information.',
         labelNames: ['type', 'method', 'source'],
+    });
+
+    const eventStoreWrites = createCounter({
+        name: 'event_store_writes_total',
+        help: 'Event writes attempted by the event store, by event type and whether the write ran inside a transaction.',
+        labelNames: ['type', 'transaction'],
     });
 
     const resourceLimit = createGauge({
@@ -823,6 +803,22 @@ export function registerPrometheusMetrics(
                     appName,
                 })
                 .observe(time);
+            const normalizedPath =
+                baseUriPath && path?.startsWith(baseUriPath)
+                    ? path.slice(baseUriPath.length)
+                    : path;
+            if (
+                normalizedPath?.startsWith('/api/client') ||
+                normalizedPath?.startsWith('/api/frontend')
+            ) {
+                sdkRequestDuration
+                    .labels({
+                        path: normalizedPath,
+                        method,
+                        status: statusCode,
+                    })
+                    .observe(time);
+            }
             config.flagResolver.impactMetrics?.incrementCounter(
                 impactMetrics.REQUEST_COUNT,
                 1,
@@ -850,6 +846,10 @@ export function registerPrometheusMetrics(
                 className,
             })
             .observe(time);
+    });
+
+    eventBus.on(events.TOKEN_CACHE_LOOKUP, ({ cache, result }) => {
+        tokenCacheLookupTotal.increment({ cache, result });
     });
 
     eventBus.on(events.EVENTS_CREATED_BY_PROCESSED, ({ updated }) => {
@@ -938,6 +938,14 @@ export function registerPrometheusMetrics(
                 method,
                 source: source || 'unknown',
             });
+        },
+    );
+
+    events.onMetricEvent(
+        eventBus,
+        events.EVENT_STORE_WRITE,
+        ({ type, transaction }) => {
+            eventStoreWrites.increment({ type, transaction });
         },
     );
 
@@ -1182,6 +1190,10 @@ export function registerPrometheusMetrics(
                 yggdrasil_version:
                     heartbeatEvent.metadata?.yggdrasilVersion ?? 'not-set',
                 spec_version: heartbeatEvent.metadata?.specVersion ?? 'not-set',
+                sdk_flavor_name:
+                    heartbeatEvent.metadata?.sdkFlavor ?? 'not-set',
+                sdk_flavor_version:
+                    heartbeatEvent.metadata?.sdkFlavorVersion ?? 'not-set',
             });
         } else {
             clientSdkVersionUsage.increment({
@@ -1191,12 +1203,16 @@ export function registerPrometheusMetrics(
                 platform_version: 'not-set',
                 yggdrasil_version: 'not-set',
                 spec_version: 'not-set',
+                sdk_flavor_name:
+                    heartbeatEvent.metadata?.sdkFlavor ?? 'not-set',
+                sdk_flavor_version:
+                    heartbeatEvent.metadata?.sdkFlavorVersion ?? 'not-set',
             });
         }
     });
 
-    eventStore.on(PROJECT_ENVIRONMENT_REMOVED, ({ project }) => {
-        projectEnvironmentsDisabled.increment({ project_id: project });
+    eventStore.on(PROJECT_ENVIRONMENT_REMOVED, () => {
+        projectEnvironmentsDisabled.inc();
     });
 
     eventBus.on(events.ADDON_EVENTS_HANDLED, ({ result, destination }) => {
@@ -1336,8 +1352,7 @@ export default class MetricsMonitor {
             'collectStaticCounters',
         );
         await schedulerService.schedule(
-            async () =>
-                this.registerPoolMetrics.bind(this, db.client.pool, eventBus),
+            async () => this.registerPoolMetrics(db.client.pool, eventBus),
             minutesToMilliseconds(1),
             'registerPoolMetrics',
         );

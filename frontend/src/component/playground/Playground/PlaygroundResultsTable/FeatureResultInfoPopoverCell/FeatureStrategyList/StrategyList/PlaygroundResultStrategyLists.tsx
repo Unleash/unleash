@@ -14,6 +14,7 @@ interface PlaygroundResultStrategyListProps {
     input?: PlaygroundRequestSchema;
     titlePrefix?: 'Enabled' | 'Disabled';
     infoText?: string;
+    className?: string;
 }
 const StyledHeaderGroup = styled('hgroup')(({ theme }) => ({
     paddingBottom: theme.spacing(2),
@@ -43,6 +44,7 @@ export const PlaygroundResultStrategyLists = ({
     input,
     titlePrefix,
     infoText,
+    className,
 }: PlaygroundResultStrategyListProps) => {
     if (strategies.length === 0) {
         return null;
@@ -62,7 +64,7 @@ export const PlaygroundResultStrategyLists = ({
                     </StyledListTitleDescription>
                 ) : null}
             </StyledHeaderGroup>
-            <StyledStrategyList>
+            <StyledStrategyList className={className}>
                 {strategies?.map((strategy, index) => (
                     <StrategyListItem key={strategy.id}>
                         {index > 0 ? <StrategySeparator /> : ''}

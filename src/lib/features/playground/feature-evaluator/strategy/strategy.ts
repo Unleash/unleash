@@ -1,149 +1,76 @@
+import type { Context, Strategy as SdkStrategy } from 'unleash-client';
+import type { VariantDefinition } from 'unleash-client/lib/variant.js';
 import type { PlaygroundConstraintSchema } from '../../../../openapi/spec/playground-constraint-schema.js';
 import type { PlaygroundSegmentSchema } from '../../../../openapi/spec/playground-segment-schema.js';
 import type { StrategyEvaluationResult } from '../client.js';
-import { type Constraint, operators } from '../constraint.js';
-import type { Context } from '../context.js';
-import { selectVariantDefinition, type VariantDefinition } from '../variant.js';
+import type { Constraint, Segment } from '../feature.js';
 
-export type SegmentForEvaluation = {
-    name: string;
-    id: number;
+export type StrategyEvaluationInput = {
+    parameters: Record<string, unknown>;
+    context: Context;
     constraints: Constraint[];
+    segments: Segment[];
+    disabled?: boolean;
+    variants?: VariantDefinition[];
 };
 
-export interface StrategyTransportInterface {
-    name: string;
-    title?: string;
-    disabled?: boolean;
-    parameters: any;
-    constraints: Constraint[];
-    variants?: VariantDefinition[];
-    segments?: number[];
-    id?: string;
-}
+/**
+ * Wraps a Node SDK strategy. The SDK decides whether each constraint
+ * matches and whether the strategy is enabled; this class only records
+ * those decisions per constraint and per segment so the playground can
+ * show them.
+ */
+export class StrategyExplainer {
+    constructor(protected readonly sdkStrategy: SdkStrategy) {}
 
-export interface Segment {
-    id: number;
-    name: string;
-    description?: string;
-    constraints: Constraint[];
-    createdBy: string;
-    createdAt: string;
-}
-
-export class Strategy {
-    public name: string;
-
-    private returnValue: boolean;
-
-    constructor(name: string, returnValue: boolean = false) {
-        this.name = name || 'unknown';
-        this.returnValue = returnValue;
+    get name(): string {
+        return this.sdkStrategy.name;
     }
 
-    checkConstraint(constraint: Constraint, context: Context): boolean {
-        const evaluator = operators.get(constraint.operator);
-
-        if (!evaluator) {
-            return false;
-        }
-
-        if (constraint.inverted) {
-            return !evaluator(constraint, context);
-        }
-
-        return evaluator(constraint, context);
-    }
-
-    checkConstraints(
+    protected explainConstraints(
         context: Context,
-        constraints?: Iterable<Constraint>,
+        constraints: Constraint[],
     ): { result: boolean; constraints: PlaygroundConstraintSchema[] } {
-        if (!constraints) {
-            return {
-                result: true,
-                constraints: [],
-            };
-        }
-
-        const mappedConstraints: PlaygroundConstraintSchema[] = [];
-        for (const constraint of constraints) {
-            if (constraint) {
-                mappedConstraints.push({
-                    ...constraint,
-                    value: constraint?.value?.toString() ?? undefined,
-                    result: this.checkConstraint(constraint, context),
-                });
-            }
-        }
-
-        const result = mappedConstraints.every(
-            (constraint) => constraint.result,
-        );
+        const explained = constraints.map((constraint) => ({
+            ...constraint,
+            value: constraint.value?.toString() ?? undefined,
+            result: this.sdkStrategy.checkConstraint(constraint, context),
+        }));
 
         return {
-            result,
-            constraints: mappedConstraints,
+            result: explained.every((constraint) => constraint.result),
+            constraints: explained,
         };
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    isEnabled(_parameters: unknown, _context: Context): boolean {
-        return this.returnValue;
-    }
-
-    checkSegments(
+    protected explainSegments(
         context: Context,
-        segments: SegmentForEvaluation[],
+        segments: Segment[],
     ): { result: boolean; segments: PlaygroundSegmentSchema[] } {
-        const resolvedSegments = segments.map((segment) => {
-            const { result, constraints } = this.checkConstraints(
+        const explained = segments.map((segment) => {
+            const { result, constraints } = this.explainConstraints(
                 context,
                 segment.constraints,
             );
-            return {
-                name: segment.name,
-                id: segment.id,
-                result,
-                constraints,
-            };
+            return { name: segment.name, id: segment.id, result, constraints };
         });
 
         return {
-            result: resolvedSegments.every((segment) => segment.result),
-            segments: resolvedSegments,
+            result: explained.every((segment) => segment.result),
+            segments: explained,
         };
     }
 
-    isEnabledWithConstraints(
-        parameters: Record<string, unknown>,
-        context: Context,
-        constraints: Iterable<Constraint>,
-        segments: Array<SegmentForEvaluation>,
-        disabled?: boolean,
-        variantDefinitions?: VariantDefinition[],
-    ): StrategyEvaluationResult {
-        const constraintResults = this.checkConstraints(context, constraints);
-        const enabledResult = this.isEnabled(parameters, context);
-        const segmentResults = this.checkSegments(context, segments);
-
-        const overallResult =
-            constraintResults.result && enabledResult && segmentResults.result;
-
-        const variantDefinition = variantDefinitions
-            ? selectVariantDefinition(
-                  parameters.groupId as string,
-                  variantDefinitions,
-                  context,
-              )
-            : undefined;
-        const variant = variantDefinition
-            ? {
-                  name: variantDefinition.name,
-                  enabled: true,
-                  payload: variantDefinition.payload,
-              }
-            : undefined;
+    explain({
+        parameters,
+        context,
+        constraints,
+        segments,
+        disabled,
+        variants,
+    }: StrategyEvaluationInput): StrategyEvaluationResult {
+        const constraintResults = this.explainConstraints(context, constraints);
+        const segmentResults = this.explainSegments(context, segments);
 
         if (disabled) {
             return {
@@ -156,12 +83,26 @@ export class Strategy {
             };
         }
 
+        const allConstraints = [
+            ...constraints,
+            ...segments.flatMap((segment) => segment.constraints),
+        ];
+        const sdkResult = this.sdkStrategy.getResult(
+            parameters,
+            context,
+            allConstraints.values(),
+            variants,
+        );
+
         return {
             result: {
-                enabled: overallResult,
+                enabled: sdkResult.enabled,
                 evaluationStatus: 'complete',
-                variant,
-                variants: variant ? variantDefinitions : undefined,
+                variant: sdkResult.enabled ? sdkResult.variant : undefined,
+                variants:
+                    sdkResult.enabled && sdkResult.variant
+                        ? variants
+                        : undefined,
             },
             constraints: constraintResults.constraints,
             segments: segmentResults.segments,

@@ -6,7 +6,7 @@ export const inactiveUsersSchema = {
     type: 'object',
     additionalProperties: false,
     description: 'A list of users that has been flagged as inactive',
-    required: ['version', 'inactiveUsers'],
+    required: ['version', 'inactiveUsers', 'totalInactiveUsers'],
     properties: {
         version: {
             description:
@@ -21,6 +21,11 @@ export const inactiveUsersSchema = {
             items: {
                 $ref: '#/components/schemas/inactiveUserSchema',
             },
+        },
+        totalInactiveUsers: {
+            description: 'The total number of inactive users',
+            type: 'integer',
+            example: 10,
         },
     },
     components: {

@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestSearchItemSchemaOneOfFourCreatedBy } from './changeRequestSearchItemSchemaOneOfFourCreatedBy';
-import type { ChangeRequestScheduleSchema } from './changeRequestScheduleSchema';
-import type { ChangeRequestSearchItemSchemaOneOfFourState } from './changeRequestSearchItemSchemaOneOfFourState';
+import type { ChangeRequestScheduleSchema } from './changeRequestScheduleSchema.ts';
+import type { ChangeRequestSearchItemSchemaOneOfFourCreatedBy } from './changeRequestSearchItemSchemaOneOfFourCreatedBy.ts';
+import type { ChangeRequestSearchItemSchemaOneOfFourState } from './changeRequestSearchItemSchemaOneOfFourState.ts';
 
 export type ChangeRequestSearchItemSchemaOneOfFour = {
     /** Date and time when the change request was created. */

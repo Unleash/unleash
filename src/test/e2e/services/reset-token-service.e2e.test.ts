@@ -167,3 +167,54 @@ test('Retrieving valid invitation links should retrieve an object with userid ke
     );
     expect(activeInvitations[userIdToCreateResetFor]).toBeTruthy();
 });
+
+test('Concurrent useAccessToken allows exactly one success', async () => {
+    const token = await resetTokenService.createToken(
+        userIdToCreateResetFor,
+        adminUser.username!,
+    );
+
+    const results = await Promise.all(
+        Array.from({ length: 20 }, () =>
+            resetTokenService.useAccessToken({
+                userId: token.userId,
+                token: token.token,
+            }),
+        ),
+    );
+
+    expect(results.filter(Boolean)).toHaveLength(1);
+});
+
+test('Concurrent resetPassword allows exactly one success', async () => {
+    const resetUser = await userService.createUser(
+        {
+            username: 'concurrent-reset-user',
+            email: 'concurrent-reset@example.com',
+            rootRole: 2,
+        },
+        TEST_AUDIT_USER,
+    );
+    const token = await resetTokenService.createToken(
+        resetUser.id,
+        adminUser.username!,
+    );
+    const passwords = Array.from(
+        { length: 10 },
+        (_, i) => `Str0ng!Pass${i}Aa1`,
+    );
+
+    const results = await Promise.allSettled(
+        passwords.map((password) =>
+            userService.resetPassword(token.token, password),
+        ),
+    );
+
+    expect(results.filter((r) => r.status === 'fulfilled')).toHaveLength(1);
+    expect(results.filter((r) => r.status === 'rejected')).toHaveLength(9);
+
+    const winnerIndex = results.findIndex((r) => r.status === 'fulfilled');
+    await expect(
+        userService.loginUser(resetUser.email!, passwords[winnerIndex]),
+    ).resolves.toBeTruthy();
+});

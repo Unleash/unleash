@@ -44,6 +44,7 @@ The frontend is a React SPA communicating with the backend via REST API.
 - **Mutations**: `useApi` hook for POST/PUT/DELETE with error handling
 - **Route gating**: Routes support `flag`, `enterprise`, and `configFlag` properties
 - **Styling**: MUI `styled()` components with emotion, use `sx` for one-offs
+- **Tracking**: user journeys are tracked using the `useTracking` hook with a `Tracking` object declared in a `<domain>Tracking.ts` file. Never call `trackEvent` directly. Decisions are in `/contributing/ADRs/front-end/tracking.md`. The how-to is in the comments on the types in `/frontend/src/utils/trackingEvents.ts`, on `useTracking` and on the `tracking` prop of `Dialogue`. Read those before adding tracking and adhere to the tracking standards.
 
 **Stack**: React 18+, Vite, Material-UI (MUI), SWR for server state
 

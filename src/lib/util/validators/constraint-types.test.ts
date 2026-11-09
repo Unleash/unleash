@@ -2,6 +2,7 @@ import {
     validateSemver,
     validateLegalValues,
     validateRegex,
+    validateCidr,
 } from './constraint-types.js';
 import type { ILegalValue } from '../../features/context/context-field-store-type.js';
 
@@ -35,6 +36,12 @@ test('semver valdiation should pass with correct format', () => {
             `the provided value is not a valid semver format. The value provided was: ${validSemver}`,
         );
     }
+});
+
+test('semver validation should pass with build metadata and prerelease', () => {
+    expect(() => validateSemver('1.2.3+4000')).not.toThrow();
+    expect(() => validateSemver('1.2.3-beta.1')).not.toThrow();
+    expect(() => validateSemver('1.2.3-beta.1+build.5')).not.toThrow();
 });
 
 test('semver validation should fail partial semver', () => {
@@ -169,4 +176,27 @@ test('regex validation should not throw when inverted is undefined', () => {
     const goodRegex = '^[a-zA-Z0-9]+$';
 
     expect(() => validateRegex(goodRegex, undefined)).not.toThrow();
+});
+
+test('cidr validation accepts exact IPs and CIDR ranges in both IP versions', () => {
+    expect(() =>
+        validateCidr([
+            '127.0.0.1',
+            '10.0.0.0/8',
+            '2001:db8::1',
+            '2001:db8::/32',
+        ]),
+    ).not.toThrow();
+});
+
+test('cidr validation names every value that is neither an IP nor a CIDR range', () => {
+    expect(() => validateCidr(['10.0.0.0/8', 'office', '10.0.0.0/33'])).toThrow(
+        'the provided values are not valid IP addresses or CIDR ranges: office, 10.0.0.0/33',
+    );
+});
+
+test('cidr validation rejects an empty list', () => {
+    expect(() => validateCidr([])).toThrow(
+        'the provided values must be a non-empty list of IP addresses or CIDR ranges.',
+    );
 });

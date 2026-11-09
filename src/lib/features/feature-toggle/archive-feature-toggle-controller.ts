@@ -2,7 +2,6 @@ import type { Response } from 'express';
 import type { IUnleashConfig } from '../../types/option.js';
 import type { IUnleashServices } from '../../services/index.js';
 import Controller from '../../routes/controller.js';
-import { extractUsername } from '../../util/extract-user.js';
 import { DELETE_FEATURE, UPDATE_FEATURE } from '../../types/permissions.js';
 import type { FeatureToggleService } from './feature-toggle-service.js';
 import type { IAuthRequest } from '../../routes/unleash-types.js';
@@ -14,7 +13,6 @@ import {
 import type { WithTransactional } from '../../db/transaction.js';
 
 export default class ArchiveController extends Controller {
-    private featureService: FeatureToggleService;
     private transactionalFeatureToggleService: WithTransactional<FeatureToggleService>;
     private openApiService: OpenApiService;
 
@@ -22,17 +20,13 @@ export default class ArchiveController extends Controller {
         config: IUnleashConfig,
         {
             transactionalFeatureToggleService,
-            featureToggleService,
             openApiService,
         }: Pick<
             IUnleashServices,
-            | 'transactionalFeatureToggleService'
-            | 'featureToggleService'
-            | 'openApiService'
+            'transactionalFeatureToggleService' | 'openApiService'
         >,
     ) {
         super(config);
-        this.featureService = featureToggleService;
         this.openApiService = openApiService;
         this.transactionalFeatureToggleService =
             transactionalFeatureToggleService;
@@ -47,8 +41,8 @@ export default class ArchiveController extends Controller {
                 openApiService.validPath({
                     tags: ['Archive'],
                     description:
-                        'This endpoint archives the specified feature.',
-                    summary: 'Archives a feature',
+                        'This endpoint deletes the specified feature if it is archived. If the feature is not archived, it is left unchanged.',
+                    summary: 'Deletes an archived feature',
                     release: { stable: '4.13.0' },
                     operationId: 'deleteFeature',
                     responses: {
@@ -87,8 +81,18 @@ export default class ArchiveController extends Controller {
         res: Response<void>,
     ): Promise<void> {
         const { featureName } = req.params;
-        const _user = extractUsername(req);
-        await this.featureService.deleteFeature(featureName, req.audit);
+        await this.transactionalFeatureToggleService.transactional(
+            async (service) => {
+                const projectId = await service.getProjectId(featureName);
+                if (projectId) {
+                    await service.deleteFeature(
+                        featureName,
+                        projectId,
+                        req.audit,
+                    );
+                }
+            },
+        );
         res.status(200).end();
     }
 

@@ -10,7 +10,6 @@
 export type CreateStrategyVariantSchemaWeightType =
     (typeof CreateStrategyVariantSchemaWeightType)[keyof typeof CreateStrategyVariantSchemaWeightType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateStrategyVariantSchemaWeightType = {
     variable: 'variable',
     fix: 'fix',

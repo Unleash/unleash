@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ReadyCheckSchemaHealth } from './readyCheckSchemaHealth';
+import type { ReadyCheckSchemaHealth } from './readyCheckSchemaHealth.ts';
 
 /**
  * Used by service orchestrators to decide whether this Unleash instance should be considered ready to serve requests.

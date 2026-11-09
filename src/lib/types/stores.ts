@@ -13,6 +13,7 @@ import type { ITagTypeStore } from '../features/tag-type/tag-type-store-type.js'
 import type { IFeatureTagStore } from './stores/feature-tag-store.js';
 import type { IUserStore } from './stores/user-store.js';
 import type { IAddonStore } from './stores/addon-store.js';
+export type { IAddon } from './stores/addon-store.js';
 import type { IAccessStore } from './stores/access-store.js';
 import type { IApiTokenStore } from './stores/api-token-store.js';
 import type { IResetTokenStore } from './stores/reset-token-store.js';
@@ -43,7 +44,10 @@ import type { ISegmentReadModel } from '../features/segment/segment-read-model-t
 import type { IProjectOwnersReadModel } from '../features/project/project-owners-read-model.type.js';
 import type { IFeatureLifecycleStore } from '../features/feature-lifecycle/feature-lifecycle-store-type.js';
 import type { IProjectFlagCreatorsReadModel } from '../features/project/project-flag-creators-read-model.type.js';
-import type { IFeatureStrategiesReadModel } from '../features/feature-toggle/types/feature-strategies-read-model-type.js';
+import type {
+    IFeatureStrategiesReadModel,
+    StrategyVariantJsonPayload,
+} from '../features/feature-toggle/types/feature-strategies-read-model-type.js';
 import type { IFeatureLifecycleReadModel } from '../features/feature-lifecycle/feature-lifecycle-read-model-type.js';
 import type { ILargestResourcesReadModel } from '../features/metrics/sizes/largest-resources-read-model-type.js';
 import type { IntegrationEventsStore } from '../features/integration-events/integration-events-store.js';
@@ -67,12 +71,14 @@ import type { IUnknownFlagsStore } from '../features/metrics/unknown-flags/unkno
 import type { IFeatureLinksReadModel } from '../features/feature-links/feature-links-read-model-type.js';
 import type { UserUpdatesReadModel } from '../features/users/user-updates-read-model.js';
 import type { IEdgeTokenStore } from './stores/edge-store.js';
+import type { IApiTokenV2Store } from '../features/apitokensv2/api-token-v2-types.js';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
     accountStore: IAccountStore;
     addonStore: IAddonStore;
     apiTokenStore: IApiTokenStore;
+    apiTokenV2Store: IApiTokenV2Store;
     clientApplicationsStore: IClientApplicationsStore;
     clientInstanceStore: IClientInstanceStore;
     clientMetricsStoreV2: IClientMetricsStoreV2;
@@ -142,6 +148,7 @@ export {
     type IAccountStore,
     type IAddonStore,
     type IApiTokenStore,
+    type IApiTokenV2Store,
     type IClientApplicationsStore,
     type IClientInstanceStore,
     type IClientMetricsStoreV2,
@@ -182,6 +189,7 @@ export {
     type IFeatureLifecycleStore,
     type IProjectFlagCreatorsReadModel,
     type IFeatureStrategiesReadModel,
+    type StrategyVariantJsonPayload,
     type IFeatureLifecycleReadModel,
     type ILargestResourcesReadModel,
     type IFeatureCollaboratorsReadModel,

@@ -86,12 +86,29 @@ export class ResetTokenStore implements IResetTokenStore {
     async useToken(token: IResetQuery): Promise<boolean> {
         const stop = this.timer('use_token');
         try {
-            await this.db<IResetTokenTable>(TABLE)
+            const updated = await this.db<IResetTokenTable>(TABLE)
                 .update({ used_at: new Date() })
-                .where({ reset_token: token.token, user_id: token.userId });
-            return true;
+                .where({ reset_token: token.token, user_id: token.userId })
+                .whereNull('used_at')
+                .andWhere('expires_at', '>', new Date());
+            return updated > 0;
         } catch (_e) {
             return false;
+        } finally {
+            stop();
+        }
+    }
+
+    async consumeToken(token: string): Promise<number | undefined> {
+        const stop = this.timer('consume_token');
+        try {
+            const rows = await this.db<IResetTokenTable>(TABLE)
+                .update({ used_at: new Date() })
+                .where({ reset_token: token })
+                .whereNull('used_at')
+                .andWhere('expires_at', '>', new Date())
+                .returning(['user_id']);
+            return rows[0]?.user_id;
         } finally {
             stop();
         }

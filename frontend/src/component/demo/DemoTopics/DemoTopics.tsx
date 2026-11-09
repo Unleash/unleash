@@ -110,7 +110,7 @@ const StyledStep = styled('li', {
         gap: theme.spacing(1),
         backgroundColor: theme.palette.background.elevation2,
         ...(selected && {
-            backgroundColor: theme.palette.secondary.light,
+            backgroundColor: theme.palette.primary.container,
             fontWeight: theme.typography.fontWeightBold,
             outline: `1px solid ${theme.palette.primary.main}`,
         }),

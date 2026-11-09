@@ -10,7 +10,7 @@ const Chip = styled('div')(({ theme }) => ({
     transform: 'translateY(-50%)',
     lineHeight: 1,
     borderRadius: theme.shape.borderRadiusLarge,
-    backgroundColor: theme.palette.secondary.border,
+    backgroundColor: theme.palette.primary.containerBorder,
     left: theme.spacing(4),
 
     // if the strategy it's applying to is disabled

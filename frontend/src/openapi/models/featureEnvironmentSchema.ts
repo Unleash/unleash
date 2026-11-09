@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ReleasePlanSchema } from './releasePlanSchema';
-import type { FeatureEnvironmentSafeguardSchema } from './featureEnvironmentSafeguardSchema';
-import type { FeatureStrategySchema } from './featureStrategySchema';
-import type { VariantSchema } from './variantSchema';
+import type { FeatureEnvironmentSafeguardSchema } from './featureEnvironmentSafeguardSchema.ts';
+import type { FeatureStrategySchema } from './featureStrategySchema.ts';
+import type { ReleasePlanSchema } from './releasePlanSchema.ts';
+import type { VariantSchema } from './variantSchema.ts';
 
 /**
  * A detailed description of the feature environment

@@ -30,14 +30,14 @@ const ChartRow = styled('div')(({ theme }) => ({
 }));
 
 const LifecycleTile = styled('article')(({ theme }) => ({
-    background: theme.palette.background.default,
+    background: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(3),
     minWidth: 0,
 
     '.skeleton': {
         '&::after': {
-            '--base-color': theme.palette.neutral.border,
+            '--base-color': theme.palette.neutral.containerBorder,
             '--initial': 'rgb(from var(--base-color) r g b / 0)',
             '--middle': 'rgb(from var(--base-color) r g b / 0.2)',
             '--peak': 'rgb(from var(--base-color) r g b / 0.5)',
@@ -66,7 +66,7 @@ const HeaderNumber = styled('span')(({ theme }) => ({
     flexFlow: 'row nowrap',
     alignItems: 'center',
     gap: theme.spacing(2),
-    fontSize: theme.typography.h1.fontSize,
+    fontSize: theme.typography.display.fontSize,
     fontWeight: 'bold',
 }));
 

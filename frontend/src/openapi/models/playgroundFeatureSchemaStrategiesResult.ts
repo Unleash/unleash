@@ -6,9 +6,9 @@
 
 /**
  * The cumulative results of all the feature's strategies. Can be `true`,
-                                  `false`, or `unknown`.
-                                  This property will only be `unknown`
-                                  if one or more of the strategies can't be fully evaluated and the rest of the strategies
-                                  all resolve to `false`.
+ *                                   `false`, or `unknown`.
+ *                                   This property will only be `unknown`
+ *                                   if one or more of the strategies can't be fully evaluated and the rest of the strategies
+ *                                   all resolve to `false`.
  */
 export type PlaygroundFeatureSchemaStrategiesResult = boolean | 'unknown';

@@ -1,7 +1,9 @@
 import type React from 'react';
 import { useContext } from 'react';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import FormTemplate, {
+    type FormTemplateLayout,
+} from 'component/common/FormTemplate/FormTemplate';
 import {
     CREATE_SEGMENT,
     UPDATE_PROJECT_SEGMENT,
@@ -22,12 +24,15 @@ import { SEGMENT_CREATE_BTN_ID } from 'utils/testIds';
 import { useSegmentLimits } from 'hooks/api/getters/useSegmentLimits/useSegmentLimits';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
+import { useTracking } from 'hooks/useTracking';
+import { segmentTrackingProps } from 'component/segments/segmentTrackingProps';
+import { createSegmentTracking } from 'component/segments/segmentTrackingProps';
 
 interface ICreateSegmentProps {
-    modal?: boolean;
+    layout?: FormTemplateLayout;
 }
 
-export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
+export const CreateSegment = ({ layout }: ICreateSegmentProps) => {
     const projectId = useOptionalPathParam('projectId');
     const { uiConfig } = useUiConfig();
     const { setToastData, setToastApiError } = useToast();
@@ -35,6 +40,7 @@ export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
     const navigate = useNavigate();
     const { createSegment, loading } = useSegmentsApi();
     const { refetchSegments } = useSegments();
+    const trackCreateSegment = useTracking(createSegmentTracking);
 
     const {
         name,
@@ -68,8 +74,15 @@ export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         clearErrors();
+        const trackingProps = segmentTrackingProps({
+            constraints,
+            description,
+        });
         try {
-            await createSegment(getSegmentPayload());
+            await trackCreateSegment.mutation(
+                () => createSegment(getSegmentPayload()),
+                trackingProps,
+            );
             await refetchSegments();
             if (projectId) {
                 navigate(`/projects/${projectId}/settings/segments/`);
@@ -93,7 +106,7 @@ export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
     return (
         <FormTemplate
             loading={loading}
-            modal={modal}
+            layout={layout}
             title='Create segment'
             description={segmentsFormDescription}
             documentationLink={segmentsDocsLink}

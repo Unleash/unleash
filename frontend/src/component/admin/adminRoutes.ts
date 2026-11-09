@@ -59,6 +59,15 @@ export const adminRoutes: INavigationMenuItem[] = [
         },
         group: 'users',
     },
+    {
+        path: '/admin/sessions',
+        title: 'Active sessions',
+        menu: {
+            adminSettings: true,
+            mode: ['enterprise'],
+        },
+        group: 'users',
+    },
 
     // Service accounts
     {
@@ -156,7 +165,7 @@ export const adminRoutes: INavigationMenuItem[] = [
     {
         path: '/admin/remote-mcp',
         title: 'Remote MCP server',
-        menu: { adminSettings: true },
+        menu: { adminSettings: true, mode: ['enterprise'] },
     },
 
     // Impact Metrics
@@ -168,6 +177,13 @@ export const adminRoutes: INavigationMenuItem[] = [
     },
 
     // Instance configuration
+    {
+        path: '/admin/instance-name',
+        title: 'Instance name',
+        menu: { adminSettings: true },
+        deployment: 'cloud',
+        group: 'instance',
+    },
     {
         path: '/admin/maintenance',
         title: 'Maintenance',
@@ -185,6 +201,7 @@ export const adminRoutes: INavigationMenuItem[] = [
         title: 'License',
         menu: { adminSettings: true, mode: ['enterprise'] },
         flag: 'enableLicense',
+        deployment: 'self-hosted',
         group: 'instance',
     },
     {
@@ -205,6 +222,7 @@ export const adminRoutes: INavigationMenuItem[] = [
         path: '/admin/billing',
         title: 'Billing & invoices',
         menu: { adminSettings: true, billing: true },
+        deployment: 'cloud',
     },
 
     // Event log

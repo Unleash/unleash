@@ -34,6 +34,34 @@ const LOGROCKET_CONNECT_SRC = [
     'https://*.logr-in.com',
 ];
 
+const HUBSPOT_SCRIPT_SRC = [
+    'https://js.hs-scripts.com',
+    'https://js.hs-analytics.net',
+    'https://js.hs-banner.com',
+    'https://js.hsforms.net',
+    'https://js.usemessages.com',
+    'https://js.hscollectedforms.net',
+    'https://static.hsappstatic.net',
+];
+
+const HUBSPOT_CONNECT_SRC = [
+    'https://*.hubspot.com',
+    'https://api.hubapi.com',
+    'https://forms.hsforms.com',
+    'https://forms.hscollectedforms.net',
+    'https://static.hsappstatic.net',
+    'wss://*.hubspot.com',
+];
+
+const HUBSPOT_FRAME_SRC = ['https://app.hubspot.com', 'https://*.hubspot.com'];
+
+const HUBSPOT_IMG_SRC = [
+    'https://track.hubspot.com',
+    'https://*.hubspot.com',
+    'https://*.hs-analytics.net',
+    'https://*.hsforms.com',
+];
+
 const flightRecorderConnectSrc = (flightRecorderUrl?: string): string[] => {
     if (!flightRecorderUrl) {
         return [];
@@ -55,6 +83,14 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
         const logRocketConnectSrc = logRocketEnabled
             ? LOGROCKET_CONNECT_SRC
             : [];
+
+        const allowHubspotChat =
+            Boolean(config.server.hubspotPortalId) &&
+            config.ui?.billing === 'pay-as-you-go';
+        const hubspotScriptSrc = allowHubspotChat ? HUBSPOT_SCRIPT_SRC : [];
+        const hubspotConnectSrc = allowHubspotChat ? HUBSPOT_CONNECT_SRC : [];
+        const hubspotFrameSrc = allowHubspotChat ? HUBSPOT_FRAME_SRC : [];
+        const hubspotImgSrc = allowHubspotChat ? HUBSPOT_IMG_SRC : [];
         const flightRecorderVariant = config.flagResolver.getVariant(
             'flightRecorderFrontend',
         );
@@ -100,6 +136,7 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                         "'self'",
                         'cdn.getunleash.io',
                         ...logRocketScriptSrc,
+                        ...hubspotScriptSrc,
                         ...config.additionalCspAllowedDomains.scriptSrc,
                     ],
                     imgSrc: [
@@ -107,18 +144,27 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                         'data:',
                         'cdn.getunleash.io',
                         'gravatar.com',
+                        ...hubspotImgSrc,
                         ...config.additionalCspAllowedDomains.imgSrc,
                     ],
                     connectSrc: [
                         "'self'",
                         'cdn.getunleash.io',
-                        'plausible.getunleash.io',
+                        'docs.getunleash.io',
+                        'p6vyurbgg0-dsn.algolia.net',
+                        'p6vyurbgg0-1.algolianet.com',
+                        'p6vyurbgg0-2.algolianet.com',
+                        'p6vyurbgg0-3.algolianet.com',
+                        'fai.buildwithfern.com',
                         'gravatar.com',
                         'europe-west3-metrics-304612.cloudfunctions.net',
                         'app.unleash-hosted.com',
+                        '*.app.unleash-hosted.com',
                         'hosted.edge.getunleash.io',
+                        'uxtweak.unleashsandbox.com',
                         ...flightRecorderSrc,
                         ...logRocketConnectSrc,
+                        ...hubspotConnectSrc,
                         ...config.additionalCspAllowedDomains.connectSrc,
                     ],
                     workerSrc,
@@ -141,13 +187,14 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
                         'gravatar.com',
                         '*.youtube.com',
                         '*.youtube-nocookie.com',
+                        ...hubspotFrameSrc,
                         ...config.additionalCspAllowedDomains.frameSrc,
                     ],
                 },
             },
-            crossOriginEmbedderPolicy: {
-                policy: 'credentialless',
-            },
+            crossOriginEmbedderPolicy: allowHubspotChat
+                ? false
+                : { policy: 'credentialless' },
             originAgentCluster: false,
             xDnsPrefetchControl: false,
         });

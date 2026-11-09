@@ -25,4 +25,21 @@ describe('SelectSdk', () => {
 
         expect(onChange).toHaveBeenCalledWith('Go');
     });
+
+    it('keeps typed text when the parent re-renders', async () => {
+        const user = userEvent.setup();
+        const { rerender } = render(
+            <SelectSdk value='Node.js' onChange={vi.fn()} />,
+        );
+
+        const input = screen.getByRole('combobox');
+        await user.click(input);
+        await user.clear(input);
+        await user.type(input, 'Pyth');
+
+        rerender(<SelectSdk value='Node.js' onChange={vi.fn()} />);
+
+        expect(input).toHaveValue('Pyth');
+        expect(screen.getByText('Python')).toBeInTheDocument();
+    });
 });

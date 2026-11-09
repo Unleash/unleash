@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ApiTokenSchemaType } from './apiTokenSchemaType';
+import type { ApiTokenSchemaType } from './apiTokenSchemaType.ts';
 
 /**
  * An overview of an [Unleash API token](https://docs.getunleash.io/concepts/api-tokens-and-client-keys).
@@ -14,6 +14,8 @@ export interface ApiTokenSchema {
      * @nullable
      */
     alias?: string | null;
+    /** The immutable appName of the explicitly associated Application, when configured. */
+    appName?: string;
     /** When the token was created. */
     createdAt: string;
     /** The environment the token has access to. */
@@ -27,8 +29,16 @@ export interface ApiTokenSchema {
     project?: string;
     /** The list of projects this token has access to. If the token has access to specific projects they will be listed here. If the token has access to all projects it will be represented as `[*]` */
     projects: string[];
-    /** The token used for authentication. */
-    secret: string;
+    /**
+     * The token used for authentication.
+     * @nullable
+     */
+    secret?: string | null;
+    /**
+     * True if using the new api token format. This means copy token will no longer work
+     * @nullable
+     */
+    secure?: boolean | null;
     /**
      * When the token was last seen/used to authenticate with. NULL if the token has not yet been used for authentication.
      * @nullable

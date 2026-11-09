@@ -7,6 +7,7 @@ import BadDataError from '../../error/bad-data-error.js';
 import type { ILegalValue } from '../../features/context/context-field-store-type.js';
 import { parseStrictSemVer } from '../semver.js';
 import { RE2JS } from 're2js';
+import { Address4, Address6 } from 'ip-address';
 
 export const validateNumber = async (value: unknown): Promise<void> => {
     await constraintNumberTypeSchema.validateAsync(value);
@@ -45,6 +46,24 @@ export const validateRegex = (value: unknown, inverted?: unknown): void => {
 
     if (inverted === true) {
         throw new BadDataError(`REGEX operator cannot be inverted.`);
+    }
+};
+
+const isIpOrCidr = (value: string): boolean =>
+    Address4.isValid(value) || Address6.isValid(value);
+
+export const validateCidr = (values: string[]): void => {
+    if (values.length === 0) {
+        throw new BadDataError(
+            'the provided values must be a non-empty list of IP addresses or CIDR ranges.',
+        );
+    }
+
+    const invalid = values.filter((value) => !isIpOrCidr(value));
+    if (invalid.length > 0) {
+        throw new BadDataError(
+            `the provided values are not valid IP addresses or CIDR ranges: ${invalid.join(', ')}`,
+        );
     }
 };
 

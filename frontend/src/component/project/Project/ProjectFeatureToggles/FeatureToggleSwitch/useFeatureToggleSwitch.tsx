@@ -1,6 +1,7 @@
 import { type ComponentProps, useCallback, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
+import { useTracking } from 'hooks/useTracking';
 import useToast from 'hooks/useToast';
 import { useChangeRequestToggle } from 'hooks/useChangeRequestToggle';
 import { UpdateEnabledMessage } from 'component/changeRequest/ChangeRequestConfirmDialog/ChangeRequestMessages/UpdateEnabledMessage';
@@ -10,10 +11,16 @@ import {
     isProdGuardEnabled,
 } from 'component/feature/FeatureStrategy/FeatureStrategyProdGuard/FeatureStrategyProdGuard';
 import { EnableEnvironmentDialog } from './EnableEnvironmentDialog/EnableEnvironmentDialog.tsx';
+import {
+    enableStrategiesDialogTracking,
+    toggleEnvironmentTracking,
+    confirmProdGuardTracking,
+} from './toggleEnvironmentTracking';
 import type {
     OnFeatureToggleSwitchArgs,
     UseFeatureToggleSwitchType,
 } from './FeatureToggleSwitch.types';
+import type { TrackingProps } from 'utils/trackingEvents';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 type Middleware = (next: () => void) => void;
@@ -34,6 +41,7 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
     const { toggleFeatureEnvironmentOn, toggleFeatureEnvironmentOff } =
         useFeatureApi();
     const { setToastData, setToastApiError } = useToast();
+    const trackToggleEnvironment = useTracking(toggleEnvironmentTracking);
     const [prodGuardModalState, setProdGuardModalState] = useState<
         ComponentProps<typeof FeatureStrategyProdGuard>
     >({
@@ -53,7 +61,6 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
             onAddDefaultStrategy: () => {},
         });
     const {
-        pending,
         onChangeRequestToggle,
         onChangeRequestToggleClose,
         onChangeRequestToggleConfirm,
@@ -61,10 +68,24 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
     } = useChangeRequestToggle(projectId);
     const [changeRequestDialogCallback, setChangeRequestDialogCallback] =
         useState<() => void>();
+    // The change request dialog runs the request itself, so it carries the flip's props.
+    const [changeRequestTrackingProps, setChangeRequestTrackingProps] =
+        useState<TrackingProps>();
 
     const onToggle = useCallback(
         async (newState: boolean, config: OnFeatureToggleSwitchArgs) => {
             let shouldActivateDisabledStrategies = false;
+            const trackingProps = {
+                newState: newState ? 'enabled' : 'disabled',
+                environmentType: config.environmentType || 'unknown',
+                viaChangeRequest: Boolean(config.isChangeRequestEnabled),
+                hasStrategies: Boolean(config.hasStrategies),
+            };
+            // Only known once the enable-strategies gate has run.
+            const mutationProps = () => ({
+                ...trackingProps,
+                activatedDisabledStrategies: shouldActivateDisabledStrategies,
+            });
 
             const confirmProductionChanges: Middleware = (next) => {
                 if (config.isChangeRequestEnabled) {
@@ -80,6 +101,10 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                     open: true,
                     label: `${!newState ? 'Disable' : 'Enable'} Environment`,
                     loading: false,
+                    tracking: {
+                        ...confirmProdGuardTracking,
+                        props: trackingProps,
+                    },
                     onClose: () => {
                         setProdGuardModalState((prev) => ({
                             ...prev,
@@ -112,6 +137,10 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                     isOpen: true,
                     environment: config.environmentName,
                     featureId: config.featureId,
+                    tracking: {
+                        ...enableStrategiesDialogTracking,
+                        props: trackingProps,
+                    },
                     onClose: () => {
                         setEnableEnvironmentDialogState((prev) => ({
                             ...prev,
@@ -148,6 +177,7 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                     config.onRollback?.();
                 });
 
+                setChangeRequestTrackingProps(mutationProps());
                 onChangeRequestToggle(
                     config.featureId,
                     config.environmentName,
@@ -162,11 +192,15 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                 }
 
                 try {
-                    await toggleFeatureEnvironmentOn(
-                        config.projectId,
-                        config.featureId,
-                        config.environmentName,
-                        shouldActivateDisabledStrategies,
+                    await trackToggleEnvironment.mutation(
+                        () =>
+                            toggleFeatureEnvironmentOn(
+                                config.projectId,
+                                config.featureId,
+                                config.environmentName,
+                                shouldActivateDisabledStrategies,
+                            ),
+                        mutationProps(),
                     );
 
                     setToastData({
@@ -186,10 +220,14 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                 }
 
                 try {
-                    await toggleFeatureEnvironmentOff(
-                        config.projectId,
-                        config.featureId,
-                        config.environmentName,
+                    await trackToggleEnvironment.mutation(
+                        () =>
+                            toggleFeatureEnvironmentOff(
+                                config.projectId,
+                                config.featureId,
+                                config.environmentName,
+                            ),
+                        mutationProps(),
                     );
                     setToastData({
                         type: 'success',
@@ -210,7 +248,7 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                 handleToggleEnvironmentOn,
             ]);
         },
-        [setProdGuardModalState],
+        [setProdGuardModalState, trackToggleEnvironment],
     );
 
     const featureSelected = enableEnvironmentDialogState.featureId.length !== 0;
@@ -228,16 +266,20 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
             />
             <ChangeRequestDialogue
                 isOpen={changeRequestDialogDetails.isOpen}
+                tracking={{
+                    ...toggleEnvironmentTracking,
+                    props: changeRequestTrackingProps,
+                }}
                 onClose={() => {
                     changeRequestDialogCallback?.();
                     onChangeRequestToggleClose();
                 }}
                 environment={changeRequestDialogDetails?.environment}
-                disabled={pending}
                 onConfirm={() => {
                     changeRequestDialogCallback?.();
-                    onChangeRequestToggleConfirm();
+                    return onChangeRequestToggleConfirm();
                 }}
+                onError={(error) => setToastApiError(formatUnknownError(error))}
                 messageComponent={
                     <UpdateEnabledMessage
                         enabled={changeRequestDialogDetails?.enabled!}

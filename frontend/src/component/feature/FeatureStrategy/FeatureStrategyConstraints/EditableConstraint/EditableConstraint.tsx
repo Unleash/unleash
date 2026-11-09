@@ -1,6 +1,4 @@
-import { IconButton, Link, styled } from '@mui/material';
-import OpenInNew from '@mui/icons-material/OpenInNew';
-import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
+import { IconButton, styled } from '@mui/material';
 import {
     isRegexOperator,
     isStringOperator,
@@ -11,16 +9,11 @@ import { operatorsForContext } from 'utils/operatorsForContext';
 import { ConstraintOperatorSelect } from './ConstraintOperatorSelect.tsx';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import Delete from '@mui/icons-material/Delete';
-import { ValueList } from './ValueList.tsx';
-import { AddValuesChip } from './AddValuesChip.tsx';
+import type { ValueListHandle } from './ValueList.tsx';
+import { ValueListWithOverflow } from './ValueListWithOverflow.tsx';
+import { AddValueInline } from './AddValueInline.tsx';
+import { AddValueButton } from './AddValueButton.tsx';
 import { ToggleConstraintCaseSensitivity } from './ToggleConstraintCaseSensitivity.tsx';
-
-import { AddSingleValueChip } from './AddSingleValueChip.tsx';
-import { ConstraintDateInput } from './ConstraintDateInput.tsx';
-import {
-    LegalValuesSelector,
-    SingleLegalValueSelector,
-} from './LegalValuesSelector.tsx';
 import {
     type LegalValueData,
     useEditableConstraint,
@@ -28,19 +21,17 @@ import {
 import type { IConstraint } from 'interfaces/strategy';
 import {
     type EditableConstraint as EditableConstraintType,
-    isDateConstraint,
+    isCidrConstraint,
     isMultiValueConstraint,
-    isNumberConstraint,
-    isRegexConstraint,
-    isSemVerConstraint,
-    isSingleValueConstraint,
 } from './useEditableConstraint/editable-constraint-type.ts';
 import type { ConstraintValidationResult } from './useEditableConstraint/constraint-validator.ts';
 import { createContextFieldOptions } from './createContextFieldOptions.ts';
+import { ContextFieldSelect } from './ContextFieldSelect.tsx';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
-import { AddRegexValueChip } from './AddRegexValueChip.tsx';
-import { ToggleConstraintInverted } from './ToggleConstraintInverted.tsx';
-import { AddRegexValueEditor } from './AddRegexValueEditor/AddRegexValueEditor.tsx';
+import { formatTargetRange } from './CidrTargetRange.tsx';
+import { getTargetRange } from './useEditableConstraint/ip-address.ts';
+import { formatConstraintValue } from 'utils/formatConstraintValue';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 
 const invertedDisabledMessages: Partial<Record<Operator, string>> = {
     REGEX: 'The REGEX operator does not support inversion',
@@ -58,10 +49,8 @@ const getInvertedDisabledText = (
 };
 
 const Container = styled('article')(({ theme }) => ({
-    '--padding': theme.spacing(2),
+    '--padding': theme.spacing(2, 0),
     backgroundColor: theme.palette.background.paper,
-    borderRadius: theme.shape.borderRadiusLarge,
-    border: `1px solid ${theme.palette.divider}`,
 }));
 
 const TopRow = styled('div')(({ theme }) => ({
@@ -93,40 +82,9 @@ const ConstraintDetails = styled('div')(({ theme }) => ({
     height: 'min-content',
 }));
 
-const LegalValuesContainer = styled('div')(({ theme }) => ({
-    padding: 'var(--padding)',
-    borderTop: `1px dashed ${theme.palette.divider}`,
-}));
-
-const StyledSelect = styled(GeneralSelect)(({ theme }) => ({
-    fieldset: { border: 'none', borderRadius: 0 },
-    maxWidth: '25ch',
-    minWidth: '7ch',
-    ':focus-within .MuiSelect-select': {
-        background: 'none',
-    },
-    ':focus-within fieldset': { borderBottomStyle: 'solid' },
-    '.MuiInputLabel-root + &': {
-        // mui adds a margin top to 'standard' selects with labels
-        margin: 0,
-    },
-    '&::before': {
-        borderColor: theme.palette.divider,
-    },
-    '&&:hover::before': {
-        borderColor: theme.palette.primary.main,
-    },
-}));
-
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
     position: 'absolute',
     right: theme.spacing(1),
-}));
-
-const StyledHelpLink = styled(Link)(({ theme }) => ({
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: 0.25,
 }));
 
 const ButtonPlaceholder = styled('div')(({ theme }) => ({
@@ -139,140 +97,92 @@ const ButtonPlaceholder = styled('div')(({ theme }) => ({
 
 const TopRowInput: FC<{
     addValues: (value: string | string[]) => void;
-    clearValues: () => void;
     localConstraint: EditableConstraintType;
-    validator: (value: string) => ConstraintValidationResult;
-    addValuesButtonRef: React.RefObject<HTMLDivElement | null>;
+    validator: (...values: string[]) => ConstraintValidationResult;
+    addValuesButtonRef: React.RefObject<HTMLButtonElement | null>;
+    valueListRef: React.RefObject<ValueListHandle | null>;
     editingOpen: boolean;
     setEditingOpen: (open: boolean) => void;
+    toggleValue: (value: string) => void;
+    selectedValues: Set<string>;
+    legalValueData?: LegalValueData;
 }> = ({
     addValues,
-    clearValues,
     localConstraint,
     validator,
     addValuesButtonRef,
-    setEditingOpen,
+    valueListRef,
     editingOpen,
+    setEditingOpen,
+    toggleValue,
+    selectedValues,
+    legalValueData,
 }) => {
-    if (isDateConstraint(localConstraint)) {
-        return (
-            <ConstraintDateInput
-                setValue={addValues}
-                value={localConstraint.value}
-                validator={validator}
-            />
-        );
-    }
-    if (isSemVerConstraint(localConstraint)) {
-        return (
-            <AddSingleValueChip
-                validator={validator}
-                onAddValue={addValues}
-                removeValue={clearValues}
-                currentValue={localConstraint.value}
-                helpText={'A semver value should be of the format X.Y.Z'}
-                inputType={'text'}
-            />
-        );
-    }
-    if (isRegexConstraint(localConstraint)) {
-        return (
-            <AddRegexValueChip
-                removeValue={clearValues}
-                currentValue={localConstraint.value}
-                validator={validator}
-                editingOpen={editingOpen}
-                setEditingOpen={setEditingOpen}
-            />
-        );
-    }
-    if (isNumberConstraint(localConstraint)) {
-        return (
-            <AddSingleValueChip
-                validator={validator}
-                onAddValue={addValues}
-                removeValue={clearValues}
-                currentValue={localConstraint.value}
-                helpText={'Add a single number'}
-                inputType={'number'}
-            />
-        );
+    const [draftValue, setDraftValue] = useState('');
+    const pendingButtonFocus = useRef(false);
+
+    useEffect(() => {
+        if (!editingOpen && pendingButtonFocus.current) {
+            pendingButtonFocus.current = false;
+            // a cancelled edit returns to the chip it was editing; otherwise
+            // (no value yet, or multi-value) the add button is still there
+            if (
+                !isMultiValueConstraint(localConstraint) &&
+                localConstraint.value
+            ) {
+                valueListRef.current?.focusValue(0);
+            } else {
+                addValuesButtonRef.current?.focus();
+            }
+        }
+    }, [editingOpen, addValuesButtonRef, valueListRef, localConstraint]);
+
+    const existingValue = !isMultiValueConstraint(localConstraint)
+        ? localConstraint.value
+        : undefined;
+    useEffect(() => {
+        if (editingOpen && existingValue) {
+            setDraftValue(existingValue);
+        }
+    }, [editingOpen, existingValue]);
+
+    if (
+        !isMultiValueConstraint(localConstraint) &&
+        localConstraint.value &&
+        !editingOpen
+    ) {
+        return null;
     }
 
-    return (
-        <AddValuesChip
+    const closeEditor = (shouldManageFocus: boolean) => {
+        if (shouldManageFocus) pendingButtonFocus.current = true;
+        setEditingOpen(false);
+    };
+
+    return editingOpen ? (
+        <AddValueInline
+            localConstraint={localConstraint}
             validator={validator}
-            helpText='Maximum 100 char length per value'
+            onAddValues={(value) => {
+                addValues(value);
+                if (!isMultiValueConstraint(localConstraint)) {
+                    closeEditor(false);
+                }
+            }}
+            value={draftValue}
+            onChange={setDraftValue}
+            onClose={closeEditor}
+            selectedValues={selectedValues}
+            toggleValue={toggleValue}
+            legalValueData={legalValueData}
+        />
+    ) : (
+        <AddValueButton
             ref={addValuesButtonRef}
-            onAddValues={addValues}
+            hasValues={selectedValues.size > 0}
+            onClick={() => setEditingOpen(true)}
         />
     );
-};
-
-const InlineEdit: FC<{
-    addValues: (value: string | string[]) => void;
-    localConstraint: EditableConstraintType;
-    editingOpen: boolean;
-    legalValueData?: LegalValueData;
-    toggleValue: (value: string) => void;
-    clearAll: () => void;
-    validator: (value: string) => ConstraintValidationResult;
-}> = ({
-    addValues,
-    localConstraint,
-    legalValueData,
-    toggleValue,
-    clearAll,
-    editingOpen,
-    validator,
-}) => {
-    if (legalValueData) {
-        return (
-            <LegalValuesContainer>
-                {isMultiValueConstraint(localConstraint) ? (
-                    <LegalValuesSelector
-                        values={localConstraint.values}
-                        toggleValue={toggleValue}
-                        clearAll={clearAll}
-                        addValues={addValues}
-                        {...legalValueData}
-                    />
-                ) : (
-                    <SingleLegalValueSelector
-                        toggleValue={toggleValue}
-                        value={localConstraint.value}
-                        {...legalValueData}
-                    />
-                )}
-            </LegalValuesContainer>
-        );
-    }
-
-    if (isRegexConstraint(localConstraint) && editingOpen) {
-        return (
-            <AddRegexValueEditor
-                initialValue={localConstraint.value}
-                caseInsensitive={Boolean(localConstraint.caseInsensitive)}
-                addValue={addValues}
-                validator={validator}
-                editingOpen={editingOpen}
-                helpText={
-                    <>
-                        A regex value should be a valid{' '}
-                        <StyledHelpLink
-                            href='https://github.com/google/re2/wiki/Syntax'
-                            target='_blank'
-                            rel='noopener noreferrer'
-                        >
-                            RE2 regular expression
-                            <OpenInNew sx={{ fontSize: 'inherit' }} />
-                        </StyledHelpLink>
-                    </>
-                }
-            />
-        );
-    }
-    return null;
 };
 
 type Props = {
@@ -291,42 +201,64 @@ export const EditableConstraint: FC<Props> = ({
         updateConstraint,
         validator,
         legalValueData,
+        selectedValues,
         invertedDisabled,
     } = useEditableConstraint(constraint, onUpdate);
-    let editingShouldBeOpen = false;
-    if (
-        isSingleValueConstraint(localConstraint) &&
-        isRegexConstraint(localConstraint)
-    ) {
-        const [isValid] = localConstraint.value
-            ? validator(localConstraint.value)
-            : [true];
-        editingShouldBeOpen = !localConstraint.value || !isValid;
-    }
-    const [editingOpen, setEditingOpen] = useState(editingShouldBeOpen);
-    useEffect(() => {
-        // open the editor when regex value is empty or invalid,
-        // even if it was closed before by the user
-        if (editingShouldBeOpen) setEditingOpen(true);
-    }, [editingShouldBeOpen]);
+    const [editingOpen, setEditingOpen] = useState(false);
+
+    const valueListRef = useRef<ValueListHandle>(null);
+    const addValuesButtonRef = useRef<HTMLButtonElement>(null);
+    const deleteButtonRef = useRef<HTMLButtonElement>(null);
+    const pendingValueFocus = useRef(false);
+    const hasSingleValue =
+        !isMultiValueConstraint(localConstraint) &&
+        Boolean(localConstraint.value);
+    const singleValue = !isMultiValueConstraint(localConstraint)
+        ? localConstraint.value
+        : undefined;
 
     const addValues = useCallback(
-        (value: string | string[]) =>
-            updateConstraint({ type: 'add value(s)', payload: value }),
-        [updateConstraint],
+        (value: string | string[]) => {
+            updateConstraint({ type: 'add value(s)', payload: value });
+            if (!isMultiValueConstraint(localConstraint)) {
+                pendingValueFocus.current = true;
+            }
+        },
+        [updateConstraint, localConstraint],
     );
+
+    useEffect(() => {
+        if (!pendingValueFocus.current) return;
+        pendingValueFocus.current = false;
+        if (singleValue) {
+            valueListRef.current?.focusValue(0);
+        }
+    }, [singleValue]);
+
+    // The add button may not be mounted yet (e.g. single-value constraints)
+    const pendingDeleteFocus = useRef(false);
+
+    useEffect(() => {
+        if (!pendingDeleteFocus.current || selectedValues.size > 0) return;
+        pendingDeleteFocus.current = false;
+        addValuesButtonRef.current?.focus();
+    }, [selectedValues]);
+
     const removeValue = useCallback(
-        (value: string) =>
-            updateConstraint({ type: 'remove value', payload: value }),
-        [updateConstraint],
-    );
-    const clearAll = useCallback(
-        () => updateConstraint({ type: 'clear values' }),
-        [updateConstraint],
+        (value: string) => {
+            if (selectedValues.size === 1) {
+                pendingDeleteFocus.current = true;
+            }
+            updateConstraint({ type: 'remove value', payload: value });
+            setEditingOpen(false);
+        },
+        [updateConstraint, selectedValues],
     );
     const toggleValue = useCallback(
-        (value: string) =>
-            updateConstraint({ type: 'toggle value', payload: value }),
+        (value: string) => {
+            updateConstraint({ type: 'toggle value', payload: value });
+            pendingValueFocus.current = true;
+        },
         [updateConstraint],
     );
     const onOperatorChange = useCallback(
@@ -346,58 +278,81 @@ export const EditableConstraint: FC<Props> = ({
     }, [updateConstraint]);
 
     const { context } = useAssignableUnleashContext();
+    const { locationSettings } = useLocationSettings();
 
     const { contextName, operator } = localConstraint;
     const showCaseSensitiveButton =
         isStringOperator(operator) || isRegexOperator(operator);
-    const deleteButtonRef = useRef<HTMLButtonElement>(null);
-    const addValuesButtonRef = useRef<HTMLDivElement>(null);
 
     if (!context) {
         return null;
     }
 
     const contextFieldOptions = createContextFieldOptions(
-        localConstraint,
         context,
+        localConstraint.contextName,
     );
+
+    const valueTitle = isCidrConstraint(localConstraint)
+        ? (value: string) => {
+              const range = getTargetRange(value);
+              return range
+                  ? `Target range: ${formatTargetRange(range)}`
+                  : undefined;
+          }
+        : undefined;
+
+    const formatValue = (value: string) =>
+        formatConstraintValue(
+            {
+                value,
+                contextName: localConstraint.contextName,
+                operator: localConstraint.operator,
+            },
+            locationSettings,
+        ) ?? value;
+
+    const onEditValue = hasSingleValue ? () => setEditingOpen(true) : undefined;
+    const visibleValues =
+        hasSingleValue && editingOpen ? [] : Array.from(selectedValues);
 
     return (
         <Container>
             <TopRow>
                 <ConstraintDetails>
                     <ConstraintOptions>
-                        <StyledSelect
-                            visuallyHideLabel
-                            id='context-field-select'
-                            name='contextName'
-                            label='Context Field'
-                            options={contextFieldOptions}
+                        <ContextFieldSelect
                             value={contextName || ''}
+                            options={contextFieldOptions}
                             onChange={(contextField) =>
                                 updateConstraint({
                                     type: 'set context field',
                                     payload: contextField,
                                 })
                             }
-                            variant='standard'
                         />
 
                         <OperatorOptions>
-                            <ToggleConstraintInverted
-                                inverted={Boolean(localConstraint.inverted)}
-                                onToggleInverted={onToggleInverted}
-                                disabledText={getInvertedDisabledText(
-                                    invertedDisabled,
-                                    operator,
-                                )}
-                            />
-
                             <ConstraintOperatorSelect
+                                contextName={contextName || ''}
                                 options={operatorsForContext(contextName)}
                                 value={operator}
                                 onChange={onOperatorChange}
                                 inverted={localConstraint.inverted}
+                                onToggleInverted={onToggleInverted}
+                                invertedDisabledText={getInvertedDisabledText(
+                                    invertedDisabled,
+                                    operator,
+                                )}
+                                showCaseSensitiveButton={
+                                    showCaseSensitiveButton
+                                }
+                                caseInsensitive={Boolean(
+                                    localConstraint.caseInsensitive,
+                                )}
+                                onToggleCaseSensitivity={
+                                    onToggleCaseSensitivity
+                                }
                             />
 
                             {showCaseSensitiveButton ? (
@@ -412,32 +367,29 @@ export const EditableConstraint: FC<Props> = ({
                             ) : null}
                         </OperatorOptions>
                     </ConstraintOptions>
-                    <ValueList
-                        values={
-                            isMultiValueConstraint(localConstraint)
-                                ? Array.from(localConstraint.values)
-                                : legalValueData && localConstraint.value
-                                  ? [localConstraint.value]
-                                  : undefined
-                        }
+                    <ValueListWithOverflow
+                        ref={valueListRef}
+                        values={visibleValues}
                         removeValue={removeValue}
-                        getExternalFocusTarget={() =>
-                            addValuesButtonRef.current ??
-                            deleteButtonRef.current
-                        }
+                        getValueTitle={valueTitle}
+                        getValueLabel={formatValue}
+                        getExternalFocusTarget={() => null}
+                        onEditValue={onEditValue}
                     >
-                        {legalValueData ? null : (
-                            <TopRowInput
-                                localConstraint={localConstraint}
-                                addValues={addValues}
-                                clearValues={clearAll}
-                                validator={validator}
-                                addValuesButtonRef={addValuesButtonRef}
-                                editingOpen={editingOpen}
-                                setEditingOpen={setEditingOpen}
-                            />
-                        )}
-                    </ValueList>
+                        <TopRowInput
+                            key={operator}
+                            localConstraint={localConstraint}
+                            addValues={addValues}
+                            validator={validator}
+                            addValuesButtonRef={addValuesButtonRef}
+                            valueListRef={valueListRef}
+                            editingOpen={editingOpen}
+                            setEditingOpen={setEditingOpen}
+                            toggleValue={toggleValue}
+                            selectedValues={selectedValues}
+                            legalValueData={legalValueData}
+                        />
+                    </ValueListWithOverflow>
                 </ConstraintDetails>
                 <ButtonPlaceholder />
                 <HtmlTooltip title='Delete constraint' arrow>
@@ -452,15 +404,6 @@ export const EditableConstraint: FC<Props> = ({
                     </StyledIconButton>
                 </HtmlTooltip>
             </TopRow>
-            <InlineEdit
-                localConstraint={localConstraint}
-                legalValueData={legalValueData}
-                editingOpen={editingOpen}
-                toggleValue={toggleValue}
-                addValues={addValues}
-                clearAll={clearAll}
-                validator={validator}
-            />
         </Container>
     );
 };

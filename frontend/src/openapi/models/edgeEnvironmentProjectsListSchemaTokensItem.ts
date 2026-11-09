@@ -8,12 +8,8 @@
  * A list of requested environment -> projects tuples.
  */
 export type EdgeEnvironmentProjectsListSchemaTokensItem = {
-    /**
-     * The name of an existing environment
-     */
+    /** The name of an existing environment */
     environment: string;
-    /**
-     * The list of projects Edge wants access to, or '*' for a wildcard token
-     */
+    /** The list of projects Edge wants access to, or '*' for a wildcard token */
     projects: string[];
 };

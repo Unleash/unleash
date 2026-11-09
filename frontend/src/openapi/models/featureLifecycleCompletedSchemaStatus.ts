@@ -10,7 +10,6 @@
 export type FeatureLifecycleCompletedSchemaStatus =
     (typeof FeatureLifecycleCompletedSchemaStatus)[keyof typeof FeatureLifecycleCompletedSchemaStatus];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const FeatureLifecycleCompletedSchemaStatus = {
     kept: 'kept',
     discarded: 'discarded',

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateFeatureSchemaOneOfFouroneAction } from './changeRequestCreateFeatureSchemaOneOfFouroneAction';
-import type { ChangeRequestCreateFeatureSchemaOneOfFouronePayload } from './changeRequestCreateFeatureSchemaOneOfFouronePayload';
+import type { ChangeRequestCreateFeatureSchemaOneOfFouroneAction } from './changeRequestCreateFeatureSchemaOneOfFouroneAction.ts';
+import type { ChangeRequestCreateFeatureSchemaOneOfFouronePayload } from './changeRequestCreateFeatureSchemaOneOfFouronePayload.ts';
 
 /**
  * Create or update a safeguard for a release plan.

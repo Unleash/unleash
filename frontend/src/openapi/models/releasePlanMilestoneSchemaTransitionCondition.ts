@@ -3,15 +3,11 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { ReleasePlanMilestoneSchemaTransitionConditionAnyOf } from './releasePlanMilestoneSchemaTransitionConditionAnyOf.ts';
 
 /**
- * The condition configuration for the transition
+ * The condition configuration for the transition.
  * @nullable
  */
-export type ReleasePlanMilestoneSchemaTransitionCondition = {
-    /**
-     * The interval in minutes before transitioning
-     * @minimum 1
-     */
-    intervalMinutes: number;
-} | null;
+export type ReleasePlanMilestoneSchemaTransitionCondition =
+    ReleasePlanMilestoneSchemaTransitionConditionAnyOf | null;

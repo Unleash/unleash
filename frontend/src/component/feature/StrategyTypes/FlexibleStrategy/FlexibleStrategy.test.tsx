@@ -1,8 +1,11 @@
 import { expect, test } from 'vitest';
 import { useState } from 'react';
 import { screen, fireEvent } from '@testing-library/react';
-import { FlexibleStrategy } from './FlexibleStrategy.tsx';
 import { render } from 'utils/testRenderer';
+import { FlexibleStrategy } from './FlexibleStrategy.tsx';
+
+const openAdvancedSettings = async () =>
+    fireEvent.click(await screen.findByRole('button', { name: /Advanced/ }));
 
 test('manipulates the rollout slider', async () => {
     const Wrapper = () => {
@@ -30,7 +33,8 @@ test('manipulates the rollout slider', async () => {
     render(<Wrapper />);
 
     const slider = await screen.findByRole('slider', { name: /rollout/i });
-    const groupIdInput = await screen.findByLabelText('groupId');
+    await openAdvancedSettings();
+    const groupIdInput = await screen.findByLabelText('Group ID');
 
     expect(slider).toHaveValue('0');
     expect(groupIdInput).toHaveValue('testid');
@@ -58,8 +62,9 @@ test('displays groupId error', async () => {
         />,
     );
 
-    const errorText = await screen.findByText('Field required test');
-    expect(errorText).toBeInTheDocument();
+    await openAdvancedSettings();
+
+    expect(await screen.findByText('Field required test')).toBeInTheDocument();
 });
 
 test('renders without crashing when stickiness/groupId is not provided', () => {

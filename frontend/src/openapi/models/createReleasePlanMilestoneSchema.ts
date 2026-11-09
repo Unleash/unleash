@@ -3,7 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateReleasePlanMilestoneStrategySchema } from './createReleasePlanMilestoneStrategySchema';
+import type { CreateReleasePlanMilestoneSchemaTransitionCondition } from './createReleasePlanMilestoneSchemaTransitionCondition.ts';
+import type { CreateReleasePlanMilestoneStrategySchema } from './createReleasePlanMilestoneStrategySchema.ts';
 
 /**
  * Schema representing the creation of a release plan milestone.
@@ -15,4 +16,6 @@ export interface CreateReleasePlanMilestoneSchema {
     sortOrder: number;
     /** A list of strategies that are attached to this milestone. */
     strategies?: CreateReleasePlanMilestoneStrategySchema[];
+    /** When set, release plans created from this template automatically progress from this milestone to the next one once the condition is met. */
+    transitionCondition?: CreateReleasePlanMilestoneSchemaTransitionCondition;
 }

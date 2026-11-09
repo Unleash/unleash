@@ -67,10 +67,13 @@ export const createProjectService = (
     config: IUnleashConfig,
 ): ProjectService => {
     const { eventBus, getLogger, flagResolver } = config;
-    const eventStore = new EventStore(db, getLogger);
+    const eventStore = new EventStore(db, eventBus, getLogger);
     const projectStore = new ProjectStore(db, eventBus, config);
     const projectOwnersReadModel = new ProjectOwnersReadModel(db);
-    const projectFlagCreatorsReadModel = new ProjectFlagCreatorsReadModel(db);
+    const projectFlagCreatorsReadModel = new ProjectFlagCreatorsReadModel(
+        db,
+        eventBus,
+    );
     const groupStore = new GroupStore(db);
     const edgeTokenStore = new EdgeTokenStore(db, eventBus, config);
     const featureToggleStore = new FeatureToggleStore(
@@ -132,11 +135,7 @@ export const createProjectService = (
         resourceLimitsService,
     );
 
-    const projectReadModel = createProjectReadModel(
-        db,
-        eventBus,
-        config.flagResolver,
-    );
+    const projectReadModel = createProjectReadModel(db, config);
 
     const onboardingReadModel = createOnboardingReadModel(db);
 

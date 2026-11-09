@@ -1,9 +1,13 @@
-import { generateObjectCombinations } from './generateObjectCombinations.js';
+import {
+    countCombinations,
+    generateCombinations,
+    splitByComma,
+} from './generateObjectCombinations.js';
 
-test('should generate all combinations correctly', () => {
+test('should generate all combinations correctly, ignoring whitespace around commas', () => {
     const obj = {
-        sessionId: '1,2',
-        appName: 'a,b,c',
+        sessionId: '1, 2',
+        appName: 'a ,b, c',
         channels: 'internet',
         nonString: 1,
     };
@@ -17,7 +21,7 @@ test('should generate all combinations correctly', () => {
         { sessionId: '2', appName: 'c', channels: 'internet', nonString: 1 },
     ];
 
-    const actualCombinations = generateObjectCombinations(obj);
+    const actualCombinations = generateCombinations(splitByComma(obj));
 
     expect(actualCombinations).toEqual(expectedCombinations);
 });
@@ -33,7 +37,7 @@ test('should generate all combinations correctly when only one combination', () 
         { sessionId: '1', appName: 'a', channels: 'internet' },
     ];
 
-    const actualCombinations = generateObjectCombinations(obj);
+    const actualCombinations = generateCombinations(splitByComma(obj));
 
     expect(actualCombinations).toEqual(expectedCombinations);
 });
@@ -58,7 +62,24 @@ test('should generate combinations with nested properties', () => {
         { sessionId: '2', appName: 'c', channels: 'internet', nonString: 1 },
     ];
 
-    const actualCombinations = generateObjectCombinations(obj);
+    const actualCombinations = generateCombinations(splitByComma(obj));
 
     expect(actualCombinations).toEqual(expectedCombinations);
+});
+
+test('should count combinations without generating them', () => {
+    const obj = {
+        sessionId: '1,2',
+        nonString: 2,
+        properties: {
+            channels: 'internet',
+            appName: 'a,b,c',
+        },
+    };
+
+    const dimensions = splitByComma(obj);
+
+    expect(countCombinations(dimensions)).toBe(
+        generateCombinations(dimensions).length,
+    );
 });

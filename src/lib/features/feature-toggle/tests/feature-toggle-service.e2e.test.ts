@@ -703,6 +703,7 @@ test.each([
     ['empty stickiness', { rollout: '100', stickiness: '' }],
     ['undefined stickiness', { rollout: '100' }],
     ['undefined parameters', undefined],
+    ['empty group id', { rollout: '100', groupId: '' }],
     [
         'different group id and stickiness',
         { rollout: '100', groupId: 'test-group', stickiness: 'userId' },
@@ -729,7 +730,7 @@ test.each([
             : (parameters?.stickiness ?? defaultStickiness);
     const expectedParameters = {
         ...parameters, // expect extra parameters to be preserved
-        groupId: parameters?.groupId ?? feature.name,
+        groupId: parameters?.groupId || feature.name,
         stickiness: expectedStickiness,
         rollout: parameters?.rollout ?? '100', // default rollout
     };

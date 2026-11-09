@@ -3,6 +3,8 @@ import getLogger from '../../test/fixtures/no-logger.js';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 import type { IClientApplicationsStore } from '../types/stores/client-applications-store.js';
 import type ClientApplicationsStore from './client-applications-store.js';
+import { ApiTokenType } from '../types/model.js';
+import { subDays } from 'date-fns';
 
 let db: ITestDb;
 
@@ -21,6 +23,115 @@ describe('ClientApplicationsStore', () => {
 
     beforeAll(() => {
         service = db.stores.clientApplicationsStore as ClientApplicationsStore;
+    });
+
+    test('persists and filters token associations without SDK activity', async () => {
+        const appName = 'application-token-persistence';
+        await service.upsert({ appName });
+        const input = {
+            tokenName: 'associated-token',
+            type: ApiTokenType.BACKEND as const,
+            projects: ['default'],
+            environment: 'production',
+            userCreated: true,
+        };
+        await db.stores.apiTokenV2Store.create(
+            { ...input, appName: appName },
+            'associated-token-selector',
+            'verifier',
+        );
+        await db.stores.apiTokenV2Store.create(
+            input,
+            'unassociated-token-selector',
+            'verifier',
+        );
+
+        expect(
+            await db.stores.apiTokenV2Store.getUserDefinedTokens(appName),
+        ).toEqual([
+            expect.objectContaining({
+                selector: 'associated-token-selector',
+                appName: appName,
+                environment: 'production',
+            }),
+        ]);
+        expect(
+            await db.stores.apiTokenV2Store.getBySelector(
+                'associated-token-selector',
+            ),
+        ).toMatchObject({ appName: appName });
+        expect(await db.stores.apiTokenV2Store.getAllActive()).toContainEqual(
+            expect.objectContaining({ appName: appName }),
+        );
+    });
+
+    test.each([
+        false,
+        true,
+    ])('referenced applications survive cleanup and reject deletion, expired token: %s', async (expired) => {
+        const appName = `protected-application-${expired}`;
+        const selector = `protected-token-${expired}`;
+        await service.upsert({ appName });
+        await db.stores.apiTokenV2Store.create(
+            {
+                tokenName: 'protect-application',
+                type: ApiTokenType.BACKEND,
+                projects: ['default'],
+                environment: 'production',
+                userCreated: true,
+                appName: appName,
+                ...(expired ? { expiresAt: subDays(new Date(), 1) } : {}),
+            },
+            selector,
+            'verifier',
+        );
+        await db
+            .rawDatabase('client_applications')
+            .where({ app_name: appName })
+            .update({ seen_at: subDays(new Date(), 40) });
+
+        await service.removeInactiveApplications();
+        expect(await service.exists(appName)).toBe(true);
+        const deletion = service.delete(appName);
+        await expect(deletion).rejects.toMatchObject({
+            name: 'BadDataError',
+            statusCode: 400,
+            details: [
+                { message: 'Application cannot be deleted while it is in use' },
+            ],
+        });
+        await expect(deletion).rejects.not.toHaveProperty('code');
+        await expect(deletion).rejects.not.toHaveProperty('constraint');
+        expect(
+            await db.stores.apiTokenV2Store.getBySelector(selector),
+        ).toBeDefined();
+
+        await db.stores.apiTokenV2Store.delete(selector);
+        await service.delete(appName);
+        expect(await service.exists(appName)).toBe(false);
+    });
+
+    test('bulkUpsert keeps the latest observation for an application', async () => {
+        const appName = 'coalesced-application';
+        const latestSeenAt = new Date('2026-09-07T08:00:00.000Z');
+
+        await service.bulkUpsert([
+            { appName, lastSeen: latestSeenAt, description: 'Latest metadata' },
+            {
+                appName,
+                lastSeen: new Date('2026-09-06T08:00:00.000Z'),
+                description: 'Older metadata',
+            },
+        ]);
+
+        const application = await db
+            .rawDatabase('client_applications')
+            .select('seen_at', 'description')
+            .where({ app_name: appName })
+            .first();
+
+        expect(application.seen_at).toEqual(latestSeenAt);
+        expect(application.description).toBe('Latest metadata');
     });
 
     describe('mapApplicationOverviewData()', () => {

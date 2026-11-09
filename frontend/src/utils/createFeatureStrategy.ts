@@ -1,9 +1,9 @@
 import type {
     IStrategy,
     IFeatureStrategy,
-    IFeatureStrategyParameters,
     IStrategyParameter,
 } from 'interfaces/strategy';
+import type { ParametersSchema } from 'openapi';
 
 // Create a new feature strategy with default values from a strategy definition.
 export const createFeatureStrategy = (
@@ -11,7 +11,7 @@ export const createFeatureStrategy = (
     strategyDefinition: IStrategy,
     defaultStickiness: string = 'default',
 ): Omit<IFeatureStrategy, 'id'> => {
-    const parameters: IFeatureStrategyParameters = {};
+    const parameters: ParametersSchema = {};
 
     strategyDefinition.parameters.forEach((parameter: IStrategyParameter) => {
         parameters[parameter.name] = createFeatureStrategyParameterValue(
@@ -39,7 +39,7 @@ const createFeatureStrategyParameterValue = (
         parameter.name === 'percentage' ||
         parameter.type === 'percentage'
     ) {
-        return '50';
+        return '100';
     }
 
     if (parameter.name === 'stickiness') {

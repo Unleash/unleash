@@ -7,6 +7,10 @@ import { EditSegment } from 'component/segments/EditSegment/EditSegment';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { GO_BACK } from 'constants/navigate';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import {
+    createSegmentTracking,
+    editSegmentTracking,
+} from 'component/segments/segmentTrackingProps';
 
 export const ProjectSegments = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -24,8 +28,9 @@ export const ProjectSegments = () => {
                         open
                         onClose={() => navigate(GO_BACK)}
                         label='Create segment'
+                        tracking={createSegmentTracking}
                     >
-                        <CreateSegment modal />
+                        <CreateSegment layout='modal' />
                     </SidebarModal>
                 }
             />
@@ -36,12 +41,13 @@ export const ProjectSegments = () => {
                         open
                         onClose={() => navigate(GO_BACK)}
                         label='Edit segment'
+                        tracking={editSegmentTracking}
                     >
-                        <EditSegment modal />
+                        <EditSegment layout='modal' />
                     </SidebarModal>
                 }
             />
-            <Route path='*' element={<SegmentTable />} />
+            <Route path='*' element={<SegmentTable variant='h2' />} />
         </Routes>
     );
 };

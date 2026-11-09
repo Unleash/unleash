@@ -10,7 +10,6 @@
 export type ChangeRequestCreateSchemaOneOfOnethreeAction =
     (typeof ChangeRequestCreateSchemaOneOfOnethreeAction)[keyof typeof ChangeRequestCreateSchemaOneOfOnethreeAction];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateSchemaOneOfOnethreeAction = {
     updateStrategy: 'updateStrategy',
 } as const;

@@ -34,7 +34,7 @@ const SegmentContainer = styled(Box, {
     flexFlow: 'column',
     gap: theme.spacing(1),
     border: `1px solid ${
-        conflict ? theme.palette.warning.border : theme.palette.divider
+        conflict ? theme.palette.warning.containerBorder : theme.palette.divider
     }`,
     borderTopColor: theme.palette.divider,
     padding: theme.spacing(3),

@@ -19,6 +19,8 @@ import {
     UPDATE_ADDON,
 } from 'component/providers/AccessProvider/permissions';
 import { useHasRootAccess } from 'hooks/useHasAccess';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import { UPDATE_PROJECT_ADDON } from '@server/types/permissions.ts';
 import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
 import type { AddonSchema } from 'openapi';
 import useAddons from 'hooks/api/getters/useAddons/useAddons';
@@ -69,7 +71,11 @@ export const IntegrationCardMenu: FC<IIntegrationCardMenuProps> = ({
             setIsMenuOpen(true);
         }
     };
-    const updateAccess = useHasRootAccess(UPDATE_ADDON);
+    const projectId = useOptionalPathParam('projectId');
+    const updateAccess = useHasRootAccess(
+        [UPDATE_ADDON, UPDATE_PROJECT_ADDON],
+        projectId,
+    );
     const deleteAccess = useHasRootAccess(DELETE_ADDON);
 
     const toggleIntegration = useCallback(async () => {

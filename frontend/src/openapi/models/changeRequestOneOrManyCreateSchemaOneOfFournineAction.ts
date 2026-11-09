@@ -10,7 +10,6 @@
 export type ChangeRequestOneOrManyCreateSchemaOneOfFournineAction =
     (typeof ChangeRequestOneOrManyCreateSchemaOneOfFournineAction)[keyof typeof ChangeRequestOneOrManyCreateSchemaOneOfFournineAction];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestOneOrManyCreateSchemaOneOfFournineAction = {
     deleteReleasePlanSafeguard: 'deleteReleasePlanSafeguard',
 } as const;

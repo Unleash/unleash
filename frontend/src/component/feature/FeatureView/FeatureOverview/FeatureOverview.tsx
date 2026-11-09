@@ -22,12 +22,15 @@ import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectO
 import type { FeatureSchema, ProjectOverviewSchema } from 'openapi/index.ts';
 import { FeatureSetupBanner } from './FeatureSetupBanner.tsx';
 import { getFeatureSetupStage } from './getFeatureSetupStage.ts';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { PayloadSchemaSidebar } from './PayloadSchema/PayloadSchemaSidebar.tsx';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     width: '100%',
     gap: theme.spacing(2),
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down(1350)]: {
         flexDirection: 'column',
     },
 }));
@@ -55,6 +58,10 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
     const { hiddenEnvironments, onEnvironmentVisibilityChange } =
         useEnvironmentVisibility();
     const onSidebarClose = () => navigate(featurePath);
+
+    const { isEnterprise } = useUiConfig();
+    const payloadSchemasEnabled = useUiFlag('payloadSchemas') && isEnterprise();
+
     usePageTitle(featureId);
     const { setLastViewed } = useLastViewedFlags();
     useEffect(() => {
@@ -163,6 +170,24 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
                             </SidebarModal>
                         }
                     />
+                    {payloadSchemasEnabled ? (
+                        <Route
+                            path='payload-schema'
+                            element={
+                                <SidebarModal
+                                    label={
+                                        feature.payloadSchema
+                                            ? 'Edit payload schema'
+                                            : 'Add payload schema'
+                                    }
+                                    onClose={onSidebarClose}
+                                    open
+                                >
+                                    <PayloadSchemaSidebar />
+                                </SidebarModal>
+                            }
+                        />
+                    ) : null}
                 </Routes>
             </StyledContainer>
             <StrategyDragTooltip show={showTooltip} onClose={onTooltipClose} />

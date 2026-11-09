@@ -3,6 +3,7 @@ import {
     parseEnvVarBoolean,
     parseEnvVarBooleanOrStringVariant,
     parseEnvVarNumber,
+    parseEnvVarNumbers,
     parseEnvVarStrings,
 } from './parseEnvVar.js';
 
@@ -69,4 +70,12 @@ test('parseEnvVarBooleanOrStringVariant', () => {
             type: PayloadType.STRING,
         },
     });
+});
+
+test('parseEnvVarNumbers', () => {
+    expect(parseEnvVarNumbers(undefined, [14, 3])).toEqual([14, 3]);
+    expect(parseEnvVarNumbers('', [14, 3])).toEqual([14, 3]);
+    expect(parseEnvVarNumbers('30, 7', [])).toEqual([30, 7]);
+    expect(parseEnvVarNumbers('a,7,b', [])).toEqual([7]);
+    expect(parseEnvVarNumbers('a,b', [14, 3])).toEqual([14, 3]);
 });

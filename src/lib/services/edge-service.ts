@@ -1,17 +1,11 @@
-import {
-    ApiTokenType,
-    type Db,
-    type IUnleashConfig,
-    type IUnleashStores,
-    SYSTEM_USER_AUDIT,
-} from '../types/index.js';
+import type { Db, IUnleashConfig, IUnleashStores } from '../types/index.js';
 import type { Logger } from '../logger.js';
 import type {
+    EdgeEnvironmentsProjectsListSchema,
     EdgeTokenSchema,
     ValidatedEdgeTokensSchema,
 } from '../openapi/index.js';
 import type { ApiTokenService } from './api-token-service.js';
-import type { EdgeEnvironmentsProjectsListSchema } from '../openapi/index.js';
 import type {
     EdgeClient,
     IEdgeTokenStore,
@@ -22,12 +16,17 @@ import {
     encryptSecret,
 } from '../features/edgetokens/edge-verification.js';
 import { EdgeTokenStore } from '../features/edgetokens/edge-token-store.js';
-import {
-    createApiTokenService,
-    createFakeApiTokenService,
-} from '../features/api-tokens/createApiTokenService.js';
 import type { IUnleashServices } from './index.js';
 import { FakeEdgeTokenStore } from '../features/edgetokens/fake-edge-token-store.js';
+import {
+    AuthorizationTokenKind,
+    parseAuthorizationToken,
+} from '../authentication/authorization-token.js';
+import {
+    type AdminApiTokenV2Service,
+    createApiTokenV2Service,
+    type ReadOnlyApiTokenV2Service,
+} from '../features/apitokensv2/api-token-v2-service.js';
 
 type ReplayProtectionArgs = {
     clientId: string;
@@ -38,22 +37,45 @@ type ReplayProtectionArgs = {
 export const createTransactionalEdgeService = (
     db: Db,
     config: IUnleashConfig,
+    {
+        apiTokenService,
+        apiTokenV2Service,
+    }: Pick<IUnleashServices, 'apiTokenService' | 'apiTokenV2Service'>,
 ) => {
     const edgeTokenStore = new EdgeTokenStore(db, config.eventBus, config);
-    const transactionalApiTokenService = createApiTokenService(db, config);
+    const apiTokenV2CreationService = createApiTokenV2Service(config)(db);
     return new EdgeService(
         { edgeTokenStore },
-        { apiTokenService: transactionalApiTokenService },
+        {
+            apiTokenService,
+            apiTokenV2Service,
+            // Writes must use the Edge transaction, while validation shares
+            // the caches warmed and invalidated by the main token services.
+            apiTokenV2CreationService,
+        },
         config,
     );
 };
 
-export const createFakeEdgeService = (config: IUnleashConfig) => {
+export const createFakeEdgeService = (
+    config: IUnleashConfig,
+    tokenServices: Pick<
+        IUnleashServices,
+        | 'apiTokenService'
+        | 'apiTokenV2Service'
+        | 'transactionalApiTokenV2Service'
+    >,
+) => {
     const fakeEdgeTokenStore = new FakeEdgeTokenStore();
-    const fakeApiTokenService = createFakeApiTokenService(config);
+
     return new EdgeService(
         { edgeTokenStore: fakeEdgeTokenStore },
-        fakeApiTokenService,
+        {
+            apiTokenService: tokenServices.apiTokenService,
+            apiTokenV2Service: tokenServices.apiTokenV2Service,
+            apiTokenV2CreationService:
+                tokenServices.transactionalApiTokenV2Service,
+        },
         config,
     );
 };
@@ -63,13 +85,23 @@ export default class EdgeService {
 
     private apiTokenService: ApiTokenService;
 
+    private apiTokenV2Service: ReadOnlyApiTokenV2Service;
+
+    private apiTokenV2CreationService: AdminApiTokenV2Service;
+
     private edgeTokenStore: IEdgeTokenStore;
 
     private readonly edgeMasterKey: string | undefined;
 
     constructor(
         { edgeTokenStore }: Pick<IUnleashStores, 'edgeTokenStore'>,
-        { apiTokenService }: Pick<IUnleashServices, 'apiTokenService'>,
+        {
+            apiTokenService,
+            apiTokenV2Service,
+            apiTokenV2CreationService,
+        }: Pick<IUnleashServices, 'apiTokenService' | 'apiTokenV2Service'> & {
+            apiTokenV2CreationService: AdminApiTokenV2Service;
+        },
         {
             getLogger,
             edgeMasterKey,
@@ -77,17 +109,26 @@ export default class EdgeService {
     ) {
         this.logger = getLogger('lib/services/edge-service.ts');
         this.apiTokenService = apiTokenService;
+        this.apiTokenV2Service = apiTokenV2Service;
+        this.apiTokenV2CreationService = apiTokenV2CreationService;
         this.edgeTokenStore = edgeTokenStore;
         this.edgeMasterKey = edgeMasterKey;
     }
 
     async getValidTokens(tokens: string[]): Promise<ValidatedEdgeTokensSchema> {
-        // new behavior: use cached tokens when possible
-        // use the db to fetch the missing ones
-        // cache stores both missing and active so we don't hammer the db
         const validatedTokens: EdgeTokenSchema[] = [];
         for (const token of tokens) {
-            const found = await this.apiTokenService.getTokenWithCache(token);
+            const parsedToken = parseAuthorizationToken(token);
+            const v2Token =
+                parsedToken?.kind === AuthorizationTokenKind.API_TOKEN &&
+                parsedToken.version === 'v2'
+                    ? await this.apiTokenV2Service.getTokenWithCache(
+                          parsedToken,
+                      )
+                    : undefined;
+            const found =
+                v2Token ??
+                (await this.apiTokenService.getTokenWithCache(token));
             if (found) {
                 validatedTokens.push({
                     token: token,
@@ -97,6 +138,7 @@ export default class EdgeService {
                 });
             }
         }
+
         return { tokens: validatedTokens };
     }
 
@@ -111,6 +153,7 @@ export default class EdgeService {
         } catch (_e) {}
         return false;
     }
+
     async loadClient(clientId: string): Promise<EdgeClient | undefined> {
         return this.edgeTokenStore.loadClient(clientId);
     }
@@ -151,41 +194,10 @@ export default class EdgeService {
                 'You must define a secret in the EDGE_MASTER_SECRET environment variable',
             );
         }
-        const tokens: EdgeTokenSchema[] = [];
-        for (const tokenReq of tokenRequest.tokens) {
-            const existing = await this.edgeTokenStore.getToken(
-                clientId,
-                tokenReq.environment,
-                tokenReq.projects,
+        const tokens =
+            await this.apiTokenV2CreationService.createTokensFromEdgeIssue(
+                tokenRequest,
             );
-            if (existing !== undefined) {
-                tokens.push({
-                    projects: existing.projects,
-                    type: existing.type,
-                    token: existing.secret,
-                    environment: existing.environment,
-                });
-            } else if (tokenReq.environment && tokenReq.projects) {
-                const newToken =
-                    await this.apiTokenService.createApiTokenWithProjects(
-                        {
-                            tokenName: `enterprise_edge_${tokenReq.environment}_${truncate(tokenReq.projects, 3)}`,
-                            alias: `ee_${tokenReq.environment}`,
-                            type: ApiTokenType.BACKEND,
-                            environment: tokenReq.environment,
-                            projects: tokenReq.projects,
-                        },
-                        SYSTEM_USER_AUDIT,
-                    );
-                await this.edgeTokenStore.saveToken(clientId, newToken);
-                tokens.push({
-                    projects: newToken.projects,
-                    type: newToken.type,
-                    token: newToken.secret,
-                    environment: newToken.environment,
-                });
-            }
-        }
 
         return { tokens };
     }
@@ -198,6 +210,3 @@ export default class EdgeService {
         await this.edgeTokenStore.deleteAll();
     }
 }
-
-const truncate = (projects: string[], max_length: number) =>
-    projects.length > max_length ? `[]` : projects.join('_');

@@ -103,7 +103,9 @@ const ProjectLinkTemplates = ({
                     gap: 1,
                 }}
             >
-                <Typography variant='h4'>Project Link Templates</Typography>
+                <Typography variant='h3' component='h4'>
+                    Project Link Templates
+                </Typography>
                 <Tooltip
                     title={
                         <Box

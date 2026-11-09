@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Button, styled, TextField } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import type { ProjectLinkTemplateSchema } from 'openapi';
-import { useEventTracker } from 'hooks/useEventTracker';
+import Input from 'component/common/Input/Input';
 
 interface IProjectLinkTemplateEditorProps {
     template?: ProjectLinkTemplateSchema;
     onSave: (template: ProjectLinkTemplateSchema) => void;
+    onValidationFailed: () => void;
     onCancel: () => void;
     isAdding: boolean;
 }
@@ -26,6 +27,7 @@ const StyledDialogActions = styled('div')(({ theme }) => ({
 const ProjectLinkTemplateEditor = ({
     template,
     onSave,
+    onValidationFailed,
     onCancel,
     isAdding,
 }: IProjectLinkTemplateEditorProps) => {
@@ -35,7 +37,6 @@ const ProjectLinkTemplateEditor = ({
         title?: string;
         url?: string;
     }>({});
-    const { trackEvent } = useEventTracker();
 
     const validateTemplateForm = () => {
         const errors: { title?: string; url?: string } = {};
@@ -50,41 +51,38 @@ const ProjectLinkTemplateEditor = ({
 
     const handleSave = () => {
         if (validateTemplateForm()) {
-            trackEvent('feature-links', {
-                props: {
-                    eventType: isAdding ? 'add-template' : 'edit-template',
-                },
-            });
             onSave({
                 title: templateTitle || null,
                 urlTemplate: templateUrl,
             });
+        } else {
+            onValidationFailed();
         }
     };
 
     return (
         <StyledContainer>
-            <TextField
+            <Input
                 label='Title (optional)'
+                description='A descriptive name for the link'
                 fullWidth
                 value={templateTitle}
                 onChange={(e) => setTemplateTitle(e.target.value)}
                 placeholder='e.g., GitHub Issue, Ticket number'
-                helperText='A descriptive name for the link.'
-                size='small'
+                size='large'
             />
-            <TextField
+            <Input
                 label='URL Template'
+                description={
+                    templateErrors.url ||
+                    'You can optionally use placeholders {{project}} and {{feature}} that will be replaced with actual values'
+                }
                 fullWidth
                 required
                 value={templateUrl}
                 onChange={(e) => setTemplateUrl(e.target.value)}
                 placeholder='https://github.com/{{project}}/{{feature}}'
-                helperText={
-                    templateErrors.url ||
-                    'You can optionally use placeholders {{project}} and {{feature}} that will be replaced with actual values.'
-                }
-                size='small'
+                size='large'
                 error={Boolean(templateErrors.url)}
             />
             <StyledDialogActions>

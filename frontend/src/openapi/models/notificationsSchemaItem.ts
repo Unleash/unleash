@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { NotificationsSchemaItemCreatedBy } from './notificationsSchemaItemCreatedBy';
-import type { NotificationsSchemaItemNotificationType } from './notificationsSchemaItemNotificationType';
+import type { NotificationsSchemaItemCreatedBy } from './notificationsSchemaItemCreatedBy.ts';
+import type { NotificationsSchemaItemNotificationType } from './notificationsSchemaItemNotificationType.ts';
 
 export type NotificationsSchemaItem = {
     /** The date and time when the notification was created */

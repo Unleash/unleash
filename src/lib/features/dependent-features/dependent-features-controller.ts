@@ -1,5 +1,6 @@
 import type { Response } from 'express';
 import Controller from '../../routes/controller.js';
+import { NotFoundError } from '../../error/index.js';
 import type { IUnleashServices, OpenApiService } from '../../services/index.js';
 import {
     type IFlagResolver,
@@ -236,17 +237,23 @@ export default class DependentFeaturesController extends Controller {
     ): Promise<void> {
         const { child, parent, projectId } = req.params;
 
-        await this.dependentFeaturesService.transactional((service) =>
-            service.deleteFeatureDependency(
-                {
-                    parent,
-                    child,
-                },
-                projectId,
-                req.user,
-                req.audit,
-            ),
+        const removedCount = await this.dependentFeaturesService.transactional(
+            (service) =>
+                service.deleteFeatureDependency(
+                    {
+                        parent,
+                        child,
+                    },
+                    projectId,
+                    req.user,
+                    req.audit,
+                ),
         );
+        if (removedCount === 0) {
+            throw new NotFoundError(
+                `No dependency on "${parent}" for feature "${child}" in project "${projectId}".`,
+            );
+        }
         res.status(200).end();
     }
 
@@ -256,14 +263,20 @@ export default class DependentFeaturesController extends Controller {
     ): Promise<void> {
         const { child, projectId } = req.params;
 
-        await this.dependentFeaturesService.transactional((service) =>
-            service.deleteFeaturesDependencies(
-                [child],
-                projectId,
-                req.user,
-                req.audit,
-            ),
+        const removedCount = await this.dependentFeaturesService.transactional(
+            (service) =>
+                service.deleteFeaturesDependencies(
+                    [child],
+                    projectId,
+                    req.user,
+                    req.audit,
+                ),
         );
+        if (removedCount === 0) {
+            throw new NotFoundError(
+                `Feature "${child}" has no dependencies to remove in project "${projectId}".`,
+            );
+        }
         res.status(200).end();
     }
 

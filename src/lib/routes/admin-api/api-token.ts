@@ -20,8 +20,7 @@ import type { IUser } from '../../types/user.js';
 import type { IUnleashConfig } from '../../types/option.js';
 import { ApiTokenType, type IApiToken } from '../../types/model.js';
 import { createApiToken } from '../../schema/api-token-schema.js';
-import type { OpenApiService, IUnleashServices } from '../../services/index.js';
-import type { IFlagResolver } from '../../types/index.js';
+import type { IUnleashServices, OpenApiService } from '../../services/index.js';
 import { createRequestSchema } from '../../openapi/util/create-request-schema.js';
 import {
     createResponseSchema,
@@ -44,14 +43,22 @@ import {
 import type { FrontendApiService } from '../../features/frontend-api/frontend-api-service.js';
 import { OperationDeniedError } from '../../error/index.js';
 import type { CreateApiTokenSchema } from '../../internals.js';
-import type { IUserPermission } from '../../server-impl.js';
+import type { WithTransactional } from '../../server-impl.js';
+import { parseApiTokenV2Identifier } from '../../authentication/authorization-token.js';
+import { canReadApiToken } from './api-token-permissions.js';
+import type {
+    AdminApiTokenV2Service,
+    ReadOnlyApiTokenV2Service,
+} from '../../features/apitokensv2/api-token-v2-service.js';
 
 interface TokenParam {
     token: string;
 }
+
 interface TokenNameParam {
     name: string;
 }
+
 export const tokenTypeToCreatePermission: (tokenType: ApiTokenType) => string =
     (tokenType) => {
         switch (tokenType) {
@@ -64,29 +71,6 @@ export const tokenTypeToCreatePermission: (tokenType: ApiTokenType) => string =
                 return CREATE_FRONTEND_API_TOKEN;
         }
     };
-
-const canReadToken = ({ permission }: IUserPermission, type: ApiTokenType) => {
-    if (permission === ADMIN) {
-        return true;
-    }
-    if (type === ApiTokenType.FRONTEND) {
-        return [
-            CREATE_FRONTEND_API_TOKEN,
-            READ_FRONTEND_API_TOKEN,
-            DELETE_FRONTEND_API_TOKEN,
-            UPDATE_FRONTEND_API_TOKEN,
-        ].includes(permission);
-    }
-    if (type === ApiTokenType.CLIENT || type === ApiTokenType.BACKEND) {
-        return [
-            CREATE_CLIENT_API_TOKEN,
-            READ_CLIENT_API_TOKEN,
-            DELETE_CLIENT_API_TOKEN,
-            UPDATE_CLIENT_API_TOKEN,
-        ].includes(permission);
-    }
-    return false;
-};
 
 const tokenTypeToUpdatePermission: (tokenType: ApiTokenType) => string = (
     tokenType,
@@ -119,6 +103,10 @@ const tokenTypeToDeletePermission: (tokenType: ApiTokenType) => string = (
 export class ApiTokenController extends Controller {
     private apiTokenService: ApiTokenService;
 
+    private apiTokenV2Service: ReadOnlyApiTokenV2Service;
+
+    private transactionalApiTokenV2Service: WithTransactional<AdminApiTokenV2Service>;
+
     private accessService: AccessService;
 
     private frontendApiService: FrontendApiService;
@@ -127,8 +115,6 @@ export class ApiTokenController extends Controller {
 
     private logger: Logger;
 
-    private flagResolver: IFlagResolver;
-
     constructor(
         config: IUnleashConfig,
         {
@@ -136,12 +122,16 @@ export class ApiTokenController extends Controller {
             accessService,
             frontendApiService,
             openApiService,
+            apiTokenV2Service,
+            transactionalApiTokenV2Service,
         }: Pick<
             IUnleashServices,
             | 'apiTokenService'
             | 'accessService'
             | 'frontendApiService'
             | 'openApiService'
+            | 'apiTokenV2Service'
+            | 'transactionalApiTokenV2Service'
         >,
     ) {
         super(config);
@@ -149,9 +139,9 @@ export class ApiTokenController extends Controller {
         this.accessService = accessService;
         this.frontendApiService = frontendApiService;
         this.openApiService = openApiService;
-        this.flagResolver = config.flagResolver;
+        this.apiTokenV2Service = apiTokenV2Service;
+        this.transactionalApiTokenV2Service = transactionalApiTokenV2Service;
         this.logger = config.getLogger('api-token-controller.js');
-
         this.route({
             method: 'get',
             path: '',
@@ -318,10 +308,19 @@ export class ApiTokenController extends Controller {
             permissionRequired,
         );
         if (hasPermission) {
-            const token = await this.apiTokenService.createApiTokenWithProjects(
-                createToken,
-                req.audit,
-            );
+            const tokenV2 =
+                await this.transactionalApiTokenV2Service.transactional(
+                    (service) =>
+                        service.create(
+                            { userCreated: true, ...createToken },
+                            req.audit,
+                        ),
+                );
+            const { selector: _selector, ...tokenWithSecret } = tokenV2;
+            const token: IApiToken = {
+                ...tokenWithSecret,
+                project: tokenV2.projects.join(','),
+            };
             this.openApiService.respondWithValidation(
                 201,
                 res,
@@ -347,10 +346,7 @@ export class ApiTokenController extends Controller {
             this.logger.error(req.body);
             return res.status(400).send();
         }
-        let tokenToUpdate: IApiToken | undefined;
-        try {
-            tokenToUpdate = await this.apiTokenService.getToken(token);
-        } catch (_error) {}
+        const tokenToUpdate = await this.getToken(token);
         if (!tokenToUpdate) {
             res.status(200).end();
             return;
@@ -368,11 +364,17 @@ export class ApiTokenController extends Controller {
             );
         }
 
-        await this.apiTokenService.updateExpiry(
-            token,
-            new Date(expiresAt),
-            req.audit,
-        );
+        const expiry = new Date(expiresAt);
+        const v2Identifier = parseApiTokenV2Identifier(token);
+        if (v2Identifier) {
+            await this.transactionalApiTokenV2Service.transactional((service) =>
+                service.updateExpiry(v2Identifier, expiry, req.audit),
+            );
+        } else {
+            // only v2 is transactional, v1 is kept as is for simplicity, since it is not used in production anymore.
+            // people might still be able to update expiry but it will not be transactional, which is fine for the migration period.
+            await this.apiTokenService.updateExpiry(token, expiry, req.audit);
+        }
 
         return res.status(200).end();
     }
@@ -382,10 +384,7 @@ export class ApiTokenController extends Controller {
         res: Response,
     ): Promise<void> {
         const { token } = req.params;
-        let tokenToUpdate: IApiToken | undefined;
-        try {
-            tokenToUpdate = await this.apiTokenService.getToken(token);
-        } catch (_error) {}
+        const tokenToUpdate = await this.getToken(token);
         if (!tokenToUpdate) {
             res.status(200).end();
             return;
@@ -402,8 +401,18 @@ export class ApiTokenController extends Controller {
                 `You do not have the required access [${permissionRequired}] to perform this operation`,
             );
         }
-        await this.apiTokenService.delete(token, req.audit);
-        await this.frontendApiService.deleteClientForFrontendApiToken(token);
+        const v2Identifier = parseApiTokenV2Identifier(token);
+        if (v2Identifier) {
+            await this.transactionalApiTokenV2Service.transactional((service) =>
+                service.delete(v2Identifier, req.audit),
+            );
+            this.apiTokenV2Service.invalidateCache([v2Identifier.selector]);
+        } else {
+            await this.apiTokenService.delete(token, req.audit);
+        }
+        await this.frontendApiService.deleteClientForFrontendApiToken(
+            v2Identifier?.selector ?? token,
+        );
         res.status(200).end();
     }
 
@@ -416,20 +425,32 @@ export class ApiTokenController extends Controller {
     }
 
     private async accessibleTokens(user: IUser): Promise<IApiToken[]> {
-        const allTokens = await this.apiTokenService.getUserDefinedTokens();
-
+        const allTokens = (
+            await Promise.all([
+                this.apiTokenService.getUserDefinedTokens(),
+                this.apiTokenV2Service.getUserDefinedTokens(),
+            ])
+        ).flat();
         if (user.isAPI && user.permissions.includes(ADMIN)) {
             return allTokens;
         }
 
         const userPermissions =
             await this.accessService.getPermissionsForUser(user);
-
-        const accessibleTokens = allTokens.filter((token) =>
-            userPermissions.some((permission) =>
-                canReadToken(permission, token.type),
-            ),
+        return allTokens.filter((token) =>
+            canReadApiToken(userPermissions, token),
         );
-        return accessibleTokens;
+    }
+
+    private async getToken(token: string): Promise<IApiToken | undefined> {
+        const v2Identifier = parseApiTokenV2Identifier(token);
+        if (v2Identifier) {
+            const tokenV2 = await this.apiTokenV2Service.getToken(v2Identifier);
+            if (tokenV2) {
+                return tokenV2;
+            }
+        }
+
+        return await this.apiTokenService.getToken(token);
     }
 }

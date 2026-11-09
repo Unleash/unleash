@@ -4,11 +4,13 @@ import dbInit, {
 import getLogger from '../../../test/fixtures/no-logger.js';
 import type { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type.js';
 import type {
+    IAccessStore,
     IEventStore,
-    IFlagResolver,
+    IFavoriteProjectsStore,
     ILastSeenStore,
     IProjectReadModel,
     IProjectStore,
+    IUserStore,
 } from '../../types/index.js';
 import { ProjectReadModel } from './project-read-model.js';
 import type EventEmitter from 'events';
@@ -19,24 +21,27 @@ let projectStore: IProjectStore;
 let eventStore: IEventStore;
 let projectReadModel: IProjectReadModel;
 let lastSeenStore: ILastSeenStore;
+let accessStore: IAccessStore;
+let favoriteProjectsStore: IFavoriteProjectsStore;
+let userStore: IUserStore;
 
-const alwaysOnFlagResolver = {
-    isEnabled() {
-        return true;
-    },
-} as unknown as IFlagResolver;
+const memberRoleId = 5;
+
+const fakeEventBus = { emit: () => {} } as unknown as EventEmitter;
+
+const buildProjectReadModel = ({ isOss }: { isOss: boolean }) =>
+    new ProjectReadModel(db.rawDatabase, { eventBus: fakeEventBus, isOss });
 
 beforeAll(async () => {
     db = await dbInit('feature_lifecycle_read_model', getLogger);
-    projectReadModel = new ProjectReadModel(
-        db.rawDatabase,
-        { emit: () => {} } as unknown as EventEmitter,
-        alwaysOnFlagResolver,
-    );
+    projectReadModel = buildProjectReadModel({ isOss: false });
     projectStore = db.stores.projectStore;
     eventStore = db.stores.eventStore;
     flagStore = db.stores.featureToggleStore;
     lastSeenStore = db.stores.lastSeenStore;
+    accessStore = db.stores.accessStore;
+    favoriteProjectsStore = db.stores.favoriteProjectsStore;
+    userStore = db.stores.userStore;
 });
 
 afterAll(async () => {
@@ -80,6 +85,20 @@ test("it doesn't count flags multiple times when they have multiple events assoc
 
     const insightsQuery = await projectReadModel.getProjectsForInsights();
     expect(insightsQuery).toMatchObject([{ id: projectId, featureCount: 1 }]);
+});
+
+test('core listing honours the archived filter', async () => {
+    await projectStore.create({ id: 'active', name: 'Active' });
+    await projectStore.create({ id: 'retired', name: 'Retired' });
+    await projectStore.archive('retired');
+
+    const activeProjects = await projectReadModel.getProjectsCore();
+    const archivedProjects = await projectReadModel.getProjectsCore({
+        archived: true,
+    });
+
+    expect(activeProjects).toMatchObject([{ id: 'active' }]);
+    expect(archivedProjects).toMatchObject([{ id: 'retired' }]);
 });
 
 test('it uses the last flag change for an flag in the project as lastUpdated', async () => {
@@ -160,4 +179,44 @@ test('it uses the last flag metrics received for lastReportedFlagUsage', async (
 
     const result = await projectReadModel.getProjectsForAdminUi();
     expect(result[0].lastReportedFlagUsage).not.toBeNull();
+});
+
+test("it only returns the default project among a user's projects in OSS", async () => {
+    await projectStore.create({ id: 'default', name: 'Default' });
+    await projectStore.create({ id: 'enterprise', name: 'Enterprise' });
+    const user = await userStore.insert({ email: 'member@getunleash.io' });
+    await accessStore.addUserToRole(user.id, memberRoleId, 'default');
+    await accessStore.addUserToRole(user.id, memberRoleId, 'enterprise');
+
+    const projects = await projectReadModel.getProjectsByUser(user.id);
+    const ossProjects = await buildProjectReadModel({
+        isOss: true,
+    }).getProjectsByUser(user.id);
+
+    expect(projects.toSorted()).toEqual(['default', 'enterprise']);
+    expect(ossProjects).toEqual(['default']);
+});
+
+test("it only returns the default project among a user's favorites in OSS", async () => {
+    await projectStore.create({ id: 'default', name: 'Default' });
+    await projectStore.create({ id: 'enterprise', name: 'Enterprise' });
+    const user = await userStore.insert({ email: 'favoriter@getunleash.io' });
+    await favoriteProjectsStore.addFavoriteProject({
+        userId: user.id,
+        project: 'default',
+    });
+    await favoriteProjectsStore.addFavoriteProject({
+        userId: user.id,
+        project: 'enterprise',
+    });
+
+    const favorites = await projectReadModel.getProjectsFavoritedByUser(
+        user.id,
+    );
+    const ossFavorites = await buildProjectReadModel({
+        isOss: true,
+    }).getProjectsFavoritedByUser(user.id);
+
+    expect(favorites.toSorted()).toEqual(['default', 'enterprise']);
+    expect(ossFavorites).toEqual(['default']);
 });

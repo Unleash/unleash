@@ -2,7 +2,8 @@ import type { FC } from 'react';
 import { Box } from '@mui/material';
 import { Search } from 'component/common/Search/Search';
 import useLoading from 'hooks/useLoading';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
+import { searchFlagsTracking } from 'component/feature/FeatureToggleList/searchTracking';
 
 interface IProjectFlagsSearchProps {
     isLoading?: boolean;
@@ -16,15 +17,10 @@ export const ProjectFlagsSearch: FC<IProjectFlagsSearchProps> = ({
     onChangeSearchQuery,
 }) => {
     const headerLoadingRef = useLoading(isLoading || false);
-    const { trackEvent } = useEventTracker();
+    const trackSearchFlags = useTracking(searchFlagsTracking('project'));
     const handleSearch = (query: string) => {
         onChangeSearchQuery?.(query);
-        trackEvent('search-bar', {
-            props: {
-                screen: 'project',
-                length: query.length,
-            },
-        });
+        trackSearchFlags('succeeded', { queryLength: query.length });
     };
 
     return (

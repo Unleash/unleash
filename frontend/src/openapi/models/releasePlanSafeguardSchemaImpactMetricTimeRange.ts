@@ -10,7 +10,6 @@
 export type ReleasePlanSafeguardSchemaImpactMetricTimeRange =
     (typeof ReleasePlanSafeguardSchemaImpactMetricTimeRange)[keyof typeof ReleasePlanSafeguardSchemaImpactMetricTimeRange];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ReleasePlanSafeguardSchemaImpactMetricTimeRange = {
     hour: 'hour',
     day: 'day',

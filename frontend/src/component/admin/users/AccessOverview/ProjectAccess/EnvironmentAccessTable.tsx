@@ -26,7 +26,7 @@ const StyledEnvTable = styled('table')(({ theme }) => ({
     },
     '& th': {
         fontWeight: 'bold',
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: theme.palette.background.paper,
         textAlign: 'left',
     },
     '& th:not(:first-of-type)': {

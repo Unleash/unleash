@@ -29,6 +29,12 @@ import type {
     VariantsSchema,
 } from '../../openapi/index.js';
 import type { IContextFieldDto } from '../context/context-field-store-type.js';
+import { createClientFeatureToggleDelta } from '../client-feature-toggles/delta/createClientFeatureToggleDelta.js';
+import { FEATURE_STRATEGY_REMOVE } from '../../events/index.js';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import { create } from '../../server-impl.js';
+import { createServices } from '../../services/index.js';
+import type MetricsMonitor from '../../metrics.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -119,7 +125,7 @@ const addLink = async (
     link: { url: string; title: string },
 ) => {
     await app.services.transactionalFeatureLinkService.createLink(
-        DEFAULT_ENV,
+        DEFAULT_PROJECT,
         { ...link, featureName: feature },
         TEST_AUDIT_USER,
     );
@@ -166,13 +172,7 @@ beforeAll(async () => {
     db = await dbInit('export_import_api_serial', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
-        {
-            experimental: {
-                flags: {
-                    featureLinks: true,
-                },
-            },
-        },
+        { experimental: { flags: { deltaApi: true } } },
         db.rawDatabase,
     );
     eventStore = db.stores.eventStore;
@@ -950,6 +950,7 @@ test('import too many feature exceeding limit', async () => {
 test('can update toggles on subsequent import', async () => {
     await createProjects();
     await app.importToggles(defaultImportPayload);
+    const { body: imported } = await getFeatureEnvironment(defaultFeatureName);
     await app.importToggles({
         ...defaultImportPayload,
         data: {
@@ -996,6 +997,69 @@ test('can update toggles on subsequent import', async () => {
             },
         ],
     });
+
+    const { body } = await app.getRecordedEvents();
+    expect(
+        body.events.filter((event) => event.type === FEATURE_STRATEGY_REMOVE),
+    ).toMatchObject([
+        {
+            featureName: defaultFeatureName,
+            project: DEFAULT_PROJECT,
+            environment: DEFAULT_ENV,
+            preData: {
+                id: imported.strategies[0].id,
+                name: 'default',
+                constraints,
+            },
+        },
+    ]);
+});
+
+test('strategies removed by an import reach the delta', async () => {
+    await createProjects();
+    await app.importToggles(defaultImportPayload);
+    const delta = createClientFeatureToggleDelta(db.rawDatabase, app.config);
+    delta.resetDelta();
+    const query = { environment: DEFAULT_ENV, project: [DEFAULT_PROJECT] };
+    try {
+        const initial =
+            await app.services.clientFeatureToggleService.getClientDelta(
+                undefined,
+                query,
+            );
+        const hydration = initial!.events.find(
+            (event) => event.type === 'hydration',
+        )!;
+        expect(hydration.features).toMatchObject([
+            { name: defaultFeatureName, strategies: [{ name: 'default' }] },
+        ]);
+
+        const metadataOnlyImport = {
+            ...defaultImportPayload,
+            data: {
+                ...defaultImportPayload.data,
+                featureStrategies: [],
+                featureEnvironments: [],
+                featureTags: [],
+            },
+        };
+        await app.importToggles(metadataOnlyImport);
+        await delta.onUpdateRevisionEvent();
+
+        const updated =
+            await app.services.clientFeatureToggleService.getClientDelta(
+                hydration.eventId,
+                query,
+            );
+        expect(updated?.events).toMatchObject([
+            {
+                type: 'feature-updated',
+                feature: { name: defaultFeatureName, strategies: [] },
+            },
+        ]);
+    } finally {
+        delta.resetDelta();
+    }
 });
 
 test('reject import with unknown context fields', async () => {
@@ -1388,4 +1452,40 @@ test('should import features from file', async () => {
         project: DEFAULT_PROJECT,
         type: 'release',
     });
+});
+
+test('should leave a flag as it was when the startup import fails partway', async () => {
+    await createProjects();
+    await createFlag({ name: defaultFeatureName });
+    await app.enableFeature(defaultFeatureName, DEFAULT_ENV);
+    const { body: before } = await getFeatureEnvironment(defaultFeatureName);
+    expect(before).toMatchObject({
+        enabled: true,
+        strategies: [{ name: 'default' }],
+    });
+
+    await expect(
+        create(
+            createTestConfig({
+                db: { disableMigration: true },
+                resourceLimits: { constraints: 0 },
+                import: {
+                    file: 'src/lib/features/export-import-toggles/import-data.json',
+                    project: DEFAULT_PROJECT,
+                    environment: DEFAULT_ENV,
+                },
+            }),
+            {
+                createDb: () => db.rawDatabase,
+                createStores: () => db.stores,
+                createServices,
+                createSessionDb: vi.fn(),
+                createMetricsMonitor: () =>
+                    ({ startMonitoring: vi.fn() }) as unknown as MetricsMonitor,
+            },
+        ),
+    ).rejects.toThrow('constraints');
+
+    const { body: after } = await getFeatureEnvironment(defaultFeatureName);
+    expect(after).toEqual(before);
 });

@@ -10,7 +10,6 @@
 export type ChangeRequestCreateFeatureSchemaOneOfTwotwoAction =
     (typeof ChangeRequestCreateFeatureSchemaOneOfTwotwoAction)[keyof typeof ChangeRequestCreateFeatureSchemaOneOfTwotwoAction];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateFeatureSchemaOneOfTwotwoAction = {
     deleteDependency: 'deleteDependency',
 } as const;

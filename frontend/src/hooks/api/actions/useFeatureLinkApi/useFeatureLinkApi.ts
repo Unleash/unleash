@@ -1,14 +1,14 @@
 import useAPI from '../useApi/useApi.js';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useCallback } from 'react';
-import type { FeatureLinkSchema } from 'openapi';
+import type { LinkSchema } from 'openapi';
 
 export const useFeatureLinkApi = (project: string, feature: string) => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
         propagateErrors: true,
     });
 
-    const addLink = async (linkSchema: FeatureLinkSchema) => {
+    const addLink = async (linkSchema: LinkSchema) => {
         const req = createRequest(
             `/api/admin/projects/${project}/features/${feature}/link`,
             {
@@ -19,7 +19,7 @@ export const useFeatureLinkApi = (project: string, feature: string) => {
         await makeRequest(req.caller, req.id);
     };
 
-    const editLink = async (linkId: string, linkSchema: FeatureLinkSchema) => {
+    const editLink = async (linkId: string, linkSchema: LinkSchema) => {
         const req = createRequest(
             `/api/admin/projects/${project}/features/${feature}/link/${linkId}`,
             {

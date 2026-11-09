@@ -61,7 +61,7 @@ const StyledHeader = styled('div')(() => ({
 }));
 
 const StyledMainValue = styled(StyledValue)(({ theme }) => ({
-    fontSize: theme.fontSizes.largeHeader,
+    fontSize: theme.typography.display.fontSize,
 }));
 
 export const HealthStats: FC<IHealthStatsProps> = ({

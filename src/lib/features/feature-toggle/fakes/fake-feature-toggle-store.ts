@@ -1,4 +1,5 @@
 import type {
+    FlagLifetime,
     IFeatureToggleStore,
     IFeatureToggleStoreQuery,
 } from '../types/feature-toggle-store-type.js';
@@ -29,8 +30,9 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     }
 
     async batchArchive(featureNames: string[]): Promise<FeatureToggle[]> {
-        const features = this.features.filter((feature) =>
-            featureNames.includes(feature.name),
+        const features = this.features.filter(
+            (feature) =>
+                featureNames.includes(feature.name) && !feature.archived,
         );
         for (const feature of features) {
             feature.archived = true;
@@ -51,11 +53,14 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return features;
     }
 
-    async batchDelete(featureNames: string[]): Promise<void> {
+    async batchDelete(featureNames: string[]): Promise<FeatureToggle[]> {
+        const deletedFeatures = this.features.filter((feature) =>
+            featureNames.includes(feature.name),
+        );
         this.features = this.features.filter(
             (feature) => !featureNames.includes(feature.name),
         );
-        return Promise.resolve();
+        return deletedFeatures;
     }
 
     async batchRevive(featureNames: string[]): Promise<FeatureToggle[]> {
@@ -111,7 +116,12 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         project: string,
         data: FeatureToggleInsert,
     ): Promise<FeatureToggle> {
-        const inserted: FeatureToggle = { ...data, project };
+        const inserted: FeatureToggle = {
+            ...data,
+            project,
+            type: data.type ?? 'release',
+            createdAt: data.createdAt ?? new Date(),
+        };
         this.features.push(inserted);
         return inserted;
     }
@@ -178,7 +188,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     ): Promise<FeatureConfigurationClient[]> {
         return this.features.filter(
             (feature) => feature,
-        ) as FeatureConfigurationClient[];
+        ) as unknown as FeatureConfigurationClient[];
     }
 
     async update(
@@ -188,8 +198,13 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         const exists = await this.exists(data.name);
         if (exists) {
             const id = this.features.findIndex((f) => f.name === data.name);
-            const old = this.features.find((f) => f.name === data.name);
-            const updated = { project, ...old, ...data };
+            const old = this.features[id];
+            const updated: FeatureToggle = {
+                ...old,
+                ...data,
+                project,
+                type: data.type ?? old.type,
+            };
             this.features.splice(id, 1);
             this.features.push(updated);
             return updated;
@@ -229,7 +244,7 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
             return !!(
                 queryModifiers.range &&
                 featureDate >= new Date(queryModifiers.range[0]).getTime() &&
-                featureDate <= new Date(queryModifiers.range[1]).getTime()
+                featureDate < new Date(queryModifiers.range[1]).getTime()
             );
         }).length;
     }
@@ -242,6 +257,16 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
 
     isPotentiallyStale(): Promise<boolean> {
         throw new Error('Method not implemented.');
+    }
+
+    async getLifetime(featureName: string): Promise<FlagLifetime | undefined> {
+        const feature = this.features.find((f) => f.name === featureName);
+        if (!feature) {
+            return undefined;
+        }
+        return feature.lifetimeDays
+            ? { type: 'expiring', days: feature.lifetimeDays }
+            : { type: 'permanent' };
     }
 
     async getFeatureTypeCounts(

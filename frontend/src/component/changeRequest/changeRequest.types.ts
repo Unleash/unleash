@@ -1,8 +1,11 @@
-import type { IFeatureVariant } from 'interfaces/featureToggle';
 import type { ISegment } from 'interfaces/segment';
 import type { IFeatureStrategy } from '../../interfaces/strategy.js';
 import type { IUser } from '../../interfaces/user.js';
-import type { SetStrategySortOrderSchema } from 'openapi';
+import type {
+    SetStrategySortOrderSchema,
+    TransitionConditionSchema,
+    VariantSchema,
+} from 'openapi';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import type { ISafeguard } from 'interfaces/safeguard';
 
@@ -104,7 +107,7 @@ export interface IChangeRequestChangeBase {
     };
 }
 
-export type PlausibleChangeRequestState =
+export type ChangeRequestTrackedState =
     | Exclude<ChangeRequestState, 'Scheduled'>
     | 'Scheduled pending'
     | 'Scheduled failed'
@@ -118,6 +121,8 @@ export type ChangeRequestState =
     | 'Scheduled'
     | 'Cancelled'
     | 'Rejected';
+
+export type ChangeRequestTransitionState = Exclude<ChangeRequestState, 'Draft'>;
 
 export const isClosed = (state: ChangeRequestState): boolean =>
     ['Applied', 'Cancelled', 'Rejected'].includes(state);
@@ -317,8 +322,8 @@ export type ISegmentChange =
     | IChangeRequestDeleteSegment;
 
 type ChangeRequestVariantPatch = {
-    variants: IFeatureVariant[];
-    snapshot?: IFeatureVariant[];
+    variants: VariantSchema[];
+    snapshot?: VariantSchema[];
 };
 
 type ChangeRequestEnabled = { enabled: boolean };
@@ -346,7 +351,7 @@ type ChangeRequestStartMilestone = {
 type ChangeRequestChangeMilestoneProgression = {
     sourceMilestone: string;
     targetMilestone: string;
-    transitionCondition: { intervalMinutes: number };
+    transitionCondition: TransitionConditionSchema;
     snapshot?: IReleasePlan;
 };
 

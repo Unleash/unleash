@@ -1,11 +1,10 @@
 import { useMemo, useState, type FC } from 'react';
-import { Button } from '@mui/material';
-import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { DELETE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useEventTracker } from 'hooks/useEventTracker';
 import type { FeatureSchema } from 'openapi';
-import { addDays, isBefore } from 'date-fns';
+import { addDays, isAfter } from 'date-fns';
 
 interface IArchiveButtonProps {
     projectId: string;
@@ -16,11 +15,14 @@ interface IArchiveButtonProps {
 
 const DEFAULT_USAGE_THRESHOLD_DAYS = 7;
 
-const isFeatureInUse = (feature?: FeatureSchema): boolean => {
+export const isFeatureInUse = (feature?: FeatureSchema): boolean => {
     const aWeekAgo = addDays(new Date(), -DEFAULT_USAGE_THRESHOLD_DAYS);
-    return !!(
-        feature?.lastSeenAt && isBefore(new Date(feature.lastSeenAt), aWeekAgo)
-    );
+    const lastSeenAt = feature?.environments
+        ?.map((env) => env.lastSeenAt)
+        .filter(Boolean)
+        .sort()
+        .at(-1);
+    return Boolean(lastSeenAt && isAfter(new Date(lastSeenAt), aWeekAgo));
 };
 
 export const ArchiveButton: FC<IArchiveButtonProps> = ({
@@ -42,7 +44,7 @@ export const ArchiveButton: FC<IArchiveButtonProps> = ({
     const onArchive = async () => {
         setIsDialogOpen(false);
         onConfirm?.();
-        trackEvent('batch_operations', {
+        trackEvent('batch-operations', {
             props: {
                 eventType: 'features archived',
             },
@@ -51,20 +53,16 @@ export const ArchiveButton: FC<IArchiveButtonProps> = ({
 
     return (
         <>
-            <PermissionHOC projectId={projectId} permission={DELETE_FEATURE}>
-                {({ hasAccess }) => (
-                    <span>
-                        <Button
-                            disabled={!hasAccess || isDialogOpen}
-                            variant='outlined'
-                            size='medium'
-                            onClick={() => setIsDialogOpen(true)}
-                        >
-                            Archive
-                        </Button>
-                    </span>
-                )}
-            </PermissionHOC>
+            <PermissionButton
+                permission={DELETE_FEATURE}
+                projectId={projectId}
+                disabled={isDialogOpen}
+                variant='outlined'
+                size='medium'
+                onClick={() => setIsDialogOpen(true)}
+            >
+                Archive
+            </PermissionButton>
             <FeatureArchiveDialog
                 projectId={projectId}
                 featureIds={featureIds}

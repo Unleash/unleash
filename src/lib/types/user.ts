@@ -55,11 +55,21 @@ export interface IProjectUser extends IUser {
     addedAt: Date;
 }
 
-export interface IAuditUser {
+/** Who performed the action - really about the User */
+export interface IAuditActor {
     id: number;
     username: string;
-    ip: string;
 }
+
+/**
+ * Which request. Where the action came from, when an HTTP req was behind
+ */
+export interface IRequestOrigin {
+    ip: string;
+    userAgent?: string;
+}
+
+export interface IAuditUser extends IAuditActor, IRequestOrigin {}
 
 export class User implements IUser {
     isAPI: boolean = false;

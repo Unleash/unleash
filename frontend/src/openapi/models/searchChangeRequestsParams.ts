@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SearchChangeRequestsState } from './searchChangeRequestsState';
+import type { SearchChangeRequestsState } from './searchChangeRequestsState.ts';
 
 export type SearchChangeRequestsParams = {
     /**

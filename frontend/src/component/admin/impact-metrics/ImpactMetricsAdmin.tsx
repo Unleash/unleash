@@ -178,7 +178,7 @@ const ImpactMetricsPage = () => {
     };
 
     return (
-        <PageContent header={<PageHeader titleElement='Impact Metrics' />}>
+        <PageContent header={<PageHeader heading='Impact Metrics' />}>
             <Layout>
                 <Card>
                     <IconHeader>
@@ -277,7 +277,7 @@ const ImpactMetricsPage = () => {
                         }
                         disabled={loading || saving}
                         fullWidth
-                        size='small'
+                        size='large'
                         type={hasCredentials && !showUrl ? 'password' : 'text'}
                         slotProps={{
                             input: {

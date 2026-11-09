@@ -7,31 +7,46 @@ import {
 import { useUiFlag } from 'hooks/useUiFlag';
 import { getVariantValue, type Variant } from 'utils/variants';
 import { FlightRecorderContext } from 'contexts/FlightRecorderContext';
+import { isLocalhostDomain } from 'utils/env';
+import { usePageViewTracking } from './usePageViewTracking';
+import { createBrowserContextEnricher } from './browserContext';
 
-// Custom UI events are low-frequency, so the periodic timer does the flushing
-// and the buffer stays small. Keep flushAt low so the keepalive flush on
-// close() stays well under the 64 KB browser limit (~35 KB at 350 bytes/event).
+// A low flushAt keeps the keepalive flush on close() well under the browser's 64 KB limit.
 const BATCH = { flushAt: 100 };
 
-export const FlightRecorderProvider: FC<{ children?: React.ReactNode }> = ({
-    children,
-}) => {
+// Flip to record from localhost, e.g. when working on the ingestion pipeline.
+const LOCAL_TESTING = false;
+
+export const FlightRecorderProvider: FC<{
+    children?: React.ReactNode;
+    createRecorder?: typeof createFlightRecorder;
+    hostname: string;
+}> = ({ children, createRecorder = createFlightRecorder, hostname }) => {
     const flag = useUiFlag('flightRecorderFrontend');
     const url = getVariantValue(flag as Variant);
 
     const [recorder, setRecorder] = useState<FlightRecorder | null>(null);
 
     useEffect(() => {
-        if (!url) {
+        // Local dev against a hosted backend still receives the flag with the
+        // production ingestion URL; dev traffic must not pollute production data.
+        if (!url || (isLocalhostDomain(hostname) && !LOCAL_TESTING)) {
             return;
         }
         try {
-            const instance = createFlightRecorder({
+            const instance = createRecorder({
                 url,
                 clientKey: '',
                 batch: BATCH,
-                onError: (info) =>
-                    console.warn('Flight recorder dropped events', info),
+                hashContextFields: ['email'],
+                enrichContext: createBrowserContextEnricher(),
+                // deliveryFailed is retried and routine in browsers
+                // (flaky wifi, adblockers) — warn only on real losses
+                onError: (info) => {
+                    if (info.reason !== 'deliveryFailed') {
+                        console.warn('Flight recorder dropped events', info);
+                    }
+                },
             });
             setRecorder(instance);
             return () => {
@@ -41,8 +56,10 @@ export const FlightRecorderProvider: FC<{ children?: React.ReactNode }> = ({
         } catch (error) {
             console.warn(error);
         }
-    }, [url]);
+        // createRecorder is a stable ref (module default or a fixture), so it won't refire.
+    }, [url, createRecorder, hostname]);
 
+    // Flush on backgrounding; unload (pagehide) is owned by usePageViewTracking.
     useEffect(() => {
         if (!recorder) {
             return;
@@ -52,14 +69,12 @@ export const FlightRecorderProvider: FC<{ children?: React.ReactNode }> = ({
                 void recorder.flush({ keepalive: true });
             }
         };
-        const flush = () => void recorder.flush({ keepalive: true });
         document.addEventListener('visibilitychange', flushIfHidden);
-        window.addEventListener('pagehide', flush);
-        return () => {
+        return () =>
             document.removeEventListener('visibilitychange', flushIfHidden);
-            window.removeEventListener('pagehide', flush);
-        };
     }, [recorder]);
+
+    usePageViewTracking(recorder);
 
     return (
         <FlightRecorderContext.Provider value={recorder}>

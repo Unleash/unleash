@@ -7,6 +7,7 @@ export * from './demo-authentication.js';
 export * from './no-authentication.js';
 export * from './oss-authentication.js';
 export * from './pat-middleware.js';
+export * from './rate-limit-middleware.js';
 export * from './rbac-middleware.js';
 export * from './request-logger.js';
 export * from './response-time-metrics.js';

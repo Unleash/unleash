@@ -50,12 +50,25 @@ test('features read model', async () => {
         await readModel.featureExistsInProject('archived-feature', 'default'),
     ).toBe(false);
 
-    // featuresInTheSameProject
     expect(
-        await readModel.featuresInTheSameProject('feature-a', 'feature-b'),
+        await readModel.featuresInProject('feature-a', 'feature-b', 'default'),
     ).toBe(true);
     expect(
-        await readModel.featuresInTheSameProject('feature-a', 'feature-c'),
+        await readModel.featuresInProject('feature-a', 'feature-c', 'default'),
+    ).toBe(false);
+    expect(
+        await readModel.featuresInProject(
+            'feature-a',
+            'feature-c',
+            'other-project',
+        ),
+    ).toBe(false);
+    expect(
+        await readModel.featuresInProject(
+            'feature-a',
+            'no-such-feature',
+            'default',
+        ),
     ).toBe(false);
 
     await db.destroy();

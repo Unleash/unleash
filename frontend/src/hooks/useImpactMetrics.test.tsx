@@ -37,7 +37,7 @@ const TestHistogramComponent = () => {
 const setup = (ui: ReactNode) => {
     const { requests }: { requests: any[] } = testServerRoute(
         server,
-        'http://localhost:12345//client/metrics',
+        'http://localhost:12345/client/metrics',
         {},
         'post',
     );

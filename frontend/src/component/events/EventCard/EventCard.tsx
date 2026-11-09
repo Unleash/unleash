@@ -22,7 +22,7 @@ const StyledChangesTitle = styled('strong')(({ theme }) => ({
 
 const StyledContainerListItem = styled('li')(({ theme }) => ({
     display: 'grid',
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.neutral.container,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(0.5),
     [theme.breakpoints.up('md')]: {

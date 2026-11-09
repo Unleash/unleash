@@ -1,5 +1,8 @@
-import type { FC, JSX } from 'react';
-import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import type { FC } from 'react';
+import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
+import GeneralSelect, {
+    type ISelectOption,
+} from 'component/common/GeneralSelect/GeneralSelect';
 import type { AggregationMode } from '../../../types.ts';
 
 export type ModeSelectorProps = {
@@ -9,37 +12,23 @@ export type ModeSelectorProps = {
     label?: string;
 };
 
-const counterOptions = [
-    <MenuItem key='rps' value='rps'>
-        Rate per second
-    </MenuItem>,
-    <MenuItem key='count' value='count'>
-        Count
-    </MenuItem>,
+const counterOptions: ISelectOption[] = [
+    { key: 'rps', label: 'Rate per second' },
+    { key: 'count', label: 'Count' },
 ];
 
-const gaugeOptions = [
-    <MenuItem key='avg' value='avg'>
-        Average
-    </MenuItem>,
-    <MenuItem key='sum' value='sum'>
-        Sum
-    </MenuItem>,
+const gaugeOptions: ISelectOption[] = [
+    { key: 'avg', label: 'Average' },
+    { key: 'sum', label: 'Sum' },
 ];
 
-const histogramOptions = [
-    <MenuItem key='p50' value='p50'>
-        50th percentile
-    </MenuItem>,
-    <MenuItem key='p95' value='p95'>
-        95th percentile
-    </MenuItem>,
-    <MenuItem key='p99' value='p99'>
-        99th percentile
-    </MenuItem>,
+const histogramOptions: ISelectOption[] = [
+    { key: 'p50', label: '50th percentile' },
+    { key: 'p95', label: '95th percentile' },
+    { key: 'p99', label: '99th percentile' },
 ];
 
-const optionsByType: Record<string, JSX.Element[]> = {
+const optionsByType: Record<string, ISelectOption[]> = {
     counter: counterOptions,
     gauge: gaugeOptions,
     histogram: histogramOptions,
@@ -55,18 +44,12 @@ export const ModeSelector: FC<ModeSelectorProps> = ({
     const options = optionsByType[metricType] ?? optionsByType.unknown;
 
     return (
-        <FormControl variant='outlined' size='small'>
-            {label ? (
-                <InputLabel id='mode-select-label'>{label}</InputLabel>
-            ) : null}
-            <Select
-                labelId='mode-select-label'
-                value={value}
-                onChange={(e) => onChange(e.target.value as AggregationMode)}
-                label={label}
-            >
-                {options}
-            </Select>
-        </FormControl>
+        <GeneralSelect<AggregationMode>
+            label={label}
+            value={value}
+            options={options}
+            onChange={onChange}
+            IconComponent={ArrowDropDown}
+        />
     );
 };

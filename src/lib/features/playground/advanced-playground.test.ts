@@ -21,7 +21,6 @@ beforeAll(async () => {
                 flags: {
                     advancedPlayground: true,
                     strictSchemaValidation: true,
-                    strategyVariant: true,
                 },
             },
         },

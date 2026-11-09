@@ -78,22 +78,6 @@ export const applicationSchema = joi
         announced: joi.boolean().optional().default(false),
     });
 
-export const customMetricSchema = joi
-    .object()
-    .options({ stripUnknown: true })
-    .keys({
-        name: joi.string().required(),
-        value: joi.number().required(),
-        labels: joi.object().pattern(joi.string(), joi.string()).optional(),
-    });
-
-export const customMetricsSchema = joi
-    .object()
-    .options({ stripUnknown: true })
-    .keys({
-        metrics: joi.array().items(customMetricSchema).required(),
-    });
-
 export const metricSampleSchema = joi
     .object()
     .options({ stripUnknown: true })

@@ -10,7 +10,6 @@
 export type MetricQuerySchemaTimeRange =
     (typeof MetricQuerySchemaTimeRange)[keyof typeof MetricQuerySchemaTimeRange];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const MetricQuerySchemaTimeRange = {
     hour: 'hour',
     day: 'day',

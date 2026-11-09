@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateProjectSchemaChangeRequestEnvironmentsItem } from './createProjectSchemaChangeRequestEnvironmentsItem';
-import type { CreateProjectSchemaMode } from './createProjectSchemaMode';
+import type { CreateProjectSchemaChangeRequestEnvironmentsItem } from './createProjectSchemaChangeRequestEnvironmentsItem.ts';
+import type { CreateProjectSchemaMode } from './createProjectSchemaMode.ts';
 
 /**
  * Data used to create a new [project](https://docs.getunleash.io/concepts/projects).

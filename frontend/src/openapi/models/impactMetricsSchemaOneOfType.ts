@@ -10,7 +10,6 @@
 export type ImpactMetricsSchemaOneOfType =
     (typeof ImpactMetricsSchemaOneOfType)[keyof typeof ImpactMetricsSchemaOneOfType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ImpactMetricsSchemaOneOfType = {
     counter: 'counter',
     gauge: 'gauge',

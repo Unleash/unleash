@@ -24,7 +24,6 @@ const setupLoggedIn = () => {
         feedback: [],
         splash: {},
     });
-    testServerRoute(server, '/api/admin/projects', { projects: [] });
 };
 
 const setupLoggedOut = () => {
@@ -35,7 +34,6 @@ const setupLoggedOut = () => {
         defaultHidden: false,
         options: [],
     });
-    testServerRoute(server, '/api/admin/projects', { projects: [] });
 };
 
 const renderInitialRedirect = () =>

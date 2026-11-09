@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSchema } from './featureSchema';
-import type { GroupItemSchema } from './groupItemSchema';
-import type { RoleSchema } from './roleSchema';
+import type { FeatureSchema } from './featureSchema.ts';
+import type { GroupItemSchema } from './groupItemSchema.ts';
+import type { RoleSchema } from './roleSchema.ts';
 
 /**
  * User profile overview

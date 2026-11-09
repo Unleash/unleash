@@ -25,11 +25,11 @@ export const createPersonalDashboardService = (
     stores: IUnleashStores,
 ) => {
     return new PersonalDashboardService(
-        new PersonalDashboardReadModel(db),
+        new PersonalDashboardReadModel(db, config),
         new ProjectOwnersReadModel(db),
-        new ProjectReadModel(db, config.eventBus, config.flagResolver),
+        new ProjectReadModel(db, config),
         new OnboardingReadModel(db),
-        new EventStore(db, config.getLogger),
+        new EventStore(db, config.eventBus, config.getLogger),
         new FeatureEventFormatterMd({
             unleashUrl: config.server.unleashUrl,
             formatStyle: 'markdown',

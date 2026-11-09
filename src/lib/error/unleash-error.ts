@@ -31,6 +31,7 @@ export const UnleashApiErrorTypes = [
     'ExceedsLimitError',
     'PasswordPreviouslyUsedError',
     'RateLimitError',
+    'SessionEndedError',
     // server errors; not the end user's fault
     'InternalError',
     'BadGatewayError',
@@ -76,17 +77,23 @@ export abstract class UnleashError extends Error {
 export class GenericUnleashError extends UnleashError {
     statusCode: number;
 
+    // logged by the error handler but never sent to the client
+    internalMessage?: string;
+
     constructor({
         name,
         message,
         statusCode,
+        internalMessage,
     }: {
         name: UnleashApiErrorName;
         message: string;
         statusCode: number;
+        internalMessage?: string;
     }) {
         super(message, name);
         this.statusCode = statusCode;
+        this.internalMessage = internalMessage;
     }
 }
 

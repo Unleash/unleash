@@ -10,7 +10,6 @@
 export type ChangeRequestOneOrManyCreateSchemaOneOfTwofiveAction =
     (typeof ChangeRequestOneOrManyCreateSchemaOneOfTwofiveAction)[keyof typeof ChangeRequestOneOrManyCreateSchemaOneOfTwofiveAction];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestOneOrManyCreateSchemaOneOfTwofiveAction = {
     addDependency: 'addDependency',
 } as const;

@@ -7,7 +7,6 @@
 export type ClientFeaturesDeltaSchemaEventsItemAnyOfThreeType =
     (typeof ClientFeaturesDeltaSchemaEventsItemAnyOfThreeType)[keyof typeof ClientFeaturesDeltaSchemaEventsItemAnyOfThreeType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ClientFeaturesDeltaSchemaEventsItemAnyOfThreeType = {
     'feature-removed': 'feature-removed',
 } as const;

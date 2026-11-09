@@ -21,6 +21,8 @@ import type { IToast } from 'interfaces/toast';
 import { useTheme } from '@mui/material/styles';
 import type { FeedbackData, FeedbackMode } from './FeedbackContext.tsx';
 import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
+import type { Tracking } from 'utils/trackingEvents';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUserType from './useUserType.ts';
 import { BaseModal } from 'component/common/SidebarModal/SidebarModal';
@@ -147,6 +149,8 @@ interface IFeedbackComponent {
     closeFeedback: () => void;
 }
 
+const feedbackTracking: Tracking = { event: 'feedback', type: 'send-feedback' };
+
 export const FeedbackComponent = ({
     feedbackData,
     showFeedback,
@@ -157,6 +161,8 @@ export const FeedbackComponent = ({
     const userType = useUserType();
     const { trackEvent } = useEventTracker();
     const theme = useTheme();
+
+    const trackFeedback = useTracking(feedbackTracking);
 
     const { addFeedback } = useUserFeedbackApi();
     const { setHasSubmittedFeedback } = useUserSubmittedFeedback(
@@ -199,6 +205,7 @@ export const FeedbackComponent = ({
                 props: {
                     eventType: `submitted - ${feedbackData.category}`,
                     category: feedbackData.category,
+                    action: 'submitted',
                 },
             });
             toastTitle = 'Feedback sent';
@@ -224,13 +231,23 @@ export const FeedbackComponent = ({
     };
 
     return (
-        <BaseModal open={showFeedback} onClose={closeFeedback} label='Feedback'>
+        <BaseModal
+            open={showFeedback}
+            onClose={closeFeedback}
+            tracking={feedbackTracking}
+            label='Feedback'
+        >
             <ParentContainer>
-                <ClickAwayListener onClickAway={() => closeFeedback()}>
+                <ClickAwayListener onClickAway={closeFeedback}>
                     <StyledContainer>
                         <Tooltip title='Close' arrow>
                             <StyledCloseButton
-                                onClick={closeFeedback}
+                                onClick={() => {
+                                    trackFeedback('dismissed', {
+                                        method: 'close-icon',
+                                    });
+                                    closeFeedback();
+                                }}
                                 size='large'
                             >
                                 <CloseIcon />
@@ -265,7 +282,7 @@ export const FeedbackComponent = ({
                                                 multiline
                                                 rows={3}
                                                 variant='outlined'
-                                                size='small'
+                                                size='large'
                                                 slotProps={{
                                                     inputLabel: {
                                                         style: {
@@ -287,7 +304,7 @@ export const FeedbackComponent = ({
                                                 name='areasForImprovement'
                                                 rows={3}
                                                 variant='outlined'
-                                                size='small'
+                                                size='large'
                                                 hidden
                                                 slotProps={{
                                                     inputLabel: {
@@ -316,7 +333,7 @@ export const FeedbackComponent = ({
                                                 multiline
                                                 rows={3}
                                                 variant='outlined'
-                                                size='small'
+                                                size='large'
                                                 slotProps={{
                                                     inputLabel: {
                                                         style: {
@@ -343,7 +360,7 @@ export const FeedbackComponent = ({
                                                 name='areasForImprovement'
                                                 rows={3}
                                                 variant='outlined'
-                                                size='small'
+                                                size='large'
                                                 slotProps={{
                                                     inputLabel: {
                                                         style: {

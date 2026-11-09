@@ -1,5 +1,5 @@
 import { Box, useMediaQuery, useTheme } from '@mui/material';
-import { StyledLink } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow';
+import { QuietLink } from 'component/common/QuietLink';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { Badge } from 'component/common/Badge/Badge';
@@ -23,12 +23,12 @@ export const ChangesScheduledBadge = ({
                 tooltip={
                     <>
                         {scheduledChangeRequestIds?.map((id, index) => (
-                            <StyledLink
+                            <QuietLink
                                 key={`${project}-${index}`}
                                 to={`/projects/${project}/change-requests/${id}`}
                             >
                                 Change request #{id}
-                            </StyledLink>
+                            </QuietLink>
                         ))}
                     </>
                 }

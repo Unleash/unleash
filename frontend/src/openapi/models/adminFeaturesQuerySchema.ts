@@ -10,6 +10,9 @@
 export interface AdminFeaturesQuerySchema {
     /** A case-insensitive prefix filter for the names of feature flags */
     namePrefix?: string;
-    /** Used to filter by tags. For each entry, a TAGTYPE:TAGVALUE is expected */
+    /**
+     * Used to filter by tags. For each entry, a TAGTYPE:TAGVALUE is expected
+     * @items.pattern \w+:\w+
+     */
     tag?: string[];
 }

@@ -3,18 +3,10 @@ import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import { describe, expect, test, vi } from 'vitest';
 import { AddRegexValueEditor } from './AddRegexValueEditor';
-import type { ConstraintValidatorOutput } from '../ConstraintValidatorOutput';
-
-const validValidator = (_: string): ConstraintValidatorOutput => [true, ''];
-const invalidValidator =
-    (msg: string) =>
-    (_: string): ConstraintValidatorOutput => [false, msg];
 
 const defaultProps = {
-    addValue: vi.fn(),
+    value: '',
     caseInsensitive: false,
-    editingOpen: true,
-    validator: validValidator,
 };
 
 describe('AddRegexValueEditor', () => {
@@ -23,14 +15,7 @@ describe('AddRegexValueEditor', () => {
             render(<AddRegexValueEditor {...defaultProps} />);
 
             expect(
-                screen.getByRole('heading', { name: 'Regular expression' }),
-            ).toBeInTheDocument();
-            expect(
                 screen.getByRole('heading', { name: 'Test regex' }),
-            ).toBeInTheDocument();
-
-            expect(
-                screen.getByTestId('CONSTRAINT_VALUES_INPUT'),
             ).toBeInTheDocument();
 
             const testInputs =
@@ -43,29 +28,6 @@ describe('AddRegexValueEditor', () => {
             ).toBeInTheDocument();
         });
 
-        test('renders with initialValue pre-filled', () => {
-            render(
-                <AddRegexValueEditor {...defaultProps} initialValue='[abc]' />,
-            );
-
-            expect(
-                screen
-                    .getByTestId('CONSTRAINT_VALUES_INPUT')
-                    .querySelector('textarea'),
-            ).toHaveValue('[abc]');
-        });
-
-        test('renders helpText when provided', () => {
-            render(
-                <AddRegexValueEditor
-                    {...defaultProps}
-                    helpText='Use RE2 syntax'
-                />,
-            );
-
-            expect(screen.getByText('Use RE2 syntax')).toBeInTheDocument();
-        });
-
         test('remove button is not rendered when only one test string exists', () => {
             render(<AddRegexValueEditor {...defaultProps} />);
 
@@ -75,93 +37,9 @@ describe('AddRegexValueEditor', () => {
         });
     });
 
-    describe('regex input', () => {
-        test('calls addValue when regex input changes', () => {
-            const addValue = vi.fn();
-            render(
-                <AddRegexValueEditor {...defaultProps} addValue={addValue} />,
-            );
-
-            const textarea = screen
-                .getByTestId('CONSTRAINT_VALUES_INPUT')
-                .querySelector('textarea')!;
-            fireEvent.change(textarea, { target: { value: '[abc]' } });
-
-            expect(addValue).toHaveBeenCalledWith('[abc]');
-        });
-
-        test('shows validator error message', () => {
-            render(
-                <AddRegexValueEditor
-                    {...defaultProps}
-                    validator={invalidValidator('Invalid regex')}
-                    initialValue='['
-                />,
-            );
-
-            expect(screen.getByText('Invalid regex')).toBeInTheDocument();
-        });
-
-        test('shows error for values longer than 100 characters', () => {
-            const longValue = 'a'.repeat(101);
-            render(
-                <AddRegexValueEditor
-                    {...defaultProps}
-                    initialValue={longValue}
-                />,
-            );
-
-            expect(
-                screen.getByText(
-                    /values cannot be longer than 100 characters/i,
-                ),
-            ).toBeInTheDocument();
-        });
-
-        test('shows error on Enter when value is empty', () => {
-            render(<AddRegexValueEditor {...defaultProps} />);
-
-            const textarea = screen
-                .getByTestId('CONSTRAINT_VALUES_INPUT')
-                .querySelector('textarea')!;
-            fireEvent.keyDown(textarea, { key: 'Enter' });
-
-            expect(
-                screen.getByText('Value cannot be empty or whitespace'),
-            ).toBeInTheDocument();
-        });
-
-        test('shows error on Enter when value is only whitespace', () => {
-            render(<AddRegexValueEditor {...defaultProps} />);
-
-            const textarea = screen
-                .getByTestId('CONSTRAINT_VALUES_INPUT')
-                .querySelector('textarea')!;
-            fireEvent.change(textarea, { target: { value: '   ' } });
-            fireEvent.keyDown(textarea, { key: 'Enter' });
-
-            expect(
-                screen.getByText('Value cannot be empty or whitespace'),
-            ).toBeInTheDocument();
-        });
-
-        test('does not show error on Shift+Enter', () => {
-            render(<AddRegexValueEditor {...defaultProps} />);
-
-            const textarea = screen
-                .getByTestId('CONSTRAINT_VALUES_INPUT')
-                .querySelector('textarea')!;
-            fireEvent.keyDown(textarea, { key: 'Enter', shiftKey: true });
-
-            expect(
-                screen.queryByText('Value cannot be empty or whitespace'),
-            ).not.toBeInTheDocument();
-        });
-    });
-
     describe('test string management', () => {
         test('adds a new test string when "Add test string" is clicked', () => {
-            render(<AddRegexValueEditor {...defaultProps} />);
+            render(<AddRegexValueEditor {...defaultProps} value='[abc]' />);
 
             fireEvent.click(
                 screen.getByRole('button', { name: /add test string/i }),
@@ -174,7 +52,7 @@ describe('AddRegexValueEditor', () => {
             expect(inputs[inputs.length - 1]).toHaveFocus();
 
             expect(
-                screen.getAllByText(/matches an empty string/i),
+                screen.getAllByLabelText(/does not match empty strings/i),
             ).toHaveLength(2);
         });
 
@@ -220,66 +98,62 @@ describe('AddRegexValueEditor', () => {
     describe('match indicators', () => {
         test('shows "does not match empty strings" for empty test string when regex does not match empty string', () => {
             // \w+ requires at least one word char, so it does not match ""
-            render(
-                <AddRegexValueEditor {...defaultProps} initialValue='\w+' />,
-            );
+            render(<AddRegexValueEditor {...defaultProps} value='\w+' />);
 
             expect(
-                screen.getByText(/does not match empty strings/i),
+                screen.getByLabelText(/does not match empty strings/i),
             ).toBeInTheDocument();
         });
 
         test('shows "matches" when regex matches the test string', () => {
-            render(
-                <AddRegexValueEditor {...defaultProps} initialValue='[abc]' />,
-            );
+            render(<AddRegexValueEditor {...defaultProps} value='[abc]' />);
 
             const testInput = screen.getByPlaceholderText('Enter test value');
             fireEvent.change(testInput, { target: { value: 'a' } });
 
             expect(
-                screen.getByText(/your regular expression matches$/i),
+                screen.getByLabelText(/your regular expression matches\.$/i),
             ).toBeInTheDocument();
         });
 
         test('shows "does not match" when regex does not match the test string', () => {
-            render(
-                <AddRegexValueEditor {...defaultProps} initialValue='[abc]' />,
-            );
+            render(<AddRegexValueEditor {...defaultProps} value='[abc]' />);
 
             const testInput = screen.getByPlaceholderText('Enter test value');
             fireEvent.change(testInput, { target: { value: 'z' } });
 
             expect(
-                screen.getByText(/your regular expression does not match$/i),
+                screen.getByLabelText(
+                    /your regular expression does not match\.$/i,
+                ),
             ).toBeInTheDocument();
         });
 
         test('shows "matches an empty string" when regex matches empty string and test input is empty', () => {
-            render(<AddRegexValueEditor {...defaultProps} initialValue='.*' />);
+            render(<AddRegexValueEditor {...defaultProps} value='.*' />);
 
             // The single test input starts empty; .* matches empty string
             expect(
-                screen.getByText(/matches an empty string/i),
+                screen.getByLabelText(/matches an empty string/i),
             ).toBeInTheDocument();
         });
 
         test('updates match status when test string changes', () => {
             // [0-9]+ matches digits but not letters
-            render(
-                <AddRegexValueEditor {...defaultProps} initialValue='[0-9]+' />,
-            );
+            render(<AddRegexValueEditor {...defaultProps} value='[0-9]+' />);
 
             const testInput = screen.getByPlaceholderText('Enter test value');
 
             fireEvent.change(testInput, { target: { value: 'hello' } });
             expect(
-                screen.getByText(/your regular expression does not match$/i),
+                screen.getByLabelText(
+                    /your regular expression does not match\.$/i,
+                ),
             ).toBeInTheDocument();
 
             fireEvent.change(testInput, { target: { value: '123' } });
             expect(
-                screen.getByText(/your regular expression matches$/i),
+                screen.getByLabelText(/your regular expression matches\.$/i),
             ).toBeInTheDocument();
         });
     });
@@ -289,7 +163,7 @@ describe('AddRegexValueEditor', () => {
             render(
                 <AddRegexValueEditor
                     {...defaultProps}
-                    initialValue='hello'
+                    value='hello'
                     caseInsensitive={false}
                 />,
             );
@@ -297,14 +171,16 @@ describe('AddRegexValueEditor', () => {
             const testInput = screen.getByPlaceholderText('Enter test value');
             fireEvent.change(testInput, { target: { value: 'HELLO' } });
 
-            expect(screen.getByText(/does not match$/i)).toBeInTheDocument();
+            expect(
+                screen.getByLabelText(/does not match\.$/i),
+            ).toBeInTheDocument();
         });
 
         test('case-insensitive: matches different case', () => {
             render(
                 <AddRegexValueEditor
                     {...defaultProps}
-                    initialValue='hello'
+                    value='hello'
                     caseInsensitive={true}
                 />,
             );
@@ -313,7 +189,7 @@ describe('AddRegexValueEditor', () => {
             fireEvent.change(testInput, { target: { value: 'HELLO' } });
 
             expect(
-                screen.getByText(/your regular expression matches$/i),
+                screen.getByLabelText(/your regular expression matches\.$/i),
             ).toBeInTheDocument();
         });
     });

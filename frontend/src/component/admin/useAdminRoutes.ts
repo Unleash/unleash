@@ -3,24 +3,21 @@ import { adminRoutes } from './adminRoutes.js';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { filterRoutesByPlanData } from './filterRoutesByPlanData.js';
 import { filterByConfig, normalizeRoutePath } from 'component/common/util';
+import { useUiFlagEvaluator } from 'hooks/useUiFlag';
 
 export const useAdminRoutes = () => {
     const { uiConfig, isPro, isEnterprise } = useUiConfig();
     const { isBilling } = useInstanceStatus();
-    const routes = [...adminRoutes];
+    const evaluateFlag = useUiFlagEvaluator();
+    const isCloud = Boolean(evaluateFlag('UNLEASH_CLOUD'));
 
-    if (uiConfig.flags.UNLEASH_CLOUD) {
-        const adminBillingMenuItem = routes.findIndex(
-            (route) => route.title === 'Billing & invoices',
-        );
-        routes[adminBillingMenuItem] = {
-            ...routes[adminBillingMenuItem],
-            path: '/admin/billing',
-        };
-    }
-
-    return routes
-        .filter(filterByConfig(uiConfig))
+    return adminRoutes
+        .filter((route) => {
+            if (route.deployment === 'cloud') return isCloud;
+            if (route.deployment === 'self-hosted') return !isCloud;
+            return true;
+        })
+        .filter(filterByConfig(uiConfig, evaluateFlag))
         .filter((route) =>
             filterRoutesByPlanData(route?.menu, {
                 enterprise: isEnterprise(),

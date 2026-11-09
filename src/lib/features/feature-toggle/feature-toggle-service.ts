@@ -26,6 +26,7 @@ import {
     type IFeatureLinksReadModel,
     type IFeatureNaming,
     type IFeatureOverview,
+    type IFeatureOverviewCore,
     type IFeatureStrategy,
     type IFeatureTagStore,
     type IFeatureToggleClientStore,
@@ -50,6 +51,7 @@ import {
     UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
     WeightType,
 } from '../../types/index.js';
+import { addDays } from 'date-fns';
 import type { Logger } from '../../logger.js';
 import {
     ForbiddenError,
@@ -63,28 +65,31 @@ import {
 } from '../../error/index.js';
 import {
     featureMetadataSchema,
-    nameSchema,
+    featureNameSchema,
     variantsArraySchema,
 } from '../../schema/feature-schema.js';
 import NotFoundError from '../../error/notfound-error.js';
 import type {
     FeatureConfigurationClient,
     IFeatureStrategiesStore,
+    StrategyBelongsToFeatureAndProjectParams,
 } from './types/feature-toggle-strategies-store-type.js';
 import { DEFAULT_ENV } from '../../util/index.js';
 import type { Operation } from 'fast-json-patch';
 import fastJsonPatch from 'fast-json-patch';
 const { applyPatch, deepClone } = fastJsonPatch;
-import type { IConstraintsReadModel } from '../constraints/constraints-read-model-type.js';
+import type { IConstraintValidator } from '../constraints/constraint-validator-type.js';
 import type { SetStrategySortOrderSchema } from '../../openapi/spec/set-strategy-sort-order-schema.js';
 import {
     getDefaultStrategy,
     getProjectDefaultStrategy,
-} from '../playground/feature-evaluator/helpers.js';
+} from './default-strategy.js';
 import type { AccessService } from '../../services/access-service.js';
 import type { IUser } from '../../types/index.js';
 import type { IFeatureProjectUserParams } from './feature-toggle-controller.js';
 import { unique } from '../../util/unique.js';
+import { arraysHaveSameItems } from '../../util/arraysHaveSameItems.js';
+import { collectIds } from '../../util/collect-ids.js';
 import type { ISegmentService } from '../segment/segment-service-interface.js';
 import type { IChangeRequestAccessReadModel } from '../change-request-access-service/change-request-access-read-model.js';
 import { checkFeatureFlagNamesAgainstPattern } from '../feature-naming-pattern/feature-naming-validation.js';
@@ -157,7 +162,7 @@ export type ServicesAndReadModels = {
     featureLinkService: FeatureLinkService;
     featureLinksReadModel: IFeatureLinksReadModel;
     resourceLimitsService: ResourceLimitsService;
-    constraintsReadModel: IConstraintsReadModel;
+    constraintValidator: IConstraintValidator;
 };
 
 export class FeatureToggleService {
@@ -177,7 +182,7 @@ export class FeatureToggleService {
 
     private projectStore: IProjectStore;
 
-    private constraintsReadModel: IConstraintsReadModel;
+    private constraintValidator: IConstraintValidator;
 
     private segmentService: ISegmentService;
 
@@ -228,7 +233,7 @@ export class FeatureToggleService {
             featureLinksReadModel,
             featureLinkService,
             resourceLimitsService,
-            constraintsReadModel,
+            constraintValidator,
         }: ServicesAndReadModels,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
@@ -239,7 +244,7 @@ export class FeatureToggleService {
         this.tagStore = featureTagStore;
         this.projectStore = projectStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
-        this.constraintsReadModel = constraintsReadModel;
+        this.constraintValidator = constraintValidator;
         this.segmentService = segmentService;
         this.accessService = accessService;
         this.eventService = eventService;
@@ -276,18 +281,18 @@ export class FeatureToggleService {
         }
     }
 
-    async validateFeatureBelongsToProject({
-        featureName,
-        projectId,
-    }: IFeatureContext): Promise<void> {
+    async validateFeatureBelongsToProject(
+        { featureName, projectId }: IFeatureContext,
+        exposeExistingFeature: boolean = true,
+    ): Promise<void> {
         const id = await this.featureToggleStore.getProjectId(featureName);
 
         if (id !== projectId) {
             throw new NotFoundError(
                 `There's no feature named "${featureName}" in project "${projectId}"${
-                    id === undefined
-                        ? '.'
-                        : `, but there's a feature with that name in project "${id}"`
+                    id !== undefined && exposeExistingFeature
+                        ? `, but there's a feature with that name in project "${id}"`
+                        : '.'
                 }`,
             );
         }
@@ -333,7 +338,7 @@ export class FeatureToggleService {
     }
 
     validateUpdatedProperties(
-        { featureName, projectId }: IFeatureContext,
+        { featureName, projectId, environment }: IFeatureStrategyContext,
         existingStrategy: IFeatureStrategy,
     ): void {
         if (existingStrategy.projectId !== projectId) {
@@ -347,28 +352,11 @@ export class FeatureToggleService {
                 'You can not change the featureName for an activation strategy.',
             );
         }
-    }
 
-    async validateProjectCanAccessSegments(
-        projectId: string,
-        segmentIds?: number[],
-    ): Promise<void> {
-        if (segmentIds && segmentIds.length > 0) {
-            await Promise.all(
-                segmentIds.map((segmentId) =>
-                    this.segmentService.get(segmentId),
-                ),
-            ).then((segments) => {
-                const mismatchedSegments = segments.filter(
-                    (segment) =>
-                        segment?.project && segment.project !== projectId,
-                );
-                if (mismatchedSegments.length > 0) {
-                    throw new BadDataError(
-                        `The segments ${mismatchedSegments.map((s) => `${s.name} with id ${s.id}`).join(',')} does not belong to project "${projectId}"`,
-                    );
-                }
-            });
+        if (existingStrategy.environment !== environment) {
+            throw new InvalidOperationError(
+                'You can not change the environment for an activation strategy.',
+            );
         }
     }
 
@@ -547,7 +535,14 @@ export class FeatureToggleService {
             .map((strategy) => strategy.id);
 
         const eventPreData: StrategyIds = { strategyIds: existingOrder };
-
+        const allSortOrdersAreAlreadyKnown = sortOrders.every(({ id }) =>
+            existingOrder.includes(id),
+        );
+        if (!allSortOrdersAreAlreadyKnown) {
+            throw new BadDataError(
+                'trying to change strategies for environment via update sortOrder',
+            );
+        }
         await Promise.all(
             sortOrders.map(({ id, sortOrder }) =>
                 this.featureStrategiesStore.updateSortOrder(id, sortOrder),
@@ -611,7 +606,7 @@ export class FeatureToggleService {
                 ...params,
                 rollout: params?.rollout ?? '100',
                 stickiness,
-                groupId: params?.groupId ?? featureName,
+                groupId: params?.groupId || featureName,
             };
         } else {
             // We don't really have good defaults for the other kinds of known strategies, so return an empty map.
@@ -642,9 +637,7 @@ export class FeatureToggleService {
                 existing: existing?.constraints ?? [],
             });
             constraints =
-                await this.constraintsReadModel.validateConstraints(
-                    constraints,
-                );
+                await this.constraintValidator.validateConstraints(constraints);
         }
 
         parameters = await this.parametersWithDefaults(
@@ -678,7 +671,7 @@ export class FeatureToggleService {
         await this.validateFeatureBelongsToProject(context);
 
         await this.validateStrategyType(strategyConfig.name);
-        await this.validateProjectCanAccessSegments(
+        await this.segmentService.validateProjectCanAccessSegments(
             projectId,
             strategyConfig.segments,
         );
@@ -821,7 +814,7 @@ export class FeatureToggleService {
         }
         this.validateUpdatedProperties(context, existingStrategy);
         await this.validateStrategyType(updates.name);
-        await this.validateProjectCanAccessSegments(
+        await this.segmentService.validateProjectCanAccessSegments(
             projectId,
             updates.segments,
         );
@@ -922,6 +915,34 @@ export class FeatureToggleService {
             return data;
         }
         throw new NotFoundError(`Could not find strategy with id ${id}`);
+    }
+
+    // updateStrategy would rewrite the whole row and undo a concurrent edit
+    async setStrategySegments(
+        id: string,
+        segmentIds: number[],
+        auditUser: IAuditUser,
+    ): Promise<void> {
+        const previousSegments = await this.segmentService.getByStrategy(id);
+        if (arraysHaveSameItems(collectIds(previousSegments), segmentIds)) {
+            return;
+        }
+        const strategy = await this.featureStrategiesStore.getStrategyById(id);
+        await this.segmentService.updateStrategySegments(id, segmentIds);
+        const segments = await this.segmentService.getByStrategy(id);
+        await this.eventService.storeEventsOrThrow([
+            new FeatureStrategyUpdateEvent({
+                project: strategy.projectId,
+                featureName: strategy.featureName,
+                environment: strategy.environment,
+                data: this.featureStrategyToPublic(strategy, segments),
+                preData: this.featureStrategyToPublic(
+                    strategy,
+                    previousSegments,
+                ),
+                auditUser,
+            }),
+        ]);
     }
 
     /**
@@ -1077,9 +1098,11 @@ export class FeatureToggleService {
                     userId,
                     archived,
                 );
+            const expectedLifetimeEndsAt = await this.expectedLifetime(result);
 
             return {
                 ...result,
+                expectedLifetimeEndsAt,
                 dependencies,
                 children,
                 lifecycle,
@@ -1097,9 +1120,11 @@ export class FeatureToggleService {
                     userId,
                     archived,
                 );
+            const expectedLifetimeEndsAt = await this.expectedLifetime(result);
 
             return {
                 ...result,
+                expectedLifetimeEndsAt,
                 dependencies,
                 children,
                 lifecycle,
@@ -1107,6 +1132,22 @@ export class FeatureToggleService {
                 collaborators: { users: collaborators },
             };
         }
+    }
+
+    private async expectedLifetime(feature: FeatureToggleWithEnvironment) {
+        if (!this.flagResolver.isEnabled('perFlagLifetime')) {
+            return undefined;
+        }
+
+        const lifetime = await this.featureToggleStore.getLifetime(
+            feature.name,
+        );
+        if (!lifetime || !feature.createdAt) {
+            return undefined;
+        }
+        return lifetime.type === 'permanent'
+            ? null
+            : addDays(feature.createdAt, lifetime.days);
     }
 
     async getVariantsForEnv(
@@ -1176,6 +1217,25 @@ export class FeatureToggleService {
         params: IFeatureProjectUserParams,
     ): Promise<IFeatureOverview[]> {
         return this.featureStrategiesStore.getFeatureOverview(params);
+    }
+
+    async getProjectFeaturesCore(
+        projectId: string,
+    ): Promise<IFeatureOverviewCore[]> {
+        const features = await this.featureToggleStore.getAll({
+            project: projectId,
+            archived: false,
+        });
+        return features.map((feature) => ({
+            name: feature.name,
+            type: feature.type,
+            description: feature.description ?? null,
+            stale: feature.stale ?? false,
+            favorite: false,
+            impressionData: feature.impressionData ?? false,
+            createdAt: feature.createdAt,
+            environments: [],
+        }));
     }
 
     async getFeatureTypeCounts(
@@ -1455,7 +1515,6 @@ export class FeatureToggleService {
 
         return created;
     }
-
     private async validateCloneFeaturePermissions(
         projectId: string,
         environments: FeatureToggleWithEnvironment['environments'],
@@ -1551,7 +1610,13 @@ export class FeatureToggleService {
             environment,
         );
     }
-
+    async strategyBelongsToFeatureAndProject(
+        params: StrategyBelongsToFeatureAndProjectParams,
+    ): Promise<boolean> {
+        return this.featureStrategiesStore.strategyBelongsToFeatureAndProject(
+            params,
+        );
+    }
     async getStrategy(strategyId: string): Promise<Saved<IStrategyConfig>> {
         const strategy =
             await this.featureStrategiesStore.getStrategyById(strategyId);
@@ -1628,7 +1693,7 @@ export class FeatureToggleService {
 
     /** Validations  */
     async validateName(name: string): Promise<string> {
-        await nameSchema.validateAsync({ name });
+        await featureNameSchema.validateAsync({ name });
         await this.validateUniqueFeatureName(name);
         return name;
     }
@@ -1777,17 +1842,17 @@ export class FeatureToggleService {
             this.validateNoOrphanParents(featureNames),
         ]);
 
-        const features =
-            await this.featureToggleStore.getAllByNames(featureNames);
-        await this.featureToggleStore.batchArchive(featureNames);
+        const archivedFeatures =
+            await this.featureToggleStore.batchArchive(featureNames);
+
         await this.dependentFeaturesService.unprotectedDeleteFeaturesDependencies(
-            featureNames,
+            archivedFeatures.map((feature) => feature.name),
             projectId,
             auditUser,
         );
 
         await this.eventService.storeEvents(
-            features.map(
+            archivedFeatures.map(
                 (feature) =>
                     new FeatureArchivedEvent({
                         featureName: feature.name,
@@ -2035,28 +2100,12 @@ export class FeatureToggleService {
         );
     }
 
-    // TODO: add project id.
     async deleteFeature(
         featureName: string,
+        projectId: string,
         auditUser: IAuditUser,
     ): Promise<void> {
-        await this.validateNoChildren(featureName);
-        const toggle = await this.featureToggleStore.get(featureName);
-        if (toggle === undefined) {
-            return; /// Do nothing, toggle is already deleted
-        }
-        const tags = await this.tagStore.getAllTagsForFeature(featureName);
-        await this.featureToggleStore.delete(featureName);
-
-        await this.eventService.storeEvent(
-            new FeatureDeletedEvent({
-                featureName,
-                project: toggle.project,
-                auditUser,
-                preData: toggle,
-                tags,
-            }),
-        );
+        await this.deleteFeatures([featureName], projectId, auditUser);
     }
 
     async deleteFeatures(
@@ -2069,9 +2118,7 @@ export class FeatureToggleService {
 
         const features =
             await this.featureToggleStore.getAllByNames(featureNames);
-        const eligibleFeatures = features.filter(
-            (toggle) => toggle.archivedAt !== null,
-        );
+        const eligibleFeatures = features.filter((toggle) => toggle.archived);
         const eligibleFeatureNames = eligibleFeatures.map(
             (toggle) => toggle.name,
         );
@@ -2081,10 +2128,15 @@ export class FeatureToggleService {
         }
 
         const tags = await this.tagStore.getAllByFeatures(eligibleFeatureNames);
-        await this.featureToggleStore.batchDelete(eligibleFeatureNames);
+        const deletedFeatures =
+            await this.featureToggleStore.batchDelete(eligibleFeatureNames);
+
+        if (deletedFeatures.length === 0) {
+            return;
+        }
 
         await this.eventService.storeEvents(
-            eligibleFeatures.map(
+            deletedFeatures.map(
                 (feature) =>
                     new FeatureDeletedEvent({
                         featureName: feature.name,
@@ -2113,7 +2165,7 @@ export class FeatureToggleService {
         const features =
             await this.featureToggleStore.getAllByNames(featureNames);
         const eligibleFeatures = features.filter(
-            (toggle) => toggle.archivedAt !== null,
+            (toggle) => toggle.archived || toggle.archivedAt,
         );
         const eligibleFeatureNames = eligibleFeatures.map(
             (toggle) => toggle.name,
@@ -2209,6 +2261,11 @@ export class FeatureToggleService {
         user: IUser,
         auditUser: IAuditUser,
     ): Promise<IVariant[]> {
+        await this.validateFeatureBelongsToProject({
+            featureName,
+            projectId: project,
+        });
+
         const oldVariants = await this.getVariantsForEnv(
             featureName,
             environment,
@@ -2325,7 +2382,14 @@ export class FeatureToggleService {
             )?.variants ||
             [];
 
-        await this.eventService.storeEvent(
+        // Save the variants before the event: other flag operations lock in this
+        // order too, which prevents deadlocks between them
+        await this.featureEnvironmentStore.setVariantsToFeatureEnvironments(
+            featureName,
+            [environment],
+            fixedVariants,
+        );
+        await this.eventService.storeEventsOrThrow([
             new EnvironmentVariantEvent({
                 featureName,
                 environment,
@@ -2334,12 +2398,7 @@ export class FeatureToggleService {
                 newVariants: fixedVariants,
                 auditUser,
             }),
-        );
-        await this.featureEnvironmentStore.setVariantsToFeatureEnvironments(
-            featureName,
-            [environment],
-            fixedVariants,
-        );
+        ]);
         return fixedVariants;
     }
 
@@ -2352,6 +2411,7 @@ export class FeatureToggleService {
         auditUser: IAuditUser,
         oldVariants?: IVariant[],
     ): Promise<IVariant[]> {
+        await this.validateFeatureBelongsToProject({ featureName, projectId });
         await this.stopWhenChangeRequestsEnabled(projectId, environment, user);
         return this.saveVariantsOnEnv(
             projectId,
@@ -2371,6 +2431,7 @@ export class FeatureToggleService {
         _user: IUser,
         auditUser: IAuditUser,
     ): Promise<IVariant[]> {
+        await this.validateFeatureBelongsToProject({ featureName, projectId });
         for (const env of environments) {
             await this.stopWhenChangeRequestsEnabled(projectId, env);
         }
@@ -2403,7 +2464,14 @@ export class FeatureToggleService {
             oldVariants[env] = featureEnv?.variants || [];
         }
 
-        await this.eventService.storeEvents(
+        // Save the variants before the event: other flag operations lock in this
+        // order too, which prevents deadlocks between them
+        await this.featureEnvironmentStore.setVariantsToFeatureEnvironments(
+            featureName,
+            environments,
+            fixedVariants,
+        );
+        await this.eventService.storeEventsOrThrow(
             environments.map(
                 (environment) =>
                     new EnvironmentVariantEvent({
@@ -2415,11 +2483,6 @@ export class FeatureToggleService {
                         auditUser,
                     }),
             ),
-        );
-        await this.featureEnvironmentStore.setVariantsToFeatureEnvironments(
-            featureName,
-            environments,
-            fixedVariants,
         );
         return fixedVariants;
     }

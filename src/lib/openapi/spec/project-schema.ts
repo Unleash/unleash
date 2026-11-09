@@ -1,12 +1,10 @@
 import type { FromSchema } from 'json-schema-to-ts';
+import { onboardingStatusSchema } from './onboarding-status-schema.js';
 
-// TODO: when `newProjectList` is removed and `onboardingStatus` is stable here,
-// declare it as a property ($ref to onboardingStatusSchema) and flip
-// `additionalProperties` back to `false`.
 export const projectSchema = {
     $id: '#/components/schemas/projectSchema',
     type: 'object',
-    additionalProperties: true,
+    additionalProperties: false,
     required: ['id', 'name'],
     description:
         'A definition of the project used for projects listing purposes',
@@ -31,7 +29,8 @@ export const projectSchema = {
         health: {
             type: 'number',
             example: 50,
-            description: 'Use `technicalDebt` instead.',
+            description:
+                "An indicator of the project's health on a scale from 0 to 100",
             deprecated: true,
         },
         technicalDebt: {
@@ -41,6 +40,7 @@ export const projectSchema = {
             maximum: 100,
             description:
                 "An indicator of the [project's technical debt](https://docs.getunleash.io/concepts/technical-debt#project-status) on a scale from 0 to 100",
+            deprecated: true,
         },
         featureCount: {
             type: 'number',
@@ -64,6 +64,15 @@ export const projectSchema = {
             type: 'number',
             example: 4,
             description: 'The number of members this project has',
+        },
+        cleanupCount: {
+            type: 'number',
+            example: 3,
+            description:
+                'The number of features in this project that have completed their lifecycle and are ready for cleanup',
+        },
+        onboardingStatus: {
+            $ref: '#/components/schemas/onboardingStatusSchema',
         },
         createdAt: {
             type: 'string',
@@ -195,9 +204,14 @@ export const projectSchema = {
                     },
                 },
             ],
+            deprecated: true,
         },
     },
-    components: {},
+    components: {
+        schemas: {
+            onboardingStatusSchema,
+        },
+    },
 } as const;
 
 export type ProjectSchema = FromSchema<typeof projectSchema>;

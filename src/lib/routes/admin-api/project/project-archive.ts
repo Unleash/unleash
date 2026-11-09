@@ -160,10 +160,8 @@ export default class ProjectArchiveController extends Controller {
     ): Promise<void> {
         const { projectId } = req.params;
         const { features } = req.body;
-        await this.featureService.deleteFeatures(
-            features,
-            projectId,
-            req.audit,
+        await this.transactionalFeatureToggleService.transactional((service) =>
+            service.deleteFeatures(features, projectId, req.audit),
         );
         res.status(200).end();
     }

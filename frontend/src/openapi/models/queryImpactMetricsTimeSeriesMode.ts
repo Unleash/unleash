@@ -7,7 +7,6 @@
 export type QueryImpactMetricsTimeSeriesMode =
     (typeof QueryImpactMetricsTimeSeriesMode)[keyof typeof QueryImpactMetricsTimeSeriesMode];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const QueryImpactMetricsTimeSeriesMode = {
     display: 'display',
     edit: 'edit',

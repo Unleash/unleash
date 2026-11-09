@@ -45,7 +45,7 @@ const StyledEditorStatusContainer = styled('div')(({ theme, style }) => ({
 
 const StyledErrorSpan = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
-    color: theme.palette.error.dark,
+    color: theme.palette.error.onContainer,
     marginRight: theme.spacing(1),
 }));
 

@@ -1,0 +1,37 @@
+import type { TableTracking } from 'hooks/useTableState';
+import type { Tracking } from 'utils/trackingEvents';
+import type { FilterItemParamHolder } from 'component/filter/Filters/Filters';
+
+export const flagsListTableTracking: TableTracking = {
+    event: 'flags-list',
+};
+
+export const flagsListProps = ({
+    filterState,
+    query,
+    total,
+}: {
+    filterState: FilterItemParamHolder;
+    query?: string | null;
+    total?: number;
+}) => {
+    const hasQuery = Boolean(query);
+    const hasFilters = Object.values(filterState).some(
+        (filter) => filter?.values.length,
+    );
+
+    return {
+        listState: hasQuery || hasFilters ? 'filtered' : 'unfiltered',
+        flagCount: total,
+    };
+};
+
+export const toggleColumnTracking: Tracking = {
+    event: 'flags-list',
+    type: 'toggle-column',
+};
+
+export const filterLifecycleTracking: Tracking = {
+    event: 'flags-list',
+    type: 'filter-lifecycle',
+};

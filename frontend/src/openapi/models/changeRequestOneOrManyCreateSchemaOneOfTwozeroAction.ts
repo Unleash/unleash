@@ -10,7 +10,6 @@
 export type ChangeRequestOneOrManyCreateSchemaOneOfTwozeroAction =
     (typeof ChangeRequestOneOrManyCreateSchemaOneOfTwozeroAction)[keyof typeof ChangeRequestOneOrManyCreateSchemaOneOfTwozeroAction];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestOneOrManyCreateSchemaOneOfTwozeroAction = {
     patchVariant: 'patchVariant',
 } as const;

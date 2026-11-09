@@ -122,7 +122,7 @@ export const RoleModal = ({
         >
             <FormTemplate
                 loading={loading}
-                modal
+                layout='modal'
                 title={editing ? `Edit ${type} role` : `New ${type} role`}
                 description={`${titleCasedType} roles allow you to control access to ${type} resources. Besides the built-in ${type} roles, you can create and manage custom ${type} roles to fit your needs.`}
                 documentationLink={`https://docs.getunleash.io/concepts/rbac${

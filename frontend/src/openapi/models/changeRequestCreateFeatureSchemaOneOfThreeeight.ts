@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateFeatureSchemaOneOfThreeeightAction } from './changeRequestCreateFeatureSchemaOneOfThreeeightAction';
-import type { ChangeRequestCreateFeatureSchemaOneOfThreeeightPayload } from './changeRequestCreateFeatureSchemaOneOfThreeeightPayload';
+import type { ChangeRequestCreateFeatureSchemaOneOfThreeeightAction } from './changeRequestCreateFeatureSchemaOneOfThreeeightAction.ts';
+import type { ChangeRequestCreateFeatureSchemaOneOfThreeeightPayload } from './changeRequestCreateFeatureSchemaOneOfThreeeightPayload.ts';
 
 /**
  * Resume paused milestone progressions for a release plan.

@@ -3,7 +3,10 @@ import AuthenticationRequired from '../../../../lib/types/authentication-require
 
 import dbInit, { type ITestDb } from '../../helpers/database-init.js';
 import getLogger from '../../../fixtures/no-logger.js';
-import type { IUnleashStores } from '../../../../lib/types/index.js';
+import type {
+    CustomAuthHandler,
+    IUnleashStores,
+} from '../../../../lib/types/index.js';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -44,8 +47,10 @@ test('creates new feature flag with createdBy', async () => {
     expect.assertions(1);
     const email = 'custom-user@mail.com';
 
-    const preHook = (app, _config, { userService }) => {
+    const preHook: CustomAuthHandler = (app, _config, services) => {
         app.use('/api/admin/', async (req, _res, next) => {
+            const { userService } = services!;
+            // @ts-expect-error user is not defined on Request type
             req.user = await userService.loginUserWithoutPassword(email, true);
             next();
         });

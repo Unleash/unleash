@@ -14,10 +14,10 @@ export const StyledProjectCard = styled(Card)<{ disabled?: boolean }>(
             justifyContent: 'center',
         },
         transition: 'background-color 0.2s ease-in-out',
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: theme.palette.background.paper,
         '&:hover': {
             backgroundColor: disabled
-                ? theme.palette.background.default
+                ? theme.palette.background.paper
                 : theme.palette.action.hover,
         },
         borderRadius: theme.shape.borderRadiusMedium,
@@ -58,6 +58,17 @@ export const StyledProjectCardContent = styled('div')(({ theme }) => ({
     ...flexRow,
     justifyContent: 'space-between',
     fontSize: theme.fontSizes.smallerBody,
+}));
+
+export const StyledProjectCardFooter = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    background: theme.palette.background.elevation1,
+    boxShadow: theme.boxShadows.accordionFooter,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderTop: `1px solid ${theme.palette.divider}`,
+    paddingInline: theme.spacing(2),
+    paddingBlock: theme.spacing(1.5),
 }));
 
 export const StyledSubtitle = styled('span')(({ theme }) => ({

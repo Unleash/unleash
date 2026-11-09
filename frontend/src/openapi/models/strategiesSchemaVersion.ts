@@ -10,7 +10,6 @@
 export type StrategiesSchemaVersion =
     (typeof StrategiesSchemaVersion)[keyof typeof StrategiesSchemaVersion];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const StrategiesSchemaVersion = {
     NUMBER_1: 1,
 } as const;

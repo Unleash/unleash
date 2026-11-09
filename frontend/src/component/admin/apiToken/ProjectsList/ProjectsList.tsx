@@ -5,14 +5,10 @@ import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { Link } from 'react-router';
+import { QuietLink } from 'component/common/QuietLink';
 
-const StyledLink = styled(Link)(({ theme }) => ({
-    textDecoration: 'none',
+const StyledLink = styled(QuietLink)(({ theme }) => ({
     color: theme.palette.links,
-    '&:hover, &:focus': {
-        textDecoration: 'underline',
-    },
 }));
 
 const StyledContainer = styled('div')({

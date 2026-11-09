@@ -20,7 +20,7 @@ const DescriptionBox = styled('div')(({ theme }) => ({
     flex: 1,
     color: theme.palette.text.secondary,
     fontSize: theme.typography.body2.fontSize,
-    background: theme.palette.background.default,
+    background: theme.palette.background.paper,
 }));
 
 const ProjectDescription = styled(DescriptionBox)(({ theme }) => ({
@@ -75,10 +75,6 @@ const SecretToken = styled(TokenPart)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const SeparatorToken = styled(TokenPart)(({ theme }) => ({
-    color: theme.palette.text.disabled,
-}));
-
 const descriptions = {
     project: 'The project this API key can retrieve feature flags from',
     environment:
@@ -103,20 +99,12 @@ export const TokenExplanation = ({
     return (
         <FullWidth>
             <ArcherContainer
-                strokeColor={theme.palette.secondary.border}
+                strokeColor={theme.palette.primary.containerBorder}
                 endMarker={false}
                 lineStyle='curve'
             >
                 <SecretExplanation>
                     <TokenDisplay>
-                        <ArcherElement id='project'>
-                            <ProjectToken>{project}</ProjectToken>
-                        </ArcherElement>
-                        <SeparatorToken>:</SeparatorToken>
-                        <ArcherElement id='environment'>
-                            <EnvironmentToken>{environment}</EnvironmentToken>
-                        </ArcherElement>
-                        <SeparatorToken>.</SeparatorToken>
                         <ArcherElement id='secret'>
                             <SecretToken>{secret}</SecretToken>
                         </ArcherElement>
@@ -124,40 +112,12 @@ export const TokenExplanation = ({
 
                     {isLargeScreen ? (
                         <TokenExplanationBox>
-                            <ArcherElement
-                                id='project-description'
-                                relations={[
-                                    {
-                                        targetId: 'project',
-                                        targetAnchor: 'bottom',
-                                        sourceAnchor: 'top',
-                                        style: {
-                                            strokeColor:
-                                                theme.palette.primary.main,
-                                            strokeWidth: 2,
-                                        },
-                                    },
-                                ]}
-                            >
+                            <ArcherElement id='project-description'>
                                 <ProjectDescription>
                                     {descriptions.project}
                                 </ProjectDescription>
                             </ArcherElement>
-                            <ArcherElement
-                                id='environment-description'
-                                relations={[
-                                    {
-                                        targetId: 'environment',
-                                        targetAnchor: 'bottom',
-                                        sourceAnchor: 'top',
-                                        style: {
-                                            strokeColor:
-                                                theme.palette.success.main,
-                                            strokeWidth: 2,
-                                        },
-                                    },
-                                ]}
-                            >
+                            <ArcherElement id='environment-description'>
                                 <EnvironmentDescription>
                                     {descriptions.environment}
                                 </EnvironmentDescription>

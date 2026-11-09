@@ -41,7 +41,17 @@ export interface IDBOption {
 }
 
 export interface ISessionOption {
+    /**
+     * The ceiling, counted from login and never extended. Default: 48 hours.
+     * Enforced whether or not the `sessionTimeouts` flag is on.
+     */
     ttlHours: number;
+    /**
+     * How many minutes after the last thing the user actually did a session
+     * ends. Default: 15, `0` is OFF. Only takes effect while the
+     * `sessionTimeouts` flag is on, which is what gates the idle window.
+     */
+    idleTimeoutMinutes: number;
     db: boolean;
     clearSiteDataOnLogout: boolean;
     cookieName: string;
@@ -105,9 +115,12 @@ export interface IServerOption {
     cdnPrefix?: string;
     edgeUrl?: string;
     unleashUrl: string;
+    slackAppBrokerUrl: string;
     logRocketAppId?: string;
+    hubspotPortalId?: string;
     serverMetrics: boolean;
     enableHeapSnapshotEnpoint: boolean;
+    enableStoriesPage: boolean;
     enableRequestLogger: boolean;
     gracefulShutdownEnable: boolean;
     gracefulShutdownTimeout: number;
@@ -161,6 +174,7 @@ export interface IUnleashOptions {
     import?: Partial<IImportOption>;
     experimental?: Partial<IExperimentalOptions>;
     email?: Partial<IEmailOption>;
+    tokenExpiryNotificationDays?: number[];
     secureHeaders?: boolean;
     additionalCspAllowedDomains?: ICspDomainOptions;
     frontendApiOrigins?: string[];
@@ -224,6 +238,7 @@ export interface IUIConfig {
     flags?: IFlags;
     unleashToken?: string;
     unleashContext?: IFlagContext;
+    billing?: 'subscription' | 'pay-as-you-go';
 }
 
 export interface ICspDomainOptions {
@@ -264,8 +279,15 @@ export interface IMetricsRateLimiting {
 export interface IRateLimiting {
     createUserMaxPerMinute: number;
     simpleLoginMaxPerMinute: number;
+    authenticationMaxPerMinute: number;
     passwordResetMaxPerMinute: number;
     callSignalEndpointMaxPerSecond: number;
+    tokenAuthenticationMaxPerMinute: number;
+    sdkApiMaxPerMinute: number;
+    adminApiMaxPerMinute: number;
+    feedbackMaxPerMinute: number;
+    playgroundMaxPerMinute: number;
+    mcpMaxPerMinute: number;
 }
 
 export interface IUnleashConfig {
@@ -282,6 +304,7 @@ export interface IUnleashConfig {
     experimental?: IExperimentalOptions;
     flagResolver: IFlagResolver;
     email: IEmailOption;
+    tokenExpiryNotificationDays: number[];
     secureHeaders: boolean;
     additionalCspAllowedDomains: ICspDomainConfig;
     frontendApiOrigins: string[];

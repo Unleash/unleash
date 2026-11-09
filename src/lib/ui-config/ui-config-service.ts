@@ -8,9 +8,9 @@ import {
     type IUnleashServices,
     type SessionService,
     type SettingService,
-    type User,
     type VersionService,
 } from '../server-impl.js';
+import type { IUser } from '../types/user.js';
 import type MaintenanceService from '../features/maintenance/maintenance-service.js';
 import {
     type SimpleAuthSettings,
@@ -20,6 +20,7 @@ import version from '../util/version.js';
 import type { ResourceLimitsService } from '../features/resource-limits/resource-limits-service.js';
 import { ImpactMetricsAvailabilityResolver } from '../features/metrics/impact/impact-metrics-availability.js';
 import { hashValue } from '../util/anonymise.js';
+import { resolveKeepAliveIntervalSeconds } from '../sessions/session-limits.js';
 
 export class UiConfigService {
     private config: IUnleashConfig;
@@ -83,7 +84,10 @@ export class UiConfigService {
         return 0;
     }
 
-    async getUiConfig(user: User): Promise<UiConfigSchema> {
+    async getUiConfig(
+        user: Pick<IUser, 'id' | 'email'>,
+        sessionId?: string,
+    ): Promise<UiConfigSchema> {
         const [
             frontendSettings,
             simpleAuthSettings,
@@ -102,10 +106,17 @@ export class UiConfigService {
             simpleAuthSettings?.disabled ||
             this.config.authentication.type === IAuthType.NONE;
 
-        const hashedEmail = user.email ? hashValue(user.email) : undefined;
+        // Hash the raw sessionID (a credential) before exposing it; safe
+        // unsalted because the sessionID is high-entropy.
+        const analyticsSessionId = sessionId ? hashValue(sessionId) : undefined;
+
+        const emailContext = user.email
+            ? { email: user.email, hashedEmail: hashValue(user.email) }
+            : {};
 
         const expFlags = this.config.flagResolver.getAll({
-            email: hashedEmail,
+            ...emailContext,
+            ...(analyticsSessionId ? { sessionId: analyticsSessionId } : {}),
         });
 
         const flags = {
@@ -115,8 +126,9 @@ export class UiConfigService {
 
         const unleashContext = {
             ...this.flagResolver.getStaticContext(),
-            ...(hashedEmail ? { email: hashedEmail } : {}),
+            ...emailContext,
             userId: user.id,
+            ...(analyticsSessionId ? { sessionId: analyticsSessionId } : {}),
         };
         const uiConfig: UiConfigSchema = {
             ...this.config.ui,
@@ -126,6 +138,7 @@ export class UiConfigService {
             edgeUrl: this.config.server.edgeUrl,
             unleashUrl: this.config.server.unleashUrl,
             logRocketAppId: this.config.server.logRocketAppId,
+            hubspotPortalId: this.config.server.hubspotPortalId,
             baseUriPath: this.config.server.baseUriPath,
             authenticationType: this.config.authentication?.type,
             frontendApiOrigins: frontendSettings.frontendApiOrigins,
@@ -138,7 +151,13 @@ export class UiConfigService {
             maintenanceMode,
             feedbackUriPath: this.config.feedbackUriPath,
             maxSessionsCount,
+            sessionKeepAliveIntervalSeconds: this.config.flagResolver.isEnabled(
+                'sessionTimeouts',
+            )
+                ? resolveKeepAliveIntervalSeconds(this.config.session)
+                : 0,
             unleashContext: unleashContext,
+            storiesPageEnabled: this.config.server.enableStoriesPage,
         };
 
         return uiConfig;

@@ -1,4 +1,6 @@
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import FormTemplate, {
+    type FormTemplateLayout,
+} from 'component/common/FormTemplate/FormTemplate';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { UPDATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
@@ -15,12 +17,18 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { GO_BACK } from 'constants/navigate';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 import { UPDATE_PROJECT_CONTEXT } from '@server/types/permissions.ts';
+import { useTracking } from 'hooks/useTracking';
+import {
+    contextFieldChangedProps,
+    editContextFieldTracking,
+    contextFieldTrackingProps,
+} from 'component/context/contextFieldTrackingProps';
 
 type EditContextProps = {
-    modal?: boolean;
+    layout?: FormTemplateLayout;
 };
 
-export const EditContext: FC<EditContextProps> = ({ modal }) => {
+export const EditContext: FC<EditContextProps> = ({ layout }) => {
     useEffect(() => {
         scrollToTop();
     }, []);
@@ -32,6 +40,7 @@ export const EditContext: FC<EditContextProps> = ({ modal }) => {
     const { context, refetch } = useContext({ name, project: projectId });
     const { updateContext, loading } = useContextsApi(projectId);
     const navigate = useNavigate();
+    const trackEditContextField = useTracking(editContextFieldTracking);
     const {
         contextName,
         contextDesc,
@@ -71,9 +80,29 @@ export const EditContext: FC<EditContextProps> = ({ modal }) => {
         const navigationTarget = projectId
             ? `/projects/${projectId}/settings/context`
             : '/context';
+        const trackingProps = {
+            ...contextFieldTrackingProps({
+                legalValues,
+                description: contextDesc,
+                stickiness,
+            }),
+            ...contextFieldChangedProps({
+                legalValues,
+                description: contextDesc,
+                stickiness,
+                initial: {
+                    description: context?.description,
+                    legalValues: context?.legalValues,
+                    stickiness: context?.stickiness,
+                },
+            }),
+        };
 
         try {
-            await updateContext(payload);
+            await trackEditContextField.mutation(
+                () => updateContext(payload),
+                trackingProps,
+            );
             refetch();
             navigate(navigationTarget);
             setToastData({
@@ -91,7 +120,7 @@ export const EditContext: FC<EditContextProps> = ({ modal }) => {
 
     return (
         <FormTemplate
-            modal={modal}
+            layout={layout}
             loading={loading}
             title='Edit context'
             description='Context fields are a basic building block used in Unleash to control roll-out.

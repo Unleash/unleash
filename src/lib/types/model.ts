@@ -11,6 +11,7 @@ import type { Collaborator } from '../features/feature-toggle/types/feature-coll
 import type { EventEmitter } from 'events';
 import type { ITag } from '../tags/index.js';
 import type { IFeatureLink } from '../features/feature-links/feature-links-read-model-type.js';
+import type { IAddon } from './index.js';
 
 export type Operator = (typeof ALL_OPERATORS)[number];
 
@@ -79,11 +80,13 @@ export interface FeatureToggleDTO {
         name: string;
         imageUrl: string;
     };
+    lifetimeDays?: number;
 }
 
 export interface FeatureToggle extends FeatureToggleDTO {
     project: string;
-    createdAt?: Date;
+    type: string;
+    createdAt: Date;
 }
 
 export interface IFeatureToggleListItem extends FeatureToggle {
@@ -135,6 +138,7 @@ export interface FeatureToggleView extends FeatureToggleWithEnvironment {
     lifecycle: IFeatureLifecycleStage | undefined;
     collaborators?: { users: Collaborator[] };
     links: Omit<IFeatureLink, 'feature'>[];
+    expectedLifetimeEndsAt?: Date | null;
 }
 
 export interface IEnvironmentDetail extends IEnvironmentBase {
@@ -221,11 +225,13 @@ export interface IApiTokenCreate {
 
 export interface IApiToken
     extends Omit<IApiTokenCreate, 'alias' | 'createdByUserId'> {
+    appName?: string;
     createdAt: Date;
     seenAt?: Date;
     environment: string;
     project: string;
     alias?: string | null;
+    secure: boolean;
 }
 
 export interface IEnvironment {
@@ -279,6 +285,17 @@ export interface IEnvironmentOverview extends IEnvironmentBase {
     hasEnabledStrategies?: boolean;
     yes?: number;
     no?: number;
+}
+
+export interface IFeatureOverviewCore {
+    name: string;
+    type: string;
+    description: string | null;
+    stale: boolean;
+    favorite: false;
+    impressionData: boolean;
+    createdAt: Date;
+    environments: [];
 }
 
 export interface IFeatureOverview {
@@ -450,12 +467,27 @@ export interface IAddonDefinition {
     events?: string[];
     tagTypes?: ITagType[];
     installation?: IAddonInstallation;
+    serverInstallation?: IAddonServerInstallation;
+    fixedEvents?: boolean;
+    environmentIndependent?: boolean;
     alerts?: IAddonAlert[];
     howTo?: string;
 }
 
+export interface IAddonOverview {
+    providers: IAddonDefinition[];
+    addons: IAddon[];
+}
+
 export interface IAddonInstallation {
     url: string;
+    title?: string;
+    helpText?: string;
+}
+
+// Experimental: may change or be removed.
+export interface IAddonServerInstallation {
+    path: string;
     title?: string;
     helpText?: string;
 }
@@ -544,6 +576,8 @@ export interface IFrontendClientApp {
     environment: string;
     projects?: string[];
     createdBy?: string;
+    sdkFlavor?: string;
+    sdkFlavorVersion?: string;
 }
 
 export interface IClientApp {
@@ -567,6 +601,8 @@ export interface IClientApp {
     specVersion?: string;
     sdkType?: 'frontend' | 'backend' | null;
     sdkVersion?: string;
+    sdkFlavor?: string;
+    sdkFlavorVersion?: string;
 }
 
 export interface IAppFeature {
@@ -719,6 +755,8 @@ export interface ISdkHeartbeatMetadata {
     platformVersion?: string;
     yggdrasilVersion?: string;
     specVersion?: string;
+    sdkFlavor?: string;
+    sdkFlavorVersion?: string;
 }
 
 export interface EnvironmentRevisionId {

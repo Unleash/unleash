@@ -55,6 +55,12 @@ export const uiConfigSchema = {
                 'The LogRocket app ID used to initialize session replay in the admin UI. Only used when the `logRocketEnabled` flag is on.',
             example: '1knhci/unleash-sandbox',
         },
+        hubspotPortalId: {
+            type: 'string',
+            description:
+                'The HubSpot portal ID. Currently used to load the customer support chat widget when the `hubspotChatEnabled` flag is on and the instance is a PAYG trial; may be reused by future HubSpot integrations.',
+            example: '1234567',
+        },
         baseUriPath: {
             type: 'string',
             description:
@@ -66,6 +72,13 @@ export const uiConfigSchema = {
             description:
                 'The URI path at which the feedback endpoint is listening.',
             example: '/feedback',
+        },
+        sessionKeepAliveIntervalSeconds: {
+            type: 'integer',
+            minimum: 0,
+            description:
+                'How often the admin UI should report that the user is still active, in seconds. `0` means it should not: either the instance has no idle timeout or the feature is off.',
+            example: 60,
         },
         disablePasswordAuth: {
             type: 'boolean',
@@ -199,6 +212,12 @@ export const uiConfigSchema = {
             type: 'object',
             description:
                 'The context object used to configure the Unleash instance.',
+        },
+        storiesPageEnabled: {
+            type: 'boolean',
+            description:
+                'Whether the internal `/_stories` component gallery route is enabled. Controlled by the `ENABLE_STORIES_PAGE` environment variable.',
+            example: false,
         },
     },
     components: {

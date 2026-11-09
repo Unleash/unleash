@@ -4,7 +4,12 @@ import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureS
 import { MarkCompletedDialogue } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/MarkCompletedDialogue';
 import { ArchivedFeatureDeleteConfirm } from '../../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm.tsx';
 import { ArchivedFeatureReviveConfirm } from '../../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureReviveConfirm/ArchivedFeatureReviveConfirm.tsx';
-
+import {
+    archiveFlagTracking,
+    deleteFlagTracking,
+    reviveFlagTracking,
+    toggleFlagStaleTracking,
+} from 'component/feature/flagActionsTracking';
 export const useRowActions = (
     onChange: () => void,
     projectId: string,
@@ -41,6 +46,10 @@ export const useRowActions = (
         open: false,
     });
 
+    const staleProps = {
+        newState: featureStaleDialogState.stale ? 'active' : 'stale',
+    };
+
     const rowActionsDialogs = (
         <>
             <FeatureStaleDialog
@@ -49,6 +58,10 @@ export const useRowActions = (
                 onClose={() => {
                     setFeatureStaleDialogState({});
                     onChange();
+                }}
+                tracking={{
+                    ...toggleFlagStaleTracking,
+                    props: staleProps,
                 }}
                 featureId={featureStaleDialogState.featureId || ''}
                 projectId={projectId}
@@ -60,6 +73,7 @@ export const useRowActions = (
                     onChange();
                     onArchiveConfirm?.();
                 }}
+                tracking={archiveFlagTracking}
                 onClose={() => {
                     setFeatureArchiveState(undefined);
                 }}
@@ -77,6 +91,7 @@ export const useRowActions = (
                 projectId={projectId}
                 featureId={showMarkCompletedDialogue.featureId}
                 onComplete={onChange}
+                openedFrom='project-list'
             />
             <ArchivedFeatureDeleteConfirm
                 deletedFeatures={[showFeatureDeleteDialogue.featureId]}
@@ -88,6 +103,7 @@ export const useRowActions = (
                         open,
                     }));
                 }}
+                tracking={deleteFlagTracking}
                 refetch={onChange}
             />
             <ArchivedFeatureReviveConfirm
@@ -100,6 +116,7 @@ export const useRowActions = (
                         open,
                     }));
                 }}
+                tracking={reviveFlagTracking}
                 refetch={() => {
                     setShowFeatureReviveDialogue((prev) => ({
                         ...prev,

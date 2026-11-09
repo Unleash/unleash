@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import {
+    Badge,
     Box,
     IconButton,
     Menu,
@@ -16,22 +17,43 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import SlackIcon from 'assets/icons/menu/slack.svg?react';
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
+import RocketLaunchOutlinedIcon from '@mui/icons-material/RocketLaunchOutlined';
+import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 import LearningLabIcon from 'assets/icons/menu/learning-lab.svg?react';
+import { HelpMenuHint } from './HelpMenuHint.tsx';
+import { HelpMenuAnnouncement } from './HelpMenuAnnouncement.tsx';
+import { useHelpButtonHint } from './HelpButtonHintContext.tsx';
+import {
+    relocationHintCampaignOver,
+    useHelpMenuRelocationHint,
+} from './useHelpMenuRelocationHint.ts';
+import { FloatingOnboardingChecklistContext } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistContext.tsx';
+import { useOnboardingChecklistVisibility } from 'component/onboarding/floatingChecklist/useOnboardingChecklistVisibility.ts';
+import { OnboardingProgressBadge } from 'component/onboarding/floatingChecklist/OnboardingProgressBadge.tsx';
+import { Link } from 'react-router';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import { useEventTracker } from 'hooks/useEventTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useVariant } from 'hooks/useVariant';
+import { useIntro } from 'component/onboarding/intro/IntroProvider.tsx';
+import { getLocalStorageItem, setLocalStorageItem } from 'utils/storage.ts';
+
+const RELOCATION_DOT_SEEN_KEY = 'help-menu-relocation:menu-opened:v1';
 
 const StyledIconButton = styled(IconButton)<{ open?: boolean }>(
     ({ theme, open }) => ({
         color: open ? theme.palette.primary.main : undefined,
-        '&:focus-visible': {
-            outlineStyle: 'solid',
-            outlineWidth: theme.spacing(0.5),
-            outlineColor: theme.palette.primary.main,
-        },
     }),
 );
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+    '& .MuiBadge-badge': {
+        backgroundColor: theme.palette.primary.main,
+        right: theme.spacing(1.4),
+        top: theme.spacing(1.1),
+    },
+}));
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
     '& .MuiPaper-root': {
@@ -45,6 +67,7 @@ interface AnchorMenuItemProps {
     href?: string;
     target?: string;
     rel?: string;
+    to?: string;
 }
 
 const StyledVisitLink = styled(Box)(({ theme }) => ({
@@ -54,12 +77,12 @@ const StyledVisitLink = styled(Box)(({ theme }) => ({
     color:
         theme.mode === 'dark'
             ? theme.palette.primary.main
-            : theme.palette.secondary.border,
+            : theme.palette.primary.containerBorder,
     '& svg': {
         color:
             theme.mode === 'dark'
                 ? theme.palette.primary.main
-                : theme.palette.secondary.border,
+                : theme.palette.primary.containerBorder,
     },
 }));
 
@@ -111,6 +134,13 @@ const StyledLearningLabContent = styled(Box)(({ theme }) => ({
     gap: theme.spacing(0.5),
 }));
 
+const IntroHintIcon = styled(ExploreOutlinedIcon)(({ theme }) => ({
+    color: theme.palette.neutral.main,
+    width: 18,
+    height: 18,
+    verticalAlign: 'bottom',
+}));
+
 const StyledMenuItem = styled(MenuItem)<AnchorMenuItemProps>(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -150,8 +180,10 @@ const LEARNING_LAB_DEFAULTS: Required<ILearningLabVariant> = {
 
 export const HelpResources = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const [buttonEl, setButtonEl] = useState<HTMLButtonElement | null>(null);
     const open = Boolean(anchorEl);
     const { trackEvent } = useEventTracker();
+    const { open: openIntro } = useIntro();
     const learningLabFlag = useUiFlag('learningLab');
     const learningLabVariant = useVariant<ILearningLabVariant>(
         learningLabFlag || undefined,
@@ -168,8 +200,43 @@ export const HelpResources = () => {
         learningLabVariant?.menuLabel ?? LEARNING_LAB_DEFAULTS.menuLabel;
     const variant = learningLabFlag ? learningLabFlag.name : 'default';
 
+    const floatingOnboardingChecklist = useContext(
+        FloatingOnboardingChecklistContext,
+    );
+    const checklistVisibility = useOnboardingChecklistVisibility();
+    const showGetStarted = Boolean(
+        floatingOnboardingChecklist && checklistVisibility === 'visible',
+    );
+
+    const {
+        activeHint,
+        showHint: showHelpButtonHint,
+        dismissHint: dismissHelpButtonHint,
+        closeHint: closeHelpButtonHint,
+        isHintSeen,
+        markHintSeen,
+    } = useHelpButtonHint();
+    const hintOpen = activeHint !== null;
+    const hintHighlightsButton = hintOpen && activeHint !== 'menu-regroup';
+
+    useHelpMenuRelocationHint();
+    const relocationHintEnabled = useUiFlag('helpMenuRelocationHint');
+    const [relocationDotSeen, setRelocationDotSeen] = useState(() =>
+        Boolean(getLocalStorageItem<boolean>(RELOCATION_DOT_SEEN_KEY)),
+    );
+    const showRelocationDot =
+        relocationHintEnabled &&
+        !relocationDotSeen &&
+        !relocationHintCampaignOver();
+
     const handleOpen = (e: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(e.currentTarget);
+        if (hintOpen) dismissHelpButtonHint();
+        if (!relocationDotSeen) {
+            setLocalStorageItem(RELOCATION_DOT_SEEN_KEY, true);
+            setRelocationDotSeen(true);
+        }
+        if (!isHintSeen('menu-regroup')) markHintSeen('menu-regroup');
         trackEvent(EVENT_NAME, {
             props: {
                 eventType: 'opened',
@@ -191,6 +258,11 @@ export const HelpResources = () => {
         handleClose();
     };
 
+    const handleGetStarted = () => {
+        handleOptionClick('get-started');
+        floatingOnboardingChecklist?.open();
+    };
+
     const { openFeedback } = useFeedback('general', 'automatic');
 
     const handleGiveFeedback = () => {
@@ -206,17 +278,46 @@ export const HelpResources = () => {
     return (
         <>
             <Tooltip title='Help & Resources' arrow>
-                <StyledIconButton
-                    size='large'
-                    open={open}
-                    onClick={handleOpen}
-                    aria-haspopup='true'
-                    aria-expanded={open}
-                    aria-label='Help and resources'
+                <StyledBadge
+                    color='primary'
+                    variant='dot'
+                    overlap='circular'
+                    invisible={!showRelocationDot}
                 >
-                    <HelpOutlineOutlinedIcon />
-                </StyledIconButton>
+                    <StyledIconButton
+                        ref={setButtonEl}
+                        size='large'
+                        open={open || hintHighlightsButton}
+                        onClick={handleOpen}
+                        aria-haspopup='true'
+                        aria-expanded={open}
+                        aria-label='Help and resources'
+                    >
+                        <HelpOutlineOutlinedIcon />
+                    </StyledIconButton>
+                </StyledBadge>
             </Tooltip>
+            <HelpMenuAnnouncement
+                open={activeHint === 'menu-regroup'}
+                anchorEl={buttonEl}
+                onDismiss={dismissHelpButtonHint}
+                onClose={closeHelpButtonHint}
+            />
+            <HelpMenuHint
+                open={activeHint === 'get-started'}
+                anchorEl={buttonEl}
+                onClose={dismissHelpButtonHint}
+            >
+                You can reopen the Get started checklist from here anytime
+            </HelpMenuHint>
+            <HelpMenuHint
+                open={activeHint === 'intro-closed'}
+                anchorEl={buttonEl}
+                onClose={dismissHelpButtonHint}
+            >
+                You can restart the <IntroHintIcon /> Unleash Intro from here
+                anytime
+            </HelpMenuHint>
             <StyledMenu
                 anchorEl={anchorEl}
                 open={open}
@@ -248,6 +349,34 @@ export const HelpResources = () => {
                         </StyledVisitLink>
                     </StyledLearningLabContent>
                 </StyledFeaturedMenuItem>
+                {showGetStarted && (
+                    <StyledMenuItem onClick={handleGetStarted}>
+                        <RocketLaunchOutlinedIcon fontSize='small' />
+                        Get started
+                        <Box sx={{ flexGrow: 1 }} />
+                        <OnboardingProgressBadge />
+                    </StyledMenuItem>
+                )}
+                <StyledMenuItem
+                    component={Link}
+                    to='/whats-new'
+                    onClick={() => handleOptionClick('whats-new')}
+                >
+                    <NewReleasesOutlinedIcon fontSize='small' />
+                    What's new
+                </StyledMenuItem>
+                <StyledMenuItem
+                    onClick={() => {
+                        handleOptionClick('quick-tour');
+                        openIntro({
+                            onExited: () => showHelpButtonHint('intro-closed'),
+                        });
+                    }}
+                    data-testid='QUICK_TOUR_BUTTON'
+                >
+                    <ExploreOutlinedIcon fontSize='small' />
+                    Unleash Intro
+                </StyledMenuItem>
                 <StyledMenuItem
                     component='a'
                     href={DOCUMENTATION_URL}

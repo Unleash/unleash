@@ -12,6 +12,7 @@ import {
     spreadVariants,
 } from './collapseHourlyMetrics.js';
 import type { Db } from '../../../db/db.js';
+import type { EnvironmentTotalUsage } from '../../../types/models/metrics.js';
 import type { IFlagResolver } from '../../../types/index.js';
 import metricsHelper from '../../../util/metrics-helper.js';
 import { DB_TIME } from '../../../metric-events.js';
@@ -199,8 +200,9 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
             .del();
     }
 
-    deleteAll(): Promise<void> {
-        return this.db(HOURLY_TABLE).del();
+    async deleteAll(): Promise<void> {
+        await this.db(HOURLY_TABLE).del();
+        await this.db(DAILY_TABLE).del();
     }
 
     destroy(): void {
@@ -317,6 +319,48 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
 
         const tokens = rows.reduce(variantRowReducerV2, {});
         return Object.values(tokens);
+    }
+
+    // The hourly/daily boundary sits at the start of yesterday because the
+    // daily rollup for yesterday only exists once aggregateDailyMetrics has
+    // run, sometime during today; cutting there keeps the sum correct no
+    // matter when that job or the hourly purge (clearMetrics) last ran.
+    async getTotalUsageForFeature(
+        featureName: string,
+    ): Promise<EnvironmentTotalUsage[]> {
+        const hourlyUsageSinceYesterday = this.db(HOURLY_TABLE)
+            .select('environment', 'yes', 'no')
+            .where('feature_name', featureName)
+            .where(
+                'timestamp',
+                '>=',
+                this.db.raw("date_trunc('day', now() - interval '1 day')"),
+            );
+        const dailyUsageBeforeYesterday = this.db(DAILY_TABLE)
+            .select('environment', 'yes', 'no')
+            .where('feature_name', featureName)
+            .where('date', '<', this.db.raw('CURRENT_DATE - 1'));
+
+        const rows: {
+            environment: string;
+            yes: string | number;
+            no: string | number;
+        }[] = await this.db
+            .select('environment')
+            .sum({ yes: 'yes', no: 'no' })
+            .from(
+                hourlyUsageSinceYesterday
+                    .unionAll(dailyUsageBeforeYesterday, true)
+                    .as('usage'),
+            )
+            .groupBy('environment')
+            .orderBy('environment');
+
+        return rows.map(({ environment, yes, no }) => ({
+            environment,
+            yes: Number(yes),
+            no: Number(no),
+        }));
     }
 
     async getSeenAppsForFeatureToggle(

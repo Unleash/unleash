@@ -11,7 +11,7 @@ export const OnboardingStatusBadge = ({
 }: IOnboardingStatusBadgeProps) => {
     const { current, total } = getProjectOnboardingStep(onboardingStatus);
     return (
-        <Badge color='secondary' sx={{ fontWeight: 'normal' }}>
+        <Badge color='primary' sx={{ fontWeight: 'normal' }}>
             Setup {current}/{total}
         </Badge>
     );

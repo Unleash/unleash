@@ -1,6 +1,6 @@
 import { useMemo, type ComponentProps, type FC } from 'react';
 import EmptyIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
-import type SvgIcon from '@mui/material/SvgIcon/SvgIcon';
+import type SvgIcon from '@mui/material/SvgIcon';
 import ApplicationsIcon from '@mui/icons-material/AppsOutlined';
 import ContextFieldsIcon from '@mui/icons-material/AccountTreeOutlined';
 import FlagTypesIcon from '@mui/icons-material/OutlinedFlag';
@@ -36,7 +36,6 @@ import PersonalDashboardIcon from '@mui/icons-material/DashboardOutlined';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
-import RocketLaunchIcon from '@mui/icons-material/RocketLaunchOutlined';
 import BuildIcon from '@mui/icons-material/BuildOutlined';
 import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequestIcon';
 
@@ -88,7 +87,6 @@ const icons: Record<
     '/personal': PersonalDashboardIcon,
     '/projects': ProjectIcon,
     '/playground': PlaygroundIcon,
-    '/custom-metrics': RocketLaunchIcon,
     '/change-requests': ChangeRequestIcon,
     GitHub: GitHubIcon,
     Documentation: LibraryBooksIcon,

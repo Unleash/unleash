@@ -16,7 +16,7 @@ import {
     type IChangeSchema,
     useChangeRequestApi,
 } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { comparisonModerator } from 'component/feature/FeatureStrategy/featureStrategy.utils';
+import { strategyComparisonModerator } from 'component/feature/FeatureStrategy/featureStrategy.utils';
 import type {
     ChangeRequestAddStrategy,
     ChangeRequestEditStrategy,
@@ -30,6 +30,9 @@ import { FeatureStrategyForm } from '../../../../feature/FeatureStrategy/Feature
 import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 import { getChangeStrategyName } from 'utils/getChangeStrategyName.ts';
+import { editChangeTracking } from 'component/changeRequest/changeRequestTracking';
+import { useTracking } from 'hooks/useTracking';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IEditChangeProps {
     change:
@@ -66,8 +69,11 @@ export const EditChange = ({
     onClose,
     featureId,
 }: IEditChangeProps) => {
+    const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
     const projectId = useRequiredPathParam('projectId');
     const { editChange } = useChangeRequestApi();
+    const editTracking = editChangeTracking(change);
+    const trackEdit = useTracking(editTracking);
 
     const constraintsWithId = addIdSymbolToConstraints(change.payload);
 
@@ -87,6 +93,12 @@ export const EditChange = ({
 
     const ref = useRef<IFeatureToggle>(feature);
 
+    const watchNothing = () => undefined;
+    const staleComparison =
+        change.action === 'addStrategy'
+            ? watchNothing
+            : strategyComparisonModerator(environment, change.payload.id);
+
     const { data, staleDataNotification, forceRefreshCache } =
         useCollaborateData<IFeatureToggle>(
             {
@@ -100,7 +112,7 @@ export const EditChange = ({
             {
                 afterSubmitAction: refetchFeature,
             },
-            comparisonModerator,
+            staleComparison,
         );
 
     useEffect(() => {
@@ -117,7 +129,9 @@ export const EditChange = ({
     };
     const onInternalSubmit = async () => {
         try {
-            await editChange(projectId, changeRequestId, change.id, payload);
+            await trackEdit.mutation(() =>
+                editChange(projectId, changeRequestId, change.id, payload),
+            );
             onSubmit();
             setToastData({
                 text: 'Change updated',
@@ -135,12 +149,14 @@ export const EditChange = ({
             open={open}
             onClose={onClose}
             label='Edit change'
+            tracking={editTracking}
             onClick={(e) => {
                 e.stopPropagation();
             }}
         >
             <FormTemplate
-                modal
+                layout='modal'
+                fitContainerHeight={singlePageStrategyForm}
                 disablePadding
                 description={featureStrategyHelp}
                 documentationLink={featureStrategyDocsLink}

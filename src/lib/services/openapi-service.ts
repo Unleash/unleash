@@ -176,22 +176,35 @@ export class OpenApiService {
         data: T,
         headers: { [header: string]: string } = {},
     ): void {
-        const errors = validateSchema<S>(schema, data);
-
-        if (errors) {
-            this.logger.debug(
-                `Invalid response for ${res.req?.originalUrl || ''}:`,
-                errors,
-            );
-            if (this.flagResolver.isEnabled('strictSchemaValidation')) {
-                throw new Error(JSON.stringify(errors, null, 4));
-            }
-        }
+        this.validateResponse<T, S>(schema, data, res.req?.originalUrl || '');
 
         Object.entries(headers).forEach(([header, value]) => {
             res.header(header, value);
         });
 
         res.status(status).json(data);
+    }
+
+    validateResponse<T, S = SchemaId>(
+        schema: SchemaId,
+        data: T,
+        logContext = '',
+    ): void {
+        const errors = validateSchema<S>(schema, data);
+
+        if (errors) {
+            this.logger.debug(`Invalid response for ${logContext}:`, errors);
+            if (this.flagResolver.isEnabled('strictSchemaValidation')) {
+                throw new Error(JSON.stringify(errors, null, 4));
+            }
+        }
+    }
+
+    serializeWithValidation<T, S = SchemaId>(
+        schema: SchemaId,
+        data: T,
+    ): Buffer {
+        this.validateResponse<T, S>(schema, data);
+        return Buffer.from(JSON.stringify(data));
     }
 }

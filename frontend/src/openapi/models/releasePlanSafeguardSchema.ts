@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ReleasePlanSafeguardSchemaAction } from './releasePlanSafeguardSchemaAction';
-import type { ReleasePlanSafeguardSchemaImpactMetric } from './releasePlanSafeguardSchemaImpactMetric';
-import type { SafeguardTriggerConditionSchema } from './safeguardTriggerConditionSchema';
+import type { ReleasePlanSafeguardSchemaAction } from './releasePlanSafeguardSchemaAction.ts';
+import type { ReleasePlanSafeguardSchemaImpactMetric } from './releasePlanSafeguardSchemaImpactMetric.ts';
+import type { SafeguardTriggerConditionSchema } from './safeguardTriggerConditionSchema.ts';
 
 /**
  * A safeguard configuration for a release plan.

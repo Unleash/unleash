@@ -15,15 +15,17 @@ import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ExportDialog } from './ExportDialog.tsx';
+import { exportFlagsTracking } from './exportTracking';
+import { searchFlagsTracking } from './searchTracking';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { focusable } from 'themes/themeStyles';
 import { FeatureLifecycleCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import useToast from 'hooks/useToast';
 import { FeaturesOverviewToggleFilters } from './FeaturesOverviewLifecycleFilters/FeaturesOverviewToggleFilters.tsx';
-import { withTableState } from 'utils/withTableState';
+import { useTableState } from 'hooks/useTableState';
 import useLoading from 'hooks/useLoading';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
+import { flagsListProps, flagsListTableTracking } from './flagsListTracking';
 import {
     useGlobalFeatureSearch,
     useTableStateFilter,
@@ -67,7 +69,7 @@ const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 export const FeatureToggleListTable: FC = () => {
     const theme = useTheme();
     const { isOss } = useUiConfig();
-    const { trackEvent } = useEventTracker();
+    const trackSearchFlags = useTracking(searchFlagsTracking('features'));
     const { environments } = useEnvironments();
     const enabledEnvironments = environments
         .filter((env) => env.enabled)
@@ -92,7 +94,6 @@ export const FeatureToggleListTable: FC = () => {
     const showArchived = Boolean(
         filterState.lifecycle?.values?.includes('archived'),
     );
-    const archiveInFlagsView = useUiFlag('archiveInFlagsView');
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [deletedFeature, setDeletedFeature] =
         useState<FeatureSearchResponseSchema>();
@@ -224,9 +225,18 @@ export const FeatureToggleListTable: FC = () => {
         [initialLoad, features, loading],
     );
     const table = useReactTable(
-        withTableState(tableState, setTableState, {
-            columns,
-            data,
+        useTableState({
+            tableState,
+            setTableState,
+            options: { columns, data },
+            tracking: {
+                ...flagsListTableTracking,
+                props: flagsListProps({
+                    filterState,
+                    query: tableState.query,
+                    total,
+                }),
+            },
         }),
     );
 
@@ -251,12 +261,7 @@ export const FeatureToggleListTable: FC = () => {
 
     const setSearchValue = (query = '') => {
         setTableState({ query });
-        trackEvent('search-bar', {
-            props: {
-                screen: 'features',
-                length: query.length,
-            },
-        });
+        trackSearchFlags('succeeded', { queryLength: query.length });
     };
 
     const rows = table.getRowModel().rows;
@@ -286,28 +291,6 @@ export const FeatureToggleListTable: FC = () => {
                             >
                                 Unknown flags
                             </Link>
-                            {!archiveInFlagsView && (
-                                <Link
-                                    component={RouterLink}
-                                    to='/archive'
-                                    underline='always'
-                                    sx={{
-                                        marginRight: 2,
-                                        fontSize:
-                                            theme.typography.body2.fontSize,
-                                        ...focusable(theme),
-                                    }}
-                                    onClick={() => {
-                                        trackEvent('search-feature-buttons', {
-                                            props: {
-                                                action: 'archive',
-                                            },
-                                        });
-                                    }}
-                                >
-                                    Archived flags
-                                </Link>
-                            )}
                             <ExportFlags
                                 onClick={() => setShowExportDialog(true)}
                             />
@@ -340,6 +323,7 @@ export const FeatureToggleListTable: FC = () => {
                     state={filterState}
                 />
                 <FavoriteIconHeader
+                    scope='global'
                     isActive={tableState.favoritesFirst}
                     onClick={() =>
                         setTableState({
@@ -392,6 +376,10 @@ export const FeatureToggleListTable: FC = () => {
                 data={data}
                 onClose={() => setShowExportDialog(false)}
                 environments={enabledEnvironments}
+                tracking={{
+                    ...exportFlagsTracking,
+                    props: { source: 'flags-list', flagCount: data.length },
+                }}
             />
             <ArchivedFeatureDeleteConfirm
                 deletedFeatures={[deletedFeature?.name!]}

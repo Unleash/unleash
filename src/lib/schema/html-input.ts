@@ -5,7 +5,10 @@ import sanitizeHtml from 'sanitize-html';
 
 type HtmlInputOptions = sanitizeHtml.IOptions;
 
-const htmlInputExtension: joi.Extension = {
+// joi.extend() binds root state into the extension's base schema, so a shared
+// extension object can only be extended once per process. Export a factory so
+// every consumer extends a fresh copy.
+const htmlInputExtension = (): joi.Extension => ({
     type: 'htmlInput',
     base: joi.string(),
     messages: {
@@ -37,6 +40,6 @@ const htmlInputExtension: joi.Extension = {
             },
         },
     },
-};
+});
 
 export default htmlInputExtension;

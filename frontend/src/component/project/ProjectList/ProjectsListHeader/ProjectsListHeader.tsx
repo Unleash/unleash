@@ -10,13 +10,10 @@ type ProjectsListHeaderProps = {
 
 const StyledHeaderContainer = styled('div')(({ theme }) => ({
     display: 'flex',
-    flexDirection: 'column-reverse',
+    flexDirection: 'row',
+    alignItems: 'center',
     minHeight: theme.spacing(5),
     gap: theme.spacing(2),
-    [theme.breakpoints.up('md')]: {
-        flexDirection: 'row',
-        alignItems: 'flex-end',
-    },
     marginBottom: theme.spacing(2),
 }));
 

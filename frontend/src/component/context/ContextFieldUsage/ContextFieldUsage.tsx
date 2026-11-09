@@ -7,10 +7,10 @@ import { useStrategiesByContext } from 'hooks/api/getters/useStrategiesByContext
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useEventTracker } from 'hooks/useEventTracker';
 
-const StyledUl = styled('ul')(({ theme }) => ({
+const StyledUl = styled('ul')({
     listStyle: 'none',
     paddingLeft: 0,
-}));
+});
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -42,7 +42,7 @@ export const ContextFieldUsage = ({ contextName }: IContextFieldUsageProps) => {
     const projectList = (
         <StyledUl>
             {projectsUsed.map((projectId) => (
-                <li key={projectId} onClick={trackClick}>
+                <li key={projectId} onClick={trackClick} onKeyUp={trackClick}>
                     <Link
                         to={`/projects/${projectId}`}
                         target='_blank'

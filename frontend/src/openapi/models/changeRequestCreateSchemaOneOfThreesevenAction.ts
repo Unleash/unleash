@@ -10,7 +10,6 @@
 export type ChangeRequestCreateSchemaOneOfThreesevenAction =
     (typeof ChangeRequestCreateSchemaOneOfThreesevenAction)[keyof typeof ChangeRequestCreateSchemaOneOfThreesevenAction];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateSchemaOneOfThreesevenAction = {
     changeMilestoneProgression: 'changeMilestoneProgression',
 } as const;

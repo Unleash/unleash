@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react';
 import { styled, Button } from '@mui/material';
 import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutlined';
+import { Truncator } from 'component/common/Truncator/Truncator';
+import { dialogHeaderHeight } from 'themes/themeStyles';
 import { DropdownList } from './ConfigButtons/DropdownList.tsx';
 import { StyledPopover } from './ConfigButtons/shared.styles';
 
@@ -19,20 +21,30 @@ const Bar = styled('div')(({ theme }) => ({
     alignItems: 'center',
     padding: theme.spacing(0, 3),
     borderBottom: `1px solid ${theme.palette.divider}`,
-    gap: theme.spacing(1),
-    height: theme.spacing(8),
+    gap: theme.spacing(0),
+    height: dialogHeaderHeight(theme),
 }));
 
 const ProjectButton = styled(Button)(({ theme }) => ({
     color: theme.palette.text.primary,
-    fontWeight: theme.typography.body1.fontWeight,
     textTransform: 'none',
     padding: theme.spacing(0.5, 1),
     minWidth: 0,
 }));
 
+const StyledSeparator = styled('span')(({ theme }) => ({
+    fontWeight: theme.typography.fontWeightBold,
+    margin: theme.spacing(0, 0.5),
+}));
+
+const Separator = () => <StyledSeparator aria-hidden>/</StyledSeparator>;
+
 const Title = styled('span')(({ theme }) => ({
-    fontWeight: theme.fontWeight.bold,
+    fontWeight: theme.typography.fontWeightBold,
+    fontSize: theme.typography.body2.fontSize,
+    paddingLeft: theme.spacing(0.5),
+    whiteSpace: 'nowrap',
+    flexShrink: 0,
 }));
 
 export const HeaderBreadcrumb: React.FC<Props> = ({
@@ -56,10 +68,16 @@ export const HeaderBreadcrumb: React.FC<Props> = ({
                             onClick={() => setAnchorEl(ref.current)}
                             aria-label='Select project'
                         >
-                            {valueLabel ?? value}
+                            <Truncator
+                                title={valueLabel ?? value}
+                                arrow
+                                sx={{ maxWidth: (theme) => theme.spacing(40) }}
+                            >
+                                {valueLabel ?? value}
+                            </Truncator>
                         </ProjectButton>
                     </div>
-                    <span style={{ margin: '0 4px' }}>/</span>
+                    <Separator />
                 </>
             ) : null}
             <Title>{title}</Title>

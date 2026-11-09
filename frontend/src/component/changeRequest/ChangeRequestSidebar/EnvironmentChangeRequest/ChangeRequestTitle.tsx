@@ -12,6 +12,7 @@ import useToast from 'hooks/useToast';
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'flex-end',
     width: '100%',
     '& > div': { width: '100%' },
     justifyContent: 'space-between',

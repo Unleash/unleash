@@ -2,32 +2,37 @@ import type { ReactElement } from 'react';
 import { ANNOUNCER_ELEMENT_TEST_ID } from 'utils/testIds';
 import { styled } from '@mui/material';
 
+export interface IAnnouncement {
+    id: number;
+    message: string;
+}
+
 interface IAnnouncerElementProps {
-    announcement?: string;
+    announcements: IAnnouncement[];
 }
 
 const StyledContainer = styled('div')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
-    zIndex: -1,
-    width: 1,
-    height: 1,
-    margin: -1,
-    padding: 0,
+    height: '1px',
     overflow: 'hidden',
+    position: 'absolute',
+    whiteSpace: 'nowrap',
+    width: '1px',
 });
 
 export const AnnouncerElement = ({
-    announcement,
+    announcements,
 }: IAnnouncerElementProps): ReactElement => {
     return (
         <StyledContainer
-            role='status'
+            role='log'
             aria-live='polite'
-            aria-atomic
             data-testid={ANNOUNCER_ELEMENT_TEST_ID}
         >
-            {announcement}
+            {announcements.map(({ id, message }) => (
+                <div key={id}>{message}</div>
+            ))}
         </StyledContainer>
     );
 };

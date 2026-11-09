@@ -1,7 +1,7 @@
 import Joibase from 'joi';
 import { nameType } from '../routes/util.js';
 import htmlInput from '../schema/html-input.js';
-const joi = Joibase.extend(htmlInput);
+const joi = Joibase.extend(htmlInput());
 export const projectSchema = joi
     .object()
     .keys({

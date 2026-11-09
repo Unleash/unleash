@@ -3,8 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectSchemaMode } from './projectSchemaMode';
-import type { ProjectSchemaOwners } from './projectSchemaOwners';
+import type { OnboardingStatusSchema } from './onboardingStatusSchema.ts';
+import type { ProjectSchemaMode } from './projectSchemaMode.ts';
+import type { ProjectSchemaOwners } from './projectSchemaOwners.ts';
 
 /**
  * A definition of the project used for projects listing purposes
@@ -20,6 +21,8 @@ export interface ProjectSchema {
      * @deprecated
      */
     avgTimeToProduction?: number;
+    /** The number of features in this project that have completed their lifecycle and are ready for cleanup */
+    cleanupCount?: number;
     /** When this project was created. */
     createdAt?: string;
     /**
@@ -38,7 +41,7 @@ export interface ProjectSchema {
     /** The number of features this project has */
     featureCount?: number;
     /**
-     * Use `technicalDebt` instead.
+     * An indicator of the project's health on a scale from 0 to 100
      * @deprecated
      */
     health?: number;
@@ -60,7 +63,11 @@ export interface ProjectSchema {
     mode?: ProjectSchemaMode;
     /** The name of this project */
     name: string;
-    /** The users and/or groups that have the "owner" role in this project. If no such users or groups exist, the list will contain the "system" owner instead. */
+    onboardingStatus?: OnboardingStatusSchema;
+    /**
+     * The users and/or groups that have the "owner" role in this project. If no such users or groups exist, the list will contain the "system" owner instead.
+     * @deprecated
+     */
     owners?: ProjectSchemaOwners;
     /**
      * The number of potentially stale features this project has
@@ -74,6 +81,7 @@ export interface ProjectSchema {
     staleFeatureCount?: number;
     /**
      * An indicator of the [project's technical debt](https://docs.getunleash.io/concepts/technical-debt#project-status) on a scale from 0 to 100
+     * @deprecated
      * @minimum 0
      * @maximum 100
      */

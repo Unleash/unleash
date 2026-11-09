@@ -57,7 +57,7 @@ export const ProjectActionsFormStep = ({
         />
         <StyledBox verticalConnector={verticalConnector}>
             <StyledHeader>
-                <Badge color='secondary'>{name}</Badge>
+                <Badge color='primary'>{name}</Badge>
                 <StyledResourceLink>{resourceLink}</StyledResourceLink>
             </StyledHeader>
             {children}

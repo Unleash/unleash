@@ -17,6 +17,7 @@ import {
 import type { StrategiesUsingSegment } from './segment-service-interface.js';
 import type { IFeatureOverview, IUser } from '../../types/index.js';
 import { DEFAULT_ENV } from '../../server-impl.js';
+import { FEATURE_STRATEGY_UPDATE } from '../../events/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -347,6 +348,134 @@ test('should return 403 when user lacks permission to update strategy segments',
     expect(hasPermissionSpy).toHaveBeenCalledTimes(1);
 });
 
+test('should return 403 when strategy does not belong to the given project', async () => {
+    const strategyProject = 'default';
+    const anotherProject = 'another-project';
+    const flag = mockFeatureFlag();
+    await app.request
+        .post(`/api/admin/projects/${strategyProject}/features`)
+        .send({ name: flag.name })
+        .expect(201);
+    const { body: strategy } = await app.request
+        .post(
+            `/api/admin/projects/${strategyProject}/features/${flag.name}/environments/${DEFAULT_ENV}/strategies`,
+        )
+        .send(flag.strategies[0])
+        .expect(200);
+
+    await app.request
+        .post(`${SEGMENTS_BASE_PATH}/strategies`)
+        .send({
+            strategyId: strategy.id,
+            segmentIds: [],
+            projectId: anotherProject,
+            environmentId: DEFAULT_ENV,
+        })
+        .expect(403);
+});
+
+test('should return 400 when attaching a segment that does not belong to the strategy project', async () => {
+    const strategyProject = 'default';
+    const segmentProject = 'another-project';
+    await db.stores.projectStore.create({
+        id: segmentProject,
+        name: segmentProject,
+    });
+    const foreignSegment = await db.stores.segmentStore.create(
+        {
+            name: randomId(),
+            project: segmentProject,
+            constraints: [],
+            createdAt: new Date(),
+        },
+        { username: 'test' },
+    );
+    const flag = mockFeatureFlag();
+    await createFeatureFlag(app, flag);
+    await addStrategyToFeatureEnv(
+        app,
+        { ...flag.strategies[0] },
+        DEFAULT_ENV,
+        flag.name,
+    );
+    const [feature] = await fetchFeatures();
+    const [strategy] = await fetchFeatureStrategies(feature.name);
+
+    await app.request
+        .post(`${SEGMENTS_BASE_PATH}/strategies`)
+        .set('Content-type', 'application/json')
+        .send({
+            strategyId: strategy.id,
+            segmentIds: [foreignSegment.id],
+            projectId: strategyProject,
+            environmentId: DEFAULT_ENV,
+        })
+        .expect(400);
+
+    const strategySegments = await fetchSegmentsByStrategy(strategy.id);
+    expect(strategySegments).toHaveLength(0);
+});
+
+test('should record a strategy update event with the previous and new segments', async () => {
+    const { body: segment1 } = await app.createSegment({
+        name: 'S1',
+        constraints: [],
+    });
+    const { body: segment2 } = await app.createSegment({
+        name: 'S2',
+        constraints: [],
+    });
+    const flag = mockFeatureFlag();
+    await createFeatureFlag(app, flag);
+    await addStrategyToFeatureEnv(
+        app,
+        { ...flag.strategies[0], segments: [segment1.id] },
+        DEFAULT_ENV,
+        flag.name,
+    );
+    const [strategy] = await fetchFeatureStrategies(flag.name);
+
+    await addSegmentsToStrategy([segment2.id], strategy.id);
+
+    const { body } = await app.getRecordedEvents({
+        feature: `IS:${flag.name}`,
+        type: `IS:${FEATURE_STRATEGY_UPDATE}`,
+    });
+    expect(body.events).toMatchObject([
+        {
+            environment: DEFAULT_ENV,
+            preData: { segments: [segment1.id] },
+            data: { segments: [segment2.id] },
+        },
+    ]);
+});
+
+test('should keep the current segments when a replacement fails partway', async () => {
+    const { body: segment1 } = await app.createSegment({
+        name: 'S1',
+        constraints: [],
+    });
+    const { body: segment2 } = await app.createSegment({
+        name: 'S2',
+        constraints: [],
+    });
+    const flag = mockFeatureFlag();
+    await createFeatureFlag(app, flag);
+    await addStrategyToFeatureEnv(
+        app,
+        { ...flag.strategies[0], segments: [segment1.id] },
+        DEFAULT_ENV,
+        flag.name,
+    );
+    const [strategy] = await fetchFeatureStrategies(flag.name);
+
+    await addSegmentsToStrategy([segment2.id, segment2.id], strategy.id, 500);
+
+    expect(collectIds(await fetchSegmentsByStrategy(strategy.id))).toEqual([
+        segment1.id,
+    ]);
+});
+
 test('should create segments', async () => {
     await app.createSegment({
         name: 'a',
@@ -435,6 +564,27 @@ test('should delete segments', async () => {
         .expect(204);
 
     expect((await fetchSegments()).length).toEqual(0);
+});
+
+test('should save segment create, update and delete each in one transaction with its event', async () => {
+    const { body: segment } = await app.createSegment({
+        name: 'a',
+        project: 'default',
+        constraints: [],
+    });
+    await updateSegment(segment.id, { ...segment, name: 'b' });
+    await app.deleteSegment(segment.id);
+
+    const { body } = await app.getRecordedEvents({
+        type: 'IS_ANY_OF:segment-created,segment-updated,segment-deleted',
+    });
+    expect(body.events).toMatchObject([
+        { type: 'segment-deleted', groupType: 'transaction' },
+        { type: 'segment-updated', groupType: 'transaction' },
+        { type: 'segment-created', groupType: 'transaction' },
+    ]);
+    // one transaction per request
+    expect(new Set(body.events.map((event) => event.groupId)).size).toBe(3);
 });
 
 test('should not delete segments used by strategies', async () => {

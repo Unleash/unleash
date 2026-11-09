@@ -10,7 +10,6 @@
 export type CreateImpactMetricsConfigSchemaTimeRange =
     (typeof CreateImpactMetricsConfigSchemaTimeRange)[keyof typeof CreateImpactMetricsConfigSchemaTimeRange];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateImpactMetricsConfigSchemaTimeRange = {
     hour: 'hour',
     day: 'day',

@@ -36,7 +36,7 @@ export const LabelsFilter: FC<LabelsFilterProps> = ({
         onChange(newLabels);
     };
 
-    if (!availableLabels || Object.keys(availableLabels).length === 0) {
+    if (Object.keys(availableLabels).length === 0) {
         return null;
     }
 

@@ -10,7 +10,6 @@
 export type UpdateStrategySchemaParametersItemType =
     (typeof UpdateStrategySchemaParametersItemType)[keyof typeof UpdateStrategySchemaParametersItemType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UpdateStrategySchemaParametersItemType = {
     string: 'string',
     percentage: 'percentage',

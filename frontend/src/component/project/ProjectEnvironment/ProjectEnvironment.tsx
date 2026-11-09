@@ -35,6 +35,11 @@ import useProjectOverview, {
     useProjectOverviewNameOrId,
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { UpgradeMoreEnvironments } from './UpgradeMoreEnvironments.tsx';
+import { useTracking } from 'hooks/useTracking';
+import {
+    toggleEnvironmentVisibilityTracking,
+    environmentTrackingProps,
+} from './projectEnvironmentTracking.ts';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -65,6 +70,9 @@ const ProjectEnvironmentList = () => {
     const { project, refetch: refetchProject } = useProjectOverview(projectId);
     const { removeEnvironmentFromProject, addEnvironmentToProject } =
         useProjectApi();
+    const trackToggleEnvironmentVisibility = useTracking(
+        toggleEnvironmentVisibilityTracking,
+    );
 
     // local state
     const [selectedEnvironment, setSelectedEnvironment] =
@@ -121,13 +129,16 @@ const ProjectEnvironmentList = () => {
             });
         } else {
             try {
-                await addEnvironmentToProject(projectId, env.name);
+                await trackToggleEnvironmentVisibility.mutation(
+                    () => addEnvironmentToProject(projectId, env.name),
+                    environmentTrackingProps(env, 'visible'),
+                );
                 refetch();
                 setToastData({
                     text: 'Environment set as visible',
                     type: 'success',
                 });
-            } catch (_error) {
+            } catch (_error: unknown) {
                 setToastApiError(errorMsg(true));
             }
         }
@@ -136,16 +147,20 @@ const ProjectEnvironmentList = () => {
     const onHideConfirm = async () => {
         if (selectedEnvironment) {
             try {
-                await removeEnvironmentFromProject(
-                    projectId,
-                    selectedEnvironment.name,
+                await trackToggleEnvironmentVisibility.mutation(
+                    () =>
+                        removeEnvironmentFromProject(
+                            projectId,
+                            selectedEnvironment.name,
+                        ),
+                    environmentTrackingProps(selectedEnvironment, 'hidden'),
                 );
                 refetch();
                 setToastData({
                     text: 'Environment hidden',
                     type: 'success',
                 });
-            } catch (_e) {
+            } catch (_error: unknown) {
                 setToastApiError(errorMsg(false));
             } finally {
                 setHideDialog(false);
@@ -240,6 +255,7 @@ const ProjectEnvironmentList = () => {
 
     const header = (
         <PageHeader
+            variant='h2'
             title={`Environments (${rows.length})`}
             actions={
                 <>
@@ -329,6 +345,17 @@ const ProjectEnvironmentList = () => {
                     open={hideDialog}
                     setOpen={setHideDialog}
                     onConfirm={onHideConfirm}
+                    tracking={
+                        selectedEnvironment
+                            ? {
+                                  ...toggleEnvironmentVisibilityTracking,
+                                  props: environmentTrackingProps(
+                                      selectedEnvironment,
+                                      'hidden',
+                                  ),
+                              }
+                            : undefined
+                    }
                 />
             </StyledDivContainer>
         </PageContent>

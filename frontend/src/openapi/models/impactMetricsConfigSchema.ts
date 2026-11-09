@@ -3,13 +3,13 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ImpactMetricsConfigSchemaAggregationMode } from './impactMetricsConfigSchemaAggregationMode';
-import type { ImpactMetricsConfigSchemaLabelSelectors } from './impactMetricsConfigSchemaLabelSelectors';
-import type { ImpactMetricsConfigSchemaMode } from './impactMetricsConfigSchemaMode';
-import type { ImpactMetricsConfigSchemaSource } from './impactMetricsConfigSchemaSource';
-import type { ImpactMetricsConfigSchemaStep } from './impactMetricsConfigSchemaStep';
-import type { ImpactMetricsConfigSchemaTimeRange } from './impactMetricsConfigSchemaTimeRange';
-import type { ImpactMetricsConfigSchemaYAxisMin } from './impactMetricsConfigSchemaYAxisMin';
+import type { ImpactMetricsConfigSchemaAggregationMode } from './impactMetricsConfigSchemaAggregationMode.ts';
+import type { ImpactMetricsConfigSchemaLabelSelectors } from './impactMetricsConfigSchemaLabelSelectors.ts';
+import type { ImpactMetricsConfigSchemaMode } from './impactMetricsConfigSchemaMode.ts';
+import type { ImpactMetricsConfigSchemaSource } from './impactMetricsConfigSchemaSource.ts';
+import type { ImpactMetricsConfigSchemaStep } from './impactMetricsConfigSchemaStep.ts';
+import type { ImpactMetricsConfigSchemaTimeRange } from './impactMetricsConfigSchemaTimeRange.ts';
+import type { ImpactMetricsConfigSchemaYAxisMin } from './impactMetricsConfigSchemaYAxisMin.ts';
 
 /**
  * Describes the configuration for a single impact metric chart.
@@ -36,9 +36,7 @@ export interface ImpactMetricsConfigSchema {
     step?: ImpactMetricsConfigSchemaStep;
     /** The time range for the metric data. */
     timeRange: ImpactMetricsConfigSchemaTimeRange;
-    /**
-     * Optional title for the impact metric chart.
-     */
+    /** Optional title for the impact metric chart. */
     title?: string;
     /** Whether the chart should begin at zero on the y-axis. */
     yAxisMin: ImpactMetricsConfigSchemaYAxisMin;

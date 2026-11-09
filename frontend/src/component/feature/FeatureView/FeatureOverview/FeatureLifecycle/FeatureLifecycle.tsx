@@ -31,6 +31,7 @@ export const FeatureLifecycle: FC<{
     const { onUncompleteHandler, loading } = useUncomplete({
         feature: feature.name,
         project: feature.project,
+        stage: currentStage,
         onChange: onUncomplete,
     });
 

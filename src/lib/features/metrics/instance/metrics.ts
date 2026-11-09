@@ -11,27 +11,21 @@ import type {
     IUnleashServices,
     OpenApiService,
 } from '../../../services/index.js';
+import type { ApiTokenService } from '../../../services/api-token-service.js';
 import { createRequestSchema } from '../../../openapi/util/create-request-schema.js';
 import {
     emptyResponse,
     getStandardResponses,
 } from '../../../openapi/util/standard-responses.js';
-import rateLimit from 'express-rate-limit';
-import { minutesToMilliseconds } from 'date-fns';
 import type { BulkMetricsSchema } from '../../../openapi/spec/bulk-metrics-schema.js';
-import {
-    clientMetricsEnvBulkSchema,
-    customMetricsSchema,
-} from '../shared/schema.js';
+import { clientMetricsEnvBulkSchema } from '../shared/schema.js';
 import type { IClientMetricsEnv } from '../client-metrics/client-metrics-store-v2-type.js';
-import type { CustomMetricsSchema } from '../../../openapi/spec/custom-metrics-schema.js';
-import type { StoredCustomMetric } from '../custom/custom-metrics-store.js';
-import type { CustomMetricsService } from '../custom/custom-metrics-service.js';
 import type {
     Metric,
     MetricsTranslator,
 } from '../impact/metrics-translator.js';
 import type { ClientMetricsSchema } from '../../../server-impl.js';
+import ApiUser from '../../../types/api-user.js';
 
 export default class ClientMetricsController extends Controller {
     logger: Logger;
@@ -42,24 +36,24 @@ export default class ClientMetricsController extends Controller {
 
     metricsV2: ClientMetricsServiceV2;
 
-    customMetricsService: CustomMetricsService;
-
     metricsTranslator: MetricsTranslator;
 
     flagResolver: IFlagResolver;
+
+    apiTokenService: ApiTokenService;
 
     constructor(
         {
             clientInstanceService,
             clientMetricsServiceV2,
             openApiService,
-            customMetricsService,
+            apiTokenService,
         }: Pick<
             IUnleashServices,
             | 'clientInstanceService'
             | 'clientMetricsServiceV2'
             | 'openApiService'
-            | 'customMetricsService'
+            | 'apiTokenService'
         >,
         config: IUnleashConfig,
     ) {
@@ -70,7 +64,7 @@ export default class ClientMetricsController extends Controller {
         this.clientInstanceService = clientInstanceService;
         this.openApiService = openApiService;
         this.metricsV2 = clientMetricsServiceV2;
-        this.customMetricsService = customMetricsService;
+        this.apiTokenService = apiTokenService;
         this.flagResolver = config.flagResolver;
 
         this.route({
@@ -91,13 +85,6 @@ export default class ClientMetricsController extends Controller {
                         202: emptyResponse,
                         204: emptyResponse,
                     },
-                }),
-                rateLimit({
-                    windowMs: minutesToMilliseconds(1),
-                    max: config.metricsRateLimiting.clientMetricsMaxPerMinute,
-                    validate: false,
-                    standardHeaders: true,
-                    legacyHeaders: false,
                 }),
             ],
         });
@@ -122,36 +109,6 @@ export default class ClientMetricsController extends Controller {
                 }),
             ],
         });
-
-        this.route({
-            method: 'post',
-            path: '/custom',
-            handler: this.customMetrics,
-            permission: NONE,
-            middleware: [
-                this.openApiService.validPath({
-                    tags: ['Client'],
-                    summary: 'Send custom metrics',
-                    description: `This operation accepts custom metrics from clients. These metrics will be exposed via Prometheus in Unleash.`,
-                    release: { stable: '7.0.0' },
-                    operationId: 'clientCustomMetrics',
-                    requestBody: createRequestSchema('customMetricsSchema'),
-                    responses: {
-                        202: emptyResponse,
-                        ...getStandardResponses(400),
-                    },
-                }),
-                rateLimit({
-                    windowMs: minutesToMilliseconds(1),
-                    max: config.metricsRateLimiting.clientMetricsMaxPerMinute,
-                    validate: false,
-                    standardHeaders: true,
-                    legacyHeaders: false,
-                }),
-            ],
-        });
-
-        // Note: Custom metrics GET endpoints are now handled by the admin API
     }
 
     private async processPromiseResults(
@@ -181,7 +138,17 @@ export default class ClientMetricsController extends Controller {
             try {
                 const { body: data, user } = req;
                 const clientIp = extractClientIp(req);
-                const { impactMetrics, ...metricsData } = data;
+                const {
+                    impactMetrics,
+                    sdkFlavor,
+                    sdkFlavorVersion,
+                    ...metricsData
+                } = data;
+                // Only single-consumer reporting has authenticated attribution.
+                // Bulk forwarding may combine many consumers behind an Edge credential.
+                if (user instanceof ApiUser && user.appName) {
+                    metricsData.appName = user.appName;
+                }
                 const environment =
                     this.metricsV2.resolveMetricsEnvironment(user);
 
@@ -191,8 +158,14 @@ export default class ClientMetricsController extends Controller {
                     environment,
                 );
 
-                await this.metricsV2.registerClientMetrics(
+                const recordSdkFlavorMetrics = this.getRegisteredMetricsData(
                     metricsData,
+                    sdkFlavor,
+                    sdkFlavorVersion,
+                );
+
+                await this.metricsV2.registerClientMetrics(
+                    recordSdkFlavorMetrics,
                     clientIp,
                     environment,
                 );
@@ -212,44 +185,20 @@ export default class ClientMetricsController extends Controller {
         }
     }
 
-    async customMetrics(
-        req: IAuthRequest<void, void, CustomMetricsSchema>,
-        res: Response<void>,
-    ): Promise<void> {
-        if (this.config.flagResolver.isEnabled('disableMetrics')) {
-            res.status(204).end();
-        } else {
-            try {
-                const { body } = req;
-
-                // Use Joi validation for custom metrics
-                await customMetricsSchema.validateAsync(body);
-
-                // Process and store custom metrics
-                if (body.metrics && Array.isArray(body.metrics)) {
-                    const validMetrics = body.metrics.filter(
-                        (metric) =>
-                            typeof metric.name === 'string' &&
-                            typeof metric.value === 'number',
-                    );
-
-                    if (validMetrics.length < body.metrics.length) {
-                        this.logger.warn(
-                            'Some invalid metric types found, skipping',
-                        );
-                    }
-
-                    this.customMetricsService.addMetrics(
-                        validMetrics as Omit<StoredCustomMetric, 'timestamp'>[],
-                    );
-                }
-
-                res.status(202).end();
-            } catch (e) {
-                this.logger.error('Failed to process custom metrics', e);
-                res.status(400).end();
-            }
-        }
+    getRegisteredMetricsData(
+        metricsData: any,
+        sdkFlavor: any,
+        sdkFlavorVersion: any,
+    ) {
+        // sdkFlavor / sdkFlavorVersion are in the metrics PAYLOAD (clientMetricsSchema) same as sdkVersion, not headers.
+        // Recording them is gated by the `recordSdkFlavorMetrics` flag.
+        const recordSdkFlavorMetrics = this.config.flagResolver.isEnabled(
+            'recordSdkFlavorMetrics',
+        );
+        const usageMetricsData = recordSdkFlavorMetrics
+            ? { ...metricsData, sdkFlavor, sdkFlavorVersion }
+            : metricsData;
+        return usageMetricsData;
     }
 
     async bulkMetrics(
@@ -261,7 +210,9 @@ export default class ClientMetricsController extends Controller {
         } else {
             const { body, user } = req;
             const clientIp = extractClientIp(req);
-            const { metrics, applications, impactMetrics } = body;
+            const { metrics, applications, impactMetrics, seenTokens } = body;
+            // Edge can aggregate multiple consumers behind one credential.
+            // No per-item token identity is available here, so retain reported appNames.
             const promises: Promise<void>[] = [];
 
             // when an app omits its `environment` and
@@ -272,6 +223,9 @@ export default class ClientMetricsController extends Controller {
 
             try {
                 for (const app of applications) {
+                    if (!app.appName) {
+                        continue;
+                    }
                     // per app `environment` from the body - when this bulk endpoint
                     // forwards metrics from many environments for edge proxies
                     const appEnvironment =
@@ -287,6 +241,9 @@ export default class ClientMetricsController extends Controller {
                             sdkType: app.sdkType,
                             sdkVersion: app.sdkVersion,
                             projects: app.projects,
+                            // forwarded by Edge for frontend SDKs - backend path already passes `app`
+                            sdkFlavor: app.sdkFlavor,
+                            sdkFlavorVersion: app.sdkFlavorVersion,
                         });
                     } else {
                         promises.push(
@@ -299,8 +256,13 @@ export default class ClientMetricsController extends Controller {
                     }
                 }
                 if (metrics && metrics.length > 0) {
+                    const metricsWithAppName = metrics.filter((metric) =>
+                        Boolean(metric.appName),
+                    );
                     const data: IClientMetricsEnv[] =
-                        await clientMetricsEnvBulkSchema.validateAsync(metrics);
+                        await clientMetricsEnvBulkSchema.validateAsync(
+                            metricsWithAppName,
+                        );
                     const filteredData = data.filter(
                         (metric) => metric.environment === acceptedEnvironment,
                     );
@@ -312,6 +274,19 @@ export default class ClientMetricsController extends Controller {
                 if (impactMetrics && impactMetrics.length > 0) {
                     promises.push(
                         this.metricsV2.registerImpactMetrics(impactMetrics),
+                    );
+                }
+
+                if (seenTokens && seenTokens.length > 0) {
+                    promises.push(
+                        this.apiTokenService
+                            .markSeenByTokens(seenTokens)
+                            .catch((error) => {
+                                this.logger.warn(
+                                    'Failed to mark API tokens as seen from bulk metrics',
+                                    error,
+                                );
+                            }),
                     );
                 }
 

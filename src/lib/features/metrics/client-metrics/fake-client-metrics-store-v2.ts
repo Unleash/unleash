@@ -6,6 +6,7 @@ import type {
     IClientMetricsEnvKey,
     IClientMetricsStoreV2,
 } from './client-metrics-store-v2-type.js';
+import type { EnvironmentTotalUsage } from '../../../types/models/metrics.js';
 
 export default class FakeClientMetricsStoreV2
     extends EventEmitter
@@ -48,6 +49,26 @@ export default class FakeClientMetricsStoreV2
     }
     aggregateDailyMetrics(): Promise<void> {
         return Promise.resolve();
+    }
+    async getTotalUsageForFeature(
+        featureName: string,
+    ): Promise<EnvironmentTotalUsage[]> {
+        const featureMetrics = this.metrics.filter(
+            (metric) => metric.featureName === featureName,
+        );
+
+        const totals = new Map<string, EnvironmentTotalUsage>();
+        for (const metric of featureMetrics) {
+            const total = totals.get(metric.environment) ?? {
+                environment: metric.environment,
+                yes: 0,
+                no: 0,
+            };
+            total.yes += metric.yes;
+            total.no += metric.no;
+            totals.set(metric.environment, total);
+        }
+        return [...totals.values()];
     }
     getSeenAppsForFeatureToggle(
         _featureName: string,

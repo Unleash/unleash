@@ -85,6 +85,15 @@ class AddonController extends Controller {
                     tags: ['Addons'],
                     release: { stable: '4.14.0' },
                     operationId: 'getAddons',
+                    parameters: [
+                        {
+                            name: 'project',
+                            description:
+                                'Only return addons that send events to this project and no other',
+                            schema: { type: 'string' },
+                            in: 'query',
+                        },
+                    ],
                     responses: {
                         ...getStandardResponses(401),
                         200: createResponseSchema('addonsSchema'),
@@ -205,16 +214,13 @@ Note: passing \`null\` as a value for the description property will set it to an
         });
     }
 
-    async getAddons(_req: Request, res: Response<AddonsSchema>): Promise<void> {
-        let addons = await this.addonService.getAddons();
-        let providers = this.addonService.getProviderDefinitions();
-
-        if (!this.flagResolver.isEnabled('serviceNowIntegration')) {
-            addons = addons.filter((addon) => addon.provider !== 'servicenow');
-            providers = providers.filter(
-                (provider) => provider.name !== 'servicenow',
-            );
-        }
+    async getAddons(
+        req: Request<unknown, unknown, unknown, { project?: string }>,
+        res: Response<AddonsSchema>,
+    ): Promise<void> {
+        const { project } = req.query;
+        const { addons, providers } =
+            await this.addonService.getAddonsOverview(project);
 
         this.openApiService.respondWithValidation(200, res, addonsSchema.$id, {
             addons: serializeDates(addons),
@@ -254,7 +260,7 @@ Note: passing \`null\` as a value for the description property will set it to an
     }
 
     async createAddon(
-        req: IAuthRequest<AddonCreateUpdateSchema, any, any, any>,
+        req: IAuthRequest<unknown, any, AddonCreateUpdateSchema, any>,
         res: Response<AddonSchema>,
     ): Promise<void> {
         const data = req.body;

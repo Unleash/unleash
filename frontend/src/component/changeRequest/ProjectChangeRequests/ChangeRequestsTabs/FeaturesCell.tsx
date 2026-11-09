@@ -1,5 +1,5 @@
 import { Box, styled } from '@mui/material';
-import { Link } from 'react-router';
+import { QuietLink } from 'component/common/QuietLink';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -11,20 +11,6 @@ const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     padding: theme.spacing(1, 0, 1, 2),
-}));
-
-const StyledLink = styled(Link)(() => ({
-    textDecoration: 'none',
-    '&:hover, &:focus': {
-        textDecoration: 'underline',
-    },
-}));
-
-const StyledTooltipLink = styled(Link)(({ theme }) => ({
-    textDecoration: 'none',
-    '&:hover, &:focus': {
-        textDecoration: 'underline',
-    },
 }));
 
 const StyledTooltipContainer = styled(Box)(({ theme }) => ({
@@ -48,7 +34,7 @@ export const FeaturesCell: FC<FeaturesCellProps> = ({ value, project }) => {
             <ConditionallyRender
                 condition={featureNames?.length < 3}
                 show={featureNames?.map((featureName: string) => (
-                    <StyledLink
+                    <QuietLink
                         key={featureName}
                         to={`/projects/${project}/features/${featureName}`}
                     >
@@ -57,7 +43,7 @@ export const FeaturesCell: FC<FeaturesCellProps> = ({ value, project }) => {
                                 {featureName}
                             </Highlighter>
                         </Truncator>
-                    </StyledLink>
+                    </QuietLink>
                 ))}
                 elseShow={
                     <TooltipLink
@@ -65,7 +51,7 @@ export const FeaturesCell: FC<FeaturesCellProps> = ({ value, project }) => {
                         tooltip={
                             <StyledTooltipContainer>
                                 {featureNames?.map((featureName: string) => (
-                                    <StyledTooltipLink
+                                    <QuietLink
                                         key={featureName}
                                         to={`/projects/${project}/features/${featureName}`}
                                     >
@@ -78,7 +64,7 @@ export const FeaturesCell: FC<FeaturesCellProps> = ({ value, project }) => {
                                                 {featureName}
                                             </Highlighter>
                                         </Truncator>
-                                    </StyledTooltipLink>
+                                    </QuietLink>
                                 ))}
                             </StyledTooltipContainer>
                         }

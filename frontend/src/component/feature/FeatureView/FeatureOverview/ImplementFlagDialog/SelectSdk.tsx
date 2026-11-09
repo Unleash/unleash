@@ -1,4 +1,5 @@
-import { Autocomplete, TextField, styled } from '@mui/material';
+import { styled } from '@mui/material';
+import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField';
 import {
     allSdks,
     serverSdks,
@@ -18,6 +19,25 @@ type SdkOption = {
     icon: UnformattedAssetPath;
     group: string;
 };
+
+const options: SdkOption[] = allSdks
+    .map((sdk) => ({
+        ...sdk,
+        group: backendNames.has(sdk.name) ? 'Backend SDKs' : 'Frontend SDKs',
+    }))
+    .sort(
+        (a, b) =>
+            a.group.localeCompare(b.group) || a.name.localeCompare(b.name),
+    );
+
+const optionsByName = new Map<SdkName, SdkOption>(
+    options.map((option) => [option.name, option]),
+);
+
+const getOptionLabel = (option: SdkOption) => option.name;
+const getOptionGroup = (option: SdkOption) => option.group;
+const isOptionEqualToValue = (option: SdkOption, value: SdkOption) =>
+    option.name === value.name;
 
 const StyledAutocompleteWrapper = styled('div')(({ theme }) => ({
     minWidth: theme.spacing(20),
@@ -43,29 +63,20 @@ const StyledSdkName = styled('span')({
 });
 
 export const SelectSdk = ({ value, onChange }: SelectSdkProps) => {
-    const options: SdkOption[] = allSdks
-        .map((sdk) => ({
-            ...sdk,
-            group: backendNames.has(sdk.name)
-                ? 'Backend SDKs'
-                : 'Frontend SDKs',
-        }))
-        .sort(
-            (a, b) =>
-                a.group.localeCompare(b.group) || a.name.localeCompare(b.name),
-        );
-
-    const icon = options.find((opt) => opt.name === value)?.icon;
+    const selectedOption = optionsByName.get(value);
+    const icon = selectedOption?.icon;
 
     return (
         <StyledAutocompleteWrapper>
-            <Autocomplete
+            <AutocompleteField
+                label='SDK'
+                size='large'
                 disableClearable
                 options={options}
-                value={options.find((opt) => opt.name === value)}
-                groupBy={(option) => option.group}
-                getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, val) => option.name === val.name}
+                value={selectedOption}
+                groupBy={getOptionGroup}
+                getOptionLabel={getOptionLabel}
+                isOptionEqualToValue={isOptionEqualToValue}
                 onChange={(_, newValue) => {
                     if (newValue?.name) {
                         onChange(newValue.name);
@@ -80,25 +91,14 @@ export const SelectSdk = ({ value, onChange }: SelectSdkProps) => {
                         <StyledSdkName>{option.name}</StyledSdkName>
                     </StyledOptionRow>
                 )}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label='SDK'
-                        size='small'
-                        slotProps={{
-                            ...params.slotProps,
-                            input: {
-                                ...params.slotProps?.input,
-                                startAdornment: icon && (
-                                    <StyledSdkIcon
-                                        src={formatAssetPath(icon)}
-                                        alt=''
-                                    />
-                                ),
-                            },
-                        }}
-                    />
-                )}
+                startAdornment={
+                    icon && (
+                        <StyledSdkIcon
+                            src={formatAssetPath(icon)}
+                            alt='sdk-icon'
+                        />
+                    )
+                }
             />
         </StyledAutocompleteWrapper>
     );

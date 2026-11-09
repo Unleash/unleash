@@ -5,7 +5,6 @@ import {
     fromIConstraint,
     invertedToggleDisabled,
     isMultiValueConstraint,
-    isSingleValueConstraint,
     toIConstraint,
 } from './editable-constraint-type.ts';
 import type {
@@ -26,6 +25,7 @@ import {
     getInvalidLegalValues,
 } from './legal-value-functions.ts';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const resolveContextDefinition = (
     context: IUnleashContextDefinition[],
@@ -48,6 +48,7 @@ const resolveContextDefinition = (
 
 export type LegalValueData = {
     legalValues: ILegalValue[];
+    remainingLegalValues: ILegalValue[];
     deletedLegalValues?: Set<string>;
     invalidLegalValues?: Set<string>;
 };
@@ -57,6 +58,7 @@ type EditableConstraintState = {
     validator: (...values: string[]) => ConstraintValidationResult;
     legalValueData?: LegalValueData;
     constraint: EditableConstraint;
+    selectedValues: Set<string>;
     invertedDisabled: boolean;
 };
 
@@ -88,9 +90,14 @@ export const useEditableConstraint = (
         [context, localConstraint.contextName],
     );
 
+    const semverBuildMetadata = useUiFlag('semverBuildMetadata');
+
     const baseValidator = useMemo(
-        () => constraintValidator(localConstraint.operator),
-        [localConstraint.operator],
+        () =>
+            constraintValidator(localConstraint.operator, {
+                semverBuildMetadata,
+            }),
+        [localConstraint.operator, semverBuildMetadata],
     );
 
     const validator = (...values: string[]) => {
@@ -124,25 +131,43 @@ export const useEditableConstraint = (
     }, [constraint.values, contextDefinition.legalValues]);
 
     const invalidLegalValues = useMemo(() => {
-        if (
-            contextDefinition.legalValues?.length &&
-            isSingleValueConstraint(localConstraint)
-        ) {
+        if (contextDefinition.legalValues?.length) {
             return getInvalidLegalValues(
                 (value) => baseValidator(value)[0],
                 contextDefinition.legalValues,
             );
         }
         return undefined;
-    }, [baseValidator, contextDefinition.legalValues, localConstraint]);
+    }, [baseValidator, contextDefinition.legalValues]);
 
-    const legalValueData = contextDefinition.legalValues?.length
-        ? {
-              legalValues: contextDefinition.legalValues,
-              invalidLegalValues,
-              deletedLegalValues,
-          }
-        : undefined;
+    const selectedValues = useMemo(
+        () =>
+            isMultiValueConstraint(localConstraint)
+                ? localConstraint.values
+                : new Set(localConstraint.value ? [localConstraint.value] : []),
+        [localConstraint],
+    );
+
+    const legalValueData = useMemo(
+        () =>
+            contextDefinition.legalValues?.length
+                ? {
+                      legalValues: contextDefinition.legalValues,
+                      remainingLegalValues:
+                          contextDefinition.legalValues.filter(
+                              (legal) => !selectedValues.has(legal.value),
+                          ),
+                      invalidLegalValues,
+                      deletedLegalValues,
+                  }
+                : undefined,
+        [
+            contextDefinition.legalValues,
+            selectedValues,
+            invalidLegalValues,
+            deletedLegalValues,
+        ],
+    );
 
     const invertedDisabled = invertedToggleDisabled(localConstraint);
 
@@ -151,6 +176,7 @@ export const useEditableConstraint = (
         constraint: localConstraint,
         validator,
         legalValueData,
+        selectedValues,
         invertedDisabled,
     } as EditableConstraintState;
 };

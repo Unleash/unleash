@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Box, TextField, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { CREATED, OK } from 'constants/statusCodes';
 import useToast from 'hooks/useToast';
 import useResetPassword from 'hooks/api/getters/useResetPassword/useResetPassword';
@@ -16,8 +16,11 @@ import ResetPasswordForm from '../common/ResetPasswordForm/ResetPasswordForm.tsx
 import InvalidToken from '../common/InvalidToken/InvalidToken.tsx';
 import { NewUserWrapper } from './NewUserWrapper/NewUserWrapper.tsx';
 import ResetPasswordError from '../common/ResetPasswordError/ResetPasswordError.tsx';
+import Input from 'component/common/Input/Input.tsx';
+import { useFlag } from '@unleash/proxy-client-react';
+import { InviteSignup } from './InviteSignup/InviteSignup.tsx';
 
-export const NewUser = () => {
+const LegacyNewUser = () => {
     const { authDetails } = useAuthDetails();
     const { setToastApiError } = useToast();
     const navigate = useNavigate();
@@ -39,6 +42,9 @@ export const NewUser = () => {
     const { resetPassword, loading: isPasswordSubmitting } =
         useAuthResetPasswordApi();
     const passwordDisabled = authDetails?.defaultHidden === true;
+    const showAuthOptions =
+        Boolean(authDetails?.options?.length) &&
+        (!isValidInvite || passwordDisabled);
 
     const onSubmitInvitedUser = async (password: string) => {
         try {
@@ -131,7 +137,7 @@ export const NewUser = () => {
                 .
             </Typography>
             <ConditionallyRender
-                condition={Boolean(authDetails?.options?.length)}
+                condition={showAuthOptions}
                 show={
                     <Box sx={{ mt: 2 }}>
                         <AuthOptions options={authDetails?.options} />
@@ -139,9 +145,7 @@ export const NewUser = () => {
                 }
             />
             <ConditionallyRender
-                condition={
-                    Boolean(authDetails?.options?.length) && !passwordDisabled
-                }
+                condition={showAuthOptions && !passwordDisabled}
                 show={
                     <DividerText
                         text='or sign-up with an email address'
@@ -165,7 +169,7 @@ export const NewUser = () => {
                                 </Typography>
                             )}
                         />
-                        <TextField
+                        <Input
                             data-loading
                             type='email'
                             value={
@@ -175,8 +179,7 @@ export const NewUser = () => {
                             }
                             id='email'
                             label='Email'
-                            variant='outlined'
-                            size='small'
+                            size='large'
                             sx={{ my: 1 }}
                             disabled={isValidToken}
                             fullWidth
@@ -191,13 +194,12 @@ export const NewUser = () => {
                         <ConditionallyRender
                             condition={Boolean(isValidInvite)}
                             show={() => (
-                                <TextField
+                                <Input
                                     data-loading
                                     value={name}
                                     id='username'
                                     label='Full name'
-                                    variant='outlined'
-                                    size='small'
+                                    size='large'
                                     sx={{ my: 1 }}
                                     fullWidth
                                     required
@@ -224,4 +226,10 @@ export const NewUser = () => {
             />
         </NewUserWrapper>
     );
+};
+
+export const NewUser = () => {
+    const newInviteFlow = useFlag('newInviteFlow');
+
+    return newInviteFlow ? <InviteSignup /> : <LegacyNewUser />;
 };

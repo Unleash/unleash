@@ -10,7 +10,6 @@
 export type VariantSchemaPayloadType =
     (typeof VariantSchemaPayloadType)[keyof typeof VariantSchemaPayloadType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const VariantSchemaPayloadType = {
     json: 'json',
     csv: 'csv',

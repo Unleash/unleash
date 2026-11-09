@@ -2,6 +2,7 @@ import { isValid, parseISO } from 'date-fns';
 import { RE2JS } from 're2js';
 import semver from 'semver';
 import {
+    isCidrOperator,
     isDateOperator,
     isInOperator,
     isNumOperator,
@@ -10,12 +11,16 @@ import {
     isStringOperator,
     type Operator,
 } from 'constants/operators.js';
+import type { UiFlags } from 'interfaces/uiConfig';
+import { isIpOrCidr } from './ip-address.ts';
+
 export type ConstraintValidationResult = [boolean, string];
+export type ConstraintValidatorFlags = Pick<UiFlags, 'semverBuildMetadata'>;
 
 const numberValidator = (value: string): ConstraintValidationResult => {
     const converted = Number(value);
 
-    if (typeof converted !== 'number' || Number.isNaN(converted)) {
+    if (!Number.isFinite(converted)) {
         if (typeof value === 'string' && value.includes(',')) {
             return [
                 false,
@@ -46,10 +51,29 @@ const stringListValidator = (
     return [true, ''];
 };
 
-const semVerValidator = (value: string): ConstraintValidationResult => {
-    const isCleanValue = semver.clean(value) === value;
+const semVerValidator = (
+    value: string,
+    allowBuildMetadata = false,
+): ConstraintValidationResult => {
+    if (!allowBuildMetadata) {
+        const isCleanValue = semver.clean(value) === value;
+        if (!semver.valid(value) || !isCleanValue) {
+            return [false, 'Value is not a valid semver. For example 1.2.4'];
+        }
+        return [true, ''];
+    }
 
-    if (!semver.valid(value) || !isCleanValue) {
+    const parsed = semver.parse(value, { loose: false });
+
+    // `SemVer.version` drops build metadata, so we can't use it (or
+    // `semver.clean`, which is built on it) to check that the input was already
+    // canonical.
+    const canonicalForm =
+        parsed && parsed.build.length > 0
+            ? `${parsed.version}+${parsed.build.join('.')}`
+            : parsed?.version;
+
+    if (canonicalForm !== value) {
         return [false, 'Value is not a valid semver. For example 1.2.4'];
     }
 
@@ -84,18 +108,33 @@ const regexValidator = (value: string): ConstraintValidationResult => {
     return [true, ''];
 };
 
-export const constraintValidator = (operator: Operator) => {
+const cidrValidator = (...values: string[]): ConstraintValidationResult => {
+    if (!values.every(isIpOrCidr)) {
+        return [false, 'Value must be IP address or CIDR range.'];
+    }
+
+    return [true, ''];
+};
+
+export const constraintValidator = (
+    operator: Operator,
+    flags: ConstraintValidatorFlags = {},
+) => {
     if (isDateOperator(operator)) {
         return dateValidator;
     }
     if (isSemVerOperator(operator)) {
-        return semVerValidator;
+        return (value: string) =>
+            semVerValidator(value, flags.semverBuildMetadata);
     }
     if (isNumOperator(operator)) {
         return numberValidator;
     }
     if (isRegexOperator(operator)) {
         return regexValidator;
+    }
+    if (isCidrOperator(operator)) {
+        return cidrValidator;
     }
     if (isStringOperator(operator) || isInOperator(operator)) {
         return stringListValidator;

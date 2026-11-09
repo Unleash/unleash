@@ -10,7 +10,6 @@
 export type ActionDefinitionParameterSchemaType =
     (typeof ActionDefinitionParameterSchemaType)[keyof typeof ActionDefinitionParameterSchemaType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ActionDefinitionParameterSchemaType = {
     select: 'select',
     hidden: 'hidden',

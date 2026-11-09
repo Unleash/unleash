@@ -7,6 +7,11 @@ import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview
 import ContextList from 'component/context/ContextList/ContextList/ContextList';
 import { CreateUnleashContext } from 'component/context/CreateUnleashContext/CreateUnleashContext';
 import { EditContext } from 'component/context/EditContext/EditContext';
+import { CloneContext } from 'component/context/CloneContext/CloneContext';
+import {
+    createContextFieldTracking,
+    editContextFieldTracking,
+} from 'component/context/contextFieldTrackingProps';
 
 export const ProjectContextFields = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -23,10 +28,28 @@ export const ProjectContextFields = () => {
                     <SidebarModal
                         open
                         onClose={() => navigate(GO_BACK)}
-                        label='Create segment'
+                        label='Create context field'
+                        tracking={createContextFieldTracking}
                     >
                         <CreateUnleashContext
-                            modal
+                            layout='modal'
+                            onSubmit={() => navigate(GO_BACK)}
+                            onCancel={() => navigate(GO_BACK)}
+                        />
+                    </SidebarModal>
+                }
+            />
+            <Route
+                path='clone/:name'
+                element={
+                    <SidebarModal
+                        open
+                        onClose={() => navigate(GO_BACK)}
+                        label='Clone context field'
+                        tracking={createContextFieldTracking}
+                    >
+                        <CloneContext
+                            layout='modal'
                             onSubmit={() => navigate(GO_BACK)}
                             onCancel={() => navigate(GO_BACK)}
                         />
@@ -40,13 +63,14 @@ export const ProjectContextFields = () => {
                         open
                         onClose={() => navigate(GO_BACK)}
                         label='Edit context field'
+                        tracking={editContextFieldTracking}
                     >
-                        <EditContext modal />
+                        <EditContext layout='modal' />
                     </SidebarModal>
                 }
             />
             {/* change this to be the context table */}
-            <Route path='*' element={<ContextList />} />
+            <Route path='*' element={<ContextList variant='h2' />} />
         </Routes>
     );
 };

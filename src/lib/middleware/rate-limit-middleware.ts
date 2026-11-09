@@ -231,14 +231,19 @@ const matchesRule = (
         return false;
     }
 
+    // Express routes case-insensitively, so /Auth/simple/login reaches the
+    // same handler as /auth/simple/login. Match the same way, or a case
+    // variant of a path skips its limit.
+    const path = request.path.toLowerCase();
     const matchesPath =
         !rule.pathPrefixes ||
-        rule.pathPrefixes.some(
-            (pathPrefix) =>
-                request.path === pathPrefix ||
-                (request.path.startsWith(pathPrefix) &&
-                    request.path[pathPrefix.length] === '/'),
-        );
+        rule.pathPrefixes.some((rulePrefix) => {
+            const pathPrefix = rulePrefix.toLowerCase();
+            return (
+                path === pathPrefix ||
+                (path.startsWith(pathPrefix) && path[pathPrefix.length] === '/')
+            );
+        });
     if (!matchesPath) {
         return false;
     }

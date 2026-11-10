@@ -136,3 +136,26 @@ test('renders a datetime-local input for a date-time format, converting the stor
 
     expect(until).toHaveValue('2024-04-01T12:00');
 });
+
+test('renders a nested object property as its own group, with fields bound to their seeded value', () => {
+    const schema = {
+        type: 'object',
+        examples: [{ address: { city: 'Oslo' } }],
+        properties: {
+            address: {
+                type: 'object',
+                title: 'Address',
+                description: 'Where to ship the order.',
+                properties: {
+                    city: { type: 'string', title: 'City' },
+                },
+            },
+        },
+    };
+
+    render(<PayloadSchemaPreview schema={schema} />);
+
+    expect(screen.getByRole('group', { name: 'Address' })).toBeInTheDocument();
+    expect(screen.getByText('Where to ship the order.')).toBeInTheDocument();
+    expect(screen.getByLabelText('City')).toHaveValue('Oslo');
+});

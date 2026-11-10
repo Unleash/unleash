@@ -29,6 +29,60 @@ test('resolves each property from its own default, then the root default, then i
     });
 });
 
+test('recurses into nested object properties, applying the same precedence at each level', () => {
+    const schema: JsonSchemaProperty = {
+        type: 'object',
+        examples: [
+            {
+                address: {
+                    zip: 'from root example',
+                    city: 'from root example',
+                },
+            },
+        ],
+        properties: {
+            address: {
+                type: 'object',
+                properties: {
+                    zip: { type: 'string', default: 'own default' },
+                    city: { type: 'string' },
+                },
+            },
+        },
+    };
+
+    expect(formValueWithExamplesAsDefaults(schema)).toEqual({
+        address: {
+            zip: 'own default',
+            city: 'from root example',
+        },
+    });
+});
+
+test('fills a nested object from both the root default and the root example when they cover different fields', () => {
+    const schema: JsonSchemaProperty = {
+        type: 'object',
+        default: { address: { city: 'from root default' } },
+        examples: [{ address: { zip: 'from root example' } }],
+        properties: {
+            address: {
+                type: 'object',
+                properties: {
+                    city: { type: 'string' },
+                    zip: { type: 'string' },
+                },
+            },
+        },
+    };
+
+    expect(formValueWithExamplesAsDefaults(schema)).toEqual({
+        address: {
+            city: 'from root default',
+            zip: 'from root example',
+        },
+    });
+});
+
 test('ignores a non-object default or example at the root', () => {
     const schema: JsonSchemaProperty = {
         type: 'object',

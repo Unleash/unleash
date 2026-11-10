@@ -1,4 +1,5 @@
 import type { JsonSchemaProperty } from './payloadSchemaTypes.ts';
+import { isObjectWithPropertiesSchema } from './schemaMatchers.ts';
 
 const firstExample = (schema: JsonSchemaProperty): unknown => {
     const { examples } = schema;
@@ -20,12 +21,35 @@ export const formValueWithExamplesAsDefaults = (
     const rootExample = asRecord(firstExample(schema));
 
     return Object.fromEntries(
-        Object.entries(schema.properties ?? {}).map(([key, propSchema]) => [
-            key,
-            propSchema.default ??
+        Object.entries(schema.properties ?? {}).map(([key, propSchema]) => {
+            if (isObjectWithPropertiesSchema(propSchema)) {
+                const effectiveDefault = isPlainObject(propSchema.default)
+                    ? propSchema.default
+                    : rootDefault[key];
+                const effectiveExamples =
+                    firstExample(propSchema) !== undefined
+                        ? propSchema.examples
+                        : rootExample[key] !== undefined
+                          ? [rootExample[key]]
+                          : undefined;
+
+                return [
+                    key,
+                    formValueWithExamplesAsDefaults({
+                        ...propSchema,
+                        default: effectiveDefault,
+                        examples: effectiveExamples,
+                    }),
+                ];
+            }
+
+            const resolved =
+                propSchema.default ??
                 rootDefault[key] ??
                 firstExample(propSchema) ??
-                rootExample[key],
-        ]),
+                rootExample[key];
+
+            return [key, resolved];
+        }),
     );
 };

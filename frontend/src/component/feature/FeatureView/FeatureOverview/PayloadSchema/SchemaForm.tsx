@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react';
-import { styled } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import { parseDateValue, parseValidDate } from 'component/common/util.ts';
 import {
     isDateTimeSchema,
+    isObjectWithPropertiesSchema,
     isPlainStringOrNumberSchema,
     type SchemaMatcher,
 } from './schemaMatchers.ts';
@@ -15,6 +16,16 @@ const StyledUnsupported = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
     color: theme.palette.text.secondary,
     fontSize: theme.typography.body2.fontSize,
+}));
+
+const StyledGroup = styled('fieldset')(({ theme }) => ({
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadiusMedium,
+    padding: theme.spacing(2),
+    margin: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
 }));
 
 const toDateTimeInputValue = (value: unknown): string =>
@@ -52,6 +63,26 @@ const SchemaFormField = ({
         matches: SchemaMatcher;
         render: () => ReactNode;
     }[] = [
+        {
+            matches: isObjectWithPropertiesSchema,
+            render: () => (
+                <StyledGroup>
+                    <Typography component='legend' variant='subtitle2'>
+                        {label}
+                    </Typography>
+                    {schema.description ? (
+                        <Typography variant='body2' color='text.secondary'>
+                            {schema.description}
+                        </Typography>
+                    ) : null}
+                    <SchemaForm
+                        schema={schema}
+                        value={(value as Record<string, unknown>) ?? {}}
+                        onChange={onChange}
+                    />
+                </StyledGroup>
+            ),
+        },
         {
             matches: isDateTimeSchema,
             render: () => (

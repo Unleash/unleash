@@ -20,3 +20,6 @@ export const isPlainStringOrNumberSchema: SchemaMatcher = (schema) =>
 
 export const isDateTimeSchema: SchemaMatcher = (schema) =>
     isPlainStringOrNumberSchema(schema) && schema.format === 'date-time';
+
+export const isObjectWithPropertiesSchema: SchemaMatcher = (schema) =>
+    schema.type === 'object' && typeof schema.properties === 'object';

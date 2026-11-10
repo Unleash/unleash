@@ -6,7 +6,7 @@ import { featureStrategySchema } from './feature-strategy-schema.js';
 import { constraintSchema } from './constraint-schema.js';
 import { strategyVariantSchema } from './strategy-variant-schema.js';
 import { tagSchema } from './tag-schema.js';
-import { featureSearchResponseSchema } from './feature-search-response-schema.js';
+import { userRecentFlagSchema } from './user-recent-flag-schema.js';
 import { featureSearchEnvironmentSchema } from './feature-search-environment-schema.js';
 
 export const userRecentFlagsSchema = {
@@ -19,7 +19,7 @@ export const userRecentFlagsSchema = {
         flags: {
             type: 'array',
             items: {
-                $ref: '#/components/schemas/featureSearchResponseSchema',
+                $ref: '#/components/schemas/userRecentFlagSchema',
             },
             description:
                 'The page of flags the current user most recently worked on.',
@@ -40,7 +40,7 @@ export const userRecentFlagsSchema = {
     components: {
         schemas: {
             featureSearchEnvironmentSchema,
-            featureSearchResponseSchema,
+            userRecentFlagSchema,
             constraintSchema,
             featureStrategySchema,
             strategyVariantSchema,

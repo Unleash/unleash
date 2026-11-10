@@ -3,6 +3,10 @@ import type { FeatureSearchService } from '../feature-search/feature-search-serv
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import type { IUserRecentFlagsReadModel } from './user-recent-flags-read-model-type.js';
 
+export type UserRecentFlagOverview = IFeatureSearchOverview & {
+    userLastUpdatedAt: Date;
+};
+
 export class UserRecentFlagsService {
     private userRecentFlagsReadModel: IUserRecentFlagsReadModel;
 
@@ -29,19 +33,20 @@ export class UserRecentFlagsService {
     async getUserRecentFlags(
         userId: number,
         { limit, offset }: { limit: number; offset: number },
-    ): Promise<IFeatureSearchOverview[]> {
+    ): Promise<UserRecentFlagOverview[]> {
         const projectAccess =
             await this.privateProjectChecker.getUserAccessibleProjects(userId);
-        const names =
-            await this.userRecentFlagsReadModel.getUserRecentFlagNames(userId, {
+        const recentFlags =
+            await this.userRecentFlagsReadModel.getUserRecentFlags(userId, {
                 limit,
                 offset,
                 projectAccess,
             });
-        if (names.length === 0) {
+        if (recentFlags.length === 0) {
             return [];
         }
 
+        const names = recentFlags.map(({ name }) => name);
         const { features } = await this.featureSearchService.search({
             userId,
             featureNames: names,
@@ -52,9 +57,9 @@ export class UserRecentFlagsService {
         const featuresByName = new Map(
             features.map((feature) => [feature.name, feature]),
         );
-        return names.flatMap((name) => {
+        return recentFlags.flatMap(({ name, userLastUpdatedAt }) => {
             const feature = featuresByName.get(name);
-            return feature ? [feature] : [];
+            return feature ? [{ ...feature, userLastUpdatedAt }] : [];
         });
     }
 }

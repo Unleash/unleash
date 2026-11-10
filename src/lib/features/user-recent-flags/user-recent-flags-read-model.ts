@@ -5,7 +5,8 @@ import type EventEmitter from 'events';
 import { FEATURE_FAVORITED, FEATURE_UNFAVORITED } from '../../events/index.js';
 import type {
     IUserRecentFlagsReadModel,
-    UserRecentFlagNamesQuery,
+    UserRecentFlag,
+    UserRecentFlagsQuery,
 } from './user-recent-flags-read-model-type.js';
 
 export class UserRecentFlagsReadModel implements IUserRecentFlagsReadModel {
@@ -22,18 +23,18 @@ export class UserRecentFlagsReadModel implements IUserRecentFlagsReadModel {
             });
     }
 
-    async getUserRecentFlagNames(
+    async getUserRecentFlags(
         userId: number,
-        { limit, offset, projectAccess }: UserRecentFlagNamesQuery,
-    ): Promise<string[]> {
-        const stopTimer = this.timer('getUserRecentFlagNames');
-        const rows: { name: string }[] = await this.db
+        { limit, offset, projectAccess }: UserRecentFlagsQuery,
+    ): Promise<UserRecentFlag[]> {
+        const stopTimer = this.timer('getUserRecentFlags');
+        const rows: UserRecentFlag[] = await this.db
             // Reads only events_created_by_user_id_created_at_idx.
             .with('user_events', (query) => {
                 query
                     .from('events')
                     .select('feature_name')
-                    .max('created_at as last_activity_at')
+                    .max('created_at as last_user_updated_at')
                     .where('created_by_user_id', userId)
                     .whereNotNull('feature_name')
                     .whereNotIn('type', [
@@ -50,15 +51,18 @@ export class UserRecentFlagsReadModel implements IUserRecentFlagsReadModel {
                     query.whereIn('features.project', projectAccess.projects);
                 }
             })
-            .select('features.name')
+            .select(
+                'features.name',
+                'user_events.last_user_updated_at as userLastUpdatedAt',
+            )
             .orderBy([
-                { column: 'user_events.last_activity_at', order: 'desc' },
+                { column: 'user_events.last_user_updated_at', order: 'desc' },
                 { column: 'features.name' },
             ])
             .limit(limit)
             .offset(offset);
         stopTimer();
 
-        return rows.map((row) => row.name);
+        return rows;
     }
 }

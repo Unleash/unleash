@@ -3,14 +3,14 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSearchResponseSchema } from './featureSearchResponseSchema.ts';
+import type { UserRecentFlagSchema } from './userRecentFlagSchema.ts';
 
 /**
  * Flags the current user interacted with, most recent first.
  */
 export interface UserRecentFlagsSchema {
     /** The page of flags the current user most recently worked on. */
-    flags: FeatureSearchResponseSchema[];
+    flags: UserRecentFlagSchema[];
     /**
      * The maximum number of flags returned in this page.
      * @minimum 1

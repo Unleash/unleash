@@ -1,14 +1,19 @@
 import type { ProjectAccess } from '../private-project/privateProjectStore.js';
 
-export type UserRecentFlagNamesQuery = {
+export type UserRecentFlagsQuery = {
     limit: number;
     offset: number;
     projectAccess: ProjectAccess;
 };
 
+export type UserRecentFlag = {
+    name: string;
+    userLastUpdatedAt: Date;
+};
+
 export interface IUserRecentFlagsReadModel {
-    getUserRecentFlagNames(
+    getUserRecentFlags(
         userId: number,
-        query: UserRecentFlagNamesQuery,
-    ): Promise<string[]>;
+        query: UserRecentFlagsQuery,
+    ): Promise<UserRecentFlag[]>;
 }

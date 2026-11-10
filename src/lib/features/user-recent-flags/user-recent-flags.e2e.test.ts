@@ -91,7 +91,12 @@ test('should list flags the user worked on, most recent first', async () => {
         .set('Content-Type', 'application/json')
         .expect(200);
 
-    expect(await getUserRecentFlags()).toMatchObject({
+    await loginUser('other@getunleash.io');
+    await app.enableFeature('favorited', 'production');
+    await loginUser('me@getunleash.io');
+
+    const recentFlags = await getUserRecentFlags();
+    expect(recentFlags).toMatchObject({
         flags: [
             { name: 'enabled_by_me' },
             {
@@ -103,6 +108,11 @@ test('should list flags the user worked on, most recent first', async () => {
         limit: 100,
         offset: 0,
     });
+    const userLastUpdatedAts = recentFlags.flags.map(
+        (flag: { userLastUpdatedAt: string }) => flag.userLastUpdatedAt,
+    );
+    const newestFirst = [...userLastUpdatedAts].sort().reverse();
+    expect(userLastUpdatedAts).toEqual(newestFirst);
 
     expect(await getUserRecentFlags('?limit=1&offset=1')).toMatchObject({
         flags: [{ name: 'created_by_me' }],
@@ -135,12 +145,14 @@ test('read model leaves out flags outside the given projects', async () => {
         db.rawDatabase,
         new EventEmitter(),
     );
-    const getFlagNames = (projectAccess: ProjectAccess) =>
-        readModel.getUserRecentFlagNames(userId, {
+    const getFlagNames = async (projectAccess: ProjectAccess) => {
+        const flags = await readModel.getUserRecentFlags(userId, {
             limit: 100,
             offset: 0,
             projectAccess,
         });
+        return flags.map((flag) => flag.name);
+    };
 
     expect(await getFlagNames({ mode: 'all' })).toEqual([
         'in_inaccessible',

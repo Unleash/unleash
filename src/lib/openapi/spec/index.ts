@@ -240,6 +240,7 @@ export * from './update-tags-schema.js';
 export * from './update-user-schema.js';
 export * from './upsert-segment-schema.js';
 export * from './user-access-overview-schema.js';
+export * from './user-recent-flag-schema.js';
 export * from './user-recent-flags-schema.js';
 export * from './user-schema.js';
 export * from './users-groups-base-schema.js';

@@ -24,24 +24,12 @@ import {
     shouldShowSurvey,
 } from './surveyStorage.ts';
 import { submitSurveyResponse } from './submitSurveyResponse.ts';
+import { matchTriggers } from '../triggers/matchTriggers.ts';
+import type { TriggerEvent } from '../triggers/triggerEvent.ts';
 import {
-    matchesPage,
-    matchTriggers,
-    type TriggerEvent,
-} from '../triggers/matchTriggers.ts';
-import {
-    observeBrowserPage,
-    type PageObserver,
-} from '../observers/observePage.ts';
-import {
-    observeBrowserClicks,
-    type ClickObserver,
-} from '../observers/observeClicks.ts';
-import {
-    type AppearObserver,
-    observeBrowserAppear,
-} from '../observers/observeAppear.ts';
-import { basePath as appBasePath } from 'utils/formatPath';
+    observeBrowserTriggers,
+    type TriggerObserver,
+} from '../observers/observeTriggers.ts';
 import { unique } from 'utils/unique';
 import { useCustomEvent } from 'hooks/useCustomEvent';
 
@@ -110,19 +98,13 @@ export type IdentifyUser = (context: IContext) => string | undefined;
 interface FeedbackProviderProps {
     children: ReactNode;
     identifyUser: IdentifyUser;
-    observePage?: PageObserver;
-    observeClicks?: ClickObserver;
-    observeAppear?: AppearObserver;
-    basePath?: string;
+    observeTriggers?: TriggerObserver;
 }
 
 export const FeedbackProvider = ({
     children,
     identifyUser,
-    observePage = observeBrowserPage,
-    observeClicks = observeBrowserClicks,
-    observeAppear = observeBrowserAppear,
-    basePath = appBasePath,
+    observeTriggers = observeBrowserTriggers,
 }: FeedbackProviderProps) => {
     const flags = useFlags();
     const surveys = useMemo(() => parseSurveys(flags), [flags]);
@@ -132,8 +114,6 @@ export const FeedbackProvider = ({
         null,
     );
     const [shownSurvey, setShownSurvey] = useState<Survey | null>(null);
-
-    useEffect(() => observePage(setPath, basePath), [observePage, basePath]);
 
     const triggered = storedTriggered ?? triggerPageSurvey(surveys, path);
     if (triggered !== storedTriggered) {
@@ -162,32 +142,24 @@ export const FeedbackProvider = ({
         }
     };
 
-    const showSurveyOnClick = useEffectEvent((target: Element) => {
-        if (path !== null) {
-            showSurveyOn({ on: 'click', path, target });
+    const onTrigger = useEffectEvent((event: TriggerEvent) => {
+        if (event.on === 'page') {
+            setPath(event.path);
+        } else {
+            showSurveyOn(event);
         }
     });
 
-    useEffect(() => observeClicks(showSurveyOnClick), [observeClicks]);
+    const triggers = useMemo(
+        () =>
+            shownSurvey === null ? surveys.map(({ trigger }) => trigger) : [],
+        [surveys, shownSurvey],
+    );
 
-    const showSurveyOnAppear = useEffectEvent((added: Element) => {
-        if (path !== null) {
-            showSurveyOn({ on: 'appear', path, added });
-        }
-    });
-
-    const waitsForAppearance =
-        shownSurvey === null &&
-        path !== null &&
-        surveys.some(
-            ({ trigger }) =>
-                trigger.on === 'appear' && matchesPage(trigger, path),
-        );
-    useEffect(() => {
-        if (waitsForAppearance) {
-            return observeAppear(showSurveyOnAppear);
-        }
-    }, [observeAppear, waitsForAppearance]);
+    useEffect(
+        () => observeTriggers(triggers, onTrigger),
+        [observeTriggers, triggers],
+    );
 
     const showSurveyOnEvent = (name: string) => {
         if (path !== null) {

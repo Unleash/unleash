@@ -2,12 +2,7 @@ import type { Survey } from '../survey.ts';
 import type { SurveyTrigger } from './surveyTrigger.ts';
 import { matchesAddedElement, matchesElement } from './elementMatch.ts';
 import { canMatchPages, toPagePattern } from './pagePattern.ts';
-
-export type TriggerEvent =
-    | { on: 'page'; path: string }
-    | { on: 'click'; path: string; target: Element }
-    | { on: 'appear'; path: string; added: Element }
-    | { on: 'event'; path: string; name: string };
+import type { TriggerEvent } from './triggerEvent.ts';
 
 export const matchesPage = (trigger: SurveyTrigger, path: string): boolean => {
     if (trigger.path === undefined) {

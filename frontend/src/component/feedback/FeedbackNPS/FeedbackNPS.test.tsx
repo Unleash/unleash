@@ -10,7 +10,7 @@ import UIContext from 'contexts/UIContext';
 import { SURVEY_KIND, SURVEY_VERSION } from 'component/feedbackModule/survey';
 import { FeedbackProvider } from 'component/feedbackModule/delivery/FeedbackProvider';
 import { FeedbackSurvey } from 'component/feedbackModule/delivery/FeedbackSurvey';
-import { observeBrowserPage } from 'component/feedbackModule/observers/observePage';
+import type { TriggerObserver } from 'component/feedbackModule/observers/observeTriggers';
 import { shouldShowSurvey } from 'component/feedbackModule/delivery/surveyStorage';
 import { FeedbackNPS } from './FeedbackNPS.tsx';
 
@@ -43,6 +43,11 @@ const surveyFlag = (name: string, title: string): IToggle => ({
     },
 });
 
+const observeHomePage: TriggerObserver = (_triggers, onTrigger) => {
+    onTrigger({ on: 'page', path: '/' });
+    return () => {};
+};
+
 const TriggerPNPS = () => {
     const { setShowFeedback } = useContext(UIContext);
     return (
@@ -58,8 +63,7 @@ const renderSurveys = (flags: IToggle[]) => {
         <FlagProvider unleashClient={client} startClient={false}>
             <FeedbackProvider
                 identifyUser={() => undefined}
-                observePage={observeBrowserPage}
-                basePath=''
+                observeTriggers={observeHomePage}
             >
                 <FeedbackSurvey />
             </FeedbackProvider>

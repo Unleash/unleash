@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { Survey } from '../survey.ts';
 import type { SurveyTrigger } from './surveyTrigger.ts';
-import { matchTriggers, type TriggerEvent } from './matchTriggers.ts';
+import { matchTriggers } from './matchTriggers.ts';
+import type { TriggerEvent } from './triggerEvent.ts';
 
 const survey = (flagName: string, trigger: SurveyTrigger): Survey => ({
     flagName,

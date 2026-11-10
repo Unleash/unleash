@@ -39,7 +39,7 @@ jobs:
       uses: actions/checkout@v7
     - name: Docker meta configuration
       id: meta
-      uses: docker/metadata-action@v5
+      uses: docker/metadata-action@v6
       with:
         images: |
           unleashorg/unleash-server

@@ -23,6 +23,12 @@ const LazyReactJSONEditor = React.lazy(
     () => import('component/common/ReactJSONEditor/ReactJSONEditor'),
 );
 
+const LazyPayloadSchemaPreview = React.lazy(() =>
+    import('./PayloadSchemaPreview.tsx').then((module) => ({
+        default: module.PayloadSchemaPreview,
+    })),
+);
+
 const StyledTemplateRow = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
@@ -31,6 +37,34 @@ const StyledButtons = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     gap: theme.spacing(2),
+}));
+
+const StyledSplit = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    minHeight: 0,
+    gap: theme.spacing(2.5),
+    flex: 1,
+    [theme.breakpoints.up('sm')]: {
+        flexDirection: 'row',
+    },
+}));
+
+const StyledPane = styled('div')(({ theme }) => ({
+    minWidth: 0,
+    minHeight: 0,
+    height: 400,
+    overflow: 'hidden',
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadiusMedium,
+    '& > *': {
+        height: '100%',
+    },
+    [theme.breakpoints.up('sm')]: {
+        flex: 1,
+        height: '100%',
+    },
 }));
 
 const templateOptions = payloadSchemaTemplateGroups.map((group) => ({
@@ -57,9 +91,8 @@ const PayloadSchemaForm = ({
     const { upsertPayloadSchema } = usePayloadSchemaApi(projectId, featureId);
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
-    const { state, editable, canSave, edit, save } = usePayloadSchemaForm(
-        feature.payloadSchema,
-    );
+    const { state, editable, canSave, parsedSchema, edit, save } =
+        usePayloadSchemaForm(feature.payloadSchema);
     const [templateKey, setTemplateKey] = useState('');
 
     const applyTemplate = (key: string) => {
@@ -94,14 +127,14 @@ const PayloadSchemaForm = ({
     return (
         <FormTemplate
             layout='modal'
+            fitContainerHeight
             title={
                 feature.payloadSchema
                     ? 'Edit payload schema'
-                    : 'Add payload schema'
+                    : 'Create payload schema'
             }
-            description="A JSON Schema (draft 2020-12) that the payloads of this flag's variants have to match."
-            documentationLink='https://json-schema.org/learn/getting-started-step-by-step'
-            documentationLinkLabel='JSON Schema guide'
+            showGuidance={false}
+            description=''
             footer={
                 <StyledButtons>
                     <Button onClick={closeSidebar}>Cancel</Button>
@@ -111,7 +144,7 @@ const PayloadSchemaForm = ({
                         disabled={!canSave}
                         onClick={saveAndClose}
                     >
-                        Save
+                        Save schema
                     </PermissionButton>
                 </StyledButtons>
             }
@@ -126,16 +159,28 @@ const PayloadSchemaForm = ({
                     fullWidth
                 />
             </StyledTemplateRow>
-            <Suspense fallback={null}>
-                <LazyReactJSONEditor
-                    content={state.content}
-                    validationError={
-                        state.status === 'rejected' ? state.error : undefined
-                    }
-                    onChange={editContent}
-                    readOnly={!editable}
-                />
-            </Suspense>
+            <StyledSplit>
+                <StyledPane>
+                    <Suspense fallback={null}>
+                        <LazyReactJSONEditor
+                            content={state.content}
+                            validationError={
+                                state.status === 'rejected'
+                                    ? state.error
+                                    : undefined
+                            }
+                            onChange={editContent}
+                            readOnly={!editable}
+                            editorStyle='fill'
+                        />
+                    </Suspense>
+                </StyledPane>
+                <StyledPane>
+                    <Suspense fallback={null}>
+                        <LazyPayloadSchemaPreview schema={parsedSchema} />
+                    </Suspense>
+                </StyledPane>
+            </StyledSplit>
         </FormTemplate>
     );
 };

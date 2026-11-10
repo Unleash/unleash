@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { JSONContent } from 'component/common/ReactJSONEditor/ReactJSONEditor';
 import { BadRequestError } from 'utils/apiUtils';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -31,7 +31,7 @@ export const usePayloadSchemaForm = (savedSchema?: Record<string, unknown>) => {
         content: savedSchema ? { json: savedSchema } : { text: '{}' },
     });
 
-    const json = parseJson(state.content);
+    const json = useMemo(() => parseJson(state.content), [state.content]);
 
     const save = async (
         send: (schema: unknown) => Promise<void>,
@@ -63,6 +63,7 @@ export const usePayloadSchemaForm = (savedSchema?: Record<string, unknown>) => {
         state,
         editable: isEditable(state),
         canSave: isEditable(state) && json.valid,
+        parsedSchema: json.valid ? json.value : undefined,
         edit: (content: JSONContent) =>
             setState((s) =>
                 isEditable(s) ? { status: 'editing', content } : s,

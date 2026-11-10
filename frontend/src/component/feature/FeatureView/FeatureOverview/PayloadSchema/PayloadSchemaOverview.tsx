@@ -4,6 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { formatPayloadSchemaPath } from './payloadSchemaPaths.ts';
+import type { JsonSchemaProperty } from './payloadSchemaTypes.ts';
 import {
     StyledMetaDataItem,
     StyledMetaDataItemLabel,
@@ -33,12 +34,6 @@ const StyledCaptionText = styled('p')(({ theme }) => ({
     ...theme.typography.caption,
     color: theme.palette.text.secondary,
 }));
-
-interface JsonSchemaProperty {
-    type?: string;
-    properties?: Record<string, JsonSchemaProperty>;
-    additionalProperties?: boolean;
-}
 
 interface IPayloadSchemaRowProps {
     projectId: string;

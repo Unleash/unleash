@@ -39,10 +39,14 @@ test('saves the payload schema shown in the editor once, even on a double-click'
 
     await screen.findByText('Edit payload schema');
     await screen.findByText(/"string"/);
-    await userEvent.dblClick(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.dblClick(
+        screen.getByRole('button', { name: 'Save schema' }),
+    );
 
     await waitFor(() =>
-        expect(screen.queryByRole('button', { name: 'Save' })).toBeNull(),
+        expect(
+            screen.queryByRole('button', { name: 'Save schema' }),
+        ).toBeNull(),
     );
     expect(requests).toEqual([{ schema: { type: 'string' } }]);
 });
@@ -59,14 +63,14 @@ test('shows why the server refused a payload schema until the schema changes', a
     renderPayloadSchemaSidebar();
 
     await screen.findByText(/"string"/);
-    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save schema' }));
 
     expect(await screen.findByRole('alert')).toHaveTextContent(
         'Invalid payload schema',
     );
-    expect(screen.getByRole('button', { name: 'Save' })).not.toHaveAttribute(
-        'aria-disabled',
-    );
+    expect(
+        screen.getByRole('button', { name: 'Save schema' }),
+    ).not.toHaveAttribute('aria-disabled');
 
     await userEvent.click(screen.getByLabelText('Start from a template'));
     await userEvent.click(

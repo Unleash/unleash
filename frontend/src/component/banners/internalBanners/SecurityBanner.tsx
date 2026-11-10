@@ -23,9 +23,9 @@ export const SecurityBanner = () => {
         message: `Potential security issue: there are ${uiConfig.maxSessionsCount} parallel sessions for a single user account.`,
         variant: 'warning' as BannerVariant,
         sticky: false,
-        link: '/admin/users',
+        link: '/admin/sessions',
         plausibleEvent: 'showUserDeviceCount',
-        linkText: 'Review user accounts',
+        linkText: 'Inspect active sessions',
     };
 
     return <Banner key='showUserDeviceCount' banner={banner} />;

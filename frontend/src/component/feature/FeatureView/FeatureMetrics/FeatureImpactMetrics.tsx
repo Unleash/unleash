@@ -1,6 +1,6 @@
 import { PageContent } from 'component/common/PageContent/PageContent.tsx';
 import { PageHeader } from '../../../common/PageHeader/PageHeader.tsx';
-import { Box, styled, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { SafeguardHelpIcon } from './Safeguard/SafeguardHelpIcon.tsx';
 import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata.ts';
@@ -19,13 +19,7 @@ import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions.t
 import useToast from 'hooks/useToast.tsx';
 import { formatUnknownError } from 'utils/formatUnknownError.ts';
 import type { ChartConfig } from '../../../impact-metrics/types.ts';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
-
-const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.mainHeader,
-    fontWeight: 'normal',
-    lineHeight: theme.spacing(5),
-}));
+import { useEventTracker } from 'hooks/useEventTracker.ts';
 
 type ModalState =
     | { type: 'closed' }
@@ -49,7 +43,7 @@ export const FeatureImpactMetrics: FC = () => {
         featureName,
     });
     const { setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const {
         metricOptions,
@@ -142,9 +136,8 @@ export const FeatureImpactMetrics: FC = () => {
     return (
         <PageContent>
             <PageHeader
-                titleElement={
-                    <StyledHeaderTitle>Impact Metrics</StyledHeaderTitle>
-                }
+                variant='h2'
+                heading='Impact Metrics'
                 actions={
                     <PermissionButton
                         variant='contained'

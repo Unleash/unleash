@@ -9,6 +9,8 @@ import {
 
 import SimpleAddon from '../../../lib/services/addon-service-test-simple-addon.js';
 import TagTypeService from '../../../lib/features/tag-type/tag-type-service.js';
+import { FakeTagUsageReadModel } from '../../../lib/features/tag-usage/fake-tag-usage-read-model.js';
+import { createFakePrivateProjectChecker } from '../../../lib/features/private-project/createPrivateProjectChecker.js';
 import { FEATURE_CREATED } from '../../../lib/events/index.js';
 import { IntegrationEventsService } from '../../../lib/services/index.js';
 import { createEventsService } from '../../../lib/features/index.js';
@@ -23,11 +25,18 @@ const _TEST_USER_ID = -9999;
 beforeAll(async () => {
     const config = createTestConfig({
         server: { baseUriPath: '/test' },
+        allowPrivateUrlInIntegration: true,
     });
     db = await dbInit('addon_service_serial', getLogger);
     stores = db.stores;
     const eventService = createEventsService(db.rawDatabase, config);
-    const tagTypeService = new TagTypeService(stores, config, eventService);
+    const tagTypeService = new TagTypeService(
+        stores,
+        config,
+        eventService,
+        new FakeTagUsageReadModel(),
+        createFakePrivateProjectChecker(),
+    );
     const integrationEventsService = new IntegrationEventsService(
         stores,
         config,
@@ -39,6 +48,7 @@ beforeAll(async () => {
             integrationEventsService,
             flagResolver: config.flagResolver,
             eventBus: config.eventBus,
+            allowPrivateUrls: true,
         }),
     };
     addonService = new AddonService(

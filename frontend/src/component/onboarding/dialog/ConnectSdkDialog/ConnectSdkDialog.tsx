@@ -9,7 +9,7 @@ import { GenerateApiKey } from './GenerateApiKey/GenerateApiKey';
 import { GenerateApiKeySummary } from './GenerateApiKey/GenerateApiKeySummary';
 import { ConfigureSdk } from './ConfigureSdk';
 import { DialogWithAside } from 'component/common/DialogWithAside/DialogWithAside';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const StyledDialogFooter = styled(Box)({
     display: 'flex',
@@ -51,7 +51,7 @@ export const ConnectSdkDialog = ({
     environments,
     feature,
 }: IConnectSDKDialogProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const [currentStep, setCurrentStep] = useState(0);
     const [expandedStep, setExpandedStep] = useState(0);

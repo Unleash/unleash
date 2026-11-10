@@ -10,6 +10,8 @@ class FakeEventStore implements IEventStore {
 
     private eventEmitter: EventEmitter = sharedEventEmitter;
 
+    private nextEventId = 0;
+
     constructor() {
         this.eventEmitter.setMaxListeners(0);
         this.events = [];
@@ -32,6 +34,25 @@ class FakeEventStore implements IEventStore {
         return Promise.resolve(1);
     }
 
+    getMaxTokenRevisionId(): Promise<number> {
+        const latestId = this.events
+            .filter((event) => event.type.startsWith('api-token-'))
+            .at(-1)?.id;
+        return Promise.resolve(latestId === undefined ? 0 : latestId + 1);
+    }
+
+    getTokenRevisionRange(start: number, end: number): Promise<IEvent[]> {
+        return Promise.resolve(
+            this.events.filter(
+                (event) =>
+                    event.id !== undefined &&
+                    event.id + 1 > start &&
+                    event.id + 1 <= end &&
+                    event.type.startsWith('api-token-'),
+            ),
+        );
+    }
+
     getDeltaRevisionState(
         _environment: string,
         _referencedSegmentIds?: Set<number>,
@@ -50,18 +71,22 @@ class FakeEventStore implements IEventStore {
     store(event: IBaseEvent): Promise<void> {
         this.events.push({
             ...event,
-            id: this.events.length,
+            id: this.nextEventId++,
             createdAt: new Date(),
         });
         this.eventEmitter.emit(event.type, event);
         return Promise.resolve();
     }
 
+    batchStoreOrThrow(events: IBaseEvent[]): Promise<void> {
+        return this.batchStore(events);
+    }
+
     batchStore(events: IBaseEvent[]): Promise<void> {
         events.forEach((event) => {
             this.events.push({
                 ...event,
-                id: this.events.length,
+                id: this.nextEventId++,
                 createdAt: new Date(),
             });
             this.eventEmitter.emit(event.type, event);

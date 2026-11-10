@@ -18,7 +18,7 @@ import {
 } from '@tanstack/react-table';
 import { CreateSegmentButton } from 'component/segments/CreateSegmentButton/CreateSegmentButton';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { useMediaQuery } from '@mui/material';
+import { useMediaQuery, type TypographyProps } from '@mui/material';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useMemo, useState } from 'react';
 import { SegmentEmpty } from 'component/segments/SegmentEmpty';
@@ -37,7 +37,11 @@ import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { UsedInCell } from 'component/context/ContextList/UsedInCell';
 import type { ISegment } from 'interfaces/segment';
 
-export const SegmentTable = () => {
+export const SegmentTable = ({
+    variant,
+}: {
+    variant?: TypographyProps['variant'];
+}) => {
     const projectId = useOptionalPathParam('projectId');
     const { segments, loading: loadingSegments } = useSegments();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -112,6 +116,7 @@ export const SegmentTable = () => {
         <PageContent
             header={
                 <PageHeader
+                    variant={variant}
                     title={`Segments (${rows.length})`}
                     actions={
                         <>

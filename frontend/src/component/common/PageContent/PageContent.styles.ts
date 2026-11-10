@@ -23,4 +23,7 @@ export const useStyles = makeStyles()((theme) => ({
     borderDisabled: {
         border: 'none',
     },
+    stickyFooter: {
+        overflowX: 'visible',
+    },
 }));

@@ -1,12 +1,11 @@
 import { Button, styled, type ButtonProps } from '@mui/material';
 import Lock from '@mui/icons-material/Lock';
-import React from 'react';
+import React, { useId } from 'react';
 import {
     TooltipResolver,
     type ITooltipResolverProps,
 } from 'component/common/TooltipResolver/TooltipResolver';
 import { formatAccessText } from 'utils/formatAccessText';
-import { useId } from 'hooks/useId';
 import {
     useHasRootAccess,
     useHasProjectEnvironmentAccess,
@@ -130,9 +129,10 @@ const BasePermissionButton = React.forwardRef<
                     aria-labelledby={id}
                     variant={variant}
                     color={color}
-                    disableRipple={disableButton}
                     className={
-                        disableButton ? `${className} Mui-disabled` : className
+                        [className, disableButton && 'Mui-disabled']
+                            .filter(Boolean)
+                            .join(' ') || undefined
                     }
                     {...rest}
                     endIcon={endIcon}

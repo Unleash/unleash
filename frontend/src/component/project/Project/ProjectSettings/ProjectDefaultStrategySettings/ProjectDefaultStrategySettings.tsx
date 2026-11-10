@@ -10,7 +10,7 @@ import {
     UPDATE_PROJECT,
 } from 'component/providers/AccessProvider/permissions';
 import { Alert, styled } from '@mui/material';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import EditDefaultStrategy from './ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy.tsx';
 import useProjectOverview, {
@@ -41,7 +41,12 @@ export const ProjectDefaultStrategySettings = () => {
     ) {
         return (
             <PageContent
-                header={<PageHeader title='Default Strategy configuration' />}
+                header={
+                    <PageHeader
+                        title='Default Strategy configuration'
+                        variant='h2'
+                    />
+                }
             >
                 <Alert severity='error'>
                     You need project owner permissions or a custom role with
@@ -57,7 +62,9 @@ export const ProjectDefaultStrategySettings = () => {
 
     return (
         <>
-            <PageContent header={<PageHeader title={`Default Strategy`} />}>
+            <PageContent
+                header={<PageHeader title={`Default Strategy`} variant='h2' />}
+            >
                 <StyledAlert severity='info'>
                     Here you can customize your default strategy for each
                     specific environment. These will be used when you enable a

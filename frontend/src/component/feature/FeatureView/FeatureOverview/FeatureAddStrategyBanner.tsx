@@ -1,6 +1,6 @@
 import { Link, styled } from '@mui/material';
 import MenuBook from '@mui/icons-material/MenuBook';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { FeatureSetupGuideBanner } from './FeatureSetupGuideBanner/FeatureSetupGuideBanner.tsx';
 import ToggleOnOutlined from '@mui/icons-material/ToggleOnOutlined';
 
@@ -11,7 +11,7 @@ const StyledIconBox = styled('span')(({ theme }) => ({
     width: theme.spacing(4),
     height: theme.spacing(4),
     borderRadius: theme.shape.borderRadiusMedium,
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,
 }));
 
@@ -23,7 +23,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }));
 
 export const FeatureAddStrategyBanner = () => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     return (
         <FeatureSetupGuideBanner

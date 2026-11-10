@@ -20,7 +20,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import { useSavedQuery } from './useSavedQuery.ts';
 import { useOnBlur } from 'hooks/useOnBlur';
 import { SearchHistory } from './SearchSuggestions/SearchHistory.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 interface ISearchProps {
     id?: string;
@@ -74,7 +74,7 @@ const StyledSearch = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     backgroundColor: theme.palette.background.elevation1,
-    border: `1px solid ${theme.palette.neutral.border}`,
+    border: `1px solid ${theme.palette.neutral.containerBorder}`,
     borderRadius: theme.shape.borderRadiusExtraLarge,
     padding: '3px 5px 3px 12px',
     width: '100%',
@@ -111,7 +111,7 @@ export const Search = ({
     debounceTime = 200,
     ...rest
 }: ISearchProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -135,8 +135,9 @@ export const Search = ({
     const hotkey = useKeyboardShortcut(
         {
             modifiers: ['ctrl', 'shift'],
-            key: 'K',
+            key: 'k',
             preventDefault: true,
+            anchorRefs: [searchContainerRef],
         },
         () => {
             usedHotkeyRef.current = true;
@@ -168,17 +169,24 @@ export const Search = ({
         usedHotkeyRef.current = false;
     }, [showSuggestions, trackEvent]);
 
-    useKeyboardShortcut({ key: 'Escape' }, () => {
-        if (searchContainerRef.current?.contains(document.activeElement)) {
-            searchInputRef.current?.blur();
-        }
-    });
+    useKeyboardShortcut(
+        { key: 'Escape', anchorRefs: [searchContainerRef] },
+        () => {
+            if (searchContainerRef.current?.contains(document.activeElement)) {
+                searchInputRef.current?.blur();
+            }
+        },
+    );
     const placeholder = `${customPlaceholder ?? 'Search'} (${hotkey})`;
 
     useOnClickOutside([searchContainerRef], hideSuggestions);
     useOnBlur(searchContainerRef, hideSuggestions);
 
     useEffect(() => {
+        const userIsTyping = document.activeElement === searchInputRef.current;
+        if (userIsTyping) {
+            return;
+        }
         setValue(initialValue);
     }, [initialValue]);
 

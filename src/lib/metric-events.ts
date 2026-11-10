@@ -1,4 +1,5 @@
 import type EventEmitter from 'events';
+import type { IEventType } from './events/index.js';
 
 const REQUEST_TIME = 'request_time';
 const SDK_CONNECTION_ID_RECEIVED = 'sdk_connection_id_received';
@@ -21,6 +22,8 @@ const CLIENT_METRICS_TAGS = 'client-api-tags';
 const CLIENT_METRICS_PROJECT = 'client-api-project';
 const CLIENT_REGISTERED = 'client_registered';
 const IMPACT_METRICS_QUERY_TIME = 'impact_metrics_query_time';
+const TOKEN_CACHE_LOOKUP = 'token_cache_lookup';
+const EVENT_STORE_WRITE = 'event_store_write';
 
 type MetricEvent =
     | typeof REQUEST_TIME
@@ -40,7 +43,9 @@ type MetricEvent =
     | typeof CLIENT_METRICS_NAMEPREFIX
     | typeof CLIENT_METRICS_TAGS
     | typeof CLIENT_METRICS_PROJECT
-    | typeof IMPACT_METRICS_QUERY_TIME;
+    | typeof IMPACT_METRICS_QUERY_TIME
+    | typeof TOKEN_CACHE_LOOKUP
+    | typeof EVENT_STORE_WRITE;
 
 type RequestOriginEventPayload = {
     type: 'UI' | 'API';
@@ -60,9 +65,21 @@ type ClientMetricsProjectPayload = {
     projects: string[];
 };
 
+type TokenCacheLookupPayload = {
+    cache: string;
+    result: 'hit' | 'miss' | 'throttled';
+};
+
+type EventStoreWritePayload = {
+    type: IEventType;
+    transaction: 'inside' | 'outside';
+};
+
 type MetricEventPayloads = {
     [key: string]: unknown;
     [REQUEST_ORIGIN]: RequestOriginEventPayload;
+    [TOKEN_CACHE_LOOKUP]: TokenCacheLookupPayload;
+    [EVENT_STORE_WRITE]: EventStoreWritePayload;
     [CLIENT_METRICS_NAMEPREFIX]: ClientMetricsNamePrefixPayload;
     [CLIENT_METRICS_TAGS]: ClientMetricsTagsPayload;
     [CLIENT_METRICS_PROJECT]: ClientMetricsProjectPayload;
@@ -110,6 +127,8 @@ export {
     CLIENT_METRICS_PROJECT,
     CLIENT_REGISTERED,
     IMPACT_METRICS_QUERY_TIME,
+    TOKEN_CACHE_LOOKUP,
+    EVENT_STORE_WRITE,
     type MetricEvent,
     type MetricEventPayload,
     emitMetricEvent,

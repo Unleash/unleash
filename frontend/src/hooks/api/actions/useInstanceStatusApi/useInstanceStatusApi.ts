@@ -26,9 +26,23 @@ const useInstanceStatusApi = () => {
         await makeRequest(req.caller, req.id);
     };
 
+    const setInstanceName = async (name: string): Promise<void> => {
+        const path = 'api/instance/name';
+        const req = createRequest(
+            path,
+            {
+                method: 'POST',
+                body: JSON.stringify({ name }),
+            },
+            'setInstanceName',
+        );
+        await makeRequest(req.caller, req.id);
+    };
+
     return {
         extendTrial,
         setAutoCreateDomainUsers,
+        setInstanceName,
         loading,
         errors,
     };

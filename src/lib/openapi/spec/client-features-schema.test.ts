@@ -14,6 +14,7 @@ test('clientFeaturesSchema required fields', () => {
         features: [
             {
                 name: 'some-name',
+                type: 'experiment',
                 enabled: false,
                 impressionData: false,
                 variants: [
@@ -165,7 +166,6 @@ test('clientFeaturesSchema unleash-proxy expected response', () => {
       "features": [
         {
           "name": "Test.old",
-          "description": "No variants here!",
           "enabled": true,
           "strategies": [
             {
@@ -176,7 +176,6 @@ test('clientFeaturesSchema unleash-proxy expected response', () => {
         },
         {
           "name": "Test.variants",
-          "description": null,
           "enabled": true,
           "strategies": [
             {
@@ -253,7 +252,6 @@ test('clientFeaturesSchema client specification test 15', () => {
       "features": [
         {
           "name": "F9.globalSegmentOn",
-          "description": "With global segment referencing constraint in on state",
           "enabled": true,
           "strategies": [
             {
@@ -267,7 +265,6 @@ test('clientFeaturesSchema client specification test 15', () => {
         },
         {
           "name": "F9.globalSegmentOff",
-          "description": "With global segment referencing constraint in off state",
           "enabled": true,
           "strategies": [
             {
@@ -281,7 +278,6 @@ test('clientFeaturesSchema client specification test 15', () => {
         },
         {
           "name": "F9.globalSegmentAndConstraint",
-          "description": "With global segment and constraint both on",
           "enabled": true,
           "strategies": [
             {
@@ -302,7 +298,6 @@ test('clientFeaturesSchema client specification test 15', () => {
         },
         {
           "name": "F9.withExtraParams",
-          "description": "With global segment that doesn't exist",
           "enabled": true,
           "project": "some-project",
           "strategies": [
@@ -324,7 +319,6 @@ test('clientFeaturesSchema client specification test 15', () => {
         },
         {
           "name": "F9.withSeveralConstraintsAndSegments",
-          "description": "With several segments and constraints",
           "enabled": true,
           "strategies": [
             {

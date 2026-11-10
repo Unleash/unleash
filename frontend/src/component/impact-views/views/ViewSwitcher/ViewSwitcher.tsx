@@ -115,13 +115,13 @@ export const ViewSwitcher: FC<ViewSwitcherProps> = ({
                                 <IconButton
                                     component='span'
                                     className='tab-actions'
-                                    size='small'
+                                    size='medium'
                                     aria-label={`${view.title} actions`}
                                     onClick={(event) =>
                                         openMenu(event, view.id)
                                     }
                                 >
-                                    <MoreVertIcon fontSize='small' />
+                                    <MoreVertIcon />
                                 </IconButton>
                             </StyledTabLabel>
                         }

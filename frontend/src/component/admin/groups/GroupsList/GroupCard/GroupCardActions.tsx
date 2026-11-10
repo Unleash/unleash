@@ -14,7 +14,7 @@ import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
 import GroupRounded from '@mui/icons-material/GroupRounded';
 import MoreVert from '@mui/icons-material/MoreVert';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { scimGroupTooltip } from 'component/admin/groups/group-constants';
 
 const StyledActions = styled('div')(({ theme }) => ({

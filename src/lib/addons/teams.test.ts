@@ -250,7 +250,6 @@ describe('Teams integration', () => {
                 'Teams webhook request was successful with status code: 200.',
             event: serializeDates(event),
             details: {
-                url: parameters.url,
                 body: {
                     themeColor: '0076D7',
                     summary: 'Message',

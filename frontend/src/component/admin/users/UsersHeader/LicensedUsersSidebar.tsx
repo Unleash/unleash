@@ -7,7 +7,7 @@ const ModalContentContainer = styled('section')(({ theme }) => ({
     minHeight: '100vh',
     maxWidth: 700,
     width: '95vw',
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
     display: 'flex',
     flexFlow: 'column',
     gap: theme.spacing(4),
@@ -30,12 +30,12 @@ const HeaderRow = styled('div')(({ theme }) => ({
 const ModalHeader = styled('h3')(({ theme }) => ({
     fontSize: theme.typography.h2.fontSize,
     margin: 0,
-    fontWeight: theme.typography.h4.fontWeight,
+    fontWeight: theme.typography.fontWeightBold,
 }));
 
 const RowHeader = styled('h4')(({ theme }) => ({
     margin: 0,
-    fontWeight: theme.typography.h4.fontWeight,
+    fontWeight: theme.typography.fontWeightBold,
     fontSize: theme.spacing(1.75),
 }));
 

@@ -3,7 +3,7 @@ import { fireEvent, screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import FeatureOverviewMetaData from './FeatureOverviewMetaData.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import type { IDependency, IFeatureToggle } from 'interfaces/featureToggle';
 import ToastRenderer from 'component/common/ToastRenderer/ToastRenderer';
 import userEvent from '@testing-library/user-event';

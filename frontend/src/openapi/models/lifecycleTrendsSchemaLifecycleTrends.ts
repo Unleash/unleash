@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { LifecycleTrendsSchemaLifecycleTrendsCleanup } from './lifecycleTrendsSchemaLifecycleTrendsCleanup';
-import type { LifecycleTrendsSchemaLifecycleTrendsDevelop } from './lifecycleTrendsSchemaLifecycleTrendsDevelop';
-import type { LifecycleTrendsSchemaLifecycleTrendsProduction } from './lifecycleTrendsSchemaLifecycleTrendsProduction';
+import type { LifecycleTrendsSchemaLifecycleTrendsCleanup } from './lifecycleTrendsSchemaLifecycleTrendsCleanup.ts';
+import type { LifecycleTrendsSchemaLifecycleTrendsDevelop } from './lifecycleTrendsSchemaLifecycleTrendsDevelop.ts';
+import type { LifecycleTrendsSchemaLifecycleTrendsProduction } from './lifecycleTrendsSchemaLifecycleTrendsProduction.ts';
 
 /**
  * Aggregated view of feature flag lifecycle across environments

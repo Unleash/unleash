@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CdnApiTokenSchema } from './cdnApiTokenSchema';
+import type { CdnApiTokenSchema } from './cdnApiTokenSchema.ts';
 
 /**
  * List of CDN tokens.

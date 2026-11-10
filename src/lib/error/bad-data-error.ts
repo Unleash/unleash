@@ -1,11 +1,18 @@
 import type { ErrorObject } from 'ajv';
 import type { ValidationError } from 'joi';
-import getProp from 'lodash.get';
 import { type ApiErrorSchema, UnleashError } from './unleash-error.js';
 
 type ValidationErrorDescription = {
     message: string;
     path?: string;
+};
+
+const safeStringify = (value: unknown): string => {
+    try {
+        return JSON.stringify(value);
+    } catch {
+        return '[value too large or deeply nested to display]';
+    }
 };
 
 class BadDataError extends UnleashError {
@@ -72,7 +79,7 @@ const genericErrorMessage = (
     propertyValue: object,
     errorMessage: string = 'is invalid',
 ) => {
-    const youSent = JSON.stringify(propertyValue);
+    const youSent = safeStringify(propertyValue);
     const message = `The \`${propertyName}\` property ${errorMessage}. You sent ${youSent}.`;
     return {
         message,
@@ -120,11 +127,10 @@ export const fromOpenApiValidationError =
     (validationError: ErrorObject): ValidationErrorDescription => {
         const { instancePath, params, message } = validationError;
 
-        const propertyValue = getProp(
-            data,
-            instancePath.split('/').filter(Boolean),
-        );
-
+        const propertyValue = instancePath
+            .split('/')
+            .filter(Boolean)
+            .reduce((value, key) => value?.[key], data);
         switch (validationError.keyword) {
             case 'required':
                 return missingRequiredPropertyMessage(
@@ -172,7 +178,7 @@ export const fromOpenApiValidationErrors = (
 export const fromJoiError = (err: ValidationError): BadDataError => {
     const details = err.details.map((detail) => {
         const messageEnd = detail.context?.value
-            ? `. You provided ${JSON.stringify(detail.context.value)}.`
+            ? `. You provided ${safeStringify(detail.context.value)}.`
             : '.';
         const message = detail.message + messageEnd;
         return {

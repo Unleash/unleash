@@ -4,7 +4,7 @@ import { useImpactMetricsOptions } from 'hooks/api/getters/useImpactMetricsMetad
 import { useFeatureImpactMetrics } from 'hooks/api/getters/useFeatureImpactMetrics/useFeatureImpactMetrics';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import type { ChartConfig } from '../../impact-metrics/types';
 import { useTrackFlagpageImpactMetrics } from 'component/impact-metrics/useImpactMetricsFunnel';
 
@@ -26,7 +26,7 @@ export const useFeatureImpactChartActions = (
         featureName,
     });
     const { setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const openChartModal = () => setChartModalOpen(true);
     const closeChartModal = () => setChartModalOpen(false);

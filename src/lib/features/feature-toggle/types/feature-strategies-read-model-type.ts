@@ -1,4 +1,13 @@
+export type StrategyVariantJsonPayload = {
+    strategyId: string;
+    variantName: string;
+    value: string;
+};
+
 export interface IFeatureStrategiesReadModel {
+    getVariantJsonPayloads(
+        featureName: string,
+    ): Promise<StrategyVariantJsonPayload[]>;
     getMaxFeatureEnvironmentStrategies(): Promise<{
         feature: string;
         environment: string;

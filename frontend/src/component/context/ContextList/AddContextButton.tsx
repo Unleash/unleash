@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useMediaQuery } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

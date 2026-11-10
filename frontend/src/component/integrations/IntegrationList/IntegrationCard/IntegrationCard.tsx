@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import { Link, styled, Tooltip, Typography } from '@mui/material';
 import { IntegrationIcon } from '../IntegrationIcon/IntegrationIcon.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -8,7 +8,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import { IntegrationCardMenu } from './IntegrationCardMenu/IntegrationCardMenu.tsx';
 import type { AddonSchema } from 'openapi';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { IntegrationEventsLastEvent } from 'component/integrations/IntegrationEvents/IntegrationEventsLastEvent';
 
 type CardVariant = 'default' | 'stacked';
@@ -53,11 +53,11 @@ const StyledCard = styled('div', {
         border: `1px solid ${theme.palette.divider}`,
         boxShadow: theme.boxShadows.card,
         ...(deprecated && {
-            backgroundColor: theme.palette.warning.light,
+            backgroundColor: theme.palette.warning.container,
         }),
         ':hover': {
             backgroundColor: deprecated
-                ? theme.palette.warning.light
+                ? theme.palette.warning.container
                 : theme.palette.action.hover,
         },
         ...(variant === 'stacked' && {
@@ -132,7 +132,7 @@ export const IntegrationCard: FC<IIntegrationCardProps> = ({
     deprecated,
     isExternal = false,
 }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const isConfigured = addon !== undefined;
 
     const handleClick = () => {

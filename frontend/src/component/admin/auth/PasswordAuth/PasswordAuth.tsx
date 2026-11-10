@@ -10,7 +10,7 @@ import useAuthSettingsApi, {
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useAdminCount } from 'hooks/api/getters/useAdminCount/useAdminCount';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
 import { PasswordAuthDialog } from './PasswordAuthDialog.tsx';
 

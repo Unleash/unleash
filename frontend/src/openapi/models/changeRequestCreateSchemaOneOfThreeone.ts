@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateSchemaOneOfThreeoneAction } from './changeRequestCreateSchemaOneOfThreeoneAction';
-import type { ChangeRequestCreateSchemaOneOfThreeonePayload } from './changeRequestCreateSchemaOneOfThreeonePayload';
+import type { ChangeRequestCreateSchemaOneOfThreeoneAction } from './changeRequestCreateSchemaOneOfThreeoneAction.ts';
+import type { ChangeRequestCreateSchemaOneOfThreeonePayload } from './changeRequestCreateSchemaOneOfThreeonePayload.ts';
 
 /**
  * Start milestone of feature environment release plan.

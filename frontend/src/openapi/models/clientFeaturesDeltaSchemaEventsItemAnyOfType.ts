@@ -7,7 +7,6 @@
 export type ClientFeaturesDeltaSchemaEventsItemAnyOfType =
     (typeof ClientFeaturesDeltaSchemaEventsItemAnyOfType)[keyof typeof ClientFeaturesDeltaSchemaEventsItemAnyOfType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ClientFeaturesDeltaSchemaEventsItemAnyOfType = {
     'feature-updated': 'feature-updated',
 } as const;

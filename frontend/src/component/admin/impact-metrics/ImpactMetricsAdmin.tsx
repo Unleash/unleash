@@ -26,7 +26,7 @@ import { useExternalImpactMetricsSourceApi } from 'hooks/api/actions/useExternal
 import { useTestExternalImpactMetricsSourceApi } from 'hooks/api/actions/useTestExternalImpactMetricsSourceApi/useTestExternalImpactMetricsSourceApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const Layout = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -96,7 +96,7 @@ const ImpactMetricsPage = () => {
     const { testExternalImpactMetricsSource, loading: testing } =
         useTestExternalImpactMetricsSourceApi();
     const { setToastData, setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const currentUrl = source.url ?? '';
 
@@ -178,7 +178,7 @@ const ImpactMetricsPage = () => {
     };
 
     return (
-        <PageContent header={<PageHeader titleElement='Impact Metrics' />}>
+        <PageContent header={<PageHeader heading='Impact Metrics' />}>
             <Layout>
                 <Card>
                     <IconHeader>
@@ -277,7 +277,7 @@ const ImpactMetricsPage = () => {
                         }
                         disabled={loading || saving}
                         fullWidth
-                        size='small'
+                        size='large'
                         type={hasCredentials && !showUrl ? 'password' : 'text'}
                         slotProps={{
                             input: {

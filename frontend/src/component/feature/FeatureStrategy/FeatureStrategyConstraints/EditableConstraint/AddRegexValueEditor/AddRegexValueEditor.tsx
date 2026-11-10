@@ -2,6 +2,7 @@ import {
     Box,
     Button,
     IconButton,
+    InputAdornment,
     styled,
     TextField,
     Typography,
@@ -11,33 +12,22 @@ import ErrorOutline from '@mui/icons-material/ErrorOutlineOutlined';
 import CheckCircleOutline from '@mui/icons-material/CheckCircleOutlineOutlined';
 import Delete from '@mui/icons-material/Delete';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
-import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
-import {
-    RegexSdkRequirementsBanner,
-    RegexSdkRequirementsToggle,
-} from './RegexSdkRequirements';
-import { useRegexSdkRequirements } from './useRegexSdkRequirements';
 import {
     type FC,
     type MutableRefObject,
-    type ReactNode,
     memo,
     useCallback,
     useEffect,
-    useId,
     useRef,
     useState,
 } from 'react';
 import { RE2JS } from 're2js';
-import type { ConstraintValidatorOutput } from '../ConstraintValidatorOutput';
 
 const StyledBox = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(2),
-    marginBottom: theme.spacing(1),
+    padding: theme.spacing(0, 2, 2),
 }));
 
 const StyledTestValuesBox = styled(Box)(({ theme }) => ({
-    marginTop: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1),
@@ -54,16 +44,15 @@ const StyledList = styled('ul')(({ theme }) => ({
 
 const StyledListItem = styled('li')(({ theme }) => ({
     display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'stretch',
+    alignItems: 'center',
     gap: theme.spacing(1),
-    marginBottom: theme.spacing(1),
 }));
 
 const StyledTestInputBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
+    width: '100%',
 }));
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
@@ -74,31 +63,6 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
         marginLeft: 0,
         marginTop: theme.spacing(1),
     },
-}));
-
-const InputRow = styled('div')(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(1),
-    alignItems: 'start',
-    width: '100%',
-    marginBlock: theme.spacing(0.5),
-}));
-
-const StyledTitleRow = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'baseline',
-    justifyContent: 'space-between',
-    gap: theme.spacing(1),
-}));
-
-const StyledMatchIndicatorBox = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'match',
-})<{ match: boolean }>(({ theme, match }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(0.5),
-    fontSize: theme.fontSizes.smallBody,
-    color: match ? theme.palette.success.main : theme.palette.warning.main,
 }));
 
 const StyledMatchIcon = styled(CheckCircleOutline)(({ theme }) => ({
@@ -116,26 +80,21 @@ const MatchIndicator: FC<{ match: boolean; testString: string }> = ({
     testString,
 }) => {
     const isEmptyTestString = testString === '';
-    return match ? (
-        <StyledMatchIndicatorBox match={match}>
-            <StyledMatchIcon aria-hidden />
-            Your regular expression matches
-            {isEmptyTestString ? ' an empty string.' : ''}
-        </StyledMatchIndicatorBox>
-    ) : (
-        <StyledMatchIndicatorBox match={match}>
-            <StyledNoMatchIcon aria-hidden />
-            Your regular expression does not match
-            {isEmptyTestString ? ' empty strings.' : ''}
-        </StyledMatchIndicatorBox>
+    const message = match
+        ? `Your regular expression matches${isEmptyTestString ? ' an empty string.' : '.'}`
+        : `Your regular expression does not match${isEmptyTestString ? ' empty strings.' : '.'}`;
+    return (
+        <HtmlTooltip title={message} arrow>
+            <InputAdornment position='end'>
+                {match ? (
+                    <StyledMatchIcon role='img' aria-label={message} />
+                ) : (
+                    <StyledNoMatchIcon role='img' aria-label={message} />
+                )}
+            </InputAdornment>
+        </HtmlTooltip>
     );
 };
-
-const HelpText = styled('p')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    fontSize: theme.typography.caption.fontSize,
-    marginTop: theme.spacing(1),
-}));
 
 type RegexTestInput = {
     id: number;
@@ -180,13 +139,21 @@ const RegexTestInputItem: FC<RegexTestInputItemProps> = memo(
                     <StyledTextField
                         type='text'
                         placeholder='Enter test value'
-                        size='small'
+                        size='large'
                         fullWidth
                         value={input.testString}
                         id={`test-input-${input.id}`}
                         slotProps={{
                             htmlInput: {
                                 'aria-describedby': 'test-strings-description',
+                            },
+                            input: {
+                                endAdornment: (
+                                    <MatchIndicator
+                                        match={input.match}
+                                        testString={input.testString}
+                                    />
+                                ),
                             },
                         }}
                         inputRef={setInputRef}
@@ -197,20 +164,15 @@ const RegexTestInputItem: FC<RegexTestInputItemProps> = memo(
                         <HtmlTooltip title='Remove test string' arrow>
                             <IconButton
                                 type='button'
-                                size='small'
+                                size='medium'
                                 aria-label={`Remove test string ${index}: ${input.testString === '' ? 'empty string' : ''}`}
-                                sx={{ ml: 'auto' }}
                                 onClick={() => onRemove(input.id)}
                             >
-                                <Delete fontSize='inherit' />
+                                <Delete />
                             </IconButton>
                         </HtmlTooltip>
                     )}
                 </StyledTestInputBox>
-                <MatchIndicator
-                    match={input.match}
-                    testString={input.testString}
-                />
             </StyledListItem>
         );
     },
@@ -291,9 +253,6 @@ const RegexTestValues: FC<{
     return (
         <StyledTestValuesBox>
             <Typography variant='h3'>Test regex</Typography>
-            <Typography id='test-strings-description' variant='body2'>
-                Enter test values to check Regex matching.
-            </Typography>
             <StyledList>
                 {regexTestInputs.map((regexTestInput, index) => (
                     <RegexTestInputItem
@@ -311,7 +270,7 @@ const RegexTestValues: FC<{
                 <Button
                     type='button'
                     variant='text'
-                    size='small'
+                    size='medium'
                     startIcon={<Add />}
                     onClick={handleAddTestString}
                 >
@@ -323,36 +282,19 @@ const RegexTestValues: FC<{
 };
 
 type AddRegexValueEditorProps = {
-    addValue: (newValue: string) => void;
-    initialValue?: string;
-    helpText?: ReactNode;
+    value: string;
     caseInsensitive: boolean;
-    editingOpen: boolean;
-    validator: (value: string) => ConstraintValidatorOutput;
 };
 
 export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
-    initialValue,
-    addValue,
-    helpText,
+    value,
     caseInsensitive,
-    validator,
-    editingOpen,
 }) => {
-    const {
-        open: sdkAlertOpen,
-        onClose: onSdkAlertClose,
-        onOpen: onSdkAlertOpen,
-    } = useRegexSdkRequirements();
-    const [inputValue, setInputValue] = useState(initialValue || '');
-    const [error, setError] = useState('');
-    const inputId = useId();
-    const helpTextId = useId();
     const matchesRegex = useCallback(
         (testString: string): boolean => {
             try {
                 return RE2JS.compile(
-                    inputValue,
+                    value,
                     caseInsensitive ? RE2JS.CASE_INSENSITIVE : undefined,
                 )
                     .matcher(testString)
@@ -361,95 +303,11 @@ export const AddRegexValueEditor: FC<AddRegexValueEditorProps> = ({
                 return false;
             }
         },
-        [inputValue, caseInsensitive],
+        [value, caseInsensitive],
     );
-
-    const validateValue = useCallback(
-        (newValue: string): string => {
-            if (newValue.length > 100) {
-                return `Values cannot be longer than 100 characters (current: ${newValue.length})`;
-            }
-            const [isValid, errorMessage] = validator(newValue);
-            return isValid ? '' : errorMessage;
-        },
-        [validator],
-    );
-
-    const handleRegexKeyDown = useCallback(
-        (e: React.KeyboardEvent) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                if (!inputValue?.trim()) {
-                    setError('Value cannot be empty or whitespace');
-                    return;
-                }
-            }
-        },
-        [inputValue],
-    );
-
-    const handleRegexInputChange = useCallback(
-        (e: React.ChangeEvent<HTMLInputElement>) => {
-            setInputValue(e.target.value);
-            setError(validateValue(e.target.value));
-            addValue(e.target.value);
-        },
-        [addValue, validateValue],
-    );
-
-    useEffect(() => {
-        if (!editingOpen) return;
-        setInputValue(initialValue || '');
-        setError(validateValue(initialValue || ''));
-    }, [editingOpen, initialValue, validateValue]);
 
     return (
         <StyledBox>
-            <RegexSdkRequirementsBanner
-                open={sdkAlertOpen}
-                onClose={onSdkAlertClose}
-            />
-
-            <StyledTitleRow>
-                <Typography variant='h2'>Regular expression</Typography>
-                <RegexSdkRequirementsToggle
-                    open={sdkAlertOpen}
-                    onOpen={onSdkAlertOpen}
-                />
-            </StyledTitleRow>
-            <InputRow>
-                <ScreenReaderOnly>
-                    <label htmlFor={inputId}>Constraint Value</label>
-                </ScreenReaderOnly>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        flexGrow: 1,
-                    }}
-                >
-                    <StyledTextField
-                        id={inputId}
-                        multiline
-                        placeholder='Enter RE2 regex value e.g.: [xyz]'
-                        value={inputValue}
-                        onChange={handleRegexInputChange}
-                        onKeyDown={handleRegexKeyDown}
-                        size='small'
-                        variant='outlined'
-                        fullWidth
-                        autoFocus
-                        error={Boolean(error)}
-                        helperText={error}
-                        aria-describedby={helpTextId}
-                        data-testid='CONSTRAINT_VALUES_INPUT'
-                    />
-                    {helpText && (
-                        <HelpText id={helpTextId}>{helpText}</HelpText>
-                    )}
-                </Box>
-            </InputRow>
-
             <RegexTestValues matchesRegex={matchesRegex} />
         </StyledBox>
     );

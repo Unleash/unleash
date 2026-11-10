@@ -1,6 +1,9 @@
 import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
+import {
+    isTimeCondition,
+    type IReleasePlanMilestone,
+} from 'interfaces/releasePlans';
 import type { ChangeMilestoneProgressionSchema } from 'openapi';
 import { ReleasePlanMilestone } from '../ReleasePlanMilestone/ReleasePlanMilestone.tsx';
 import { useMilestoneProgressionsApi } from 'hooks/api/actions/useMilestoneProgressionsApi/useMilestoneProgressionsApi';
@@ -9,7 +12,8 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { calculateMilestoneStatus } from './milestoneStatusUtils.js';
 import { MilestoneAutomation } from './MilestoneAutomation.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import { ReadonlyMilestoneAutomation } from './ReadonlyMilestoneAutomation.tsx';
+import { useEventTracker } from 'hooks/useEventTracker.ts';
 import { ProjectEnvironmentStrategyDraggableItem } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/ProjectEnvironmentStrategyDraggableItem.tsx';
 
 const StyledConnection = styled('div', {
@@ -86,7 +90,7 @@ export const ReleasePlanMilestoneItem = ({
     const { changeMilestoneProgression } = useMilestoneProgressionsApi();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { setToastData, setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const isNotLastMilestone = index < milestones.length - 1;
     const isProgressionFormOpen = progressionFormOpenIndex === index;
@@ -101,9 +105,9 @@ export const ReleasePlanMilestoneItem = ({
         trackEvent('release-management', {
             props: {
                 eventType: 'change-progression',
-                transitionUnit: getTimeUnit(
-                    payload.transitionCondition.intervalMinutes,
-                ),
+                transitionUnit: isTimeCondition(payload.transitionCondition)
+                    ? getTimeUnit(payload.transitionCondition.intervalMinutes)
+                    : 'exposures',
             },
         });
         if (isChangeRequestConfigured(environment)) {
@@ -163,24 +167,39 @@ export const ReleasePlanMilestoneItem = ({
     const pendingProgressionChange = getPendingProgressionChange(milestone.id);
     const effectiveTransitionCondition = milestone.transitionCondition;
 
-    const shouldShowAutomation = isNotLastMilestone && !readonly;
+    const renderAutomationSection = () => {
+        if (!isNotLastMilestone) {
+            return undefined;
+        }
+        if (readonly) {
+            return effectiveTransitionCondition ? (
+                <ReadonlyMilestoneAutomation
+                    transitionCondition={effectiveTransitionCondition}
+                    status={status}
+                    environment={environment}
+                    featureName={featureName}
+                />
+            ) : undefined;
+        }
+        return (
+            <MilestoneAutomation
+                milestone={milestone}
+                milestones={milestones}
+                status={status}
+                isProgressionFormOpen={isProgressionFormOpen}
+                effectiveTransitionCondition={effectiveTransitionCondition}
+                pendingProgressionChange={pendingProgressionChange}
+                onOpenProgressionForm={handleOpenProgressionForm}
+                onCloseProgressionForm={handleCloseProgressionForm}
+                onChangeProgression={handleChangeProgression}
+                onDeleteProgression={onDeleteProgression}
+                environment={environment}
+                featureName={featureName}
+            />
+        );
+    };
 
-    const automationSection = shouldShowAutomation ? (
-        <MilestoneAutomation
-            milestone={milestone}
-            milestones={milestones}
-            status={status}
-            readonly={readonly}
-            isProgressionFormOpen={isProgressionFormOpen}
-            effectiveTransitionCondition={effectiveTransitionCondition}
-            pendingProgressionChange={pendingProgressionChange}
-            onOpenProgressionForm={handleOpenProgressionForm}
-            onCloseProgressionForm={handleCloseProgressionForm}
-            onChangeProgression={handleChangeProgression}
-            onDeleteProgression={onDeleteProgression}
-            environment={environment}
-        />
-    ) : undefined;
+    const automationSection = renderAutomationSection();
 
     const renderStrategy = (strategy, strategyIndex) => (
         <ProjectEnvironmentStrategyDraggableItem

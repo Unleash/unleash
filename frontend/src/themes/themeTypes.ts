@@ -1,7 +1,29 @@
 // biome-ignore lint: we need this to correctly extend the MUI theme
 import { FormHelperTextOwnProps } from '@mui/material/FormHelperText';
+import type { CSSProperties } from 'react';
 
 declare module '@mui/material/styles' {
+    interface TypographyVariants {
+        display: CSSProperties;
+    }
+    interface TypographyVariantsOptions {
+        display?: CSSProperties;
+    }
+
+    interface Shape {
+        borderRadiusSmall: number;
+        borderRadiusMedium: number;
+        borderRadiusLarge: number;
+        borderRadiusExtraLarge: number;
+        tableRowHeight: number;
+        tableRowHeightCompact: number;
+        tableRowHeightDense: number;
+    }
+
+    interface ZIndex {
+        sticky: number;
+    }
+
     interface CustomTheme {
         mode: 'light' | 'dark';
         /**
@@ -41,15 +63,21 @@ declare module '@mui/material/styles' {
     }
 
     interface PaletteColor {
-        border?: string;
+        /** Tinted surface fill for this color (subtle "container" background). */
+        container?: string;
+        /** Border for the tinted container surface. */
+        containerBorder?: string;
+        /** Text/icon color drawn on the container fill. */
+        onContainer?: string;
     }
 
     interface SimplePaletteColorOptions {
-        border?: string;
+        container?: string;
+        containerBorder?: string;
+        onContainer?: string;
     }
 
     interface CustomTypeBackground {
-        application: string;
         sidebar: string;
         alternative: string;
         elevation1: string;
@@ -116,15 +144,6 @@ declare module '@mui/material/styles' {
         highlight: string;
 
         /**
-         * Used for the interactive guide spotlight
-         */
-        spotlight: {
-            border: string;
-            outline: string;
-            pulse: string;
-        };
-
-        /**
          * For Links
          */
         links: string;
@@ -157,6 +176,42 @@ declare module '@mui/material/styles' {
             main: string;
             contrastText: string;
         };
+
+        /**
+         * Syntax highlighting colors for code examples (e.g. SDK onboarding snippets).
+         * Use these tokens in any component that renders highlighted code so the
+         * colour choices are centralised and adapt to light / dark mode.
+         */
+        codeHighlighting: {
+            /** Control-flow and reserved words: if, for, return, const, … */
+            keyword: string;
+            /** CSS selector tag names */
+            selectorTag: string;
+            /** String literals, template expressions, and doc-comment tags */
+            string: string;
+            /** Numeric literals */
+            number: string;
+            /** Boolean/null/undefined literals */
+            literal: string;
+            /** Inline and block comments */
+            comment: string;
+            /** Language built-ins: console, print, len, … */
+            builtIn: string;
+            /** Function names at their definition or call site */
+            title: string;
+            /** Class names (e.g. UnleashConfig in UnleashConfig.builder()) */
+            class_: string;
+            /** Type annotations and generic parameters */
+            type: string;
+            /** HTML / XML attribute names and object keys */
+            attr: string;
+            /** Variable references */
+            variable: string;
+            /** HTML / XML tag names */
+            tag: string;
+            /** Preprocessor directives, decorators, and other metadata */
+            meta: string;
+        };
     }
     interface Theme extends CustomTheme {}
     interface ThemeOptions extends CustomTheme {}
@@ -164,36 +219,8 @@ declare module '@mui/material/styles' {
     interface Palette extends CustomPalette {}
     interface PaletteOptions extends CustomPalette {}
     interface TypeBackground extends CustomTypeBackground {}
-
-    /* Extend the action object from MUI */
-    interface CustomTypeAction {
-        /**
-         * Add background color on hover for the interactive elements
-         * that use the alternative primary color. First used to add
-         * hover colors to button group elements
-         **/
-        alternative: string;
-    }
-
-    interface TypeAction extends CustomTypeAction {}
 }
 
-declare module '@mui/system/createTheme/shape' {
-    interface Shape {
-        borderRadiusSmall: number;
-        borderRadiusMedium: number;
-        borderRadiusLarge: number;
-        borderRadiusExtraLarge: number;
-        tableRowHeight: number;
-        tableRowHeightCompact: number;
-        tableRowHeightDense: number;
-    }
-}
-declare module '@mui/material/styles/zIndex' {
-    interface ZIndex {
-        sticky: number;
-    }
-}
 declare module '@mui/material' {
     interface ButtonPropsColorOverrides {
         web: true;
@@ -202,5 +229,33 @@ declare module '@mui/material' {
 declare module '@mui/material/FormHelperText' {
     interface FormHelperTextOwnProps {
         'data-testid'?: string;
+    }
+}
+
+// Design system v2 adds a third input size ("large") on top of MUI's
+// built-in "small"/"medium". Sizing lives in themes/controls.ts.
+declare module '@mui/material/InputBase' {
+    interface InputBasePropsSizeOverrides {
+        large: true;
+    }
+}
+declare module '@mui/material/TextField' {
+    interface TextFieldPropsSizeOverrides {
+        large: true;
+    }
+}
+declare module '@mui/material/FormControl' {
+    interface FormControlPropsSizeOverrides {
+        large: true;
+    }
+}
+declare module '@mui/material/Autocomplete' {
+    interface AutocompletePropsSizeOverrides {
+        large: true;
+    }
+}
+declare module '@mui/material/InputLabel' {
+    interface InputLabelPropsSizeOverrides {
+        large: true;
     }
 }

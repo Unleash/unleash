@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import { UG } from 'component/common/flags';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { GroupsList } from './GroupsList/GroupsList.tsx';

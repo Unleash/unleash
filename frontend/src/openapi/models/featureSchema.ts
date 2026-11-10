@@ -3,15 +3,14 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSchemaCollaborators } from './featureSchemaCollaborators';
-import type { FeatureSchemaCreatedBy } from './featureSchemaCreatedBy';
-import type { FeatureSchemaDependenciesItem } from './featureSchemaDependenciesItem';
-import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
-import type { FeatureSchemaLifecycle } from './featureSchemaLifecycle';
-import type { FeatureSchemaLinksItem } from './featureSchemaLinksItem';
-import type { FeatureSchemaStrategiesItem } from './featureSchemaStrategiesItem';
-import type { TagSchema } from './tagSchema';
-import type { VariantSchema } from './variantSchema';
+import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema.ts';
+import type { FeatureSchemaCollaborators } from './featureSchemaCollaborators.ts';
+import type { FeatureSchemaCreatedBy } from './featureSchemaCreatedBy.ts';
+import type { FeatureSchemaDependenciesItem } from './featureSchemaDependenciesItem.ts';
+import type { FeatureSchemaLifecycle } from './featureSchemaLifecycle.ts';
+import type { FeatureSchemaLinksItem } from './featureSchemaLinksItem.ts';
+import type { FeatureSchemaPayloadSchema } from './featureSchemaPayloadSchema.ts';
+import type { TagSchema } from './tagSchema.ts';
 
 /**
  * A feature flag definition
@@ -46,31 +45,32 @@ export interface FeatureSchema {
     enabled?: boolean;
     /** The list of environments where the feature can be used */
     environments?: FeatureEnvironmentSchema[];
+    /**
+     * The date the flag is expected to reach the end of its lifetime. `null` if the flag is permanent. This is an experimental field and may change.
+     * @nullable
+     */
+    expectedLifetimeEndsAt?: string | null;
     /** `true` if the feature was favorited, otherwise `false`. */
     favorite?: boolean;
     /** `true` if the impression data collection is enabled for the feature, otherwise `false`. */
     impressionData?: boolean;
-    /**
-     * The date when metrics where last collected for the feature. This field was deprecated in v5, use the one in featureEnvironmentSchema
-     * @deprecated
-     * @nullable
-     */
-    lastSeenAt?: string | null;
     /** Current lifecycle stage of the feature */
     lifecycle?: FeatureSchemaLifecycle;
+    /**
+     * The lifetime of this flag in days. If the value is `0`, the flag is expected to be permanent. Absent when the flag uses the lifetime of its feature type. This is an experimental field and may change.
+     * @minimum 0
+     */
+    lifetimeDays?: number;
     /** The list of links. This is an experimental field and may change. */
     links?: FeatureSchemaLinksItem[];
     /** Unique feature name */
     name: string;
+    /** The JSON Schema document, draft 2020-12, that describes the variant payloads of the flag. Absent when the flag has none. Only present on Unleash Enterprise. This is an experimental field and may change. */
+    payloadSchema?: FeatureSchemaPayloadSchema;
     /** Name of the project the feature belongs to */
     project?: string;
     /** `true` if the feature is stale based on the age and feature type, otherwise `false`. */
     stale?: boolean;
-    /**
-     * This was deprecated in v5 and will be removed in a future major version
-     * @deprecated
-     */
-    strategies?: FeatureSchemaStrategiesItem[];
     /**
      * The list of feature tags
      * @nullable
@@ -78,9 +78,4 @@ export interface FeatureSchema {
     tags?: TagSchema[] | null;
     /** Type of the flag e.g. experiment, kill-switch, release, operational, permission */
     type?: string;
-    /**
-     * The list of feature variants
-     * @deprecated
-     */
-    variants?: VariantSchema[];
 }

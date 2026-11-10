@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Divider, styled, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { AuthPageLayout } from '../common/AuthPageLayout';
 import { AuthSuccessIcon } from '../common/AuthSuccessIcon';
 import { SnakeGame } from './SnakeGame';

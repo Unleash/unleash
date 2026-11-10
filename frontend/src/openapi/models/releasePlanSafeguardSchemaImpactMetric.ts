@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ReleasePlanSafeguardSchemaImpactMetricAggregationMode } from './releasePlanSafeguardSchemaImpactMetricAggregationMode';
-import type { ReleasePlanSafeguardSchemaImpactMetricLabelSelectors } from './releasePlanSafeguardSchemaImpactMetricLabelSelectors';
-import type { ReleasePlanSafeguardSchemaImpactMetricSource } from './releasePlanSafeguardSchemaImpactMetricSource';
-import type { ReleasePlanSafeguardSchemaImpactMetricTimeRange } from './releasePlanSafeguardSchemaImpactMetricTimeRange';
+import type { ReleasePlanSafeguardSchemaImpactMetricAggregationMode } from './releasePlanSafeguardSchemaImpactMetricAggregationMode.ts';
+import type { ReleasePlanSafeguardSchemaImpactMetricLabelSelectors } from './releasePlanSafeguardSchemaImpactMetricLabelSelectors.ts';
+import type { ReleasePlanSafeguardSchemaImpactMetricSource } from './releasePlanSafeguardSchemaImpactMetricSource.ts';
+import type { ReleasePlanSafeguardSchemaImpactMetricTimeRange } from './releasePlanSafeguardSchemaImpactMetricTimeRange.ts';
 
 /**
  * The metric configuration used to evaluate the safeguard condition.

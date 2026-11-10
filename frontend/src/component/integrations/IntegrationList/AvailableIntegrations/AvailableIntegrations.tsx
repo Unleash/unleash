@@ -9,6 +9,7 @@ import { OFFICIAL_SDKS } from './SDKs.ts';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { IntegrationProviderCards } from './IntegrationProviderCards.tsx';
 
 interface IAvailableIntegrationsProps {
     providers: AddonTypeSchema[];
@@ -67,7 +68,7 @@ export const AvailableIntegrations: FC<IAvailableIntegrationsProps> = ({
             <StyledSection>
                 <div>
                     <Typography component='h3' variant='h2'>
-                        Unleash crafted
+                        Official integrations
                     </Typography>
                     <Typography
                         variant='body2'
@@ -80,29 +81,7 @@ export const AvailableIntegrations: FC<IAvailableIntegrationsProps> = ({
                     </Typography>
                 </div>
                 <StyledCardsGrid>
-                    {filtered
-                        ?.sort(
-                            (a, b) =>
-                                a.displayName?.localeCompare(b.displayName) ||
-                                0,
-                        )
-                        .map(
-                            ({
-                                name,
-                                displayName,
-                                description,
-                                deprecated,
-                            }) => (
-                                <IntegrationCard
-                                    key={name}
-                                    icon={name}
-                                    title={displayName || name}
-                                    description={description}
-                                    link={`/integrations/create/${name}`}
-                                    deprecated={deprecated}
-                                />
-                            ),
-                        )}
+                    <IntegrationProviderCards providers={filtered} />
                     <ConditionallyRender
                         condition={isEnterprise() && signalsEnabled}
                         show={
@@ -189,7 +168,7 @@ export const AvailableIntegrations: FC<IAvailableIntegrationsProps> = ({
                 <StyledSdksSection>
                     <StyledSdksGroup>
                         <Box>
-                            <Typography component='h4' variant='h4'>
+                            <Typography component='h4' variant='h3'>
                                 Backend SDKs
                             </Typography>
                             <Typography
@@ -227,7 +206,7 @@ export const AvailableIntegrations: FC<IAvailableIntegrationsProps> = ({
                     </StyledSdksGroup>
                     <StyledSdksGroup>
                         <Box>
-                            <Typography component='h4' variant='h4'>
+                            <Typography component='h4' variant='h3'>
                                 Frontend SDKs
                             </Typography>
                             <Typography

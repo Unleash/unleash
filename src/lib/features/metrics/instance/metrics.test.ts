@@ -76,6 +76,28 @@ test('should validate client metrics', () => {
         .expect(400);
 });
 
+test('should reject an empty app name before registering the client instance', async () => {
+    const registerInstance = vi.spyOn(
+        services.clientInstanceService,
+        'registerInstance',
+    );
+
+    await request
+        .post('/api/client/metrics')
+        .send({
+            appName: '',
+            instanceId: 'invalid-instance',
+            bucket: {
+                start: Date.now(),
+                stop: Date.now(),
+                toggles: {},
+            },
+        })
+        .expect(400);
+
+    expect(registerInstance).not.toHaveBeenCalled();
+});
+
 test('should accept empty client metrics', () => {
     return request
         .post('/api/client/metrics')
@@ -265,6 +287,58 @@ test('should return 204 if metrics are disabled by feature flag', async () => {
 });
 
 describe('bulk metrics', () => {
+    test('still rejects bulk entries with a missing app name', async () => {
+        await request
+            .post('/api/client/metrics/bulk')
+            .send({
+                applications: [
+                    {
+                        instanceId: 'missing-app-name',
+                        environment: 'development',
+                    },
+                ],
+                metrics: [],
+            })
+            .expect(400);
+    });
+
+    test('ignores entries with empty app names while processing the rest of the payload', async () => {
+        await request
+            .post('/api/client/metrics/bulk')
+            .send({
+                applications: [
+                    {
+                        appName: '',
+                        instanceId: 'empty-app-name',
+                        environment: 'development',
+                    },
+                    {
+                        appName: 'valid-application',
+                        instanceId: 'valid-instance',
+                        environment: 'development',
+                        sdkVersion: 'unleash-client-js:1.0.0',
+                        sdkType: 'frontend',
+                    },
+                ],
+                metrics: [
+                    {
+                        featureName: 'ignored-metric',
+                        appName: '',
+                        environment: 'development',
+                        yes: 1,
+                        no: 0,
+                    },
+                ],
+            })
+            .expect(202);
+
+        await services.clientInstanceService.bulkAdd();
+
+        await expect(
+            services.clientInstanceService.getApplication('valid-application'),
+        ).resolves.toMatchObject({ appName: 'valid-application' });
+    });
+
     test('should separate frontend applications and backend applications', async () => {
         const frontendApp: BulkRegistrationSchema = {
             appName: 'application-name',
@@ -407,7 +481,10 @@ describe('bulk metrics', () => {
                         },
                         {
                             project: 'project-b',
-                            environments: ['production', 'development'],
+                            environments: expect.arrayContaining([
+                                'development',
+                                'production',
+                            ]),
                         },
                         {
                             project: 'project-c',
@@ -481,6 +558,51 @@ describe('bulk metrics', () => {
                 metrics: [],
             })
             .expect(202);
+    });
+
+    test('should mark seen tokens from bulk metrics', async () => {
+        const authed = await getSetup({
+            authentication: {
+                type: IAuthType.DEMO,
+                enableApiToken: true,
+            },
+            experimental: {
+                flags: {
+                    allowDeprecatedApiTokenMiddleware: true,
+                },
+            },
+        });
+        const upstreamToken =
+            await authed.services.apiTokenService.createApiTokenWithProjects({
+                tokenName: 'edge-upstream-token',
+                type: ApiTokenType.BACKEND,
+                environment: 'development',
+                projects: ['*'],
+            });
+        const sdkToken =
+            await authed.services.apiTokenService.createApiTokenWithProjects({
+                tokenName: 'edge-seen-token',
+                type: ApiTokenType.CLIENT,
+                environment: 'development',
+                projects: ['*'],
+            });
+        await authed.request
+            .post('/api/client/metrics/bulk')
+            .set('Authorization', upstreamToken.secret)
+            .send({
+                applications: [],
+                metrics: [],
+                seenTokens: [sdkToken.secret],
+            })
+            .expect(202);
+
+        await authed.services.apiTokenService.updateLastSeen();
+
+        const updatedToken = await authed.services.apiTokenService.getToken(
+            sdkToken.secret,
+        );
+        expect(updatedToken?.seenAt).toBeInstanceOf(Date);
+        await authed.destroy();
     });
 
     test('should validate bulk metrics data', async () => {

@@ -96,6 +96,7 @@ export const FeedbackCESForm = ({ state, onClose }: IFeedbackCESFormProps) => {
                         {state.text}
                     </StyledTextLabel>
                     <TextField
+                        id='comment'
                         value={form.comment ?? ''}
                         onChange={onCommentChange}
                         multiline

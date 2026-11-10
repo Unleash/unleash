@@ -3,11 +3,11 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { ClientMetricsSchemaBucketTogglesVariantsAnyOf } from './clientMetricsSchemaBucketTogglesVariantsAnyOf.ts';
 
 /**
  * An object describing how many times each variant was returned. Variant names are used as properties, and the number of times they were exposed is the corresponding value (i.e. `{ [variantName]: number }`).
  * @nullable
  */
-export type ClientMetricsSchemaBucketTogglesVariants = {
-    [key: string]: number;
-} | null;
+export type ClientMetricsSchemaBucketTogglesVariants =
+    ClientMetricsSchemaBucketTogglesVariantsAnyOf | null;

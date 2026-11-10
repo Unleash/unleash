@@ -1,10 +1,16 @@
 import { useState } from 'react';
-import { Accordion, AccordionDetails, Box, styled } from '@mui/material';
+import {
+    Accordion,
+    AccordionDetails,
+    Box,
+    Button,
+    styled,
+} from '@mui/material';
 import type {
     IFeatureEnvironment,
     IFeatureEnvironmentMetrics,
 } from 'interfaces/featureToggle';
-import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
+import { FeatureStrategyWizard } from 'component/feature/FeatureStrategy/FeatureStrategyWizard/FeatureStrategyWizard.tsx';
 import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { UpgradeChangeRequests } from './UpgradeChangeRequests/UpgradeChangeRequests.tsx';
@@ -17,8 +23,10 @@ import FeatureOverviewEnvironmentMetrics from './EnvironmentHeader/FeatureOvervi
 import { FeatureOverviewEnvironmentToggle } from './EnvironmentHeader/FeatureOverviewEnvironmentToggle/FeatureOverviewEnvironmentToggle.tsx';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import { EnvironmentAccordionBody } from './EnvironmentAccordionBody/EnvironmentAccordionBody.tsx';
-import type { StrategyFilterValue } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenuCards/FeatureStrategyMenuCards';
+import type { StrategySetupScreen } from 'component/feature/FeatureStrategy/strategyActionsTracking.ts';
 import { FeatureStrategyMenuButton } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenuButton.tsx';
+import { useEventTracker } from 'hooks/useEventTracker';
+import { TestConfigurationSidebar } from './TestConfiguration/TestConfigurationSidebar.tsx';
 
 const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -81,16 +89,20 @@ export const FeatureOverviewEnvironment = ({
             (environment?.releasePlans && environment?.releasePlans.length > 0),
     );
 
-    const [filter, setFilter] = useState<StrategyFilterValue>(null);
+    const [initialScreen, setInitialScreen] =
+        useState<StrategySetupScreen>('cards');
     const [isStrategyMenuDialogOpen, setIsStrategyMenuDialogOpen] =
         useState<boolean>(false);
+    const [isTestConfigurationOpen, setIsTestConfigurationOpen] =
+        useState<boolean>(false);
+    const { trackEvent } = useEventTracker();
 
     const dialogId = isStrategyMenuDialogOpen
         ? 'FeatureStrategyMenuDialog'
         : undefined;
 
     const openMoreStrategies = (_event: React.SyntheticEvent) => {
-        setFilter(null);
+        setInitialScreen('cards');
         setIsStrategyMenuDialogOpen(true);
     };
 
@@ -127,7 +139,7 @@ export const FeatureOverviewEnvironment = ({
                     onOpenReleaseTemplates={
                         isEnterprise()
                             ? () => {
-                                  setFilter('releaseTemplates');
+                                  setInitialScreen('templates');
                                   setIsStrategyMenuDialogOpen(true);
                               }
                             : undefined
@@ -146,15 +158,13 @@ export const FeatureOverviewEnvironment = ({
                                 onClick={openMoreStrategies}
                                 variant='outlined'
                             />
-                            <FeatureStrategyMenu
+                            <FeatureStrategyWizard
                                 projectId={projectId}
                                 featureId={featureId}
                                 environmentId={environment.name}
-                                isStrategyMenuDialogOpen={
-                                    isStrategyMenuDialogOpen
-                                }
+                                open={isStrategyMenuDialogOpen}
                                 onClose={onClose}
-                                defaultFilter={filter}
+                                initialScreen={initialScreen}
                             />
                         </>
                     ) : (
@@ -173,6 +183,22 @@ export const FeatureOverviewEnvironment = ({
                     </StyledEnvironmentAccordionContainer>
                     <StyledAccordionFooter>
                         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                            <Button
+                                variant='outlined'
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    trackEvent('playground', {
+                                        props: {
+                                            eventType:
+                                                'test-configuration-opened',
+                                            environment: environment.name,
+                                        },
+                                    });
+                                    setIsTestConfigurationOpen(true);
+                                }}
+                            >
+                                Try configuration
+                            </Button>
                             <Box
                                 sx={{
                                     ml: 'auto',
@@ -186,15 +212,13 @@ export const FeatureOverviewEnvironment = ({
                                     onClick={openMoreStrategies}
                                     variant='outlined'
                                 />
-                                <FeatureStrategyMenu
+                                <FeatureStrategyWizard
                                     projectId={projectId}
                                     featureId={featureId}
                                     environmentId={environment.name}
-                                    isStrategyMenuDialogOpen={
-                                        isStrategyMenuDialogOpen
-                                    }
+                                    open={isStrategyMenuDialogOpen}
                                     onClose={onClose}
-                                    defaultFilter={filter}
+                                    initialScreen={initialScreen}
                                 />
                             </Box>
                         </Box>
@@ -204,6 +228,14 @@ export const FeatureOverviewEnvironment = ({
                     </StyledAccordionFooter>
                 </NewStyledAccordionDetails>
             </StyledAccordion>
+            <TestConfigurationSidebar
+                open={isTestConfigurationOpen}
+                onClose={() => setIsTestConfigurationOpen(false)}
+                projectId={projectId}
+                featureId={featureId}
+                environmentId={environment.name}
+                strategies={environment.strategies}
+            />
         </StyledFeatureOverviewEnvironment>
     );
 };

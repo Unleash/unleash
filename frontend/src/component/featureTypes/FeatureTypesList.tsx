@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router';
 import {
     type ColumnDef,
     flexRender,

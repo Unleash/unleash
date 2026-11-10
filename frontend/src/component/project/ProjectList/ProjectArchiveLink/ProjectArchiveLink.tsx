@@ -6,7 +6,7 @@ import {
     useTheme,
 } from '@mui/material';
 import ArchiveIcon from '@mui/icons-material/Inventory2Outlined';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import type { FC } from 'react';
 

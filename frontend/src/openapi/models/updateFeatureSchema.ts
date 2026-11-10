@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UpdateFeatureSchemaType } from './updateFeatureSchemaType';
+import type { UpdateFeatureSchemaType } from './updateFeatureSchemaType.ts';
 
 /**
  * Data used for updating a feature flag
@@ -17,6 +17,6 @@ export interface UpdateFeatureSchema {
     impressionData?: boolean;
     /** `true` if the feature is archived */
     stale?: boolean;
-    /** Type of the flag e.g. experiment, kill-switch, release, operational, permission */
+    /** Type of the flag e.g. experiment, kill-switch, release, operational, permission, sunset */
     type?: UpdateFeatureSchemaType;
 }

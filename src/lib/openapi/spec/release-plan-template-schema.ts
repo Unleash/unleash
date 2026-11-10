@@ -40,6 +40,13 @@ export const releasePlanTemplateSchema = {
             example: 'This is my release plan',
             nullable: true,
         },
+        project: {
+            type: 'string',
+            description:
+                'The project this release template belongs to. `null` for global release templates available in all projects.',
+            example: 'my-project',
+            nullable: true,
+        },
         createdByUserId: {
             type: 'number',
             description:

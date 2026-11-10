@@ -59,6 +59,7 @@ export default class EventSearchController extends Controller {
             permission: NONE,
             middleware: [
                 openApiService.validPath({
+                    release: { stable: '4.14.3' },
                     operationId: 'searchEvents',
                     tags: ['Events'],
                     summary: 'Search for events',

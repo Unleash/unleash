@@ -15,7 +15,7 @@ const BaseButton = styled('button', {
 })<{ selected?: boolean }>(({ theme, selected }) => ({
     cursor: 'pointer',
     border: 'none',
-    backgroundColor: selected ? theme.palette.secondary.light : 'inherit',
+    backgroundColor: selected ? theme.palette.primary.container : 'inherit',
     fontSize: theme.typography.body1.fontSize,
     padding: theme.spacing(0.5),
     borderRadius: theme.shape.borderRadius,
@@ -163,7 +163,6 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
             <SelectorDropdownButton
                 endIcon={open ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
                 variant='outlined'
-                disableRipple
                 onClick={() => setOpen(true)}
             >
                 {buttonText}

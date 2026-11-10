@@ -27,23 +27,11 @@ export const clientFeatureSchema = {
                 'What kind of feature flag is this. Refer to the documentation on [feature flag types](https://docs.getunleash.io/concepts/feature-flags#feature-flag-types) for more information',
             example: 'release',
         },
-        description: {
-            type: 'string',
-            description: 'A description of the flag',
-            nullable: true,
-            example: 'No variants here',
-        },
         enabled: {
             type: 'boolean',
             description:
                 'Whether the feature flag is enabled for the current API key or not. This is ANDed with the evaluation results of the strategies list, so if this is false, the evaluation result will always be false',
             example: true,
-        },
-        stale: {
-            description:
-                'If this is true Unleash believes this feature flag has been active longer than Unleash expects a flag of this type to be active',
-            type: 'boolean',
-            example: false,
         },
         impressionData: {
             description:

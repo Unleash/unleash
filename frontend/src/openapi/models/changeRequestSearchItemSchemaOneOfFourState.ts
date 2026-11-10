@@ -10,7 +10,6 @@
 export type ChangeRequestSearchItemSchemaOneOfFourState =
     (typeof ChangeRequestSearchItemSchemaOneOfFourState)[keyof typeof ChangeRequestSearchItemSchemaOneOfFourState];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestSearchItemSchemaOneOfFourState = {
     Scheduled: 'Scheduled',
 } as const;

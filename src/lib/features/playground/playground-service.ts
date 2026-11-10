@@ -1,9 +1,7 @@
 import type { FeatureToggleService } from '../feature-toggle/feature-toggle-service.js';
 import type { SdkContextSchema } from '../../openapi/spec/sdk-context-schema.js';
-import type { IUnleashServices } from '../../services/index.js';
 import { ALL } from '../../types/models/api-token.js';
 import type { PlaygroundFeatureSchema } from '../../openapi/spec/playground-feature-schema.js';
-import type { Logger } from '../../logger.js';
 import type {
     IFlagResolver,
     ISegment,
@@ -17,7 +15,11 @@ import type {
     FeatureStrategiesEvaluationResult,
 } from '../../features/playground/feature-evaluator/client.js';
 import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
-import { generateObjectCombinations } from './generateObjectCombinations.js';
+import {
+    countCombinations,
+    generateCombinations,
+    splitByComma,
+} from './generateObjectCombinations.js';
 import groupBy from 'lodash.groupby';
 import { omitKeys } from '../../util/index.js';
 import type {
@@ -25,10 +27,15 @@ import type {
     playgroundStrategyEvaluation,
 } from '../../openapi/index.js';
 import type { AdvancedPlaygroundEnvironmentFeatureSchema } from '../../openapi/spec/advanced-playground-environment-feature-schema.js';
-import { validateQueryComplexity } from './validateQueryComplexity.js';
+import {
+    validateContextComplexity,
+    validateQueryComplexity,
+} from './validateQueryComplexity.js';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
-import { getDefaultVariant } from './feature-evaluator/variant.js';
+import { defaultVariant } from 'unleash-client/lib/variant.js';
 import { cleanContext } from './clean-context.js';
+import { NotFoundError } from '../../error/index.js';
+import type { IPlaygroundReadModel } from './playground-read-model-type.js';
 
 type EvaluationInput = {
     features: FeatureConfigurationClient[];
@@ -69,9 +76,10 @@ export type PlaygroundFeatureEvaluationResult = Omit<
 };
 
 export class PlaygroundService {
-    private readonly logger: Logger;
-
-    private readonly featureToggleService: FeatureToggleService;
+    private readonly featureToggleService: Pick<
+        FeatureToggleService,
+        'getPlaygroundFeatures'
+    >;
 
     private readonly flagResolver: IFlagResolver;
 
@@ -79,22 +87,29 @@ export class PlaygroundService {
 
     private readonly segmentReadModel: ISegmentReadModel;
 
+    private readonly playgroundReadModel: IPlaygroundReadModel;
+
     constructor(
         config: IUnleashConfig,
         {
             featureToggleService,
             privateProjectChecker,
-        }: Pick<
-            IUnleashServices,
-            'featureToggleService' | 'privateProjectChecker'
-        >,
+            playgroundReadModel,
+        }: {
+            featureToggleService: Pick<
+                FeatureToggleService,
+                'getPlaygroundFeatures'
+            >;
+            privateProjectChecker: IPrivateProjectChecker;
+            playgroundReadModel: IPlaygroundReadModel;
+        },
         segmentReadModel: ISegmentReadModel,
     ) {
-        this.logger = config.getLogger('services/playground-service.ts');
         this.flagResolver = config.flagResolver;
         this.featureToggleService = featureToggleService;
         this.privateProjectChecker = privateProjectChecker;
         this.segmentReadModel = segmentReadModel;
+        this.playgroundReadModel = playgroundReadModel;
     }
 
     async evaluateAdvancedQuery(
@@ -116,19 +131,10 @@ export class PlaygroundService {
 
         const segments = await this.segmentReadModel.getActive();
 
-        let filteredProjects: typeof projects = projects;
-
-        const projectAccess =
-            await this.privateProjectChecker.getUserAccessibleProjects(userId);
-        if (projectAccess.mode === 'all') {
-            filteredProjects = projects;
-        } else if (projects === ALL) {
-            filteredProjects = projectAccess.projects;
-        } else {
-            filteredProjects = projects.filter((project) =>
-                projectAccess.projects.includes(project),
-            );
-        }
+        const filteredProjects = await this.filterAccessibleProjects(
+            projects,
+            userId,
+        );
 
         const environmentFeatures = await Promise.all(
             environments.map((env) =>
@@ -138,14 +144,16 @@ export class PlaygroundService {
 
         const { context: cleanedContext, removedProperties } =
             cleanContext(context);
-        const contexts = generateObjectCombinations(cleanedContext);
-
+        const contextDimensions = splitByComma(cleanedContext);
+        const contextCombinationsCount = countCombinations(contextDimensions);
+        validateContextComplexity(contextCombinationsCount, limit);
         validateQueryComplexity(
             environments.length,
             environmentFeatures[0]?.features.length ?? 0,
-            contexts.length,
+            contextCombinationsCount,
             limit,
         );
+        const contexts = generateCombinations(contextDimensions);
 
         const results = await Promise.all(
             environmentFeatures.flatMap(
@@ -181,6 +189,23 @@ export class PlaygroundService {
         };
     }
 
+    private async filterAccessibleProjects(
+        projects: typeof ALL | string[],
+        userId: number,
+    ): Promise<typeof ALL | string[]> {
+        const projectAccess =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+        if (projectAccess.mode === 'all') {
+            return projects;
+        }
+        if (projects === ALL) {
+            return projectAccess.projects;
+        }
+        return projects.filter((project) =>
+            projectAccess.projects.includes(project),
+        );
+    }
+
     private async evaluate({
         featureProject,
         features,
@@ -194,10 +219,9 @@ export class PlaygroundService {
         if (!head) {
             return [];
         } else {
-            const client = await offlineUnleashClient({
+            const client = offlineUnleashClient({
                 features: [head, ...rest],
                 context,
-                logError: this.logger.error,
                 segments,
             });
 
@@ -233,7 +257,7 @@ export class PlaygroundService {
                                   strategyEvaluationResult,
                                   clientContext,
                               )
-                            : getDefaultVariant()),
+                            : defaultVariant),
                         feature_enabled: isEnabled,
                     };
 
@@ -282,13 +306,67 @@ export class PlaygroundService {
         return { features, featureProject, environment };
     }
 
+    async evaluateFeature(
+        featureName: string,
+        environment: string,
+        context: SdkContextSchema,
+        userId: number,
+    ): Promise<PlaygroundFeatureEvaluationResult> {
+        const notFound = new NotFoundError(
+            `Could not find feature flag ${featureName}`,
+        );
+
+        const [features, segments] = await Promise.all([
+            this.playgroundReadModel.getFeatureWithParents(
+                featureName,
+                environment,
+            ),
+            this.segmentReadModel.getActive(),
+        ]);
+
+        const target = features.find(({ name }) => name === featureName);
+        if (
+            !target ||
+            !(await this.privateProjectChecker.hasAccessToProject(
+                userId,
+                target.project,
+            ))
+        ) {
+            throw notFound;
+        }
+
+        const featureProject = Object.fromEntries(
+            features.map(({ name, project }) => [name, project]),
+        );
+
+        const result = await this.evaluate({
+            features,
+            featureProject,
+            segments,
+            context,
+            environment,
+        });
+
+        const evaluated = result.find(({ name }) => name === featureName);
+        if (!evaluated) {
+            throw notFound;
+        }
+
+        return omitKeys(evaluated, 'environment', 'context');
+    }
+
     async evaluateQuery(
         projects: typeof ALL | string[],
         environment: string,
         context: SdkContextSchema,
+        userId: number,
     ): Promise<PlaygroundFeatureEvaluationResult[]> {
+        const filteredProjects = await this.filterAccessibleProjects(
+            projects,
+            userId,
+        );
         const [{ features, featureProject }, segments] = await Promise.all([
-            this.resolveFeatures(projects, environment),
+            this.resolveFeatures(filteredProjects, environment),
             this.segmentReadModel.getActive(),
         ]);
 

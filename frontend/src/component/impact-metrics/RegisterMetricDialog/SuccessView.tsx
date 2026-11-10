@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import CodeIcon from '@mui/icons-material/Code';
 import { useTrackRegisterImpactMetrics } from './useTrackRegisterImpactMetrics';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useCheckMetricAvailable } from './useCheckMetricAvailable';
 
 type SuccessViewProps = {

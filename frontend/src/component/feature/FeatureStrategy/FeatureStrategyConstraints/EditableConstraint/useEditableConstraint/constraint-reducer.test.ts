@@ -108,10 +108,9 @@ describe('changing context field', () => {
     test.each([
         ['multi-value', multiValueConstraint],
         ['single-value', singleValueConstraint],
-    ])('changing context field to currentTime from a %s constraint sets the current time as the value', (_, constraint) => {
-        const now = new Date();
+    ])('changing context field to currentTime from a %s constraint sets DATE_AFTER with an empty value', (_, constraint) => {
         const input = { ...constraint, contextName: 'field-a' };
-        const { value, ...result } = constraintReducer(input, {
+        const result = constraintReducer(input, {
             type: 'set context field',
             payload: 'currentTime',
         }) as Extractable;
@@ -120,10 +119,8 @@ describe('changing context field', () => {
             ...inputBody,
             contextName: 'currentTime',
             operator: DATE_AFTER,
+            value: '',
         });
-        expect(new Date(value as string).getTime()).toBeGreaterThanOrEqual(
-            now.getTime(),
-        );
     });
     test('changing context field from currentTime to something else sets a default operator', () => {
         const input = dateConstraint;
@@ -502,6 +499,48 @@ describe('removing / clearing values', () => {
         });
     });
 });
+describe('deleted legal values update', () => {
+    test('returns the same state reference when the set is unchanged (prevents infinite update loop)', () => {
+        const input = {
+            ...multiValueConstraint,
+            deletedLegalValues: new Set(['A']),
+        };
+        const output = constraintReducer(input, {
+            type: 'deleted legal values update',
+            payload: new Set(['A']),
+        });
+        expect(output).toBe(input);
+    });
+
+    test('treats undefined and empty set as the same', () => {
+        const input = multiValueConstraint;
+        const output = constraintReducer(input, {
+            type: 'deleted legal values update',
+            payload: new Set(),
+        });
+        expect(output).toBe(input);
+
+        const withUndefinedPayload = constraintReducer(input, {
+            type: 'deleted legal values update',
+        });
+        expect(withUndefinedPayload).toBe(input);
+    });
+
+    test('returns a new state when the set actually changes', () => {
+        const input = {
+            ...multiValueConstraint,
+            deletedLegalValues: new Set(['A']),
+        };
+        const payload = new Set(['A', 'B']);
+        const output = constraintReducer(input, {
+            type: 'deleted legal values update',
+            payload,
+        });
+        expect(output).not.toBe(input);
+        expect(output.deletedLegalValues).toBe(payload);
+    });
+});
+
 describe('toggle options', () => {
     const stateTransitions = [
         [undefined, true],

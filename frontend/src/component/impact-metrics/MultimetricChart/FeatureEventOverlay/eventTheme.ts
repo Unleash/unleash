@@ -24,5 +24,5 @@ export const EVENT_TYPE_LABEL: Record<MultimetricFeatureEvent['type'], string> =
 export type EventGroup = {
     /** Position along the x-axis as a percent of the visible range. */
     pct: number;
-    events: MultimetricFeatureEvent[];
+    events: [MultimetricFeatureEvent, ...MultimetricFeatureEvent[]];
 };

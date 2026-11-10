@@ -1,5 +1,5 @@
 import type { ComponentType, ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { ProjectCard as DefaultProjectCard } from '../ProjectCard/ProjectCard.tsx';
 import { loadingData } from './loadingData.ts';
 import { styled } from '@mui/material';
@@ -7,7 +7,7 @@ import { UpgradeProjectCard } from '../ProjectCard/UpgradeProjectCard.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type { ProjectsListView } from './hooks/useProjectsListState.ts';
 import { ProjectsListTable } from './ProjectsListTable/ProjectsListTable.tsx';
-import type { ProjectListItem } from 'hooks/api/getters/useProjects/useProjects.ts';
+import type { ProjectSchema } from 'openapi';
 
 const StyledGridContainer = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -29,10 +29,10 @@ type ProjectGroupProps = {
     sectionTitle?: string;
     sectionSubtitle?: string;
     HeaderActions?: ReactNode;
-    projects: ProjectListItem[];
+    projects: ProjectSchema[];
     loading: boolean;
     placeholder?: string;
-    ProjectCardComponent?: ComponentType<ProjectListItem & any>;
+    ProjectCardComponent?: ComponentType<ProjectSchema & any>;
     link?: boolean;
     view?: ProjectsListView;
 };

@@ -37,8 +37,10 @@ export const usePlaceholderData = (
                               data: [
                                   3, 5, 4, 6, 2, 7, 5, 3, 8, 3, 5, 11, 8, 4, 3,
                               ],
-                              borderColor: theme.palette.warning.border,
-                              backgroundColor: theme.palette.warning.border,
+                              borderColor:
+                                  theme.palette.warning.containerBorder,
+                              backgroundColor:
+                                  theme.palette.warning.containerBorder,
                           },
                       ]
                     : [

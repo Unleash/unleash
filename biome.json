@@ -91,7 +91,25 @@
     },
     {
       "includes": [
-        "frontend/src/component/App.tsx",
+        "frontend/src/**",
+        "!frontend/src/component/common/GeneralSelect/**",
+        "!frontend/src/component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/LegacyConstraintOperatorSelect.tsx"
+      ],
+      "plugins": ["./floating-label.grit"]
+    },
+    {
+      "includes": ["frontend/src/**"],
+      "plugins": ["./tracking-shape.grit"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noNodejsModules": "error"
+          }
+        }
+      }
+    },
+    {
+      "includes": [
         "frontend/src/component/InitialRedirect.tsx",
         "frontend/src/component/admin/banners/BannerModal/BannerModal.tsx",
         "frontend/src/component/admin/banners/BannersTable/BannersTable.tsx",
@@ -105,6 +123,7 @@
         "frontend/src/component/admin/users/UsersList/AccessRequestsTable/AccessRequestsTable.tsx",
         "frontend/src/component/admin/users/hooks/useAddUserForm.ts",
         "frontend/src/component/admin/users/UsersList/UsersList.tsx",
+        "frontend/src/component/admin/users/UsersList/UsersListDeprecated.tsx",
         "frontend/src/component/application/ConnectedInstances/ConnectedInstances.tsx",
         "frontend/src/component/changeRequest/ChangeRequest/Changes/Change/EditChange.tsx",
         "frontend/src/component/commandBar/RecentlyVisitedRecorder.tsx",
@@ -121,7 +140,8 @@
         "frontend/src/component/admin/serviceAccounts/ServiceAccountsTable/ServiceAccountModal/ServiceAccountTokens/ServiceAccountTokens.tsx",
         "frontend/src/component/admin/users/AccessOverview/AccessOverview.tsx",
         "frontend/src/component/admin/users/AutoCreateDomainUsersToggle.tsx",
-        "frontend/src/component/admin/users/InactiveUsersList/InactiveUsersList.tsx",
+        "frontend/src/component/admin/users/InactiveUsersList/InactiveUsersListDeprecated.tsx",
+        "frontend/src/component/admin/users/InactiveUsersList/InactiveUsersListBody.tsx",
         "frontend/src/component/application/ApplicationChart.tsx",
         "frontend/src/component/application/ApplicationOverview.tsx",
         "frontend/src/component/commandBar/CommandBar.tsx",
@@ -140,7 +160,7 @@
         "frontend/src/component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate.tsx",
         "frontend/src/component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit.tsx",
         "frontend/src/component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm.tsx",
-        "frontend/src/component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBody.tsx",
+        "frontend/src/component/feature/FeatureStrategy/FeatureStrategyForm/LegacyStrategyFormBody.tsx",
         "frontend/src/component/feature/FeatureToggleList/FeatureToggleListTable.tsx",
         "frontend/src/component/feature/FeatureToggleList/FeaturesOverviewLifecycleFilters/FeaturesOverviewToggleFilters.tsx",
         "frontend/src/component/feature/FeatureView/FeatureMetrics/FeatureExposureMetrics.tsx",
@@ -160,10 +180,7 @@
         "frontend/src/component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx",
         "frontend/src/component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm.tsx",
         "frontend/src/component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/FeatureEnvironmentVariants.tsx",
-        "frontend/src/component/feature/StrategyTypes/NewStrategyVariants.tsx",
-        "frontend/src/component/feature/StrategyTypes/StrategyVariants.tsx",
-        "frontend/src/component/feedback/FeedbackCESContext/FeedbackCESProvider.tsx",
-        "frontend/src/component/filter/FilterItem/FilterItem.tsx",
+        "frontend/src/component/feature/StrategyTypes/LegacyStrategyVariants.tsx",
         "frontend/src/component/filter/Filters/Filters.tsx",
         "frontend/src/component/impact-metrics/ImpactMetrics.tsx",
         "frontend/src/component/impact-metrics/MultimetricChart/useChartPlotArea.ts",
@@ -172,7 +189,6 @@
         "frontend/src/component/impact-metrics/hooks/useImpactMetricsState.ts",
         "frontend/src/component/insights/InsightsFilters.tsx",
         "frontend/src/component/insights/components/LifecycleChart/LifecycleChartComponent.tsx",
-        "frontend/src/component/insights/components/LineChart/LineChartComponent.tsx",
         "frontend/src/component/insights/componentsChart/CreationArchiveChart/CreationArchiveChart.tsx",
         "frontend/src/component/insights/componentsChart/MetricsSummaryChart/MetricsSummaryChart.tsx",
         "frontend/src/component/insights/componentsChart/NewProductionFlagsChart/useNewProductionFlagsData.ts",
@@ -184,7 +200,6 @@
         "frontend/src/component/insights/hooks/useInsightsData.ts",
         "frontend/src/component/insights/hooks/usePlaceholderData.ts",
         "frontend/src/component/insights/hooks/useProjectChartData.ts",
-        "frontend/src/component/integrations/IntegrationForm/IntegrationForm.tsx",
         "frontend/src/component/integrations/IntegrationList/IntegrationCard/IntegrationCardMenu/IntegrationCardMenu.tsx",
         "frontend/src/component/layout/Error/LayoutError.tsx",
         "frontend/src/component/layout/MainLayout/AdminMenu/AdminNavigationItems.tsx",
@@ -198,7 +213,6 @@
         "frontend/src/component/playground/Playground/AdvancedPlaygroundResultsTable/AdvancedPlaygroundResultsTable.tsx",
         "frontend/src/component/playground/Playground/PlaygroundEnvironmentTable/PlaygroundEnvironmentDiffTable.tsx",
         "frontend/src/component/playground/Playground/PlaygroundEnvironmentTable/PlaygroundEnvironmentTable.tsx",
-        "frontend/src/component/playground/Playground/PlaygroundForm/PlaygroundCodeFieldset/PlaygroundCodeFieldset.tsx",
         "frontend/src/component/project/Project/CreateProject/CreateProjectForm/ConfigButtons/ChangeRequestTable.tsx",
         "frontend/src/component/project/Project/CreateProject/CreateProjectForm/LegacyCreateProjectDialog.tsx",
         "frontend/src/component/project/Project/Import/ImportModal.tsx",
@@ -265,7 +279,6 @@
         "frontend/src/hooks/useCollaborateData.tsx",
         "frontend/src/hooks/useConditionallyHiddenColumns.ts",
         "frontend/src/hooks/useDragItem.ts",
-        "frontend/src/hooks/useFormErrors.ts",
         "frontend/src/hooks/useHighestPermissionChangeRequestEnvironment.ts",
         "frontend/src/hooks/useLastViewedFlags.ts",
         "frontend/src/hooks/usePagination.ts",

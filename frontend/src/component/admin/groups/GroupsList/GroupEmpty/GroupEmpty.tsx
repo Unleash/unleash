@@ -1,5 +1,5 @@
 import { Button, styled, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 export const GroupEmpty = () => {
     const StyledContainerDiv = styled('div')(({ theme }) => ({

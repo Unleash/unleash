@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ReleasePlanSchema } from './releasePlanSchema';
+import type { ReleasePlanSchema } from './releasePlanSchema.ts';
 
 /**
  * A collection of release plans

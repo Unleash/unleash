@@ -1,10 +1,10 @@
-import type User from '../../lib/types/user.js';
-import type { IUser } from '../../lib/types/user.js';
+import type { IUser, User } from '../../lib/types/user.js';
 import type {
     ICreateUser,
     IUserLookup,
     IUserStore,
 } from '../../lib/types/stores/user-store.js';
+import { subDays } from 'date-fns';
 
 class UserStoreMock implements IUserStore {
     data: IUser[];
@@ -88,6 +88,22 @@ class UserStoreMock implements IUserStore {
             return o;
         });
         return Promise.resolve(user);
+    }
+
+    deleteInactiveUsers(
+        numberOfDaysToBeInactive: number,
+        excludedUserId: number,
+    ): Promise<IUser[]> {
+        const inactiveCutoff = subDays(new Date(), numberOfDaysToBeInactive);
+        this.data = this.data.filter((o) => {
+            return (
+                o.id === excludedUserId ||
+                ((o.seenAt === undefined || o.seenAt >= inactiveCutoff) &&
+                    (o.createdAt === undefined ||
+                        o.createdAt >= inactiveCutoff))
+            );
+        });
+        return Promise.resolve([]);
     }
 
     async getByQuery({ id, username, email }: IUserLookup): Promise<IUser> {

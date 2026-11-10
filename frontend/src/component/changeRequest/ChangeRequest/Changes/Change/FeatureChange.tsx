@@ -12,7 +12,7 @@ import { VariantPatch } from './VariantPatch/VariantPatch.tsx';
 import { EnvironmentStrategyExecutionOrder } from './EnvironmentStrategyExecutionOrder/EnvironmentStrategyExecutionOrder.tsx';
 import { ArchiveFeatureChange } from './ArchiveFeatureChange.tsx';
 import { DependencyChange } from './DependencyChange.tsx';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import {
     ReleasePlanChange,
     isConsolidatedMilestoneAction,
@@ -26,10 +26,10 @@ const StyledSingleChangeBox = styled(Box)(({ theme }) => ({
     borderBottomWidth: 0,
     borderRadius: 0,
     '&[data-conflict="change"]': {
-        borderColor: theme.palette.warning.border,
+        borderColor: theme.palette.warning.containerBorder,
     },
     '[data-conflict="change"] + &': {
-        borderTopColor: theme.palette.warning.border,
+        borderTopColor: theme.palette.warning.containerBorder,
     },
     '[data-conflict="feature"] &': {
         borderTopColor: theme.palette.divider,

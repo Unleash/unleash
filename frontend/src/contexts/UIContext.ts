@@ -6,11 +6,13 @@ interface IUIContext {
     setToast: React.Dispatch<React.SetStateAction<IToast>>;
     showFeedback: boolean;
     setShowFeedback: React.Dispatch<React.SetStateAction<boolean>>;
+    surveyVisible: boolean;
+    setSurveyVisible: React.Dispatch<React.SetStateAction<boolean>>;
     setThemeMode: React.Dispatch<React.SetStateAction<themeMode>>;
     themeMode: themeMode;
 }
 
-export type themeMode = 'light' | 'dark';
+export type themeMode = 'light' | 'dark' | 'system';
 
 export const createEmptyToast = (): IToast => {
     return {
@@ -30,6 +32,10 @@ const setShowFeedbackPlaceholder = () => {
     throw new Error('setShowFeedback called outside UIContext');
 };
 
+const setSurveyVisiblePlaceholder = () => {
+    throw new Error('setSurveyVisible called outside UIContext');
+};
+
 const setThemeModePlaceholder = () => {
     throw new Error('setMode called outside UIContext');
 };
@@ -39,6 +45,8 @@ const UIContext = React.createContext<IUIContext>({
     setToast: setToastPlaceholder,
     showFeedback: false,
     setShowFeedback: setShowFeedbackPlaceholder,
+    surveyVisible: false,
+    setSurveyVisible: setSurveyVisiblePlaceholder,
     themeMode: 'light',
     setThemeMode: setThemeModePlaceholder,
 });

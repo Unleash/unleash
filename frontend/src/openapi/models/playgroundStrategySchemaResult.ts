@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PlaygroundStrategySchemaResultAnyOf } from './playgroundStrategySchemaResultAnyOf';
-import type { PlaygroundStrategySchemaResultAnyOfFour } from './playgroundStrategySchemaResultAnyOfFour';
+import type { PlaygroundStrategySchemaResultAnyOf } from './playgroundStrategySchemaResultAnyOf.ts';
+import type { PlaygroundStrategySchemaResultAnyOfFour } from './playgroundStrategySchemaResultAnyOfFour.ts';
 
 /**
  * The strategy's evaluation result. If the strategy is a custom strategy that Unleash can't evaluate, `evaluationStatus` will be `unknown`. Otherwise, it will be `true` or `false`

@@ -1,12 +1,13 @@
 import {
+    useEffect,
     useState,
     type FormEventHandler,
     type ChangeEventHandler,
 } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useTracking } from 'hooks/useTracking';
+import { Link, useNavigate } from 'react-router';
 import {
     Button,
-    TextField,
     Switch,
     Paper,
     FormControlLabel,
@@ -24,6 +25,8 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { FeatureNamingPatternInfo } from '../FeatureNamingPatternInfo/FeatureNamingPatternInfo.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import Input from 'component/common/Input/Input.tsx';
+import { cloneFlagTracking } from 'component/feature/flagActionsTracking';
 
 const StyledPage = styled(Paper)(({ theme }) => ({
     overflow: 'visible',
@@ -72,6 +75,10 @@ export const CopyFeatureToggle = () => {
     const [nameError, setNameError] = useState<string | undefined>();
     const [newToggleName, setnewToggleName] = useState<string>();
     const { cloneFeatureToggle, validateFeatureToggleName } = useFeatureApi();
+    const trackCloneFlag = useTracking(cloneFlagTracking);
+    useEffect(() => {
+        trackCloneFlag('opened');
+    }, [trackCloneFlag]);
     const featureId = useRequiredPathParam('featureId');
     const projectId = useRequiredPathParam('projectId');
     const { feature } = useFeature(projectId, featureId);
@@ -116,10 +123,14 @@ export const CopyFeatureToggle = () => {
         }
 
         try {
-            await cloneFeatureToggle(projectId, featureId, {
-                name: newToggleName as string,
-                replaceGroupId,
-            });
+            await trackCloneFlag.mutation(
+                () =>
+                    cloneFeatureToggle(projectId, featureId, {
+                        name: newToggleName as string,
+                        replaceGroupId,
+                    }),
+                { replaceGroupId },
+            );
             navigate(getTogglePath(projectId, newToggleName as string));
         } catch (error) {
             setApiError(formatUnknownError(error));
@@ -179,7 +190,8 @@ export const CopyFeatureToggle = () => {
                     }
                 />
                 <StyledForm onSubmit={onSubmit}>
-                    <TextField
+                    <Input
+                        fullWidth
                         label='Name'
                         name='name'
                         value={newToggleName || ''}
@@ -187,8 +199,7 @@ export const CopyFeatureToggle = () => {
                         onChange={setValue}
                         error={nameError !== undefined}
                         helperText={nameError}
-                        variant='outlined'
-                        size='small'
+                        size='large'
                         aria-required
                         aria-details={
                             displayFeatureNamingInfo

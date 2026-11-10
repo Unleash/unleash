@@ -110,9 +110,6 @@ export const SignalEndpointsForm = ({
                     Signal endpoint status
                 </FormSwitch>
             </StyledRaisedSection>
-            <StyledInputDescription>
-                What is your new signal endpoint name?
-            </StyledInputDescription>
             <StyledInput
                 autoFocus
                 label='Signal endpoint name'
@@ -126,9 +123,6 @@ export const SignalEndpointsForm = ({
                 onBlur={(e) => handleOnBlur(() => validateName(e.target.value))}
                 autoComplete='off'
             />
-            <StyledInputDescription>
-                What is your new signal endpoint description?
-            </StyledInputDescription>
             <StyledInput
                 label='Signal endpoint description'
                 value={description}
@@ -194,9 +188,6 @@ export const SignalEndpointsForm = ({
                                 }
                                 show={
                                     <>
-                                        <StyledInputSecondaryDescription>
-                                            What is your new token name?
-                                        </StyledInputSecondaryDescription>
                                         <StyledInput
                                             autoFocus
                                             label='Token name'

@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { FeatureOverviewEnvironment } from './FeatureOverviewEnvironment.tsx';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import userEvent from '@testing-library/user-event';
@@ -70,6 +70,25 @@ const setupOssEndpoints = () => {
             },
         ],
     });
+};
+
+const setupTryConfigurationEndpoints = () => {
+    setupOssEndpoints();
+    testServerRoute(server, '/api/admin/context', [{ name: 'appName' }]);
+};
+
+const environmentWithActivations = {
+    name: 'production',
+    enabled: true,
+    type: 'production',
+    strategies: [
+        {
+            id: '1',
+            name: 'flexibleRollout',
+            parameters: {},
+            constraints: [],
+        },
+    ],
 };
 
 describe('FeatureOverviewEnvironment', () => {
@@ -217,7 +236,7 @@ describe('FeatureOverviewEnvironment', () => {
         ).not.toBeInTheDocument();
     });
 
-    test('opens strategy menu dialog with release templates filter when clicking release template suggestion', async () => {
+    test('opens the strategy dialog on the template screen when clicking release template suggestion', async () => {
         const user = userEvent.setup();
         setupEnterpriseEndpoints();
         renderRoute(
@@ -236,11 +255,31 @@ describe('FeatureOverviewEnvironment', () => {
             'Choose a release template',
         );
         await user.click(releaseTemplateButton);
-        const releaseTemplatesFilter = screen.queryByRole('button', {
-            name: /release templates/i,
-        });
 
-        expect(releaseTemplatesFilter).toBeInTheDocument();
-        expect(releaseTemplatesFilter).toHaveAttribute('aria-pressed', 'true');
+        expect(
+            await screen.findByRole('heading', { name: 'Select template' }),
+        ).toBeInTheDocument();
+    });
+
+    describe('Try configuration', () => {
+        test('opens the drawer', async () => {
+            setupTryConfigurationEndpoints();
+            const user = userEvent.setup();
+            renderRoute(
+                <FeatureOverviewEnvironment
+                    environment={environmentWithActivations}
+                />,
+                [{ permission: CREATE_FEATURE_STRATEGY }],
+            );
+
+            await user.click(await screen.findByText('production'));
+            await user.click(await screen.findByText('Try configuration'));
+
+            expect(
+                await screen.findByRole('heading', {
+                    name: 'Try configuration',
+                }),
+            ).toBeInTheDocument();
+        });
     });
 });

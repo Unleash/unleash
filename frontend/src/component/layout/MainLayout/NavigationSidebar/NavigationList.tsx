@@ -13,9 +13,8 @@ import { useNewAdminMenu } from 'hooks/useNewAdminMenu';
 import { AdminMenuNavigation } from '../AdminMenu/AdminNavigationItems.tsx';
 import { ConfigurationAccordion } from './ConfigurationAccordion.tsx';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
-import { NewFeatureBadge } from 'component/layout/components/NewFeatureBadge/NewFeatureBadge.tsx';
 import { Badge } from 'component/common/Badge/Badge.tsx';
-import { useRoutes } from './useRoutes.ts';
+import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequestsNotifications/PendingAccessRequestsIndicator.tsx';
 
 const StyledNavigationList = styled(List)(({ theme }) => ({
     display: 'flex',
@@ -48,17 +47,11 @@ export const PrimaryNavigationList: FC<{
     onClick: (activeItem: string) => void;
     activeItem?: string;
 }> = ({ mode, setMode, onClick, activeItem }) => {
-    const {
-        routes: { primaryRoutes },
-    } = useRoutes();
-    const newRoute = primaryRoutes.find((route) => route.isNew);
     const PrimaryListItem = ({
         href,
         text,
-        isNew,
         badge,
     }: Pick<ComponentProps<typeof MenuListItem>, 'href' | 'text'> & {
-        isNew?: boolean;
         badge?: ReactNode;
     }) => (
         <MenuListItem
@@ -68,12 +61,7 @@ export const PrimaryNavigationList: FC<{
             onClick={() => onClick(href)}
             selected={activeItem === href}
             mode={mode}
-            badge={
-                badge ??
-                (newRoute?.title.toLowerCase() === text.toLowerCase() ? (
-                    <NewFeatureBadge />
-                ) : null)
-            }
+            badge={badge}
         />
     );
 
@@ -169,6 +157,7 @@ export const AdminSettingsLink: FC<{
                 onClick={() => onClick('/admin')}
                 mode={mode}
                 icon={<IconRenderer path='/admin' />}
+                badge={<PendingAccessRequestsIndicator />}
             />
         </StyledNavigationList>
     </Box>

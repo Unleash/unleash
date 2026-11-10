@@ -10,7 +10,6 @@
 export type MetricQuerySchemaSource =
     (typeof MetricQuerySchemaSource)[keyof typeof MetricQuerySchemaSource];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const MetricQuerySchemaSource = {
     internal: 'internal',
     external: 'external',

@@ -5,13 +5,17 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Use Node.js 22.x
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 22.x
       - uses: actions/checkout@master
@@ -24,9 +28,9 @@ jobs:
           ./svg-contributors/bin/contributors -o unleash -n unleash -l 500
       - uses: aws-actions/configure-aws-credentials@v6
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+          role-to-assume: ${{ secrets.AWS_STATIC_ASSETS_ROLE_ARN }}
+          role-session-name: github-actions-unleash
       - name: Publish static assets to S3
         run: |
           ls -l

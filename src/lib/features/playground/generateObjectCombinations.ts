@@ -9,7 +9,10 @@ export const splitByComma = <T extends Record<string, unknown>>(
                 const nested = splitByComma(value as any);
                 return { ...acc, ...nested };
             } else if (typeof value === 'string') {
-                return { ...acc, [key]: value.split(',') };
+                return {
+                    ...acc,
+                    [key]: value.split(',').map((part) => part.trim()),
+                };
             } else {
                 return { ...acc, [key]: [value] };
             }
@@ -17,6 +20,14 @@ export const splitByComma = <T extends Record<string, unknown>>(
         {} as Dict<T>,
     );
 };
+
+export const countCombinations = <T extends Record<string, unknown>>(
+    obj: Dict<T>,
+): number =>
+    Object.values(obj).reduce(
+        (count: number, values) => count * values.length,
+        1,
+    );
 
 export const generateCombinations = <T extends Record<string, unknown>>(
     obj: Dict<T>,
@@ -30,11 +41,4 @@ export const generateCombinations = <T extends Record<string, unknown>>(
             ),
         [{}] as Partial<T>[],
     ) as T[];
-};
-
-export const generateObjectCombinations = <T extends Record<string, any>>(
-    obj: T,
-): T[] => {
-    const splitObj = splitByComma(obj);
-    return generateCombinations(splitObj);
 };

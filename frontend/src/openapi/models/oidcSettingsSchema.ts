@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { OidcSettingsSchemaOneOf } from './oidcSettingsSchemaOneOf';
-import type { OidcSettingsSchemaOneOfFour } from './oidcSettingsSchemaOneOfFour';
+import type { OidcSettingsSchemaOneOf } from './oidcSettingsSchemaOneOf.ts';
+import type { OidcSettingsSchemaOneOfFour } from './oidcSettingsSchemaOneOfFour.ts';
 
 /**
  * Settings for configuring OpenID Connect as a login provider for Unleash

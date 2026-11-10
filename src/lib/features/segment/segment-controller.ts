@@ -17,9 +17,11 @@ import {
     getStandardResponses,
 } from '../../openapi/util/standard-responses.js';
 import type { ISegmentService } from './segment-service-interface.js';
+import type { WithTransactional } from '../../db/transaction.js';
 import type { SegmentStrategiesSchema } from '../../openapi/spec/segment-strategies-schema.js';
 import type {
     AccessService,
+    FeatureToggleService,
     IUnleashServices,
     OpenApiService,
 } from '../../services/index.js';
@@ -50,6 +52,10 @@ type IUpdateFeatureStrategySegmentsRequest = IAuthRequest<
 export class SegmentsController extends Controller {
     private segmentService: ISegmentService;
 
+    private transactionalSegmentService: WithTransactional<ISegmentService>;
+
+    private transactionalFeatureToggleService: WithTransactional<FeatureToggleService>;
+
     private accessService: AccessService;
 
     private flagResolver: IFlagResolver;
@@ -60,17 +66,26 @@ export class SegmentsController extends Controller {
         config: IUnleashConfig,
         {
             segmentService,
+            transactionalSegmentService,
+            transactionalFeatureToggleService,
             accessService,
             openApiService,
         }: Pick<
             IUnleashServices,
-            'segmentService' | 'accessService' | 'openApiService'
+            | 'segmentService'
+            | 'transactionalSegmentService'
+            | 'transactionalFeatureToggleService'
+            | 'accessService'
+            | 'openApiService'
         >,
     ) {
         super(config);
         this.flagResolver = config.flagResolver;
         this.config = config;
         this.segmentService = segmentService;
+        this.transactionalSegmentService = transactionalSegmentService;
+        this.transactionalFeatureToggleService =
+            transactionalFeatureToggleService;
         this.accessService = accessService;
         this.openApiService = openApiService;
 
@@ -85,6 +100,7 @@ export class SegmentsController extends Controller {
                     description:
                         'Uses the name provided in the body of the request to validate if the given name exists or not',
                     tags: ['Segments'],
+                    release: { stable: '5.5.0' },
                     operationId: 'validateSegment',
                     requestBody: createRequestSchema('nameSchema'),
                     responses: {
@@ -103,6 +119,7 @@ export class SegmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Segments'],
+                    release: { stable: '5.5.0' },
                     operationId: 'getSegmentsByStrategyId',
                     summary: 'Get strategy segments',
                     description:
@@ -125,6 +142,7 @@ export class SegmentsController extends Controller {
                     description:
                         'Sets the segments of the strategy specified to be exactly the ones passed in the payload. Any segments that were used by the strategy before will be removed if they are not in the provided list of segments.',
                     tags: ['Strategies'],
+                    release: { stable: '5.5.0' },
                     operationId: 'updateFeatureStrategySegments',
                     requestBody: createRequestSchema(
                         'updateFeatureStrategySegmentsSchema',
@@ -147,6 +165,7 @@ export class SegmentsController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Segments'],
+                    release: { stable: '5.5.0' },
                     operationId: 'getStrategiesBySegmentId',
                     summary: 'Get strategies that reference segment',
                     description:
@@ -192,6 +211,7 @@ export class SegmentsController extends Controller {
                         },
                     ],
                     tags: ['Segments'],
+                    release: { stable: '5.5.0' },
                     operationId: 'removeSegment',
                     responses: {
                         204: emptyResponse,
@@ -212,6 +232,7 @@ export class SegmentsController extends Controller {
                     description:
                         'Updates the content of the segment with the provided payload. Requires `name` and `constraints` to be present. If `project` is not present, it will be set to `null`. Any other fields not specified will be left untouched.',
                     tags: ['Segments'],
+                    release: { stable: '5.5.0' },
                     operationId: 'updateSegment',
                     parameters: [
                         {
@@ -243,6 +264,7 @@ export class SegmentsController extends Controller {
                     summary: 'Get a segment',
                     description: 'Retrieves a segment based on its ID.',
                     tags: ['Segments'],
+                    release: { stable: '5.5.0' },
                     operationId: 'getSegment',
                     parameters: [
                         {
@@ -274,6 +296,7 @@ export class SegmentsController extends Controller {
                     description:
                         'Creates a new segment using the payload provided',
                     tags: ['Segments'],
+                    release: { stable: '5.5.0' },
                     operationId: 'createSegment',
                     requestBody: createRequestSchema('upsertSegmentSchema'),
                     responses: {
@@ -297,6 +320,7 @@ export class SegmentsController extends Controller {
                     description:
                         'Retrieves all segments that exist in this Unleash instance.',
                     tags: ['Segments'],
+                    release: { stable: '5.5.0' },
                     operationId: 'getSegments',
                     responses: {
                         200: createResponseSchema('segmentsSchema'),
@@ -355,23 +379,23 @@ export class SegmentsController extends Controller {
             return;
         }
 
+        await this.segmentService.validateStrategyBelongsToProjectAndEnvironment(
+            { strategyId, projectId, environment: environmentId },
+        );
+
+        await this.segmentService.validateProjectCanAccessSegments(
+            projectId,
+            segmentIds,
+        );
+
         if (segmentIds.length > this.config.strategySegmentsLimit) {
             throw new BadDataError(
                 `Strategies may not have more than ${this.config.strategySegmentsLimit} segments`,
             );
         }
 
-        const segments = await this.segmentService.getByStrategy(strategyId);
-        const currentSegmentIds = segments.map((segment) => segment.id);
-
-        await this.removeFromStrategy(
-            strategyId,
-            currentSegmentIds.filter((id) => !segmentIds.includes(id)),
-        );
-
-        await this.addToStrategy(
-            strategyId,
-            segmentIds.filter((id) => !currentSegmentIds.includes(id)),
+        await this.transactionalFeatureToggleService.transactional((service) =>
+            service.setStrategySegments(strategyId, segmentIds, req.audit),
         );
 
         this.openApiService.respondWithValidation(
@@ -434,7 +458,9 @@ export class SegmentsController extends Controller {
         if (segmentIsInUse) {
             res.status(409).send();
         } else {
-            await this.segmentService.delete(id, req.user, req.audit);
+            await this.transactionalSegmentService.transactional((service) =>
+                service.delete(id, req.user, req.audit),
+            );
             res.status(204).send();
         }
     }
@@ -450,11 +476,8 @@ export class SegmentsController extends Controller {
             project: req.body.project,
             constraints: req.body.constraints,
         };
-        await this.segmentService.update(
-            id,
-            updateRequest,
-            req.user,
-            req.audit,
+        await this.transactionalSegmentService.transactional((service) =>
+            service.update(id, updateRequest, req.user, req.audit),
         );
         res.status(204).send();
     }
@@ -479,9 +502,8 @@ export class SegmentsController extends Controller {
         res: Response<AdminSegmentSchema>,
     ): Promise<void> {
         const createRequest = req.body;
-        const segment = await this.segmentService.create(
-            createRequest,
-            req.audit,
+        const segment = await this.transactionalSegmentService.transactional(
+            (service) => service.create(createRequest, req.audit),
         );
         this.openApiService.respondWithValidation(
             201,
@@ -510,28 +532,6 @@ export class SegmentsController extends Controller {
             res,
             segmentsSchema.$id,
             serializeDates(response),
-        );
-    }
-
-    private async removeFromStrategy(
-        strategyId: string,
-        segmentIds: number[],
-    ): Promise<void> {
-        await Promise.all(
-            segmentIds.map((id) =>
-                this.segmentService.removeFromStrategy(id, strategyId),
-            ),
-        );
-    }
-
-    private async addToStrategy(
-        strategyId: string,
-        segmentIds: number[],
-    ): Promise<void> {
-        await Promise.all(
-            segmentIds.map((id) =>
-                this.segmentService.addToStrategy(id, strategyId),
-            ),
         );
     }
 }

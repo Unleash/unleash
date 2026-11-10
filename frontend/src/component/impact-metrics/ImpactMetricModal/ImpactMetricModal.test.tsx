@@ -120,7 +120,7 @@ describe('ImpactMetricModal', () => {
         expect(onSave).toHaveBeenCalledWith({
             title: undefined,
             metricName: 'my_external_metric',
-            timeRange: 'day',
+            timeRange: 'hour',
             yAxisMin: 'auto',
             aggregationMode: 'count',
             labelSelectors: { my_custom_label: ['value1'] },

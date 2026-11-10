@@ -1,5 +1,5 @@
 import { Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import {
     StyledBold,
     StyledBox,
@@ -40,7 +40,7 @@ export const EnvironmentTemplateSuggestion = ({
                 <StyledSpan>release template</StyledSpan>
             </HtmlTooltip>
             &nbsp;to this environment&nbsp;
-            <Button size='small' variant='text' onClick={onClick}>
+            <Button size='medium' variant='text' onClick={onClick}>
                 Choose a release template
             </Button>
         </StyledSuggestion>

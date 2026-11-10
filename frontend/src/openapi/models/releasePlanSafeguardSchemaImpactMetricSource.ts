@@ -10,7 +10,6 @@
 export type ReleasePlanSafeguardSchemaImpactMetricSource =
     (typeof ReleasePlanSafeguardSchemaImpactMetricSource)[keyof typeof ReleasePlanSafeguardSchemaImpactMetricSource];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ReleasePlanSafeguardSchemaImpactMetricSource = {
     internal: 'internal',
     external: 'external',

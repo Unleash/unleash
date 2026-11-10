@@ -16,6 +16,8 @@ let config: IUnleashConfig;
 let featureToggleStore: IFeatureToggleStore;
 let segmentStore: ISegmentStore;
 
+const user = new User({ username: 'user', id: 1 });
+
 beforeEach(() => {
     featureToggleStore = new FakeFeatureToggleStore();
     segmentStore = new FakeSegmentStore();
@@ -231,10 +233,7 @@ test('should verify permission for root resource', async () => {
 
     const cb = vi.fn();
     const req: any = {
-        user: new User({
-            username: 'user',
-            id: 1,
-        }),
+        user,
         params: {},
     };
 
@@ -264,10 +263,7 @@ test('should lookup projectId from params', async () => {
 
     const cb = vi.fn();
     const req: any = {
-        user: new User({
-            username: 'user',
-            id: 1,
-        }),
+        user,
         params: {
             projectId: 'some-proj',
         },
@@ -303,10 +299,7 @@ test('should lookup projectId from feature flag', async () => {
 
     const cb = vi.fn();
     const req: any = {
-        user: new User({
-            username: 'user',
-            id: 1,
-        }),
+        user,
         params: {
             featureName,
         },
@@ -340,10 +333,7 @@ test('should lookup projectId from data', async () => {
 
     const cb = vi.fn();
     const req: any = {
-        user: new User({
-            username: 'user',
-            id: 1,
-        }),
+        user,
         params: {},
         body: {
             featureName,
@@ -378,7 +368,7 @@ test('Does not double check permission if not changing project when updating fla
     );
     const cb = vi.fn();
     const req: any = {
-        user: new User({ username: 'user', id: 1 }),
+        user,
         params: { featureName },
         body: { featureName, project: oldProjectId },
     };
@@ -406,7 +396,7 @@ test('CREATE_TAG_TYPE does not need projectId', async () => {
     );
     const cb = vi.fn();
     const req: any = {
-        user: new User({ username: 'user', id: 1 }),
+        user,
         params: {},
         body: { name: 'new-tag-type', description: 'New tag type for testing' },
     };
@@ -434,7 +424,7 @@ test('UPDATE_TAG_TYPE does not need projectId', async () => {
     );
     const cb = vi.fn();
     const req: any = {
-        user: new User({ username: 'user', id: 1 }),
+        user,
         params: {},
         body: { name: 'new-tag-type', description: 'New tag type for testing' },
     };
@@ -462,7 +452,7 @@ test('DELETE_TAG_TYPE does not need projectId', async () => {
     );
     const cb = vi.fn();
     const req: any = {
-        user: new User({ username: 'user', id: 1 }),
+        user,
         params: {},
         body: { name: 'new-tag-type', description: 'New tag type for testing' },
     };
@@ -493,10 +483,7 @@ test('should not expect featureName for UPDATE_FEATURE when projectId specified'
 
     const cb = vi.fn();
     const req: any = {
-        user: new User({
-            username: 'user',
-            id: 1,
-        }),
+        user,
         params: {},
         body: {
             project: projectId,
@@ -513,4 +500,86 @@ test('should not expect featureName for UPDATE_FEATURE when projectId specified'
         projectId,
         undefined,
     );
+});
+
+const segmentUpdateRequest = async ({
+    hasPermission,
+    segmentProject,
+    body,
+}: {
+    hasPermission: PermissionChecker['hasPermission'];
+    segmentProject: string | undefined;
+    body: object;
+}) => {
+    const segment = await segmentStore.create(
+        {
+            name: 'segment',
+            project: segmentProject,
+            constraints: [],
+            createdAt: new Date(),
+        },
+        { username: 'creator' },
+    );
+
+    const middleware = rbacMiddleware(
+        config,
+        { featureToggleStore, segmentStore },
+        { hasPermission },
+    );
+    const req: any = {
+        user,
+        params: { id: String(segment.id) },
+        body,
+    };
+    middleware(req, undefined, () => {});
+
+    return req;
+};
+
+test('a user cannot update a segment in a project they lack access to by naming a project they can access in the body', async () => {
+    const req = await segmentUpdateRequest({
+        hasPermission: async (_user, _permissions, projectId) =>
+            projectId === 'my-project',
+        segmentProject: 'someone-elses-project',
+        body: { project: 'my-project' },
+    });
+
+    const allowed = await req.checkRbac([
+        perms.UPDATE_SEGMENT,
+        perms.UPDATE_PROJECT_SEGMENT,
+    ]);
+
+    expect(allowed).toBe(false);
+});
+
+test('a user can update a segment in a project they have access to', async () => {
+    const req = await segmentUpdateRequest({
+        hasPermission: async (_user, _permissions, projectId) =>
+            projectId === 'my-project',
+        segmentProject: 'my-project',
+        body: { project: 'my-project' },
+    });
+
+    const allowed = await req.checkRbac([
+        perms.UPDATE_SEGMENT,
+        perms.UPDATE_PROJECT_SEGMENT,
+    ]);
+
+    expect(allowed).toBe(true);
+});
+
+test('a user with the instance-wide update-segment permission can update a global segment', async () => {
+    const req = await segmentUpdateRequest({
+        hasPermission: async (_user, permissions) =>
+            permissions.includes(perms.UPDATE_SEGMENT),
+        segmentProject: undefined,
+        body: {},
+    });
+
+    const allowed = await req.checkRbac([
+        perms.UPDATE_SEGMENT,
+        perms.UPDATE_PROJECT_SEGMENT,
+    ]);
+
+    expect(allowed).toBe(true);
 });

@@ -3,6 +3,7 @@ import { createConfig } from './lib/create-config.js';
 import { LogLevel } from './lib/logger.js';
 import { ApiTokenType } from './lib/types/model.js';
 
+// local server configuraion for development purposes.
 process.nextTick(async () => {
     try {
         await start(
@@ -49,14 +50,27 @@ process.nextTick(async () => {
                         deltaApi: true,
                         uniqueSdkTracking: true,
                         strictSchemaValidation: true,
-                        customMetrics: true,
                         disableImpactMetrics: false,
-                        registerImpactMetrics: true,
                         regexConstraintOperator: true,
-                        enterpriseEdgeTokensList: true,
                         userTokenWithClientApiLoggingKillSwitch: false,
-                        reactRouter_v7_relativeSplatPath: true,
                         allowDeprecatedApiTokenMiddleware: false,
+                        learningLab: true,
+                        serviceNowIntegration: true,
+                        recordSdkFlavorMetrics: true,
+                        semverBuildMetadata: true,
+                        helpMenuRelocationHint: true,
+                        ipConstraintOperator: true,
+                        githubIntegration: true,
+                        integrationParamKvpEditor: true,
+                        singlePageStrategyForm: true,
+                        feedbackModule: true,
+                        feedbackModuleDisplaySurvey: true,
+                        feedbackModuleSubmitResponses: true,
+                        playgroundFeatureEvaluation: true,
+                        dashboardV2: true,
+                        perFlagLifetime: true,
+                        slackAppAuthV2: true,
+                        redactFeatureLabelInMetrics: true,
                     },
                 },
                 authentication: {

@@ -7,7 +7,6 @@
 export type GetConnectionsForPeriodGrouping =
     (typeof GetConnectionsForPeriodGrouping)[keyof typeof GetConnectionsForPeriodGrouping];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const GetConnectionsForPeriodGrouping = {
     daily: 'daily',
     monthly: 'monthly',

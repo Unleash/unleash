@@ -1,4 +1,4 @@
-import { useLocation, Navigate } from 'react-router-dom';
+import { useLocation, Navigate } from 'react-router';
 
 export const LoginRedirect = () => {
     const { pathname, search } = useLocation();

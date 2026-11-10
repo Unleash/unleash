@@ -40,6 +40,9 @@ const mockFactories: () => UnleashFactoryMethods = () => ({
             userService: {
                 initAdminUser: vi.fn(),
             },
+            apiTokenV2Service: {
+                initialize: vi.fn(),
+            },
             schedulerService: {
                 schedule: vi.fn(),
                 stop: vi.fn(),

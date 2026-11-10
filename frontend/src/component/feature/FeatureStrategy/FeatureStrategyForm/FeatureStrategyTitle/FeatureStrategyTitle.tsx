@@ -1,6 +1,6 @@
-import { Box, Typography } from '@mui/material';
-import Input from 'component/common/Input/Input';
+import { Box } from '@mui/material';
 import type { FC } from 'react';
+import { BorderlessInput } from 'component/common/Input/BorderlessInput';
 
 interface IFeatureStrategyTitleProps {
     title: string;
@@ -10,23 +10,20 @@ interface IFeatureStrategyTitleProps {
 export const FeatureStrategyTitle: FC<IFeatureStrategyTitleProps> = ({
     title,
     setTitle,
-}) => {
-    return (
-        <Box sx={{ paddingBottom: (theme) => theme.spacing(2) }}>
-            <Typography
-                sx={{
-                    paddingBottom: (theme) => theme.spacing(2),
-                }}
-            >
-                What would you like to call this strategy? (optional)
-            </Typography>
-            <Input
-                label='Strategy title'
-                id='title-input'
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                sx={{ width: '100%' }}
-            />
-        </Box>
-    );
-};
+}) => (
+    <Box sx={{ paddingBottom: (theme) => theme.spacing(2) }}>
+        <BorderlessInput
+            variant='standard'
+            placeholder='Untitled strategy'
+            id='title-input'
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            slotProps={{
+                htmlInput: {
+                    sx: (theme) => theme.typography.h1,
+                },
+            }}
+            fullWidth
+        />
+    </Box>
+);

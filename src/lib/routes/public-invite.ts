@@ -48,6 +48,7 @@ export class PublicInviteController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
+                    release: { stable: '4.16.0' },
                     operationId: 'validatePublicSignupToken',
                     summary: `Validate signup token`,
                     description: `Check whether the provided public sign-up token exists, has not expired and is enabled`,
@@ -67,6 +68,7 @@ export class PublicInviteController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Public signup tokens'],
+                    release: { stable: '4.16.0' },
                     operationId: 'addPublicSignupTokenUser',
                     summary: 'Add a user via a signup token',
                     description:

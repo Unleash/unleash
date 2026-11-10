@@ -21,12 +21,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           ref: v${{ inputs.version }} # tag that should be created by the caller workflow
       - uses: pnpm/action-setup@v5
       - name: Setup to npm
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 22.x
           registry-url: 'https://registry.npmjs.org'
@@ -46,9 +46,9 @@ jobs:
           npm publish --tag ${TAG:-latest}
       - uses: aws-actions/configure-aws-credentials@v6
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+          role-to-assume: ${{ secrets.AWS_STATIC_ASSETS_ROLE_ARN }}
+          role-session-name: github-actions-unleash
       - name: Publish static assets to S3
         run: |
           aws s3 cp frontend/build s3://getunleash-static/unleash/v${{ inputs.version }} --recursive

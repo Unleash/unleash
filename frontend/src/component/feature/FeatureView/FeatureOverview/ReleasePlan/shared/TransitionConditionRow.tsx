@@ -1,0 +1,106 @@
+import BoltIcon from '@mui/icons-material/Bolt';
+import { styled } from '@mui/material';
+import type { TransitionConditionSchema } from 'openapi';
+import type { ReactNode } from 'react';
+
+const StyledTransitionRowContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    justifyContent: 'space-between',
+    width: '100%',
+}));
+
+const StyledTransitionContentGroup = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: theme.spacing(1),
+}));
+
+const StyledTransitionIcon = styled(BoltIcon, {
+    shouldForwardProp: (prop) => prop !== 'muted',
+})<{ muted?: boolean }>(({ theme, muted }) => ({
+    color: theme.palette.common.white,
+    fontSize: 18,
+    flexShrink: 0,
+    backgroundColor: muted
+        ? theme.palette.neutral.containerBorder
+        : theme.palette.primary.main,
+    borderRadius: '50%',
+    padding: theme.spacing(0.25),
+}));
+
+const StyledTransitionLabel = styled('span', {
+    shouldForwardProp: (prop) => prop !== 'muted',
+})<{ muted?: boolean }>(({ theme, muted }) => ({
+    color: muted ? theme.palette.text.secondary : theme.palette.text.primary,
+    fontSize: theme.typography.body2.fontSize,
+    flexShrink: 0,
+}));
+
+const getConditionText = (type: TransitionConditionSchema['type']) =>
+    type === 'exposure' ? 'since feature creation' : 'from milestone start';
+
+interface TransitionConditionRowProps {
+    condition: ReactNode;
+    type?: TransitionConditionSchema['type'];
+    label?: string;
+    muted?: boolean;
+    endActions?: ReactNode;
+    conditionInfo?: ReactNode;
+}
+
+export const TransitionConditionRow = ({
+    condition,
+    type = 'time',
+    label = 'Proceed after',
+    muted,
+    endActions,
+    conditionInfo,
+}: TransitionConditionRowProps) => {
+    const conditionText = getConditionText(type);
+
+    return (
+        <StyledTransitionRowContainer>
+            <StyledTransitionContentGroup>
+                <StyledTransitionIcon muted={muted} />
+                <StyledTransitionLabel muted={muted}>
+                    {label}
+                </StyledTransitionLabel>
+                {condition}
+                <StyledTransitionLabel muted={muted}>
+                    {conditionText}
+                </StyledTransitionLabel>
+                {conditionInfo}
+            </StyledTransitionContentGroup>
+            {endActions}
+        </StyledTransitionRowContainer>
+    );
+};
+
+interface ReadonlyTransitionConditionRowProps {
+    value: string;
+    type?: TransitionConditionSchema['type'];
+    label: string;
+    muted?: boolean;
+    conditionInfo?: ReactNode;
+}
+
+export const ReadonlyTransitionConditionRow = ({
+    value,
+    type = 'time',
+    label,
+    muted,
+    conditionInfo,
+}: ReadonlyTransitionConditionRowProps) => (
+    <StyledTransitionRowContainer>
+        <StyledTransitionContentGroup>
+            <StyledTransitionIcon muted={muted} />
+            <StyledTransitionLabel muted={muted}>
+                {label} {value} {getConditionText(type)}
+            </StyledTransitionLabel>
+            {conditionInfo}
+        </StyledTransitionContentGroup>
+    </StyledTransitionRowContainer>
+);

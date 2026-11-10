@@ -5,6 +5,8 @@ import { ImportTogglesStore } from './import-toggles-store.js';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
 import TagStore from '../../db/tag-store.js';
 import TagTypeStore from '../tag-type/tag-type-store.js';
+import { TagUsageReadModel } from '../tag-usage/tag-usage-read-model.js';
+import { FakeTagUsageReadModel } from '../tag-usage/fake-tag-usage-read-model.js';
 import FeatureTagStore from '../../db/feature-tag-store.js';
 import StrategyStore from '../../db/strategy-store.js';
 import ContextFieldStore from '../context/context-field-store.js';
@@ -31,7 +33,10 @@ import FakeContextFieldStore from '../context/fake-context-field-store.js';
 import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store.js';
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store.js';
 import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store.js';
-import { createPrivateProjectChecker } from '../private-project/createPrivateProjectChecker.js';
+import {
+    createFakePrivateProjectChecker,
+    createPrivateProjectChecker,
+} from '../private-project/createPrivateProjectChecker.js';
 import type { DeferredServiceFactory } from '../../db/transaction.js';
 import { DependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model.js';
 import { FakeDependentFeaturesReadModel } from '../dependent-features/fake-dependent-features-read-model.js';
@@ -83,7 +88,7 @@ export const createFakeExportImportTogglesService = (
         { getLogger },
         eventService,
     );
-    const contextService = createFakeContextService(config);
+    const { contextService } = createFakeContextService(config);
     const strategyService = new StrategyService(
         { strategyStore },
         { getLogger },
@@ -93,6 +98,8 @@ export const createFakeExportImportTogglesService = (
         { tagTypeStore },
         { getLogger },
         eventService,
+        new FakeTagUsageReadModel(),
+        createFakePrivateProjectChecker(),
     );
     const dependentFeaturesReadModel = new FakeDependentFeaturesReadModel();
 
@@ -126,6 +133,7 @@ export const createFakeExportImportTogglesService = (
             tagTypeService,
             dependentFeaturesService,
             featureLinkService,
+            privateProjectChecker: createFakePrivateProjectChecker(),
         },
         dependentFeaturesReadModel,
         segmentReadModel,
@@ -167,7 +175,7 @@ export const deferredExportImportTogglesService = (
         );
         const accessService = createAccessService(db, config);
         const featureToggleService = createFeatureToggleService(db, config);
-        createPrivateProjectChecker(db, config);
+        const privateProjectChecker = createPrivateProjectChecker(db, config);
         const eventService = createEventsService(db, config);
 
         const featureTagService = new FeatureTagService(
@@ -189,6 +197,8 @@ export const deferredExportImportTogglesService = (
             { tagTypeStore },
             { getLogger },
             eventService,
+            new TagUsageReadModel(db),
+            createPrivateProjectChecker(db, config),
         );
         const dependentFeaturesReadModel = new DependentFeaturesReadModel(db);
 
@@ -222,6 +232,7 @@ export const deferredExportImportTogglesService = (
                 tagTypeService,
                 dependentFeaturesService,
                 featureLinkService,
+                privateProjectChecker,
             },
             dependentFeaturesReadModel,
             segmentReadModel,

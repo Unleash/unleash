@@ -275,6 +275,9 @@ export default class ClientMetricsServiceV2 {
 
         if (data.sdkVersion) {
             const [sdkName, sdkVersion] = data.sdkVersion.split(':');
+            const recordSdkFlavorMetrics = this.flagResolver.isEnabled(
+                'recordSdkFlavorMetrics',
+            );
             const heartbeatEvent: ISdkHeartbeat = {
                 sdkName,
                 sdkVersion,
@@ -283,6 +286,12 @@ export default class ClientMetricsServiceV2 {
                     platformVersion: data.platformVersion,
                     yggdrasilVersion: data.yggdrasilVersion,
                     specVersion: data.specVersion,
+                    sdkFlavor: recordSdkFlavorMetrics
+                        ? data.sdkFlavor
+                        : undefined,
+                    sdkFlavorVersion: recordSdkFlavorMetrics
+                        ? data.sdkFlavorVersion
+                        : undefined,
                 },
             };
 
@@ -336,6 +345,10 @@ export default class ClientMetricsServiceV2 {
             await this.clientMetricsStoreV2.getSeenAppsForFeatureToggle(
                 featureName,
             );
+        const totalUsage =
+            await this.clientMetricsStoreV2.getTotalUsageForFeature(
+                featureName,
+            );
 
         const groupedMetrics = metrics.reduce((prev, curr) => {
             if (prev[curr.environment]) {
@@ -355,6 +368,7 @@ export default class ClientMetricsServiceV2 {
         return {
             featureName,
             lastHourUsage: Object.values(groupedMetrics),
+            totalUsage,
             seenApplications,
         };
     }

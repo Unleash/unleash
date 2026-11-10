@@ -50,6 +50,12 @@ const StyledCompletedBadge = styled(Badge)(({ theme }) => ({
     },
 }));
 
+const StyledActiveBadge = styled(Badge)(({ theme }) => ({
+    backgroundColor: theme.palette.primary.main,
+    color: 'white',
+    border: `1px solid ${theme.palette.primary.main}`,
+}));
+
 const StyledSummary = styled(Box)({
     marginLeft: 'auto',
 });
@@ -92,8 +98,10 @@ export const ConnectSdkDialogStep = ({
                     <StyledCompletedBadge round>
                         <CheckIcon />
                     </StyledCompletedBadge>
+                ) : isExpanded ? (
+                    <StyledActiveBadge round>{stepNumber}</StyledActiveBadge>
                 ) : (
-                    <Badge color={isExpanded ? 'primary' : 'neutral'} round>
+                    <Badge color='neutral' round>
                         {stepNumber}
                     </Badge>
                 )}

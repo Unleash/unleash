@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import ProjectStatusSvg from 'assets/icons/projectStatus.svg?react';
@@ -35,7 +35,7 @@ import {
     Routes,
     useLocation,
     useSearchParams,
-} from 'react-router-dom';
+} from 'react-router';
 import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue.tsx';
 import { ProjectLog } from './ProjectLog/ProjectLog.tsx';
 import { ChangeRequestOverview } from 'component/changeRequest/ChangeRequestOverview/ChangeRequestOverview';
@@ -47,13 +47,19 @@ import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadg
 import { Badge } from 'component/common/Badge/Badge';
 import type { UiFlags } from 'interfaces/uiConfig';
 import { HiddenProjectIconWithTooltip } from './HiddenProjectIconWithTooltip/HiddenProjectIconWithTooltip.tsx';
-import { ChangeRequestPlausibleProvider } from 'component/changeRequest/ChangeRequestContext';
 import { ProjectApplications } from '../ProjectApplications/ProjectApplications.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectArchived } from './ArchiveProject/ProjectArchived.tsx';
-import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker.ts';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
-import { ProjectStatusModal } from './ProjectStatus/ProjectStatusModal.tsx';
+import {
+    ProjectStatusModal,
+    type ProjectStatusOpenedFrom,
+} from './ProjectStatus/ProjectStatusModal.tsx';
+import {
+    deleteProjectTracking,
+    selectProjectTabTracking,
+} from 'component/project/projectTracking';
+import { useTracking } from 'hooks/useTracking';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -122,9 +128,12 @@ const ProjectStatus = () => {
     const [projectStatusOpen, setProjectStatusOpen] = useState(
         searchParams.has('project-status'),
     );
+    const [openedFrom, setOpenedFrom] =
+        useState<ProjectStatusOpenedFrom>('deep-link');
     const openStatusModal = () => {
         searchParams.set('project-status', '');
         setSearchParams(searchParams);
+        setOpenedFrom('project-header');
         setProjectStatusOpen(true);
     };
     const closeStatusModal = () => {
@@ -144,6 +153,7 @@ const ProjectStatus = () => {
             </ProjectStatusButton>
             <ProjectStatusModal
                 open={projectStatusOpen}
+                openedFrom={openedFrom}
                 onClose={closeStatusModal}
                 onFollowLink={() => setProjectStatusOpen(false)}
             />
@@ -153,11 +163,11 @@ const ProjectStatus = () => {
 
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
-    const { trackEvent } = usePlausibleTracker();
+    const trackSelectTab = useTracking(selectProjectTabTracking);
     const params = useQueryParams();
     const { project, loading, error, refetch } = useProjectOverview(projectId);
     const ref = useLoading(loading, '[data-loading-project=true]');
-    const { setToastData, setToastApiError } = useToast();
+    const { setToastData } = useToast();
     const [modalOpen, setModalOpen] = useState(false);
     const navigate = useNavigate();
     const { pathname } = useLocation();
@@ -167,11 +177,6 @@ export const Project = () => {
     const { favorite, unfavorite } = useFavoriteProjectsApi();
 
     const [showDelDialog, setShowDelDialog] = useState(false);
-
-    const [
-        changeRequestChangesWillOverwrite,
-        setChangeRequestChangesWillOverwrite,
-    ] = useState(false);
 
     const tabs: ITab[] = [
         {
@@ -249,10 +254,8 @@ export const Project = () => {
             } else {
                 await favorite(projectId);
             }
-            refetch();
-        } catch (_error) {
-            setToastApiError('Something went wrong, could not update favorite');
-        }
+        } catch {}
+        refetch();
     };
 
     const enterpriseIcon = (
@@ -287,6 +290,7 @@ export const Project = () => {
                                 <StyledFavoriteIconButton
                                     onClick={onFavorite}
                                     isFavorite={project?.favorite || false}
+                                    size='medium'
                                 />
                             </StyledProjectTitle>
                         </StyledDiv>
@@ -319,11 +323,9 @@ export const Project = () => {
                                     }
                                     value={tab.path}
                                     onClick={() => {
-                                        if (tab.title !== 'Flags') {
-                                            trackEvent('project-navigation', {
-                                                props: {
-                                                    eventType: tab.title,
-                                                },
+                                        if (tab.name !== 'flags') {
+                                            trackSelectTab('succeeded', {
+                                                tab: tab.name,
                                             });
                                         }
                                         navigate(
@@ -364,6 +366,7 @@ export const Project = () => {
             <DeleteProjectDialogue
                 projectId={projectId}
                 open={showDelDialog}
+                tracking={deleteProjectTracking}
                 onClose={() => {
                     setShowDelDialog(false);
                 }}
@@ -388,18 +391,7 @@ export const Project = () => {
                 />
                 <Route
                     path='change-requests/:id'
-                    element={
-                        <ChangeRequestPlausibleProvider
-                            value={{
-                                willOverwriteStrategyChanges:
-                                    changeRequestChangesWillOverwrite,
-                                registerWillOverwriteStrategyChanges: () =>
-                                    setChangeRequestChangesWillOverwrite(true),
-                            }}
-                        >
-                            <ChangeRequestOverview />
-                        </ChangeRequestPlausibleProvider>
-                    }
+                    element={<ChangeRequestOverview />}
                 />
                 <Route path='settings/*' element={<ProjectSettings />} />
                 <Route path='applications' element={<ProjectApplications />} />

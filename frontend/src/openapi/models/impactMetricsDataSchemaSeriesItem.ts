@@ -3,11 +3,15 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ImpactMetricsDataSchemaSeriesItemDataItemItem } from './impactMetricsDataSchemaSeriesItemDataItemItem';
-import type { ImpactMetricsDataSchemaSeriesItemMetric } from './impactMetricsDataSchemaSeriesItemMetric';
+import type { ImpactMetricsDataSchemaSeriesItemDataItemItem } from './impactMetricsDataSchemaSeriesItemDataItemItem.ts';
+import type { ImpactMetricsDataSchemaSeriesItemMetric } from './impactMetricsDataSchemaSeriesItemMetric.ts';
 
 export type ImpactMetricsDataSchemaSeriesItem = {
-    /** Array of [timestamp, value] data points. Timestamps are Unix epoch seconds; values are strings. */
+    /**
+     * Array of [timestamp, value] data points. Timestamps are Unix epoch seconds; values are strings.
+     * @items.minItems 2
+     * @items.maxItems 2
+     */
     data: ImpactMetricsDataSchemaSeriesItemDataItemItem[][];
     /** Label key-value pairs identifying this series. */
     metric: ImpactMetricsDataSchemaSeriesItemMetric;

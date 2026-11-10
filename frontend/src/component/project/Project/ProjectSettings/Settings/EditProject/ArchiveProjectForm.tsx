@@ -31,7 +31,7 @@ export const ArchiveProjectForm = ({ featureCount }: IDeleteProjectForm) => {
                 documentationLink='https://docs.getunleash.io/concepts/projects'
                 documentationLinkLabel='Projects documentation'
                 formatApiCode={formatProjectArchiveApiCode}
-                compact
+                layout='compact'
                 compactPadding
                 showDescription={false}
                 showLink={false}

@@ -10,7 +10,8 @@ import {
     featureStrategyHelp,
 } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
-import { StrategyFormBody } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBody.tsx';
+import { StrategyFormBodySelector } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBodySelector.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export interface IReleasePlanTemplateAddStrategyFormProps {
     onCancel: () => void;
@@ -27,6 +28,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
     onAddUpdateStrategy,
     editMode,
 }: IReleasePlanTemplateAddStrategyFormProps) => {
+    const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
     const normalizedStrategyName = strategy.name || strategy.strategyName;
     const [currentStrategy, setCurrentStrategy] = useState({
         ...strategy,
@@ -44,13 +46,14 @@ export const ReleasePlanTemplateAddStrategyForm = ({
 
     return (
         <FormTemplate
-            modal
+            layout='modal'
+            fitContainerHeight={singlePageStrategyForm}
             disablePadding
             description={featureStrategyHelp}
             documentationLink={featureStrategyDocsLink}
             documentationLinkLabel={featureStrategyDocsLinkLabel}
         >
-            <StrategyFormBody
+            <StrategyFormBodySelector
                 strategy={currentStrategy}
                 setStrategy={setCurrentStrategy}
                 strategyDefinition={strategyDefinition}
@@ -67,6 +70,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                     onAddUpdateStrategy(currentStrategy);
                 }}
             >
+                <Button onClick={onCancel}>Cancel</Button>
                 <Button
                     variant='contained'
                     color='primary'
@@ -75,8 +79,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                 >
                     {editMode ? 'Add changes' : 'Add strategy'}
                 </Button>
-                <Button onClick={onCancel}>Cancel</Button>
-            </StrategyFormBody>
+            </StrategyFormBodySelector>
         </FormTemplate>
     );
 };

@@ -112,8 +112,10 @@ export const BillingPlan = () => {
                                     <StyledTrialSpan
                                         sx={(theme) => ({
                                             color: expired
-                                                ? theme.palette.error.dark
-                                                : theme.palette.warning.dark,
+                                                ? theme.palette.error
+                                                      .onContainer
+                                                : theme.palette.warning
+                                                      .onContainer,
                                         })}
                                     >
                                         {expired

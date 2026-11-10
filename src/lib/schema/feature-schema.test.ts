@@ -1,10 +1,54 @@
 import {
     constraintSchema,
     featureSchema,
+    featureMetadataSchema,
+    featureNameSchema,
     querySchema,
 } from './feature-schema.js';
 
-test('should require URL firendly name', () => {
+describe.each([
+    ['feature', featureSchema],
+    ['feature metadata', featureMetadataSchema],
+    ['feature name', featureNameSchema],
+])('%s validation', (_label, schema) => {
+    test.each([
+        'some/name',
+        'some name',
+        'some?name',
+        'some#name',
+        'some%name',
+        '.',
+        '..',
+    ])('rejects URL-unsafe name %s', (name) => {
+        const { error } = schema.validate({ name });
+        expect(error?.details[0].message).toBe('"name" must be URL friendly');
+    });
+
+    test.each([
+        '__proto__',
+        'constructor',
+        'prototype',
+        ...Object.getOwnPropertyNames(Object.prototype).filter(
+            (name) => !['__proto__', 'constructor'].includes(name),
+        ),
+    ])('rejects reserved name %s', (name) => {
+        const { error } = schema.validate({ name });
+        expect(error?.details[0].message).toBe(
+            '"name" must not be a reserved JavaScript property name',
+        );
+    });
+
+    test.each([
+        'app.name',
+        'my-constructor',
+        'prototype-enabled',
+        'Constructor',
+    ])('allows name %s', (name) => {
+        expect(schema.validate({ name }).error).toBeUndefined();
+    });
+});
+
+test('should require URL friendly name', () => {
     const toggle = {
         name: 'io`dasd',
         enabled: false,
@@ -361,7 +405,7 @@ test('constraint schema should only allow specified operators', async () => {
         await constraintSchema.validateAsync(invalidConstraint);
     } catch (error) {
         expect(error.message).toBe(
-            '"operator" must be one of [NOT_IN, IN, STR_ENDS_WITH, STR_STARTS_WITH, STR_CONTAINS, NUM_EQ, NUM_GT, NUM_GTE, NUM_LT, NUM_LTE, DATE_AFTER, DATE_BEFORE, SEMVER_EQ, SEMVER_GT, SEMVER_LT, REGEX]',
+            '"operator" must be one of [NOT_IN, IN, STR_ENDS_WITH, STR_STARTS_WITH, STR_CONTAINS, NUM_EQ, NUM_GT, NUM_GTE, NUM_LT, NUM_LTE, DATE_AFTER, DATE_BEFORE, SEMVER_EQ, SEMVER_GT, SEMVER_LT, SEMVER_GTE, SEMVER_LTE, REGEX, IN_CIDR]',
         );
     }
 });

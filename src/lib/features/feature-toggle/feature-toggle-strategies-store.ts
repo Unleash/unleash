@@ -30,6 +30,7 @@ import { isAfter } from 'date-fns';
 type Raw<T = any> = Knex.Raw<T>;
 import type { ITag } from '../../tags/index.js';
 import { ulid } from 'ulidx';
+import type { StrategyBelongsToFeatureAndProjectParams } from './types/feature-toggle-strategies-store-type.js';
 
 const COLUMNS = [
     'id',
@@ -909,6 +910,21 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
 
         stopTimer();
         return rows.length;
+    }
+
+    async strategyBelongsToFeatureAndProject({
+        strategyId,
+        featureName,
+        project,
+    }: StrategyBelongsToFeatureAndProjectParams): Promise<boolean> {
+        const stop = this.timer('strategyBelongsToFeatureAndProject');
+        const result = await this.db.raw(
+            `SELECT EXISTS(SELECT 1 FROM ${T.featureStrategies} WHERE id = ? AND feature_name = ? AND project_name = ?) AS present`,
+            [strategyId, featureName, project],
+        );
+        stop();
+        const { present } = result.rows[0];
+        return present;
     }
 }
 export default FeatureStrategiesStore;

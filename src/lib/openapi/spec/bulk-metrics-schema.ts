@@ -34,6 +34,14 @@ export const bulkMetricsSchema = {
                 $ref: '#/components/schemas/impactMetricsSchema',
             },
         },
+        seenTokens: {
+            description:
+                'A list of API tokens observed by downstream providers. (Typically Unleash Edge)',
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+        },
     },
     components: {
         schemas: {

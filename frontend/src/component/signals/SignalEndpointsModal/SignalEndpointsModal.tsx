@@ -24,12 +24,12 @@ const StyledHeader = styled('div')(({ theme }) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    marginBottom: theme.fontSizes.mainHeader,
+    marginBottom: theme.spacing(2.5),
 }));
 
-const StyledTitle = styled('h1')({
-    fontWeight: 'normal',
-});
+const StyledTitle = styled('h1')(({ theme }) => ({
+    ...theme.typography.h1,
+}));
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -152,7 +152,7 @@ export const SignalEndpointsModal = ({
         >
             <FormTemplate
                 loading={loading}
-                modal
+                layout='modal'
                 description='Signal endpoints allow third-party services to send signals to Unleash.'
                 documentationLink='https://docs.getunleash.io/concepts/signals'
                 documentationLinkLabel='Signals documentation'

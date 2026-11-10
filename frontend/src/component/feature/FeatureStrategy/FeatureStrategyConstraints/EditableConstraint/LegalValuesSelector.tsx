@@ -44,7 +44,7 @@ type BaseProps = {
     invalidLegalValues?: Set<string>;
     isInputSelected: (value: string) => boolean;
     multiSelect?: {
-        selectAll: () => void;
+        selectAll: (selectableLegalValues: string[]) => void;
         clearAll: () => void;
         values: Set<string>;
     };
@@ -65,18 +65,26 @@ const BaseLegalValueSelector: FC<BaseProps> = ({
     const alertId = useId();
 
     const filteredValues = filterLegalValues(legalValues, filter);
+    const isSelectable = (value: string) => !invalidLegalValues?.has(value);
+    const selectableLegalValues = legalValues.filter(({ value }) =>
+        isSelectable(value),
+    );
 
     const isAllSelected =
         multiSelect &&
-        legalValues.length ===
-            multiSelect.values.size + (deletedLegalValues?.size ?? 0);
+        selectableLegalValues.length > 0 &&
+        selectableLegalValues.every(({ value }) =>
+            multiSelect.values.has(value),
+        );
 
     const handleSearchKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            if (filteredValues.length > 0) {
-                const firstValue = filteredValues[0].value;
-                onChange(firstValue);
+            const firstSelectable = filteredValues.find(({ value }) =>
+                isSelectable(value),
+            );
+            if (firstSelectable) {
+                onChange(firstSelectable.value);
             }
         }
     };
@@ -100,7 +108,7 @@ const BaseLegalValueSelector: FC<BaseProps> = ({
                 </Alert>
             ) : null}
             <p>
-                <span id={labelId}>Select values from a predefined set</span>
+                <span id={labelId}>Select values from a predefined set</span>.{' '}
                 {invalidLegalValues?.size ? (
                     <span id={descriptionId}>
                         Values that are not valid for your chosen operator have
@@ -120,12 +128,17 @@ const BaseLegalValueSelector: FC<BaseProps> = ({
                             whiteSpace: 'nowrap',
                         }}
                         variant={'text'}
+                        disabled={selectableLegalValues.length === 0}
                         onClick={() => {
                             if (isAllSelected) {
                                 multiSelect.clearAll();
                                 return;
                             } else {
-                                multiSelect.selectAll();
+                                multiSelect.selectAll(
+                                    selectableLegalValues.map(
+                                        ({ value }) => value,
+                                    ),
+                                );
                             }
                         }}
                     >
@@ -215,9 +228,7 @@ export const LegalValuesSelector = ({
             onChange={toggleValue}
             multiSelect={{
                 clearAll,
-                selectAll: () => {
-                    addValues(legalValues.map(({ value }) => value));
-                },
+                selectAll: addValues,
                 values,
             }}
             {...baseProps}

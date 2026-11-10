@@ -1,7 +1,6 @@
 import type { FC } from 'react';
 import {
     Button,
-    TextField,
     Box,
     styled,
     useTheme,
@@ -15,9 +14,14 @@ import { useChartFormState } from '../hooks/useChartFormState.ts';
 import type { ChartConfig } from '../types.ts';
 import type { ImpactMetric } from 'hooks/api/getters/useImpactMetricsMetadata/useImpactMetricsMetadata';
 import { LabelsFilter } from './LabelFilter/LabelsFilter.tsx';
+import {
+    LabelDiscoveryError,
+    LabelDiscoveryLoading,
+} from './LabelFilter/LabelDiscoveryStatus.tsx';
 import { ImpactMetricsChart } from '../ImpactMetricsChart.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import { useEventTracker } from 'hooks/useEventTracker.ts';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
+import Input from 'component/common/Input/Input.tsx';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -28,7 +32,12 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     },
     padding: 0,
     '& .MuiPaper-root > section': {
-        overflowX: 'hidden',
+        overflow: 'hidden',
+        // scroll the form column instead of the whole section, so the
+        // sidebar always spans the full visible height of the modal
+        '& > div': {
+            overflowY: 'auto',
+        },
     },
 }));
 
@@ -39,8 +48,7 @@ const StyledForm = styled('form')({
 });
 
 const StyledTitle = styled('h1')(({ theme }) => ({
-    fontWeight: 'normal',
-    fontSize: theme.typography.h1.fontSize,
+    ...theme.typography.h1,
     margin: 0,
 }));
 
@@ -116,7 +124,7 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
         });
     const theme = useTheme();
     const screenBreakpoint = useMediaQuery(theme.breakpoints.down('lg'));
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const handleSave = () => {
         if (!isValid) return;
@@ -129,6 +137,19 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
         });
         onClose();
     };
+
+    const labelsFilter =
+        currentAvailableLabels.status === 'loading' ? (
+            <LabelDiscoveryLoading />
+        ) : currentAvailableLabels.status === 'error' ? (
+            <LabelDiscoveryError />
+        ) : (
+            <LabelsFilter
+                labelSelectors={formData.labelSelectors}
+                onChange={actions.setLabelSelectors}
+                availableLabels={currentAvailableLabels.labels}
+            />
+        );
 
     const sidebarDescription = (
         <>
@@ -172,7 +193,7 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
     return (
         <StyledDialog open={open} onClose={onClose}>
             <FormTemplate
-                compact
+                layout='compact'
                 disablePadding
                 description={sidebarDescription}
                 showLink={false}
@@ -191,13 +212,12 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
                                 : 'Add impact metric'}
                         </StyledTitle>
 
-                        <TextField
+                        <Input
                             label='Chart Title (optional)'
                             value={formData.title}
                             onChange={(e) => actions.setTitle(e.target.value)}
                             fullWidth
-                            variant='outlined'
-                            size='small'
+                            size='large'
                         />
 
                         <ImpactMetricsControls
@@ -205,15 +225,7 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
                             actions={actions}
                             metrics={metrics}
                             loading={loading}
-                            labelsFilter={
-                                currentAvailableLabels ? (
-                                    <LabelsFilter
-                                        labelSelectors={formData.labelSelectors}
-                                        onChange={actions.setLabelSelectors}
-                                        availableLabels={currentAvailableLabels}
-                                    />
-                                ) : null
-                            }
+                            labelsFilter={labelsFilter}
                         />
                     </StyledFormContent>
                     <StyledButtonContainer>

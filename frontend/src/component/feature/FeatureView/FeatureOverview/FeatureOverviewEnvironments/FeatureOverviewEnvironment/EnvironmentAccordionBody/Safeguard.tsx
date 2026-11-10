@@ -1,18 +1,8 @@
 import { useMemo, useState, type ReactNode } from 'react';
-import {
-    Box,
-    IconButton,
-    ListSubheader,
-    menuClasses,
-    styled,
-    Menu,
-    MenuItem,
-    Tooltip,
-    Typography,
-} from '@mui/material';
+import { IconButton, styled, Tooltip } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import HelpOutlineOutlined from '@mui/icons-material/HelpOutlineOutlined';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -21,6 +11,8 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import {
     SafeguardForm as SafeguardFormBase,
+    safeguardTypeOption,
+    SafeguardTypeSelect,
     type SafeguardType,
 } from '../../../ReleasePlan/SafeguardForm/SafeguardForm.tsx';
 import { SafeguardChangeRequestDialog } from '../../../ReleasePlan/SafeguardForm/SafeguardChangeRequestDialog.tsx';
@@ -39,7 +31,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import type { ISafeguard } from 'interfaces/safeguard';
 import { strategyBackground } from 'component/common/StrategyList/StrategyListItem';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const StyledSafeguardContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -60,41 +52,6 @@ const StyledAddSafeguardContent = styled('div')(({ theme }) => ({
     paddingRight: theme.spacing(2),
 }));
 
-const StyledSafeguardMenu = styled(Menu)(({ theme }) => ({
-    [`& .${menuClasses.paper}`]: {
-        maxWidth: theme.spacing(45),
-    },
-}));
-
-const StyledMenuHeader = styled(ListSubheader)(({ theme }) => ({
-    padding: theme.spacing(1, 2, 0.5, 2),
-    lineHeight: 1.6,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    fontSize: theme.typography.caption.fontSize,
-    fontWeight: theme.typography.fontWeightBold,
-    color: theme.palette.text.secondary,
-    backgroundColor: 'transparent',
-}));
-
-const optionItemSx = {
-    whiteSpace: 'normal',
-    alignItems: 'flex-start',
-    py: 1.25,
-} as const;
-
-const DisabledItemWrapper = styled('li')({
-    listStyle: 'none',
-    padding: 0,
-    margin: 0,
-});
-
-const StyledOptionDescription = styled(Typography)(({ theme }) => ({
-    display: 'block',
-    marginTop: theme.spacing(0.25),
-    color: theme.palette.text.secondary,
-}));
-
 const StyledSplashTriggerButton = styled(IconButton)(({ theme }) => ({
     color: theme.palette.action.active,
     padding: theme.spacing(0.5),
@@ -102,7 +59,7 @@ const StyledSplashTriggerButton = styled(IconButton)(({ theme }) => ({
 
 const SafeguardSplashTrigger = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const openSplash = () => {
         trackEvent('safeguards', {
@@ -118,37 +75,21 @@ const SafeguardSplashTrigger = () => {
         <Tooltip title='Learn how safeguards work' arrow>
             <StyledSplashTriggerButton
                 onClick={openSplash}
-                size='small'
+                size='medium'
                 aria-label='Learn how safeguards work'
             >
-                <HelpOutlineOutlined fontSize='small' />
+                <HelpOutlineOutlined />
             </StyledSplashTriggerButton>
         </Tooltip>
     );
 };
 
-export const AddSafeguard = ({
-    onSelect,
-    releasePlan,
-}: {
-    onSelect: (type: SafeguardType) => void;
-    releasePlan?: { id: string; name: string };
-}) => {
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const { trackEvent } = usePlausibleTracker();
-
+const AddSafeguard = ({ onAdd }: { onAdd: () => void }) => {
     return (
         <StyledSafeguardContainer>
             <StyledAddSafeguardContent>
                 <StyledActionButton
-                    onClick={(e) => {
-                        trackEvent('safeguards', {
-                            props: {
-                                eventType: 'choose safeguard opened',
-                            },
-                        });
-                        setAnchorEl(e.currentTarget);
-                    }}
+                    onClick={onAdd}
                     color='primary'
                     startIcon={<Add />}
                     sx={{ mt: 2, mb: 2, ml: 2, mr: 0.5 }}
@@ -157,77 +98,6 @@ export const AddSafeguard = ({
                 </StyledActionButton>
                 <SafeguardSplashTrigger />
             </StyledAddSafeguardContent>
-            <StyledSafeguardMenu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={() => setAnchorEl(null)}
-            >
-                <StyledMenuHeader disableSticky>
-                    Select safeguard action
-                </StyledMenuHeader>
-                <MenuItem
-                    sx={optionItemSx}
-                    onClick={() => {
-                        trackEvent('safeguards', {
-                            props: {
-                                eventType: 'form opened',
-                                safeguardType: 'featureEnvironment',
-                            },
-                        });
-                        onSelect('featureEnvironment');
-                        setAnchorEl(null);
-                    }}
-                >
-                    <Box>
-                        <Typography variant='body2'>
-                            Disable environment
-                        </Typography>
-                        <StyledOptionDescription variant='caption'>
-                            If your chosen metric crosses its threshold, this
-                            flag is turned off in this environment. Existing
-                            users stop seeing the flag immediately.
-                        </StyledOptionDescription>
-                    </Box>
-                </MenuItem>
-                <Tooltip
-                    title={
-                        releasePlan
-                            ? ''
-                            : 'Add a release plan to use this safeguard'
-                    }
-                    placement='right'
-                    arrow
-                >
-                    <DisabledItemWrapper>
-                        <MenuItem
-                            component='div'
-                            sx={optionItemSx}
-                            disabled={!releasePlan}
-                            onClick={() => {
-                                trackEvent('safeguards', {
-                                    props: {
-                                        eventType: 'form opened',
-                                        safeguardType: 'releasePlan',
-                                    },
-                                });
-                                onSelect('releasePlan');
-                                setAnchorEl(null);
-                            }}
-                        >
-                            <Box>
-                                <Typography variant='body2'>
-                                    Pause release plan automation
-                                </Typography>
-                                <StyledOptionDescription variant='caption'>
-                                    If your chosen metric crosses its threshold,
-                                    automatic milestone progression stops. The
-                                    current milestone keeps serving traffic.
-                                </StyledOptionDescription>
-                            </Box>
-                        </MenuItem>
-                    </DisabledItemWrapper>
-                </Tooltip>
-            </StyledSafeguardMenu>
         </StyledSafeguardContainer>
     );
 };
@@ -250,7 +120,7 @@ const useSafeguardActions = ({
     onSafeguardChange: () => void;
 }) => {
     const { setToastData, setToastApiError } = useToast();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { addChange } = useChangeRequestApi();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { data: pendingChangeRequests, refetch: refetchChangeRequests } =
@@ -526,6 +396,7 @@ const SafeguardForm = ({
     featureId,
     onSafeguardChange,
     onCancel,
+    typeSelector,
     headerAction,
 }: {
     safeguardType: SafeguardType;
@@ -535,6 +406,7 @@ const SafeguardForm = ({
     featureId: string;
     onSafeguardChange: () => void;
     onCancel: () => void;
+    typeSelector?: ReactNode;
     headerAction?: ReactNode;
 }) => {
     const projectId = useRequiredPathParam('projectId');
@@ -579,6 +451,7 @@ const SafeguardForm = ({
                 featureId={featureId}
                 badge={safeguardBadge}
                 safeguardType={safeguardType}
+                typeSelector={typeSelector}
                 headerAction={headerAction}
             />
             {submitChangeRequestDialog.data && (
@@ -615,7 +488,7 @@ const SafeguardForm = ({
                 >
                     <p>
                         <strong>Remove</strong> safeguard
-                        {releasePlan && (
+                        {safeguardType === 'releasePlan' && releasePlan && (
                             <>
                                 {' '}
                                 from release plan{' '}
@@ -646,6 +519,17 @@ export const Safeguard = ({
 }) => {
     const releasePlanSafeguard = releasePlan?.safeguards?.[0];
     const [addingType, setAddingType] = useState<SafeguardType | null>(null);
+    const { trackEvent } = useEventTracker();
+
+    const handleTypeChange = (type: SafeguardType) => {
+        trackEvent('safeguards', {
+            props: {
+                eventType: 'form opened',
+                safeguardType: type,
+            },
+        });
+        setAddingType(type);
+    };
 
     const handleExistingChange = () => {
         setAddingType(null);
@@ -688,36 +572,37 @@ export const Safeguard = ({
         );
     }
 
-    if (addingType === 'featureEnvironment') {
-        return (
-            <StyledSafeguardContainer>
-                <SafeguardForm
-                    safeguardType='featureEnvironment'
-                    environmentName={environmentName}
-                    featureId={featureId}
-                    onSafeguardChange={onSafeguardChange}
-                    onCancel={() => setAddingType(null)}
-                />
-            </StyledSafeguardContainer>
+    if (addingType) {
+        const typeSelector = (
+            <SafeguardTypeSelect value={addingType} onChange={handleTypeChange}>
+                {safeguardTypeOption('featureEnvironment')}
+                {safeguardTypeOption(
+                    'releasePlan',
+                    releasePlan
+                        ? undefined
+                        : 'Add a release plan to use this option',
+                )}
+            </SafeguardTypeSelect>
         );
-    }
 
-    if (addingType === 'releasePlan' && releasePlan) {
         return (
             <StyledSafeguardContainer>
                 <SafeguardForm
-                    safeguardType='releasePlan'
+                    safeguardType={addingType}
                     releasePlan={releasePlan}
                     environmentName={environmentName}
                     featureId={featureId}
                     onSafeguardChange={onSafeguardChange}
                     onCancel={() => setAddingType(null)}
+                    typeSelector={typeSelector}
                 />
             </StyledSafeguardContainer>
         );
     }
 
-    return <AddSafeguard onSelect={setAddingType} releasePlan={releasePlan} />;
+    return (
+        <AddSafeguard onAdd={() => handleTypeChange('featureEnvironment')} />
+    );
 };
 
 export default Safeguard;

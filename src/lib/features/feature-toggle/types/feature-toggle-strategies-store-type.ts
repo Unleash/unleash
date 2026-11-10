@@ -11,10 +11,10 @@ import type { IFeatureProjectUserParams } from '../feature-toggle-controller.js'
 
 export interface FeatureConfigurationClient {
     name: string;
-    type: string;
+    type?: string;
     enabled: boolean;
     project: string;
-    stale: boolean;
+    stale?: boolean;
     strategies: IStrategyConfig[];
     variants: IVariant[];
     dependencies?: IDependency[];
@@ -33,6 +33,7 @@ export interface IFeatureSearchParams {
     lifecycle?: string;
     lastSeenAt?: string;
     favorite?: string;
+    featureNames?: string[];
     status?: string[][];
     offset: number;
     favoritesFirst?: boolean;
@@ -59,7 +60,13 @@ export type IQueryOperator =
 export interface IQueryParam {
     field: string;
     operator: IQueryOperator;
-    values: (string | null)[];
+    values: readonly (string | null)[];
+}
+
+export interface StrategyBelongsToFeatureAndProjectParams {
+    strategyId: string;
+    featureName: string;
+    project: string;
 }
 
 export interface IFeatureStrategiesStore
@@ -128,4 +135,8 @@ export interface IFeatureStrategiesStore
     getCustomStrategiesInUseCount(): Promise<number>;
 
     getDefaultStickiness(projectId: string): Promise<string>;
+
+    strategyBelongsToFeatureAndProject(
+        params: StrategyBelongsToFeatureAndProjectParams,
+    ): Promise<boolean>;
 }

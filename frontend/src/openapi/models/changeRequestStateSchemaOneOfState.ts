@@ -10,7 +10,6 @@
 export type ChangeRequestStateSchemaOneOfState =
     (typeof ChangeRequestStateSchemaOneOfState)[keyof typeof ChangeRequestStateSchemaOneOfState];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestStateSchemaOneOfState = {
     Draft: 'Draft',
     In_review: 'In review',

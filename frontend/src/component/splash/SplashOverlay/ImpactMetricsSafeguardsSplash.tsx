@@ -12,7 +12,7 @@ import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
 import UnleashLogoWhite from 'assets/img/logoWithWhiteText.svg?react';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useImpactMetricsCounter } from 'hooks/useImpactMetrics';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const DOCS_URL = 'https://docs.getunleash.io/concepts/impact-metrics';
 const TRACKING_HELP =
@@ -322,7 +322,7 @@ interface ImpactMetricsSafeguardsSplashProps {
 export const ImpactMetricsSafeguardsSplash = ({
     onClose,
 }: ImpactMetricsSafeguardsSplashProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { increment: trackDisplayed } = useImpactMetricsCounter(
         'impactMetricsSafeguardsSplash_displayed',
         TRACKING_HELP,

@@ -1,7 +1,7 @@
 import { Link } from '@mui/material';
 import type { AnchorHTMLAttributes, ComponentProps } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const LinkRenderer = ({
     href = '',

@@ -36,12 +36,11 @@ describe('FeatureStrategySegmentList', () => {
             />,
         );
 
-        expect(screen.getByText('Selected Segments')).toBeInTheDocument();
         expect(
             screen.getByText('Segment with constraints'),
         ).toBeInTheDocument();
         expect(
-            screen.queryByText(/You are adding an empty segment/i),
+            screen.queryByText(/userId has no constraints/i),
         ).not.toBeInTheDocument();
     });
 
@@ -57,15 +56,8 @@ describe('FeatureStrategySegmentList', () => {
             />,
         );
 
-        expect(screen.getByText('Selected Segments')).toBeInTheDocument();
         expect(
-            screen.getByText('pre-access-demo-accounts'),
-        ).toBeInTheDocument();
-        expect(
-            screen.getByText(/You are adding an empty segment/i),
-        ).toBeInTheDocument();
-        expect(
-            screen.getByText(/This will activate this feature for ALL USERS/i),
+            screen.getByText(/pre-access-demo-accounts has no constraints/i),
         ).toBeInTheDocument();
     });
 });

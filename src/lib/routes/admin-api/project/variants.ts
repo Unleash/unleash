@@ -19,6 +19,7 @@ import { BadDataError, PermissionError } from '../../../../lib/error/index.js';
 import type { IUser } from '../../../types/index.js';
 import type { PushVariantsSchema } from '../../../openapi/spec/push-variants-schema.js';
 import { getStandardResponses } from '../../../openapi/index.js';
+import type { WithTransactional } from '../../../db/transaction.js';
 
 const PREFIX = '/:projectId/features/:featureName/variants';
 const ENV_PREFIX =
@@ -40,22 +41,30 @@ export default class VariantsController extends Controller {
 
     private featureService: FeatureToggleService;
 
+    private transactionalFeatureToggleService: WithTransactional<FeatureToggleService>;
+
     private accessService: AccessService;
 
     constructor(
         config: IUnleashConfig,
         {
             featureToggleService,
+            transactionalFeatureToggleService,
             openApiService,
             accessService,
         }: Pick<
             IUnleashServices,
-            'featureToggleService' | 'openApiService' | 'accessService'
+            | 'featureToggleService'
+            | 'transactionalFeatureToggleService'
+            | 'openApiService'
+            | 'accessService'
         >,
     ) {
         super(config);
         this.logger = config.getLogger('admin-api/project/variants.ts');
         this.featureService = featureToggleService;
+        this.transactionalFeatureToggleService =
+            transactionalFeatureToggleService;
         this.accessService = accessService;
         this.route({
             method: 'get',
@@ -67,6 +76,7 @@ export default class VariantsController extends Controller {
                     summary: 'Get variants for a feature in an environment',
                     description: `Returns the variants for a feature in a specific environment. If the feature has no variants it will return an empty array of variants`,
                     tags: ['Features'],
+                    release: { stable: '4.18.0' },
                     operationId: 'getEnvironmentFeatureVariants',
                     responses: {
                         200: createResponseSchema('featureVariantsSchema'),
@@ -85,6 +95,7 @@ export default class VariantsController extends Controller {
                     summary: "Patch a feature's variants in an environment",
                     description: `Apply a list of patches to the features environments in the specified environment. The patch objects should conform to the [JSON-patch format (RFC 6902)](https://www.rfc-editor.org/rfc/rfc6902).`,
                     tags: ['Features'],
+                    release: { stable: '4.18.0' },
                     operationId: 'patchEnvironmentsFeatureVariants',
                     requestBody: createRequestSchema('patchesSchema'),
                     responses: {
@@ -112,6 +123,7 @@ The backend will validate the input for the following invariants:
 
 The backend will also distribute remaining weight up to 1000 after adding the variants with \`weightType: fix\` together amongst the variants of \`weightType: variable\``,
                     tags: ['Features'],
+                    release: { stable: '4.18.0' },
                     operationId: 'overwriteEnvironmentFeatureVariants',
                     requestBody: createRequestSchema('variantsSchema'),
                     responses: {
@@ -129,6 +141,7 @@ The backend will also distribute remaining weight up to 1000 after adding the va
             middleware: [
                 openApiService.validPath({
                     tags: ['Features'],
+                    release: { stable: '4.20.0' },
                     operationId: 'overwriteFeatureVariantsOnEnvironments',
                     summary:
                         'Create (overwrite) variants for a feature flag in multiple environments',
@@ -173,13 +186,15 @@ The backend will also distribute remaining weight up to 1000 after adding the va
             ...variant,
         }));
 
-        await this.featureService.crProtectedSetVariantsOnEnvs(
-            projectId,
-            featureName,
-            environments,
-            variantsWithDefaults,
-            req.user,
-            req.audit,
+        await this.transactionalFeatureToggleService.transactional((service) =>
+            service.crProtectedSetVariantsOnEnvs(
+                projectId,
+                featureName,
+                environments,
+                variantsWithDefaults,
+                req.user,
+                req.audit,
+            ),
         );
         res.status(200).json({
             version: 1,
@@ -232,14 +247,18 @@ The backend will also distribute remaining weight up to 1000 after adding the va
     ): Promise<void> {
         const { projectId, featureName, environment } = req.params;
 
-        const variants = await this.featureService.updateVariantsOnEnv(
-            featureName,
-            projectId,
-            environment,
-            req.body,
-            req.user,
-            req.audit,
-        );
+        const variants =
+            await this.transactionalFeatureToggleService.transactional(
+                (service) =>
+                    service.updateVariantsOnEnv(
+                        featureName,
+                        projectId,
+                        environment,
+                        req.body,
+                        req.user,
+                        req.audit,
+                    ),
+            );
         res.status(200).json({
             version: 1,
             variants,
@@ -251,14 +270,18 @@ The backend will also distribute remaining weight up to 1000 after adding the va
         res: Response<FeatureVariantsSchema>,
     ): Promise<void> {
         const { featureName, environment, projectId } = req.params;
-        const variants = await this.featureService.crProtectedSaveVariantsOnEnv(
-            projectId,
-            featureName,
-            environment,
-            req.body,
-            req.user,
-            req.audit,
-        );
+        const variants =
+            await this.transactionalFeatureToggleService.transactional(
+                (service) =>
+                    service.crProtectedSaveVariantsOnEnv(
+                        projectId,
+                        featureName,
+                        environment,
+                        req.body,
+                        req.user,
+                        req.audit,
+                    ),
+            );
         res.status(200).json({
             version: 1,
             variants: variants,

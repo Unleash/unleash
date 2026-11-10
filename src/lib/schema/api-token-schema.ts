@@ -6,6 +6,7 @@ export const createApiToken = joi
     .object()
     .keys({
         tokenName: joi.string().required(),
+        appName: joi.string().optional(),
         type: joi
             .string()
             .lowercase()

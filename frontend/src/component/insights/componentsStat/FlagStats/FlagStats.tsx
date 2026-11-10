@@ -1,6 +1,6 @@
 import Icon from '@mui/material/Icon';
 import { Box, Typography, styled } from '@mui/material';
-import { useId } from 'hooks/useId';
+import { useId } from 'react';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
@@ -15,7 +15,7 @@ const StyledRing = styled(Box)(({ theme }) => ({
     borderRadius: '50%',
     width: '200px',
     height: '200px',
-    border: `10px solid ${theme.palette.secondary.border}`,
+    border: `10px solid ${theme.palette.primary.containerBorder}`,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -25,12 +25,12 @@ const StyledRingContent = styled(Box)(({ theme }) => ({
     borderRadius: '50%',
     width: '180px',
     height: '180px',
-    backgroundColor: theme.palette.secondary.light,
+    backgroundColor: theme.palette.primary.container,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     fontWeight: 'bold',
-    fontSize: theme.fontSizes.extraLargeHeader,
+    fontSize: theme.typography.display.fontSize,
     border: `10px solid ${theme.palette.background.paper}`,
 }));
 

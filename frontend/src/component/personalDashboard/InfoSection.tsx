@@ -8,6 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { formatAssetPath } from 'utils/formatPath';
 import upgradeHosted from 'assets/img/upgradeHosted.png';
+import { EnterpriseBenefits } from './EnterpriseBenefits.tsx';
 
 type InfoSectionProps = {};
 
@@ -42,30 +43,6 @@ const StyledTitle = styled('h2')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
-}));
-
-const StyledList = styled('ul')(({ theme }) => ({
-    listStyle: 'none',
-    padding: 0,
-    margin: 0,
-    fontSize: theme.typography.body2.fontSize,
-    '& li': {},
-}));
-
-const StyledListItem = styled('li')(({ theme }) => ({
-    position: 'relative',
-    paddingLeft: theme.spacing(2.5),
-    marginBottom: theme.spacing(0.5),
-    '&::before': {
-        content: '""',
-        position: 'absolute',
-        left: 0,
-        top: theme.spacing(0.375),
-        width: theme.spacing(1.5),
-        height: theme.spacing(1.5),
-        borderRadius: theme.spacing(0.5),
-        backgroundColor: theme.palette.primary.main,
-    },
 }));
 
 const StyledCloseButton = styled(IconButton)(({ theme }) => ({
@@ -103,7 +80,7 @@ export const InfoSection: FC<InfoSectionProps> = () => {
                     onClick={onDismiss}
                     size='small'
                 >
-                    <CloseIcon fontSize='inherit' />
+                    <CloseIcon />
                 </StyledCloseButton>
             </Tooltip>
             <StyledContent>
@@ -120,24 +97,7 @@ export const InfoSection: FC<InfoSectionProps> = () => {
                         in your company with the full experience of Unleash with
                         some key advantages like:
                     </Typography>
-                    <StyledList>
-                        <StyledListItem>
-                            Unlimited projects and environments
-                        </StyledListItem>
-                        <StyledListItem>
-                            Priority support for managed and self-hosted options
-                        </StyledListItem>
-                        <StyledListItem>
-                            SSO/SCIM - streamlined access and account management
-                        </StyledListItem>
-                        <StyledListItem>
-                            RBAC - precise access control
-                        </StyledListItem>
-                        <StyledListItem>
-                            Change requests - reduce error risk with
-                            pull-request like experience
-                        </StyledListItem>
-                    </StyledList>
+                    <EnterpriseBenefits />
                     <div>
                         <Button href='https://www.getunleash.io/upgrade-unleash?utm_source=oss&utm_medium=feature&utm_content=dashboard'>
                             View full Enterprise offering

@@ -19,6 +19,7 @@ const setup = (
     const recordedChanges: FilterItemParams[] = [];
 
     const mockProps: IFilterDateItemProps = {
+        filterKey: 'irrelevant',
         name,
         label,
         onChange: (value: FilterItemParams) => recordedChanges.push(value),

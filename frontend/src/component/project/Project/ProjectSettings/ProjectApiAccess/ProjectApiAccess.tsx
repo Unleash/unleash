@@ -6,7 +6,7 @@ import AccessContext from 'contexts/AccessContext';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { CreateProjectApiToken } from 'component/project/Project/ProjectSettings/ProjectApiAccess/CreateProjectApiToken';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router';
 import { ApiTokenTable } from 'component/common/ApiTokenTable/ApiTokenTable';
 import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
 import { CreateApiTokenButton } from 'component/common/ApiTokenTable/CreateApiTokenButton/CreateApiTokenButton';
@@ -20,7 +20,6 @@ import {
 import { CopyApiTokenButton } from 'component/common/ApiTokenTable/CopyApiTokenButton/CopyApiTokenButton';
 import { RemoveApiTokenButton } from 'component/common/ApiTokenTable/RemoveApiTokenButton/RemoveApiTokenButton';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useProjectApiTokensApi from 'hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
@@ -34,7 +33,6 @@ export const ProjectApiAccess = () => {
         loading,
         refetch: refetchProjectTokens,
     } = useProjectApiTokens(projectId);
-    const { trackEvent } = usePlausibleTracker();
     const { deleteToken: deleteProjectToken } = useProjectApiTokensApi();
 
     usePageTitle(`Project api access – ${projectName}`);
@@ -43,16 +41,13 @@ export const ProjectApiAccess = () => {
         tokens,
         (props) => (
             <ActionCell>
-                <CopyApiTokenButton
-                    token={props.row.original}
-                    permission={READ_PROJECT_API_TOKEN}
-                    project={projectId}
-                    track={() =>
-                        trackEvent('project_api_tokens', {
-                            props: { eventType: 'api_key_copied' },
-                        })
-                    }
-                />
+                {!props.row.original.secure ? (
+                    <CopyApiTokenButton
+                        token={props.row.original}
+                        permission={READ_PROJECT_API_TOKEN}
+                        project={projectId}
+                    />
+                ) : null}
                 <RemoveApiTokenButton
                     token={props.row.original}
                     permission={DELETE_PROJECT_API_TOKEN}
@@ -62,9 +57,6 @@ export const ProjectApiAccess = () => {
                             props.row.original.secret,
                             projectId,
                         );
-                        trackEvent('project_api_tokens', {
-                            props: { eventType: 'api_key_deleted' },
-                        });
                         refetchProjectTokens();
                     }}
                 />
@@ -79,6 +71,7 @@ export const ProjectApiAccess = () => {
             <PageContent
                 header={
                     <PageHeader
+                        variant='h2'
                         title={`API access (${rowCount})`}
                         actions={
                             <>

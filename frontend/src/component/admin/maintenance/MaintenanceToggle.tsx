@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import { useMaintenance } from 'hooks/api/getters/useMaintenance/useMaintenance';
 import { useMaintenanceApi } from 'hooks/api/actions/useMaintenanceApi/useMaintenanceApi';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import useToast from 'hooks/useToast';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
@@ -40,7 +40,7 @@ export const MaintenanceToggle = () => {
     const { enabled, refetchMaintenance } = useMaintenance();
     const { refetch: refetchUiConfig } = useUiConfig();
     const { toggleMaintenance } = useMaintenanceApi();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { setToastData } = useToast();
     const updateEnabled = async () => {
         setToastData({

@@ -1,5 +1,5 @@
 import { render } from 'utils/testRenderer';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { ProjectOnboarding } from './ProjectOnboarding.tsx';
 import { screen } from '@testing-library/react';

@@ -124,7 +124,6 @@ export default class NewRelicAddon extends Addon {
             stateDetails: stateDetails.join('\n'),
             event: serializeDates(event),
             details: {
-                url,
                 body,
             },
         });

@@ -3,14 +3,15 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { EdgeApiKeyRevisionIdSchema } from './edgeApiKeyRevisionIdSchema';
-import type { ConnectionConsumptionSchema } from './connectionConsumptionSchema';
-import type { EdgeInstanceDataSchemaHosting } from './edgeInstanceDataSchemaHosting';
-import type { EdgeUpstreamLatencySchema } from './edgeUpstreamLatencySchema';
-import type { EdgeProcessMetricsSchema } from './edgeProcessMetricsSchema';
-import type { RequestConsumptionSchema } from './requestConsumptionSchema';
-import type { EdgeRequestStatsSchema } from './edgeRequestStatsSchema';
-import type { EdgeInstanceTrafficSchema } from './edgeInstanceTrafficSchema';
+import type { ConnectionConsumptionSchema } from './connectionConsumptionSchema.ts';
+import type { EdgeApiKeyRevisionIdSchema } from './edgeApiKeyRevisionIdSchema.ts';
+import type { EdgeInstanceDataSchemaEnricherMetrics } from './edgeInstanceDataSchemaEnricherMetrics.ts';
+import type { EdgeInstanceDataSchemaHosting } from './edgeInstanceDataSchemaHosting.ts';
+import type { EdgeInstanceDataSchemaProcessMetrics } from './edgeInstanceDataSchemaProcessMetrics.ts';
+import type { EdgeInstanceTrafficSchema } from './edgeInstanceTrafficSchema.ts';
+import type { EdgeRequestStatsSchema } from './edgeRequestStatsSchema.ts';
+import type { EdgeUpstreamLatencySchema } from './edgeUpstreamLatencySchema.ts';
+import type { RequestConsumptionSchema } from './requestConsumptionSchema.ts';
 
 /**
  * Represents Edge instance observability data.
@@ -34,13 +35,17 @@ export interface EdgeInstanceDataSchema {
     connectionConsumptionSinceLastReport?: ConnectionConsumptionSchema;
     /** Which version (semver) of Edge is the Edge instance running. */
     edgeVersion: string;
+    /**
+     * Context enrichment request latency, errors, and timeouts.
+     * @nullable
+     */
+    enricherMetrics?: EdgeInstanceDataSchemaEnricherMetrics;
     /** A marker that tells Unleash whether this Edge instance is self-hosted, enterprise self-hosted, or hosted by Unleash. */
     hosting?: EdgeInstanceDataSchemaHosting;
     /** The ID of the Edge process, typically a ULID. Newly generated for each restart of the instance. */
     identifier: string;
     latencyUpstream: EdgeUpstreamLatencySchema;
-    /** @nullable */
-    processMetrics?: EdgeProcessMetricsSchema;
+    processMetrics?: EdgeInstanceDataSchemaProcessMetrics;
     /**
      * Which region the Edge instance is running in. Set to AWS_REGION by default (if present).
      * @nullable

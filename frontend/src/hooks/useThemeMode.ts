@@ -1,5 +1,6 @@
 import UIContext, { type themeMode } from 'contexts/UIContext';
 import { useContext } from 'react';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { setLocalStorageItem } from 'utils/storage';
 import { lightTheme } from 'themes/theme';
 import { darkTheme } from 'themes/dark-theme';
@@ -8,25 +9,37 @@ import type { Theme } from '@mui/material/styles';
 interface IUseThemeModeOutput {
     resolveTheme: () => Theme;
     onSetThemeMode: () => void;
+    setThemeMode: (mode: themeMode) => void;
     themeMode: themeMode;
 }
 
 export const useThemeMode = (): IUseThemeModeOutput => {
-    const { themeMode, setThemeMode } = useContext(UIContext);
+    const { themeMode, setThemeMode: setContextThemeMode } =
+        useContext(UIContext);
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     const key = 'unleash-theme';
 
-    const resolveTheme = () => (themeMode === 'light' ? lightTheme : darkTheme);
+    const resolvedMode: 'light' | 'dark' =
+        themeMode === 'system'
+            ? prefersDarkMode
+                ? 'dark'
+                : 'light'
+            : themeMode;
 
-    const onSetThemeMode = () => {
-        setThemeMode((prev: themeMode) => {
-            if (prev === 'light') {
-                setLocalStorageItem(key, 'dark');
-                return 'dark';
-            }
-            setLocalStorageItem(key, 'light');
-            return 'light';
-        });
+    const resolveTheme = (): Theme =>
+        resolvedMode === 'dark' ? darkTheme : lightTheme;
+
+    const setThemeMode = (mode: themeMode) => {
+        setLocalStorageItem(key, mode);
+        setContextThemeMode(mode);
     };
 
-    return { resolveTheme, onSetThemeMode, themeMode };
+    // toggle relative to what's currently shown, so it also works from 'system'
+    const onSetThemeMode = () => {
+        const next = resolvedMode === 'dark' ? 'light' : 'dark';
+        setLocalStorageItem(key, next);
+        setContextThemeMode(next);
+    };
+
+    return { resolveTheme, onSetThemeMode, setThemeMode, themeMode };
 };

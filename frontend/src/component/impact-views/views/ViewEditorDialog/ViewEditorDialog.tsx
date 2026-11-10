@@ -1,13 +1,16 @@
 import { useEffect, useReducer, type FC } from 'react';
 import {
-    Autocomplete,
     Box,
     FormControlLabel,
+    IconButton,
     Radio,
+    Switch,
     TextField,
+    Tooltip,
     Typography,
     styled,
 } from '@mui/material';
+import Delete from '@mui/icons-material/Delete';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import GeneralSelect, {
     type ISelectOption,
@@ -25,6 +28,8 @@ import type { AvailableImpactMetricsSchemaMetricsItem } from 'openapi';
 import { FeaturePicker } from '../FeaturePicker/FeaturePicker';
 import type { MetricView, ViewMetricConfig } from '../types';
 import { TIME_RANGE_OPTIONS } from '../../constants';
+import Input from 'component/common/Input/Input';
+import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField';
 
 type ViewInput = Omit<MetricView, 'id' | 'createdAt' | 'updatedAt'>;
 
@@ -40,12 +45,6 @@ const StyledFieldGroup = styled('div')(({ theme }) => ({
     minWidth: 220,
 }));
 
-const StyledFieldLabel = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-    fontWeight: theme.typography.fontWeightBold,
-    color: theme.palette.text.primary,
-}));
-
 const StyledHelper = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
@@ -54,8 +53,8 @@ const StyledHelper = styled(Typography)(({ theme }) => ({
 const StyledMetricRow = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    gap: theme.spacing(1.5),
-    padding: theme.spacing(1, 1.5),
+    gap: theme.spacing(2),
+    padding: theme.spacing(2, 2.5),
     borderRadius: theme.shape.borderRadius,
     border: `1px solid ${theme.palette.divider}`,
     backgroundColor: theme.palette.background.elevation1,
@@ -66,20 +65,19 @@ const StyledMetricName = styled('div')(({ theme }) => ({
     minWidth: 0,
     display: 'flex',
     flexDirection: 'column',
+    gap: theme.spacing(0.5),
 }));
 
-const StyledMetricLabel = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
-    fontWeight: theme.typography.fontWeightMedium,
-    color: theme.palette.text.primary,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
+const StyledNameInput = styled(TextField)(({ theme }) => ({
+    maxWidth: theme.spacing(30),
 }));
 
 const StyledMetricHint = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
 }));
 
 const AGGREGATION_OPTIONS: ISelectOption[] = [
@@ -140,8 +138,10 @@ const MetricOptionRow: FC<{ option: MetricOption }> = ({ option }) => (
 
 const MetricGoalRow: FC<{
     metric: ViewMetricConfig;
-    onSelectGoal: (metricName: string) => void;
-}> = ({ metric, onSelectGoal }) => {
+    onSelectGoal: (id: string) => void;
+    onRename: (id: string, displayName: string) => void;
+    onRemove: (id: string) => void;
+}> = ({ metric, onSelectGoal, onRename, onRemove }) => {
     const label = metric.displayName || metric.metricName;
     return (
         <StyledMetricRow>
@@ -152,7 +152,7 @@ const MetricGoalRow: FC<{
                     <Radio
                         size='small'
                         checked={Boolean(metric.goal)}
-                        onChange={() => onSelectGoal(metric.metricName)}
+                        onChange={() => onSelectGoal(metric.id)}
                     />
                 }
                 label={
@@ -166,13 +166,30 @@ const MetricGoalRow: FC<{
                 labelPlacement='bottom'
             />
             <StyledMetricName>
-                <StyledMetricLabel title={metric.metricName}>
-                    {label}
-                </StyledMetricLabel>
-                <StyledMetricHint>
-                    {metricTypeHint(metric.metricName)}
+                <StyledNameInput
+                    label='Display name'
+                    value={metric.displayName ?? ''}
+                    onChange={(event) =>
+                        onRename(metric.id, event.target.value)
+                    }
+                    placeholder={metric.metricName}
+                    size='large'
+                    variant='outlined'
+                    fullWidth
+                />
+                <StyledMetricHint title={metric.metricName}>
+                    {metric.metricName} · {metricTypeHint(metric.metricName)}
                 </StyledMetricHint>
             </StyledMetricName>
+            <Tooltip title='Remove metric' arrow>
+                <IconButton
+                    size='medium'
+                    aria-label={`Remove ${label}`}
+                    onClick={() => onRemove(metric.id)}
+                >
+                    <Delete />
+                </IconButton>
+            </Tooltip>
         </StyledMetricRow>
     );
 };
@@ -184,6 +201,7 @@ export type ViewFormData = {
     timeRange: ChartTimeRange;
     aggregationMode: AggregationMode;
     environment: string;
+    showTopMovers: boolean;
 };
 
 const goalAggregation = (metrics: ViewMetricConfig[]): AggregationMode => {
@@ -200,6 +218,7 @@ const seedForm = (initialView?: MetricView | null): ViewFormData => {
             timeRange: DEFAULT_TIME_RANGE,
             aggregationMode: DEFAULT_AGGREGATION,
             environment: DEFAULT_ENVIRONMENT,
+            showTopMovers: false,
         };
     }
     return {
@@ -209,6 +228,7 @@ const seedForm = (initialView?: MetricView | null): ViewFormData => {
         timeRange: initialView.timeRange,
         aggregationMode: goalAggregation(initialView.metrics),
         environment: initialView.environment,
+        showTopMovers: initialView.showTopMovers ?? false,
     };
 };
 
@@ -219,8 +239,11 @@ type FormAction =
     | { type: 'setMetrics'; options: MetricOption[] }
     | { type: 'setTimeRange'; timeRange: ChartTimeRange }
     | { type: 'setAggregation'; aggregationMode: AggregationMode }
-    | { type: 'setGoal'; metricName: string }
-    | { type: 'setEnvironment'; environment: string };
+    | { type: 'setGoal'; id: string }
+    | { type: 'renameMetric'; id: string; displayName: string }
+    | { type: 'removeMetric'; id: string }
+    | { type: 'setEnvironment'; environment: string }
+    | { type: 'setShowTopMovers'; showTopMovers: boolean };
 
 const patchMetrics = (
     metrics: ViewMetricConfig[],
@@ -262,6 +285,8 @@ const formReducer = (state: ViewFormData, action: FormAction): ViewFormData => {
             return { ...state, featureNames: action.featureNames };
         case 'setEnvironment':
             return { ...state, environment: action.environment };
+        case 'setShowTopMovers':
+            return { ...state, showTopMovers: action.showTopMovers };
         case 'setTimeRange':
             return {
                 ...state,
@@ -295,8 +320,24 @@ const formReducer = (state: ViewFormData, action: FormAction): ViewFormData => {
                 ...state,
                 metrics: state.metrics.map((metric) => ({
                     ...metric,
-                    goal: metric.metricName === action.metricName,
+                    goal: metric.id === action.id,
                 })),
+            };
+        case 'renameMetric':
+            return {
+                ...state,
+                metrics: state.metrics.map((metric) =>
+                    metric.id === action.id
+                        ? { ...metric, displayName: action.displayName }
+                        : metric,
+                ),
+            };
+        case 'removeMetric':
+            return {
+                ...state,
+                metrics: state.metrics.filter(
+                    (metric) => metric.id !== action.id,
+                ),
             };
     }
 };
@@ -345,6 +386,7 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
             metrics: form.metrics,
             timeRange: form.timeRange,
             environment: form.environment,
+            showTopMovers: form.showTopMovers,
         });
     };
 
@@ -368,8 +410,9 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                     pt: 1,
                 }}
             >
-                <TextField
+                <Input
                     label='View title'
+                    fullWidth
                     value={form.title}
                     onChange={(event) =>
                         dispatch({
@@ -378,14 +421,22 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                         })
                     }
                     placeholder='e.g. Checkout funnel'
-                    size='small'
+                    size='large'
                     autoFocus
                     required
                 />
 
                 <StyledFieldGroup>
-                    <StyledFieldLabel>Metrics</StyledFieldLabel>
-                    <Autocomplete
+                    <AutocompleteField
+                        label='Metrics'
+                        helperText='All selected metrics are drawn together on a
+                                single chart.'
+                        size='large'
+                        placeholder={
+                            form.metrics.length === 0
+                                ? 'Pick one or more metrics…'
+                                : 'Add another metric…'
+                        }
                         multiple
                         disableCloseOnSelect
                         loading={metricsLoading}
@@ -414,23 +465,7 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                                 <MetricOptionRow option={option} />
                             </Box>
                         )}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                placeholder={
-                                    form.metrics.length === 0
-                                        ? 'Pick one or more metrics…'
-                                        : 'Add another metric…'
-                                }
-                                size='small'
-                                variant='outlined'
-                            />
-                        )}
                     />
-                    <StyledHelper>
-                        All selected metrics are drawn together on a single
-                        chart.
-                    </StyledHelper>
                     {form.metrics.length > 0 ? (
                         <Box
                             sx={{
@@ -442,13 +477,20 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                         >
                             {form.metrics.map((metric) => (
                                 <MetricGoalRow
-                                    key={metric.metricName}
+                                    key={metric.id}
                                     metric={metric}
-                                    onSelectGoal={(metricName) =>
+                                    onSelectGoal={(id) =>
+                                        dispatch({ type: 'setGoal', id })
+                                    }
+                                    onRename={(id, displayName) =>
                                         dispatch({
-                                            type: 'setGoal',
-                                            metricName,
+                                            type: 'renameMetric',
+                                            id,
+                                            displayName,
                                         })
+                                    }
+                                    onRemove={(id) =>
+                                        dispatch({ type: 'removeMetric', id })
                                     }
                                 />
                             ))}
@@ -469,6 +511,7 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                             id='view-aggregation'
                             labelId='view-aggregation-label'
                             label='Aggregation'
+                            fullWidth
                             value={form.aggregationMode}
                             options={AGGREGATION_OPTIONS}
                             onChange={(aggregationMode) =>
@@ -487,6 +530,7 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                             id='view-time-range'
                             labelId='view-time-range-label'
                             label='Time range'
+                            fullWidth
                             value={form.timeRange}
                             options={TIME_RANGE_OPTIONS}
                             onChange={(timeRange) =>
@@ -499,6 +543,7 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                             id='view-environment'
                             labelId='view-environment-label'
                             label='Environment'
+                            fullWidth
                             value={form.environment}
                             options={environmentOptions}
                             disabled={envLoading}
@@ -515,6 +560,27 @@ export const ViewEditorDialog: FC<ViewEditorDialogProps> = ({
                         </StyledHelper>
                     </StyledFieldGroup>
                 </Box>
+
+                <StyledFieldGroup>
+                    <FormControlLabel
+                        control={
+                            <Switch
+                                checked={form.showTopMovers}
+                                onChange={(event) =>
+                                    dispatch({
+                                        type: 'setShowTopMovers',
+                                        showTopMovers: event.target.checked,
+                                    })
+                                }
+                            />
+                        }
+                        label='Show top movers'
+                    />
+                    <StyledHelper>
+                        Ranks the flags whose toggle had the biggest effect on
+                        the goal metric, shown beside the chart.
+                    </StyledHelper>
+                </StyledFieldGroup>
             </Box>
         </Dialogue>
     );

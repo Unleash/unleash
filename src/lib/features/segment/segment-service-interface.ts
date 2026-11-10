@@ -22,6 +22,17 @@ export interface ISegmentService {
 
     getByStrategy(strategyId: string): Promise<ISegment[]>;
 
+    validateStrategyBelongsToProjectAndEnvironment(context: {
+        strategyId: string;
+        projectId: string;
+        environment: string;
+    }): Promise<void>;
+
+    validateProjectCanAccessSegments(
+        projectId: string,
+        segmentIds?: number[],
+    ): Promise<void>;
+
     get(id: number, userId?: number): Promise<ISegment>;
 
     /**

@@ -1,5 +1,4 @@
 import type { Response } from 'express';
-import type { AuthedRequest } from '../types/core.js';
 import type { IUnleashServices } from '../services/index.js';
 import type { IUnleashConfig } from '../types/option.js';
 import Controller from '../routes/controller.js';
@@ -55,6 +54,7 @@ class UiConfigController extends Controller {
                     summary: 'Get UI configuration',
                     description:
                         'Retrieves the full configuration used to set up the Unleash Admin UI.',
+                    release: { stable: '4.15.0' },
                     operationId: 'getUiConfig',
                     responses: {
                         200: createResponseSchema('uiConfigSchema'),
@@ -74,6 +74,7 @@ class UiConfigController extends Controller {
                     summary: 'Sets allowed CORS origins',
                     description:
                         'Sets Cross-Origin Resource Sharing headers for Frontend SDK API.',
+                    release: { stable: '6.6.0' },
                     operationId: 'setCors',
                     requestBody: createRequestSchema('setCorsSchema'),
                     responses: { 204: emptyResponse },
@@ -83,10 +84,15 @@ class UiConfigController extends Controller {
     }
 
     async getUiConfig(
-        req: AuthedRequest,
+        req: IAuthRequest,
         res: Response<UiConfigSchema>,
     ): Promise<void> {
-        const uiConfig = await this.uiConfigService.getUiConfig(req.user);
+        // Only pass the sessionID for logged-in sessions; otherwise it's
+        // ephemeral per request and correlates nothing.
+        const uiConfig = await this.uiConfigService.getUiConfig(
+            req.user,
+            req.session?.user ? req.sessionID : undefined,
+        );
 
         this.openApiService.respondWithValidation(
             200,

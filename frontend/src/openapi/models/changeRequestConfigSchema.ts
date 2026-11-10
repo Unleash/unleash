@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestEnvironmentConfigSchema } from './changeRequestEnvironmentConfigSchema';
+import type { ChangeRequestEnvironmentConfigSchema } from './changeRequestEnvironmentConfigSchema.ts';
 
 /**
  * A list of environment-specific [change request](https://docs.getunleash.io/concepts/change-requests) configurations.

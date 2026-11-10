@@ -22,28 +22,8 @@ export const FavoriteIconButton: FC<IFavoriteIconButtonProps> = ({
             <IconButton size={size} data-loading {...props}>
                 <ConditionallyRender
                     condition={isFavorite}
-                    show={
-                        <StarIcon
-                            color='primary'
-                            sx={{
-                                fontSize: (theme) =>
-                                    size === 'medium'
-                                        ? theme.spacing(2)
-                                        : theme.spacing(3),
-                            }}
-                        />
-                    }
-                    elseShow={
-                        <StarBorderIcon
-                            color='primary'
-                            sx={{
-                                fontSize: (theme) =>
-                                    size === 'medium'
-                                        ? theme.spacing(2)
-                                        : theme.spacing(3),
-                            }}
-                        />
-                    }
+                    show={<StarIcon color='primary' />}
+                    elseShow={<StarBorderIcon color='primary' />}
                 />
             </IconButton>
         </TooltipResolver>

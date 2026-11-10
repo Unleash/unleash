@@ -313,6 +313,46 @@ describe('count current flags in each stage', () => {
         });
     });
 
+    test('a revived flag whose latest lifecycle stage is still archived is counted as initial', async () => {
+        const project = await db.stores.projectStore.create({
+            name: 'project',
+            id: randomId(),
+        });
+
+        const flag = await db.stores.featureToggleStore.create(project.id, {
+            name: randomId(),
+            createdByUserId: 1,
+        });
+
+        const time = Date.now();
+        const stages = ['initial', 'archived'];
+        for (const [index, stage] of stages.entries()) {
+            await db.stores.featureLifecycleStore.insert([
+                {
+                    feature: flag.name,
+                    stage: stage as StageName,
+                },
+            ]);
+
+            await db
+                .rawDatabase('feature_lifecycles')
+                .where({
+                    feature: flag.name,
+                    stage: stage,
+                })
+                .update({
+                    created_at: addMinutes(time, index),
+                });
+        }
+
+        const result = await readModel.getCurrentFlagsInEachStage(project.id);
+
+        expect(result).toMatchObject({
+            initial: 1,
+            archived: 0,
+        });
+    });
+
     test('the archived count is based on the features table (source of truth), not the lifecycle table', async () => {
         const project = await db.stores.projectStore.create({
             name: 'project',

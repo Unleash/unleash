@@ -2,7 +2,9 @@ import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import { IntegrationForm } from '../IntegrationForm/IntegrationForm.tsx';
 import cloneDeep from 'lodash.clonedeep';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import type { AddonSchema } from 'openapi';
+import type { FormTemplateLayout } from 'component/common/FormTemplate/FormTemplate';
 
 export const DEFAULT_DATA: Omit<AddonSchema, 'id'> = {
     provider: '',
@@ -14,8 +16,13 @@ export const DEFAULT_DATA: Omit<AddonSchema, 'id'> = {
     environments: [],
 };
 
-export const CreateIntegration = () => {
+type CreateIntegrationProps = {
+    layout?: FormTemplateLayout;
+};
+
+export const CreateIntegration = ({ layout }: CreateIntegrationProps) => {
     const providerId = useRequiredPathParam('providerId');
+    const projectId = useOptionalPathParam('projectId');
     const { providers, refetchAddons } = useAddons();
 
     const editMode = false;
@@ -26,6 +33,8 @@ export const CreateIntegration = () => {
     const defaultAddon = {
         ...cloneDeep(DEFAULT_DATA),
         provider: provider ? provider.name : '',
+        // In a project the selector is hidden, so scope the new integration here.
+        projects: projectId ? [projectId] : [],
     };
     const deprecated = !provider || Boolean(provider.deprecated);
 
@@ -36,6 +45,7 @@ export const CreateIntegration = () => {
             fetch={refetchAddons}
             addon={defaultAddon}
             deprecated={deprecated}
+            layout={layout}
         />
     );
 };

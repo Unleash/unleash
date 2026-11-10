@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { LifecycleTrendsSchemaLifecycleTrendsCleanupCategoriesExperimental } from './lifecycleTrendsSchemaLifecycleTrendsCleanupCategoriesExperimental';
-import type { LifecycleTrendsSchemaLifecycleTrendsCleanupCategoriesPermanent } from './lifecycleTrendsSchemaLifecycleTrendsCleanupCategoriesPermanent';
-import type { LifecycleTrendsSchemaLifecycleTrendsCleanupCategoriesRelease } from './lifecycleTrendsSchemaLifecycleTrendsCleanupCategoriesRelease';
+import type { LifecycleTrendsSchemaLifecycleTrendsCleanupCategoriesExperimental } from './lifecycleTrendsSchemaLifecycleTrendsCleanupCategoriesExperimental.ts';
+import type { LifecycleTrendsSchemaLifecycleTrendsCleanupCategoriesPermanent } from './lifecycleTrendsSchemaLifecycleTrendsCleanupCategoriesPermanent.ts';
+import type { LifecycleTrendsSchemaLifecycleTrendsCleanupCategoriesRelease } from './lifecycleTrendsSchemaLifecycleTrendsCleanupCategoriesRelease.ts';
 
 export type LifecycleTrendsSchemaLifecycleTrendsCleanupCategories = {
     experimental: LifecycleTrendsSchemaLifecycleTrendsCleanupCategoriesExperimental;

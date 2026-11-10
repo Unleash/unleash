@@ -10,7 +10,6 @@
 export type ReleasePlanTemplateSchemaDiscriminator =
     (typeof ReleasePlanTemplateSchemaDiscriminator)[keyof typeof ReleasePlanTemplateSchemaDiscriminator];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ReleasePlanTemplateSchemaDiscriminator = {
     template: 'template',
 } as const;

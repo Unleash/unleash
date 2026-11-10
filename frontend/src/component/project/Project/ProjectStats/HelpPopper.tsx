@@ -21,7 +21,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(3, 3),
     maxWidth: '350px',
     borderRadius: `${theme.shape.borderRadiusMedium}px`,
-    border: `1px solid ${theme.palette.neutral.border}`,
+    border: `1px solid ${theme.palette.neutral.containerBorder}`,
     fontSize: theme.typography.body2.fontSize,
 }));
 
@@ -73,7 +73,7 @@ export const HelpPopper: FC<IHelpPopperProps> = ({ children, id }) => {
                         {children}
                         <Feedback
                             id={id}
-                            eventName='project_overview'
+                            eventName='project-overview'
                             localStorageKey='ProjectOverviewFeedback'
                         />
                     </StyledPaper>

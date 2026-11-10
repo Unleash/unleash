@@ -516,3 +516,99 @@ test('Should throttle password reset email', async () => {
     const attempt3 = service.createResetPasswordEmail('known@example.com');
     await expect(attempt3).resolves.toBeInstanceOf(URL);
 });
+
+describe('changePassword session invalidation', () => {
+    const buildService = () => {
+        const userStore = new UserStoreMock();
+        const accessService = new AccessServiceMock();
+        const resetTokenStore = new FakeResetTokenStore();
+        const resetTokenService = new ResetTokenService(
+            { resetTokenStore },
+            config,
+        );
+        const emailService = new EmailService(config);
+        const sessionStore = new FakeSessionStore();
+        const sessionService = new SessionService({ sessionStore }, config);
+        const eventService = createFakeEventsService(config);
+        const settingService = new SettingService(
+            { settingStore: new FakeSettingStore() },
+            config,
+            eventService,
+        );
+        const resourceLimitsService = new ResourceLimitsService(config);
+
+        const service = new UserService({ userStore }, config, {
+            accessService,
+            resetTokenService,
+            emailService,
+            eventService,
+            sessionService,
+            settingService,
+            resourceLimitsService,
+        });
+        return { service, sessionStore, userStore };
+    };
+
+    const strongPassword = 't7GTx&$Y9pcsnxRv6';
+
+    const seedUserWithTwoSessions = async (
+        userStore: UserStoreMock,
+        sessionStore: FakeSessionStore,
+    ) => {
+        const user = await userStore.insert(
+            new User({ id: 1, email: 'concurrent@mail.com' }),
+        );
+        await sessionStore.insertSession({
+            sid: 'browserA',
+            sess: { user: { id: user.id } },
+        });
+        await sessionStore.insertSession({
+            sid: 'browserB',
+            sess: { user: { id: user.id } },
+        });
+        return user.id;
+    };
+
+    test('terminates all active sessions for the user on password change', async () => {
+        const { service, sessionStore, userStore } = buildService();
+        const userId = await seedUserWithTwoSessions(userStore, sessionStore);
+        expect(await sessionStore.getSessionsForUser(userId)).toHaveLength(2);
+
+        await service.changePassword(userId, strongPassword);
+
+        expect(await sessionStore.getSessionsForUser(userId)).toHaveLength(0);
+    });
+
+    test('terminates sessions by default when an options object without logoutUser is passed', async () => {
+        const { service, sessionStore, userStore } = buildService();
+        const userId = await seedUserWithTwoSessions(userStore, sessionStore);
+
+        // Secure-by-default: a missing/undefined flag must not skip invalidation
+        await service.changePassword(userId, strongPassword, {});
+
+        expect(await sessionStore.getSessionsForUser(userId)).toHaveLength(0);
+    });
+
+    test('keeps sessions only when logout is explicitly disabled', async () => {
+        const { service, sessionStore, userStore } = buildService();
+        const userId = await seedUserWithTwoSessions(userStore, sessionStore);
+
+        await service.changePassword(userId, strongPassword, {
+            logoutUser: false,
+        });
+
+        expect(await sessionStore.getSessionsForUser(userId)).toHaveLength(2);
+    });
+
+    test('keeps the current session and terminates the others when keepSessionId is set', async () => {
+        const { service, sessionStore, userStore } = buildService();
+        const userId = await seedUserWithTwoSessions(userStore, sessionStore);
+
+        await service.changePassword(userId, strongPassword, {
+            keepSessionId: 'browserA',
+        });
+
+        const remaining = await sessionStore.getSessionsForUser(userId);
+        expect(remaining.map((session) => session.sid)).toEqual(['browserA']);
+    });
+});

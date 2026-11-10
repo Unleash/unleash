@@ -1,16 +1,24 @@
 import type React from 'react';
-import { forwardRef, useImperativeHandle, type RefObject } from 'react';
-import { Box, Button, styled, Typography } from '@mui/material';
+import {
+    forwardRef,
+    useEffect,
+    useImperativeHandle,
+    useRef,
+    useState,
+    type RefObject,
+} from 'react';
+import { Box, Button, styled, Typography, useTheme } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import type { IConstraint } from 'interfaces/strategy';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { EditableConstraintsList } from 'component/common/NewConstraintAccordion/ConstraintsList/EditableConstraintsList';
+import { EditableConstraintsList } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/EditableConstraintsList.tsx';
 import { Limit } from 'component/common/Limit/Limit';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { RecentlyUsedConstraints } from '../RecentlyUsedConstraints/RecentlyUsedConstraints.tsx';
 import { useWeakMap } from 'hooks/useWeakMap.ts';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext.ts';
 import { createEmptyConstraint } from 'utils/createEmptyConstraint.ts';
+import { SelectPopover } from 'component/common/SelectPopover/SelectPopover.tsx';
+import { createContextFieldOptions } from 'component/feature/FeatureStrategy/FeatureStrategyConstraints/EditableConstraint/createContextFieldOptions.ts';
 
 interface IConstraintAccordionListProps {
     constraints: IConstraint[];
@@ -23,11 +31,31 @@ const StyledContainer = styled('div')({
     flexDirection: 'column',
 });
 
+const StyledRow = styled(Box)({
+    display: 'flex',
+    justifyContent: 'space-between',
+});
+
+const StyledTitle = styled('h3')(({ theme }) => ({
+    margin: 0,
+    fontSize: 'inherit',
+    fontWeight: theme.typography.fontWeightMedium,
+    color: theme.palette.text.secondary,
+}));
+
 const StyledHelpIconBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
+}));
+
+const StyledLimitBox = styled(Box)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    '&:empty': {
+        display: 'none',
+    },
 }));
 
 const useConstraintLimit = (constraintsCount: number) => {
@@ -69,34 +97,44 @@ const useConstraintAccordionList = (
         addConstraint,
     }));
 
-    const onAdd =
-        addConstraint &&
-        (() => {
-            addConstraint(context[0].name);
-        });
-
-    return { onAdd, state, context };
+    return { addConstraint, state, context };
 };
 
 export const FeatureStrategyConstraintAccordionList = forwardRef<
     IConstraintAccordionListRef | undefined,
     IConstraintAccordionListProps
 >(({ constraints, setConstraints }, ref) => {
-    const { onAdd, context } = useConstraintAccordionList(
+    const theme = useTheme();
+    const { addConstraint, context } = useConstraintAccordionList(
         setConstraints,
         ref as RefObject<IConstraintAccordionListRef | null>,
     );
     const { limit, limitReached } = useConstraintLimit(constraints.length);
+    const addConstraintButtonRef = useRef<HTMLButtonElement>(null);
+    const [addConstraintAnchor, setAddConstraintAnchor] =
+        useState<HTMLButtonElement | null>(null);
+    const listRef = useRef<HTMLDivElement>(null);
+    const [pendingNewRowFocus, setPendingNewRowFocus] = useState(false);
+
+    useEffect(() => {
+        if (!pendingNewRowFocus) return;
+        const rows = listRef.current?.querySelectorAll(':scope > ul > li');
+        if (!rows || rows.length !== constraints.length) return;
+        setPendingNewRowFocus(false);
+        rows[rows.length - 1].querySelector<HTMLElement>('button')?.focus();
+    }, [constraints, pendingNewRowFocus]);
 
     if (context.length === 0) {
         return null;
     }
 
+    const contextFieldOptions = createContextFieldOptions(context);
+
     return (
         <StyledContainer>
-            <div>
+            <StyledRow>
                 <StyledHelpIconBox>
-                    <Typography>Constraints</Typography>
+                    <StyledTitle>Constraints</StyledTitle>
                     <HelpIcon
                         htmlTooltip
                         tooltip={
@@ -118,43 +156,56 @@ export const FeatureStrategyConstraintAccordionList = forwardRef<
                         }
                     />
                 </StyledHelpIconBox>
-                {setConstraints ? (
-                    <EditableConstraintsList
-                        ref={ref}
-                        setConstraints={setConstraints}
-                        constraints={constraints}
-                    />
-                ) : null}
-                <Box
-                    sx={(theme) => ({
-                        marginTop: theme.spacing(2),
-                        marginBottom: theme.spacing(2),
-                    })}
-                >
-                    <Limit
-                        name='constraints in this strategy'
-                        shortName='constraints'
-                        currentValue={constraints.length}
-                        limit={limit}
-                    />
-                </Box>
-
                 <Button
+                    ref={addConstraintButtonRef}
                     type='button'
-                    onClick={onAdd}
+                    onClick={() => {
+                        setPendingNewRowFocus(false);
+                        setAddConstraintAnchor(addConstraintButtonRef.current);
+                    }}
                     startIcon={<Add />}
                     variant='outlined'
                     color='primary'
+                    size='medium'
                     data-testid='ADD_CONSTRAINT_BUTTON'
                     disabled={Boolean(limitReached)}
                 >
                     Add constraint
                 </Button>
-                <RecentlyUsedConstraints
-                    setConstraints={setConstraints}
-                    constraints={constraints}
+                <SelectPopover
+                    open={Boolean(addConstraintAnchor)}
+                    anchorEl={addConstraintAnchor}
+                    onClose={() => setAddConstraintAnchor(null)}
+                    disableRestoreFocus={pendingNewRowFocus}
+                    optionGroups={contextFieldOptions}
+                    onChange={(contextName) => {
+                        if (contextName) {
+                            setPendingNewRowFocus(true);
+                            addConstraint(contextName);
+                        }
+                    }}
+                    searchPlaceholderText='Search context fields'
+                    horizontalAlign='right'
+                    listMaxHeight={theme.spacing(45)}
                 />
-            </div>
+            </StyledRow>
+            {setConstraints ? (
+                <div ref={listRef}>
+                    <EditableConstraintsList
+                        ref={ref}
+                        setConstraints={setConstraints}
+                        constraints={constraints}
+                    />
+                </div>
+            ) : null}
+            <StyledLimitBox>
+                <Limit
+                    name='constraints in this strategy'
+                    shortName='constraints'
+                    currentValue={constraints.length}
+                    limit={limit}
+                />
+            </StyledLimitBox>
         </StyledContainer>
     );
 });

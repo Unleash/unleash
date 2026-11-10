@@ -10,7 +10,10 @@ import type {
     IFeatureToggleQuery,
     IVariant,
 } from '../../types/model.js';
-import type { IFeatureToggleStore } from './types/feature-toggle-store-type.js';
+import type {
+    FlagLifetime,
+    IFeatureToggleStore,
+} from './types/feature-toggle-store-type.js';
 import type { Db } from '../../db/db.js';
 import type { LastSeenInput } from '../metrics/last-seen/last-seen-service.js';
 import { NameExistsError } from '../../error/index.js';
@@ -39,20 +42,25 @@ const FEATURE_COLUMNS = [
     'created_at',
     'impression_data',
     'archived_at',
+    'lifetime_days',
 ];
 
 export interface FeaturesTable {
     name: string;
     description: string | null;
-    type?: string;
+    type: string;
     stale?: boolean | null;
     project: string;
-    created_at?: Date;
+    created_at: Date;
     impression_data?: boolean | null;
     archived?: boolean;
     archived_at?: Date | null;
     created_by_user_id?: number;
+    lifetime_days?: number | null;
 }
+
+type FeaturesInsertRow = Omit<FeaturesTable, 'type' | 'created_at'> &
+    Partial<Pick<FeaturesTable, 'type' | 'created_at'>>;
 
 export interface FeatureToggleInsert
     extends Omit<FeatureToggleDTO, 'createdByUserId'> {
@@ -71,6 +79,7 @@ const commonSelectColumns = [
     'features.stale as stale',
     'features.impression_data as impression_data',
     'features.created_at as created_at',
+    'features.lifetime_days as lifetime_days',
 ];
 
 const TABLE = 'features';
@@ -95,9 +104,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     ) {
         this.db = db;
         this.logger = getLogger('feature-toggle-store.ts');
-        this.featureToggleRowConverter = new FeatureToggleRowConverter(
-            flagResolver,
-        );
+        this.featureToggleRowConverter = new FeatureToggleRowConverter();
         this.flagResolver = flagResolver;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
@@ -304,10 +311,9 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         }
 
         if (queryModifiers.range && queryModifiers.range.length === 2) {
-            query.andWhereBetween(dateAccessor, [
-                queryModifiers.range[0],
-                queryModifiers.range[1],
-            ]);
+            query
+                .andWhere(dateAccessor, '>=', queryModifiers.range[0])
+                .andWhere(dateAccessor, '<', queryModifiers.range[1]);
         }
 
         const queryResult = await query.first();
@@ -417,6 +423,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             impressionData: row.impression_data || false,
             archivedAt: row.archived_at || undefined,
             archived: row.archived_at != null,
+            lifetimeDays: row.lifetime_days ?? undefined,
         };
     }
 
@@ -431,7 +438,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         return sortedVariants;
     }
 
-    insertToRow(project: string, data: FeatureToggleInsert): FeaturesTable {
+    insertToRow(project: string, data: FeatureToggleInsert): FeaturesInsertRow {
         const row = {
             name: data.name,
             description: data.description || null,
@@ -442,6 +449,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             created_at: data.createdAt,
             impression_data: data.impressionData || false,
             created_by_user_id: data.createdByUserId,
+            lifetime_days: data.lifetimeDays,
         };
         if (!row.created_at) {
             delete row.created_at;
@@ -453,7 +461,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     dtoToUpdateRow(
         project: string,
         data: FeatureToggleDTO,
-    ): Omit<FeaturesTable, 'created_by_user_id'> {
+    ): Omit<FeaturesInsertRow, 'created_by_user_id' | 'created_at'> {
         const row = {
             name: data.name,
             description: data.description || null,
@@ -462,6 +470,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             archived_at: data.archived ? new Date() : null,
             stale: data.stale,
             impression_data: data.impressionData,
+            lifetime_days: data.lifetimeDays,
         };
 
         return row;
@@ -516,6 +525,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         const now = new Date();
         const rows = await this.db(TABLE)
             .whereIn('name', names)
+            .whereNull('archived_at')
             .update({ archived_at: now })
             .returning(FEATURE_COLUMNS);
         return rows.map((row) => this.rowToFeature(row));
@@ -539,11 +549,14 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .del();
     }
 
-    async batchDelete(names: string[]): Promise<void> {
-        await this.db(TABLE)
+    async batchDelete(names: string[]): Promise<FeatureToggle[]> {
+        const rows = await this.db(TABLE)
             .whereIn('name', names)
             .whereNotNull('archived_at')
-            .del();
+            .del()
+            .returning(FEATURE_COLUMNS);
+
+        return rows.map((row) => this.rowToFeature(row));
     }
 
     async revive(name: string): Promise<FeatureToggle> {
@@ -636,9 +649,10 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             `SELECT name,
                     project,
                     potentially_stale,
-                    (? > (features.created_at + ((SELECT feature_types.lifetime_days
-                                                  FROM feature_types
-                                                  WHERE feature_types.id = features.type) *
+                    (? > (features.created_at + (NULLIF(COALESCE(features.lifetime_days,
+                                                                (SELECT feature_types.lifetime_days
+                                                                 FROM feature_types
+                                                                 WHERE feature_types.id = features.type)), 0) *
                                                  INTERVAL '1 day'))) as current_staleness
              FROM features
              WHERE NOT stale = true
@@ -686,6 +700,23 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             .where({ name: featureName });
 
         return result?.potentially_stale ?? false;
+    }
+
+    async getLifetime(featureName: string): Promise<FlagLifetime | undefined> {
+        const result = await this.db(TABLE)
+            .leftJoin('feature_types', 'feature_types.id', 'features.type')
+            .where('features.name', featureName)
+            .first(
+                this.db.raw(
+                    'COALESCE(features.lifetime_days, feature_types.lifetime_days) AS lifetime_days',
+                ),
+            );
+        if (!result) {
+            return undefined;
+        }
+        return result.lifetime_days
+            ? { type: 'expiring', days: result.lifetime_days }
+            : { type: 'permanent' };
     }
 
     async setCreatedByUserId(batchSize: number): Promise<number | undefined> {

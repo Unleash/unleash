@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useEffectEvent } from 'react';
 
 /**
  * A hook that provides methods to emit and listen to custom DOM events.
@@ -13,15 +13,17 @@ export const useCustomEvent = (
         document.dispatchEvent(event);
     }, [eventName]);
 
+    const onEvent = useEffectEvent(handler);
+
     useEffect(() => {
-        const eventListener = (event: Event) => handler(event as CustomEvent);
+        const eventListener = (event: Event) => onEvent(event as CustomEvent);
 
         document.addEventListener(eventName, eventListener);
 
         return () => {
             document.removeEventListener(eventName, eventListener);
         };
-    }, [eventName, handler]);
+    }, [eventName]);
 
     return { emitEvent };
 };

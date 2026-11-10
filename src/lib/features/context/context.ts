@@ -48,6 +48,7 @@ import {
 
 interface ContextParam {
     contextField: string;
+    projectId?: string;
 }
 
 interface DeleteLegalValueParam extends ContextParam {
@@ -77,7 +78,9 @@ export class ContextController extends Controller {
         this.openApiService = openApiService;
         this.transactionalContextService = transactionalContextService;
         const prefix = mode === 'global' ? '' : '/:projectId/context';
-        const rootLevelContextFieldsRelease = undefined; // this represents the legacy behavior
+        const rootLevelContextFieldsRelease = {
+            stable: '7.4.1' as const,
+        };
         const projectLevelContextFieldsRelease = {
             beta: '7.4.0' as const, // project context fields introduced in 7.4.0
         };
@@ -156,7 +159,10 @@ export class ContextController extends Controller {
             method: 'post',
             path: prefix,
             handler: this.createContextField,
-            permission: [CREATE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT],
+            permission:
+                mode === 'project'
+                    ? [CREATE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT]
+                    : CREATE_CONTEXT_FIELD,
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
@@ -181,7 +187,10 @@ export class ContextController extends Controller {
             method: 'put',
             path: `${prefix}/:contextField`,
             handler: this.updateContextField,
-            permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT],
+            permission:
+                mode === 'project'
+                    ? [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT]
+                    : UPDATE_CONTEXT_FIELD,
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
@@ -203,7 +212,10 @@ export class ContextController extends Controller {
             method: 'post',
             path: `${prefix}/:contextField/legal-values`,
             handler: this.updateLegalValue,
-            permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT],
+            permission:
+                mode === 'project'
+                    ? [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT]
+                    : UPDATE_CONTEXT_FIELD,
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
@@ -227,7 +239,10 @@ export class ContextController extends Controller {
             path: `${prefix}/:contextField/legal-values/:legalValue`,
             handler: this.deleteLegalValue,
             acceptAnyContentType: true,
-            permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT],
+            permission:
+                mode === 'project'
+                    ? [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT]
+                    : UPDATE_CONTEXT_FIELD,
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
@@ -250,7 +265,10 @@ export class ContextController extends Controller {
             path: `${prefix}/:contextField`,
             handler: this.deleteContextField,
             acceptAnyContentType: true,
-            permission: [DELETE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT],
+            permission:
+                mode === 'project'
+                    ? [DELETE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT]
+                    : DELETE_CONTEXT_FIELD,
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
@@ -270,7 +288,10 @@ export class ContextController extends Controller {
             method: 'post',
             path: `${prefix}/validate`,
             handler: this.validateContextFieldName,
-            permission: [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT],
+            permission:
+                mode === 'project'
+                    ? [UPDATE_CONTEXT_FIELD, UPDATE_PROJECT_CONTEXT]
+                    : UPDATE_CONTEXT_FIELD,
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
@@ -370,7 +391,11 @@ export class ContextController extends Controller {
         const contextField = req.body;
 
         await this.transactionalContextService.transactional((service) =>
-            service.updateContextField({ ...contextField, name }, req.audit),
+            service.updateContextField(
+                { ...contextField, name },
+                req.audit,
+                req.params.projectId,
+            ),
         );
         res.status(200).end();
     }
@@ -383,7 +408,11 @@ export class ContextController extends Controller {
         const legalValue = req.body;
 
         await this.transactionalContextService.transactional((service) =>
-            service.updateLegalValue({ name, legalValue }, req.audit),
+            service.updateLegalValue(
+                { name, legalValue },
+                req.audit,
+                req.params.projectId,
+            ),
         );
         res.status(200).end();
     }
@@ -396,7 +425,11 @@ export class ContextController extends Controller {
         const legalValue = req.params.legalValue;
 
         await this.transactionalContextService.transactional((service) =>
-            service.deleteLegalValue({ name, legalValue }, req.audit),
+            service.deleteLegalValue(
+                { name, legalValue },
+                req.audit,
+                req.params.projectId,
+            ),
         );
         res.status(200).end();
     }
@@ -408,7 +441,7 @@ export class ContextController extends Controller {
         const name = req.params.contextField;
 
         await this.transactionalContextService.transactional((service) =>
-            service.deleteContextField(name, req.audit),
+            service.deleteContextField(name, req.audit, req.params.projectId),
         );
         res.status(200).end();
     }

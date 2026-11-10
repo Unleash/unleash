@@ -9,7 +9,7 @@ import {
     useTheme,
 } from '@mui/material';
 import type { ChangeRequestType } from '../../changeRequest.types';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { ChangeRequestStatusBadge } from '../../ChangeRequestStatusBadge/ChangeRequestStatusBadge.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
@@ -23,6 +23,8 @@ import Input from 'component/common/Input/Input';
 import { ChangeRequestTitle } from './ChangeRequestTitle.tsx';
 import { UpdateCount } from 'component/changeRequest/UpdateCount';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { useTracking } from 'hooks/useTracking';
+import { changeRequestTransitionTracking } from 'component/changeRequest/changeRequestTracking';
 import { DraftChangeRequestActions } from '../DraftChangeRequestActions/DraftChangeRequestActions.tsx';
 import type { AvailableReviewerSchema } from 'hooks/api/getters/useAvailableChangeRequestReviewers/useAvailableChangeRequestReviewers.ts';
 
@@ -48,7 +50,7 @@ const ChangeRequestHeader = styled(Box)(({ theme }) => ({
     borderRadius: `${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px 0 0`,
     borderBottom: 'none',
     overflow: 'hidden',
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.neutral.container,
 }));
 
 const ChangeRequestContent = styled(Box)(({ theme }) => ({
@@ -74,15 +76,20 @@ export const EnvironmentChangeRequest: FC<{
     const [title, setTitle] = useState(environmentChangeRequest.title);
     const { changeState, updateRequestedApprovers } = useChangeRequestApi();
     const [reviewers, setReviewers] = useState<AvailableReviewerSchema[]>([]);
+    const trackSendToReview = useTracking(
+        changeRequestTransitionTracking('In review', 'Draft'),
+    );
 
     const [disabled, setDisabled] = useState(false);
     const sendToReview = async (project: string) => {
         setDisabled(true);
         try {
-            await changeState(project, environmentChangeRequest.id, 'Draft', {
-                state: 'In review',
-                comment: commentText,
-            });
+            await trackSendToReview.mutation(() =>
+                changeState(project, environmentChangeRequest.id, {
+                    state: 'In review',
+                    comment: commentText,
+                }),
+            );
 
             if (reviewers && reviewers.length > 0) {
                 await updateRequestedApprovers(
@@ -91,8 +98,9 @@ export const EnvironmentChangeRequest: FC<{
                     reviewers.map((reviewer) => reviewer.id),
                 );
             }
-        } catch (_e) {
+        } catch (e) {
             setDisabled(false);
+            throw e;
         }
     };
 
@@ -190,7 +198,9 @@ export const EnvironmentChangeRequest: FC<{
                                 <StyledFlexAlignCenterBox>
                                     <StyledSuccessIcon />
                                     <Typography
-                                        color={theme.palette.success.dark}
+                                        color={
+                                            theme.palette.success.onContainer
+                                        }
                                     >
                                         Draft successfully sent to review
                                     </Typography>

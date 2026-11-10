@@ -1,5 +1,5 @@
 import Breadcrumbs from '@mui/material/Breadcrumbs';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import AccessContext from 'contexts/AccessContext';
 import { useContext } from 'react';

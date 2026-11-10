@@ -111,7 +111,7 @@ export const AutocompleteBox = ({
                 renderInput={renderCustomInput}
                 getOptionLabel={(value) => value.label}
                 disabled={disabled}
-                size='small'
+                size='large'
                 multiple
             />
         </StyledContainer>

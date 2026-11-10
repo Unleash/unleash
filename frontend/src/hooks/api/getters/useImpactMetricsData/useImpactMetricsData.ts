@@ -1,6 +1,7 @@
 import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter.js';
 import { formatApiPath } from 'utils/formatPath';
 import type { MetricSource } from 'component/impact-metrics/types';
+import type { ChartTimeRange } from 'component/impact-metrics/MultimetricChart/chartConfig';
 import type {
     ImpactMetricsDataSchema,
     ImpactMetricsDataSchemaLabels,
@@ -33,7 +34,27 @@ export type ImpactMetricsQuery = {
 const DEFAULT_AGGREGATION_MODE = 'count';
 const DEFAULT_SOURCE: MetricSource = 'internal';
 
-export const useImpactMetricsData = (query?: ImpactMetricsQuery) => {
+// Wider ranges are costlier to query and tolerate staler data (trend views),
+// so we poll them less often — a deliberate staleness budget, max 10 minutes.
+export const rangeToRefreshInterval = (range: ChartTimeRange): number => {
+    switch (range) {
+        case 'hour':
+            return 30_000;
+        case 'day':
+            return 2 * 60_000;
+        case 'week':
+            return 5 * 60_000;
+        case 'month':
+        case 'threeMonths':
+        case 'sixMonths':
+            return 10 * 60_000;
+    }
+};
+
+export const useImpactMetricsData = (
+    query?: ImpactMetricsQuery,
+    options?: { refreshInterval?: number },
+) => {
     const shouldFetch = Boolean(query?.metricName && query?.range);
 
     const createPath = () => {
@@ -78,7 +99,9 @@ export const useImpactMetricsData = (query?: ImpactMetricsQuery) => {
                 ? () => fetcher(formatApiPath(PATH), 'Impact metrics data')
                 : () => Promise.resolve([]),
             {
-                refreshInterval: 30 * 1_000,
+                refreshInterval:
+                    options?.refreshInterval ??
+                    (query ? rangeToRefreshInterval(query.range) : 0),
                 revalidateOnFocus: true,
             },
         );

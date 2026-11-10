@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { EventSchemaData } from './eventSchemaData';
-import type { EventSchemaPreData } from './eventSchemaPreData';
-import type { TagSchema } from './tagSchema';
-import type { EventSchemaType } from './eventSchemaType';
+import type { EventSchemaData } from './eventSchemaData.ts';
+import type { EventSchemaPreData } from './eventSchemaPreData.ts';
+import type { EventSchemaType } from './eventSchemaType.ts';
+import type { TagSchema } from './tagSchema.ts';
 
 /**
  * An event describing something happening in the system

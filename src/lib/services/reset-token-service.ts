@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import bcrypt from 'bcryptjs';
 import { URL } from 'url';
 import type { Logger } from '../logger.js';
 import UsedTokenError from '../error/used-token-error.js';
@@ -34,13 +33,23 @@ export default class ResetTokenService {
     }
 
     async useAccessToken(token: IResetQuery): Promise<boolean> {
-        try {
-            await this.isValid(token.token);
-            await this.store.useToken(token);
-            return true;
-        } catch (_e) {
-            return false;
+        return this.store.useToken(token);
+    }
+
+    /**
+     * Atomically validates and consumes a single-use reset/invite token.
+     * Exactly one concurrent caller can succeed for a given token
+     * (GHSA-36wh-fxff-4h93 / TOCTOU on isValid + useToken).
+     * @returns the user id that owned the consumed token
+     */
+    async consumeToken(token: string): Promise<number> {
+        const userId = await this.store.consumeToken(token);
+        if (userId == null) {
+            // Distinguish used vs missing/expired for clearer errors.
+            await this.isValid(token);
+            throw new InvalidTokenError();
         }
+        return userId;
     }
 
     async getActiveInvitations(): Promise<IInviteLinks> {
@@ -111,7 +120,7 @@ export default class ResetTokenService {
         creator: string,
         expiryDelta: number = hoursToMilliseconds(24),
     ): Promise<IResetToken> {
-        const token = await this.generateToken();
+        const token = this.generateToken();
         const expiry = new Date(Date.now() + expiryDelta);
         await this.expireExistingTokensForUser(tokenUser);
         return this.store.insert({
@@ -122,7 +131,7 @@ export default class ResetTokenService {
         });
     }
 
-    private generateToken(): Promise<string> {
-        return bcrypt.hash(crypto.randomBytes(32).toString(), 10);
+    private generateToken(): string {
+        return Buffer.from(crypto.randomBytes(32)).toString('base64url');
     }
 }

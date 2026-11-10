@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type FC } from 'react';
 import { useGroups } from 'hooks/api/getters/useGroups/useGroups';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router';
 import type { IGroup } from 'interfaces/group';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';

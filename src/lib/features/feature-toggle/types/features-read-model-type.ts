@@ -4,8 +4,9 @@ export interface IFeaturesReadModel {
         featureName: string,
         projectId: string,
     ): Promise<boolean>;
-    featuresInTheSameProject(
+    featuresInProject(
         featureA: string,
         featureB: string,
+        projectId: string,
     ): Promise<boolean>;
 }

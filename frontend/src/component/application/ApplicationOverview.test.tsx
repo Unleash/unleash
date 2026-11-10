@@ -2,7 +2,7 @@ import { test } from 'vitest';
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import type { ApplicationOverviewSchema } from 'openapi';
 import ApplicationOverview from './ApplicationOverview.tsx';
 

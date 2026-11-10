@@ -18,7 +18,7 @@ import {
 import { IconRenderer } from './AdminMenuIcons.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router';
 import { filterByConfig } from 'component/common/util';
 import { filterRoutesByPlanData } from 'component/admin/filterRoutesByPlanData';
 import { adminGroups, adminRoutes } from 'component/admin/adminRoutes';
@@ -26,6 +26,8 @@ import { useEffect, useState, type ReactNode } from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
 import { useShowBadge } from 'component/layout/components/EnterprisePlanBadge/useShowBadge';
 import { EnterprisePlanBadge } from 'component/layout/components/EnterprisePlanBadge/EnterprisePlanBadge';
+import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequestsNotifications/PendingAccessRequestsIndicator';
+import { useUiFlagEvaluator } from 'hooks/useUiFlag';
 
 interface IMenuLinkItem {
     href: string;
@@ -157,9 +159,10 @@ export const AdminNavigationItems = ({
     const { isBilling } = useInstanceStatus();
     const location = useLocation();
     const showBadge = useShowBadge();
+    const evaluateFlag = useUiFlagEvaluator();
 
     const routes = adminRoutes
-        .filter(filterByConfig(uiConfig))
+        .filter(filterByConfig(uiConfig, evaluateFlag))
         .filter((route) =>
             filterRoutesByPlanData(route?.menu, {
                 enterprise: isEnterprise(),
@@ -239,6 +242,11 @@ export const AdminNavigationItems = ({
                             isActiveMenu={Boolean(isActiveMenu)}
                             key={item.text}
                             staticExpanded={staticExpanded}
+                            collapsedBadge={
+                                item.href === 'users' ? (
+                                    <PendingAccessRequestsIndicator />
+                                ) : null
+                            }
                         >
                             {item.items.map((subItem) => (
                                 <AdminSubListItem
@@ -250,6 +258,11 @@ export const AdminNavigationItems = ({
                                     badge={
                                         showBadge(subItem.menuMode) ? (
                                             <EnterprisePlanBadge />
+                                        ) : null
+                                    }
+                                    inlineBadge={
+                                        subItem.href === '/admin/users' ? (
+                                            <PendingAccessRequestsIndicator />
                                         ) : null
                                     }
                                 >

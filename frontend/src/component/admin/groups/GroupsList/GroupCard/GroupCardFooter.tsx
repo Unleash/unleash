@@ -7,7 +7,7 @@ import {
 } from 'component/common/AvatarGroup/AvatarGroup';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { Box, styled } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const StyledAvatarComponent = styled(AvatarComponent)(({ theme }) => ({
     height: theme.spacing(2.5),
@@ -58,7 +58,7 @@ export const GroupCardFooter = ({ group }: IGroupCardFooterProps) => {
                                             `/projects/${project}/settings/access`,
                                         );
                                     }}
-                                    color='secondary'
+                                    color='primary'
                                     icon={<TopicOutlinedIcon />}
                                 >
                                     {project}

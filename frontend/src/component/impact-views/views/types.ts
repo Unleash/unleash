@@ -1,10 +1,5 @@
 import type { ImpactMetricsConfigSchema } from 'openapi';
 import type { ChartTimeRange } from 'component/impact-metrics/MultimetricChart/chartConfig';
-import type { MultimetricFeatureEvent } from 'component/impact-metrics/MultimetricChart/types';
-
-export type ImpactViewFeatureEvent = MultimetricFeatureEvent & {
-    featureName?: string;
-};
 
 export type ViewMetricConfig = Pick<
     ImpactMetricsConfigSchema,
@@ -16,8 +11,10 @@ export type ViewMetricConfig = Pick<
     | 'source'
     | 'title'
     | 'yAxisMin'
-    | 'timeRange'
 > & {
+    // Wider than the stored-config schema type: views support the extended
+    // query-only ranges (threeMonths/sixMonths).
+    timeRange: ChartTimeRange;
     goal?: boolean;
 };
 
@@ -28,6 +25,7 @@ export type MetricView = {
     metrics: ViewMetricConfig[];
     timeRange: ChartTimeRange;
     environment: string;
+    showTopMovers?: boolean;
     createdAt: number;
     updatedAt: number;
 };

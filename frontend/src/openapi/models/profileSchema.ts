@@ -3,14 +3,16 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSchema } from './featureSchema';
-import type { GroupItemSchema } from './groupItemSchema';
-import type { RoleSchema } from './roleSchema';
+import type { FeatureSchema } from './featureSchema.ts';
+import type { GroupItemSchema } from './groupItemSchema.ts';
+import type { RoleSchema } from './roleSchema.ts';
 
 /**
  * User profile overview
  */
 export interface ProfileSchema {
+    /** Whether the current user has a local password that can be changed. */
+    canChangePassword: boolean;
     /** Deprecated, always returns empty array */
     features: FeatureSchema[];
     /** Experimental: Which groups this user is a member of */

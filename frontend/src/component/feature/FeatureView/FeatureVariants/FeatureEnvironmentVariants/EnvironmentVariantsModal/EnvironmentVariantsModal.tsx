@@ -5,17 +5,15 @@ import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { type FormEvent, useEffect, useMemo, useState, memo } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import type {
-    IFeatureEnvironment,
-    IFeatureVariant,
-} from 'interfaces/featureToggle';
+import type { IFeatureEnvironment } from 'interfaces/featureToggle';
+import type { VariantSchema } from 'openapi';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { Operation } from 'fast-json-patch';
 import CloudCircle from '@mui/icons-material/CloudCircle';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewWarning';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { VariantForm } from './VariantForm/VariantForm.tsx';
+import { LegacyVariantForm } from './VariantForm/LegacyVariantForm.tsx';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from 'component/providers/AccessProvider/permissions';
 import { WeightType } from 'constants/variantTypes';
@@ -35,7 +33,7 @@ const StyledFormSubtitle = styled('div')(({ theme }) => ({
     },
     marginTop: theme.spacing(-3.5),
     marginBottom: theme.spacing(2),
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
     position: 'sticky',
@@ -47,7 +45,7 @@ const StyledCloudCircle = styled(CloudCircle, {
     shouldForwardProp: (prop) => prop !== 'deprecated',
 })<{ deprecated?: boolean }>(({ theme, deprecated }) => ({
     color: deprecated
-        ? theme.palette.neutral.border
+        ? theme.palette.neutral.containerBorder
         : theme.palette.primary.main,
 }));
 
@@ -114,7 +112,7 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
 }));
 
-export type IFeatureVariantEdit = IFeatureVariant & {
+export type IFeatureVariantEdit = VariantSchema & {
     isValid: boolean;
     new: boolean;
     id: string;
@@ -125,18 +123,18 @@ interface IEnvironmentVariantModalProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     getApiPayload: (
-        variants: IFeatureVariant[],
-        newVariants: IFeatureVariant[],
+        variants: VariantSchema[],
+        newVariants: VariantSchema[],
     ) => { patch: Operation[]; error?: string };
-    getCrPayload: (variants: IFeatureVariant[]) => {
+    getCrPayload: (variants: VariantSchema[]) => {
         feature: string;
         action: 'patchVariant';
-        payload: { variants: IFeatureVariant[] };
+        payload: { variants: VariantSchema[] };
     };
-    onConfirm: (updatedVariants: IFeatureVariant[]) => void;
+    onConfirm: (updatedVariants: VariantSchema[]) => void;
 }
 
-const MemoizedVariantForm = memo(VariantForm);
+const MemoizedVariantForm = memo(LegacyVariantForm);
 
 export const EnvironmentVariantsModal = ({
     environment,
@@ -327,7 +325,7 @@ export const EnvironmentVariantsModal = ({
     return (
         <SidebarModal open={open} onClose={handleClose} label=''>
             <FormTemplate
-                modal
+                layout='modal'
                 title=''
                 description='Variants allow you to return a variant object if the feature flag is considered enabled for the current request.'
                 documentationLink='https://docs.getunleash.io/concepts/feature-flag-variants'

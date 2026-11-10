@@ -10,7 +10,6 @@
 export type ChangeRequestOneOrManyCreateSchemaOneOfFourzeroAction =
     (typeof ChangeRequestOneOrManyCreateSchemaOneOfFourzeroAction)[keyof typeof ChangeRequestOneOrManyCreateSchemaOneOfFourzeroAction];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestOneOrManyCreateSchemaOneOfFourzeroAction = {
     deleteMilestoneProgression: 'deleteMilestoneProgression',
 } as const;

@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UserAccessOverviewSchemaOverview } from './userAccessOverviewSchemaOverview';
-import type { UserAccessOverviewSchemaProjectRolesItem } from './userAccessOverviewSchemaProjectRolesItem';
-import type { RoleSchema } from './roleSchema';
-import type { UserSchema } from './userSchema';
+import type { RoleSchema } from './roleSchema.ts';
+import type { UserAccessOverviewSchemaOverview } from './userAccessOverviewSchemaOverview.ts';
+import type { UserAccessOverviewSchemaProjectRolesItem } from './userAccessOverviewSchemaProjectRolesItem.ts';
+import type { UserSchema } from './userSchema.ts';
 
 /**
  * Describes the access overview (list of permissions and metadata) for a user.

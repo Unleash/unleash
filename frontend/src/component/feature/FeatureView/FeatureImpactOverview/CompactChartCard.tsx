@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { styled, Tooltip, Typography } from '@mui/material';
 import ShieldOutlined from '@mui/icons-material/ShieldOutlined';
 import { ImpactMetricsChart } from 'component/impact-metrics/ImpactMetricsChart';

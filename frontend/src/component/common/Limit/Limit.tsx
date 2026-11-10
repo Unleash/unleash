@@ -1,6 +1,6 @@
 import { Box, IconButton, styled, Tooltip, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import WarningIcon from '@mui/icons-material/ErrorOutlined';
 import ErrorIcon from '@mui/icons-material/Cancel';
 import CloseIcon from '@mui/icons-material/Close';
@@ -11,7 +11,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: `${theme.shape.borderRadiusMedium}px`,
     width: '100%',
@@ -23,7 +23,7 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 }));
 
 const StyledWarningIcon = styled(WarningIcon)(({ theme }) => ({
-    color: theme.palette.warning.border,
+    color: theme.palette.warning.containerBorder,
 }));
 
 const StyledErrorIcon = styled(ErrorIcon)(({ theme }) => ({

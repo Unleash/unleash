@@ -10,7 +10,6 @@
 export type CreateStrategyVariantSchemaPayloadType =
     (typeof CreateStrategyVariantSchemaPayloadType)[keyof typeof CreateStrategyVariantSchemaPayloadType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const CreateStrategyVariantSchemaPayloadType = {
     json: 'json',
     csv: 'csv',

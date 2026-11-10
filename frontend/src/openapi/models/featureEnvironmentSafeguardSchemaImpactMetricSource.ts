@@ -10,7 +10,6 @@
 export type FeatureEnvironmentSafeguardSchemaImpactMetricSource =
     (typeof FeatureEnvironmentSafeguardSchemaImpactMetricSource)[keyof typeof FeatureEnvironmentSafeguardSchemaImpactMetricSource];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const FeatureEnvironmentSafeguardSchemaImpactMetricSource = {
     internal: 'internal',
     external: 'external',

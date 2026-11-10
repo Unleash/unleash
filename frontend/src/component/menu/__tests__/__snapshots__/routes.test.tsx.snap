@@ -140,19 +140,17 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
-    "flag": "customMetrics",
-    "menu": {
-      "main": true,
-    },
-    "path": "/custom-metrics",
-    "title": "Custom metrics",
+    "menu": {},
+    "parent": "/context",
+    "path": "/context/create",
+    "title": "Create",
     "type": "protected",
   },
   {
     "menu": {},
     "parent": "/context",
-    "path": "/context/create",
-    "title": "Create",
+    "path": "/context/clone/:name",
+    "title": "Clone",
     "type": "protected",
   },
   {
@@ -227,6 +225,14 @@ exports[`returns all baseRoutes 1`] = `
     },
     "path": "/environments",
     "title": "Environments",
+    "type": "protected",
+  },
+  {
+    "enterprise": true,
+    "flag": "feedbackModule",
+    "menu": {},
+    "path": "/surveys/create",
+    "title": "Create survey",
     "type": "protected",
   },
   {
@@ -333,6 +339,13 @@ exports[`returns all baseRoutes 1`] = `
     "parent": "/integrations",
     "path": "/integrations/edit/:addonId",
     "title": "Edit",
+    "type": "protected",
+  },
+  {
+    "menu": {},
+    "parent": "/integrations",
+    "path": "/integrations/connected/:providerId",
+    "title": "Connecting",
     "type": "protected",
   },
   {

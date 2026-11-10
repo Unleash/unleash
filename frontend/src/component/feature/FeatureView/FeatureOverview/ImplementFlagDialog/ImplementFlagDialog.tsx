@@ -29,6 +29,7 @@ const Body = styled('div')(({ theme }) => ({
     flexDirection: 'column',
     gap: theme.spacing(3),
     flex: 1,
+    minHeight: '620px',
 }));
 
 const Footer = styled('div')(({ theme }) => ({

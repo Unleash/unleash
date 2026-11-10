@@ -6,6 +6,7 @@ import type Addon from './addon.js';
 import SlackAppAddon from './slack-app.js';
 import type { IAddonConfig } from '../types/index.js';
 import SlackAddon from './slack.js';
+import TeamsWorkflowAddon from './teams-workflow.js';
 
 export interface IAddonProviders {
     [key: string]: Addon;
@@ -19,6 +20,7 @@ export const getAddons: (args: IAddonConfig) => IAddonProviders = (args) => {
         new TeamsAddon(args),
         new DatadogAddon(args),
         new NewRelicAddon(args),
+        new TeamsWorkflowAddon(args),
     ];
 
     return addons.reduce((map, addon) => {

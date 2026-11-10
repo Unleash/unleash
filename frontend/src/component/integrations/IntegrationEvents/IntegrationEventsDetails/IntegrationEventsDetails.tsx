@@ -2,7 +2,7 @@ import { Alert, styled } from '@mui/material';
 import type { IntegrationEvent } from 'interfaces/integrationEvent';
 import { IntegrationEventsDetailsAccordion } from './IntegrationEventsDetailsAccordion.tsx';
 import CheckCircleOutline from '@mui/icons-material/CheckCircleOutlineOutlined';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { lazy, Suspense } from 'react';
 
 const LazyReactJSONEditor = lazy(

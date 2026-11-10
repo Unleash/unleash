@@ -274,6 +274,27 @@ export const featureSchema = {
             description:
                 'The list of links. This is an experimental field and may change.',
         },
+        payloadSchema: {
+            type: 'object',
+            additionalProperties: true,
+            description:
+                'The JSON Schema document, draft 2020-12, that describes the variant payloads of the flag. Absent when the flag has none. Only present on Unleash Enterprise. This is an experimental field and may change.',
+        },
+        lifetimeDays: {
+            type: 'integer',
+            minimum: 0,
+            example: 40,
+            description:
+                'The lifetime of this flag in days. If the value is `0`, the flag is expected to be permanent. Absent when the flag uses the lifetime of its feature type. This is an experimental field and may change.', // todo: remove extra sentence when perFlagLifetime is removed
+        },
+        expectedLifetimeEndsAt: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+            example: '2026-11-16T14:34:12.123Z',
+            description:
+                'The date the flag is expected to reach the end of its lifetime. `null` if the flag is permanent. This is an experimental field and may change.', // todo: remove extra sentence when perFlagLifetime is removed
+        },
     },
     components: {
         schemas: {

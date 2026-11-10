@@ -4,16 +4,17 @@ import {
     useState,
     type FC,
 } from 'react';
-import { Button, styled, TextField } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import styles from './DemoAuth.module.scss';
 import Logo from 'assets/img/logo.svg?react';
 import { LOGIN_BUTTON, LOGIN_EMAIL_ID } from 'utils/testIds';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useAuthApi } from 'hooks/api/actions/useAuthApi/useAuthApi';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import type { IAuthEndpointDetailsResponse } from 'hooks/api/getters/useAuth/useAuthEndpoint';
+import Input from 'component/common/Input/Input';
 
 const StyledForm = styled('form')({
     display: 'flex',
@@ -61,12 +62,12 @@ const DemoAuth: FC<IDemoAuthProps> = ({ authDetails, redirect }) => {
                     No further data or credit card required
                 </p>
                 <div className={styles.form}>
-                    <TextField
+                    <Input
                         value={email}
                         className={styles.emailField}
                         onChange={handleChange}
-                        size='small'
-                        variant='outlined'
+                        fullWidth
+                        size='large'
                         label='Email'
                         name='email'
                         id='email'

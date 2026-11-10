@@ -1,9 +1,9 @@
 import { useEffect, type FC } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { Box, Button } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IErrorProps {
@@ -19,14 +19,14 @@ const ZendeskButton = () => {
 
 export const LayoutError: FC<IErrorProps> = ({ error }) => {
     const navigate = useNavigate();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { isOss } = useUiConfig();
     const showZendeskButton = !isOss();
 
     useEffect(() => {
         const { message, stack = 'unknown' } = error;
 
-        trackEvent('unknown_ui_error', {
+        trackEvent('unknown-ui-error', {
             props: {
                 location: window?.location?.href || 'unknown',
                 message,
@@ -36,7 +36,9 @@ export const LayoutError: FC<IErrorProps> = ({ error }) => {
     }, []);
 
     return (
-        <Box sx={{ backgroundColor: 'neutral.light', height: '100%', p: 4 }}>
+        <Box
+            sx={{ backgroundColor: 'neutral.container', height: '100%', p: 4 }}
+        >
             <Dialogue
                 open={true}
                 title='Something went wrong'

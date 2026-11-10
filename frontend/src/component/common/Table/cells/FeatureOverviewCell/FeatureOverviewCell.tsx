@@ -7,16 +7,15 @@ import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import { useSearchHighlightContext } from '../../SearchHighlightContext/SearchHighlightContext.tsx';
 import { Highlighter } from '../../../Highlighter/Highlighter.tsx';
 import { StyledDescription } from '../LinkCell/LinkCell.styles';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { Badge } from '../../../Badge/Badge.tsx';
 import { HtmlTooltip } from '../../../HtmlTooltip/HtmlTooltip.tsx';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { useLocationSettings } from 'hooks/useLocationSettings';
-import { getLocalizedDateString } from '../../../util.ts';
 import { Tag } from 'component/common/Tag/Tag';
 import { formatTag } from 'utils/format-tag';
 import { Truncator } from 'component/common/Truncator/Truncator';
+import { QuietLink } from 'component/common/QuietLink';
 
 interface IFeatureNameCellProps {
     row: {
@@ -35,12 +34,8 @@ interface IFeatureNameCellProps {
     onFavorite?: (feature: FeatureSearchResponseSchema) => void;
 }
 
-const StyledFeatureLink = styled(Link)(({ theme }) => ({
-    textDecoration: 'none',
+const StyledFeatureLink = styled(QuietLink)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
-    '&:hover, &:focus': {
-        textDecoration: 'underline',
-    },
 }));
 
 const CustomTagButton = styled('button')(({ theme }) => ({
@@ -136,10 +131,14 @@ const FeatureName: FC<{
     project: string;
     feature: string;
     searchQuery: string;
-}> = ({ project, feature, searchQuery }) => {
+    onClick?: () => void;
+}> = ({ project, feature, searchQuery, onClick }) => {
     return (
         <Box sx={(theme) => ({ fontWeight: theme.typography.fontWeightBold })}>
-            <StyledFeatureLink to={`/projects/${project}/features/${feature}`}>
+            <StyledFeatureLink
+                to={`/projects/${project}/features/${feature}`}
+                onClick={onClick}
+            >
                 <Truncator
                     lines={1}
                     title={feature}
@@ -310,6 +309,7 @@ export const PrimaryFeatureInfo: FC<{
     delay?: number;
     isFavorite: boolean;
     onFavorite: () => void;
+    onFlagClick?: () => void;
 }> = ({
     project,
     feature,
@@ -321,6 +321,7 @@ export const PrimaryFeatureInfo: FC<{
     delay = 500,
     isFavorite,
     onFavorite,
+    onFlagClick,
 }) => {
     const { featureTypes } = useFeatureTypes();
     const IconComponent = getFeatureTypeIcons(type);
@@ -328,23 +329,15 @@ export const PrimaryFeatureInfo: FC<{
         (featureType) => featureType.id === type,
     )?.name;
     const title = `${typeName || type} flag`;
-    const { locationSettings } = useLocationSettings();
-    const archivedDate = getLocalizedDateString(
-        archivedAt,
-        locationSettings.locale,
-    );
 
     const TypeIcon = () => (
         <HtmlTooltip arrow title={title} describeChild>
             <IconButton
-                sx={{ p: 0 }}
+                size='medium'
                 aria-label={`add ${type} flag to filter`}
                 onClick={() => onTypeClick(type)}
             >
-                <IconComponent
-                    sx={(theme) => ({ fontSize: theme.spacing(2) })}
-                    data-testid='feature-type-icon'
-                />
+                <IconComponent data-testid='feature-type-icon' />
             </IconButton>
         </HtmlTooltip>
     );
@@ -362,6 +355,7 @@ export const PrimaryFeatureInfo: FC<{
                     project={project}
                     feature={feature}
                     searchQuery={searchQuery}
+                    onClick={onFlagClick}
                 />
             )}
             <FavoriteButton isFavorite={isFavorite} onClick={onFavorite} />
@@ -383,7 +377,7 @@ export const PrimaryFeatureInfo: FC<{
                             color={
                                 dependencyType === 'parent'
                                     ? 'warning'
-                                    : 'secondary'
+                                    : 'primary'
                             }
                         >
                             {dependencyType}
@@ -391,13 +385,6 @@ export const PrimaryFeatureInfo: FC<{
                     </HtmlTooltip>
                 }
             />
-            {archivedAt && (
-                <HtmlTooltip arrow title={archivedDate} describeChild>
-                    <Badge tabIndex={0} color='neutral'>
-                        Archived
-                    </Badge>
-                </HtmlTooltip>
-            )}
         </FeatureNameAndType>
     );
 };
@@ -432,6 +419,7 @@ export const createFeatureOverviewCell =
         onTagClick: (tag: string) => void,
         onFlagTypeClick: (type: string) => void,
         onFavorite: (feature: FeatureSearchResponseSchema) => void,
+        onFlagClick?: () => void,
     ): FC<IFeatureNameCellProps> =>
     ({ row }) => {
         const { searchQuery } = useSearchHighlightContext();
@@ -450,6 +438,7 @@ export const createFeatureOverviewCell =
                     onFavorite={() =>
                         onFavorite(row.original as FeatureSearchResponseSchema)
                     }
+                    onFlagClick={onFlagClick}
                 />
                 <SecondaryFeatureInfo
                     description={row.original.description || ''}

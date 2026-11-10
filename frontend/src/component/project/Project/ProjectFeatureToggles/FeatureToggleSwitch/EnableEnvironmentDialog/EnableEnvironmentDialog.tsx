@@ -5,6 +5,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import type { Tracking } from 'utils/trackingEvents';
 
 const StyledList = styled('ul')(({ theme }) => ({
     margin: theme.spacing(1),
@@ -19,6 +20,7 @@ interface IEnableEnvironmentDialogProps {
     environment?: string;
     featureId: string;
     showBanner?: boolean;
+    tracking?: Tracking;
 }
 
 export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
@@ -28,6 +30,7 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
     onClose,
     environment,
     featureId,
+    tracking,
 }) => {
     const projectId = useRequiredPathParam('projectId');
 
@@ -74,6 +77,7 @@ export const EnableEnvironmentDialog: FC<IEnableEnvironmentDialogProps> = ({
             onClose={onClose}
             title={`Enable feature flag in ${environment}`}
             fullWidth
+            tracking={tracking}
         >
             <Typography sx={{ mb: (theme) => theme.spacing(3) }}>
                 A feature flag cannot be enabled without an enabled strategy.

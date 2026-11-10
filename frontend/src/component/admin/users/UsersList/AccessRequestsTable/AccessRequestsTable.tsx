@@ -19,10 +19,14 @@ import type { UserAccessRequestSchema } from 'openapi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { RoleSelectCell } from './RoleSelectCell.tsx';
+import { PendingAccessRequestsIndicator } from '../../AccessRequestsNotifications/PendingAccessRequestsIndicator.tsx';
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(2),
     fontWeight: theme.typography.fontWeightBold,
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
 }));
 
 const StyledActions = styled('div')(({ theme }) => ({
@@ -155,7 +159,7 @@ export const AccessRequestsTable = () => {
                         <Button
                             variant='outlined'
                             color='primary'
-                            size='small'
+                            size='medium'
                             onClick={() => handleApprove(original)}
                         >
                             Approve
@@ -205,7 +209,10 @@ export const AccessRequestsTable = () => {
 
     return (
         <StyledContainer>
-            <StyledTitle>Access requests ({accessRequests.length})</StyledTitle>
+            <StyledTitle>
+                Access requests ({accessRequests.length})
+                <PendingAccessRequestsIndicator />
+            </StyledTitle>
             <VirtualizedTable tableInstance={table} />
             <Dialogue
                 open={Boolean(requestToReject)}

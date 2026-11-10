@@ -1,5 +1,5 @@
 import { useState, type FC } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { styled } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import type { AddonSchema } from 'openapi';
@@ -9,6 +9,8 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { DELETE_ADDON } from 'component/providers/AccessProvider/permissions';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import { formatIntegrationListPath } from '../../integrationPaths.ts';
 import { StyledHelpText, StyledTitle } from '../IntegrationForm.styles';
 
 interface IIntegrationDeleteProps {
@@ -27,6 +29,7 @@ export const IntegrationDelete: FC<IIntegrationDeleteProps> = ({ id }) => {
     const { refetchAddons } = useAddons();
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
+    const projectId = useOptionalPathParam('projectId');
     const onSubmit = async () => {
         try {
             await removeAddon(id);
@@ -38,7 +41,7 @@ export const IntegrationDelete: FC<IIntegrationDeleteProps> = ({ id }) => {
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
-        navigate('/integrations');
+        navigate(formatIntegrationListPath(projectId));
     };
 
     return (

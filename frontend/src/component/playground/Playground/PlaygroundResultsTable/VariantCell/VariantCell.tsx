@@ -4,11 +4,11 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import type React from 'react';
 import { useState, type FC } from 'react';
 import { VariantInformation } from './VariantInformation/VariantInformation.tsx';
-import type { IFeatureVariant } from 'interfaces/featureToggle';
+import type { VariantSchema } from 'openapi';
 
 interface IVariantCellProps {
     variant: string;
-    variants: IFeatureVariant[];
+    variants: VariantSchema[];
     feature: string;
     isEnabled: boolean;
 }

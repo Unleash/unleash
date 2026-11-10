@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { DetailedInvoicesLineSchema } from './detailedInvoicesLineSchema';
+import type { DetailedInvoicesLineSchema } from './detailedInvoicesLineSchema.ts';
 
 export type DetailedInvoicesSchemaInvoicesItem = {
     /** The currency code for the invoice */

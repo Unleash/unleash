@@ -6,7 +6,7 @@ import {
     useMemo,
     useState,
 } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import {
     Box,
     Button,
@@ -30,7 +30,7 @@ import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
@@ -43,7 +43,8 @@ import {
     MultiPillDropdown,
     nameInputSlotProps,
     SinglePillDropdown,
-} from 'component/common/DialogFormTemplate/NewDialogFormTemplate';
+} from 'component/common/DialogFormTemplate/DialogFormTemplate.tsx';
+import { dialogHeaderHeight } from 'themes/themeStyles';
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
 } from '../../hooks/useProjectForm.ts';
@@ -67,16 +68,13 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
         backgroundColor: 'transparent',
     },
     padding: 0,
-    '& .MuiPaper-root > section': {
-        overflowX: 'hidden',
-    },
 }));
 
-const StyledNewSidebarHeader = styled(Box)(({ theme }) => ({
+const StyledSidebarHeader = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    height: theme.spacing(8),
+    height: dialogHeaderHeight(theme),
     margin: theme.spacing(-4, -4, 0, -4),
     padding: theme.spacing(0, 2),
     borderBottom: `1px solid ${theme.palette.divider}`,
@@ -86,23 +84,23 @@ const StyledNewSidebarHeader = styled(Box)(({ theme }) => ({
     },
 }));
 
-const StyledNewSidebarCloseButton = styled(IconButton)(({ theme }) => ({
+const StyledSidebarCloseButton = styled(IconButton)(({ theme }) => ({
     color: theme.palette.common.white,
 }));
 
-const StyledNewSidebarLinkContainer = styled(Box)(({ theme }) => ({
+const StyledSidebarLinkContainer = styled(Box)(({ theme }) => ({
     margin: theme.spacing(3, 0),
     display: 'flex',
     alignItems: 'center',
     width: '100%',
 }));
 
-const StyledNewSidebarLinkIcon = styled(MenuBookIcon)(({ theme }) => ({
+const StyledSidebarLinkIcon = styled(MenuBookIcon)(({ theme }) => ({
     marginRight: theme.spacing(1),
     color: theme.palette.primary.contrastText,
 }));
 
-const StyledNewSidebarLink = styled(Link)(({ theme }) => ({
+const StyledSidebarLink = styled(Link)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
     display: 'block',
     '&:hover': {
@@ -111,7 +109,7 @@ const StyledNewSidebarLink = styled(Link)(({ theme }) => ({
 }));
 
 const StyledForm = styled('form')(({ theme }) => ({
-    background: theme.palette.background.default,
+    background: theme.palette.background.paper,
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
@@ -122,8 +120,8 @@ const TitleBar = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     padding: theme.spacing(0, 4),
     borderBottom: `1px solid ${theme.palette.divider}`,
-    height: theme.spacing(8),
-    fontWeight: theme.typography.body1.fontWeight,
+    height: dialogHeaderHeight(theme),
+    fontWeight: theme.fontWeight.bold,
 }));
 
 const Section = styled(Box)(({ theme }) => ({
@@ -134,20 +132,19 @@ const projectModeOptions = [
     {
         value: 'open',
         label: 'Open project',
-        description:
-            'Anyone can see the project and anyone can create change requests.',
+        description: 'Anyone can see the project and create change requests.',
     },
     {
         value: 'protected',
         label: 'Protected project',
         description:
-            'Anyone can see the project, but only admins and project members can submit change requests.',
+            'Anyone can see the project; only admins and members can submit change requests.',
     },
     {
         value: 'private',
         label: 'Private project',
         description:
-            'Hides the project from users with the "viewer" root role who are not members of the project. Only project members and admins can submit change requests.',
+            'Hidden from non-member viewers; only members and admins can submit change requests.',
     },
 ];
 
@@ -307,7 +304,6 @@ const ChangeRequestCheckbox: FC<ChangeRequestCheckboxProps> = ({
             {showConfig ? (
                 <InlineChangeRequestConfig>
                     <TableSearchInput
-                        variant='outlined'
                         size='small'
                         value={searchText}
                         onChange={(event) => setSearchText(event.target.value)}
@@ -345,7 +341,7 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
     const { uiConfig, isEnterprise } = useUiConfig();
     const { createProject, loading: creatingProject } = useProjectApi();
     const { refetchUser } = useAuthUser();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const {
         projectName,
@@ -409,7 +405,7 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
             navigate(`/projects/${createdProject.id}`);
             setToastData({ text: 'Project created', type: 'success' });
             if (projectStickiness !== DEFAULT_PROJECT_STICKINESS) {
-                trackEvent('project_stickiness_set');
+                trackEvent('project-stickiness-set');
             }
             trackEvent('project-mode', {
                 props: { mode: projectMode, action: 'added' },
@@ -452,31 +448,33 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
         });
     }, [availableChangeRequestEnvironments]);
 
-    const stickinessLabel = projectStickiness;
+    const stickinessLabel = projectStickiness
+        ? `${projectStickiness} stickiness`
+        : 'Select stickiness';
 
     const projectModeLabel = projectMode;
 
     const sidebar: ReactNode = (
         <>
-            <StyledNewSidebarHeader>
-                <StyledNewSidebarCloseButton
+            <StyledSidebarHeader>
+                <StyledSidebarCloseButton
                     onClick={onClose}
                     size='small'
                     aria-label='Close'
                 >
                     <CloseIcon />
-                </StyledNewSidebarCloseButton>
-            </StyledNewSidebarHeader>
-            <StyledNewSidebarLinkContainer>
-                <StyledNewSidebarLinkIcon />
-                <StyledNewSidebarLink
+                </StyledSidebarCloseButton>
+            </StyledSidebarHeader>
+            <StyledSidebarLinkContainer>
+                <StyledSidebarLinkIcon />
+                <StyledSidebarLink
                     href='https://docs.getunleash.io/reference/projects'
                     rel='noopener noreferrer'
                     target='_blank'
                 >
                     Projects documentation
-                </StyledNewSidebarLink>
-            </StyledNewSidebarLinkContainer>
+                </StyledSidebarLink>
+            </StyledSidebarLinkContainer>
             <ApiCommandBlock
                 command={formatApiCode()}
                 onCopy={copyApiCommand}
@@ -488,7 +486,7 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
     return (
         <StyledDialog open={open} onClose={onClose}>
             <FormTemplate
-                compact
+                layout='compact'
                 disablePadding
                 description=''
                 formatApiCode={formatApiCode}
@@ -552,7 +550,7 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
                             tooltip={{
                                 header: 'Select project environments',
                                 description:
-                                    'Each feature flag can have a separate configuration per environment. This setting configures which environments your project should start with.',
+                                    'Each feature flag can have a separate configuration per environment.',
                             }}
                             options={activeEnvironments.map((env) => ({
                                 label: env.name,
@@ -566,15 +564,17 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
 
                         <SinglePillDropdown<string>
                             label={stickinessLabel}
+                            selectedValue={projectStickiness}
                             tooltip={{
                                 header: 'Set default project stickiness',
                                 description:
-                                    'Stickiness is used to guarantee that your users see the same result when using a gradual rollout. Default stickiness allows you to choose which field is used by default in this project.',
+                                    'Stickiness is used to guarantee that your users see the same result when using a gradual rollout.',
                             }}
                             options={stickinessOptions.map(
-                                ({ key, label }) => ({
+                                ({ key, label, description }) => ({
                                     value: key,
                                     label,
+                                    description,
                                 }),
                             )}
                             onChange={(value) => setProjectStickiness(value)}
@@ -585,10 +585,10 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
                         {isEnterprise() ? (
                             <SinglePillDropdown<string>
                                 label={`${projectModeLabel} project`}
+                                selectedValue={projectMode}
+                                hideSearch
                                 tooltip={{
                                     header: 'Set project collaboration mode',
-                                    description:
-                                        "A project's collaboration mode defines who can see your project and create change requests in it.",
                                 }}
                                 options={projectModeOptions}
                                 onChange={(value) =>

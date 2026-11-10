@@ -1,4 +1,9 @@
-import { Switch, FormControlLabel, useMediaQuery } from '@mui/material';
+import {
+    Switch,
+    FormControlLabel,
+    useMediaQuery,
+    type TypographyProps,
+} from '@mui/material';
 import EventJson from 'component/events/EventJson/EventJson';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -14,11 +19,18 @@ import { useEventLogSearch } from './useEventLogSearch.ts';
 import { StickyPaginationBar } from 'component/common/Table/StickyPaginationBar/StickyPaginationBar';
 import { EventActions } from './EventActions.tsx';
 import useLoading from 'hooks/useLoading';
+import { useTracking } from 'hooks/useTracking';
+import {
+    selectPageSizeTracking,
+    paginateTableTracking,
+    toggleRawViewTracking,
+} from './eventLogTracking';
 
 interface IEventLogProps {
     title: string;
     project?: string;
     feature?: string;
+    variant?: TypographyProps['variant'];
 }
 
 const StyledEventsList = styled('ul')(({ theme }) => ({
@@ -48,7 +60,12 @@ const Placeholder = styled('li')({
     '&[data-loading-events=true]': { zIndex: '1' }, // .skeleton has z-index: 9990
 });
 
-export const EventLog = ({ title, project, feature }: IEventLogProps) => {
+export const EventLog = ({
+    title,
+    project,
+    feature,
+    variant,
+}: IEventLogProps) => {
     const { isEnterprise } = useUiConfig();
     const showFilters = isEnterprise();
     const {
@@ -67,6 +84,26 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
               : { type: 'global' },
     );
     const ref = useLoading(loading, '[data-loading-events=true]');
+    const trackToggleRawView = useTracking(toggleRawViewTracking);
+    const trackPaginateTable = useTracking(paginateTableTracking);
+    const trackSelectPageSize = useTracking(selectPageSizeTracking);
+
+    const fetchNextPage = () => {
+        pagination.nextPage();
+        trackPaginateTable('succeeded', {
+            pageDepth: pagination.currentPage + 2,
+        });
+    };
+    const fetchPrevPage = () => {
+        pagination.prevPage();
+        trackPaginateTable('succeeded', {
+            pageDepth: pagination.currentPage,
+        });
+    };
+    const setPageLimit = (pageSize: number) => {
+        pagination.setPageLimit(pageSize);
+        trackSelectPageSize('succeeded', { pageSize });
+    };
 
     const setSearchValue = (query = '') => {
         setTableState({ query });
@@ -74,8 +111,11 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const { eventSettings, setEventSettings } = useEventSettings();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-    const onShowData = () => {
+    const toggleShowData = () => {
         setEventSettings((prev) => ({ showData: !prev.showData }));
+        trackToggleRawView('succeeded', {
+            newState: eventSettings.showData ? 'hidden' : 'shown',
+        });
     };
 
     const searchInputField = (
@@ -92,7 +132,7 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
             control={
                 <Switch
                     checked={eventSettings.showData}
-                    onChange={onShowData}
+                    onChange={toggleShowData}
                     color='primary'
                 />
             }
@@ -135,6 +175,7 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
                 bodyClass={'no-padding'}
                 header={
                     <PageHeader
+                        variant={variant}
                         title={`${title} (${total})`}
                         actions={
                             <>
@@ -174,9 +215,9 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
                             totalItems={total}
                             pageSize={pagination.pageSize}
                             pageIndex={pagination.currentPage}
-                            fetchPrevPage={pagination.prevPage}
-                            fetchNextPage={pagination.nextPage}
-                            setPageLimit={pagination.setPageLimit}
+                            fetchPrevPage={fetchPrevPage}
+                            fetchNextPage={fetchNextPage}
+                            setPageLimit={setPageLimit}
                         />
                     }
                 />

@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
-import { type Location, Navigate } from 'react-router-dom';
-import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { type Location, Navigate } from 'react-router';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import Loader from './common/Loader/Loader.tsx';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
@@ -42,12 +41,11 @@ export const useLastViewedPage = (location?: Location) => {
 
 export const InitialRedirect = () => {
     const { user, loading: isLoadingAuth } = useAuthUser();
-    const { loading: isLoadingProjects } = useProjects();
     const isLoggedIn = Boolean(user?.id);
     const { lastViewedPage } = useLastViewedPage();
     const { lastViewed: lastViewedProject } = useLastViewedProject();
 
-    if (isLoadingAuth || isLoadingProjects) {
+    if (isLoadingAuth) {
         return <Loader type='fullscreen' />;
     }
 

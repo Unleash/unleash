@@ -4,13 +4,18 @@ import cloneDeep from 'lodash.clonedeep';
 import { DEFAULT_DATA } from '../CreateIntegration/CreateIntegration.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { AddonSchema, AddonTypeSchema } from 'openapi';
+import type { FormTemplateLayout } from 'component/common/FormTemplate/FormTemplate';
 
 const findProvider = (
     addon: AddonSchema | Omit<AddonSchema, 'id'>,
     providers: AddonTypeSchema[],
 ) => providers.find((provider) => provider.name === addon?.provider);
 
-export const EditIntegration = () => {
+type EditIntegrationProps = {
+    layout?: FormTemplateLayout;
+};
+
+export const EditIntegration = ({ layout }: EditIntegrationProps) => {
     const addonId = useRequiredPathParam('addonId');
     const { providers, addons, refetchAddons } = useAddons();
 
@@ -29,6 +34,7 @@ export const EditIntegration = () => {
             fetch={refetchAddons}
             addon={addon}
             deprecated={deprecated}
+            layout={layout}
         />
     );
 };

@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateSegmentSchemaOneOf } from './changeRequestCreateSegmentSchemaOneOf';
-import type { ChangeRequestCreateSegmentSchemaOneOfThree } from './changeRequestCreateSegmentSchemaOneOfThree';
+import type { ChangeRequestCreateSegmentSchemaOneOf } from './changeRequestCreateSegmentSchemaOneOf.ts';
+import type { ChangeRequestCreateSegmentSchemaOneOfThree } from './changeRequestCreateSegmentSchemaOneOfThree.ts';
 
 /**
  * Data used to create a [change request](https://docs.getunleash.io/concepts/change-requests) for a single segment change.

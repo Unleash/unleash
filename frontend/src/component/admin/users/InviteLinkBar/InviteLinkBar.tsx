@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { InviteLinkBarContent } from './InviteLinkBarContent.tsx';
 import { styled } from '@mui/material';
 
@@ -12,7 +12,7 @@ const Bar = styled('article')(({ theme }) => ({
 }));
 
 export const InviteLinkBar: FC = () => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const onInviteLinkActionClick = (inviteLink?: string) => {
         trackEvent('invite', {
             props: {

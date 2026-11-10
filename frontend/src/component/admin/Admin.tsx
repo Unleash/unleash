@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router';
 import { ApiTokenPage } from './apiToken/ApiTokenPage/ApiTokenPage.tsx';
 import { CreateApiToken } from './apiToken/CreateApiToken/CreateApiToken.tsx';
 import { AuthSettings } from './auth/AuthSettings.tsx';
@@ -7,6 +7,7 @@ import FlaggedBillingRedirect from './billing/FlaggedBillingRedirect/FlaggedBill
 import { CorsAdmin } from './cors/index.js';
 import { GroupsAdmin } from './groups/GroupsAdmin.tsx';
 import { InstanceAdmin } from './instance-admin/InstanceAdmin.tsx';
+import { InstanceName } from './instance-name/InstanceName.tsx';
 import { InstancePrivacy } from './instance-privacy/InstancePrivacy.tsx';
 import { MaintenanceAdmin } from './maintenance/index.js';
 import { Network } from './network/Network.tsx';
@@ -14,13 +15,14 @@ import { Roles } from './roles/Roles.tsx';
 import { ServiceAccounts } from './serviceAccounts/ServiceAccounts.tsx';
 import CreateUser from './users/CreateUser/CreateUser.tsx';
 import { InviteLink } from './users/InviteLink/InviteLink.tsx';
-import UsersAdmin from './users/UsersAdmin.tsx';
+import UsersTabs from './users/UsersTabs/UsersTabs.tsx';
 import NotFound from 'component/common/NotFound/NotFound';
 import { Banners } from './banners/Banners.tsx';
 import { License } from './license/License.tsx';
 import { AdminHome } from './AdminHome.tsx';
 import { RemoteMcpAdmin } from './remote-mcp/RemoteMcpAdmin.tsx';
 import { ImpactMetricsAdmin } from './impact-metrics/ImpactMetricsAdmin.tsx';
+import { ActiveSessions } from 'component/sessions/ActiveSessions.tsx';
 import { lazy } from 'react';
 
 const EnterpriseEdge = lazy(
@@ -32,7 +34,7 @@ export const Admin = () => {
         <>
             <Routes>
                 <Route index element={<AdminHome />} />
-                <Route path='users/*' element={<UsersAdmin />} />
+                <Route path='users/*' element={<UsersTabs />} />
                 <Route path='api' element={<ApiTokenPage />} />
                 <Route path='api/create-token' element={<CreateApiToken />} />
                 <Route path='service-accounts' element={<ServiceAccounts />} />
@@ -56,6 +58,8 @@ export const Admin = () => {
                 <Route path='remote-mcp' element={<RemoteMcpAdmin />} />
                 <Route path='impact-metrics' element={<ImpactMetricsAdmin />} />
                 <Route path='instance-privacy' element={<InstancePrivacy />} />
+                <Route path='instance-name' element={<InstanceName />} />
+                <Route path='sessions' element={<ActiveSessions />} />
                 <Route path='*' element={<NotFound />} />
             </Routes>
         </>

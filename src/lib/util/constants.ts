@@ -34,7 +34,10 @@ export const DATE_BEFORE = 'DATE_BEFORE';
 export const SEMVER_EQ = 'SEMVER_EQ';
 export const SEMVER_GT = 'SEMVER_GT';
 export const SEMVER_LT = 'SEMVER_LT';
+export const SEMVER_GTE = 'SEMVER_GTE';
+export const SEMVER_LTE = 'SEMVER_LTE';
 export const REGEX = 'REGEX';
+export const IN_CIDR = 'IN_CIDR';
 
 export const ALL_OPERATORS = [
     NOT_IN,
@@ -52,7 +55,10 @@ export const ALL_OPERATORS = [
     SEMVER_EQ,
     SEMVER_GT,
     SEMVER_LT,
+    SEMVER_GTE,
+    SEMVER_LTE,
     REGEX,
+    IN_CIDR,
 ] as const;
 
 export const STRING_OPERATORS = [
@@ -64,6 +70,12 @@ export const STRING_OPERATORS = [
 ];
 export const NUM_OPERATORS = [NUM_EQ, NUM_GT, NUM_GTE, NUM_LT, NUM_LTE];
 export const DATE_OPERATORS = [DATE_AFTER, DATE_BEFORE];
-export const SEMVER_OPERATORS = [SEMVER_EQ, SEMVER_GT, SEMVER_LT];
+export const SEMVER_OPERATORS = [
+    SEMVER_EQ,
+    SEMVER_GT,
+    SEMVER_LT,
+    SEMVER_GTE,
+    SEMVER_LTE,
+];
 
 export const PAT_LIMIT = 10;

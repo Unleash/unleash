@@ -1,8 +1,8 @@
 import { Button, styled, Typography } from '@mui/material';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import type { FC } from 'react';
 import { ActionBox } from './ActionBox.tsx';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { NeutralCircleContainer } from './SharedComponents.tsx';
 
 const MainCircleContainer = styled(NeutralCircleContainer)(({ theme }) => ({
@@ -16,13 +16,13 @@ const SuccessContainer = styled('div')(({ theme }) => ({
 
     fontSize: theme.spacing(1.75),
     fontWeight: 'bold',
-    backgroundColor: theme.palette.success.light,
+    backgroundColor: theme.palette.success.container,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(2, 2, 2, 2),
 }));
 
 export const CreateFlag: FC<{ project: string }> = ({ project }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     return (
         <ActionBox
             data-loading

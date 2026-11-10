@@ -1,4 +1,4 @@
-import { useMemo, type FC, type PropsWithChildren } from 'react';
+import { useId, useMemo, type FC, type PropsWithChildren } from 'react';
 import {
     AccordionSummary,
     type AccordionSummaryProps,
@@ -6,7 +6,6 @@ import {
 } from '@mui/material';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Truncator } from 'component/common/Truncator/Truncator';
-import { useId } from 'hooks/useId';
 import { EnvironmentStrategySuggestion } from './EnvironmentStrategySuggestion/EnvironmentStrategySuggestion.js';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
@@ -84,8 +83,8 @@ const StyledTruncator = styled(Truncator)(({ theme }) => ({
 
 const StyledStrategyCount = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
-    color: theme.palette.info.contrastText,
-    backgroundColor: theme.palette.info.light,
+    color: theme.palette.info.onContainer,
+    backgroundColor: theme.palette.info.container,
     whiteSpace: 'nowrap',
     width: 'min-content',
     borderRadius: theme.shape.borderRadiusExtraLarge,
@@ -95,7 +94,7 @@ const StyledStrategyCount = styled('p')(({ theme }) => ({
 const NeutralStrategyCount = styled(StyledStrategyCount)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.neutral.container,
 }));
 
 type EnvironmentMetadata = {

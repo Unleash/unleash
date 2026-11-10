@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 export const useNewAdminMenu = () => {
     const location = useLocation();

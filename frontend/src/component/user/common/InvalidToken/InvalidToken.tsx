@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { Button, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { INVALID_TOKEN_BUTTON } from 'utils/testIds';
 import { useThemeStyles } from 'themes/themeStyles';
 import classnames from 'classnames';

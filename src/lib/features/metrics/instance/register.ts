@@ -16,8 +16,6 @@ import type {
 import { emptyResponse } from '../../../openapi/util/standard-responses.js';
 import { createRequestSchema } from '../../../openapi/util/create-request-schema.js';
 import type { ClientApplicationSchema } from '../../../openapi/spec/client-application-schema.js';
-import rateLimit from 'express-rate-limit';
-import { minutesToMilliseconds } from 'date-fns';
 import version from '../../../util/version.js';
 
 export default class RegisterController extends Controller {
@@ -53,16 +51,10 @@ export default class RegisterController extends Controller {
                     summary: 'Register a client SDK',
                     description:
                         'Register a client SDK with Unleash. SDKs call this endpoint on startup to tell Unleash about their existence. Used to track custom strategies in use as well as SDK versions.',
+                    release: { stable: '4.14.0' },
                     operationId: 'registerClientApplication',
                     requestBody: createRequestSchema('clientApplicationSchema'),
                     responses: { 202: emptyResponse },
-                }),
-                rateLimit({
-                    windowMs: minutesToMilliseconds(1),
-                    max: config.metricsRateLimiting.clientRegisterMaxPerMinute,
-                    validate: false,
-                    standardHeaders: true,
-                    legacyHeaders: false,
                 }),
             ],
         });
@@ -92,9 +84,13 @@ export default class RegisterController extends Controller {
         const clientIp = extractClientIp(req);
         const environment = this.resolveEnvironment(user); // derived from the API token only
         data.projects = this.resolveProject(user);
+        const registration =
+            user instanceof ApiUser && user.appName
+                ? { ...data, appName: user.appName }
+                : data;
 
         await this.clientInstanceService.registerBackendClient(
-            data,
+            registration,
             clientIp,
             environment,
         );

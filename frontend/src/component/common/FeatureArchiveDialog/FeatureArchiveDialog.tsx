@@ -6,21 +6,27 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { Alert, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
 import { useScheduledChangeRequestsWithFlags } from 'hooks/api/getters/useScheduledChangeRequestsWithFlags/useScheduledChangeRequestsWithFlags';
 import type { ScheduledChangeRequestViewModel } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
+import type { Tracking } from 'utils/trackingEvents';
+import { useTracking } from 'hooks/useTracking';
+
+// Under change requests the dialog only queues a change; the outcome rows say which.
+export type ArchiveVia = 'direct' | 'change-request';
 
 interface IFeatureArchiveDialogProps {
     isOpen: boolean;
-    onConfirm: () => void;
+    onConfirm: (archiveVia: ArchiveVia) => void;
     onClose: () => void;
     projectId: string;
     featureIds: string[];
     featuresWithUsage?: string[];
+    tracking?: Tracking;
 }
 
 const RemovedDependenciesAlert = () => {
@@ -206,14 +212,17 @@ const useActionButtonText = (projectId: string, isBulkArchive: boolean) => {
 const useArchiveAction = ({
     projectId,
     featureIds,
+    tracking,
     onSuccess,
     onError,
 }: {
     projectId: string;
     featureIds: string[];
+    tracking?: Tracking;
     onSuccess: () => void;
-    onError: () => void;
+    onError: (error: unknown) => void;
 }) => {
+    const [archiving, setArchiving] = useState(false);
     const { setToastData, setToastApiError } = useToast();
     const { archiveFeatureToggle } = useFeatureApi();
     const { archiveFeatures } = useProjectApi();
@@ -226,6 +235,10 @@ const useArchiveAction = ({
         useHighestPermissionChangeRequestEnvironment(projectId);
     const isBulkArchive = featureIds?.length > 1;
     const environment = getHighestEnvironment();
+    const archiveVia: ArchiveVia =
+        environment && isChangeRequestConfiguredForReview(environment)
+            ? 'change-request'
+            : 'direct';
     const addArchiveToggleToChangeRequest = async () => {
         if (!environment) {
             console.error('No change request environment');
@@ -265,25 +278,34 @@ const useArchiveAction = ({
         });
     };
 
-    return async () => {
+    const trackArchive = useTracking(tracking);
+
+    const archiveAction = async () => {
+        setArchiving(true);
         try {
-            if (
-                environment &&
-                isChangeRequestConfiguredForReview(environment)
-            ) {
-                await addArchiveToggleToChangeRequest();
-            } else if (isBulkArchive) {
-                await archiveToggles();
-            } else {
-                await archiveToggle();
-            }
+            await trackArchive.mutation(
+                async () => {
+                    if (archiveVia === 'change-request') {
+                        await addArchiveToggleToChangeRequest();
+                    } else if (isBulkArchive) {
+                        await archiveToggles();
+                    } else {
+                        await archiveToggle();
+                    }
+                },
+                { archiveVia },
+            );
 
             onSuccess();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
-            onError();
+            onError(error);
+        } finally {
+            setArchiving(false);
         }
     };
+
+    return { archiveAction, archiving, archiveVia };
 };
 
 const useVerifyArchive = (
@@ -334,6 +356,7 @@ export const FeatureArchiveDialog: FC<IFeatureArchiveDialogProps> = ({
     projectId,
     featureIds,
     featuresWithUsage,
+    tracking,
 }) => {
     const isBulkArchive = featureIds?.length > 1;
 
@@ -343,11 +366,12 @@ export const FeatureArchiveDialog: FC<IFeatureArchiveDialogProps> = ({
         ? 'Archive feature flags'
         : 'Archive feature flag';
 
-    const archiveAction = useArchiveAction({
+    const { archiveAction, archiving, archiveVia } = useArchiveAction({
         projectId,
         featureIds,
+        tracking,
         onSuccess() {
-            onConfirm();
+            onConfirm(archiveVia);
             onClose();
         },
         onError() {
@@ -374,7 +398,8 @@ export const FeatureArchiveDialog: FC<IFeatureArchiveDialogProps> = ({
             primaryButtonText={buttonText}
             secondaryButtonText='Cancel'
             title={dialogTitle}
-            disabledPrimaryButton={disableArchive}
+            disabledPrimaryButton={disableArchive || archiving}
+            tracking={tracking}
         >
             <ConditionallyRender
                 condition={isBulkArchive}

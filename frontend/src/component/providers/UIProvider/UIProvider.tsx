@@ -6,23 +6,13 @@ import UIContext, {
 import type { IToast } from 'interfaces/toast';
 import { getLocalStorageItem } from 'utils/storage';
 
-const resolveMode = (): themeMode => {
-    const value = getLocalStorageItem('unleash-theme');
-    if (value) {
-        return value as themeMode;
-    }
-
-    const osDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
-
-    if (osDark) {
-        return 'dark';
-    }
-    return 'light';
-};
+const resolveMode = (): themeMode =>
+    getLocalStorageItem<themeMode>('unleash-theme') ?? 'system';
 
 const UIProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
     const [toastData, setToast] = useState<IToast>(createEmptyToast());
     const [showFeedback, setShowFeedback] = useState(false);
+    const [surveyVisible, setSurveyVisible] = useState(false);
     const [themeMode, setThemeMode] = useState(resolveMode());
 
     const context = React.useMemo(
@@ -31,10 +21,12 @@ const UIProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
             toastData,
             showFeedback,
             setShowFeedback,
+            surveyVisible,
+            setSurveyVisible,
             themeMode,
             setThemeMode,
         }),
-        [toastData, showFeedback, themeMode],
+        [toastData, showFeedback, surveyVisible, themeMode],
     );
 
     return <UIContext.Provider value={context}>{children}</UIContext.Provider>;

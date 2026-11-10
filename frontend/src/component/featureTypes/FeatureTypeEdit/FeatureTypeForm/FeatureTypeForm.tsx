@@ -1,6 +1,6 @@
 import { type FormEventHandler, type FC, useState, useCallback } from 'react';
 import { Box, Button, Typography, Checkbox, styled } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useFeatureTypeApi } from 'hooks/api/actions/useFeatureTypeApi/useFeatureTypeApi';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
@@ -15,7 +15,7 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 type FeatureTypeFormProps = {
     featureType?: FeatureTypeSchema;
@@ -52,7 +52,7 @@ export const FeatureTypeForm: FC<FeatureTypeFormProps> = ({
         !featureType?.lifetimeDays,
     );
     const { setToastData, setToastApiError } = useToast();
-    const tracker = usePlausibleTracker();
+    const tracker = useEventTracker();
 
     const onChangeLifetime = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = Number.parseInt(trim(e.target.value), 10);
@@ -118,7 +118,7 @@ export const FeatureTypeForm: FC<FeatureTypeFormProps> = ({
 
     return (
         <FormTemplate
-            modal
+            layout='modal'
             title={
                 loading
                     ? 'Edit flag type'

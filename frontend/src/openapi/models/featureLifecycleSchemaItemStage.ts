@@ -10,7 +10,6 @@
 export type FeatureLifecycleSchemaItemStage =
     (typeof FeatureLifecycleSchemaItemStage)[keyof typeof FeatureLifecycleSchemaItemStage];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const FeatureLifecycleSchemaItemStage = {
     initial: 'initial',
     'pre-live': 'pre-live',

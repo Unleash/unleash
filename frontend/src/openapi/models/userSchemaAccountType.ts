@@ -10,7 +10,6 @@
 export type UserSchemaAccountType =
     (typeof UserSchemaAccountType)[keyof typeof UserSchemaAccountType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const UserSchemaAccountType = {
     User: 'User',
     Service_Account: 'Service Account',

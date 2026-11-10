@@ -1,30 +1,10 @@
-import { useContext, useState } from 'react';
-import { ClickAwayListener, IconButton, styled, Tooltip } from '@mui/material';
-import { useId } from 'hooks/useId';
-import { focusable } from 'themes/themeStyles';
+import { useContext } from 'react';
+import { Button } from '@mui/material';
 import AccessContext from 'contexts/AccessContext';
 import PersonAdd from '@mui/icons-material/PersonAdd';
-import { InviteLinkContent } from '../InviteLinkContent.tsx';
-
-const StyledContainer = styled('div')(() => ({
-    position: 'relative',
-}));
-
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
-    ...focusable(theme),
-    borderRadius: 100,
-    '&:focus-visible': {
-        outlineStyle: 'solid',
-        outlineWidth: 2,
-        outlineColor: theme.palette.primary.main,
-        borderRadius: '100%',
-    },
-}));
+import { Link } from 'react-router';
 
 const InviteLinkButton = () => {
-    const [showInviteLinkContent, setShowInviteLinkContent] = useState(false);
-    const modalId = useId();
-
     const { isAdmin } = useContext(AccessContext);
 
     if (!isAdmin) {
@@ -32,23 +12,26 @@ const InviteLinkButton = () => {
     }
 
     return (
-        <ClickAwayListener onClickAway={() => setShowInviteLinkContent(false)}>
-            <StyledContainer>
-                <Tooltip title='Invite users' arrow>
-                    <StyledIconButton
-                        onClick={() => setShowInviteLinkContent(true)}
-                        size='large'
-                    >
-                        <PersonAdd />
-                    </StyledIconButton>
-                </Tooltip>
-                <InviteLinkContent
-                    showInviteLinkContent={showInviteLinkContent}
-                    setShowInviteLinkContent={setShowInviteLinkContent}
-                    id={modalId}
-                />
-            </StyledContainer>
-        </ClickAwayListener>
+        <Button
+            component={Link}
+            to='/admin/users'
+            variant='outlined'
+            color='inherit'
+            startIcon={<PersonAdd />}
+            aria-label='Invite users'
+            sx={(theme) => ({
+                mx: 1,
+                color: theme.palette.neutral.main,
+                borderColor: theme.palette.neutral.containerBorder,
+                '&:hover': {
+                    color: theme.palette.neutral.dark,
+                    borderColor: theme.palette.neutral.main,
+                    backgroundColor: theme.palette.neutral.container,
+                },
+            })}
+        >
+            Invite
+        </Button>
     );
 };
 

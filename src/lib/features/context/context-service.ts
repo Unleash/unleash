@@ -1,3 +1,4 @@
+import { auditEventFields } from '../../util/index.js';
 import type {
     IContextField,
     IContextFieldDto,
@@ -124,6 +125,17 @@ class ContextService {
         return field;
     }
 
+    private validateContextFieldBelongsToProject(
+        field: IContextField,
+        project: string | undefined,
+    ): void {
+        if (project && field.project !== project) {
+            throw new NotFoundError(
+                `Could not find context field ${field.name} in project ${project}`,
+            );
+        }
+    }
+
     async getStrategiesByContextField(
         name: string,
         userId: number,
@@ -167,9 +179,7 @@ class ContextService {
         const createdField = await this.contextFieldStore.create(value);
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_CREATED,
-            createdBy: auditUser.username,
-            createdByUserId: auditUser.id,
-            ip: auditUser.ip,
+            ...auditEventFields(auditUser),
             data: contextField,
         });
 
@@ -179,15 +189,12 @@ class ContextService {
     async updateContextField(
         updatedContextField: IContextFieldDto,
         auditUser: IAuditUser,
+        project?: string,
     ): Promise<void> {
-        const contextField = await this.contextFieldStore.get(
+        const contextField = await this.getContextField(
             updatedContextField.name,
         );
-        if (contextField === undefined) {
-            throw new NotFoundError(
-                `Could not find context field with name: ${updatedContextField.name}`,
-            );
-        }
+        this.validateContextFieldBelongsToProject(contextField, project);
         const value = await contextSchema.validateAsync(updatedContextField);
 
         await this.contextFieldStore.update(value);
@@ -195,9 +202,7 @@ class ContextService {
         const { createdAt, sortOrder, ...previousContextField } = contextField;
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_UPDATED,
-            createdBy: auditUser.username,
-            createdByUserId: auditUser.id,
-            ip: auditUser.ip,
+            ...auditEventFields(auditUser),
             preData: previousContextField,
             data: value,
         });
@@ -206,15 +211,12 @@ class ContextService {
     async updateLegalValue(
         contextFieldLegalValue: { name: string; legalValue: LegalValueSchema },
         auditUser: IAuditUser,
+        project?: string,
     ): Promise<void> {
-        const contextField = await this.contextFieldStore.get(
+        const contextField = await this.getContextField(
             contextFieldLegalValue.name,
         );
-        if (contextField === undefined) {
-            throw new NotFoundError(
-                `Context field with name ${contextFieldLegalValue.name} was not found`,
-            );
-        }
+        this.validateContextFieldBelongsToProject(contextField, project);
         const validatedLegalValue = await legalValueSchema.validateAsync(
             contextFieldLegalValue.legalValue,
         );
@@ -239,9 +241,7 @@ class ContextService {
 
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_UPDATED,
-            createdBy: auditUser.username,
-            createdByUserId: auditUser.id,
-            ip: auditUser.ip,
+            ...auditEventFields(auditUser),
             preData: contextField,
             data: newContextField,
         });
@@ -250,15 +250,12 @@ class ContextService {
     async deleteLegalValue(
         contextFieldLegalValue: { name: string; legalValue: string },
         auditUser: IAuditUser,
+        project?: string,
     ): Promise<void> {
-        const contextField = await this.contextFieldStore.get(
+        const contextField = await this.getContextField(
             contextFieldLegalValue.name,
         );
-        if (contextField === undefined) {
-            throw new NotFoundError(
-                `Could not find context field with name ${contextFieldLegalValue.name}`,
-            );
-        }
+        this.validateContextFieldBelongsToProject(contextField, project);
 
         const newContextField = {
             ...contextField,
@@ -272,9 +269,7 @@ class ContextService {
 
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_UPDATED,
-            createdBy: auditUser.username,
-            createdByUserId: auditUser.id,
-            ip: auditUser.ip,
+            ...auditEventFields(auditUser),
             preData: contextField,
             data: newContextField,
         });
@@ -283,8 +278,10 @@ class ContextService {
     async deleteContextField(
         name: string,
         auditUser: IAuditUser,
+        project?: string,
     ): Promise<void> {
-        const contextField = await this.contextFieldStore.get(name);
+        const contextField = await this.getContextField(name);
+        this.validateContextFieldBelongsToProject(contextField, project);
 
         const strategies =
             await this.featureStrategiesStore.getStrategiesByContextField(name);
@@ -299,9 +296,7 @@ class ContextService {
         await this.contextFieldStore.delete(name);
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_DELETED,
-            createdBy: auditUser.username,
-            createdByUserId: auditUser.id,
-            ip: auditUser.ip,
+            ...auditEventFields(auditUser),
             preData: contextField,
         });
     }
@@ -309,17 +304,12 @@ class ContextService {
     async validateUniqueName({
         name,
     }: Pick<IContextFieldDto, 'name'>): Promise<void> {
-        let msg: string | undefined;
-        try {
-            await this.contextFieldStore.get(name);
-            msg = 'A context field with that name already exist';
-        } catch (_error) {
-            // No conflict, everything ok!
-            return;
+        const existingField = await this.contextFieldStore.get(name);
+        if (existingField !== undefined) {
+            throw new NameExistsError(
+                'A context field with that name already exist',
+            );
         }
-
-        // Intentional throw here!
-        throw new NameExistsError(msg);
     }
 
     async validateName(name: string): Promise<void> {

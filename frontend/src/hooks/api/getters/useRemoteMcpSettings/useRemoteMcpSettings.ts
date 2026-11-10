@@ -5,6 +5,7 @@ const PATH = `api/admin/remote-mcp/settings`;
 
 export type RemoteMcpSettings = {
     enabled: boolean;
+    feedbackOptIn?: boolean;
 };
 
 const DEFAULT_DATA: RemoteMcpSettings = {

@@ -4,7 +4,7 @@ import { InstanceStatusBar } from 'component/common/InstanceStatus/InstanceStatu
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { type IInstanceStatus, InstancePlan } from 'interfaces/instance';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';

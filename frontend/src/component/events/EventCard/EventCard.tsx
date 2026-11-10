@@ -2,10 +2,10 @@ import { EventDiff } from 'component/events/EventDiff/EventDiff';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHMS } from 'utils/formatDate';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { styled } from '@mui/material';
 import type { EventSchema } from 'openapi';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
 
 interface IEventCardProps {
     entry: EventSchema;
@@ -22,7 +22,7 @@ const StyledChangesTitle = styled('strong')(({ theme }) => ({
 
 const StyledContainerListItem = styled('li')(({ theme }) => ({
     display: 'grid',
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.neutral.container,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(0.5),
     [theme.breakpoints.up('md')]: {

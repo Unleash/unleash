@@ -9,11 +9,6 @@ const StyledForm = styled('div')(({ theme }) => ({
     minHeight: theme.spacing(12),
 }));
 
-const StyledInputSecondaryDescription = styled('p')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    marginBottom: theme.spacing(1),
-}));
-
 const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
     maxWidth: theme.spacing(50),
@@ -73,9 +68,6 @@ export const SignalEndpointsTokensCreateDialog = ({
             title='New token'
         >
             <StyledForm>
-                <StyledInputSecondaryDescription>
-                    What is your new token name?
-                </StyledInputSecondaryDescription>
                 <StyledInput
                     autoFocus
                     label='Token name'

@@ -16,8 +16,14 @@ import { Alert } from '@mui/material';
 import { useAuthDetails } from 'hooks/api/getters/useAuth/useAuthDetails';
 import { AUTH_PAGE_ID } from 'utils/testIds';
 import { type ReactElement, useEffect } from 'react';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { setSessionStorageItem } from 'utils/storage';
+import { LOGIN_ERROR_CODES } from '@server/types/login-errors';
+
+// mapping error code to user msg - anything else is shown as it came.
+const LOGIN_ERRORS = new Map<string, string>([
+    [LOGIN_ERROR_CODES.oidcNotEnabled, 'OpenID Connect is not enabled'],
+]);
 
 interface IAuthenticationProps {
     redirect: string;
@@ -30,8 +36,9 @@ const Authentication = ({
 }: IAuthenticationProps) => {
     const { authDetails } = useAuthDetails();
     const params = useQueryParams();
-    const error = params.get('errorMsg');
-    const { trackEvent } = usePlausibleTracker();
+    const errorMsg = params.get('errorMsg') ?? '';
+    const error = LOGIN_ERRORS.get(errorMsg) ?? errorMsg;
+    const { trackEvent } = useEventTracker();
 
     useEffect(() => {
         if (redirect) {

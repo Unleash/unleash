@@ -1,5 +1,5 @@
 import FeatureOverviewMetaData from './FeatureOverviewMetaData/FeatureOverviewMetaData.tsx';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import {
     FeatureStrategyEdit,
@@ -19,16 +19,18 @@ import { StrategyDragTooltip } from './StrategyDragTooltip.tsx';
 import { CleanupReminder } from '../CleanupReminder/CleanupReminder.tsx';
 import { useFeature } from '../../../../hooks/api/getters/useFeature/useFeature.ts';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { useMinimumUnleashVersion } from 'hooks/useMinimumUnleashVersion.ts';
 import type { FeatureSchema, ProjectOverviewSchema } from 'openapi/index.ts';
 import { FeatureSetupBanner } from './FeatureSetupBanner.tsx';
 import { getFeatureSetupStage } from './getFeatureSetupStage.ts';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { PayloadSchemaSidebar } from './PayloadSchema/PayloadSchemaSidebar.tsx';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     width: '100%',
     gap: theme.spacing(2),
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down(1350)]: {
         flexDirection: 'column',
     },
 }));
@@ -49,7 +51,6 @@ interface FeatureOverviewProps {
 }
 
 export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
-    const flipMainContentOrder = useMinimumUnleashVersion('8.0.0');
     const navigate = useNavigate();
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -57,6 +58,10 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
     const { hiddenEnvironments, onEnvironmentVisibilityChange } =
         useEnvironmentVisibility();
     const onSidebarClose = () => navigate(featurePath);
+
+    const { isEnterprise } = useUiConfig();
+    const payloadSchemasEnabled = useUiFlag('payloadSchemas') && isEnterprise();
+
     usePageTitle(featureId);
     const { setLastViewed } = useLastViewedFlags();
     useEffect(() => {
@@ -106,20 +111,6 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
         <div>
             <CleanupReminder feature={feature} onChange={refetchFeature} />
             <StyledContainer>
-                {!flipMainContentOrder && (
-                    <div>
-                        {!featureLoading ? (
-                            <FeatureOverviewMetaData
-                                hiddenEnvironments={hiddenEnvironments}
-                                onEnvironmentVisibilityChange={
-                                    onEnvironmentVisibilityChange
-                                }
-                                feature={feature}
-                                onChange={refetchFeature}
-                            />
-                        ) : null}
-                    </div>
-                )}
                 <StyledMainContent>
                     {allLoadingDone &&
                         (shouldShowSetup ? (
@@ -142,20 +133,18 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
                         hiddenEnvironments={hiddenEnvironments}
                     />
                 </StyledMainContent>
-                {flipMainContentOrder && (
-                    <div>
-                        {!featureLoading ? (
-                            <FeatureOverviewMetaData
-                                hiddenEnvironments={hiddenEnvironments}
-                                onEnvironmentVisibilityChange={
-                                    onEnvironmentVisibilityChange
-                                }
-                                feature={feature}
-                                onChange={refetchFeature}
-                            />
-                        ) : null}
-                    </div>
-                )}
+                <div>
+                    {!featureLoading ? (
+                        <FeatureOverviewMetaData
+                            hiddenEnvironments={hiddenEnvironments}
+                            onEnvironmentVisibilityChange={
+                                onEnvironmentVisibilityChange
+                            }
+                            feature={feature}
+                            onChange={refetchFeature}
+                        />
+                    ) : null}
+                </div>
                 <Routes>
                     <Route
                         path='strategies/create'
@@ -181,6 +170,24 @@ export const FeatureOverview = ({ header }: FeatureOverviewProps) => {
                             </SidebarModal>
                         }
                     />
+                    {payloadSchemasEnabled ? (
+                        <Route
+                            path='payload-schema'
+                            element={
+                                <SidebarModal
+                                    label={
+                                        feature.payloadSchema
+                                            ? 'Edit payload schema'
+                                            : 'Add payload schema'
+                                    }
+                                    onClose={onSidebarClose}
+                                    open
+                                >
+                                    <PayloadSchemaSidebar />
+                                </SidebarModal>
+                            }
+                        />
+                    ) : null}
                 </Routes>
             </StyledContainer>
             <StrategyDragTooltip show={showTooltip} onClose={onTooltipClose} />

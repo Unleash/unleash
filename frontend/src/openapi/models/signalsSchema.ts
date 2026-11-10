@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SignalSchema } from './signalSchema';
+import type { SignalSchema } from './signalSchema.ts';
 
 /**
  * A response model with a list of signals.

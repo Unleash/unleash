@@ -8,7 +8,7 @@ import {
     Navigate,
     RouterProvider,
     createMemoryRouter,
-} from 'react-router-dom';
+} from 'react-router';
 import { useRecentlyVisited } from './useRecentlyVisited.ts';
 import { RecentlyVisitedRecorder } from 'component/commandBar/RecentlyVisitedRecorder';
 
@@ -30,10 +30,7 @@ beforeEach(() => {
 
 test('checks that routes that exist in routes.ts gets added to lastVisited', async () => {
     render(
-        <Router
-            initialEntries={['/']}
-            future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-        >
+        <Router initialEntries={['/']}>
             <RouteNameRender />
             <Routes>
                 <Route path='/' element={<Navigate to={'/search'} />} />
@@ -69,28 +66,12 @@ test('checks that routes that exist in routes.ts gets added to lastVisited', asy
 });
 
 test('visiting gets added to the list', async () => {
-    const router = createMemoryRouter(
-        [
-            { path: '/search', element: <RouteNameRender /> },
-            { path: '/projects', element: <RouteNameRender /> },
-            { path: '/', element: <RouteNameRender /> },
-        ],
-        {
-            future: {
-                v7_relativeSplatPath: true,
-                v7_fetcherPersist: true,
-                v7_normalizeFormMethod: true,
-                v7_partialHydration: true,
-                v7_skipActionErrorRevalidation: true,
-            },
-        },
-    );
-    render(
-        <RouterProvider
-            router={router}
-            future={{ v7_startTransition: true }}
-        />,
-    );
+    const router = createMemoryRouter([
+        { path: '/search', element: <RouteNameRender /> },
+        { path: '/projects', element: <RouteNameRender /> },
+        { path: '/', element: <RouteNameRender /> },
+    ]);
+    render(<RouterProvider router={router} />);
     router.navigate('/search');
     await screen.findByText('/search');
     router.navigate('/projects');

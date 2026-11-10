@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureStrategySchema } from './featureStrategySchema';
+import type { FeatureStrategySchema } from './featureStrategySchema.ts';
 
 /**
  * Describes a project's configuration in a given environment.

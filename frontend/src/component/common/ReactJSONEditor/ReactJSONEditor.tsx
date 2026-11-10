@@ -2,13 +2,38 @@ import { json, jsonParseLinter } from '@codemirror/lang-json';
 import { linter } from '@codemirror/lint';
 import ErrorIcon from '@mui/icons-material/Error';
 import FormatIndentIncrease from '@mui/icons-material/FormatIndentIncrease';
-import { Box, Button, styled, useTheme } from '@mui/material';
+import {
+    Box,
+    Button,
+    type ButtonProps,
+    styled,
+    type Theme,
+    useTheme,
+} from '@mui/material';
 import CodeMirror from '@uiw/react-codemirror';
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react';
 
-type EditorStyle = 'default' | 'sidePanel';
+type EditorStyle = 'default' | 'sidePanel' | 'fill';
 
-type JSONContent = { text: string } | { json: unknown };
+const fillOverrides = (theme: Theme) => ({
+    height: '100%',
+    border: 0,
+    backgroundColor: 'transparent',
+    '&:hover, &:focus-within': {
+        borderColor: 'transparent',
+        boxShadow: 'none',
+    },
+    '& .cm-editor': {
+        height: '100%',
+        backgroundColor: 'transparent',
+    },
+    '& .cm-gutters': {
+        backgroundColor: 'transparent',
+        color: theme.palette.text.secondary,
+    },
+});
+
+export type JSONContent = { text: string } | { json: unknown };
 
 type JSONEditorChange = (content: JSONContent) => void;
 
@@ -16,10 +41,12 @@ interface IReactJSONEditorProps {
     content: JSONContent;
     onChange?: JSONEditorChange;
     onBlur?: () => void;
+    placeholder?: string;
     validationError?: string;
     readOnly?: boolean;
     statusBar?: boolean;
     editorStyle?: EditorStyle;
+    formatButtonProps?: ButtonProps;
 }
 
 const StyledEditorWrapper = styled(Box, {
@@ -33,14 +60,24 @@ const StyledEditorWrapper = styled(Box, {
         overflow: 'hidden',
         position: 'relative',
         backgroundColor: theme.palette.background.paper,
-        minHeight: editorStyle === 'sidePanel' ? undefined : theme.spacing(8),
+        minHeight:
+            editorStyle === 'sidePanel' || editorStyle === 'fill'
+                ? undefined
+                : theme.spacing(8),
         '&:hover': {
             borderColor: theme.palette.action.disabled,
+        },
+        '& .cm-cursor': {
+            borderLeftWidth: theme.spacing(0.2),
+            borderLeftColor: theme.palette.text.primary,
         },
         '&:focus-within': {
             borderColor: hasError
                 ? theme.palette.error.main
                 : theme.palette.primary.main,
+            boxShadow: `0 0 0 1px ${
+                hasError ? theme.palette.error.main : theme.palette.primary.main
+            }`,
         },
         '& .cm-editor': {
             backgroundColor: theme.palette.background.paper,
@@ -59,6 +96,9 @@ const StyledEditorWrapper = styled(Box, {
             paddingRight: theme.spacing(12),
             paddingBottom: theme.spacing(1),
             minHeight: 'inherit',
+        },
+        '& .cm-placeholder': {
+            color: theme.palette.text.disabled,
         },
         '& .cm-gutters': {
             backgroundColor: theme.palette.background.alternative,
@@ -106,20 +146,18 @@ const StyledEditorWrapper = styled(Box, {
         '& .cm-diagnostic-error': {
             borderLeftColor: theme.palette.error.main,
         },
-        ...(editorStyle === 'sidePanel' && {
-            height: '100%',
-            border: 0,
-            backgroundColor: 'transparent',
-            '&:hover, &:focus-within': {
-                borderColor: 'transparent',
-            },
-            '& .cm-editor': {
+        ...(editorStyle === 'sidePanel' && fillOverrides(theme)),
+        ...(editorStyle === 'fill' && {
+            ...fillOverrides(theme),
+            minHeight: 0,
+            flex: 1,
+            overflow: 'hidden',
+            '& .cm-theme-none': {
                 height: '100%',
-                backgroundColor: 'transparent',
             },
-            '& .cm-gutters': {
-                backgroundColor: 'transparent',
-                color: theme.palette.text.secondary,
+            '& .cm-scroller': {
+                height: '100%',
+                overflow: 'auto',
             },
         }),
     }),
@@ -147,20 +185,29 @@ const StyledStatusBar = styled('div')(({ theme }) => ({
 const StyledValidationMessage = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
+    flexShrink: 0,
     gap: theme.spacing(1),
     marginTop: theme.spacing(0.75),
     padding: theme.spacing(1, 1.5),
-    border: `1px solid ${theme.palette.error.border}`,
+    border: `1px solid ${theme.palette.error.containerBorder}`,
     borderRadius: theme.shape.borderRadiusMedium,
-    backgroundColor: theme.palette.error.light,
-    color: theme.palette.error.dark,
+    backgroundColor: theme.palette.error.container,
+    color: theme.palette.error.onContainer,
     fontSize: theme.fontSizes.smallBody,
     lineHeight: 1.4,
 }));
 
-const StyledEditorContainer = styled('div')({
+const StyledEditorContainer = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'editorStyle',
+})<{ editorStyle: EditorStyle }>(({ editorStyle }) => ({
     width: '100%',
-});
+    ...(editorStyle === 'fill' && {
+        height: '100%',
+        minHeight: 0,
+        display: 'flex',
+        flexDirection: 'column',
+    }),
+}));
 
 const contentToText = (content: JSONContent): string => {
     if ('text' in content) {
@@ -191,10 +238,12 @@ const ReactJSONEditor: FC<IReactJSONEditorProps> = ({
     content,
     onChange,
     onBlur,
+    placeholder,
     validationError: validationErrorProp,
     readOnly = false,
     statusBar = false,
     editorStyle = 'default',
+    formatButtonProps,
 }) => {
     const theme = useTheme();
     const value = useMemo(() => contentToText(content), [content]);
@@ -236,21 +285,22 @@ const ReactJSONEditor: FC<IReactJSONEditorProps> = ({
         onChange?.({ text: formatted });
     }, [onChange, value]);
 
-    const minHeight =
-        editorStyle === 'sidePanel' ? undefined : theme.spacing(10);
+    const fillsHeight = editorStyle === 'sidePanel' || editorStyle === 'fill';
+    const minHeight = fillsHeight ? undefined : theme.spacing(10);
     const visibleValidationError = validationErrorProp ?? validationError;
 
     return (
-        <StyledEditorContainer>
+        <StyledEditorContainer editorStyle={editorStyle}>
             <StyledEditorWrapper
                 editorStyle={editorStyle}
                 hasError={Boolean(visibleValidationError)}
             >
                 {!readOnly ? (
                     <StyledFormatButton
-                        size='small'
+                        size='medium'
                         variant='outlined'
                         startIcon={<FormatIndentIncrease />}
+                        {...formatButtonProps}
                         onClick={formatJson}
                     >
                         Format
@@ -258,8 +308,9 @@ const ReactJSONEditor: FC<IReactJSONEditorProps> = ({
                 ) : null}
                 <CodeMirror
                     value={value}
+                    placeholder={placeholder}
                     minHeight={minHeight}
-                    height={editorStyle === 'sidePanel' ? '100%' : undefined}
+                    height={fillsHeight ? '100%' : undefined}
                     theme='none'
                     extensions={extensions}
                     onChange={handleChange}

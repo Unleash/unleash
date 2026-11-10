@@ -10,7 +10,6 @@
 export type SignalSchemaSource =
     (typeof SignalSchemaSource)[keyof typeof SignalSchemaSource];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const SignalSchemaSource = {
     'signal-endpoint': 'signal-endpoint',
 } as const;

@@ -3,8 +3,8 @@ import ErrorOutlineRounded from '@mui/icons-material/ErrorOutlineRounded';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import WarningAmber from '@mui/icons-material/WarningAmber';
 import { styled, Icon, Link } from '@mui/material';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { useNavigate } from 'react-router-dom';
+import { useEventTracker } from 'hooks/useEventTracker';
+import { useNavigate } from 'react-router';
 import { BannerDialog } from './BannerDialog/BannerDialog.tsx';
 import { useState } from 'react';
 import { Markdown } from 'component/common/Markdown/Markdown';
@@ -37,13 +37,14 @@ const StyledBar = styled('aside', {
             overflow: 'auto',
         }),
         borderColor:
-            theme.palette[variant]?.border ??
-            theme.palette[DEFAULT_VARIANT].border,
+            theme.palette[variant]?.containerBorder ??
+            theme.palette[DEFAULT_VARIANT].containerBorder,
         background:
-            theme.palette[variant]?.light ??
-            theme.palette[DEFAULT_VARIANT].light,
+            theme.palette[variant]?.container ??
+            theme.palette[DEFAULT_VARIANT].container,
         color:
-            theme.palette[variant]?.dark ?? theme.palette[DEFAULT_VARIANT].dark,
+            theme.palette[variant]?.onContainer ??
+            theme.palette[DEFAULT_VARIANT].onContainer,
         fontSize: theme.fontSizes.smallBody,
     }),
 );
@@ -145,7 +146,7 @@ const BannerButton = ({
     children,
 }: IBannerButtonProps) => {
     const navigate = useNavigate();
-    const tracker = usePlausibleTracker();
+    const tracker = useEventTracker();
 
     if (!link) return null;
 

@@ -64,12 +64,14 @@ test.each([
     );
 });
 
-test(`${currentVersion} returns stable for legacy endpoints without cutoffs before the default threshold`, () => {
-    expect(calculateStability(undefined, currentVersion)).toBe('stable');
-});
-
-test(`${currentVersion} returns alpha when both cutoffs are omitted after the default threshold`, () => {
-    expect(calculateStability(undefined, '7.8.0')).toBe('alpha');
+test.each([
+    ['7.6.0', 'stable'],
+    ['8.0.0', 'stable'],
+    ['8.0.99', 'stable'],
+    ['8.1.0', 'alpha'],
+    ['8.2.0', 'alpha'],
+] as const)('%s returns %s for legacy endpoints without release milestones', (version, expected) => {
+    expect(calculateStability(undefined, version)).toBe(expected);
 });
 
 test.each([

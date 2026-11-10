@@ -1,6 +1,6 @@
 import { Button, styled, Typography } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import type { ReactNode } from 'react';
 import EnterpriseEdgeCloud from 'assets/img/enterpriseEdgeCloud.svg?react';
 import EnterpriseEdgeSelfHosted from 'assets/img/enterpriseEdgeSelfHosted.svg?react';
@@ -166,7 +166,7 @@ const EdgeVersionCard = ({
                 component={Link}
                 nativeButton={false}
                 to={docsUrl}
-                size='small'
+                size='medium'
                 sx={{ fontSize: '14px' }}
                 rel='noopener noreferrer'
                 target='_blank'

@@ -24,7 +24,7 @@ import { LoginHistorySuccessfulCell } from './LoginHistorySuccessfulCell/LoginHi
 import type { ILoginEvent } from 'interfaces/loginEvent';
 import { useLoginHistoryApi } from 'hooks/api/actions/useLoginHistoryApi/useLoginHistoryApi';
 import { formatDateYMDHMS } from 'utils/formatDate';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import Download from '@mui/icons-material/Download';
 

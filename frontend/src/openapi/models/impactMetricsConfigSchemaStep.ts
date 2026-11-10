@@ -12,7 +12,6 @@ export type ImpactMetricsConfigSchemaStep =
     | (typeof ImpactMetricsConfigSchemaStep)[keyof typeof ImpactMetricsConfigSchemaStep]
     | null;
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ImpactMetricsConfigSchemaStep = {
     '1m': '1m',
     '15m': '15m',

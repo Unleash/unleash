@@ -1,6 +1,12 @@
-import Clear from '@mui/icons-material/Clear';
-import { Chip, type ChipProps, styled, type Theme } from '@mui/material';
-import { type FC, forwardRef, type PropsWithChildren, useRef } from 'react';
+import { chipClasses, styled } from '@mui/material';
+import {
+    forwardRef,
+    type PropsWithChildren,
+    useImperativeHandle,
+    useRef,
+} from 'react';
+import { FeatureStrategyChip } from 'component/feature/FeatureStrategy/FeatureStrategyChip/FeatureStrategyChip';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 
 const ValueListWrapper = styled('div')({
     display: 'contents',
@@ -11,103 +17,114 @@ const StyledList = styled('ul')({
     display: 'contents',
 });
 
-export const baseChipStyles = (theme: Theme) => ({
-    ':hover': { background: theme.palette.secondary.light },
-    ':focus-visible': {
-        background: theme.palette.background.elevation1,
-        outlineColor: theme.palette.secondary.dark,
-    },
-    background: theme.palette.background.elevation1,
-    color: theme.palette.text.primary,
-    height: 'auto',
-    outline: `1px solid #0000`,
-    transition: 'all 0.3s ease',
-});
-
-export const ValueChip = styled(
-    forwardRef<HTMLDivElement, ChipProps>((props, ref) => (
-        <Chip size='small' {...props} ref={ref} deleteIcon={<Clear />} />
-    )),
-)(({ theme }) => ({
-    ...baseChipStyles(theme),
-    color: theme.palette.text.primary,
-    padding: 0,
-    height: 'auto',
-    '& .MuiChip-label': {
-        paddingTop: theme.spacing(0.5),
-        paddingBottom: theme.spacing(0.5),
-        paddingLeft: theme.spacing(1.5),
-    },
-    '& .MuiChip-deleteIcon': {
-        marginRight: theme.spacing(1),
-    },
-    svg: {
-        fill: theme.palette.secondary.dark,
-        borderRadius: '50%',
-        outline: `2px solid #0000`,
-        transition: 'inherit',
-        ':focus-visible,:hover': {
-            backgroundColor: theme.palette.table.headerHover,
-            outlineColor: theme.palette.table.headerHover,
-        },
+const EditableValueChip = styled(FeatureStrategyChip)(({ theme }) => ({
+    cursor: 'text',
+    [`&.${chipClasses.clickable}:hover`]: {
+        background: theme.palette.primary.container,
+        outlineColor: theme.palette.primary.light,
     },
 }));
 
-type Props = {
+export type ValueListProps = {
     values?: string[];
     removeValue: (value: string) => void;
     // the element that should receive focus when all value chips are deleted
     getExternalFocusTarget: () => HTMLElement | null;
+    getValueTitle?: (value: string) => string | undefined;
+    getValueLabel?: (value: string) => string;
+    // when set, values can be clicked to edit them in place
+    onEditValue?: (value: string) => void;
 };
 
-export const ValueList: FC<PropsWithChildren<Props>> = ({
-    values = [],
-    removeValue,
-    getExternalFocusTarget,
-    children,
-}) => {
-    const constraintElementRefs: React.MutableRefObject<
-        (HTMLDivElement | null)[]
-    > = useRef([]);
+export type ValueListHandle = {
+    focusValue: (index: number) => void;
+};
 
-    const nextFocusTarget = (deletedIndex: number) => {
-        if (deletedIndex === values.length - 1) {
-            if (deletedIndex === 0) {
-                return getExternalFocusTarget();
+export const ValueList = forwardRef<
+    ValueListHandle,
+    PropsWithChildren<ValueListProps>
+>(
+    (
+        {
+            values = [],
+            removeValue,
+            getExternalFocusTarget,
+            getValueTitle,
+            getValueLabel,
+            onEditValue,
+            children,
+        },
+        ref,
+    ) => {
+        const constraintElementRefs: React.MutableRefObject<
+            (HTMLDivElement | null)[]
+        > = useRef([]);
+
+        useImperativeHandle(ref, () => ({
+            focusValue: (index) =>
+                constraintElementRefs.current[index]?.focus(),
+        }));
+
+        const nextFocusTarget = (deletedIndex: number) => {
+            if (deletedIndex === values.length - 1) {
+                if (deletedIndex === 0) {
+                    return getExternalFocusTarget();
+                } else {
+                    return constraintElementRefs.current[deletedIndex - 1];
+                }
             } else {
-                return constraintElementRefs.current[deletedIndex - 1];
+                return constraintElementRefs.current[deletedIndex + 1];
             }
-        } else {
-            return constraintElementRefs.current[deletedIndex + 1];
-        }
-    };
+        };
 
-    return (
-        <ValueListWrapper>
-            <StyledList>
-                {values.map((value, index) => (
-                    <li key={value}>
-                        <ValueChip
-                            ref={(el) => {
-                                constraintElementRefs.current[index] = el;
-                            }}
-                            sx={{
-                                height: 'auto',
-                                '& .MuiChip-label': {
+        const Chip = onEditValue ? EditableValueChip : FeatureStrategyChip;
+
+        return (
+            <ValueListWrapper>
+                {children}
+                <StyledList>
+                    {values.map((value, index) => {
+                        const chip = (
+                            <Chip
+                                ref={(el: HTMLDivElement | null) => {
+                                    constraintElementRefs.current[index] = el;
+                                }}
+                                labelSx={{
                                     display: 'block',
                                     whiteSpace: 'normal',
-                                },
-                            }}
-                            label={value}
-                            onDelete={() => {
-                                nextFocusTarget(index)?.focus();
-                                removeValue(value);
-                            }}
-                        />
-                    </li>
-                ))}
-            </StyledList>
-            {children}
-        </ValueListWrapper>
-    );
-};
+                                    userSelect: 'text',
+                                }}
+                                label={getValueLabel?.(value) ?? value}
+                                title={getValueTitle?.(value)}
+                                onClick={
+                                    onEditValue
+                                        ? () => onEditValue(value)
+                                        : undefined
+                                }
+                                onDelete={() => {
+                                    nextFocusTarget(index)?.focus();
+                                    removeValue(value);
+                                }}
+                            />
+                        );
+                        return (
+                            <li key={value}>
+                                {onEditValue ? (
+                                    <HtmlTooltip
+                                        title='Click to edit'
+                                        arrow
+                                        describeChild
+                                    >
+                                        {chip}
+                                    </HtmlTooltip>
+                                ) : (
+                                    chip
+                                )}
+                            </li>
+                        );
+                    })}
+                </StyledList>
+            </ValueListWrapper>
+        );
+    },
+);

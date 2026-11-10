@@ -1,6 +1,7 @@
 import type { ComponentProps, Dispatch, FC, SetStateAction } from 'react';
-import { Autocomplete, Chip, TextField } from '@mui/material';
+import { type Autocomplete, Chip } from '@mui/material';
 import { renderOption } from '../../renderOption.tsx';
+import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField.tsx';
 
 interface IEnvironmentsFieldProps {
     environments: string[];
@@ -48,16 +49,14 @@ export const EnvironmentsField: FC<IEnvironmentsFieldProps> = ({
     };
 
     return (
-        <Autocomplete
+        <AutocompleteField
             disablePortal
             limitTags={3}
             id='environment'
             multiple={true}
             options={environmentOptions}
             sx={{ flex: 1 }}
-            renderInput={(params) => (
-                <TextField {...params} label='Environments' />
-            )}
+            label='Environments'
             renderOption={renderOption}
             renderValue={(value, getItemProps) => {
                 return value.map((option, index) => {

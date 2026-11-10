@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { CopyFeatureToggle } from './CopyFeature.tsx';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import { screen } from '@testing-library/react';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { testServerRoute, testServerSetup } from 'utils/testServer';

@@ -7,6 +7,7 @@ import { FeatureLifecycle } from './FeatureLifecycle.tsx';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { MarkCompletedDialogue } from './MarkCompletedDialogue.tsx';
+import { archiveFlagTracking } from 'component/feature/flagActionsTracking';
 
 export const FlagExposure: FC<{
     project: string;
@@ -51,6 +52,7 @@ export const FlagExposure: FC<{
             ) : (
                 <FeatureArchiveDialog
                     isOpen={showDelDialog}
+                    tracking={archiveFlagTracking}
                     onConfirm={onArchive}
                     onClose={() => setShowDelDialog(false)}
                     projectId={project}
@@ -65,6 +67,7 @@ export const FlagExposure: FC<{
                     projectId={feature.project}
                     featureId={feature.name}
                     onComplete={refetchFeature}
+                    openedFrom='personal-dashboard'
                 />
             ) : null}
         </Box>

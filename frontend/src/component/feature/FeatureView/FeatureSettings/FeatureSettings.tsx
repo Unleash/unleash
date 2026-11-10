@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { PageContent } from 'component/common/PageContent/PageContent';
+import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Box, List, ListItemButton, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import FeatureSettingsProject from './FeatureSettingsProject/FeatureSettingsProject.tsx';
@@ -36,7 +37,10 @@ export const FeatureSettings = () => {
     const { uiConfig } = useUiConfig();
 
     return (
-        <PageContent header='Settings' sx={{ padding: 0 }}>
+        <PageContent
+            header={<PageHeader title='Settings' variant='h2' />}
+            sx={{ padding: 0 }}
+        >
             <Box sx={{ display: 'flex' }}>
                 <StyledListContainer>
                     <List>

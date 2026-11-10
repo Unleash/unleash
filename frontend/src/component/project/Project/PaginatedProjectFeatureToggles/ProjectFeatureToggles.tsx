@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -7,10 +7,12 @@ import { PaginatedTable } from 'component/common/Table';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { FavoriteIconHeader } from 'component/common/Table/FavoriteIconHeader/FavoriteIconHeader';
 import { ActionsCell } from '../ProjectFeatureToggles/ActionsCell/ActionsCell.tsx';
+import { ArchivedActionsCell } from '../ProjectFeatureToggles/ActionsCell/ArchivedActionsCell.tsx';
 import { useFavoriteFeaturesApi } from 'hooks/api/actions/useFavoriteFeaturesApi/useFavoriteFeaturesApi';
 import { MemoizedRowSelectCell } from '../ProjectFeatureToggles/RowSelectCell/RowSelectCell.tsx';
 import { BatchSelectionActionsBar } from 'component/common/BatchSelectionActionsBar/BatchSelectionActionsBar';
 import { ProjectFeaturesBatchActions } from '../ProjectFeatureToggles/ProjectFeaturesBatchActions/ProjectFeaturesBatchActions.tsx';
+import { ArchiveBatchActions } from '../../../archive/ArchiveTable/ArchiveBatchActions.tsx';
 import {
     FeatureLifecycleCell,
     MemoizedFeatureEnvironmentSeenCell,
@@ -19,7 +21,13 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useFeatureToggleSwitch } from '../ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch.tsx';
 import useLoading from 'hooks/useLoading';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
-import { withTableState } from 'utils/withTableState';
+import { useTableState } from 'hooks/useTableState';
+import {
+    toggleColumnTracking,
+    flagsListProps,
+    flagsListTableTracking,
+} from 'component/feature/FeatureToggleList/flagsListTracking';
+import { useTracking } from 'hooks/useTracking';
 import type { FeatureSearchResponseSchema } from 'openapi';
 import {
     ArchivedFeatureToggleCell,
@@ -40,15 +48,17 @@ import {
 import { AvatarCell } from './AvatarCell.tsx';
 import { Box, styled, useMediaQuery, useTheme } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog/ConnectSdkDialog.tsx';
 import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding.tsx';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { ArchivedFeatureActionCell } from '../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureActionCell.tsx';
-import { ArchiveBatchActions } from '../../../archive/ArchiveTable/ArchiveBatchActions.tsx';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { ImportModal } from '../Import/ImportModal.tsx';
 import { ProjectCleanupReminder } from './ProjectCleanupReminder/ProjectCleanupReminder.tsx';
-import { formatEnvironmentColumnId } from './formatEnvironmentColumnId.ts';
+import {
+    formatEnvironmentColumnId,
+    trackedColumnName,
+} from 'utils/formatEnvironmentColumnId';
 import { ProjectFeaturesColumnsMenu } from './ProjectFeaturesColumnsMenu/ProjectFeaturesColumnsMenu.tsx';
 import { ProjectFeatureTogglesHeader } from './ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader.tsx';
 import { ProjectFlagsSearch } from './ProjectFlagsSearch/ProjectFlagsSearch.tsx';
@@ -81,28 +91,10 @@ const FilterRow = styled('div')({
     alignItems: 'center',
 });
 
-const LinkToggle = styled('button')(({ theme }) => ({
-    background: 'none',
-    border: 'none',
-    padding: 0,
-    margin: theme.spacing(0, 1.5),
-    marginLeft: 'auto',
-    cursor: 'pointer',
-    color: theme.palette.primary.main,
-    textDecoration: 'underline',
-    fontSize: theme.typography.body2.fontSize,
-    fontWeight: theme.typography.fontWeightMedium,
-    display: 'inline-flex',
-    alignItems: 'center',
-    '&:hover': {
-        textDecoration: 'none',
-    },
-}));
-
 export const ProjectFeatureToggles = ({
     environments: availableEnvironments,
 }: ProjectFeatureTogglesProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const projectId = useRequiredPathParam('projectId');
     const { project } = useProjectOverview(projectId);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
@@ -123,17 +115,31 @@ export const ProjectFeatureToggles = ({
     const { onFlagTypeClick, onTagClick, onAvatarClick } =
         useProjectFeatureSearchActions(tableState, setTableState);
 
+    const { refetch: refetchProjectStatus } = useProjectStatus(projectId);
+    const refetchWithLifecycleCounts = useCallback(() => {
+        refetch();
+        refetchProjectStatus();
+    }, [refetch, refetchProjectStatus]);
+
     const filterState = {
         tag: tableState.tag,
         createdAt: tableState.createdAt,
         type: tableState.type,
         state: tableState.state,
         createdBy: tableState.createdBy,
-        archived: tableState.archived,
         lifecycle: tableState.lifecycle,
         lastSeenAt: tableState.lastSeenAt,
         favorite: tableState.favorite,
     };
+    const listProps = flagsListProps({
+        filterState,
+        query: tableState.query,
+        total,
+    });
+    const trackToggleColumn = useTracking({
+        ...toggleColumnTracking,
+        props: listProps,
+    });
 
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const onFavorite = useCallback(
@@ -164,7 +170,11 @@ export const ProjectFeatureToggles = ({
         setShowMarkCompletedDialogue,
         setShowFeatureReviveDialogue,
         setShowFeatureDeleteDialogue,
-    } = useRowActions(refetch, projectId, trackArchiveAction);
+    } = useRowActions(
+        refetchWithLifecycleCounts,
+        projectId,
+        trackArchiveAction,
+    );
 
     const isPlaceholder = Boolean(initialLoad || loading);
 
@@ -172,29 +182,22 @@ export const ProjectFeatureToggles = ({
 
     const [onboardingFlow, setOnboardingFlow] = useLocalStorageState<
         'visible' | 'closed'
-    >(`onboarding-flow:v1-${projectId}`, 'closed');
+    >(`onboarding-flow:v2-${projectId}`, 'closed');
 
+    const sawOnboardingInProgress = useRef(false);
     useEffect(() => {
-        if (!isPlaceholder && !isOnboarded) {
+        if (isPlaceholder) return;
+        if (!isOnboarded) {
+            sawOnboardingInProgress.current = true;
+        } else if (sawOnboardingInProgress.current) {
             setOnboardingFlow('visible');
         }
     }, [isPlaceholder, isOnboarded]);
 
-    const showNewOnboarding = onboardingFlow === 'visible';
+    const showNewOnboarding = !isOnboarded || onboardingFlow === 'visible';
 
     const showCleanupReminder = !tableState.lastSeenAt && !tableState.lifecycle;
-    const showArchived = Boolean(tableState.archived);
-    const toggleArchived = () => {
-        if (showArchived) {
-            setTableState({ archived: undefined });
-        } else {
-            setTableState({
-                archived: { operator: 'IS', values: ['true'] },
-                lifecycle: undefined,
-            });
-        }
-    };
-    const environments = showArchived ? [] : availableEnvironments;
+    const environments = availableEnvironments;
 
     const columns = useMemo(
         () => [
@@ -252,7 +255,7 @@ export const ProjectFeatureToggles = ({
                 },
             }),
 
-            columnHelper.accessor('lastSeenAt', {
+            columnHelper.accessor((row) => row.environments, {
                 id: 'lastSeenAt',
                 header: 'Last seen',
                 cell: ({ row: { original } }) => (
@@ -279,7 +282,7 @@ export const ProjectFeatureToggles = ({
                                 open: true,
                             });
                         }}
-                        onUncomplete={refetch}
+                        onUncomplete={refetchWithLifecycleCounts}
                         onArchive={() => setFeatureArchiveState(original.name)}
                         data-loading
                     />
@@ -354,9 +357,9 @@ export const ProjectFeatureToggles = ({
                 id: 'actions',
                 header: '',
                 cell: ({ row }) =>
-                    tableState.archived ? (
-                        <ArchivedFeatureActionCell
-                            project={projectId}
+                    row.original.archivedAt ? (
+                        <ArchivedActionsCell
+                            projectId={projectId}
                             onRevive={() => {
                                 setShowFeatureReviveDialogue({
                                     featureId: row.id,
@@ -450,18 +453,28 @@ export const ProjectFeatureToggles = ({
     const defaultColumnVisibility = useDefaultColumnVisibility(allColumnIds);
 
     const table = useReactTable(
-        withTableState(tableState, setTableState, {
-            columns,
-            data,
-            enableRowSelection: true,
-            state: {
-                columnVisibility: defaultColumnVisibility,
+        useTableState({
+            tableState,
+            setTableState,
+            options: {
+                columns,
+                data,
+                enableRowSelection: true,
+                state: {
+                    columnVisibility: defaultColumnVisibility,
+                },
+                getRowId,
             },
-            getRowId,
+            tracking: { ...flagsListTableTracking, props: listProps },
         }),
     );
 
     const { columnVisibility, rowSelection } = table.getState();
+
+    const activeFilters = JSON.stringify([filterState, tableState.query]);
+    // reset flag selection on filter changes
+    useEffect(() => table.resetRowSelection(), [activeFilters, table]);
+
     const onToggleColumnVisibility = useCallback(
         (columnId: string) => {
             const isVisible = columnVisibility[columnId];
@@ -476,11 +489,18 @@ export const ProjectFeatureToggles = ({
                         !columnId.includes(','),
                 ),
             });
+            trackToggleColumn('succeeded', {
+                column: trackedColumnName(columnId),
+                newState: isVisible ? 'hidden' : 'shown',
+            });
         },
-        [columnVisibility, setTableState],
+        [columnVisibility, setTableState, trackToggleColumn],
     );
 
     const selectedData = useSelectedData(features, rowSelection);
+    const allSelectedAreArchived =
+        selectedData.length > 0 &&
+        selectedData.every((feature) => feature.archivedAt);
 
     return (
         <Container>
@@ -502,18 +522,7 @@ export const ProjectFeatureToggles = ({
                         isLoading={initialLoad}
                         totalItems={total}
                         environmentsToExport={environments}
-                        actions={
-                            <LinkToggle type='button' onClick={toggleArchived}>
-                                {showArchived
-                                    ? 'View active flags'
-                                    : 'View archived flags'}
-                            </LinkToggle>
-                        }
-                        title={
-                            showArchived
-                                ? 'Archived feature flags'
-                                : 'Feature flags'
-                        }
+                        title='Feature flags'
                     />
                 }
                 bodyClass='noop'
@@ -526,22 +535,12 @@ export const ProjectFeatureToggles = ({
                 >
                     <FiltersContainer>
                         <FilterRow>
-                            {showArchived ? (
-                                <Box sx={{ marginRight: 'auto' }}>
-                                    <ProjectOverviewFilters
-                                        project={projectId}
-                                        onChange={setTableState}
-                                        state={filterState}
-                                    />
-                                </Box>
-                            ) : (
-                                <ProjectLifecycleFilters
-                                    projectId={projectId}
-                                    state={filterState}
-                                    onChange={setTableState}
-                                    total={loading ? undefined : total}
-                                />
-                            )}
+                            <ProjectLifecycleFilters
+                                projectId={projectId}
+                                state={filterState}
+                                onChange={setTableState}
+                                total={loading ? undefined : total}
+                            />
                             {isMediumScreen ? null : (
                                 <ProjectFlagsSearch
                                     searchQuery={tableState.query || ''}
@@ -557,31 +556,30 @@ export const ProjectFeatureToggles = ({
                                 onToggle={onToggleColumnVisibility}
                             />
                         </FilterRow>
-                        {showArchived ? null : (
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <FilterRow>
-                                    <ProjectOverviewFilters
-                                        project={projectId}
-                                        onChange={setTableState}
-                                        state={filterState}
-                                    />
-                                </FilterRow>
-                                <FavoriteIconHeader
-                                    isActive={tableState.favoritesFirst}
-                                    onClick={() =>
-                                        setTableState({
-                                            favoritesFirst:
-                                                !tableState.favoritesFirst,
-                                        })
-                                    }
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}
+                        >
+                            <FilterRow>
+                                <ProjectOverviewFilters
+                                    project={projectId}
+                                    onChange={setTableState}
+                                    state={filterState}
                                 />
-                            </Box>
-                        )}
+                            </FilterRow>
+                            <FavoriteIconHeader
+                                scope='project'
+                                isActive={tableState.favoritesFirst}
+                                onClick={() =>
+                                    setTableState({
+                                        favoritesFirst:
+                                            !tableState.favoritesFirst,
+                                    })
+                                }
+                            />
+                        </Box>
                         {isMediumScreen ? (
                             <ProjectFlagsSearch
                                 searchQuery={tableState.query || ''}
@@ -622,14 +620,13 @@ export const ProjectFeatureToggles = ({
                 }
             />
             <BatchSelectionActionsBar count={selectedData.length}>
-                {tableState.archived ? (
+                {allSelectedAreArchived ? (
                     <ArchiveBatchActions
                         selectedIds={Object.keys(rowSelection)}
                         projectId={projectId}
                         onConfirm={() => {
-                            refetch();
+                            refetchWithLifecycleCounts();
                             table.resetRowSelection();
-                            trackArchiveAction('bulk archived');
                         }}
                     />
                 ) : (
@@ -638,7 +635,7 @@ export const ProjectFeatureToggles = ({
                         data={selectedData}
                         projectId={projectId}
                         onResetSelection={table.resetRowSelection}
-                        onChange={refetch}
+                        onChange={refetchWithLifecycleCounts}
                     />
                 )}
             </BatchSelectionActionsBar>

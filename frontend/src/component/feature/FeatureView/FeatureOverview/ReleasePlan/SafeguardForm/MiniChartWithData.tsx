@@ -1,6 +1,6 @@
 import { Box, Typography, Link, Divider, styled } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { ImpactMetricsChart } from 'component/impact-metrics/ImpactMetricsChart';
 import type { MetricQuerySchemaTimeRange } from 'openapi/models/metricQuerySchemaTimeRange';

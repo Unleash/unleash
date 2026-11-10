@@ -3,27 +3,24 @@ import type { IUnleashConfig } from '../types/option.js';
 import type { Logger } from '../logger.js';
 import type { IProject, IProjectHealthReport } from '../types/model.js';
 import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type.js';
-import type { IFeatureTypeStore } from '../types/stores/feature-type-store.js';
 import type { IProjectStore } from '../features/project/project-store-type.js';
 import type ProjectService from '../features/project/project-service.js';
-import {
-    calculateProjectHealth,
-    calculateProjectHealthRating,
-} from '../domain/project-health/project-health.js';
+import { calculateProjectHealthRating } from '../domain/project-health/project-health.js';
 import { batchExecute } from '../util/index.js';
 import metricsHelper from '../util/metrics-helper.js';
 import { FUNCTION_TIME } from '../metric-events.js';
+import type { IProjectHealthFeaturesReadModel } from '../domain/project-health/features-read-model.js';
 
 export default class ProjectHealthService {
     private logger: Logger;
 
     private projectStore: IProjectStore;
 
-    private featureTypeStore: IFeatureTypeStore;
-
     private featureToggleStore: IFeatureToggleStore;
 
     private projectService: ProjectService;
+
+    private featuresReadModel: IProjectHealthFeaturesReadModel;
 
     calculateHealthRating: (project: Pick<IProject, 'id'>) => Promise<number>;
 
@@ -32,23 +29,20 @@ export default class ProjectHealthService {
     constructor(
         {
             projectStore,
-            featureTypeStore,
             featureToggleStore,
-        }: Pick<
-            IUnleashStores,
-            'projectStore' | 'featureTypeStore' | 'featureToggleStore'
-        >,
+        }: Pick<IUnleashStores, 'projectStore' | 'featureToggleStore'>,
         { getLogger, eventBus }: Pick<IUnleashConfig, 'getLogger' | 'eventBus'>,
         projectService: ProjectService,
+        featuresReadModel: IProjectHealthFeaturesReadModel,
     ) {
         this.logger = getLogger('services/project-health-service.ts');
         this.projectStore = projectStore;
-        this.featureTypeStore = featureTypeStore;
         this.featureToggleStore = featureToggleStore;
+        this.featuresReadModel = featuresReadModel;
 
         this.projectService = projectService;
         this.calculateHealthRating = calculateProjectHealthRating(
-            this.featureTypeStore,
+            this.featuresReadModel,
             this.featureToggleStore,
         );
         this.timer = (functionName: string) =>
@@ -61,22 +55,20 @@ export default class ProjectHealthService {
     async getProjectHealthReport(
         projectId: string,
     ): Promise<IProjectHealthReport> {
-        const featureTypes = await this.featureTypeStore.getAll();
-
         const overview = await this.projectService.getProjectHealth(
             projectId,
             false,
             undefined,
         );
 
-        const healthRating = calculateProjectHealth(
-            overview.features,
-            featureTypes,
-        );
+        const potentiallyStaleCount =
+            await this.featuresReadModel.getPotentiallyStaleCount(projectId);
 
         return {
             ...overview,
-            ...healthRating,
+            potentiallyStaleCount,
+            activeCount: overview.features.filter((flag) => !flag.stale).length,
+            staleCount: overview.features.filter((flag) => flag.stale).length,
         };
     }
 

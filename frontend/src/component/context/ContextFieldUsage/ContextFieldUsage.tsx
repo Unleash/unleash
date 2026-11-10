@@ -1,16 +1,16 @@
 import { Alert, styled } from '@mui/material';
 import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { formatStrategyName } from 'utils/strategyNames';
 import { useStrategiesByContext } from 'hooks/api/getters/useStrategiesByContext/useStrategiesByContext';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
-const StyledUl = styled('ul')(({ theme }) => ({
+const StyledUl = styled('ul')({
     listStyle: 'none',
     paddingLeft: 0,
-}));
+});
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -23,7 +23,7 @@ interface IContextFieldUsageProps {
 export const ContextFieldUsage = ({ contextName }: IContextFieldUsageProps) => {
     const { strategies } = useStrategiesByContext(contextName);
     const { projects } = useProjects();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const trackClick = () => {
         trackEvent('context-usage', {
@@ -42,7 +42,7 @@ export const ContextFieldUsage = ({ contextName }: IContextFieldUsageProps) => {
     const projectList = (
         <StyledUl>
             {projectsUsed.map((projectId) => (
-                <li key={projectId} onClick={trackClick}>
+                <li key={projectId} onClick={trackClick} onKeyUp={trackClick}>
                     <Link
                         to={`/projects/${projectId}`}
                         target='_blank'

@@ -1,10 +1,10 @@
 import { IconButton, Tooltip } from '@mui/material';
 import IosShare from '@mui/icons-material/IosShare';
 import type { FC } from 'react';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 export const ExportFlags: FC<{ onClick: () => void }> = ({ onClick }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     return (
         <Tooltip title='Export flags' arrow>
@@ -17,7 +17,6 @@ export const ExportFlags: FC<{ onClick: () => void }> = ({ onClick }) => {
                         },
                     });
                 }}
-                size='small'
             >
                 <IosShare />
             </IconButton>

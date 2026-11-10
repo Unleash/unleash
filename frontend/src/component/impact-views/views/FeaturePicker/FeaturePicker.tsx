@@ -1,12 +1,16 @@
-import { useMemo, useState, type FC } from 'react';
+import { useCallback, useMemo, useState, type FC, type ReactNode } from 'react';
 import {
-    Autocomplete,
     Box,
-    TextField,
+    Checkbox,
+    Divider,
+    FormControlLabel,
+    Paper,
+    type PaperProps,
     Typography,
     debounce,
 } from '@mui/material';
 import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureSearch';
+import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField';
 
 type FeatureOption = {
     name: string;
@@ -39,6 +43,7 @@ export const FeaturePicker: FC<FeaturePickerProps> = ({
 }) => {
     const [inputValue, setInputValue] = useState('');
     const [debouncedQuery, setDebouncedQuery] = useState('');
+    const [includeArchived, setIncludeArchived] = useState(false);
 
     const updateQuery = useMemo(
         () =>
@@ -48,9 +53,41 @@ export const FeaturePicker: FC<FeaturePickerProps> = ({
         [],
     );
 
+    const ArchivedFilterPaper = useCallback(
+        ({
+            children,
+            ...paperProps
+        }: PaperProps & { children?: ReactNode }) => (
+            <Paper {...paperProps}>
+                <FormControlLabel
+                    sx={{ px: 2, py: 1 }}
+                    onMouseDown={(event) => event.preventDefault()}
+                    control={
+                        <Checkbox
+                            size='small'
+                            checked={includeArchived}
+                            onChange={(_, checked) =>
+                                setIncludeArchived(checked)
+                            }
+                        />
+                    }
+                    label={
+                        <Typography variant='body2'>
+                            Search archived features
+                        </Typography>
+                    }
+                />
+                <Divider />
+                {children}
+            </Paper>
+        ),
+        [includeArchived],
+    );
+
     const { features, loading } = useFeatureSearch({
         query: debouncedQuery || undefined,
         limit: PICKER_LIMIT,
+        archived: includeArchived ? 'IS:true' : undefined,
     });
 
     const options: FeatureOption[] = features.map(({ name, project }) => ({
@@ -67,7 +104,15 @@ export const FeaturePicker: FC<FeaturePickerProps> = ({
     );
 
     return (
-        <Autocomplete
+        <AutocompleteField
+            label='Features to follow'
+            helperText='Toggle events for these features will be drawn over the chart.'
+            size='large'
+            placeholder={
+                value.length === 0
+                    ? 'Search for features…'
+                    : 'Add another feature…'
+            }
             multiple
             disableCloseOnSelect
             disabled={disabled}
@@ -75,6 +120,7 @@ export const FeaturePicker: FC<FeaturePickerProps> = ({
             options={options}
             value={selectedOptions}
             inputValue={inputValue}
+            slots={{ paper: ArchivedFilterPaper }}
             onInputChange={(_, next, reason) => {
                 if (reason !== 'input') return;
                 setInputValue(next);
@@ -91,20 +137,6 @@ export const FeaturePicker: FC<FeaturePickerProps> = ({
                 <Box component='li' {...props} key={option.name}>
                     <FeatureOptionRow option={option} />
                 </Box>
-            )}
-            renderInput={(params) => (
-                <TextField
-                    {...params}
-                    label='Features to follow'
-                    placeholder={
-                        value.length === 0
-                            ? 'Search for features…'
-                            : 'Add another feature…'
-                    }
-                    size='small'
-                    variant='outlined'
-                    helperText='Toggle events for these features will be drawn over the chart.'
-                />
             )}
         />
     );

@@ -1,19 +1,24 @@
 import { type FC, useState } from 'react';
 import { TextField, Box } from '@mui/material';
 import { Dialogue } from '../../../common/Dialogue/Dialogue.tsx';
+import type { Tracking } from 'utils/trackingEvents';
 
 interface IChangeRequestDialogueProps {
     open: boolean;
-    onConfirm: (comment?: string) => void;
+    onConfirm: (comment?: string) => Promise<unknown>;
+    onError?: (error: unknown) => void;
     onClose: () => void;
     disabled?: boolean;
+    tracking: Tracking;
 }
 
 export const ChangeRequestRejectDialogue: FC<IChangeRequestDialogueProps> = ({
     open,
     onConfirm,
+    onError,
     onClose,
     disabled = false,
+    tracking,
 }) => {
     const [commentText, setCommentText] = useState('');
 
@@ -22,9 +27,11 @@ export const ChangeRequestRejectDialogue: FC<IChangeRequestDialogueProps> = ({
             open={open}
             primaryButtonText='Reject changes'
             secondaryButtonText='Cancel'
-            onClick={() => onConfirm(commentText)}
+            onSubmit={() => onConfirm(commentText)}
+            onError={onError}
             disabledPrimaryButton={disabled}
             onClose={onClose}
+            tracking={tracking}
             title='Reject changes'
             fullWidth
         >

@@ -25,7 +25,7 @@ const StyledCloudCircle = styled(CloudCircle, {
     shouldForwardProp: (prop) => prop !== 'deprecated',
 })<{ deprecated?: boolean }>(({ theme, deprecated }) => ({
     color: deprecated
-        ? theme.palette.neutral.border
+        ? theme.palette.neutral.containerBorder
         : theme.palette.primary.main,
 }));
 
@@ -37,7 +37,7 @@ export const EnvironmentIconCell: FC<IEnvironmentIconCellProps> = ({
     environment,
 }) => (
     <StyledCell>
-        <DragIcon size='large' disableRipple className='drag-icon'>
+        <DragIcon size='large' className='drag-icon'>
             <DragIndicator titleAccess='Drag to reorder' />
         </DragIcon>
         <StyledCloudCircle deprecated={!environment.enabled} />

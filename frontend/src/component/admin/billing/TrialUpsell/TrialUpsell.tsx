@@ -12,15 +12,15 @@ import SamsungLogo from 'assets/logos/samsung.svg?react';
 import LloydsLogo from 'assets/logos/lloyds.svg?react';
 import { trialHasExpired } from 'utils/instanceTrial';
 import { TrialUpsellDescription } from './TrialUpsellDescription';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 
 const StyledBillingInformation = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(3),
     borderRadius: theme.shape.borderRadiusMedium,
     padding: theme.spacing(1.5, 4, 1.5, 3),
-    border: `1px solid ${theme.palette.secondary.border}`,
-    backgroundColor: theme.palette.secondary.light,
+    border: `1px solid ${theme.palette.primary.containerBorder}`,
+    backgroundColor: theme.palette.primary.container,
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -62,10 +62,10 @@ export const TrialUpsell = () => {
     const { hasAccess } = useContext(AccessContext);
     const { instancePrices } = useInstancePrices();
     const { instanceStatus } = useInstanceStatus();
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const onUpgrade = () => {
-        trackEvent('upgrade_trial_billing_page', {
+        trackEvent('upgrade-trial-billing-page', {
             props: {
                 eventType: 'upgrade_click',
             },

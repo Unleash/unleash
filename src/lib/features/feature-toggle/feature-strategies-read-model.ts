@@ -1,5 +1,10 @@
 import type { Db } from '../../db/db.js';
-import type { IFeatureStrategiesReadModel } from './types/feature-strategies-read-model-type.js';
+import type { IStrategyVariant } from '../../types/index.js';
+import type {
+    IFeatureStrategiesReadModel,
+    StrategyVariantJsonPayload,
+} from './types/feature-strategies-read-model-type.js';
+import { hasJsonPayload } from './variant-json-payload.js';
 
 export class FeatureStrategiesReadModel implements IFeatureStrategiesReadModel {
     private db: Db;
@@ -16,6 +21,24 @@ export class FeatureStrategiesReadModel implements IFeatureStrategiesReadModel {
                 'feature_strategies.feature_name',
             )
             .where('features.archived_at', null);
+    }
+
+    async getVariantJsonPayloads(
+        featureName: string,
+    ): Promise<StrategyVariantJsonPayload[]> {
+        const rows: { id: string; variants: IStrategyVariant[] }[] =
+            await this.activeStrategies()
+                .where('feature_strategies.feature_name', featureName)
+                .whereNull('feature_strategies.milestone_id')
+                .select('feature_strategies.id', 'feature_strategies.variants');
+
+        return rows.flatMap((row) =>
+            row.variants.filter(hasJsonPayload).map((variant) => ({
+                strategyId: row.id,
+                variantName: variant.name,
+                value: variant.payload.value,
+            })),
+        );
     }
 
     async getMaxFeatureEnvironmentStrategies(): Promise<{

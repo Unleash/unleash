@@ -10,7 +10,6 @@
 export type InstanceAdminStatsSchemaClientAppsItemRange =
     (typeof InstanceAdminStatsSchemaClientAppsItemRange)[keyof typeof InstanceAdminStatsSchemaClientAppsItemRange];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const InstanceAdminStatsSchemaClientAppsItemRange = {
     allTime: 'allTime',
     '30d': '30d',

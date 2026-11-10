@@ -1,4 +1,5 @@
 import dbInit, { type ITestDb } from '../helpers/database-init.js';
+import type { AdminApiTokenV2Service } from '../../../lib/features/apitokensv2/api-token-v2-service.js';
 import getLogger from '../../fixtures/no-logger.js';
 import { createTestConfig } from '../../config/test-config.js';
 import { ApiTokenType, type IApiToken } from '../../../lib/types/model.js';
@@ -16,21 +17,23 @@ import {
 } from '../../../lib/types/index.js';
 import { createApiTokenService } from '../../../lib/features/api-tokens/createApiTokenService.js';
 import { randomBytes } from 'node:crypto';
+import {
+    createApiTokenV2Service,
+    type ReadOnlyApiTokenV2Service,
+} from '../../../lib/features/apitokensv2/api-token-v2-service.js';
+import type { ApiTokenV2WithSecret } from '../../../lib/features/apitokensv2/index.js';
+import { AuthorizationTokenKind } from '../../../lib/authentication/authorization-token.js';
 
 let db: ITestDb;
 let stores: IUnleashStores;
 let edgeService: EdgeService;
 let projectService: ProjectService;
 let user: IUser;
+let apiTokenV2Service: ReadOnlyApiTokenV2Service & AdminApiTokenV2Service;
 
 beforeAll(async () => {
     const config = createTestConfig({
         server: { baseUriPath: '/test' },
-        experimental: {
-            flags: {
-                useMemoizedActiveTokens: true,
-            },
-        },
         edgeMasterKey: '5ja3QXrqi4T2A+V+0QOw8eTA68lsHQE81vNO80MGrhw=',
     });
     db = await dbInit('api_token_service_serial', getLogger);
@@ -51,10 +54,15 @@ beforeAll(async () => {
     await projectService.createProject(project, user, TEST_AUDIT_USER);
 
     const apiTokenService = createApiTokenService(db.rawDatabase, config);
+    apiTokenV2Service = createApiTokenV2Service(db.config)(db.rawDatabase);
 
     edgeService = new EdgeService(
         { edgeTokenStore: db.stores.edgeTokenStore },
-        { apiTokenService },
+        {
+            apiTokenService,
+            apiTokenV2Service,
+            apiTokenV2CreationService: apiTokenV2Service,
+        },
         config,
     );
 });
@@ -111,6 +119,38 @@ test('should only return valid tokens', async () => {
     expect(activeToken.secret).toBe(response.tokens[0].token);
 });
 
+test('validates previously issued v2 tokens', async () => {
+    const token: ApiTokenV2WithSecret = await apiTokenV2Service.create(
+        {
+            tokenName: 'v2 edge token',
+            type: ApiTokenType.BACKEND,
+            projects: ['*'],
+            environment: DEFAULT_ENV,
+            userCreated: false,
+        },
+        SYSTEM_USER_AUDIT,
+    );
+
+    const response = await edgeService.getValidTokens([token.secret]);
+
+    expect(response.tokens).toHaveLength(1);
+    expect(response.tokens[0].token).toBe(token.secret);
+
+    await apiTokenV2Service.delete(
+        {
+            kind: AuthorizationTokenKind.API_TOKEN,
+            version: 'v2',
+            selector: token.selector,
+        },
+        SYSTEM_USER_AUDIT,
+    );
+    apiTokenV2Service.invalidateCache([token.selector]);
+
+    await expect(edgeService.getValidTokens([token.secret])).resolves.toEqual({
+        tokens: [],
+    });
+});
+
 describe('Enterprise Edge - Generated tokens', () => {
     const clientId = 'enterprise-edge';
     beforeAll(async () => {
@@ -148,7 +188,7 @@ describe('Enterprise Edge - Generated tokens', () => {
         };
         await projectService.createProject(zProject, user, SYSTEM_USER_AUDIT);
     });
-    test('saving a token should make it fetchable from clientId, environment and projects', async () => {
+    test('each issuance creates a fresh secure credential for the requested scope', async () => {
         const tokens = await edgeService.getOrCreateTokens(clientId, {
             tokens: [
                 {
@@ -171,9 +211,11 @@ describe('Enterprise Edge - Generated tokens', () => {
         );
         const first = tokens.tokens[0];
         const second = refetched.tokens[0];
-        expect(first.token).toStrictEqual(second.token);
+        expect(first.token).not.toEqual(second.token);
+        expect(first.token).toMatch(/^\[\]:development\.v2_/);
+        expect(second.projects).toEqual(first.projects);
     });
-    test(`order of projects doesn't matter for uniqueness comparison`, async () => {
+    test('preserves project scope regardless of request order', async () => {
         const tokens = await edgeService.getOrCreateTokens(clientId, {
             tokens: [
                 {
@@ -203,7 +245,8 @@ describe('Enterprise Edge - Generated tokens', () => {
         });
         const first = tokens.tokens[0];
         const second = refetched.tokens[0];
-        expect(first.token).toStrictEqual(second.token);
+        expect(first.token).not.toEqual(second.token);
+        expect([...first.projects].sort()).toEqual([...second.projects].sort());
     });
     test(`Deletes nonces that have expired`, async () => {
         const nonce = randomBytes(16).toString('hex');

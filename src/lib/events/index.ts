@@ -26,7 +26,6 @@ export const FEATURE_TAG_IMPORT = 'feature-tag-import' as const;
 export const FEATURE_STRATEGY_UPDATE = 'feature-strategy-update' as const;
 export const FEATURE_STRATEGY_ADD = 'feature-strategy-add' as const;
 export const FEATURE_STRATEGY_REMOVE = 'feature-strategy-remove' as const;
-export const DROP_FEATURE_TAGS = 'drop-feature-tags' as const;
 export const FEATURE_UNTAGGED = 'feature-untagged' as const;
 export const FEATURE_STALE_ON = 'feature-stale-on' as const;
 export const FEATURE_COMPLETED = 'feature-completed' as const;
@@ -82,6 +81,7 @@ export const PROJECT_GROUP_ADDED = 'project-group-added' as const;
 export const DROP_PROJECTS = 'drop-projects' as const;
 export const TAG_CREATED = 'tag-created' as const;
 export const TAG_DELETED = 'tag-deleted' as const;
+export const TAG_UPDATED = 'tag-updated' as const;
 export const TAG_IMPORT = 'tag-import' as const;
 export const DROP_TAGS = 'drop-tags' as const;
 export const TAG_TYPE_CREATED = 'tag-type-created' as const;
@@ -125,6 +125,10 @@ export const CLIENT_REGISTER = 'client-register' as const;
 
 export const PAT_CREATED = 'pat-created' as const;
 export const PAT_DELETED = 'pat-deleted' as const;
+export const SERVICE_ACCOUNT_TOKEN_CREATED =
+    'service-account-token-created' as const;
+export const SERVICE_ACCOUNT_TOKEN_DELETED =
+    'service-account-token-deleted' as const;
 
 export const PUBLIC_SIGNUP_TOKEN_CREATED =
     'public-signup-token-created' as const;
@@ -182,6 +186,7 @@ export const BANNER_DELETED = 'banner-deleted' as const;
 
 export const SAFEGUARD_CHANGED = 'safeguard-changed' as const;
 export const SAFEGUARD_DELETED = 'safeguard-deleted' as const;
+export const SAFEGUARD_TRIGGERED = 'safeguard-triggered' as const;
 export const RELEASE_PLAN_PROGRESSIONS_RESUMED =
     'release-plan-progressions-resumed' as const;
 export const RELEASE_PLAN_PROGRESSIONS_PAUSED =
@@ -269,7 +274,6 @@ export const IEventTypes = [
     FEATURE_LINK_REMOVED,
     FEATURE_LINK_UPDATED,
     STRATEGY_ORDER_CHANGED,
-    DROP_FEATURE_TAGS,
     FEATURE_UNTAGGED,
     FEATURE_STALE_ON,
     FEATURE_STALE_OFF,
@@ -308,6 +312,7 @@ export const IEventTypes = [
     DROP_PROJECTS,
     TAG_CREATED,
     TAG_DELETED,
+    TAG_UPDATED,
     TAG_IMPORT,
     DROP_TAGS,
     TAG_TYPE_CREATED,
@@ -342,6 +347,8 @@ export const IEventTypes = [
     CLIENT_REGISTER,
     PAT_CREATED,
     PAT_DELETED,
+    SERVICE_ACCOUNT_TOKEN_CREATED,
+    SERVICE_ACCOUNT_TOKEN_DELETED,
     PUBLIC_SIGNUP_TOKEN_CREATED,
     PUBLIC_SIGNUP_TOKEN_USER_ADDED,
     PUBLIC_SIGNUP_TOKEN_TOKEN_UPDATED,
@@ -382,6 +389,7 @@ export const IEventTypes = [
     BANNER_DELETED,
     SAFEGUARD_CHANGED,
     SAFEGUARD_DELETED,
+    SAFEGUARD_TRIGGERED,
     RELEASE_PLAN_PROGRESSIONS_RESUMED,
     RELEASE_PLAN_PROGRESSIONS_PAUSED,
     PROJECT_ENVIRONMENT_ADDED,
@@ -423,19 +431,24 @@ export const IEventTypes = [
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 
-// this represents the write model for events
-export interface IBaseEvent {
+export interface IEventData {
     type: IEventType;
-    createdBy: string;
-    createdByUserId: number;
     project?: string;
     environment?: string;
     featureName?: string;
-    ip: string;
     data?: any;
     preData?: any;
     tags?: ITag[];
 }
+
+export interface IEventAuditColumns {
+    createdBy: string;
+    createdByUserId: number;
+    ip: string;
+    userAgent?: string;
+}
+
+export interface IBaseEvent extends IEventData, IEventAuditColumns {}
 
 // This represents the read model for events
 export interface IEvent extends Omit<IBaseEvent, 'ip'> {

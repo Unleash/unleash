@@ -1,20 +1,29 @@
-import { useState, type FC } from 'react';
+import { useRef, useState, type FC } from 'react';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import { useKeyboardCopy } from 'hooks/useKeyboardCopy';
+import { useTracking } from 'hooks/useTracking';
+import { copyFlagNameTracking } from 'component/feature/flagActionsTracking';
 import { IconButton, Tooltip } from '@mui/material';
 import Check from '@mui/icons-material/Check';
 import FileCopyOutlined from '@mui/icons-material/FileCopyOutlined';
 
-const iconSize = 18 / 8;
-
 export const FeatureCopyName: FC<{ name: string }> = ({ name }) => {
+    const buttonRef = useRef<HTMLButtonElement>(null);
     const [isFeatureNameCopied, setIsFeatureNameCopied] = useState(false);
     const { setToastData } = useToast();
+    const trackCopyFlagName = useTracking(copyFlagNameTracking);
 
-    const handleCopyToClipboard = () => {
+    const handleCopyToClipboard = (method: 'button' | 'keyboard-shortcut') => {
         try {
-            copy(name);
+            if (copy(name)) {
+                trackCopyFlagName('succeeded', { method });
+            } else {
+                trackCopyFlagName('failed', {
+                    method,
+                    failedOn: 'clipboard',
+                });
+            }
             setIsFeatureNameCopied(true);
             const timeout = setTimeout(() => {
                 setIsFeatureNameCopied(false);
@@ -31,7 +40,10 @@ export const FeatureCopyName: FC<{ name: string }> = ({ name }) => {
         }
     };
 
-    const shortcutDescription = useKeyboardCopy(handleCopyToClipboard);
+    const shortcutDescription = useKeyboardCopy(
+        () => handleCopyToClipboard('keyboard-shortcut'),
+        [buttonRef],
+    );
 
     return (
         <Tooltip
@@ -42,19 +54,12 @@ export const FeatureCopyName: FC<{ name: string }> = ({ name }) => {
             }
             arrow
         >
-            <IconButton onClick={handleCopyToClipboard}>
-                {isFeatureNameCopied ? (
-                    <Check
-                        sx={(theme) => ({
-                            fontSize: theme.spacing(iconSize),
-                            color: theme.palette.success.main,
-                        })}
-                    />
-                ) : (
-                    <FileCopyOutlined
-                        sx={(theme) => ({ fontSize: theme.spacing(iconSize) })}
-                    />
-                )}
+            <IconButton
+                ref={buttonRef}
+                size='medium'
+                onClick={() => handleCopyToClipboard('button')}
+            >
+                {isFeatureNameCopied ? <Check /> : <FileCopyOutlined />}
             </IconButton>
         </Tooltip>
     );

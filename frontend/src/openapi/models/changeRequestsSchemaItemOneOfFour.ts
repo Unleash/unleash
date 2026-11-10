@@ -3,13 +3,13 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema';
-import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema';
-import type { ChangeRequestsSchemaItemOneOfFourCreatedBy } from './changeRequestsSchemaItemOneOfFourCreatedBy';
-import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema';
-import type { ChangeRequestScheduleSchema } from './changeRequestScheduleSchema';
-import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema';
-import type { ChangeRequestsSchemaItemOneOfFourState } from './changeRequestsSchemaItemOneOfFourState';
+import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema.ts';
+import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema.ts';
+import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema.ts';
+import type { ChangeRequestScheduleSchema } from './changeRequestScheduleSchema.ts';
+import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema.ts';
+import type { ChangeRequestsSchemaItemOneOfFourCreatedBy } from './changeRequestsSchemaItemOneOfFourCreatedBy.ts';
+import type { ChangeRequestsSchemaItemOneOfFourState } from './changeRequestsSchemaItemOneOfFourState.ts';
 
 export type ChangeRequestsSchemaItemOneOfFour = {
     /**

@@ -22,7 +22,7 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import AccessContext from 'contexts/AccessContext';
 import useApplicationsApi from 'hooks/api/actions/useApplicationsApi/useApplicationsApi';
 import useApplication from 'hooks/api/getters/useApplication/useApplication';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import useToast from 'hooks/useToast';
 import { formatDateYMD } from 'utils/formatDate';

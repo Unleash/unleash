@@ -10,7 +10,6 @@
 export type ChangeRequestOneOrManyCreateSchemaOneOfThreefourAction =
     (typeof ChangeRequestOneOrManyCreateSchemaOneOfThreefourAction)[keyof typeof ChangeRequestOneOrManyCreateSchemaOneOfThreefourAction];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestOneOrManyCreateSchemaOneOfThreefourAction = {
     deleteReleasePlan: 'deleteReleasePlan',
 } as const;

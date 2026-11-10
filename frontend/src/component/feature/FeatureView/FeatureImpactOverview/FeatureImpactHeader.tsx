@@ -9,9 +9,11 @@ import { ImpactMetricsEmptyState } from './ImpactMetricsEmptyState';
 import { CompactChartCard } from './CompactChartCard';
 import { GroupedChartCard } from './GroupedChartCard';
 import { groupImpactConfigs, multimetricFirst } from './groupImpactConfigs';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useTrackFlagpageImpactMetrics } from 'component/impact-metrics/useImpactMetricsFunnel';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { ImpactMetricModal } from 'component/impact-metrics/ImpactMetricModal/ImpactMetricModal';
+import { useFeatureImpactChartActions } from '../useFeatureImpactChartActions';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -93,14 +95,29 @@ const StyledFooter = styled('div')(({ theme }) => ({
 interface FeatureImpactHeaderProps {
     projectId: string;
     featureName: string;
-    onAddChart: () => void;
 }
 
 export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
     projectId,
     featureName,
-    onAddChart,
 }) => {
+    const {
+        chartModalOpen,
+        openChartModal: onAddChart,
+        closeChartModal,
+        saveChart,
+        metricOptions,
+        metadataLoading,
+    } = useFeatureImpactChartActions(projectId, featureName);
+    const chartModal = (
+        <ImpactMetricModal
+            open={chartModalOpen}
+            onClose={closeChartModal}
+            onSave={saveChart}
+            metrics={metricOptions}
+            loading={metadataLoading}
+        />
+    );
     const [impactMetricsAccordionState, setImpactMetricsAccordionState] =
         useLocalStorageState<'open' | 'closed'>(
             'impact-metrics-accordion:expanded',
@@ -109,7 +126,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
     const [bannerState, setBannerState] = useLocalStorageState<
         'open' | 'closed'
     >('impact-metrics-banner:dismissed', 'open');
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { trackAccordionOpened, trackAddMetricClicked } =
         useTrackFlagpageImpactMetrics();
 
@@ -146,10 +163,13 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
         }
 
         return (
-            <ImpactMetricsEmptyState
-                onAddChart={onAddChart}
-                onDismiss={() => setBannerState('closed')}
-            />
+            <>
+                <ImpactMetricsEmptyState
+                    onAddChart={onAddChart}
+                    onDismiss={() => setBannerState('closed')}
+                />
+                {chartModal}
+            </>
         );
     }
 
@@ -229,6 +249,7 @@ export const FeatureImpactHeader: FC<FeatureImpactHeaderProps> = ({
                     </Button>
                 </StyledFooter>
             </Collapse>
+            {chartModal}
         </StyledContainer>
     );
 };

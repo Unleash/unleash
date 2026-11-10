@@ -337,16 +337,17 @@ test('should not allow to add dependency to self', async () => {
 test('should not allow to add dependency to feature from another project', async () => {
     const child = randomId();
     const parent = randomId();
+    const otherProject = randomId();
     await app.createFeature(parent);
-    await createProject('another-project');
-    await app.createFeature(child, 'another-project');
+    await createProject(otherProject);
+    await app.createFeature(child, otherProject);
 
     await addFeatureDependency(
         child,
         {
             feature: parent,
         },
-        403,
+        404,
     );
 });
 test('should create feature-dependency-removed when archiving and has dependency', async () => {
@@ -380,4 +381,62 @@ test('should not create feature-dependency-removed when archiving and no depende
             expect.objectContaining({ type: 'feature-dependencies-removed' }),
         ]),
     );
+});
+
+describe('cross-project feature-dependency mutations are rejected', () => {
+    const setupFeaturesInOtherProject = async () => {
+        const otherProject = randomId();
+        await createProject(otherProject);
+        const parent = randomId();
+        const child = randomId();
+        await app.createFeature(parent, otherProject);
+        await app.createFeature(child, otherProject);
+        return { otherProject, parent, child };
+    };
+
+    const dependencyRows = async (child: string) =>
+        db.rawDatabase('dependent_features').where({ child });
+
+    const seedDependency = async (parent: string, child: string) =>
+        db.rawDatabase('dependent_features').insert({ parent, child });
+
+    test('POST dependencies cannot target a feature in another project', async () => {
+        const { parent, child } = await setupFeaturesInOtherProject();
+
+        await app.request
+            .post(`/api/admin/projects/default/features/${child}/dependencies`)
+            .send({ feature: parent })
+            .expect(404);
+
+        expect(await dependencyRows(child)).toHaveLength(0);
+        expect(await getRecordedEventTypesForDependencies()).toEqual([]);
+    });
+
+    test('DELETE single dependency cannot target a feature in another project', async () => {
+        const { parent, child } = await setupFeaturesInOtherProject();
+        await seedDependency(parent, child);
+
+        await app.request
+            .delete(
+                `/api/admin/projects/default/features/${child}/dependencies/${parent}`,
+            )
+            .expect(404);
+
+        expect(await dependencyRows(child)).toHaveLength(1);
+        expect(await getRecordedEventTypesForDependencies()).toEqual([]);
+    });
+
+    test('DELETE all dependencies cannot target a feature in another project', async () => {
+        const { parent, child } = await setupFeaturesInOtherProject();
+        await seedDependency(parent, child);
+
+        await app.request
+            .delete(
+                `/api/admin/projects/default/features/${child}/dependencies`,
+            )
+            .expect(404);
+
+        expect(await dependencyRows(child)).toHaveLength(1);
+        expect(await getRecordedEventTypesForDependencies()).toEqual([]);
+    });
 });

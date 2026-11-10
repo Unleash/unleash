@@ -9,6 +9,9 @@ export type ExportQuerySchemaAnyOf = {
     downloadFile?: boolean;
     /** The environment to export from */
     environment: string;
-    /** Selects features to export by name. If the list is empty all features are returned. */
+    /**
+     * Selects features to export by name. If the list is empty all features are returned.
+     * @items.minLength 1
+     */
     features: string[];
 };

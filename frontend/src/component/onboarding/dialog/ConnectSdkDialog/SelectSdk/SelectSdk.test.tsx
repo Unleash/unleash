@@ -14,8 +14,11 @@ test('renders SDK buttons, shows no selection, and calls onSelect on click', asy
     await userEvent.click(screen.getByRole('button', { name: /node\.js/i }));
     expect(onSelect).toHaveBeenCalledWith({ name: 'Node.js', type: 'client' });
 
-    await userEvent.click(screen.getByRole('button', { name: /react/i }));
-    expect(onSelect).toHaveBeenCalledWith({ name: 'React', type: 'frontend' });
+    await userEvent.click(screen.getByRole('button', { name: /Android/i }));
+    expect(onSelect).toHaveBeenCalledWith({
+        name: 'Android',
+        type: 'frontend',
+    });
 });
 
 test('marks the matching sdk as selected', () => {

@@ -13,9 +13,12 @@ import {
 } from '@slack/web-api';
 import Addon from './addon.js';
 
-import slackAppDefinition from './slack-app-definition.js';
+import slackAppDefinition, {
+    slackAppServerInstallDefinition,
+} from './slack-app-definition.js';
 import {
     type IAddonConfig,
+    type IAddonDefinition,
     type IFlagResolver,
     serializeDates,
 } from '../types/index.js';
@@ -56,6 +59,12 @@ export default class SlackAppAddon extends Addon {
             linkStyle: LinkStyle.SLACK,
         });
         this.flagResolver = args.flagResolver;
+    }
+
+    get definition(): IAddonDefinition {
+        return this.flagResolver.isEnabled('slackAppAuthV2')
+            ? slackAppServerInstallDefinition
+            : super.definition;
     }
 
     async handleEvent(

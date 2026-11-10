@@ -9,7 +9,7 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { IntegrationEventsStateIcon } from './IntegrationEventsStateIcon.tsx';
 import { IntegrationEventsDetails } from './IntegrationEventsDetails/IntegrationEventsDetails.tsx';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -41,7 +41,7 @@ const StyledForm = styled('form')({
 });
 
 const StyledFailedItemWrapper = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.error.light,
+    backgroundColor: theme.palette.error.container,
 }));
 
 const StyledButtonContainer = styled('div')(({ theme }) => ({
@@ -85,7 +85,7 @@ export const IntegrationEventsModal = ({
         >
             <FormTemplate
                 loading={loading && integrationEvents.length === 0}
-                modal
+                layout='modal'
                 description=''
                 documentationLink=''
                 documentationLinkLabel=''

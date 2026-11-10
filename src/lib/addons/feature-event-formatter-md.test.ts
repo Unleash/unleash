@@ -26,7 +26,10 @@ import {
     SEMVER_EQ,
     SEMVER_GT,
     SEMVER_LT,
+    SEMVER_GTE,
+    SEMVER_LTE,
     STR_CONTAINS,
+    IN_CIDR,
     STR_ENDS_WITH,
     STR_STARTS_WITH,
 } from '../util/index.js';
@@ -302,7 +305,7 @@ const testCases: [string, IEvent][] = [
                 },
             ],
     ),
-    ...[IN, NOT_IN, STR_CONTAINS, STR_STARTS_WITH, STR_ENDS_WITH].map(
+    ...[IN, NOT_IN, STR_CONTAINS, STR_STARTS_WITH, STR_ENDS_WITH, IN_CIDR].map(
         (operator) =>
             <[string, IEvent]>[
                 `when default strategy updated with operator ${operator}`,
@@ -359,6 +362,8 @@ const testCases: [string, IEvent][] = [
         SEMVER_EQ,
         SEMVER_GT,
         SEMVER_LT,
+        SEMVER_GTE,
+        SEMVER_LTE,
     ].map(
         (operator) =>
             <[string, IEvent]>[

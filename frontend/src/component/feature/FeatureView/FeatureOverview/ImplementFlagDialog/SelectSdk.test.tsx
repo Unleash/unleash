@@ -15,16 +15,6 @@ describe('SelectSdk', () => {
         expect(screen.getByText('Frontend SDKs')).toBeInTheDocument();
     });
 
-    it('clearing the selection does not call onChange', async () => {
-        const user = userEvent.setup();
-        const onChange = vi.fn();
-        render(<SelectSdk value='Node.js' onChange={onChange} />);
-
-        await user.click(screen.getByLabelText('Clear'));
-
-        expect(onChange).not.toHaveBeenCalled();
-    });
-
     it('selecting an sdk passes its name to onChange', async () => {
         const user = userEvent.setup();
         const onChange = vi.fn();
@@ -34,5 +24,22 @@ describe('SelectSdk', () => {
         await user.click(screen.getByText('Go'));
 
         expect(onChange).toHaveBeenCalledWith('Go');
+    });
+
+    it('keeps typed text when the parent re-renders', async () => {
+        const user = userEvent.setup();
+        const { rerender } = render(
+            <SelectSdk value='Node.js' onChange={vi.fn()} />,
+        );
+
+        const input = screen.getByRole('combobox');
+        await user.click(input);
+        await user.clear(input);
+        await user.type(input, 'Pyth');
+
+        rerender(<SelectSdk value='Node.js' onChange={vi.fn()} />);
+
+        expect(input).toHaveValue('Pyth');
+        expect(screen.getByText('Python')).toBeInTheDocument();
     });
 });

@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ImpactMetricsDataSchemaDebug } from './impactMetricsDataSchemaDebug';
-import type { ImpactMetricsDataSchemaLabels } from './impactMetricsDataSchemaLabels';
-import type { ImpactMetricsDataSchemaSeriesItem } from './impactMetricsDataSchemaSeriesItem';
+import type { ImpactMetricsDataSchemaDebug } from './impactMetricsDataSchemaDebug.ts';
+import type { ImpactMetricsDataSchemaLabels } from './impactMetricsDataSchemaLabels.ts';
+import type { ImpactMetricsDataSchemaSeriesItem } from './impactMetricsDataSchemaSeriesItem.ts';
 
 /**
  * Response containing time series data from a metrics source.

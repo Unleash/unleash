@@ -23,6 +23,8 @@ import noAuthentication, {
     noApiToken,
 } from './middleware/no-authentication.js';
 import secureHeaders from './middleware/secure-headers.js';
+import { sessionContextMiddleware } from './middleware/session-context.js';
+import { sessionTimeoutMiddleware } from './middleware/session-timeout-middleware.js';
 
 import { loadIndexHTML, findPublicFolder } from './util/index.js';
 import patMiddleware from './middleware/pat-middleware.js';
@@ -37,6 +39,15 @@ import { originMiddleware } from './middleware/origin-middleware.js';
 import { userTokenClientApiLogger } from './middleware/user-token-client-api-logger-middleware.js';
 import backendApiAccessMiddleware from './middleware/backend-token-middleware.js';
 import frontendApiAccessMiddleware from './middleware/frontend-token-middleware.js';
+import { createRateLimitMiddleware } from './middleware/rate-limit-middleware.js';
+
+export const normalizeUrlPath = (url: string): string => {
+    const queryIndex = url.indexOf('?');
+    const path = queryIndex === -1 ? url : url.slice(0, queryIndex);
+    const query = queryIndex === -1 ? '' : url.slice(queryIndex);
+
+    return path.replace(/\/+/g, '/') + query;
+};
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -80,9 +91,13 @@ export default async function getApp(
     app.use(cookieParser());
 
     app.use((req, _res, next) => {
-        req.url = req.url.replace(/\/+/g, '/');
+        req.url = normalizeUrlPath(req.url);
         next();
     });
+    app.use(
+        baseUriPath,
+        createRateLimitMiddleware(config, 'beforeAuthentication'),
+    );
 
     app.use(
         `${baseUriPath}/api/admin/features-batch`,
@@ -94,10 +109,15 @@ export default async function getApp(
             express.json({ strict: false }),
         ),
     );
+
+    app.use(secureHeaders(config));
+
     if (unleashSession) {
         app.use(unleashSession);
+
+        app.use(`${baseUriPath}/api`, sessionTimeoutMiddleware(config));
     }
-    app.use(secureHeaders(config));
+
     app.use(express.urlencoded({ extended: true }));
     app.use(favicon(path.join(publicFolder, 'favicon.ico')));
     app.use(baseUriPath, favicon(path.join(publicFolder, 'favicon.ico')));
@@ -120,7 +140,6 @@ export default async function getApp(
         userTokenClientApiLogger(config),
     );
 
-    app.use(baseUriPath, patMiddleware(config, services));
     if (config.authentication.type === IAuthType.NONE) {
         logger.warn(
             'The AuthType=none option for Unleash is no longer recommended and will be removed in version 6.',
@@ -136,6 +155,7 @@ export default async function getApp(
         `${baseUriPath}/api/client`,
         backendApiAccessMiddleware(config, services),
     );
+    app.use(baseUriPath, patMiddleware(config, services));
     app.use(baseUriPath, apiAccessMiddleware(config, services));
 
     switch (config.authentication.type) {
@@ -168,8 +188,15 @@ export default async function getApp(
 
     app.use(
         baseUriPath,
+        createRateLimitMiddleware(config, 'afterAuthentication'),
+    );
+
+    app.use(
+        baseUriPath,
         rbacMiddleware(config, stores, services.accessService),
     );
+
+    app.use(`${baseUriPath}/api/admin`, sessionContextMiddleware());
 
     app.use(`${baseUriPath}/api/admin`, originMiddleware(config));
 

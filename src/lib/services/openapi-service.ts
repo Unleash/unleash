@@ -8,10 +8,7 @@ import {
     removeJsonSchemaProps,
     type SchemaId,
 } from '../openapi/index.js';
-import type {
-    ApiOperation,
-    StabilityRelease,
-} from '../openapi/util/api-operation.js';
+import type { ApiOperation } from '../openapi/util/api-operation.js';
 import type { Logger } from '../logger.js';
 import { validateSchema } from '../openapi/validate.js';
 import type { IFlagResolver } from '../types/index.js';
@@ -36,11 +33,6 @@ type OpenApiMiddleware = IExpressOpenApi & {
         router?: unknown,
         basePath?: string,
     ) => OpenApiDocument;
-};
-
-// Allow legacy operations that omit the release field until we backfill them.
-type LegacyApiOperation = Omit<ApiOperation, 'release'> & {
-    release?: StabilityRelease;
 };
 
 export class OpenApiService {
@@ -70,7 +62,7 @@ export class OpenApiService {
         ) as OpenApiMiddleware;
     }
 
-    validPath(op: ApiOperation | LegacyApiOperation): RequestHandler {
+    validPath(op: ApiOperation): RequestHandler {
         // extract enterpriseOnly and release to avoid leaking into the OpenAPI spec
         const { enterpriseOnly, release, ...openapiSpec } = op;
         const { baseUriPath = '' } = this.config.server ?? {};
@@ -184,22 +176,35 @@ export class OpenApiService {
         data: T,
         headers: { [header: string]: string } = {},
     ): void {
-        const errors = validateSchema<S>(schema, data);
-
-        if (errors) {
-            this.logger.debug(
-                `Invalid response for ${res.req?.originalUrl || ''}:`,
-                errors,
-            );
-            if (this.flagResolver.isEnabled('strictSchemaValidation')) {
-                throw new Error(JSON.stringify(errors, null, 4));
-            }
-        }
+        this.validateResponse<T, S>(schema, data, res.req?.originalUrl || '');
 
         Object.entries(headers).forEach(([header, value]) => {
             res.header(header, value);
         });
 
         res.status(status).json(data);
+    }
+
+    validateResponse<T, S = SchemaId>(
+        schema: SchemaId,
+        data: T,
+        logContext = '',
+    ): void {
+        const errors = validateSchema<S>(schema, data);
+
+        if (errors) {
+            this.logger.debug(`Invalid response for ${logContext}:`, errors);
+            if (this.flagResolver.isEnabled('strictSchemaValidation')) {
+                throw new Error(JSON.stringify(errors, null, 4));
+            }
+        }
+    }
+
+    serializeWithValidation<T, S = SchemaId>(
+        schema: SchemaId,
+        data: T,
+    ): Buffer {
+        this.validateResponse<T, S>(schema, data);
+        return Buffer.from(JSON.stringify(data));
     }
 }

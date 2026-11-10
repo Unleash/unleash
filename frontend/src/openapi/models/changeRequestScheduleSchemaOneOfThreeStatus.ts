@@ -10,7 +10,6 @@
 export type ChangeRequestScheduleSchemaOneOfThreeStatus =
     (typeof ChangeRequestScheduleSchemaOneOfThreeStatus)[keyof typeof ChangeRequestScheduleSchemaOneOfThreeStatus];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestScheduleSchemaOneOfThreeStatus = {
     failed: 'failed',
 } as const;

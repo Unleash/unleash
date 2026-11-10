@@ -1,4 +1,4 @@
-import { type CSSProperties, type RefObject, useMemo } from 'react';
+import { type CSSProperties, type RefObject, useMemo, useRef } from 'react';
 import { useTheme, TableBody, TableRow } from '@mui/material';
 import { SortableTableHeader } from 'component/common/Table/SortableTableHeader/SortableTableHeader';
 import { TableCell } from 'component/common/Table/TableCell/TableCell';
@@ -32,8 +32,10 @@ export const VirtualizedTable = <T,>({
 
     const rows = tableInstance.getRowModel().rows;
 
+    const tableRef = useRef<HTMLTableElement>(null);
     const [firstRenderedIndex, lastRenderedIndex] = useVirtualizedRange(
         rowHeight,
+        tableRef,
         40,
         5,
         parentRef?.current,
@@ -47,6 +49,7 @@ export const VirtualizedTable = <T,>({
     return (
         <Table
             role='table'
+            ref={tableRef}
             rowHeight={rowHeight}
             style={{ height: tableHeight }}
         >

@@ -1,5 +1,5 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { GroupForm } from '../GroupForm/GroupForm.tsx';
 import { useGroupForm } from '../hooks/useGroupForm.ts';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

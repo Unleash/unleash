@@ -1,6 +1,6 @@
 import { beforeEach, expect, test } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import { SWRConfig } from 'swr';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { setLocalStorageItem } from 'utils/storage';
@@ -24,7 +24,6 @@ const setupLoggedIn = () => {
         feedback: [],
         splash: {},
     });
-    testServerRoute(server, '/api/admin/projects', { projects: [] });
 };
 
 const setupLoggedOut = () => {
@@ -35,19 +34,12 @@ const setupLoggedOut = () => {
         defaultHidden: false,
         options: [],
     });
-    testServerRoute(server, '/api/admin/projects', { projects: [] });
 };
 
 const renderInitialRedirect = () =>
     render(
         <SWRConfig value={{ provider: () => new Map(), dedupingInterval: 0 }}>
-            <MemoryRouter
-                initialEntries={['/']}
-                future={{
-                    v7_startTransition: true,
-                    v7_relativeSplatPath: true,
-                }}
-            >
+            <MemoryRouter initialEntries={['/']}>
                 <Routes>
                     <Route path='/' element={<InitialRedirect />} />
                     <Route path='*' element={<LocationDisplay />} />

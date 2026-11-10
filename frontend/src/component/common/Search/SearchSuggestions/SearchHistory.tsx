@@ -3,7 +3,7 @@ import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { FC } from 'react';
 import { StyledCode } from './SearchInstructions/SearchInstructions.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { onEnter } from './onEnter.ts';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -23,7 +23,7 @@ export const SearchHistory: FC<ISearchHistoryProps> = ({
     onSuggestion,
     savedQuery,
 }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const onSavedQuery = () => {
         onSuggestion(savedQuery || '');
         trackEvent('search-filter-suggestions', {

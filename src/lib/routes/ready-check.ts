@@ -40,6 +40,7 @@ export class ReadyCheckController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Operational'],
+                    release: { stable: '7.3.0' },
                     operationId: 'getReady',
                     summary: 'Get instance readiness status',
                     description:

@@ -11,7 +11,7 @@ import {
     ADMIN,
     APPLY_CHANGE_REQUEST,
 } from 'component/providers/AccessProvider/permissions';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 const server = testServerSetup();
 const mockChangeRequest = (

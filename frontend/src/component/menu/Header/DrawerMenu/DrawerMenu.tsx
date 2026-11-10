@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { Divider, Drawer, styled } from '@mui/material';
 import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
 import UnleashLogoWhite from 'assets/img/logoWithWhiteText.svg?react';

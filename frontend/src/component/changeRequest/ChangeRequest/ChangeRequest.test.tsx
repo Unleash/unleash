@@ -1,7 +1,7 @@
 import { expect, test } from 'vitest';
 import { screen, waitFor } from '@testing-library/react';
 
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 
 import { render } from 'utils/testRenderer';
 import { ChangeRequest } from './ChangeRequest.tsx';

@@ -22,6 +22,8 @@ const vitestConfig = vitestDefineConfig({
         globals: true,
         setupFiles: 'src/setupTests.ts',
         environment: 'jsdom',
+        testTimeout: 30_000,
+        hookTimeout: 30_000,
         exclude: [...configDefaults.exclude, '**/cypress/**'],
         server: {
             deps: {
@@ -95,6 +97,10 @@ export default defineConfig(({ mode }) => {
                         target: UNLEASH_API,
                         changeOrigin: true,
                     },
+                    [`^${UNLEASH_BASE_PATH}feedback/`]: {
+                        target: UNLEASH_API,
+                        changeOrigin: true,
+                    },
                 },
                 fs: {
                     allow: ['..'],
@@ -102,6 +108,15 @@ export default defineConfig(({ mode }) => {
             },
             resolve: {
                 tsconfigPaths: true,
+                dedupe: [
+                    'react',
+                    'react-dom',
+                    '@mui/material',
+                    '@mui/system',
+                    '@mui/utils',
+                    '@emotion/react',
+                    '@emotion/styled',
+                ],
             },
             plugins: [
                 {

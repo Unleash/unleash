@@ -18,20 +18,20 @@ type VariantProps = {
 const variants: VariantProps = {
     primary: {
         card: (theme: Theme): CSSObject => ({
-            backgroundColor: theme.palette.background.default,
-            background: theme.palette.secondary.light,
+            backgroundColor: theme.palette.background.paper,
+            background: theme.palette.primary.container,
             '&:hover': {
-                backgroundColor: theme.palette.neutral.light,
+                backgroundColor: theme.palette.neutral.container,
             },
         }),
         header: (theme: Theme): CSSObject => ({
             fontWeight: theme.typography.fontWeightRegular,
         }),
         body: (theme: Theme): CSSObject => ({
-            backgroundColor: theme.palette.background.default,
+            backgroundColor: theme.palette.background.paper,
             color: theme.palette.text.secondary,
             '&:hover': {
-                backgroundColor: theme.palette.neutral.light,
+                backgroundColor: theme.palette.neutral.container,
             },
             fontSize: theme.fontSizes.smallBody,
         }),
@@ -44,19 +44,19 @@ const variants: VariantProps = {
     },
     secondary: {
         card: (theme: Theme): CSSObject => ({
-            backgroundColor: theme.palette.secondary.light,
-            borderColor: theme.palette.secondary.border,
+            backgroundColor: theme.palette.primary.container,
+            borderColor: theme.palette.primary.containerBorder,
             color: theme.palette.text.primary,
         }),
         header: (theme: Theme): CSSObject => ({
             fontWeight: theme.typography.fontWeightBold,
         }),
         body: (theme: Theme): CSSObject => ({
-            backgroundColor: theme.palette.secondary.light,
+            backgroundColor: theme.palette.primary.container,
             color: theme.palette.text.primary,
         }),
         footer: (theme: Theme): CSSObject => ({
-            background: theme.palette.secondary.light,
+            background: theme.palette.primary.container,
             fontSize: theme.fontSizes.bodySize,
         }),
     },
@@ -109,7 +109,7 @@ const StyledCardIconContainer = styled(Box)(({ theme }) => ({
     placeItems: 'center',
     padding: theme.spacing(0.5),
     alignSelf: 'baseline',
-    backgroundColor: theme.palette.secondary.light,
+    backgroundColor: theme.palette.primary.container,
     color: theme.palette.primary.main,
     borderRadius: theme.shape.borderRadiusMedium,
     '& > svg': {

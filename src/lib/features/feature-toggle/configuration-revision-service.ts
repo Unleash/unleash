@@ -49,6 +49,8 @@ export default class ConfigurationRevisionService extends EventEmitter {
 
     private revisionId: number;
 
+    private initializationPromise: Promise<number> | undefined;
+
     private maxRevisionId: Map<string, number> = new Map();
 
     private flagResolver: IFlagResolver;
@@ -119,7 +121,28 @@ export default class ConfigurationRevisionService extends EventEmitter {
         return maxRevId;
     }
 
+    // Establish the baseline once without announcing it as a configuration change.
+    // Concurrent callers share the pending promise; failures allow a later retry.
+    initialize(): Promise<number> {
+        if (!this.initializationPromise) {
+            this.initializationPromise = this.refreshMaxRevisionId(false).catch(
+                (error) => {
+                    this.initializationPromise = undefined;
+                    throw error;
+                },
+            );
+        }
+        return this.initializationPromise;
+    }
+
     async updateMaxRevisionId(emit: boolean = true): Promise<number> {
+        // A poll must not race the cache's silent baseline read. Read again
+        // afterward so changes committed during initialization are still announced.
+        await this.initializationPromise;
+        return this.refreshMaxRevisionId(emit);
+    }
+
+    private async refreshMaxRevisionId(emit: boolean): Promise<number> {
         if (this.flagResolver.isEnabled('disableUpdateMaxRevisionId')) {
             return 0;
         }

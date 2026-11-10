@@ -27,6 +27,7 @@ export interface IEventStore
     publishUnannouncedEvents(): Promise<void>;
     store(event: IBaseEvent): Promise<void>;
     batchStore(events: IBaseEvent[]): Promise<void>;
+    batchStoreOrThrow(events: IBaseEvent[]): Promise<void>;
     getEvents(): Promise<IEvent[]>;
     count(): Promise<number>;
     searchEventsCount(
@@ -42,6 +43,8 @@ export interface IEventStore
         currentMax?: number,
         environment?: string,
     ): Promise<number>;
+    getMaxTokenRevisionId(currentMax?: number): Promise<number>;
+    getTokenRevisionRange(start: number, end: number): Promise<IEvent[]>;
     getDeltaRevisionState(
         environment: string,
         referencedSegmentIds?: Set<number>,

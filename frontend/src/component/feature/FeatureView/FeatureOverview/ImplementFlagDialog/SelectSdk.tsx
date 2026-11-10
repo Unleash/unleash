@@ -1,9 +1,11 @@
-import { Autocomplete, TextField, styled } from '@mui/material';
+import { styled } from '@mui/material';
+import { AutocompleteField } from 'component/common/AutocompleteField/AutocompleteField';
 import {
     allSdks,
     serverSdks,
     type SdkName,
 } from 'component/onboarding/dialog/sharedTypes';
+import { formatAssetPath } from 'utils/formatPath';
 
 interface SelectSdkProps {
     value: SdkName;
@@ -14,11 +16,30 @@ const backendNames = new Set<SdkName>(serverSdks.map((s) => s.name));
 
 type SdkOption = {
     name: SdkName;
-    icon: string;
+    icon: UnformattedAssetPath;
     group: string;
 };
 
-const StyledAutocomplete = styled(Autocomplete<SdkOption>)(({ theme }) => ({
+const options: SdkOption[] = allSdks
+    .map((sdk) => ({
+        ...sdk,
+        group: backendNames.has(sdk.name) ? 'Backend SDKs' : 'Frontend SDKs',
+    }))
+    .sort(
+        (a, b) =>
+            a.group.localeCompare(b.group) || a.name.localeCompare(b.name),
+    );
+
+const optionsByName = new Map<SdkName, SdkOption>(
+    options.map((option) => [option.name, option]),
+);
+
+const getOptionLabel = (option: SdkOption) => option.name;
+const getOptionGroup = (option: SdkOption) => option.group;
+const isOptionEqualToValue = (option: SdkOption, value: SdkOption) =>
+    option.name === value.name;
+
+const StyledAutocompleteWrapper = styled('div')(({ theme }) => ({
     minWidth: theme.spacing(20),
     maxWidth: theme.spacing(32.5),
 }));
@@ -34,6 +55,7 @@ const StyledSdkIcon = styled('img')(({ theme }) => ({
     height: theme.spacing(2.5),
     flexShrink: 0,
     borderRadius: theme.shape.borderRadiusSmall,
+    marginLeft: theme.spacing(0.5),
 }));
 
 const StyledSdkName = styled('span')({
@@ -41,39 +63,43 @@ const StyledSdkName = styled('span')({
 });
 
 export const SelectSdk = ({ value, onChange }: SelectSdkProps) => {
-    const options: SdkOption[] = allSdks
-        .map((sdk) => ({
-            ...sdk,
-            group: backendNames.has(sdk.name)
-                ? 'Backend SDKs'
-                : 'Frontend SDKs',
-        }))
-        .sort(
-            (a, b) =>
-                a.group.localeCompare(b.group) || a.name.localeCompare(b.name),
-        );
+    const selectedOption = optionsByName.get(value);
+    const icon = selectedOption?.icon;
 
     return (
-        <StyledAutocomplete
-            options={options}
-            value={options.find((opt) => opt.name === value) ?? null}
-            groupBy={(option) => option.group}
-            getOptionLabel={(option) => option.name}
-            isOptionEqualToValue={(option, val) => option.name === val.name}
-            onChange={(_, newValue) => {
-                if (newValue?.name) {
-                    onChange(newValue.name);
+        <StyledAutocompleteWrapper>
+            <AutocompleteField
+                label='SDK'
+                size='large'
+                disableClearable
+                options={options}
+                value={selectedOption}
+                groupBy={getOptionGroup}
+                getOptionLabel={getOptionLabel}
+                isOptionEqualToValue={isOptionEqualToValue}
+                onChange={(_, newValue) => {
+                    if (newValue?.name) {
+                        onChange(newValue.name);
+                    }
+                }}
+                renderOption={({ key, ...props }, option) => (
+                    <StyledOptionRow key={key} {...props}>
+                        <StyledSdkIcon
+                            src={formatAssetPath(option.icon)}
+                            alt=''
+                        />
+                        <StyledSdkName>{option.name}</StyledSdkName>
+                    </StyledOptionRow>
+                )}
+                startAdornment={
+                    icon && (
+                        <StyledSdkIcon
+                            src={formatAssetPath(icon)}
+                            alt='sdk-icon'
+                        />
+                    )
                 }
-            }}
-            renderOption={({ key, ...props }, option) => (
-                <StyledOptionRow key={key} {...props}>
-                    <StyledSdkIcon src={option.icon} alt='' />
-                    <StyledSdkName>{option.name}</StyledSdkName>
-                </StyledOptionRow>
-            )}
-            renderInput={(params) => (
-                <TextField {...params} label='SDK' size='small' />
-            )}
-        />
+            />
+        </StyledAutocompleteWrapper>
     );
 };

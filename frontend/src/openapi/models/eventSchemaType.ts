@@ -10,7 +10,6 @@
 export type EventSchemaType =
     (typeof EventSchemaType)[keyof typeof EventSchemaType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const EventSchemaType = {
     'application-created': 'application-created',
     'feature-created': 'feature-created',
@@ -36,7 +35,6 @@ export const EventSchemaType = {
     'feature-link-removed': 'feature-link-removed',
     'feature-link-updated': 'feature-link-updated',
     'strategy-order-changed': 'strategy-order-changed',
-    'drop-feature-tags': 'drop-feature-tags',
     'feature-untagged': 'feature-untagged',
     'feature-stale-on': 'feature-stale-on',
     'feature-stale-off': 'feature-stale-off',
@@ -75,6 +73,7 @@ export const EventSchemaType = {
     'drop-projects': 'drop-projects',
     'tag-created': 'tag-created',
     'tag-deleted': 'tag-deleted',
+    'tag-updated': 'tag-updated',
     'tag-import': 'tag-import',
     'drop-tags': 'drop-tags',
     'tag-type-created': 'tag-type-created',
@@ -109,6 +108,8 @@ export const EventSchemaType = {
     'client-register': 'client-register',
     'pat-created': 'pat-created',
     'pat-deleted': 'pat-deleted',
+    'service-account-token-created': 'service-account-token-created',
+    'service-account-token-deleted': 'service-account-token-deleted',
     'public-signup-token-created': 'public-signup-token-created',
     'public-signup-token-user-added': 'public-signup-token-user-added',
     'public-signup-token-updated': 'public-signup-token-updated',
@@ -152,6 +153,7 @@ export const EventSchemaType = {
     'banner-deleted': 'banner-deleted',
     'safeguard-changed': 'safeguard-changed',
     'safeguard-deleted': 'safeguard-deleted',
+    'safeguard-triggered': 'safeguard-triggered',
     'release-plan-progressions-resumed': 'release-plan-progressions-resumed',
     'release-plan-progressions-paused': 'release-plan-progressions-paused',
     'project-environment-added': 'project-environment-added',

@@ -2,9 +2,9 @@ import { Alert, styled } from '@mui/material';
 import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import type { ProjectSchema } from 'openapi';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { formatStrategyName } from 'utils/strategyNames';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type {
     ChangeRequestNewStrategy,
@@ -38,7 +38,7 @@ export const SegmentProjectAlert = ({
     projectsUsed,
     availableProjects,
 }: ISegmentProjectAlertProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     const trackClick = () => {
         trackEvent('segment-usage', {

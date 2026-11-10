@@ -55,6 +55,7 @@ export default class EventController extends Controller {
             middleware: [
                 openApiService.validPath({
                     deprecated: true,
+                    release: { stable: '4.14.0' },
                     operationId: 'getEvents',
                     tags: ['Events'],
                     responses: {
@@ -87,6 +88,7 @@ export default class EventController extends Controller {
             middleware: [
                 openApiService.validPath({
                     deprecated: true,
+                    release: { stable: '4.14.0' },
                     operationId: 'getEventsForToggle',
                     tags: ['Events'],
                     responses: {
@@ -109,6 +111,7 @@ export default class EventController extends Controller {
             middleware: [
                 this.openApiService.validPath({
                     tags: ['Events'],
+                    release: { stable: '6.2.0' },
                     operationId: 'getEventCreators',
                     summary: 'Get a list of all users that have created events',
                     description:

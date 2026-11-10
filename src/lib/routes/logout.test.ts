@@ -113,7 +113,7 @@ test('should clear "unleash-session" cookies', async () => {
         .expect(302)
         .expect(
             'Set-Cookie',
-            'unleash-session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+            'unleash-session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Lax',
         );
 });
 
@@ -139,14 +139,14 @@ test('should clear "unleash-session" cookie even when disabled clear site data',
         .expect(302)
         .expect(
             'Set-Cookie',
-            'unleash-session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT',
+            'unleash-session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Lax',
         );
 });
 
 test('should call destroy on session', async () => {
     const baseUriPath = '';
     const fakeSession = {
-        destroy: vi.fn(),
+        destroy: vi.fn((cb?: () => void) => cb?.()),
     };
     const app = express();
     const config = createTestConfig({ server: { baseUriPath } });
@@ -220,7 +220,7 @@ test('should handle req.logout without callback function', async () => {
 
 test('should redirect to alternative logoutUrl', async () => {
     const fakeSession = {
-        destroy: vi.fn(),
+        destroy: vi.fn((cb?: () => void) => cb?.()),
         logoutUrl: '/some-other-path',
     };
     const app = express();
@@ -248,7 +248,7 @@ test('Should destroy sessions for user', async () => {
     const app = express();
     const config = createTestConfig();
     const fakeSession = {
-        destroy: vi.fn(),
+        destroy: vi.fn((cb?: () => void) => cb?.()),
         user: {
             id: 1,
         },

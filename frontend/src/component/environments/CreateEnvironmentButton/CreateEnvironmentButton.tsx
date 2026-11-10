@@ -1,7 +1,7 @@
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import Add from '@mui/icons-material/Add';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import ProPlanIcon from 'assets/icons/pro-enterprise-feature-badge.svg?react';
 import ProPlanIconLight from 'assets/icons/pro-enterprise-feature-badge-light.svg?react';

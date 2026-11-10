@@ -1,5 +1,4 @@
 import { createContext } from 'react';
-import type { TrackEventOptions } from './EventTrackerContext';
 
 /**
  * The post-init LogRocket API surface available to consumers.
@@ -7,7 +6,10 @@ import type { TrackEventOptions } from './EventTrackerContext';
  * Expose additional LogRocket methods here as we need them.
  */
 export type LogRocketInstance = {
-    track: (event: string, props?: TrackEventOptions['props']) => void;
+    track: (
+        event: string,
+        props?: Record<string, string | number | boolean>,
+    ) => void;
 };
 
 export const LogRocketContext = createContext<LogRocketInstance | null>(null);

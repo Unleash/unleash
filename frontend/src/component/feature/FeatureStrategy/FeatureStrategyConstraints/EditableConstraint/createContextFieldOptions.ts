@@ -1,15 +1,11 @@
 import type { IUnleashContextDefinition } from 'interfaces/context.ts';
-import type { EditableConstraint } from './useEditableConstraint/editable-constraint-type';
-import type { SelectOptionGroup } from 'component/common/GeneralSelect/GeneralSelect';
+import type { SelectOptionGroup } from 'component/common/SelectPopover/SelectPopover.tsx';
 
 export const createContextFieldOptions = (
-    localConstraint: EditableConstraint,
     context: IUnleashContextDefinition[],
-) => {
+    currentContextName?: string,
+): SelectOptionGroup<string>[] => {
     const existingContextFieldNames = context.map((context) => context.name);
-    const contextFieldHasBeenDeleted = !existingContextFieldNames.includes(
-        localConstraint.contextName,
-    );
 
     const fields = context.reduce(
         ({ project, global }, next) => {
@@ -26,12 +22,17 @@ export const createContextFieldOptions = (
         },
     );
 
-    const optList = (opts: { name: string }[]) =>
+    const optList = (
+        opts: Pick<IUnleashContextDefinition, 'name' | 'legalValues'>[],
+    ) =>
         opts
             .toSorted((a, b) => a.name.localeCompare(b.name))
             .map((option) => ({
-                key: option.name,
+                value: option.name,
                 label: option.name,
+                detail: option.legalValues?.length
+                    ? `${option.legalValues.length} legal value${option.legalValues.length === 1 ? '' : 's'}`
+                    : undefined,
             }));
 
     return [
@@ -43,9 +44,10 @@ export const createContextFieldOptions = (
             groupHeader: 'Global context fields',
             options: optList(fields.global),
         },
-        contextFieldHasBeenDeleted && {
-            groupHeader: 'Deleted context fields',
-            options: optList([{ name: localConstraint.contextName }]),
-        },
-    ].filter(Boolean) as SelectOptionGroup[];
+        currentContextName &&
+            !existingContextFieldNames.includes(currentContextName) && {
+                groupHeader: 'Deleted context fields',
+                options: optList([{ name: currentContextName }]),
+            },
+    ].filter(Boolean) as SelectOptionGroup<string>[];
 };

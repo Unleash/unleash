@@ -3,10 +3,10 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { MetricQuerySchemaAggregationMode } from './metricQuerySchemaAggregationMode';
-import type { MetricQuerySchemaLabelSelectors } from './metricQuerySchemaLabelSelectors';
-import type { MetricQuerySchemaSource } from './metricQuerySchemaSource';
-import type { MetricQuerySchemaTimeRange } from './metricQuerySchemaTimeRange';
+import type { MetricQuerySchemaAggregationMode } from './metricQuerySchemaAggregationMode.ts';
+import type { MetricQuerySchemaLabelSelectors } from './metricQuerySchemaLabelSelectors.ts';
+import type { MetricQuerySchemaSource } from './metricQuerySchemaSource.ts';
+import type { MetricQuerySchemaTimeRange } from './metricQuerySchemaTimeRange.ts';
 
 /**
  * Common metric query configuration for selecting and filtering metric data.

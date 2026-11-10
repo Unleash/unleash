@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { SamlSettingsSchemaOneOfThreeDefaultRootRole } from './samlSettingsSchemaOneOfThreeDefaultRootRole';
+import type { SamlSettingsSchemaOneOfThreeDefaultRootRole } from './samlSettingsSchemaOneOfThreeDefaultRootRole.ts';
 
 export type SamlSettingsSchemaOneOfThree = {
     /** Should Unleash create users based on the emails coming back in the authentication reply from the SAML server */
@@ -17,8 +17,8 @@ export type SamlSettingsSchemaOneOfThree = {
     /** A comma separated list of email domains that Unleash will auto create user accounts for. */
     emailDomains?: string;
     /** Whether to enable or disable SAML 2.0 for this instance */
-    enabled?: boolean;
-    /** Should we enable group syncing. Refer to the documentation [Group syncing](https://docs.getunleash.io/guides/how-to-set-up-group-sso-sync) */
+    enabled?: false;
+    /** Should we enable group syncing. Refer to the documentation [Group syncing](https://docs.getunleash.io/single-sign-on/how-to-set-up-group-sso-sync) */
     enableGroupSyncing?: boolean;
     /** The SAML 2.0 entity ID */
     entityId?: string;

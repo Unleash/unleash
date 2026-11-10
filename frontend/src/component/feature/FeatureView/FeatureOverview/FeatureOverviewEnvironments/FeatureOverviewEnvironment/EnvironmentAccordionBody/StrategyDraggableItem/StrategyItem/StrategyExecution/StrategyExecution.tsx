@@ -1,12 +1,12 @@
 import type { FC } from 'react';
 import type { FeatureStrategySchema } from 'openapi';
-import type { IFeatureStrategyPayload } from 'interfaces/strategy';
+import type { ISegment } from 'interfaces/segment';
 import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { objectId } from 'utils/objectId';
 import { useCustomStrategyParameters } from './hooks/useCustomStrategyParameters.js';
 import { useStrategyParameters } from './hooks/useStrategyParameters.js';
-import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
+import { useSegmentsMap } from 'hooks/api/getters/useSegments/useSegmentsMap.ts';
 import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
 import {
     ConstraintListItem,
@@ -15,7 +15,7 @@ import {
 import { RolloutVariants } from './RolloutVariants/RolloutVariants.tsx';
 
 type StrategyExecutionProps = {
-    strategy: IFeatureStrategyPayload | FeatureStrategySchema;
+    strategy: FeatureStrategySchema;
     displayGroupId?: boolean;
 };
 
@@ -24,17 +24,14 @@ export const StrategyExecution: FC<StrategyExecutionProps> = ({
     displayGroupId = false,
 }) => {
     const { strategies } = useStrategies();
-    const { segments } = useSegments();
+    const segmentsById = useSegmentsMap();
     const { isCustomStrategy, customStrategyParameters: customStrategyItems } =
         useCustomStrategyParameters(strategy, strategies);
-    const strategyParameters = useStrategyParameters(
-        strategy as FeatureStrategySchema,
-        displayGroupId,
-    );
+    const strategyParameters = useStrategyParameters(strategy, displayGroupId);
     const { constraints } = strategy;
-    const strategySegments = segments?.filter((segment) =>
-        strategy.segments?.includes(segment.id),
-    );
+    const strategySegments = strategy.segments
+        ?.map((id) => segmentsById.get(id))
+        .filter((segment): segment is ISegment => Boolean(segment));
 
     return (
         <>

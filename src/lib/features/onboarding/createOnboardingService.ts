@@ -11,13 +11,9 @@ import { FakeOnboardingStore } from './fake-onboarding-store.js';
 export const createOnboardingService =
     (config: IUnleashConfig) =>
     (db: Db): OnboardingService => {
-        const { eventBus, flagResolver, getLogger } = config;
+        const { getLogger } = config;
         const onboardingStore = new OnboardingStore(db);
-        const projectReadModel = new ProjectReadModel(
-            db,
-            eventBus,
-            flagResolver,
-        );
+        const projectReadModel = new ProjectReadModel(db, config);
         const userStore = new UserStore(db, getLogger);
         const onboardingService = new OnboardingService(
             {

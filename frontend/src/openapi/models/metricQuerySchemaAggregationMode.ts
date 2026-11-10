@@ -10,7 +10,6 @@
 export type MetricQuerySchemaAggregationMode =
     (typeof MetricQuerySchemaAggregationMode)[keyof typeof MetricQuerySchemaAggregationMode];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const MetricQuerySchemaAggregationMode = {
     rps: 'rps',
     count: 'count',

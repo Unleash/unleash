@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestCreateFeatureSchemaOneOfTwofourAction } from './changeRequestCreateFeatureSchemaOneOfTwofourAction';
-import type { ReleasePlanTemplateIdSchema } from './releasePlanTemplateIdSchema';
+import type { ChangeRequestCreateFeatureSchemaOneOfTwofourAction } from './changeRequestCreateFeatureSchemaOneOfTwofourAction.ts';
+import type { ReleasePlanTemplateIdSchema } from './releasePlanTemplateIdSchema.ts';
 
 /**
  * Add a release plan to this feature environment.

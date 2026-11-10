@@ -1,5 +1,7 @@
 import { createUuid } from 'utils/createUuid';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import FormTemplate, {
+    type FormTemplateLayout,
+} from 'component/common/FormTemplate/FormTemplate';
 import {
     UPDATE_PROJECT_SEGMENT,
     UPDATE_SEGMENT,
@@ -12,7 +14,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useToast from 'hooks/useToast';
 import type React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useSegmentForm } from '../hooks/useSegmentForm.ts';
 import { SegmentForm } from '../SegmentForm.tsx';
@@ -28,9 +30,15 @@ import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPe
 import type { ISegment } from 'interfaces/segment.ts';
 import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
+import { useTracking } from 'hooks/useTracking';
+import {
+    segmentChangedProps,
+    editSegmentTracking,
+    segmentTrackingProps,
+} from 'component/segments/segmentTrackingProps';
 
 interface IEditSegmentProps {
-    modal?: boolean;
+    layout?: FormTemplateLayout;
 }
 
 const addIdSymbolToConstraints = (segment?: ISegment): ISegment | undefined => {
@@ -43,7 +51,7 @@ const addIdSymbolToConstraints = (segment?: ISegment): ISegment | undefined => {
     return { ...segment, constraints };
 };
 
-export const EditSegment = ({ modal }: IEditSegmentProps) => {
+export const EditSegment = ({ layout }: IEditSegmentProps) => {
     const projectId = useOptionalPathParam('projectId');
     const segmentId = useRequiredPathParam('segmentId');
     const { segment: segmentWithoutConstraintIds } = useSegment(
@@ -55,6 +63,7 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
     const navigate = useNavigate();
     const { updateSegment, loading } = useSegmentsApi();
     const { refetchSegments } = useSegments();
+    const trackEditSegment = useTracking(editSegmentTracking);
 
     const {
         name,
@@ -101,16 +110,42 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
         if (segment) {
             e.preventDefault();
             clearErrors();
+            const trackingProps = {
+                viaChangeRequest: Boolean(changeRequestEnv),
+                ...segmentTrackingProps({
+                    constraints,
+                    description,
+                }),
+                ...segmentChangedProps({
+                    name,
+                    description,
+                    constraints,
+                    initial: {
+                        name: segment.name,
+                        description: segment.description,
+                        constraints: segment.constraints,
+                    },
+                }),
+            };
             try {
-                if (changeRequestEnv) {
-                    await addChange(segment.project || '', changeRequestEnv, {
-                        action: 'updateSegment',
-                        feature: null,
-                        payload: { id: segment.id, ...getSegmentPayload() },
-                    });
-                } else {
-                    await updateSegment(segment.id, getSegmentPayload());
-                }
+                await trackEditSegment.mutation(
+                    () =>
+                        changeRequestEnv
+                            ? addChange(
+                                  segment.project || '',
+                                  changeRequestEnv,
+                                  {
+                                      action: 'updateSegment',
+                                      feature: null,
+                                      payload: {
+                                          id: segment.id,
+                                          ...getSegmentPayload(),
+                                      },
+                                  },
+                              )
+                            : updateSegment(segment.id, getSegmentPayload()),
+                    trackingProps,
+                );
                 refetchSegments();
                 if (projectId) {
                     navigate(`/projects/${projectId}/settings/segments/`);
@@ -129,10 +164,14 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
         }
     };
 
+    if (!segment) {
+        return null;
+    }
+
     return (
         <FormTemplate
             loading={loading}
-            modal={modal}
+            layout={layout}
             title='Edit segment'
             description={segmentsFormDescription}
             documentationLink={segmentsDocsLink}
@@ -155,7 +194,7 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
             >
                 <UpdateButton
                     permission={[UPDATE_SEGMENT, UPDATE_PROJECT_SEGMENT]}
-                    projectId={projectId}
+                    projectId={segment.project}
                     disabled={!hasValidConstraints || overSegmentValuesLimit}
                     data-testid={SEGMENT_SAVE_BTN_ID}
                 >

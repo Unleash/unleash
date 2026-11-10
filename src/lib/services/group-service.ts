@@ -1,3 +1,4 @@
+import { auditEventFields } from '../util/index.js';
 import type {
     ICreateGroupModel,
     IGroup,
@@ -130,9 +131,7 @@ export class GroupService {
         const newUserIds = group.users?.map((g) => g.user.id);
         await this.eventService.storeEvent({
             type: GROUP_CREATED,
-            createdBy: auditUser.username,
-            createdByUserId: auditUser.id,
-            ip: auditUser.ip,
+            ...auditEventFields(auditUser),
             data: { ...group, users: newUserIds },
         });
 

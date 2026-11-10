@@ -3,12 +3,12 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureTypeCountSchema } from './featureTypeCountSchema';
-import type { ProjectInsightsSchemaHealth } from './projectInsightsSchemaHealth';
-import type { ProjectDoraMetricsSchema } from './projectDoraMetricsSchema';
-import type { ProjectInsightsSchemaMembers } from './projectInsightsSchemaMembers';
-import type { ProjectStatsSchema } from './projectStatsSchema';
-import type { ProjectInsightsSchemaTechnicalDebt } from './projectInsightsSchemaTechnicalDebt';
+import type { FeatureTypeCountSchema } from './featureTypeCountSchema.ts';
+import type { ProjectDoraMetricsSchema } from './projectDoraMetricsSchema.ts';
+import type { ProjectInsightsSchemaHealth } from './projectInsightsSchemaHealth.ts';
+import type { ProjectInsightsSchemaMembers } from './projectInsightsSchemaMembers.ts';
+import type { ProjectInsightsSchemaTechnicalDebt } from './projectInsightsSchemaTechnicalDebt.ts';
+import type { ProjectStatsSchema } from './projectStatsSchema.ts';
 
 /**
  * A high-level overview of a project insights. It contains information such as project statistics, overall health, types of flags, members overview, change requests overview.

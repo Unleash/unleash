@@ -10,7 +10,6 @@
 export type ChangeRequestCreateSchemaOneOfFivetwoAction =
     (typeof ChangeRequestCreateSchemaOneOfFivetwoAction)[keyof typeof ChangeRequestCreateSchemaOneOfFivetwoAction];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateSchemaOneOfFivetwoAction = {
     changeFeatureEnvSafeguard: 'changeFeatureEnvSafeguard',
 } as const;

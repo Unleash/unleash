@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import { render } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import Footer from './Footer.tsx';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import { AnnouncerProvider } from 'component/common/Announcer/AnnouncerProvider/AnnouncerProvider';
@@ -9,12 +9,7 @@ test('should render DrawerMenu', () => {
     const { asFragment } = render(
         <ThemeProvider>
             <AnnouncerProvider>
-                <MemoryRouter
-                    future={{
-                        v7_startTransition: true,
-                        v7_relativeSplatPath: true,
-                    }}
-                >
+                <MemoryRouter>
                     <Footer />
                 </MemoryRouter>
             </AnnouncerProvider>
@@ -28,13 +23,7 @@ test('should render DrawerMenu with "features" selected', () => {
     const { asFragment } = render(
         <ThemeProvider>
             <AnnouncerProvider>
-                <MemoryRouter
-                    initialEntries={['/features']}
-                    future={{
-                        v7_startTransition: true,
-                        v7_relativeSplatPath: true,
-                    }}
-                >
+                <MemoryRouter initialEntries={['/features']}>
                     <Footer />
                 </MemoryRouter>
             </AnnouncerProvider>

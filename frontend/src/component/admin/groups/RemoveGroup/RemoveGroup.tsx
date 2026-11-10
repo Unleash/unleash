@@ -5,7 +5,7 @@ import { useGroups } from 'hooks/api/getters/useGroups/useGroups';
 import useToast from 'hooks/useToast';
 import type { IGroup } from 'interfaces/group';
 import type { FC } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
 interface IRemoveGroupProps {

@@ -1,7 +1,28 @@
-import { fireEvent, screen } from '@testing-library/react';
+import type { ComponentProps } from 'react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
+import {
+    EventTrackerContext,
+    type EventProps,
+} from 'contexts/EventTrackerContext';
 import { Dialogue } from './Dialogue.tsx';
 import { expect, test, vi } from 'vitest';
+
+const renderDialogue = (props: ComponentProps<typeof Dialogue>) => {
+    const rows: Array<{ event: string } & EventProps> = [];
+    render(
+        <EventTrackerContext.Provider
+            value={{
+                trackEvent: (event, options) =>
+                    rows.push({ event, ...options?.props }),
+            }}
+        >
+            <Dialogue {...props} />
+        </EventTrackerContext.Provider>,
+    );
+
+    return rows;
+};
 
 test('modal should close when escape is pressed', () => {
     const mockSetOpen = vi.fn();
@@ -19,4 +40,127 @@ test('modal should close when escape is pressed', () => {
     fireEvent.keyDown(dialogue, { key: 'Escape', code: 'Escape' });
 
     expect(mockSetOpen).toHaveBeenCalledWith(false);
+});
+
+test('tracks opening and dismissing as one journey', () => {
+    const rows = renderDialogue({
+        open: true,
+        title: 'New dialogue created',
+        tracking: { event: 'project-access', type: 'remove-access' },
+        onClose: () => {},
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'No, take me back' }));
+
+    expect(rows).toEqual([
+        {
+            event: 'project-access',
+            eventType: 'remove-access',
+            action: 'opened',
+        },
+        {
+            event: 'project-access',
+            eventType: 'remove-access',
+            action: 'dismissed',
+            method: 'cancel-button',
+        },
+    ]);
+});
+
+test('escape is dismissed once even when both close paths are wired', () => {
+    const rows = renderDialogue({
+        open: true,
+        title: 'New dialogue created',
+        tracking: { event: 'project-access', type: 'remove-access' },
+        setOpen: () => {},
+        onClose: () => {},
+    });
+
+    fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' });
+
+    expect(rows).toEqual([
+        {
+            event: 'project-access',
+            eventType: 'remove-access',
+            action: 'opened',
+        },
+        {
+            event: 'project-access',
+            eventType: 'remove-access',
+            action: 'dismissed',
+            method: 'escape',
+        },
+    ]);
+});
+
+test('an undeclared dialog emits nothing', () => {
+    const rows = renderDialogue({
+        open: true,
+        title: 'New dialogue created',
+        setOpen: () => {},
+    });
+
+    fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' });
+
+    expect(rows).toEqual([]);
+});
+
+test('a confirm that runs the request is tracked as one journey while the button waits for it', async () => {
+    let finishRequest: () => void = () => {};
+    const rows = renderDialogue({
+        open: true,
+        title: 'New dialogue created',
+        tracking: { event: 'project-access', type: 'remove-access' },
+        onSubmit: () =>
+            new Promise<void>((resolve) => {
+                finishRequest = resolve;
+            }),
+    });
+    const confirm = screen.getByRole('button', { name: "Yes, I'm sure" });
+
+    fireEvent.click(confirm);
+
+    expect(confirm).toBeDisabled();
+    finishRequest();
+    await waitFor(() => expect(confirm).toBeEnabled());
+    expect(rows).toEqual([
+        {
+            event: 'project-access',
+            eventType: 'remove-access',
+            action: 'opened',
+        },
+        {
+            event: 'project-access',
+            eventType: 'remove-access',
+            action: 'submitted',
+        },
+        {
+            event: 'project-access',
+            eventType: 'remove-access',
+            action: 'succeeded',
+        },
+    ]);
+});
+
+test('a rejected confirm is recorded as failed and handed to the caller', async () => {
+    const failure = new Error('request failed');
+    const errors: unknown[] = [];
+    const rows = renderDialogue({
+        open: true,
+        title: 'New dialogue created',
+        tracking: { event: 'project-access', type: 'remove-access' },
+        onSubmit: () => Promise.reject(failure),
+        onError: (error) => errors.push(error),
+    });
+    const confirm = screen.getByRole('button', { name: "Yes, I'm sure" });
+
+    fireEvent.click(confirm);
+
+    await waitFor(() => expect(confirm).toBeEnabled());
+    expect(errors).toEqual([failure]);
+    expect(rows).toMatchObject([
+        { action: 'opened' },
+        { action: 'submitted' },
+        { action: 'failed', failedOn: 'request' },
+    ]);
 });

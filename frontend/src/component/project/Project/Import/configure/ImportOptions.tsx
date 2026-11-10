@@ -49,14 +49,16 @@ export const ImportOptions: FC<IImportOptionsProps> = ({
     return (
         <ImportOptionsContainer>
             <ImportOptionsHeader>Import options</ImportOptionsHeader>
-            <ImportOptionsDescription>
-                Choose the environment to import the configuration for
-            </ImportOptionsDescription>
             <GeneralSelect
                 sx={{ width: '180px' }}
                 options={environmentOptions || []}
                 onChange={onChange}
                 label={'Environment'}
+                description={
+                    <ImportOptionsDescription>
+                        Choose the environment to import the configuration for
+                    </ImportOptionsDescription>
+                }
                 value={environment}
                 data-testid={IMPORT_ENVIRONMENT}
                 IconComponent={KeyboardArrowDownOutlined}

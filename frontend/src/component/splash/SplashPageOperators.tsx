@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import { Button, IconButton, styled } from '@mui/material';
 import CloseOutlined from '@mui/icons-material/CloseOutlined';
 

@@ -1,5 +1,7 @@
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import FormTemplate, {
+    type FormTemplateLayout,
+} from 'component/common/FormTemplate/FormTemplate';
 import { useContextForm } from '../hooks/useContextForm.ts';
 import { ContextForm } from '../ContextForm/ContextForm.tsx';
 import { CREATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
@@ -10,17 +12,28 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
 import { UPDATE_PROJECT_CONTEXT } from '@server/types/permissions.ts';
+import type { IUnleashContextDefinition } from 'interfaces/context';
+import { useTracking } from 'hooks/useTracking';
+import { contextFieldTrackingProps } from 'component/context/contextFieldTrackingProps';
+import { createContextFieldTracking } from 'component/context/contextFieldTrackingProps';
 
 interface ICreateContextProps {
     onSubmit: () => void;
     onCancel: () => void;
-    modal?: boolean;
+    layout?: FormTemplateLayout;
+    /**
+     * When set, the form starts out as a copy of this context field. Only
+     * the name differs, so the user doesn't have to retype long lists of
+     * legal values.
+     */
+    cloneFrom?: IUnleashContextDefinition;
 }
 
 export const CreateUnleashContext = ({
     onSubmit,
     onCancel,
-    modal,
+    layout,
+    cloneFrom,
 }: ICreateContextProps) => {
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
@@ -39,28 +52,50 @@ export const CreateUnleashContext = ({
         clearErrors,
         setErrors,
         errors,
-    } = useContextForm({ initialProject: projectId });
+    } = useContextForm({
+        initialContextName: cloneFrom && `${cloneFrom.name}_clone`,
+        initialContextDesc: cloneFrom?.description,
+        initialLegalValues: cloneFrom?.legalValues,
+        initialStickiness: cloneFrom?.stickiness,
+        initialProject: projectId,
+    });
     const { createContext, loading } = useContextsApi(projectId);
     const { refetchUnleashContext } = useScopedUnleashContext();
+    const trackCreateContextField = useTracking(createContextFieldTracking);
 
     const handleSubmit = async (e: Event) => {
         e.preventDefault();
         e.stopPropagation();
+        const trackingProps = {
+            ...contextFieldTrackingProps({
+                legalValues,
+                description: contextDesc,
+                stickiness,
+            }),
+            cloned: Boolean(cloneFrom),
+        };
         const validName = await validateContext();
 
         if (validName) {
             const payload = getContextPayload();
             try {
-                await createContext(payload);
+                await trackCreateContextField.mutation(
+                    () => createContext(payload),
+                    trackingProps,
+                );
                 refetchUnleashContext();
                 setToastData({
-                    text: 'Context field created',
+                    text: cloneFrom
+                        ? 'Context field cloned'
+                        : 'Context field created',
                     type: 'success',
                 });
                 onSubmit();
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
+        } else {
+            trackCreateContextField.validationFailed(trackingProps);
         }
     };
 
@@ -78,13 +113,13 @@ export const CreateUnleashContext = ({
     return (
         <FormTemplate
             loading={loading}
-            title='Create context'
+            title={cloneFrom ? `Clone ${cloneFrom.name}` : 'Create context'}
             description='Context fields are a basic building block used in Unleash to control roll-out.
             They can be used together with strategy constraints as part of the activation strategy evaluation.'
             documentationLink='https://docs.getunleash.io/concepts/unleash-context#custom-context-fields'
             documentationLinkLabel='Context fields documentation'
             formatApiCode={formatApiCode}
-            modal={modal}
+            layout={layout}
         >
             <ContextForm
                 errors={errors}

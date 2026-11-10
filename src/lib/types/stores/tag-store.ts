@@ -5,5 +5,6 @@ export interface ITagStore extends Store<ITag, ITag> {
     getTagsByType(type: string): Promise<ITag[]>;
     getTag(type: string, value: string): Promise<ITag>;
     createTag(tag: ITag): Promise<void>;
+    renameTag(tag: ITag, newValue: string): Promise<void>;
     bulkImport(tags: ITag[]): Promise<ITag[]>;
 }

@@ -1,5 +1,6 @@
 import type { Response } from 'express';
 import Controller from '../../routes/controller.js';
+import { NotFoundError } from '../../error/index.js';
 import type { IUnleashServices, OpenApiService } from '../../services/index.js';
 import {
     type IFlagResolver,
@@ -88,6 +89,7 @@ export default class DependentFeaturesController extends Controller {
                     summary: 'Add a feature dependency.',
                     description:
                         'Add a dependency to a parent feature. Each environment will resolve corresponding dependency independently.',
+                    release: { stable: '5.5.0' },
                     operationId: 'addFeatureDependency',
                     requestBody: createRequestSchema(
                         'createDependentFeatureSchema',
@@ -111,6 +113,7 @@ export default class DependentFeaturesController extends Controller {
                     tags: ['Dependencies'],
                     summary: 'Deletes a feature dependency.',
                     description: 'Remove a dependency to a parent feature.',
+                    release: { stable: '5.5.0' },
                     operationId: 'deleteFeatureDependency',
                     responses: {
                         200: emptyResponse,
@@ -131,6 +134,7 @@ export default class DependentFeaturesController extends Controller {
                     tags: ['Dependencies'],
                     summary: 'Deletes feature dependencies.',
                     description: 'Remove dependencies to all parent features.',
+                    release: { stable: '5.5.0' },
                     operationId: 'deleteFeatureDependencies',
                     responses: {
                         200: emptyResponse,
@@ -151,6 +155,7 @@ export default class DependentFeaturesController extends Controller {
                     summary: 'List parent options.',
                     description:
                         'List available parents who have no transitive dependencies.',
+                    release: { stable: '5.5.0' },
                     operationId: 'listParentOptions',
                     responses: {
                         200: createResponseSchema('parentFeatureOptionsSchema'),
@@ -171,6 +176,7 @@ export default class DependentFeaturesController extends Controller {
                     summary: 'List parent feature variants.',
                     description:
                         'List available parent variants across all strategy variants and feature environment variants.',
+                    release: { stable: '5.11.0' },
                     operationId: 'listParentVariantOptions',
                     responses: {
                         200: createResponseSchema('parentVariantOptionsSchema'),
@@ -191,6 +197,7 @@ export default class DependentFeaturesController extends Controller {
                     summary: 'Check dependencies exist.',
                     description:
                         'Check if any dependencies exist in this Unleash instance',
+                    release: { stable: '5.6.0' },
                     operationId: 'checkDependenciesExist',
                     responses: {
                         200: createResponseSchema('dependenciesExistSchema'),
@@ -230,17 +237,23 @@ export default class DependentFeaturesController extends Controller {
     ): Promise<void> {
         const { child, parent, projectId } = req.params;
 
-        await this.dependentFeaturesService.transactional((service) =>
-            service.deleteFeatureDependency(
-                {
-                    parent,
-                    child,
-                },
-                projectId,
-                req.user,
-                req.audit,
-            ),
+        const removedCount = await this.dependentFeaturesService.transactional(
+            (service) =>
+                service.deleteFeatureDependency(
+                    {
+                        parent,
+                        child,
+                    },
+                    projectId,
+                    req.user,
+                    req.audit,
+                ),
         );
+        if (removedCount === 0) {
+            throw new NotFoundError(
+                `No dependency on "${parent}" for feature "${child}" in project "${projectId}".`,
+            );
+        }
         res.status(200).end();
     }
 
@@ -250,14 +263,20 @@ export default class DependentFeaturesController extends Controller {
     ): Promise<void> {
         const { child, projectId } = req.params;
 
-        await this.dependentFeaturesService.transactional((service) =>
-            service.deleteFeaturesDependencies(
-                [child],
-                projectId,
-                req.user,
-                req.audit,
-            ),
+        const removedCount = await this.dependentFeaturesService.transactional(
+            (service) =>
+                service.deleteFeaturesDependencies(
+                    [child],
+                    projectId,
+                    req.user,
+                    req.audit,
+                ),
         );
+        if (removedCount === 0) {
+            throw new NotFoundError(
+                `Feature "${child}" has no dependencies to remove in project "${projectId}".`,
+            );
+        }
         res.status(200).end();
     }
 

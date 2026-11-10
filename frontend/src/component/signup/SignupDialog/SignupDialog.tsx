@@ -6,11 +6,12 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
-import { type ComponentType, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { type ComponentType, useContext, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
-import { SignupDialogInviteOthers } from './SignupDialogInviteOthers.tsx';
+import { SignupDialogDomainJoin } from './SignupDialogDomainJoin.tsx';
+import { useIntro } from 'component/onboarding/intro/IntroProvider.tsx';
 import { type SignupData, useSignup } from '../hooks/useSignup.ts';
 import { type SubmitSignupData, useSignupApi } from '../hooks/useSignupApi.ts';
 import useToast from 'hooks/useToast.tsx';
@@ -24,6 +25,8 @@ import {
     DEFAULT_PROJECT_ID,
     useDefaultProjectId,
 } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId.ts';
+import AccessContext from 'contexts/AccessContext.ts';
+import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus.ts';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -107,10 +110,12 @@ const StyledHeart = styled(Heart)(({ theme }) => ({
     },
 }));
 
-const StyledBody = styled(Box)(({ theme }) => ({
+const StyledBody = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'wide',
+})<{ wide?: boolean }>(({ theme, wide }) => ({
     display: 'flex',
     flexDirection: 'column',
-    padding: theme.spacing(4, 10),
+    padding: wide ? theme.spacing(4, 5) : theme.spacing(4, 10),
     [theme.breakpoints.down('sm')]: {
         padding: theme.spacing(2),
     },
@@ -118,7 +123,8 @@ const StyledBody = styled(Box)(({ theme }) => ({
     justifyContent: 'center',
     backgroundColor: theme.palette.background.paper,
     width: '100%',
-    maxWidth: theme.spacing(70),
+    maxWidth: wide ? theme.spacing(92) : theme.spacing(70),
+    boxSizing: wide ? 'border-box' : undefined,
     margin: 'auto',
 }));
 
@@ -181,15 +187,21 @@ export type SignupStepContent = ComponentType<{
     error?: string;
 }>;
 
+type SignupStepContext = {
+    signupData?: SignupData;
+    emailDomain?: string;
+};
+
 type SignupStep = {
     title:
         | 'Set password'
         | 'Set up your account'
-        | 'Invite your team'
+        | 'Let your team join'
         | `You're all set`;
     description?: string;
     content: SignupStepContent;
-    show?: (signupData?: SignupData) => boolean;
+    show?: (context: SignupStepContext) => boolean;
+    adminOnly?: boolean;
     isCustom?: boolean;
 };
 
@@ -198,8 +210,7 @@ const SIGNUP_STEPS: SignupStep[] = [
         title: 'Set password',
         description: `Create a secure password, and you're good to go!`,
         content: SignupDialogSetPassword,
-        show: (signupData?: SignupData) =>
-            Boolean(signupData?.shouldSetPassword),
+        show: ({ signupData }) => Boolean(signupData?.shouldSetPassword),
     },
     {
         title: 'Set up your account',
@@ -207,10 +218,13 @@ const SIGNUP_STEPS: SignupStep[] = [
         content: SignupDialogAccountDetails,
     },
     {
-        title: 'Invite your team',
+        title: 'Let your team join',
         description:
-            'Bring your teammates on board to collaborate on feature flags and evaluate Unleash together.\nYou can always invite more people later.',
-        content: SignupDialogInviteOthers,
+            'Make it easy for your teammates to find this instance and collaborate on feature flags with you.\nYou can change this later in user settings.',
+        content: SignupDialogDomainJoin,
+        adminOnly: true,
+        show: ({ signupData, emailDomain }) =>
+            Boolean(emailDomain) && !signupData?.companyName,
     },
     {
         title: `You're all set`,
@@ -219,6 +233,19 @@ const SIGNUP_STEPS: SignupStep[] = [
     },
 ];
 
+export const getSignupSteps = (context: SignupStepContext, isAdmin: boolean) =>
+    SIGNUP_STEPS.filter(({ show, adminOnly }) => {
+        if (adminOnly && !isAdmin) {
+            return false;
+        }
+
+        if (show && !show(context)) {
+            return false;
+        }
+
+        return true;
+    });
+
 export const SignupDialog = () => {
     const { trackEvent } = useEventTracker();
     const { setToastApiError } = useToast();
@@ -226,6 +253,12 @@ export const SignupDialog = () => {
     const { submitSignupData } = useSignupApi();
     const navigate = useNavigate();
     const defaultProjectId = useDefaultProjectId();
+    const { open: openIntro } = useIntro();
+    const { isAdmin } = useContext(AccessContext);
+    const { instanceStatus } = useInstanceStatus();
+    const emailDomain = instanceStatus?.ucaSignup
+        ? instanceStatus.emailDomain
+        : undefined;
 
     const [data, setData] = useState<SubmitSignupData>({
         password: '',
@@ -233,14 +266,14 @@ export const SignupDialog = () => {
         companyRole: '',
         companyName: '',
         companyIsNA: false,
+        hearAboutUs: '',
         productUpdatesEmailConsent: false,
-        inviteEmails: [],
     });
     const [step, setStep] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState('');
 
-    const steps = SIGNUP_STEPS.filter(({ show }) => !show || show(signupData));
+    const steps = getSignupSteps({ signupData, emailDomain }, isAdmin);
     const safeStep = Math.min(step, steps.length - 1);
     const currentStep = steps[safeStep];
 
@@ -271,9 +304,6 @@ export const SignupDialog = () => {
             props: {
                 eventType,
                 step: currentStep.title,
-                ...(eventType === 'invite' && {
-                    totalInvitedEmails: data.inviteEmails.length,
-                }),
             },
         });
 
@@ -287,6 +317,9 @@ export const SignupDialog = () => {
             await submitSignupData(data);
             refetch();
             navigate(`/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`);
+            if (eventType === 'tour') {
+                openIntro();
+            }
         } catch (e: unknown) {
             const error = formatUnknownError(e);
             setToastApiError(error);
@@ -307,7 +340,7 @@ export const SignupDialog = () => {
                 />
                 <StyledHearts>
                     {Array.from({
-                        length: safeStep + 1 + data.inviteEmails.length,
+                        length: safeStep + 1,
                     }).map((_, i) => (
                         <StyledHeartWrapper key={i}>
                             <StyledHeart
@@ -319,7 +352,7 @@ export const SignupDialog = () => {
                     ))}
                 </StyledHearts>
             </StyledAside>
-            <StyledBody>
+            <StyledBody wide={currentStep.isCustom}>
                 {!currentStep.isCustom && (
                     <StyledHeader data-public>
                         <StyledTitle>{currentStep.title}</StyledTitle>

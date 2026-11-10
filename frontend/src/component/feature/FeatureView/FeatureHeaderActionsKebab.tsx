@@ -13,7 +13,7 @@ import {
     MenuItem,
     Typography,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import {
     CREATE_FEATURE,
     DELETE_FEATURE,

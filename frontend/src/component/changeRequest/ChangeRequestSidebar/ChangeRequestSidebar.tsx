@@ -1,4 +1,4 @@
-import { useState, type FC } from 'react';
+import type { FC } from 'react';
 import { Box, Button, styled, Typography } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -11,9 +11,10 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { EnvironmentChangeRequest } from './EnvironmentChangeRequest/EnvironmentChangeRequest.tsx';
 import { ReviewChangesHeader } from './ReviewChangesHeader/ReviewChangesHeader.tsx';
-import { ChangeRequestPlausibleProvider } from '../ChangeRequestContext.tsx';
 import { refreshFeatureChangeRequests } from 'utils/refreshAllPendingChangeRequests.ts';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam.ts';
+import { useNavigate } from 'react-router';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IChangeRequestSidebarProps {
     open: boolean;
@@ -81,13 +82,12 @@ export const ChangeRequestSidebar: FC<IChangeRequestSidebarProps> = ({
     const featureName = useOptionalPathParam('featureId');
     const { discardDraft } = useChangeRequestApi();
     const { setToastApiError } = useToast();
-    const [
-        changeRequestChangesWillOverwrite,
-        setChangeRequestChangesWillOverwrite,
-    ] = useState(false);
+    const navigate = useNavigate();
+    const submitRedirect = useUiFlag('changeRequestSubmitRedirect');
 
     const onReview = async (
         changeState: (project: string) => Promise<void>,
+        changeRequestId: number,
     ) => {
         try {
             await changeState(project);
@@ -98,6 +98,11 @@ export const ChangeRequestSidebar: FC<IChangeRequestSidebarProps> = ({
                     : Promise.resolve(),
             ]);
             onClose();
+            if (submitRedirect) {
+                navigate(
+                    `/projects/${project}/change-requests/${changeRequestId}`,
+                );
+            }
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -123,7 +128,7 @@ export const ChangeRequestSidebar: FC<IChangeRequestSidebarProps> = ({
             <SidebarModal open={open} onClose={onClose} label='Review changes'>
                 <StyledPageContent
                     disableBorder={true}
-                    header={<PageHeader titleElement='Review your changes' />}
+                    header={<PageHeader heading='Review your changes' />}
                 >
                     There are no changes to review.
                     {/* FIXME: empty state */}
@@ -140,29 +145,21 @@ export const ChangeRequestSidebar: FC<IChangeRequestSidebarProps> = ({
                 header={<ReviewChangesHeader />}
             >
                 {data?.map((environmentChangeRequest) => (
-                    <ChangeRequestPlausibleProvider
+                    <EnvironmentChangeRequest
                         key={environmentChangeRequest.id}
-                        value={{
-                            willOverwriteStrategyChanges:
-                                changeRequestChangesWillOverwrite,
-                            registerWillOverwriteStrategyChanges: () =>
-                                setChangeRequestChangesWillOverwrite(true),
-                        }}
+                        environmentChangeRequest={environmentChangeRequest}
+                        onClose={onClose}
+                        onReview={(changeState) =>
+                            onReview(changeState, environmentChangeRequest.id)
+                        }
+                        onDiscard={onDiscard}
                     >
-                        <EnvironmentChangeRequest
-                            key={environmentChangeRequest.id}
-                            environmentChangeRequest={environmentChangeRequest}
-                            onClose={onClose}
-                            onReview={onReview}
-                            onDiscard={onDiscard}
-                        >
-                            <ChangeRequest
-                                changeRequest={environmentChangeRequest}
-                                onNavigate={onClose}
-                                onRefetch={refetchChangeRequest}
-                            />
-                        </EnvironmentChangeRequest>
-                    </ChangeRequestPlausibleProvider>
+                        <ChangeRequest
+                            changeRequest={environmentChangeRequest}
+                            onNavigate={onClose}
+                            onRefetch={refetchChangeRequest}
+                        />
+                    </EnvironmentChangeRequest>
                 ))}
             </StyledPageContent>
         </SidebarModal>

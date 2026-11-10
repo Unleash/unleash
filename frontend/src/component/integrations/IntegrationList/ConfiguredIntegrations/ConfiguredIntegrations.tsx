@@ -8,6 +8,8 @@ import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSign
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import { formatIntegrationEditPath } from 'component/integrations/integrationPaths';
 
 const StyledConfiguredSection = styled('section')(({ theme }) => ({
     display: 'flex',
@@ -30,6 +32,14 @@ export const ConfiguredIntegrations: FC<ConfiguredIntegrationsProps> = ({
     const { signalEndpoints } = useSignalEndpoints();
     const signalsEnabled = useUiFlag('signals');
     const { isEnterprise } = useUiConfig();
+    // Set when this list is rendered inside a project's settings.
+    const projectId = useOptionalPathParam('projectId');
+
+    const showSignalsCard =
+        !projectId &&
+        isEnterprise() &&
+        signalsEnabled &&
+        signalEndpoints.length > 0;
 
     const ref = useLoading(loading || false);
 
@@ -45,8 +55,9 @@ export const ConfiguredIntegrations: FC<ConfiguredIntegrationsProps> = ({
                         color: 'text.secondary',
                     }}
                 >
-                    These are the integrations that are currently configured for
-                    your Unleash instance.
+                    {projectId
+                        ? 'These integrations only receive events from this project.'
+                        : 'These are the integrations that are currently configured for your Unleash instance.'}
                 </Typography>
             </div>
             <StyledCardsGrid ref={ref}>
@@ -66,18 +77,14 @@ export const ConfiguredIntegrations: FC<ConfiguredIntegrationsProps> = ({
                                 title={providerConfig?.displayName || provider}
                                 isEnabled={enabled}
                                 description={description || ''}
-                                link={`/integrations/edit/${id}`}
+                                link={formatIntegrationEditPath(id, projectId)}
                                 configureActionText='Open'
                                 deprecated={providerConfig?.deprecated}
                             />
                         );
                     })}
                 <ConditionallyRender
-                    condition={
-                        isEnterprise() &&
-                        signalsEnabled &&
-                        signalEndpoints.length > 0
-                    }
+                    condition={showSignalsCard}
                     show={
                         <IntegrationCard
                             variant='stacked'

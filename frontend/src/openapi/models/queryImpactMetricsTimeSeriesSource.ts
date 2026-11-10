@@ -7,7 +7,6 @@
 export type QueryImpactMetricsTimeSeriesSource =
     (typeof QueryImpactMetricsTimeSeriesSource)[keyof typeof QueryImpactMetricsTimeSeriesSource];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const QueryImpactMetricsTimeSeriesSource = {
     internal: 'internal',
     external: 'external',

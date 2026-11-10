@@ -260,3 +260,33 @@ describe('SlackAppAddon', () => {
         });
     });
 });
+
+describe('SlackAppAddon definition', () => {
+    const addonWithFlag = (enabled: boolean) =>
+        new SlackAppAddon({
+            ...ARGS,
+            flagResolver: {
+                isEnabled: () => enabled,
+            } as unknown as IFlagResolver,
+        });
+
+    it('should offer the paste-the-token installation while slackAppAuthV2 is off', () => {
+        const { definition } = addonWithFlag(false);
+
+        expect(definition).toMatchObject({
+            installation: {
+                url: 'https://app-for-slack.getunleash.io/install',
+            },
+        });
+        expect(definition.serverInstallation).toBeUndefined();
+    });
+
+    it('should offer Install & connect instead while slackAppAuthV2 is on', () => {
+        const { definition } = addonWithFlag(true);
+
+        expect(definition).toMatchObject({
+            serverInstallation: { path: 'slack-app/install' },
+        });
+        expect(definition.installation).toBeUndefined();
+    });
+});

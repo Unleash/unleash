@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { RequestsPerSecondSchemaData } from './requestsPerSecondSchemaData';
-import type { RequestsPerSecondSchemaStatus } from './requestsPerSecondSchemaStatus';
+import type { RequestsPerSecondSchemaData } from './requestsPerSecondSchemaData.ts';
+import type { RequestsPerSecondSchemaStatus } from './requestsPerSecondSchemaStatus.ts';
 
 /**
  * Statistics for usage of Unleash, formatted so it can easily be used in a graph

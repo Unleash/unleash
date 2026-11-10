@@ -15,10 +15,11 @@ import { CopyStrategyIconMenu } from './StrategyItem/CopyStrategyIconMenu/CopySt
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import Edit from '@mui/icons-material/Edit';
 import MenuStrategyRemove from './StrategyItem/MenuStrategyRemove/MenuStrategyRemove.tsx';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { UPDATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import { StrategyDraggableItem } from './StrategyDraggableItem.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker.ts';
+import { useTracking } from 'hooks/useTracking.ts';
+import { editStrategyTracking } from 'component/feature/FeatureStrategy/strategyActionsTracking';
 
 type EditControlsProps = {
     projectId: string;
@@ -39,7 +40,9 @@ const EditControls = ({
     otherEnvironments,
     scope,
 }: EditControlsProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const trackEditStrategy = useTracking(
+        editStrategyTracking({ strategyScope: scope }),
+    );
     return (
         <>
             <PermissionIconButton
@@ -49,11 +52,7 @@ const EditControls = ({
                 component={Link}
                 nativeButton={false}
                 onClick={() => {
-                    if (scope === 'milestone') {
-                        trackEvent('edit-milestone-strategy', {
-                            props: { eventType: 'clicked edit button' },
-                        });
-                    }
+                    trackEditStrategy('opened');
                 }}
                 to={editStrategyPath}
                 tooltipProps={{

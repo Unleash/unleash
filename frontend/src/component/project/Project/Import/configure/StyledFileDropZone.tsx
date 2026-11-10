@@ -3,7 +3,7 @@ import { FileDropZone } from './FileDropZone.tsx';
 
 export const StyledFileDropZone = styled(FileDropZone)(({ theme }) => ({
     padding: theme.spacing(4, 2, 2, 2),
-    border: `1px dashed ${theme.palette.secondary.border}`,
+    border: `1px dashed ${theme.palette.primary.containerBorder}`,
     borderRadius: theme.shape.borderRadiusLarge,
     display: 'flex',
     flexDirection: 'column',

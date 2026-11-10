@@ -68,7 +68,7 @@ test('createFeatureStrategy with parameters', () => {
         "parameters": {
           "b": "false",
           "groupId": "a",
-          "rollout": "50",
+          "rollout": "100",
           "s": "",
           "stickiness": "default",
         },

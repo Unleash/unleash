@@ -3,7 +3,6 @@ import type {
     IContextFieldDto,
     IContextFieldStore,
 } from './context-field-store-type.js';
-import NotFoundError from '../../error/notfound-error.js';
 
 export default class FakeContextFieldStore implements IContextFieldStore {
     count(): Promise<number> {
@@ -65,14 +64,8 @@ export default class FakeContextFieldStore implements IContextFieldStore {
         return this.contextFields.some((cF) => cF.name === key);
     }
 
-    async get(key: string): Promise<IContextField> {
-        const contextField = this.contextFields.find((cF) => cF.name === key);
-        if (contextField) {
-            return contextField;
-        }
-        throw new NotFoundError(
-            `Could not find contextField with name : ${key}`,
-        );
+    async get(key: string): Promise<IContextField | undefined> {
+        return this.contextFields.find((cF) => cF.name === key);
     }
 
     async getAll(): Promise<IContextField[]> {

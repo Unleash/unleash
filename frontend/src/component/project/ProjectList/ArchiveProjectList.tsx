@@ -1,5 +1,5 @@
 import { type FC, useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -17,6 +17,7 @@ import { ReviveProjectDialog } from './ReviveProjectDialog/ReviveProjectDialog.t
 import { DeleteProjectDialogue } from '../Project/DeleteProject/DeleteProjectDialogue.tsx';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { safeRegExp } from '@server/util/escape-regex';
+import { deleteProjectTracking } from 'component/project/projectTracking';
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
     maxWidth: '500px',
@@ -159,6 +160,7 @@ export const ArchiveProjectList: FC = () => {
                 projectId={deleteProject.id || ''}
                 projectName={deleteProject.name || ''}
                 open={deleteProject.isOpen}
+                tracking={deleteProjectTracking}
                 onClose={() => {
                     setDeleteProject((state) => ({ ...state, isOpen: false }));
                 }}

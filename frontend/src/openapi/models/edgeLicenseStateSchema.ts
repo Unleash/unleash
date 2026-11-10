@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { EdgeLicenseStateSchemaEdgeLicenseState } from './edgeLicenseStateSchemaEdgeLicenseState';
+import type { EdgeLicenseStateSchemaEdgeLicenseState } from './edgeLicenseStateSchemaEdgeLicenseState.ts';
 
 /**
  * A model representing the Edge license state response.

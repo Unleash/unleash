@@ -1,30 +1,31 @@
 import Add from '@mui/icons-material/Add';
 import { Button, Chip, Stack, styled } from '@mui/material';
 import Input from 'component/common/Input/Input';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 
 const StyledItemListAdd = styled('div')(({ theme }) => ({
     display: 'flex',
+    alignItems: 'flex-end',
+    gap: theme.spacing(1),
     marginBottom: theme.spacing(1),
-    '& > div:first-of-type': {
-        width: '100%',
-        marginRight: theme.spacing(1),
-        '& > div:first-of-type': {
-            width: '100%',
-        },
-    },
 }));
+
+const StyledInputContainer = styled('div')({
+    flex: 1,
+});
 
 interface IItemListProps {
     label: string;
     value: string[];
     onChange: React.Dispatch<React.SetStateAction<string[]>>;
+    description?: ReactNode;
 }
 
 export const ItemList = ({
     label,
     value,
     onChange,
+    description,
     ...props
 }: IItemListProps) => {
     const [inputValue, setInputValue] = useState('');
@@ -41,16 +42,20 @@ export const ItemList = ({
     return (
         <div {...props}>
             <StyledItemListAdd>
-                <Input
-                    label={label}
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyPress={(e) => {
-                        if (e.key === 'Enter') {
-                            addItem();
-                        }
-                    }}
-                />
+                <StyledInputContainer>
+                    <Input
+                        fullWidth
+                        label={label}
+                        value={inputValue}
+                        description={description}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        onKeyPress={(e) => {
+                            if (e.key === 'Enter') {
+                                addItem();
+                            }
+                        }}
+                    />
+                </StyledInputContainer>
                 <Button
                     startIcon={<Add />}
                     onClick={addItem}

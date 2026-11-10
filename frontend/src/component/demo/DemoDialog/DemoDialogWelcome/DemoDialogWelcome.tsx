@@ -3,14 +3,14 @@ import demoQR from 'assets/img/demo-qr.svg';
 import { formatAssetPath } from 'utils/formatPath';
 import Launch from '@mui/icons-material/Launch';
 import { DemoDialog } from '../DemoDialog.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 
 const StyledDemoPane = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.neutral.container,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(2),
     margin: theme.spacing(2, 0),
@@ -67,7 +67,7 @@ export const DemoDialogWelcome = ({
     onStart,
 }: IDemoDialogWelcomeProps) => {
     const interactiveDemoKillSwitch = useUiFlag('interactiveDemoKillSwitch');
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
 
     return (
         <DemoDialog open={open} onClose={onClose} preventCloseOnBackdropClick>

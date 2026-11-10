@@ -6,38 +6,38 @@ npm install @unleash/proxy-client-svelte
 2\. Initialize Unleash
 ```svelte
 <script>
-	import { FlagProvider } from '@unleash/proxy-client-svelte';
-	const { children } = $props();
+    import { FlagProvider } from '@unleash/proxy-client-svelte';
+    const { children } = $props();
 
-	const config = {
+    const config = {
         url: '<YOUR_API_URL>',
         clientKey: '<YOUR_API_TOKEN>', // in production use environment variable
         appName: 'unleash-onboarding-svelte',
-	};
+    };
 </script>
 
 <div class="app">
-	<FlagProvider {config}>
-		<main>
-			{@render children()}
-		</main>
-	</FlagProvider>
+    <FlagProvider {config}>
+        <main>
+            {@render children()}
+        </main>
+    </FlagProvider>
 </div>
 ```
 
 3\. Check feature flag status
 ```svelte
 <script lang="ts">
-	import { useFlag } from '@unleash/proxy-client-svelte';
-	const enabled = useFlag('<YOUR_FLAG>');
+    import { useFlag } from '@unleash/proxy-client-svelte';
+    const enabled = useFlag('<YOUR_FLAG>');
 </script>
 
 <section>
-	{#if $enabled}
-		<p><YOUR_FLAG> is enabled!</p>
-	{:else}
-		<p><YOUR_FLAG> is disabled!</p>
-	{/if}
+    {#if $enabled}
+        <p><YOUR_FLAG> is enabled!</p>
+    {:else}
+        <p><YOUR_FLAG> is disabled!</p>
+    {/if}
 </section>
 ```
 ---
@@ -58,15 +58,15 @@ const config = {
 
 ```svelte
 <script lang="ts">
-	import { useFlag } from '@unleash/proxy-client-svelte';
-	const enabled = useFlag('<YOUR_FLAG>');
+    import { useFlag } from '@unleash/proxy-client-svelte';
+    const enabled = useFlag('<YOUR_FLAG>');
 </script>
 
 <section>
-	{#if $enabled}
-		<p><YOUR_FLAG> is enabled!</p>
-	{:else}
-		<p><YOUR_FLAG> is disabled!</p>
-	{/if}
+    {#if $enabled}
+        <p><YOUR_FLAG> is enabled!</p>
+    {:else}
+        <p><YOUR_FLAG> is disabled!</p>
+    {/if}
 </section>
 ```

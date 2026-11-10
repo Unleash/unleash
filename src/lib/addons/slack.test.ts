@@ -300,8 +300,9 @@ describe('Slack integration', () => {
 
         await addon.handleEvent(event, parameters, INTEGRATION_ID);
 
-        const req1 = bodies[0];
-        const req2 = bodies[1];
+        const [req1, req2] = bodies.sort((a, b) =>
+            a.channel.localeCompare(b.channel),
+        );
 
         expect(bodies).toHaveLength(2);
         expect(req1.channel).toBe('#another-channel-1');

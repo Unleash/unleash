@@ -2,7 +2,6 @@ import type { FC } from 'react';
 import {
     Box,
     IconButton,
-    styled,
     type Theme,
     Typography,
     useTheme,
@@ -88,7 +87,7 @@ export const ChangeRequestReviewStatus: FC<
                 sx={{
                     backgroundColor:
                         changeRequest.state === 'In review'
-                            ? theme.palette.warning.light
+                            ? theme.palette.warning.container
                             : 'initial',
                 }}
                 border={resolveBorder(changeRequest.state, theme)}
@@ -149,7 +148,9 @@ const Approved = () => {
             <StyledFlexAlignCenterBox>
                 <StyledSuccessIcon />
                 <Box>
-                    <StyledReviewTitle color={theme.palette.success.dark}>
+                    <StyledReviewTitle
+                        color={theme.palette.success.onContainer}
+                    >
                         Changes approved
                     </StyledReviewTitle>
                     <Typography>
@@ -163,7 +164,9 @@ const Approved = () => {
             <StyledFlexAlignCenterBox>
                 <StyledSuccessIcon />
                 <Box>
-                    <StyledReviewTitle color={theme.palette.success.dark}>
+                    <StyledReviewTitle
+                        color={theme.palette.success.onContainer}
+                    >
                         Changes are ready to be applied
                     </StyledReviewTitle>
                 </Box>
@@ -184,7 +187,9 @@ const ReviewRequired = ({ minApprovals }: IReviewRequiredProps) => {
             <StyledFlexAlignCenterBox>
                 <StyledWarningIcon />
                 <Box>
-                    <StyledReviewTitle color={theme.palette.warning.dark}>
+                    <StyledReviewTitle
+                        color={theme.palette.warning.onContainer}
+                    >
                         Review required
                     </StyledReviewTitle>
                     <Typography>
@@ -198,7 +203,7 @@ const ReviewRequired = ({ minApprovals }: IReviewRequiredProps) => {
 
             <StyledFlexAlignCenterBox>
                 <StyledWarningIcon />
-                <StyledReviewTitle color={theme.palette.warning.dark}>
+                <StyledReviewTitle color={theme.palette.warning.onContainer}>
                     Apply changes is blocked
                 </StyledReviewTitle>
             </StyledFlexAlignCenterBox>
@@ -222,11 +227,6 @@ const Applied = () => {
         </>
     );
 };
-
-const StyledIconButton = styled(IconButton)({
-    maxWidth: '32px',
-    maxHeight: '32px',
-});
 
 interface IScheduledProps {
     schedule?: ChangeRequestSchedule;
@@ -257,7 +257,9 @@ const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
             <StyledFlexAlignCenterBox>
                 <StyledSuccessIcon />
                 <Box>
-                    <StyledReviewTitle color={theme.palette.success.dark}>
+                    <StyledReviewTitle
+                        color={theme.palette.success.onContainer}
+                    >
                         Changes approved
                     </StyledReviewTitle>
                     <Typography>
@@ -270,9 +272,9 @@ const Scheduled = ({ schedule, onEditClick }: IScheduledProps) => {
 
             <StyledScheduledBox>
                 {scheduleStatusBox}
-                <StyledIconButton onClick={onEditClick}>
+                <IconButton onClick={onEditClick} aria-label='edit schedule'>
                     <StyledEditIcon />
-                </StyledIconButton>
+                </IconButton>
             </StyledScheduledBox>
         </>
     );
@@ -354,7 +356,7 @@ const ScheduledPending = ({
         <StyledFlexAlignCenterBox>
             <StyledScheduledIcon />
             <Box>
-                <StyledReviewTitle color={theme.palette.warning.dark}>
+                <StyledReviewTitle color={theme.palette.warning.onContainer}>
                     Changes are scheduled to be applied on: {scheduledTime}
                 </StyledReviewTitle>
                 <Typography>Your timezone is {timezone}</Typography>

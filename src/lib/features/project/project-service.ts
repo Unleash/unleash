@@ -79,13 +79,16 @@ import type {
     IProjectQuery,
     IProjectsQuery,
 } from './project-store-type.js';
-import type { IProjectFlagCreatorsReadModel } from './project-flag-creators-read-model.type.js';
+import type {
+    FlagCreatorsSearchResult,
+    IProjectFlagCreatorsReadModel,
+} from './project-flag-creators-read-model.type.js';
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error.js';
 import type EventEmitter from 'events';
 import type { ApiTokenService } from '../../services/index.js';
-import type { ProjectForUi } from './project-read-model-type.js';
+import type { ProjectCore, ProjectForUi } from './project-read-model-type.js';
 import { canGrantProjectRole } from './can-grant-project-role.js';
-import { batchExecute } from '../../util/index.js';
+import { FOREIGN_KEY_VIOLATION } from '../../error/index.js';
 import metricsHelper from '../../util/metrics-helper.js';
 import { FUNCTION_TIME } from '../../metric-events.js';
 import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
@@ -240,58 +243,66 @@ export default class ProjectService {
         query?: IProjectQuery & IProjectsQuery,
         userId?: number,
     ): Promise<ProjectForUi[]> {
-        const stopTimer = this.timer('oldProjectListFields');
         const allProjects = await this.projectReadModel.getProjectsForAdminUi(
             query,
             userId,
         );
 
-        let projects = allProjects;
-        if (userId) {
-            const projectAccess =
-                await this.privateProjectChecker.getUserAccessibleProjects(
-                    userId,
-                );
+        const projects = await this.filterAccessibleProjects(
+            allProjects,
+            userId,
+        );
 
-            if (projectAccess.mode !== 'all') {
-                projects = allProjects.filter((project) =>
-                    projectAccess.projects.includes(project.id),
-                );
-            }
-        }
-        stopTimer();
-
-        if (this.flagResolver.isEnabled('newProjectList')) {
-            //TODO: update project-schema when removing this flag
-            const stopTimer = this.timer('newProjectListFields');
-            const projectIds = projects.map((p) => p.id);
-            const [onboardingStatuses, cleanupByProject] = await Promise.all([
-                this.onboardingReadModel
-                    .getOnboardingStatusesForProjects(projectIds)
-                    .catch(() => new Map<string, OnboardingStatus>()),
-                this.featureLifecycleReadModel
-                    .getStageCountByProject()
-                    .then((rows) => {
-                        const map = new Map<string, number>();
-                        for (const row of rows) {
-                            if (row.stage === 'completed') {
-                                map.set(row.project, row.count);
-                            }
+        const projectIds = projects.map((p) => p.id);
+        const [onboardingStatuses, cleanupByProject] = await Promise.all([
+            this.onboardingReadModel
+                .getOnboardingStatusesForProjects(projectIds)
+                .catch(() => new Map<string, OnboardingStatus>()),
+            this.featureLifecycleReadModel
+                .getStageCountByProject()
+                .then((rows) => {
+                    const map = new Map<string, number>();
+                    for (const row of rows) {
+                        if (row.stage === 'completed') {
+                            map.set(row.project, row.count);
                         }
-                        return map;
-                    })
-                    .catch(() => new Map<string, number>()),
-            ]);
+                    }
+                    return map;
+                })
+                .catch(() => new Map<string, number>()),
+        ]);
 
-            stopTimer();
-
-            for (const project of projects) {
-                project.onboardingStatus = onboardingStatuses.get(project.id);
-                project.cleanupCount = cleanupByProject.get(project.id);
-            }
+        for (const project of projects) {
+            project.onboardingStatus = onboardingStatuses.get(project.id);
+            project.cleanupCount = cleanupByProject.get(project.id);
         }
 
         return projects;
+    }
+
+    async getProjectsCore(
+        query?: IProjectQuery,
+        userId?: number,
+    ): Promise<ProjectCore[]> {
+        const allProjects = await this.projectReadModel.getProjectsCore(query);
+        return this.filterAccessibleProjects(allProjects, userId);
+    }
+
+    private async filterAccessibleProjects<T extends { id: string }>(
+        projects: T[],
+        userId?: number,
+    ): Promise<T[]> {
+        if (!userId) {
+            return projects;
+        }
+        const projectAccess =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+        if (projectAccess.mode === 'all') {
+            return projects;
+        }
+        return projects.filter((project) =>
+            projectAccess.projects.includes(project.id),
+        );
     }
 
     async addOwnersToProjects(
@@ -1094,6 +1105,18 @@ export default class ProjectService {
         return this.projectFlagCreatorsReadModel.getFlagCreators(projectId);
     }
 
+    async getFlagCreatorsAcrossProjects(
+        userId: number,
+        options: { query?: string; limit: number; offset: number },
+    ): Promise<FlagCreatorsSearchResult> {
+        const accessibleProjects =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+        return this.projectFlagCreatorsReadModel.getFlagCreatorsAcrossProjects(
+            accessibleProjects,
+            options,
+        );
+    }
+
     async changeRole(
         projectId: string,
         roleId: number,
@@ -1188,14 +1211,29 @@ export default class ProjectService {
     async statusJob(): Promise<void> {
         const projects = await this.projectStore.getAll();
 
-        // run one project status update at a time every
-        void batchExecute(projects, 1, 30_000, async (project) => {
-            const statusUpdate = await this.getStatusUpdates(project.id);
-            await this.projectStatsStore.updateProjectStats(
-                statusUpdate.projectId,
-                statusUpdate.updates,
-            );
-        });
+        // One project at a time, awaited, so a failure is caught here instead
+        // of escaping as an unhandled rejection.
+        for (const { id } of projects) {
+            try {
+                const { updates } = await this.getStatusUpdates(id);
+                await this.projectStatsStore.updateProjectStats(id, updates);
+            } catch (error) {
+                if (
+                    error?.code === FOREIGN_KEY_VIOLATION &&
+                    error?.constraint === 'project_stats_project_fkey'
+                ) {
+                    // Deleted after the job listed it.
+                    this.logger.info(
+                        `Skipping project stats for deleted project ${id}`,
+                    );
+                } else {
+                    this.logger.error(
+                        `Failed to update project stats for project ${id}`,
+                        error,
+                    );
+                }
+            }
+        }
     }
 
     async getStatusUpdates(projectId: string): Promise<ICalculateStatus> {

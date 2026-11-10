@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { GroupUserModelSchema } from './groupUserModelSchema';
+import type { GroupUserModelSchema } from './groupUserModelSchema.ts';
 
 /**
  * Data about a group including their project role
@@ -40,7 +40,10 @@ export interface GroupWithProjectRoleSchema {
      * @minimum 0
      */
     roleId?: number;
-    /** A list of roles this user has in the given project */
+    /**
+     * A list of roles this user has in the given project
+     * @items.minimum 0
+     */
     roles?: number[];
     /**
      * A role id that is used as the root role for all users in this group. This can be either the id of the Viewer, Editor or Admin role.

@@ -1,6 +1,6 @@
 import { Box, Divider, styled, Typography, useTheme } from '@mui/material';
 import { ArcherContainer, ArcherElement } from 'react-archer';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import type React from 'react';
 import { type FC, useLayoutEffect, useRef, useState } from 'react';
 import type {
@@ -14,7 +14,7 @@ import CloudCircle from '@mui/icons-material/CloudCircle';
 import Flag from '@mui/icons-material/Flag';
 import WarningAmberRounded from '@mui/icons-material/WarningAmberRounded';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { getApplicationIssues } from './ApplicationIssues/ApplicationIssues.tsx';
 
 const StyledTable = styled('table')(({ theme }) => ({
@@ -39,8 +39,8 @@ const StyledApplicationBox = styled(Box)<{
 }>(({ theme, mode }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
     border: '1px solid',
-    borderColor: theme.palette[mode].border,
-    backgroundColor: theme.palette[mode].light,
+    borderColor: theme.palette[mode].containerBorder,
+    backgroundColor: theme.palette[mode].container,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -53,9 +53,13 @@ const StyledEnvironmentBox = styled(Box)<{
     borderRadius: theme.shape.borderRadiusMedium,
     border: '1px solid',
     borderColor:
-        theme.palette[mode === 'success' ? 'secondary' : 'warning'].border,
+        mode === 'success'
+            ? theme.palette.primary.containerBorder
+            : theme.palette.warning.containerBorder,
     backgroundColor:
-        theme.palette[mode === 'success' ? 'secondary' : 'warning'].light,
+        mode === 'success'
+            ? theme.palette.primary.container
+            : theme.palette.warning.container,
     display: 'inline-block',
     padding: theme.spacing(1.5, 1.5, 1.5, 1.5),
     zIndex: 1,
@@ -85,7 +89,7 @@ const StyledStatus = styled(Typography)<{
 }>(({ theme, mode }) => ({
     gap: theme.spacing(1),
     fontSize: theme.fontSizes.smallBody,
-    color: theme.palette[mode].dark,
+    color: theme.palette[mode].onContainer,
     display: 'flex',
     alignItems: 'center',
 }));
@@ -93,7 +97,7 @@ const StyledStatus = styled(Typography)<{
 const StyledIconRow = styled(Box)(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(3),
-    color: theme.palette.secondary.main,
+    color: theme.palette.primary.main,
     paddingTop: theme.spacing(2),
 }));
 
@@ -169,8 +173,8 @@ const ApplicationCounters = ({
     );
 };
 
-const useTracking = () => {
-    const { trackEvent } = usePlausibleTracker();
+const useApplicationChartTracking = () => {
+    const { trackEvent } = useEventTracker();
     return () => {
         trackEvent('sdk-reporting', {
             props: {
@@ -191,7 +195,7 @@ const getEnvironmentMode = (
 };
 
 export const ApplicationChart = ({ data }: IApplicationChartProps) => {
-    const trackClick = useTracking();
+    const trackClick = useApplicationChartTracking();
     const applicationName = useRequiredPathParam('name');
     const { elementRef, width } = useElementWidth();
     const navigate = useNavigate();
@@ -202,7 +206,7 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
     return (
         <Box sx={{ width }}>
             <ArcherContainer
-                strokeColor={theme.palette.secondary.border}
+                strokeColor={theme.palette.primary.containerBorder}
                 endMarker={false}
             >
                 <StyleApplicationContainer>
@@ -216,8 +220,8 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                 strokeColor:
                                     getEnvironmentMode(environment) ===
                                     'success'
-                                        ? theme.palette.secondary.border
-                                        : theme.palette.warning.border,
+                                        ? theme.palette.primary.containerBorder
+                                        : theme.palette.warning.containerBorder,
                             },
                         }))}
                     >

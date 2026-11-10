@@ -3,7 +3,7 @@ import ChevronRight from '@mui/icons-material/ChevronRight';
 import { Box, Typography, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { HorizontalDistributionChart } from '../../components/HorizontalDistributionChart/HorizontalDistributionChart.tsx';
 import { UserDistributionInfo } from './UserDistributionInfo.tsx';
 
@@ -41,7 +41,7 @@ const StyledUserDistributionContainer = styled(Box)(({ theme }) => ({
 const StyledUserCount = styled(Typography)(({ theme }) => ({
     color: theme.palette.primary.contrastText,
     fontWeight: 'bold',
-    fontSize: theme.fontSizes.extraLargeHeader,
+    fontSize: theme.typography.display.fontSize,
     margin: 0,
     padding: 0,
 }));

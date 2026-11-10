@@ -3,13 +3,13 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema';
-import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema';
-import type { ChangeRequestSchemaOneOfCreatedBy } from './changeRequestSchemaOneOfCreatedBy';
-import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema';
-import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema';
-import type { ChangeRequestSchemaOneOfState } from './changeRequestSchemaOneOfState';
-import type { ChangeRequestSchemaOneOfStateTimestamps } from './changeRequestSchemaOneOfStateTimestamps';
+import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema.ts';
+import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema.ts';
+import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema.ts';
+import type { ChangeRequestSchemaOneOfCreatedBy } from './changeRequestSchemaOneOfCreatedBy.ts';
+import type { ChangeRequestSchemaOneOfState } from './changeRequestSchemaOneOfState.ts';
+import type { ChangeRequestSchemaOneOfStateTimestamps } from './changeRequestSchemaOneOfStateTimestamps.ts';
+import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema.ts';
 
 export type ChangeRequestSchemaOneOf = {
     /** A list of approvals that this change request has received. */

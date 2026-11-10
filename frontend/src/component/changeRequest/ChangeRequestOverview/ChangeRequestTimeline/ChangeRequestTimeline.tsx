@@ -59,7 +59,7 @@ const StyledSubtitle = styled(Box)(({ theme }) => ({
 }));
 
 const StyledTimeline = styled(Timeline)(() => ({
-    [`& .${timelineItemClasses.root}:before`]: {
+    [`&& .${timelineItemClasses.root}::before`]: {
         flex: 0,
         padding: 0,
     },

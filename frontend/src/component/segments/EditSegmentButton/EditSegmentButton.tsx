@@ -5,7 +5,7 @@ import {
     UPDATE_SEGMENT,
     UPDATE_PROJECT_SEGMENT,
 } from 'component/providers/AccessProvider/permissions';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
 interface IEditSegmentButtonProps {
@@ -28,7 +28,7 @@ export const EditSegmentButton = ({ segment }: IEditSegmentButtonProps) => {
                 }
             }}
             permission={[UPDATE_SEGMENT, UPDATE_PROJECT_SEGMENT]}
-            projectId={projectId}
+            projectId={segment.project}
             tooltipProps={{ title: 'Edit segment' }}
         >
             <Edit data-loading />

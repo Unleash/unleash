@@ -5,8 +5,9 @@ const defaultState = {
     eventTimeline: false,
 };
 
-export type HighlightKey = keyof typeof defaultState;
-type HighlightState = typeof defaultState;
+type StaticHighlightKey = keyof typeof defaultState;
+export type HighlightKey = StaticHighlightKey | `access-request-${string}`;
+type HighlightState = Partial<Record<HighlightKey, boolean>>;
 
 export interface IHighlightContext {
     isHighlighted: (key: HighlightKey) => boolean;
@@ -20,7 +21,7 @@ interface IHighlightProviderProps {
 export const HighlightProvider = ({ children }: IHighlightProviderProps) => {
     const [state, setState] = useState<HighlightState>(defaultState);
 
-    const isHighlighted = (key: HighlightKey) => state[key];
+    const isHighlighted = (key: HighlightKey) => Boolean(state[key]);
 
     const setHighlight = (key: HighlightKey, value: boolean) => {
         setState((prevState) => ({ ...prevState, [key]: value }));

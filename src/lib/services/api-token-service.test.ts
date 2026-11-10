@@ -1,7 +1,6 @@
 import { createTestConfig } from '../../test/config/test-config.js';
 import {
     type IUnleashConfig,
-    type IUnleashOptions,
     type IUser,
     SYSTEM_USER_ID,
 } from '../types/index.js';
@@ -19,7 +18,7 @@ import {
     API_TOKEN_DELETED,
     API_TOKEN_UPDATED,
 } from '../events/index.js';
-import { vi } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 
 test('Should init api token', async () => {
     const token = {
@@ -33,11 +32,6 @@ test('Should init api token', async () => {
     const config: IUnleashConfig = createTestConfig({
         authentication: {
             initApiTokens: [token],
-        },
-        experimental: {
-            flags: {
-                useMemoizedActiveTokens: true,
-            },
         },
     });
     const { apiTokenService, apiTokenStore } =
@@ -163,8 +157,8 @@ describe('API token getTokenWithCache', () => {
         expiresAt: undefined,
     };
 
-    const setup = (options?: IUnleashOptions) => {
-        const config: IUnleashConfig = createTestConfig(options);
+    const setup = () => {
+        const config: IUnleashConfig = createTestConfig();
         const { apiTokenService, apiTokenStore } =
             createFakeApiTokenService(config);
         return {

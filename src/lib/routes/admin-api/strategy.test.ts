@@ -76,6 +76,32 @@ test('create a new strategy with empty parameters', async () => {
         .expect(201);
 });
 
+test('does not allow duplicate parameter names when creating a strategy', async () => {
+    const { request, base, strategyStore } = await getSetup();
+    const name = 'DuplicateParametersStrategy';
+
+    const { body } = await request
+        .post(`${base}/api/admin/strategies`)
+        .send({
+            name,
+            parameters: [
+                {
+                    name: 'twin',
+                    type: 'string',
+                },
+                {
+                    name: 'twin',
+                    type: 'number',
+                },
+            ],
+        })
+        .expect(400);
+
+    expect(body.name).toBe('BadDataError');
+    expect(body.details[0].message).toContain('contains a duplicate value');
+    expect(await strategyStore.exists(name)).toBe(false);
+});
+
 test('creating strategies is forbidden when disabled by configuration', async () => {
     process.env.UNLEASH_DISABLE_CUSTOM_STRATEGY_CREATION = 'true';
     const { request, base } = await getSetup();
@@ -109,6 +135,44 @@ test('update strategy', async () => {
         .put(`${base}/api/admin/strategies/${name}`)
         .send({ name, parameters: [], description: 'added' })
         .expect(200);
+});
+
+test('does not allow duplicate parameter names when updating a strategy', async () => {
+    const { request, base, strategyStore } = await getSetup();
+    const name = 'DuplicateParametersUpdateStrategy';
+    const originalParameters = [
+        {
+            name: 'region',
+            type: 'string' as const,
+        },
+    ];
+
+    await strategyStore.createStrategy({
+        name,
+        parameters: originalParameters,
+    });
+
+    const { body } = await request
+        .put(`${base}/api/admin/strategies/${name}`)
+        .send({
+            parameters: [
+                {
+                    name: 'quota',
+                    type: 'number',
+                },
+                {
+                    name: 'quota',
+                    type: 'string',
+                },
+            ],
+        })
+        .expect(400);
+
+    expect(body.name).toBe('BadDataError');
+    expect(body.details[0].message).toContain('contains a duplicate value');
+
+    const storedStrategy = await strategyStore.get(name);
+    expect(storedStrategy?.parameters).toEqual(originalParameters);
 });
 
 test('updating strategies is forbidden when disabled by configuration', async () => {

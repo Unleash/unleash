@@ -43,7 +43,7 @@ export const featureSearchQueryParameters = [
                 '^(IS|IS_NOT|IS_ANY_OF|IS_NONE_OF):(.*?)(,([a-zA-Z0-9_]+))*$',
         },
         description:
-            'The lifecycle stage of the feature. The stagee can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.',
+            'The lifecycle stage of the feature. The stage can be specified with an operator. The supported operators are IS, IS_NOT, IS_ANY_OF, IS_NONE_OF.',
         in: 'query',
     },
     {
@@ -160,13 +160,14 @@ export const featureSearchQueryParameters = [
     },
     {
         name: 'archived',
+        deprecated: true, // todo(v9): remove this parameter (deprecated since 8.0.1)
         schema: {
             type: 'string',
             example: 'IS:true',
             pattern: '^IS:(true|false)$',
         },
         description:
-            'Whether to get results for archived feature flags or active feature flags. If `IS:true`, Unleash will return only archived flags. If `IS:false`, it will return only active flags.',
+            'Deprecated: use the `lifecycle` parameter instead (`lifecycle=IS:archived` is equivalent to `archived=IS:true`). Whether to get results for archived feature flags or active feature flags. If `IS:true`, Unleash will return only archived flags, taking precedence over any `lifecycle` filter. If `IS:false`, it will return only active flags.',
         in: 'query',
     },
     {

@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src",
     "target": "esnext",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -11,7 +10,7 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "noImplicitAny": false, // we might want to change this to true
     "isolatedModules": true,
@@ -19,7 +18,8 @@
     "jsx": "react-jsx",
     "strict": true,
     "paths": {
-      "@server/*": ["./../../src/lib/*"]
+      "*": ["./src/*"],
+      "@server/*": ["../src/lib/*"]
     },
     "types": ["cypress", "node"]
   },

@@ -116,7 +116,6 @@ export default class TeamsAddon extends Addon {
             stateDetails: stateDetails.join('\n'),
             event: serializeDates(event),
             details: {
-                url,
                 body,
             },
         });

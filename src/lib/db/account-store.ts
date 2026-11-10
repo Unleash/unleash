@@ -6,6 +6,10 @@ import type { IUserLookup } from '../types/stores/user-store.js';
 import type { IAdminCount } from '../types/stores/account-store.js';
 import type { IAccountStore, MinimalUser } from '../types/index.js';
 import type { Db } from './db.js';
+import type {
+    AccountTokenReference,
+    AccountTokenWithVerifier,
+} from '../types/stores/account-store.js';
 
 const TABLE = 'users';
 
@@ -147,26 +151,70 @@ export class AccountStore implements IAccountStore {
         return rowToUser(row);
     }
 
-    async getAccountByPersonalAccessToken(secret: string): Promise<User> {
-        const row = await this.activeAccounts()
+    private getAccountByTokenQuery() {
+        return this.activeAccounts()
             .select(USER_COLUMNS.map((column) => `${TABLE}.${column}`))
             .leftJoin(
                 'personal_access_tokens',
                 'personal_access_tokens.user_id',
                 `${TABLE}.id`,
-            )
-            .where('secret', secret)
-            .andWhere('expires_at', '>', 'now()')
-            .first();
-        return rowToUser(row);
+            );
     }
 
-    async markSeenAt(secrets: string[]): Promise<void> {
+    async getAccountByPersonalAccessToken(
+        secret: string,
+    ): Promise<User | undefined> {
+        const row = await this.getAccountByTokenQuery()
+            .where('secret', secret)
+            .whereNull('selector')
+            .andWhere('expires_at', '>', 'now()')
+            .first();
+        return row ? rowToUser(row) : undefined;
+    }
+
+    async getAccountByTokenSelector(
+        selector: string,
+    ): Promise<AccountTokenWithVerifier | undefined> {
+        const row = await this.getAccountByTokenQuery()
+            .select('personal_access_tokens.verifier')
+            .where('selector', selector)
+            .andWhere('expires_at', '>', 'now()')
+            .first();
+        return row
+            ? { account: rowToUser(row), verifier: row.verifier }
+            : undefined;
+    }
+
+    async markSeenAt(tokens: AccountTokenReference[]): Promise<void> {
+        if (tokens.length === 0) {
+            return;
+        }
+
         const now = new Date();
+        const legacySecrets = tokens
+            .filter((token) => token.version === 'v1')
+            .map((token) => token.secret);
+        const selectors = tokens
+            .filter((token) => token.version === 'v2')
+            .map((token) => token.selector);
+
+        if (legacySecrets.length === 0 && selectors.length === 0) {
+            return;
+        }
         try {
-            await this.db('personal_access_tokens')
-                .whereIn('secret', secrets)
-                .update({ seen_at: now });
+            const query = this.db('personal_access_tokens');
+            if (legacySecrets.length > 0 && selectors.length > 0) {
+                query.where((builder) =>
+                    builder
+                        .whereIn('secret', legacySecrets)
+                        .orWhereIn('selector', selectors),
+                );
+            } else if (legacySecrets.length > 0) {
+                query.whereIn('secret', legacySecrets);
+            } else if (selectors.length > 0) {
+                query.whereIn('selector', selectors);
+            }
+            await query.update({ seen_at: now });
         } catch (err) {
             this.logger.error('Could not update lastSeen, error: ', err);
         }

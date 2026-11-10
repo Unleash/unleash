@@ -1,0 +1,122 @@
+import type { IConstraint, IContextFieldStore } from '../../types/index.js';
+import { constraintSchema } from '../../schema/feature-schema.js';
+import {
+    DATE_OPERATORS,
+    IN_CIDR,
+    NUM_OPERATORS,
+    REGEX,
+    SEMVER_OPERATORS,
+    STRING_OPERATORS,
+} from '../../util/index.js';
+import {
+    validateDate,
+    validateLegalValues,
+    validateNumber,
+    validateSemver,
+    validateString,
+    validateRegex,
+    validateCidr,
+} from '../../util/validators/constraint-types.js';
+import type { IConstraintValidator } from './constraint-validator-type.js';
+import BadDataError from '../../error/bad-data-error.js';
+
+const oneOf = (values: string[], match: string) => {
+    return values.some((value) => value === match);
+};
+
+const SINGLE_VALUE_OPERATORS = [
+    ...NUM_OPERATORS,
+    ...DATE_OPERATORS,
+    ...SEMVER_OPERATORS,
+];
+
+const validateSingleValue = (value: unknown): void => {
+    if (value === undefined || value === null || value === '') {
+        throw new BadDataError(
+            'Single-value constraint operators require a non-empty value.',
+        );
+    }
+};
+
+type ContextFieldReadModel = Pick<IContextFieldStore, 'get' | 'exists'>;
+
+export class ConstraintValidator implements IConstraintValidator {
+    private contextFieldReadModel: ContextFieldReadModel;
+
+    constructor(contextFieldReadModel: ContextFieldReadModel) {
+        this.contextFieldReadModel = contextFieldReadModel;
+    }
+
+    async validateConstraints(
+        constraints: IConstraint[],
+    ): Promise<IConstraint[]> {
+        const validations = constraints.map((constraint) => {
+            return this.validateConstraint(constraint);
+        });
+
+        return Promise.all(validations);
+    }
+
+    async validateConstraint(input: IConstraint): Promise<IConstraint> {
+        const constraint = await constraintSchema.validateAsync(input);
+        const { operator } = constraint;
+        if (oneOf(SINGLE_VALUE_OPERATORS, operator)) {
+            validateSingleValue(constraint.value);
+        }
+
+        if (oneOf(NUM_OPERATORS, operator)) {
+            await validateNumber(constraint.value);
+        }
+
+        if (oneOf(STRING_OPERATORS, operator)) {
+            await validateString(constraint.values);
+        }
+
+        if (oneOf(SEMVER_OPERATORS, operator)) {
+            // Semver library is not asynchronous, so we do not
+            // need to await here.
+            validateSemver(constraint.value);
+        }
+
+        if (oneOf(DATE_OPERATORS, operator)) {
+            await validateDate(constraint.value);
+        }
+
+        if (operator === REGEX) {
+            validateRegex(constraint.value, constraint.inverted);
+        }
+
+        if (operator === IN_CIDR) {
+            validateCidr(constraint.values);
+        }
+
+        if (await this.contextFieldReadModel.exists(constraint.contextName)) {
+            const contextDefinition = await this.contextFieldReadModel.get(
+                constraint.contextName,
+            );
+
+            if (
+                contextDefinition?.legalValues &&
+                contextDefinition.legalValues.length > 0
+            ) {
+                const valuesToValidate = oneOf(
+                    [
+                        ...DATE_OPERATORS,
+                        ...SEMVER_OPERATORS,
+                        ...NUM_OPERATORS,
+                        REGEX,
+                    ],
+                    operator,
+                )
+                    ? constraint.value
+                    : constraint.values;
+                validateLegalValues(
+                    contextDefinition.legalValues,
+                    valuesToValidate,
+                );
+            }
+        }
+
+        return constraint;
+    }
+}

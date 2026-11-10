@@ -49,7 +49,7 @@ jobs:
           --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
           token: ${{ secrets.GH_PUSH_TOKEN }}
@@ -61,7 +61,7 @@ jobs:
           git config user.email "<>"
       - uses: pnpm/action-setup@v5
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'
@@ -114,7 +114,7 @@ jobs:
 
     steps:
       - name: checkout main branch
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: main
           fetch-depth: 0
@@ -125,7 +125,7 @@ jobs:
           git config user.email "<>"
       - uses: pnpm/action-setup@v5
       - name: Use Node js 22
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: '22.x'
           cache: 'pnpm'
@@ -166,7 +166,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Create release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: v${{ inputs.version }}
           name: v${{ inputs.version }}

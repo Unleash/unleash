@@ -12,7 +12,14 @@ import { createCounter } from '../../../util/metrics/index.js';
 import type { DbMetricsMonitor } from '../../../metrics-gauge.js';
 
 interface IntegrationMetricsSetupOpts {
-    config: Pick<IUnleashConfig, 'getLogger' | 'server' | 'flagResolver'>;
+    config: Pick<
+        IUnleashConfig,
+        | 'getLogger'
+        | 'server'
+        | 'flagResolver'
+        | 'allowPrivateUrlInIntegration'
+        | 'allowListIntegration'
+    >;
     stores: Pick<IUnleashStores, 'addonStore' | 'settingStore'>;
     eventBus: EventEmitter;
     dbMetrics: DbMetricsMonitor;
@@ -42,6 +49,8 @@ export function setupIntegrationMetrics(
         unleashUrl: opts.config.server.unleashUrl,
         flagResolver: opts.config.flagResolver,
         eventBus: opts.eventBus,
+        allowPrivateUrls: opts.config.allowPrivateUrlInIntegration,
+        allowList: opts.config.allowListIntegration,
     } as Parameters<typeof getAddons>[0]);
 
     registerIntegrationMetrics({ ...opts, addonProviders });

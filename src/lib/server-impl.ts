@@ -25,7 +25,7 @@ import {
     type IUnleashServices,
     type PatService,
 } from './services/index.js';
-import { defaultLockKey, defaultTimeout, withDbLock } from './util/db-lock.js';
+import { withDbLock } from './util/db-lock.js';
 import { scheduleServices } from './features/scheduler/schedule-services.js';
 import { compareAndLogPostgresVersion } from './util/postgres-version-checker.js';
 import {
@@ -44,12 +44,15 @@ import { CRUDStore } from './db/crud/crud-store.js';
 import type { CrudStoreConfig } from './db/crud/crud-store.js';
 import { type Logger, LogLevel, type LogProvider } from './logger.js';
 import { ImportTogglesStore } from './features/export-import-toggles/import-toggles-store.js';
+import Addon from './addons/addon.js';
 import { ALL_PROJECTS, CUSTOM_ROOT_ROLE_TYPE } from './util/index.js';
 import {
+    auditEventFields,
     extractAuditInfoFromUser,
     getVariantValue,
     isDefined,
     parseEnvVarBoolean,
+    parseEnvVarNumber,
     randomId,
 } from './util/index.js';
 import type {
@@ -107,6 +110,7 @@ import {
     createContextService,
     createEnvironmentService,
     createEventsService,
+    createPatService,
     createUserService,
     createFakeInstanceStatsService,
     createFakeProjectService,
@@ -132,11 +136,13 @@ import {
     createFakeDependentFeaturesService,
     createFakeAccessService,
     corsOriginMiddleware,
+    auditAccessMiddleware,
     impactRegister,
     EXTERNAL_SOURCE_SETTING_KEY,
     type ExternalImpactMetricsSource,
 } from './internals.js';
 import SessionStore from './db/session-store.js';
+import { createRateLimitMiddleware } from './middleware/rate-limit-middleware.js';
 import metricsHelper from './util/metrics-helper.js';
 import type { ReleasePlanMilestoneStrategyWriteModel } from './features/release-plans/release-plan-milestone-strategy-store.js';
 import type { ReleasePlanMilestoneStrategyService } from './features/release-plans/release-plan-milestone-strategy-service.js';
@@ -162,8 +168,11 @@ import {
     createHistogram,
 } from './util/metrics/index.js';
 import FakeEventStore from '../test/fixtures/fake-event-store.js';
+import { FakeAccountStore } from '../test/fixtures/fake-account-store.js';
+import FakePatStore from './features/pat/fake-pat-store.js';
 import type { Subscriber } from './features/user-subscriptions/user-subscriptions-read-model-type.js';
 import { UserSubscriptionsReadModel } from './features/user-subscriptions/user-subscriptions-read-model.js';
+import { AccountStore } from './db/account-store.js';
 import { FakeUserSubscriptionsReadModel } from './features/user-subscriptions/fake-user-subscriptions-read-model.js';
 import type { IPrivateProjectChecker } from './features/private-project/privateProjectCheckerType.js';
 import type { ProjectAccess } from './features/private-project/privateProjectStore.js';
@@ -182,7 +191,9 @@ import type { IImportService } from './features/export-import-toggles/export-imp
 import type { IContextFieldDto } from './features/context/context-field-store-type.js';
 import { SegmentReadModel } from './features/segment/segment-read-model.js';
 import { FeaturesReadModel } from './features/feature-toggle/features-read-model.js';
+import { hasJsonPayload } from './features/feature-toggle/variant-json-payload.js';
 import { FakeFeaturesReadModel } from './features/feature-toggle/fakes/fake-features-read-model.js';
+import { FakeFeatureStrategiesReadModel } from './features/feature-toggle/fake-feature-strategies-read-model.js';
 import type { IFeaturesReadModel } from './features/feature-toggle/types/features-read-model-type.js';
 import type ExportImportService from './features/export-import-toggles/export-import-service.js';
 import { FeatureEnvironmentStore } from './db/feature-environment-store.js';
@@ -205,7 +216,7 @@ import {
 import {
     getDefaultStrategy,
     getProjectDefaultStrategy,
-} from './features/playground/feature-evaluator/helpers.js';
+} from './features/feature-toggle/default-strategy.js';
 import { getDbConfig } from '../test/e2e/helpers/database-config.js';
 import { testDbPrefix } from '../test/e2e/helpers/database-init.js';
 import type { RequestHandler } from 'express';
@@ -231,10 +242,11 @@ export async function initialServiceSetup(
     {
         userService,
         apiTokenService,
+        apiTokenV2Service,
         edgeService,
     }: Pick<
         IUnleashServices,
-        'userService' | 'apiTokenService' | 'edgeService'
+        'userService' | 'apiTokenService' | 'apiTokenV2Service' | 'edgeService'
     >,
 ) {
     await userService.initAdminUser(authentication);
@@ -244,6 +256,7 @@ export async function initialServiceSetup(
     if (edgeClientSecret && edgeClientSecret.length > 0) {
         await edgeService.saveClient('enterprise-edge', edgeClientSecret);
     }
+    await apiTokenV2Service.initialize();
 }
 export type UnleashFactoryMethods = {
     // Factory methods: useful for testing
@@ -257,6 +270,17 @@ export type UnleashFactoryMethods = {
     createSessionDb: (config: IUnleashConfig, db: Db) => RequestHandler;
     createMetricsMonitor: () => MetricsMonitor;
 };
+
+async function waitForFlagResolverReady(
+    config: IUnleashConfig,
+    logger: Logger,
+) {
+    logger.info('Waiting for flag resolver to be ready...');
+    const start = Date.now();
+    await config.flagResolver.ready;
+    logger.info(`Flag resolver is ready after ${Date.now() - start}ms`);
+}
+
 export async function createApp(
     config: IUnleashConfig,
     startApp: boolean,
@@ -269,6 +293,7 @@ export async function createApp(
     },
 ): Promise<IUnleash> {
     const logger = config.getLogger('server-impl.js');
+    await waitForFlagResolverReady(config, logger);
 
     // Surface unhandled promise rejections to logs so they don't crash the process
     process.on('unhandledRejection', (reason: unknown) => {
@@ -310,7 +335,7 @@ export async function createApp(
                 logger.error('Failure when executing shutdown hook', e);
             }
         }
-        services.schedulerService.stop();
+        await services.schedulerService.stop();
         services.addonService.destroy();
         await db.destroy();
     };
@@ -340,10 +365,12 @@ export async function createApp(
     };
 
     if (config.import.file) {
-        await services.importService.importFromFile(
-            config.import.file,
-            config.import.project,
-            config.import.environment,
+        await services.importService.transactional((service) =>
+            service.importFromFile(
+                config.import.file,
+                config.import.project,
+                config.import.environment,
+            ),
         );
     }
 
@@ -351,8 +378,10 @@ export async function createApp(
         config.environmentEnableOverrides &&
         config.environmentEnableOverrides?.length > 0
     ) {
-        await services.environmentService.overrideEnabledProjects(
-            config.environmentEnableOverrides,
+        const environmentEnableOverrides = config.environmentEnableOverrides;
+        await services.transactionalEnvironmentService.transactional(
+            (service) =>
+                service.overrideEnabledProjects(environmentEnableOverrides),
         );
     }
 
@@ -395,6 +424,8 @@ async function start(
     const logger = config.getLogger('server-impl.js');
 
     try {
+        await waitForFlagResolverReady(config, logger);
+
         if (config.db.disableMigration) {
             logger.info('DB migration: disabled');
         } else {
@@ -402,11 +433,7 @@ async function start(
                 logger.info('DB migration: start');
                 if (config.flagResolver.isEnabled('migrationLock')) {
                     logger.info('Running migration with lock');
-                    const lock = withDbLock(config.db, {
-                        lockKey: defaultLockKey,
-                        timeout: defaultTimeout,
-                        logger,
-                    });
+                    const lock = withDbLock(config.db, { logger });
                     await lock(migrateDb)(config);
                 } else {
                     logger.info('Running migration without lock');
@@ -444,6 +471,8 @@ async function create(
     const logger = config.getLogger('server-impl.js');
 
     try {
+        await waitForFlagResolverReady(config, logger);
+
         if (config.db.disableMigration) {
             logger.info('DB migrations disabled');
         } else {
@@ -474,6 +503,7 @@ export {
     ALL_PROJECTS,
     ALL,
     isAllProjects,
+    auditEventFields,
     extractAuditInfoFromUser,
     createTestConfig,
     NoAuthUser,
@@ -481,6 +511,7 @@ export {
     defaultToRow,
     isDefined,
     parseEnvVarBoolean,
+    parseEnvVarNumber,
     querySchema,
     basePaginationParameters,
     migrateDb,
@@ -496,6 +527,7 @@ export {
     normalizeQueryParams,
     parseSearchOperatorValue,
     createEventsService,
+    createPatService,
     createUserService,
     SessionStore,
     createAccessService,
@@ -522,6 +554,9 @@ export {
     createHistogram,
     UserSubscriptionsReadModel,
     FakeUserSubscriptionsReadModel,
+    AccountStore,
+    FakeAccountStore,
+    FakePatStore,
     FakePrivateProjectChecker,
     FakeChangeRequestAccessReadModel,
     createFakeProjectReadModel,
@@ -533,6 +568,8 @@ export {
     SegmentReadModel,
     FeaturesReadModel,
     FakeFeaturesReadModel,
+    FakeFeatureStrategiesReadModel,
+    hasJsonPayload,
     FeatureEnvironmentStore,
     ChangeRequestAccessReadModel,
     StrategyStore,
@@ -566,12 +603,15 @@ export {
     getProjectDefaultStrategy,
     getDefaultStrategy,
     corsOriginMiddleware,
+    createRateLimitMiddleware,
+    auditAccessMiddleware,
     ApiTokenType,
     impactRegister,
     EXTERNAL_SOURCE_SETTING_KEY,
     EnvironmentStore,
     ProjectStore,
     defaultMetricsRegister,
+    Addon,
 };
 
 export type {
@@ -640,6 +680,11 @@ export * from './openapi/index.js';
 export * from './types/index.js';
 export * from './error/index.js';
 export * from './util/index.js';
+export * from './sessions/index.js';
 export * from './services/index.js';
+export {
+    AuthorizationTokenKind,
+    type ApiAuthorizationTokenKind,
+} from './authentication/authorization-token.js';
 export * as eventtypes from './events/index.js';
 export * as interfaces from './interfaces/index.js';

@@ -14,7 +14,10 @@ import { DraftBanner } from './DraftBanner/DraftBanner.tsx';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar.tsx';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
-import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash.tsx';
+import { FloatingOnboardingChecklistVisibilityGate } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistVisibilityGate.tsx';
+import { FloatingOnboardingChecklistProvider } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistContext.tsx';
+import { HelpButtonHintProvider } from 'component/menu/Header/HelpResources/HelpButtonHintContext.tsx';
+import { AccessRequestsNotifications } from 'component/admin/users/AccessRequestsNotifications/AccessRequestsNotifications';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -31,19 +34,19 @@ const MainLayoutContent = styled(Grid)(({ theme }) => ({
     minWidth: 0, // this is a fix for overflowing flex
     maxWidth: `1512px`,
     margin: '0 auto',
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
     [theme.breakpoints.up(1856)]: {
         width: '100%',
     },
     [theme.breakpoints.down(1856)]: {
-        marginLeft: theme.spacing(7),
-        marginRight: theme.spacing(7),
+        marginLeft: theme.spacing(3.5),
+        marginRight: theme.spacing(3.5),
     },
     [theme.breakpoints.down('lg')]: {
         maxWidth: `1250px`,
-        paddingLeft: theme.spacing(1),
-        paddingRight: theme.spacing(1),
+        paddingLeft: theme.spacing(0.5),
+        paddingRight: theme.spacing(0.5),
     },
     [theme.breakpoints.down(1024)]: {
         marginLeft: 0,
@@ -58,7 +61,7 @@ const MainLayoutContentWrapper = styled('div')(({ theme }) => ({
     margin: theme.spacing(0, 'auto'),
     flexGrow: 1,
     width: '100%',
-    backgroundColor: theme.palette.background.application,
+    backgroundColor: theme.palette.background.default,
     position: 'relative',
     display: 'flex',
     flexDirection: 'column',
@@ -126,66 +129,71 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
         return (
-            <EventTimelineProvider>
-                <MainLayoutContainer>
-                    <MainLayoutContentWrapper>
-                        <LayoutFlexContainer>
-                            <ConditionallyRender
-                                condition={!isSmallScreen}
-                                show={<NavigationSidebar />}
-                            />
+            <HelpButtonHintProvider>
+                <FloatingOnboardingChecklistProvider>
+                    <EventTimelineProvider>
+                        <MainLayoutContainer>
+                            <MainLayoutContentWrapper>
+                                <LayoutFlexContainer>
+                                    <ConditionallyRender
+                                        condition={!isSmallScreen}
+                                        show={<NavigationSidebar />}
+                                    />
 
-                            <MainContentWrapper>
-                                <ConditionallyRender
-                                    condition={Boolean(
-                                        projectId &&
-                                            isChangeRequestConfiguredInAnyEnv(),
-                                    )}
-                                    show={
-                                        <DraftBanner
-                                            project={projectId || ''}
+                                    <MainContentWrapper>
+                                        <ConditionallyRender
+                                            condition={Boolean(
+                                                projectId &&
+                                                    isChangeRequestConfiguredInAnyEnv(),
+                                            )}
+                                            show={
+                                                <DraftBanner
+                                                    project={projectId || ''}
+                                                />
+                                            }
+                                        />
+                                        <HeaderContentContainer>
+                                            <Header />
+
+                                            <ContentFlexContainer>
+                                                <StyledMainLayoutContent>
+                                                    <SkipNavTarget />
+                                                    <MainLayoutContentContainer
+                                                        ref={ref}
+                                                    >
+                                                        <BreadcrumbNav />
+                                                        {children}
+                                                    </MainLayoutContentContainer>
+                                                </StyledMainLayoutContent>
+                                            </ContentFlexContainer>
+                                        </HeaderContentContainer>
+
+                                        <FloatingOnboardingChecklistVisibilityGate />
+                                        <Footer />
+                                    </MainContentWrapper>
+                                </LayoutFlexContainer>
+
+                                <ThemeMode
+                                    darkmode={
+                                        <StyledImg
+                                            style={{ opacity: 0.06 }}
+                                            src={formatAssetPath(textureImage)}
+                                            alt=''
+                                        />
+                                    }
+                                    lightmode={
+                                        <StyledImg
+                                            src={formatAssetPath(textureImage)}
+                                            alt=''
                                         />
                                     }
                                 />
-                                <HeaderContentContainer>
-                                    <Header />
-
-                                    <ContentFlexContainer>
-                                        <StyledMainLayoutContent>
-                                            <SkipNavTarget />
-                                            <MainLayoutContentContainer
-                                                ref={ref}
-                                            >
-                                                <BreadcrumbNav />
-                                                {children}
-                                            </MainLayoutContentContainer>
-                                        </StyledMainLayoutContent>
-                                    </ContentFlexContainer>
-                                </HeaderContentContainer>
-
-                                <Footer />
-                            </MainContentWrapper>
-                        </LayoutFlexContainer>
-
-                        <ThemeMode
-                            darkmode={
-                                <StyledImg
-                                    style={{ opacity: 0.06 }}
-                                    src={formatAssetPath(textureImage)}
-                                    alt=''
-                                />
-                            }
-                            lightmode={
-                                <StyledImg
-                                    src={formatAssetPath(textureImage)}
-                                    alt=''
-                                />
-                            }
-                        />
-                    </MainLayoutContentWrapper>
-                </MainLayoutContainer>
-                <NewInUnleash />
-            </EventTimelineProvider>
+                            </MainLayoutContentWrapper>
+                        </MainLayoutContainer>
+                        <AccessRequestsNotifications />
+                    </EventTimelineProvider>
+                </FloatingOnboardingChecklistProvider>
+            </HelpButtonHintProvider>
         );
     },
 );

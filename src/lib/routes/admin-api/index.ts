@@ -14,6 +14,7 @@ import ClientMetricsController from '../../features/metrics/client-metrics/clien
 import TagController from './tag.js';
 import TagTypeController from '../../features/tag-type/tag-type.js';
 import AddonController from './addon.js';
+import { SlackAppIntegrationController } from '../../addons/slack-app-integration-controller.js';
 import { ApiTokenController } from './api-token.js';
 import UserAdminController from './user-admin.js';
 import EmailController from './email.js';
@@ -23,6 +24,7 @@ import ProjectController from '../../features/project/project-controller.js';
 import { EnvironmentsController } from '../../features/environments/environments-controller.js';
 import ConstraintsController from '../../features/constraints/constraints-controller.js';
 import PatController from './user/pat.js';
+import SessionController from './session.js';
 import { PublicSignupController } from './public-signup.js';
 import InstanceAdminController from './instance-admin.js';
 import TelemetryController from './telemetry.js';
@@ -35,9 +37,10 @@ import { InactiveUsersController } from '../../users/inactive/inactive-users-con
 import { UiObservabilityController } from '../../features/ui-observability-controller/ui-observability-controller.js';
 import { SearchApi } from './search/index.js';
 import PersonalDashboardController from '../../features/personal-dashboard/personal-dashboard-controller.js';
+import UserRecentFlagsController from '../../features/user-recent-flags/user-recent-flags-controller.js';
 import FeatureLifecycleCountController from '../../features/feature-lifecycle/feature-lifecycle-count-controller.js';
 import type { IUnleashServices } from '../../services/index.js';
-import CustomMetricsController from '../../features/metrics/custom/custom-metrics-controller.js';
+import FlagCreatorsController from '../../features/project/flag-creators-controller.js';
 
 export class AdminApi extends Controller {
     constructor(
@@ -78,14 +81,18 @@ export class AdminApi extends Controller {
             '/client-metrics',
             new ClientMetricsController(config, services).router,
         );
-        this.app.use(
-            '/custom-metrics',
-            new CustomMetricsController(services, config).router,
-        );
         this.app.use('/user', new UserController(config, services).router);
+        this.app.use(
+            '/session',
+            new SessionController(config, services).router,
+        );
         this.app.use(
             '/user/tokens',
             new PatController(config, services).router,
+        );
+        this.app.use(
+            '/user/recent-flags',
+            new UserRecentFlagsController(config, services).router,
         );
 
         this.app.use(
@@ -106,6 +113,10 @@ export class AdminApi extends Controller {
             new TagTypeController(config, services).router,
         );
         this.app.use('/addons', new AddonController(config, services).router);
+        this.app.use(
+            '/integrations/slack-app',
+            new SlackAppIntegrationController(config, services).router,
+        );
         this.app.use(
             '/api-tokens',
             new ApiTokenController(config, services).router,
@@ -176,6 +187,11 @@ export class AdminApi extends Controller {
         );
 
         this.app.use('/search', new SearchApi(config, services, db).router);
+
+        this.app.use(
+            '/flag-creators',
+            new FlagCreatorsController(config, services).router,
+        );
 
         this.app.use(
             '/record-ui-error',

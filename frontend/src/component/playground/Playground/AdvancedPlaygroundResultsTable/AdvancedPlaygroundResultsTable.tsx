@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import {
     type ColumnDef,
     getCoreRowModel,
@@ -27,7 +27,7 @@ import type {
 } from 'openapi';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
 import { AdvancedPlaygroundEnvironmentDiffCell } from './AdvancedPlaygroundEnvironmentCell/AdvancedPlaygroundEnvironmentDiffCell.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { countCombinations, getBucket } from './combinationCounter.ts';
 
 const defaultSort = { id: 'name', desc: false };
@@ -47,7 +47,7 @@ export const AdvancedPlaygroundResultsTable = ({
     input,
     loading,
 }: IAdvancedPlaygroundResultsTableProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     if (features) {
         trackEvent('playground', {
             props: {

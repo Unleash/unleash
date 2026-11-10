@@ -3,13 +3,16 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { UpdateTagsSchema } from './updateTagsSchema';
+import type { UpdateTagsSchema } from './updateTagsSchema.ts';
 
 /**
  * Represents tag changes to be applied to a list of features.
  */
 export interface TagsBulkAddSchema {
-    /** The list of features that will be affected by the tag changes. */
+    /**
+     * The list of features that will be affected by the tag changes.
+     * @items.minLength 1
+     */
     features: string[];
     /** The tag changes to be applied to the features. */
     tags: UpdateTagsSchema;

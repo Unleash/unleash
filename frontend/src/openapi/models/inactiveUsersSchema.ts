@@ -3,7 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { InactiveUserSchema } from './inactiveUserSchema';
+import type { InactiveUserSchema } from './inactiveUserSchema.ts';
 
 /**
  * A list of users that has been flagged as inactive
@@ -11,6 +11,8 @@ import type { InactiveUserSchema } from './inactiveUserSchema';
 export interface InactiveUsersSchema {
     /** The list of users that are flagged as inactive */
     inactiveUsers: InactiveUserSchema[];
+    /** The total number of inactive users */
+    totalInactiveUsers: number;
     /**
      * The version of this schema. Used to keep track of compatibility
      * @minimum 1

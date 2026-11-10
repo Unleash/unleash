@@ -3,11 +3,11 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { EdgeLatencyMetricsSchema } from './edgeLatencyMetricsSchema';
+import type { EdgeLatencyMetricsSchema } from './edgeLatencyMetricsSchema.ts';
 
 /**
  * A map containing requests that were denied.
  */
 export type EdgeInstanceTrafficSchemaAccessDenied = {
-    [key: string]: EdgeLatencyMetricsSchema;
+    [key: string]: EdgeLatencyMetricsSchema | null;
 };

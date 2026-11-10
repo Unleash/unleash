@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { RequestsPerSecondSchemaDataResultItem } from './requestsPerSecondSchemaDataResultItem';
-import type { RequestsPerSecondSchemaDataResultType } from './requestsPerSecondSchemaDataResultType';
+import type { RequestsPerSecondSchemaDataResultItem } from './requestsPerSecondSchemaDataResultItem.ts';
+import type { RequestsPerSecondSchemaDataResultType } from './requestsPerSecondSchemaDataResultType.ts';
 
 /**
  * The query result from prometheus

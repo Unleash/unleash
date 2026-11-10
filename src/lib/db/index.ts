@@ -70,13 +70,14 @@ import { FeatureLinksReadModel } from '../features/feature-links/feature-links-r
 import { UserUpdatesReadModel } from '../features/users/user-updates-read-model.js';
 import { EdgeTokenStore } from '../features/edgetokens/edge-token-store.js';
 import { ReleasePlanMilestoneStrategyStore } from '../features/release-plans/release-plan-milestone-strategy-store.js';
+import { ApiTokenV2Store } from '../features/apitokensv2/api-token-v2-store.js';
 
 export const createStores = (
     config: IUnleashConfig,
     db: Db,
 ): IUnleashStores => {
     const { getLogger, eventBus } = config;
-    const eventStore = new EventStore(db, getLogger);
+    const eventStore = new EventStore(db, eventBus, getLogger);
 
     return {
         eventStore,
@@ -121,6 +122,7 @@ export const createStores = (
             getLogger,
             config.flagResolver,
         ),
+        apiTokenV2Store: new ApiTokenV2Store(db),
         resetTokenStore: new ResetTokenStore(db, eventBus, getLogger),
         sessionStore: new SessionStore(db, eventBus, getLogger),
         userFeedbackStore: new UserFeedbackStore(db, eventBus, getLogger),
@@ -172,17 +174,15 @@ export const createStores = (
         privateProjectStore: new PrivateProjectStore(db, getLogger),
         dependentFeaturesStore: new DependentFeaturesStore(db),
         lastSeenStore: new LastSeenStore(db, eventBus, getLogger),
-        featureSearchStore: new FeatureSearchStore(
-            db,
-            eventBus,
-            getLogger,
-            config.flagResolver,
-        ),
+        featureSearchStore: new FeatureSearchStore(db, eventBus),
         inactiveUsersStore: new InactiveUsersStore(db, eventBus, getLogger),
         trafficDataUsageStore: new TrafficDataUsageStore(db, getLogger),
         segmentReadModel: new SegmentReadModel(db),
         projectOwnersReadModel: new ProjectOwnersReadModel(db),
-        projectFlagCreatorsReadModel: new ProjectFlagCreatorsReadModel(db),
+        projectFlagCreatorsReadModel: new ProjectFlagCreatorsReadModel(
+            db,
+            eventBus,
+        ),
         featureLifecycleStore: new FeatureLifecycleStore(db, eventBus),
         featureStrategiesReadModel: new FeatureStrategiesReadModel(db),
         onboardingReadModel: createOnboardingReadModel(db),
@@ -191,11 +191,7 @@ export const createStores = (
         largestResourcesReadModel: new LargestResourcesReadModel(db),
         integrationEventsStore: new IntegrationEventsStore(db, { eventBus }),
         featureCollaboratorsReadModel: new FeatureCollaboratorsReadModel(db),
-        projectReadModel: createProjectReadModel(
-            db,
-            eventBus,
-            config.flagResolver,
-        ),
+        projectReadModel: createProjectReadModel(db, config),
         userUnsubscribeStore: new UserUnsubscribeStore(db),
         userSubscriptionsReadModel: new UserSubscriptionsReadModel(db),
         uniqueConnectionStore: new UniqueConnectionStore(db),

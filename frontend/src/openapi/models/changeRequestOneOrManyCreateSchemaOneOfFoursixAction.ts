@@ -10,7 +10,6 @@
 export type ChangeRequestOneOrManyCreateSchemaOneOfFoursixAction =
     (typeof ChangeRequestOneOrManyCreateSchemaOneOfFoursixAction)[keyof typeof ChangeRequestOneOrManyCreateSchemaOneOfFoursixAction];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestOneOrManyCreateSchemaOneOfFoursixAction = {
     changeReleasePlanSafeguard: 'changeReleasePlanSafeguard',
 } as const;

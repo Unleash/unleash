@@ -3,8 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestStateSchemaOneOf } from './changeRequestStateSchemaOneOf';
-import type { ChangeRequestStateSchemaOneOfThree } from './changeRequestStateSchemaOneOfThree';
+import type { ChangeRequestStateSchemaOneOf } from './changeRequestStateSchemaOneOf.ts';
+import type { ChangeRequestStateSchemaOneOfThree } from './changeRequestStateSchemaOneOfThree.ts';
 
 /**
  * Data used to update the state of a [change request](https://docs.getunleash.io/concepts/change-requests).

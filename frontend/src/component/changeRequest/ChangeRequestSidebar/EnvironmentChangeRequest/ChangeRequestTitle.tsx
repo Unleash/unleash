@@ -12,6 +12,7 @@ import useToast from 'hooks/useToast';
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'flex-end',
     width: '100%',
     '& > div': { width: '100%' },
     justifyContent: 'space-between',
@@ -23,10 +24,6 @@ export const StyledHeader = styled(Typography)(({ theme }) => ({
     alignItems: 'center',
     marginRight: theme.spacing(1),
     fontSize: theme.fontSizes.mainHeader,
-}));
-
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
-    borderRadius: theme.shape.borderRadius,
 }));
 
 export const ChangeRequestTitle: FC<{
@@ -78,9 +75,12 @@ export const ChangeRequestTitle: FC<{
             <ConditionallyRender
                 condition={isDisabled}
                 show={
-                    <StyledIconButton onClick={toggleEditState}>
+                    <IconButton
+                        onClick={toggleEditState}
+                        aria-label='edit title'
+                    >
                         <Edit />
-                    </StyledIconButton>
+                    </IconButton>
                 }
             />
             <ConditionallyRender

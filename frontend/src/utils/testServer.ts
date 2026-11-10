@@ -21,21 +21,39 @@ export const testServerSetup = (): SetupServer => {
 export const testServerRoute = (
     server: SetupServer,
     path: string,
-    json: object | boolean | string | number,
+    json: object | boolean | string | number | null,
     method: 'get' | 'post' | 'put' | 'delete' = 'get',
     status: number = 200,
+    searchParams?: Record<string, string>,
 ) => {
     const requests: unknown[] = [];
     server.use(
         http[method](path, async ({ request }) => {
+            if (searchParams) {
+                const url = new URL(request.url);
+                const matches = Object.entries(searchParams).every(
+                    ([key, value]) => url.searchParams.get(key) === value,
+                );
+                // Fall through to other handlers for this path when the
+                // search params don't match.
+                if (!matches) return undefined;
+            }
             if (method === 'post' || method === 'put') {
                 const body = await request.json().catch(() => undefined);
                 if (body !== undefined) {
                     requests.push(body);
                 }
             }
-            return HttpResponse.json(json, { status });
+            return json === null
+                ? new HttpResponse(null, { status })
+                : HttpResponse.json(json, { status });
         }),
     );
     return { requests };
 };
+
+export const badRequest = (message: string) => ({
+    name: 'BadDataError',
+    message,
+    details: [{ message }],
+});

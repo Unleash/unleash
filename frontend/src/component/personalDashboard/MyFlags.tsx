@@ -8,7 +8,7 @@ import {
     VirtualizedList,
     listItemStyle,
 } from './SharedComponents.tsx';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import {
     Alert,
@@ -34,7 +34,7 @@ const FlagListItem: FC<{
     selected: boolean;
     onClick: () => void;
 }> = ({ flag, selected, onClick }) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const IconComponent = getFeatureTypeIcons(flag.type);
     const flagLink = `projects/${flag.project}/features/${flag.name}`;
     return (

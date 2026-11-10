@@ -17,6 +17,10 @@ export interface IFeatureToggleStoreQuery {
     type?: string;
 }
 
+export type FlagLifetime =
+    | { type: 'expiring'; days: number }
+    | { type: 'permanent' };
+
 export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
     count(query?: Partial<IFeatureToggleStoreQuery>): Promise<number>;
 
@@ -37,7 +41,7 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
         stale: boolean,
     ): Promise<FeatureToggle[]>;
 
-    batchDelete(featureNames: string[]): Promise<void>;
+    batchDelete(featureNames: string[]): Promise<FeatureToggle[]>;
 
     batchRevive(featureNames: string[]): Promise<FeatureToggle[]>;
 
@@ -74,6 +78,8 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
     >;
 
     isPotentiallyStale(featureName: string): Promise<boolean>;
+
+    getLifetime(featureName: string): Promise<FlagLifetime | undefined>;
 
     disableAllEnvironmentsForFeatures(names: string[]): Promise<void>;
 

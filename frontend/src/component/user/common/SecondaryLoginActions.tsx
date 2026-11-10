@@ -1,5 +1,5 @@
 import { styled, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(2),

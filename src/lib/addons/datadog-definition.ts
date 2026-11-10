@@ -28,7 +28,7 @@ const dataDogDefinition: IAddonDefinition = {
             name: 'url',
             displayName: 'Datadog Events URL',
             description:
-                "Default URL: https://api.datadoghq.com/api/v1/events. Needs to be changed if your're not using the US1 site.",
+                "Default URL: https://api.datadoghq.com/api/v1/events. Needs to be changed if you're not using the US1 site.",
             type: 'url',
             required: false,
             sensitive: false,

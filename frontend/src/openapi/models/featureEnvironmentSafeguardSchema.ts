@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureEnvironmentSafeguardSchemaAction } from './featureEnvironmentSafeguardSchemaAction';
-import type { FeatureEnvironmentSafeguardSchemaImpactMetric } from './featureEnvironmentSafeguardSchemaImpactMetric';
-import type { SafeguardTriggerConditionSchema } from './safeguardTriggerConditionSchema';
+import type { FeatureEnvironmentSafeguardSchemaAction } from './featureEnvironmentSafeguardSchemaAction.ts';
+import type { FeatureEnvironmentSafeguardSchemaImpactMetric } from './featureEnvironmentSafeguardSchemaImpactMetric.ts';
+import type { SafeguardTriggerConditionSchema } from './safeguardTriggerConditionSchema.ts';
 
 /**
  * A safeguard configuration for a feature environment.

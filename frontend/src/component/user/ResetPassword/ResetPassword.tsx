@@ -1,5 +1,5 @@
 import { type SyntheticEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { OK } from 'constants/statusCodes';
 import useLoading from 'hooks/useLoading';
 import { Button, styled, Typography } from '@mui/material';

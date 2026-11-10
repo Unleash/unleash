@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router';
 import { Alert, Link } from '@mui/material';
 import { useUsersPlan } from 'hooks/useUsersPlan';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';

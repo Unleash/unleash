@@ -1,14 +1,14 @@
-import type { IFlagResolver } from '../../types/index.js';
+import type { IUnleashConfig } from '../../types/index.js';
 import type { Knex } from 'knex';
 import type { Db } from '../../db/db.js';
 import type {
     IProjectReadModel,
+    ProjectCore,
     ProjectForInsights,
     ProjectForUi,
 } from './project-read-model-type.js';
 import type { IProjectQuery, IProjectsQuery } from './project-store-type.js';
 import metricsHelper from '../../util/metrics-helper.js';
-import type EventEmitter from 'events';
 import type { IProjectMembersCount } from './project-store.js';
 type Raw<T = any> = Knex.Raw<T>;
 
@@ -33,6 +33,16 @@ const mapProjectForUi = (row): ProjectForUi => {
     };
 };
 
+const mapProjectCore = (row): ProjectCore => {
+    return {
+        id: row.id,
+        name: row.name,
+        description: row.description,
+        createdAt: row.created_at,
+        archivedAt: row.archived_at,
+    };
+};
+
 const mapProjectForInsights = (row): ProjectForInsights => {
     return {
         id: row.id,
@@ -52,8 +62,14 @@ export class ProjectReadModel implements IProjectReadModel {
 
     private timer: Function;
 
-    constructor(db: Db, eventBus: EventEmitter, _flagResolver: IFlagResolver) {
+    private isOss: boolean;
+
+    constructor(
+        db: Db,
+        { eventBus, isOss }: Pick<IUnleashConfig, 'eventBus' | 'isOss'>,
+    ) {
         this.db = db;
+        this.isOss = isOss;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'project',
@@ -232,6 +248,32 @@ export class ProjectReadModel implements IProjectReadModel {
         });
     }
 
+    async getProjectsCore(query?: IProjectQuery): Promise<ProjectCore[]> {
+        const projectTimer = this.timer('getProjectsCore');
+        let projects = this.db(TABLE).orderBy('name', 'asc');
+
+        if (query?.archived === true) {
+            projects = projects.whereNot('archived_at', null);
+        } else {
+            projects = projects.where('archived_at', null);
+        }
+
+        if (query?.id) {
+            projects = projects.where('id', query.id);
+        }
+
+        const rows = await projects.select(
+            'id',
+            'name',
+            'description',
+            'created_at',
+            'archived_at',
+        );
+        projectTimer();
+
+        return rows.map(mapProjectCore);
+    }
+
     private async getMembersCount(): Promise<IProjectMembersCount[]> {
         const memberTimer = this.timer('getMembersCount');
         const membersQuery = this.db
@@ -284,7 +326,10 @@ export class ProjectReadModel implements IProjectReadModel {
             })
             .as('query');
 
-        const projects = await this.db.from(projectsQuery).pluck('project');
+        const projects = await this.db
+            .from(projectsQuery)
+            .modify(this.onlyDefaultProjectInOss)
+            .pluck('project');
         return projects;
     }
 
@@ -295,8 +340,15 @@ export class ProjectReadModel implements IProjectReadModel {
             .leftJoin('projects', 'favorite_projects.project', 'projects.id')
             .where('favorite_projects.user_id', userId)
             .andWhere('projects.archived_at', null)
+            .modify(this.onlyDefaultProjectInOss)
             .pluck('project');
 
         return favoritedProjects;
     }
+
+    private onlyDefaultProjectInOss = (query: Knex.QueryBuilder): void => {
+        if (this.isOss) {
+            query.where('project', 'default');
+        }
+    };
 }

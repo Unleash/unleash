@@ -12,6 +12,7 @@ import {
     type IUserWithRootRole,
     TEST_AUDIT_USER,
 } from '../../../types/index.js';
+import { createClientFeatureToggleDelta } from '../delta/createClientFeatureToggleDelta.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -29,7 +30,6 @@ const getApiClientResponse = (project = 'default') => [
         type: 'release',
         enabled: false,
         project: project,
-        stale: false,
         strategies: [
             {
                 name: 'flexibleRollout',
@@ -51,7 +51,6 @@ const getApiClientResponse = (project = 'default') => [
             },
         ],
         variants: [],
-        description: null,
         impressionData: false,
     },
     {
@@ -59,7 +58,6 @@ const getApiClientResponse = (project = 'default') => [
         type: 'release',
         enabled: false,
         project: project,
-        stale: false,
         strategies: [
             {
                 name: 'default',
@@ -75,7 +73,6 @@ const getApiClientResponse = (project = 'default') => [
             },
         ],
         variants: [],
-        description: null,
         impressionData: false,
     },
 ];
@@ -146,6 +143,7 @@ const setupFeatures = async (
         'test2',
         project,
     );
+    return segmentBody.id;
 };
 
 beforeAll(async () => {
@@ -308,6 +306,116 @@ test('should return correct data structure from /api/client/features', async () 
     expect(result.body.features).toEqual(getApiClientResponse());
 });
 
+test('full, single-feature and delta responses include feature type and omit administrative metadata', async () => {
+    const segmentId = await setupFeatures(db, app);
+    await app.services.featureToggleService.updateFeatureToggle(
+        'default',
+        {
+            name: 'test1',
+            description: 'Administrative description',
+            type: 'experiment',
+            impressionData: true,
+        },
+        'test1',
+        TEST_AUDIT_USER,
+    );
+    await app.services.featureToggleService.updateStale(
+        'test1',
+        true,
+        TEST_AUDIT_USER,
+    );
+    const expected = getApiClientResponse();
+    expected[0].impressionData = true;
+    expected[0].type = 'experiment';
+    const expectedWithSegmentReferences = [
+        {
+            ...expected[0],
+            strategies: [
+                {
+                    ...expected[0].strategies[0],
+                    constraints: [],
+                    segments: [segmentId],
+                },
+            ],
+        },
+        expected[1],
+    ];
+    const full = await app.request.get('/api/client/features').expect(200);
+    expect(full.body.features).toHaveLength(expected.length);
+    expect(full.body.features).toEqual(expect.arrayContaining(expected));
+    const single = await app.request
+        .get('/api/client/features/test1')
+        .expect(200);
+    expect(single.body).toEqual(expected[0]);
+
+    const admin = await app.request
+        .get('/api/admin/projects/default/features/test1')
+        .expect(200);
+    expect(admin.body).toMatchObject({
+        description: 'Administrative description',
+        type: 'experiment',
+        stale: true,
+    });
+
+    const delta = createClientFeatureToggleDelta(db.rawDatabase, app.config);
+    delta.resetDelta();
+    const revisions = app.services.configurationRevisionService;
+    const query = { environment: DEFAULT_ENV, project: ['default'] };
+    try {
+        const referencedSegments = await app.request
+            .get('/api/client/features')
+            .set('Unleash-Client-Spec', '4.2.0')
+            .expect(200);
+        expect(referencedSegments.body.features).toHaveLength(expected.length);
+        expect(referencedSegments.body.features).toEqual(
+            expect.arrayContaining(expectedWithSegmentReferences),
+        );
+        await revisions.updateMaxRevisionId(false);
+        const initial =
+            await app.services.clientFeatureToggleService.getClientDelta(
+                undefined,
+                query,
+            );
+        const hydration = initial!.events.find(
+            (event) => event.type === 'hydration',
+        )!;
+        expect(hydration.features).toHaveLength(expected.length);
+        expect(hydration.features).toEqual(
+            expect.arrayContaining(expectedWithSegmentReferences),
+        );
+
+        await app.enableFeature('test1', DEFAULT_ENV);
+        await revisions.updateMaxRevisionId(false);
+        await delta.onUpdateRevisionEvent();
+        const updated =
+            await app.services.clientFeatureToggleService.getClientDelta(
+                hydration.eventId,
+                query,
+            );
+        expect(
+            updated!.events.filter((event) => event.type === 'feature-updated'),
+        ).toEqual([
+            expect.objectContaining({
+                type: 'feature-updated',
+                feature: {
+                    ...expectedWithSegmentReferences[0],
+                    enabled: true,
+                },
+            }),
+        ]);
+        const after = await app.request.get('/api/client/features').expect(200);
+        expect(after.body.features).toHaveLength(expected.length);
+        expect(after.body.features).toEqual(
+            expect.arrayContaining([
+                { ...expected[0], enabled: true },
+                expected[1],
+            ]),
+        );
+    } finally {
+        delta.resetDelta();
+    }
+});
+
 test('should return correct data structure from /api/client/features for pro', async () => {
     await proApp.services.projectService.createProject(
         { name: 'Pro', id: 'pro' },
@@ -350,5 +458,10 @@ test('should match snapshot from /api/client/features', async () => {
         .expect('Content-Type', /json/)
         .expect(200);
 
-    expect(result.body).toMatchSnapshot();
+    expect(result.body).toMatchSnapshot({
+        meta: {
+            etag: expect.any(String),
+            revisionId: expect.any(Number),
+        },
+    });
 });

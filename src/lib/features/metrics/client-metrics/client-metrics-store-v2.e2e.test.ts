@@ -364,6 +364,79 @@ test('Should get metric', async () => {
     expect(metric.no).toBe(42);
 });
 
+test('Sums total usage from the hourly and daily tables per environment', async () => {
+    const featureName = 'total-usage-feature';
+    const hourlyUsage = (
+        overrides: Partial<IClientMetricsEnv>,
+    ): IClientMetricsEnv => ({
+        featureName,
+        appName: 'web',
+        environment: 'dev',
+        timestamp: new Date(),
+        yes: 0,
+        no: 0,
+        ...overrides,
+    });
+    const dailyRollup = ({
+        daysAgo,
+        yes,
+        no,
+    }: {
+        daysAgo: number;
+        yes: number;
+        no: number;
+    }) => ({
+        feature_name: featureName,
+        app_name: 'web',
+        environment: 'dev',
+        date: subDays(new Date(), daysAgo),
+        yes,
+        no,
+    });
+
+    const excludedRolledUpHourlyRow = hourlyUsage({
+        timestamp: subDays(new Date(), 3),
+        yes: 500,
+        no: 500,
+    });
+    await clientMetricsStore.batchInsertMetrics([
+        hourlyUsage({ yes: 5, no: 2 }),
+        hourlyUsage({ environment: 'prod', yes: 7, no: 0 }),
+        hourlyUsage({ featureName: 'another-feature', yes: 1000, no: 1000 }),
+        excludedRolledUpHourlyRow,
+    ]);
+
+    const countedRollupFromBeforeYesterday = dailyRollup({
+        daysAgo: 3,
+        yes: 100,
+        no: 50,
+    });
+    const excludedYesterdaysRollup = dailyRollup({
+        daysAgo: 1,
+        yes: 999,
+        no: 999,
+    });
+    const excludedAnotherFeaturesRollup = {
+        ...dailyRollup({ daysAgo: 3, yes: 4000, no: 4000 }),
+        feature_name: 'another-feature',
+    };
+    await db
+        .rawDatabase('client_metrics_env_daily')
+        .insert([
+            countedRollupFromBeforeYesterday,
+            excludedYesterdaysRollup,
+            excludedAnotherFeaturesRollup,
+        ]);
+
+    const totalUsage =
+        await clientMetricsStore.getTotalUsageForFeature(featureName);
+
+    expect(totalUsage).toEqual([
+        { environment: 'dev', yes: 5 + 100, no: 2 + 50 },
+        { environment: 'prod', yes: 7, no: 0 },
+    ]);
+});
+
 test('Should not exist after delete', async () => {
     const metric = {
         featureName: 'demo4',

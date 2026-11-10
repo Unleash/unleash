@@ -7,7 +7,7 @@ import {
     Typography,
 } from '@mui/material';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import EnterpriseEdgeCloud from 'assets/img/enterpriseEdgeCloud.svg?react';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
@@ -24,9 +24,9 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
         gap: theme.spacing(1),
     },
     '&.MuiAlert-standard.MuiAlert-colorInfo': {
-        backgroundColor: theme.palette.secondary.light,
+        backgroundColor: theme.palette.primary.container,
         color: theme.palette.text.primary,
-        border: `1px solid ${theme.palette.secondary.border}`,
+        border: `1px solid ${theme.palette.primary.containerBorder}`,
     },
 }));
 

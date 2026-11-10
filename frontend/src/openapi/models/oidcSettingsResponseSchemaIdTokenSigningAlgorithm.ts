@@ -10,7 +10,6 @@
 export type OidcSettingsResponseSchemaIdTokenSigningAlgorithm =
     (typeof OidcSettingsResponseSchemaIdTokenSigningAlgorithm)[keyof typeof OidcSettingsResponseSchemaIdTokenSigningAlgorithm];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const OidcSettingsResponseSchemaIdTokenSigningAlgorithm = {
     RS256: 'RS256',
     RS384: 'RS384',

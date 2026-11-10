@@ -5,6 +5,7 @@ import { createTestConfig } from '../test/config/test-config.js';
 import {
     CLIENT_REGISTERED,
     DB_TIME,
+    EVENT_STORE_WRITE,
     EXCEEDS_LIMIT,
     FUNCTION_TIME,
     REQUEST_TIME,
@@ -28,6 +29,7 @@ import { createFakeGetActiveUsers } from './features/instance-stats/getActiveUse
 import { createFakeGetProductionChanges } from './features/instance-stats/getProductionChanges.js';
 import type {
     IEnvironmentStore,
+    IUnleashConfig,
     IFeatureLifecycleReadModel,
     IFeatureLifecycleStore,
     IUnleashStores,
@@ -55,11 +57,13 @@ let featureLifeCycleStore: IFeatureLifecycleStore;
 let featureLifeCycleReadModel: IFeatureLifecycleReadModel;
 let db: ITestDb;
 let refreshDbMetrics: () => Promise<void>;
+let config: IUnleashConfig;
 
 beforeAll(async () => {
-    const config = createTestConfig({
+    config = createTestConfig({
         server: {
             serverMetrics: true,
+            baseUriPath: '/demo',
         },
     });
     stores = createStores();
@@ -120,6 +124,41 @@ test('should collect metrics for requests', async () => {
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
         /http_request_duration_milliseconds\{quantile="0\.99",path="somePath",method="GET",status="200",appName="undefined"\}.*1337/,
+    );
+});
+
+test('SDK histogram strips the base path from path labels', async () => {
+    eventBus.emit(REQUEST_TIME, {
+        path: '/demo/api/client/features',
+        method: 'GET',
+        statusCode: 200,
+        time: 90,
+    });
+    eventBus.emit(REQUEST_TIME, {
+        path: '/demo/api/frontend',
+        method: 'GET',
+        statusCode: 200,
+        time: 30,
+    });
+    eventBus.emit(REQUEST_TIME, {
+        path: '/demo/api/admin/projects',
+        method: 'GET',
+        statusCode: 200,
+        time: 50,
+    });
+
+    const metrics = await prometheusRegister.metrics();
+    expect(metrics).toMatch(
+        /http_sdk_request_duration_milliseconds_count\{path="\/api\/client\/features",method="GET",status="200"\} 1/,
+    );
+    expect(metrics).toMatch(
+        /http_sdk_request_duration_milliseconds_count\{path="\/api\/frontend",method="GET",status="200"\} 1/,
+    );
+    expect(metrics).not.toMatch(
+        /http_sdk_request_duration_milliseconds[^\n]*api\/admin/,
+    );
+    expect(metrics).toMatch(
+        /http_request_duration_milliseconds_count\{path="\/demo\/api\/admin\/projects",method="GET",status="200",appName="undefined"\} 1/,
     );
 });
 
@@ -208,6 +247,79 @@ test('should collect metrics for feature flag size', async () => {
     expect(metrics).toMatch(/feature_toggles_total\{version="(.*)"\} 0/);
 });
 
+describe('feature label on max/largest feature metrics', () => {
+    beforeEach(() => {
+        stores.featureStrategiesReadModel = {
+            getVariantJsonPayloads: async () => [],
+            getMaxFeatureEnvironmentStrategies: async () => ({
+                feature: 'secretFlag',
+                environment: 'production',
+                count: 3,
+            }),
+            getMaxFeatureStrategies: async () => ({
+                feature: 'secretFlag',
+                count: 4,
+            }),
+            getMaxConstraintValues: async () => ({
+                feature: 'secretFlag',
+                environment: 'production',
+                count: 5,
+            }),
+            getMaxConstraintsPerStrategy: async () => ({
+                feature: 'secretFlag',
+                environment: 'production',
+                count: 6,
+            }),
+        };
+        stores.largestResourcesReadModel = {
+            getLargestProjectEnvironments: async () => [],
+            getLargestFeatureEnvironments: async () => [
+                {
+                    feature: 'secretFlag',
+                    environment: 'production',
+                    size: 7,
+                },
+            ],
+        };
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+    });
+
+    const featureMetrics = [
+        'max_feature_environment_strategies',
+        'max_feature_strategies',
+        'max_constraint_values',
+        'max_strategy_constraints',
+        'largest_feature_environment_size',
+    ];
+
+    test('uses the flag name as feature label by default', async () => {
+        await refreshDbMetrics();
+        const metrics = await prometheusRegister.metrics();
+        for (const name of featureMetrics) {
+            expect(metrics).toMatch(
+                new RegExp(`${name}\\{[^}]*feature="secretFlag"`),
+            );
+        }
+    });
+
+    test('redacts the feature label when redactFeatureLabelInMetrics is enabled', async () => {
+        vi.spyOn(config.flagResolver, 'isEnabled').mockImplementation(
+            (flag) => flag === 'redactFeatureLabelInMetrics',
+        );
+        await refreshDbMetrics();
+        const metrics = await prometheusRegister.metrics();
+        expect(metrics).not.toMatch(/secretFlag/);
+        for (const name of featureMetrics) {
+            expect(metrics).toMatch(
+                new RegExp(`${name}\\{[^}]*feature="redacted"`),
+            );
+        }
+    });
+});
+
 test('should collect metrics for archived feature flag size', async () => {
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(/feature_toggles_archived_total 0/);
@@ -259,10 +371,10 @@ test('Should collect metrics for client sdk versions', async () => {
         'client_sdk_versions',
     );
     expect(metrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set"} 3/,
+        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set",sdk_flavor_name="not-set",sdk_flavor_version="not-set"} 3/,
     );
     expect(metrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-java",sdk_version="5\.0\.0",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set"} 3/,
+        /client_sdk_versions\{sdk_name="unleash-client-java",sdk_version="5\.0\.0",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set",sdk_flavor_name="not-set",sdk_flavor_version="not-set"} 3/,
     );
     eventStore.emit(CLIENT_REGISTER, {
         sdkName: 'unleash-client-node',
@@ -272,7 +384,7 @@ test('Should collect metrics for client sdk versions', async () => {
         'client_sdk_versions',
     );
     expect(newmetrics).toMatch(
-        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set"} 4/,
+        /client_sdk_versions\{sdk_name="unleash-client-node",sdk_version="3\.2\.5",platform_name="not-set",platform_version="not-set",yggdrasil_version="not-set",spec_version="not-set",sdk_flavor_name="not-set",sdk_flavor_version="not-set"} 4/,
     );
 });
 
@@ -311,31 +423,11 @@ test('should collect metrics for project disabled numbers', async () => {
     const recordedMetric = await prometheusRegister.getSingleMetricAsString(
         'project_environments_disabled',
     );
-    expect(recordedMetric).toMatch(
-        /project_environments_disabled{project_id="default"} 1/,
-    );
+    expect(recordedMetric).toMatch(/project_environments_disabled 1/);
 });
 
 test('should collect metrics for lifecycle', async () => {
-    await db.stores.featureToggleStore.create('default', {
-        name: 'my_feature_b',
-        createdByUserId: 9999,
-    });
-    await featureLifeCycleStore.insert([
-        {
-            feature: 'my_feature_b',
-            stage: 'initial',
-        },
-    ]);
-    const stageCount = await featureLifeCycleReadModel.getStageCountByProject();
-    const stageDurations =
-        await featureLifeCycleReadModel.getAllWithStageDuration();
-    expect(stageCount).toHaveLength(1);
-    expect(stageDurations).toHaveLength(1);
-
     const metrics = await prometheusRegister.metrics();
-    expect(metrics).toMatch(/feature_lifecycle_stage_duration/);
-    expect(metrics).toMatch(/feature_lifecycle_stage_count_by_project/);
     expect(metrics).toMatch(/feature_lifecycle_stage_entered/);
 });
 
@@ -350,6 +442,20 @@ test('should collect limit exceeded metrics', async () => {
     );
     expect(recordedMetric).toMatch(
         /exceeds_limit_error{resource="feature flags",limit="5000"} 1/,
+    );
+});
+
+test('should collect event store writes by type and transaction', async () => {
+    eventBus.emit(EVENT_STORE_WRITE, {
+        type: 'feature-updated',
+        transaction: 'outside',
+    });
+
+    const recordedMetric = await prometheusRegister.getSingleMetricAsString(
+        'event_store_writes_total',
+    );
+    expect(recordedMetric).toMatch(
+        /event_store_writes_total{type="feature-updated",transaction="outside"} 1/,
     );
 });
 

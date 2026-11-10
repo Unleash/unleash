@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type FC } from 'react';
 import { IconButton, Tooltip, useMediaQuery, useTheme } from '@mui/material';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router';
 import {
     type ColumnDef,
     getCoreRowModel,
@@ -290,8 +290,8 @@ export const Group: FC = () => {
                         isLoading={loading}
                         header={
                             <PageHeader
-                                secondary
-                                title={`Users (${
+                                variant='h2'
+                                heading={`Users (${
                                     rows.length < data.length
                                         ? `${rows.length} of ${data.length}`
                                         : data.length

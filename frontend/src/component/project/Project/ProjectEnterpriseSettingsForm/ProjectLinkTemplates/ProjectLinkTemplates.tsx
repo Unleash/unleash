@@ -103,7 +103,9 @@ const ProjectLinkTemplates = ({
                     gap: 1,
                 }}
             >
-                <Typography variant='h4'>Project Link Templates</Typography>
+                <Typography variant='h3' component='h4'>
+                    Project Link Templates
+                </Typography>
                 <Tooltip
                     title={
                         <Box
@@ -121,8 +123,8 @@ const ProjectLinkTemplates = ({
                         </Box>
                     }
                 >
-                    <IconButton size='small' sx={{ ml: 1 }}>
-                        <HelpOutlineIcon fontSize='small' />
+                    <IconButton size='medium' sx={{ ml: 1 }}>
+                        <HelpOutlineIcon />
                     </IconButton>
                 </Tooltip>
             </Box>

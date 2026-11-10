@@ -1,6 +1,9 @@
 import type {
     AdvancedPlaygroundRequestSchema,
     AdvancedPlaygroundResponseSchema,
+    PlaygroundFeatureSchema,
+    PlaygroundFeatureRequestSchema,
+    PlaygroundFeatureResponseSchema,
     PlaygroundRequestSchema,
     PlaygroundResponseSchema,
     PlaygroundStrategySchema,
@@ -87,28 +90,36 @@ export const advancedPlaygroundViewModel = (
     return { features, input };
 };
 
+const featureWithStrategyLinks = (
+    environment: string,
+    { name, strategies, projectId, ...rest }: PlaygroundFeatureEvaluationResult,
+): PlaygroundFeatureSchema => ({
+    ...rest,
+    name,
+    projectId,
+    strategies: {
+        ...strategies,
+        data: strategies.data.map((strategy) =>
+            addStrategyEditLink(environment, projectId, name, strategy),
+        ),
+    },
+});
+
 export const playgroundViewModel = (
     input: PlaygroundRequestSchema,
     playgroundResult: PlaygroundFeatureEvaluationResult[],
 ): PlaygroundResponseSchema => {
-    const features = playgroundResult.map(
-        ({ name, strategies, projectId, ...rest }) => ({
-            ...rest,
-            name,
-            projectId,
-            strategies: {
-                ...strategies,
-                data: strategies.data.map((strategy) =>
-                    addStrategyEditLink(
-                        input.environment,
-                        projectId,
-                        name,
-                        strategy,
-                    ),
-                ),
-            },
-        }),
+    const features = playgroundResult.map((feature) =>
+        featureWithStrategyLinks(input.environment, feature),
     );
 
     return { input, features };
 };
+
+export const playgroundFeatureViewModel = (
+    input: PlaygroundFeatureRequestSchema,
+    playgroundResult: PlaygroundFeatureEvaluationResult,
+): PlaygroundFeatureResponseSchema => ({
+    input,
+    feature: featureWithStrategyLinks(input.environment, playgroundResult),
+});

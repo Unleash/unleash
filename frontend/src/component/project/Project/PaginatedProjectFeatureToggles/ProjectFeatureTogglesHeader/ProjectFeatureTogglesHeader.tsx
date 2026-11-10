@@ -1,16 +1,13 @@
 import { type FC, type ReactNode, useState } from 'react';
-import { Box, IconButton, styled, Tooltip } from '@mui/material';
+import { Box, IconButton, Tooltip } from '@mui/material';
 import useLoading from 'hooks/useLoading';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
+import { exportFlagsTracking } from 'component/feature/FeatureToggleList/exportTracking';
 import IosShare from '@mui/icons-material/IosShare';
 import { FlagCreationButton } from './FlagCreationButton/FlagCreationButton.tsx';
 import { ImportButton } from './ImportButton/ImportButton.tsx';
-
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
-    padding: theme.spacing(1.5),
-}));
 
 type ProjectFeatureTogglesHeaderProps = {
     isLoading?: boolean;
@@ -36,19 +33,21 @@ export const ProjectFeatureTogglesHeader: FC<
     return (
         <Box ref={headerLoadingRef} aria-busy={isLoading} aria-live='polite'>
             <PageHeader
-                titleElement={`${title} ${
+                variant='h2'
+                heading={`${title} ${
                     totalItems !== undefined ? `(${totalItems})` : ''
                 }`}
                 actions={
                     <>
                         {actions}
                         <Tooltip title='Export all project flags' arrow>
-                            <StyledIconButton
+                            <IconButton
+                                size='large'
                                 data-loading
                                 onClick={() => setShowExportDialog(true)}
                             >
                                 <IosShare />
-                            </StyledIconButton>
+                            </IconButton>
                         </Tooltip>
                         <ImportButton />
 
@@ -59,6 +58,10 @@ export const ProjectFeatureTogglesHeader: FC<
                                 data={[]}
                                 onClose={() => setShowExportDialog(false)}
                                 environments={environmentsToExport || []}
+                                tracking={{
+                                    ...exportFlagsTracking,
+                                    props: { source: 'project-header' },
+                                }}
                             />
                         ) : null}
                         <Box>

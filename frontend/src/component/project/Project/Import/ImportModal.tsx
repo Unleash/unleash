@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
+import { useTracking } from 'hooks/useTracking';
 import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ImportTimeline } from './ImportTimeline.tsx';
@@ -14,6 +15,7 @@ import {
 import { ValidationStage } from './validate/ValidationStage.tsx';
 import { ImportStage } from './import/ImportStage.tsx';
 import { ImportOptions } from './configure/ImportOptions.tsx';
+import { importFlagsTracking } from 'component/project/Project/Import/importTracking';
 
 const ModalContentContainer = styled('div')(({ theme }) => ({
     minHeight: '100vh',
@@ -54,9 +56,22 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
     const [environment, setEnvironment] = useState('');
     const [importPayload, setImportPayload] = useState('');
     const [activeTab, setActiveTab] = useState<ImportMode>('file');
+    // Dropping a file switches the tab to 'code', so activeTab alone can't tell file from code.
+    const [importSource, setImportSource] = useState<ImportMode>('file');
+
+    const importTracking = {
+        ...importFlagsTracking,
+        props: { importSource },
+    };
+    const trackImportFlags = useTracking(importTracking);
 
     const close = () => {
         setOpen(false);
+    };
+
+    const cancel = () => {
+        trackImportFlags('dismissed', { method: 'cancel-button' });
+        close();
     };
 
     useEffect(() => {
@@ -70,10 +85,16 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
         setEnvironment('');
         setImportPayload('');
         setActiveTab('file');
+        setImportSource('file');
     };
 
     return (
-        <SidebarModal open={open} onClose={close} label='Import flags'>
+        <SidebarModal
+            open={open}
+            onClose={close}
+            label='Import flags'
+            tracking={importTracking}
+        >
             <ModalContentContainer>
                 <TimelineContainer>
                     <TimelineHeader>Process</TimelineHeader>
@@ -101,14 +122,17 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                                     activeTab={activeTab}
                                     setActiveTab={setActiveTab}
                                     importPayload={importPayload}
-                                    setImportPayload={setImportPayload}
+                                    setImportPayload={(payload, source) => {
+                                        setImportPayload(payload);
+                                        setImportSource(source);
+                                    }}
                                 />
                             }
                             actions={
                                 <Actions
                                     disabled={!isValidJSON(importPayload)}
                                     onSubmit={() => setImportStage('validate')}
-                                    onClose={close}
+                                    onClose={cancel}
                                 />
                             }
                         />
@@ -123,7 +147,8 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                             payload={importPayload}
                             onBack={() => setImportStage('configure')}
                             onSubmit={() => setImportStage('import')}
-                            onClose={close}
+                            onClose={cancel}
+                            tracking={importTracking}
                         />
                     }
                 />
@@ -135,6 +160,7 @@ export const ImportModal = ({ open, setOpen, project }: IImportModalProps) => {
                             environment={environment}
                             payload={importPayload}
                             onClose={close}
+                            tracking={importTracking}
                         />
                     }
                 />

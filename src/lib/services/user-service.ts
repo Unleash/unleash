@@ -80,6 +80,21 @@ export interface ILoginUserRequest {
     autoCreate?: boolean;
 }
 
+export interface ChangePasswordOptions {
+    /**
+     * Opt out of invalidating sessions when changing the password. Defaults to
+     * logging the user out (only set this to `false` for flows like setting an
+     * initial password during signup).
+     */
+    logoutUser?: boolean;
+    /**
+     * When set, keep this session alive and only terminate the user's other
+     * sessions. Used by self-service password changes so the user who performed
+     * the change stays logged in while every other device is signed out.
+     */
+    keepSessionId?: string;
+}
+
 const saltRounds = 10;
 const disallowNPreviousPasswords = 5;
 
@@ -397,6 +412,9 @@ export class UserService {
     }
 
     async deleteUser(userId: number, auditUser: IAuditUser): Promise<void> {
+        if (!(await this.store.exists(userId))) {
+            return;
+        }
         const user = await this.getUser(userId);
         await this.accessService.wipeUserPermissions(userId);
         await this.sessionService.deleteSessionsForUser(userId);
@@ -409,6 +427,32 @@ export class UserService {
                 auditUser,
             }),
         );
+    }
+
+    async deleteInactiveUsers(
+        numberOfDaysToBeInactive: number,
+        auditUser: IAuditUser,
+    ): Promise<void> {
+        const usersDeleted = await this.store.deleteInactiveUsers(
+            numberOfDaysToBeInactive,
+            auditUser.id,
+        );
+        // Note: after deletion we can't get the role for the user. This is a simplification
+        const viewerRole = await this.accessService.getPredefinedRole(
+            RoleName.VIEWER,
+        );
+        const userIds = usersDeleted.map((user) => user.id);
+        await this.accessService.bulkWipeUserPermissions(userIds);
+        await this.sessionService.deleteSessionsForUsers(userIds);
+        if (usersDeleted.length > 0) {
+            const deletions = usersDeleted.map((user) => {
+                return new UserDeletedEvent({
+                    deletedUser: { ...user, rootRole: viewerRole.id },
+                    auditUser,
+                });
+            });
+            await this.eventService.storeEventsOrThrow([...deletions]);
+        }
     }
 
     async deleteScimUsers(auditUser: IAuditUser): Promise<void> {
@@ -570,7 +614,7 @@ export class UserService {
     async changePassword(
         userId: number,
         password: string,
-        { logoutUser }: { logoutUser?: boolean } = { logoutUser: true },
+        { logoutUser, keepSessionId }: ChangePasswordOptions = {},
     ): Promise<void> {
         this.validatePassword(password);
         const passwordHash = await bcrypt.hash(password, saltRounds);
@@ -582,14 +626,30 @@ export class UserService {
         );
         await this.resetTokenService.expireExistingTokensForUser(userId);
 
-        if (logoutUser) {
-            await this.sessionService.deleteSessionsForUser(userId);
+        // Invalidate active sessions whenever the password changes so that
+        // other devices/browsers are forced to re-authenticate with the new
+        // credentials (OWASP session management). When `keepSessionId` is
+        // provided we keep that session alive (the one that performed the
+        // change) and only terminate the others. Callers must opt out of
+        // invalidation entirely with `logoutUser: false` (e.g. setting an
+        // initial password during signup); a missing/undefined flag stays
+        // secure.
+        if (logoutUser !== false) {
+            if (keepSessionId) {
+                await this.sessionService.deleteSessionsForUserExcept(
+                    userId,
+                    keepSessionId,
+                );
+            } else {
+                await this.sessionService.deleteSessionsForUser(userId);
+            }
         }
     }
 
     async changePasswordWithPreviouslyUsedPasswordCheck(
         userId: number,
         password: string,
+        options: ChangePasswordOptions = {},
     ): Promise<void> {
         const previouslyUsed =
             await this.store.getPasswordsPreviouslyUsed(userId);
@@ -600,15 +660,22 @@ export class UserService {
             throw new PasswordPreviouslyUsedError();
         }
 
-        await this.changePassword(userId, password);
+        await this.changePassword(userId, password, options);
     }
 
     async changePasswordWithVerification(
         userId: number,
         newPassword: string,
         oldPassword: string,
+        options: ChangePasswordOptions = {},
     ): Promise<void> {
         const currentPasswordHash = await this.store.getPasswordHash(userId);
+        if (!currentPasswordHash) {
+            throw new PasswordMismatch(
+                `The old password you provided is invalid. If you have forgotten your password, visit ${this.baseUriPath}/forgotten-password or get in touch with your instance administrator.`,
+            );
+        }
+
         const match = await bcrypt.compare(oldPassword, currentPasswordHash);
         if (!match) {
             throw new PasswordMismatch(
@@ -619,7 +686,14 @@ export class UserService {
         await this.changePasswordWithPreviouslyUsedPasswordCheck(
             userId,
             newPassword,
+            options,
         );
+    }
+
+    async hasPassword(userId: number): Promise<boolean> {
+        const passwordHash = await this.store.getPasswordHash(userId);
+
+        return Boolean(passwordHash);
     }
 
     async getUserForToken(token: string): Promise<TokenUserSchema> {
@@ -649,17 +723,14 @@ export class UserService {
      */
     async resetPassword(token: string, password: string): Promise<void> {
         this.validatePassword(password);
-        const user = await this.getUserForToken(token);
+        // Consume before changing the password so concurrent requests cannot
+        // both pass validation and both write a new password (TOCTOU).
+        const userId = await this.resetTokenService.consumeToken(token);
 
         await this.changePasswordWithPreviouslyUsedPasswordCheck(
-            user.id,
+            userId,
             password,
         );
-
-        await this.resetTokenService.useAccessToken({
-            userId: user.id,
-            token,
-        });
     }
 
     async createResetPasswordEmail(

@@ -1,12 +1,4 @@
-import {
-    Box,
-    Button,
-    styled,
-    Tab,
-    Tabs,
-    TextField,
-    Typography,
-} from '@mui/material';
+import { Box, Button, styled, Tab, Tabs, Typography } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StyledFileDropZone } from './StyledFileDropZone.tsx';
 import { PulsingAvatar } from 'component/common/PulsingAvatar/PulsingAvatar';
@@ -21,10 +13,7 @@ import {
     CODE_TEXT_FIELD,
     VALIDATE_BUTTON,
 } from 'utils/testIds';
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-    width: '100%',
-}));
+import Input from 'component/common/Input/Input.tsx';
 
 const DropMessage = styled(Typography)(({ theme }) => ({
     marginTop: theme.spacing(4),
@@ -74,7 +63,7 @@ export const ImportArea: FC<{
     activeTab: ImportMode;
     setActiveTab: (mode: ImportMode) => void;
     importPayload: string;
-    setImportPayload: (payload: string) => void;
+    setImportPayload: (payload: string, source: ImportMode) => void;
 }> = ({ activeTab, setActiveTab, importPayload, setImportPayload }) => {
     const [dragActive, setDragActive] = useState(false);
     const { setToastData } = useToast();
@@ -85,7 +74,7 @@ export const ImportArea: FC<{
             show={
                 <StyledFileDropZone
                     onSuccess={(data) => {
-                        setImportPayload(data);
+                        setImportPayload(data, 'file');
                         setActiveTab('code');
                         setToastData({
                             type: 'success',
@@ -93,7 +82,7 @@ export const ImportArea: FC<{
                         });
                     }}
                     onError={(error) => {
-                        setImportPayload('');
+                        setImportPayload('', 'file');
                         setToastData({
                             type: 'error',
                             text: error,
@@ -120,10 +109,12 @@ export const ImportArea: FC<{
                 </StyledFileDropZone>
             }
             elseShow={
-                <StyledTextField
+                <Input
                     label='Exported feature flags'
-                    variant='outlined'
-                    onChange={(event) => setImportPayload(event.target.value)}
+                    fullWidth
+                    onChange={(event) =>
+                        setImportPayload(event.target.value, 'code')
+                    }
                     value={importPayload}
                     data-testid={CODE_TEXT_FIELD}
                     multiline

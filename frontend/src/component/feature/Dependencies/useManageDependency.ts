@@ -1,5 +1,5 @@
 import { type ParentValue, REMOVE_DEPENDENCY_OPTION } from './constants.js';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import useToast from 'hooks/useToast';
@@ -16,7 +16,7 @@ export const useManageDependency = (
     parentValue: ParentValue,
     onClose: () => void,
 ) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(project);
@@ -50,7 +50,7 @@ export const useManageDependency = (
                     },
                 },
             ]);
-            trackEvent('dependent_features', {
+            trackEvent('dependent-features', {
                 props: {
                     eventType: 'dependency added',
                 },
@@ -76,7 +76,7 @@ export const useManageDependency = (
                         ? 'deleteDependency'
                         : 'addDependency';
                 await handleAddChange(actionType);
-                trackEvent('dependent_features', {
+                trackEvent('dependent-features', {
                     props: {
                         eventType:
                             actionType === 'addDependency'
@@ -86,7 +86,7 @@ export const useManageDependency = (
                 });
             } else if (parent === REMOVE_DEPENDENCY_OPTION.key) {
                 await removeDependencies(featureId);
-                trackEvent('dependent_features', {
+                trackEvent('dependent-features', {
                     props: {
                         eventType: 'dependency removed',
                     },
@@ -101,7 +101,7 @@ export const useManageDependency = (
                             ? parentValue.variants
                             : [],
                 });
-                trackEvent('dependent_features', {
+                trackEvent('dependent-features', {
                     props: {
                         eventType: 'dependency added',
                     },

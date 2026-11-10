@@ -10,7 +10,6 @@
 export type ChangeRequestCreateFeatureSchemaOneOfFourfourAction =
     (typeof ChangeRequestCreateFeatureSchemaOneOfFourfourAction)[keyof typeof ChangeRequestCreateFeatureSchemaOneOfFourfourAction];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const ChangeRequestCreateFeatureSchemaOneOfFourfourAction = {
     deleteReleasePlanSafeguard: 'deleteReleasePlanSafeguard',
 } as const;

@@ -14,7 +14,6 @@ interface MilestoneAutomationProps {
     milestone: IReleasePlanMilestone;
     milestones: IReleasePlanMilestone[];
     status: MilestoneStatus;
-    readonly: boolean | undefined;
     isProgressionFormOpen: boolean;
     effectiveTransitionCondition: IReleasePlanMilestone['transitionCondition'];
     pendingProgressionChange: PendingProgressionChange | null;
@@ -25,13 +24,13 @@ interface MilestoneAutomationProps {
     ) => Promise<{ shouldReset?: boolean }>;
     onDeleteProgression: (milestone: IReleasePlanMilestone) => void;
     environment: string;
+    featureName: string;
 }
 
 export const MilestoneAutomation = ({
     milestone,
     milestones,
     status,
-    readonly,
     isProgressionFormOpen,
     effectiveTransitionCondition,
     pendingProgressionChange,
@@ -40,19 +39,13 @@ export const MilestoneAutomation = ({
     onChangeProgression,
     onDeleteProgression,
     environment,
+    featureName,
 }: MilestoneAutomationProps) => {
     const milestoneIndex = milestones.findIndex((m) => m.id === milestone.id);
-    const isNotLastMilestone = milestoneIndex < milestones.length - 1;
     const nextMilestoneId = milestones[milestoneIndex + 1]?.id || '';
     const hasAnyPausedMilestone = milestones.some((milestone) =>
         Boolean(milestone.pausedAt),
     );
-
-    const showAutomation = isNotLastMilestone && !readonly;
-
-    if (!showAutomation) {
-        return null;
-    }
 
     const hasPendingChange =
         pendingProgressionChange?.action === 'changeMilestoneProgression';
@@ -80,12 +73,11 @@ export const MilestoneAutomation = ({
                     onSubmit={onChangeProgression}
                     onCancel={onCloseProgressionForm}
                     environment={environment}
+                    featureName={featureName}
                 />
             ) : effectiveTransitionCondition ? (
                 <MilestoneTransitionDisplay
-                    intervalMinutes={
-                        effectiveTransitionCondition.intervalMinutes
-                    }
+                    transitionCondition={effectiveTransitionCondition}
                     targetMilestoneId={nextMilestoneId}
                     sourceMilestoneStartedAt={milestone.startedAt}
                     onSave={onChangeProgression}
@@ -94,6 +86,7 @@ export const MilestoneAutomation = ({
                     status={status}
                     badge={badge}
                     environment={environment}
+                    featureName={featureName}
                 />
             ) : hasAnyPausedMilestone ? null : (
                 <StyledActionButton

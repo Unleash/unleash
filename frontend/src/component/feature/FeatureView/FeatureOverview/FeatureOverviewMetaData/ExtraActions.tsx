@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import {
     IconButton,
     ListItemIcon,
@@ -16,31 +16,24 @@ import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
 import MoreVert from '@mui/icons-material/MoreVert';
 
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
-    height: theme.spacing(3.5),
-    width: theme.spacing(3.5),
-}));
-
 const StyledPopover = styled(Popover)(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(1, 1.5),
 }));
 
-interface IDependencyActionsProps {
-    capabilityId: string;
-    feature: string;
+interface IExtraActionsProps {
+    tooltipTitle: string;
     onEdit: () => void;
     onDelete: () => void;
 }
 
 export const ExtraActions = ({
-    capabilityId,
-    feature,
+    tooltipTitle,
     onEdit,
     onDelete,
-}: IDependencyActionsProps) => {
-    const id = `${capabilityId}-${feature}-actions`;
-    const menuId = `${id}-menu`;
+}: IExtraActionsProps) => {
+    const id = useId();
+    const menuId = useId();
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -54,9 +47,10 @@ export const ExtraActions = ({
 
     return (
         <Box>
-            <Tooltip title='Dependency actions' arrow describeChild>
-                <StyledIconButton
+            <Tooltip title={tooltipTitle} arrow describeChild>
+                <IconButton
                     id={id}
+                    size='medium'
                     aria-controls={open ? menuId : undefined}
                     aria-haspopup='true'
                     aria-expanded={open ? 'true' : undefined}
@@ -64,7 +58,7 @@ export const ExtraActions = ({
                     type='button'
                 >
                     <MoreVert />
-                </StyledIconButton>
+                </IconButton>
             </Tooltip>
             <StyledPopover
                 id={menuId}

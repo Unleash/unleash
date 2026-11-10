@@ -1,6 +1,6 @@
 import { test } from 'vitest';
 import { render } from 'utils/testRenderer';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import BreadcrumbNav from './BreadcrumbNav.tsx';
 import { screen } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';

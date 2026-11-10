@@ -1,5 +1,5 @@
-import UIContext from 'contexts/UIContext';
-import { useContext, type JSX } from 'react';
+import { useTheme } from '@mui/material/styles';
+import type { JSX } from 'react';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender.tsx';
 
 interface IThemeModeProps {
@@ -8,11 +8,11 @@ interface IThemeModeProps {
 }
 
 export const ThemeMode = ({ darkmode, lightmode }: IThemeModeProps) => {
-    const { themeMode } = useContext(UIContext);
+    const theme = useTheme();
 
     return (
         <ConditionallyRender
-            condition={themeMode === 'dark'}
+            condition={theme.mode === 'dark'}
             show={darkmode}
             elseShow={lightmode}
         />

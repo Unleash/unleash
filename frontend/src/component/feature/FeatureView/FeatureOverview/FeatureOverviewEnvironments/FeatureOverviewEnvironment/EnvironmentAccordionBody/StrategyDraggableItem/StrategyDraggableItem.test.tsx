@@ -3,7 +3,7 @@ import { render } from 'utils/testRenderer';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { screen } from '@testing-library/react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import type {
     ChangeRequestType,
     ChangeRequestAction,

@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 /**
  * A card container with a border that highlights on hover/focus.
@@ -18,7 +18,7 @@ export const Card = styled('div')(({ theme }) => ({
     position: 'relative',
     border: `1.5px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusLarge,
-    background: theme.palette.background.default,
+    background: theme.palette.background.paper,
     padding: theme.spacing(2),
     transition: 'border-color 150ms ease',
     '&:hover, &:focus-within': {

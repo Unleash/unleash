@@ -1,11 +1,15 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { EventTrackerProvider } from './EventTrackerProvider';
-import { PlausibleContext } from 'contexts/PlausibleContext';
-import { LogRocketContext } from 'contexts/LogRocketContext';
-import { EventTrackerContext } from 'contexts/EventTrackerContext';
 import { useContext } from 'react';
-import { vi, expect, test } from 'vitest';
+import { expect, test } from 'vitest';
+import { render } from 'utils/testRenderer';
+import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { EventTrackerProvider } from './EventTrackerProvider';
+import { FlightRecorderContext } from 'contexts/FlightRecorderContext';
+import { EventTrackerContext } from 'contexts/EventTrackerContext';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+
+const server = testServerSetup();
 
 const TrackButton = () => {
     const tracker = useContext(EventTrackerContext);
@@ -23,28 +27,47 @@ const TrackButton = () => {
     );
 };
 
-test('trackEvent calls both Plausible and LogRocket', async () => {
-    const plausibleTrack = vi.fn();
-    const logRocketTrack = vi.fn();
+const ConfigProbe = () => {
+    const { uiConfig } = useUiConfig();
+    return <span>ctx:{uiConfig?.unleashContext?.userId ?? 'none'}</span>;
+};
+
+test('a tracked event is recorded with the user context and the current path', async () => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        unleashContext: { userId: 'u-1', email: 'person@example.com' },
+    });
+
+    const recordedEvents: Array<{ payload: { eventId: string } }> = [];
+    const record = (event: (typeof recordedEvents)[number]) =>
+        recordedEvents.push(event);
 
     render(
-        <PlausibleContext.Provider
-            value={{ trackEvent: plausibleTrack } as any}
-        >
-            <LogRocketContext.Provider value={{ track: logRocketTrack }}>
-                <EventTrackerProvider>
-                    <TrackButton />
-                </EventTrackerProvider>
-            </LogRocketContext.Provider>
-        </PlausibleContext.Provider>,
+        <FlightRecorderContext.Provider value={{ record } as any}>
+            <EventTrackerProvider>
+                <ConfigProbe />
+                <TrackButton />
+            </EventTrackerProvider>
+        </FlightRecorderContext.Provider>,
     );
+
+    await screen.findByText('ctx:u-1');
+    await userEvent.click(screen.getByRole('button', { name: 'track' }));
+
+    expect(recordedEvents).toEqual([
+        {
+            eventType: 'custom',
+            eventName: 'invite',
+            context: { userId: 'u-1', email: 'person@example.com' },
+            payload: {
+                eventType: 'test',
+                path: '/',
+                eventId: expect.any(String),
+            },
+        },
+    ]);
 
     await userEvent.click(screen.getByRole('button', { name: 'track' }));
 
-    expect(plausibleTrack).toHaveBeenCalledWith('invite', {
-        props: { eventType: 'test' },
-    });
-    expect(logRocketTrack).toHaveBeenCalledWith('invite', {
-        eventType: 'test',
-    });
+    const eventIds = recordedEvents.map((event) => event.payload.eventId);
+    expect(new Set(eventIds).size).toBe(2);
 });

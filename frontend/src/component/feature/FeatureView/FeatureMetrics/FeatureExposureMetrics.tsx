@@ -99,7 +99,9 @@ export const FeatureExposureMetrics = () => {
     }
 
     return (
-        <PageContent header={<PageHeader title='Exposure metrics' />}>
+        <PageContent
+            header={<PageHeader title='Exposure metrics' variant='h2' />}
+        >
             <Grid container component='header' spacing={2}>
                 <Grid size={{ xs: 12, md: 4 }}>
                     <ConditionallyRender

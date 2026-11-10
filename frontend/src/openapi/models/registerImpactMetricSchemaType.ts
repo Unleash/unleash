@@ -10,7 +10,6 @@
 export type RegisterImpactMetricSchemaType =
     (typeof RegisterImpactMetricSchemaType)[keyof typeof RegisterImpactMetricSchemaType];
 
-// eslint-disable-next-line @typescript-eslint/no-redeclare
 export const RegisterImpactMetricSchemaType = {
     counter: 'counter',
     gauge: 'gauge',

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useEventTracker } from 'hooks/useEventTracker';
 import {
     Box,
     Button,
@@ -143,7 +143,7 @@ interface ReleaseManagementSplashProps {
 export const ReleaseManagementSplash = ({
     onClose,
 }: ReleaseManagementSplashProps) => {
-    const { trackEvent } = usePlausibleTracker();
+    const { trackEvent } = useEventTracker();
     const videoRef = useRef<HTMLVideoElement>(null);
     const [isPlaying, setIsPlaying] = useState(false);
 

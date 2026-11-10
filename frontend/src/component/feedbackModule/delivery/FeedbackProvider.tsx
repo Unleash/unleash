@@ -18,8 +18,6 @@ import {
     observeBrowserTriggers,
     type TriggerObserver,
 } from '../observers/observeTriggers.ts';
-import { unique } from 'utils/unique';
-import { useCustomEvent } from 'hooks/useCustomEvent';
 
 interface FeedbackContextValue {
     survey: Survey | null;
@@ -56,23 +54,6 @@ const triggerPageSurvey = (
     }
     const pageSurvey = findEligibleSurvey(surveys, { on: 'page', path });
     return pageSurvey === null ? null : triggerSurvey(pageSurvey);
-};
-
-const customEventNames = (surveys: Survey[]): string[] =>
-    unique(
-        surveys.flatMap(({ trigger }) =>
-            trigger.on === 'event' ? [trigger.name] : [],
-        ),
-    ).toSorted();
-
-interface SurveyEventListenerProps {
-    name: string;
-    onEvent: (name: string) => void;
-}
-
-const SurveyEventListener = ({ name, onEvent }: SurveyEventListenerProps) => {
-    useCustomEvent(name, () => onEvent(name));
-    return null;
 };
 
 interface FeedbackProviderProps {
@@ -139,14 +120,6 @@ export const FeedbackProvider = ({
         [observeTriggers, triggers],
     );
 
-    const showSurveyOnEvent = (name: string) => {
-        if (path !== null) {
-            showSurveyOn({ on: 'event', path, name });
-        }
-    };
-
-    const eventNames = useMemo(() => customEventNames(surveys), [surveys]);
-
     const closeSurvey = () => {
         setTriggered(null);
         setShownSurvey(null);
@@ -169,13 +142,6 @@ export const FeedbackProvider = ({
         <FeedbackContext.Provider
             value={{ survey: shownSurvey, submit, dismiss }}
         >
-            {eventNames.map((name) => (
-                <SurveyEventListener
-                    key={name}
-                    name={name}
-                    onEvent={showSurveyOnEvent}
-                />
-            ))}
             {children}
         </FeedbackContext.Provider>
     );

@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import type { SurveyTrigger } from '../triggers/surveyTrigger.ts';
 import type { TriggerEvent } from '../triggers/triggerEvent.ts';
+import type { EventObserver } from './observeEvents.ts';
 import type { PageObserver, Unsubscribe } from './observePage.ts';
 import { observeTriggers } from './observeTriggers.ts';
 
@@ -47,6 +48,26 @@ const fakeElementObserver = () => {
     };
 };
 
+const fakeEventObserver = () => {
+    let observed: { names: string[]; onEvent: (name: string) => void } | null =
+        null;
+    const observe: EventObserver = (names, onEvent) => {
+        observed = { names, onEvent };
+        return () => {
+            observed = null;
+        };
+    };
+    return {
+        observe,
+        dispatch: (name: string) => {
+            if (observed?.names.includes(name)) {
+                observed.onEvent(name);
+            }
+        },
+        observedNames: () => observed?.names ?? null,
+    };
+};
+
 const CLICK_CREATE_FLAG: SurveyTrigger = {
     on: 'click',
     selector: '[data-testid="create-flag"]',
@@ -61,6 +82,7 @@ describe('observeTriggers', () => {
     let pageObserver: ReturnType<typeof fakePageObserver>;
     let clickObserver: ReturnType<typeof fakeElementObserver>;
     let appearObserver: ReturnType<typeof fakeElementObserver>;
+    let eventObserver: ReturnType<typeof fakeEventObserver>;
     let emitted: TriggerEvent[];
     let unsubscribe: Unsubscribe | undefined;
 
@@ -72,6 +94,7 @@ describe('observeTriggers', () => {
                 observePage: pageObserver.observe,
                 observeClicks: clickObserver.observe,
                 observeAppear: appearObserver.observe,
+                observeEvents: eventObserver.observe,
                 basePath: BASE_PATH,
             },
         );
@@ -81,6 +104,7 @@ describe('observeTriggers', () => {
         pageObserver = fakePageObserver('/projects');
         clickObserver = fakeElementObserver();
         appearObserver = fakeElementObserver();
+        eventObserver = fakeEventObserver();
         emitted = [];
         unsubscribe = undefined;
     });
@@ -139,6 +163,39 @@ describe('observeTriggers', () => {
         expect(clickObserver.isInstalled()).toBe(false);
     });
 
+    it('stamps a host event with the page the user is currently on', () => {
+        install([{ on: 'event', name: 'flag-created' }]);
+
+        pageObserver.navigate('/projects/default');
+        eventObserver.dispatch('flag-created');
+
+        expect(emitted.at(-1)).toEqual({
+            on: 'event',
+            path: '/projects/default',
+            name: 'flag-created',
+        });
+    });
+
+    it('observes only the host events the triggers use, once each', () => {
+        install([
+            { on: 'event', name: 'flag-created' },
+            CLICK_CREATE_FLAG,
+            { on: 'event', name: 'flag-archived' },
+            { on: 'event', name: 'flag-created' },
+        ]);
+
+        expect(eventObserver.observedNames()).toEqual([
+            'flag-archived',
+            'flag-created',
+        ]);
+    });
+
+    it('does not observe host events without an event trigger', () => {
+        install([CLICK_CREATE_FLAG]);
+
+        expect(eventObserver.observedNames()).toBeNull();
+    });
+
     it('observes appearances only on pages an appear trigger matches', () => {
         install([{ ...APPEAR_TOAST, path: '/projects/*' }]);
         expect(appearObserver.isInstalled()).toBe(false);
@@ -186,14 +243,20 @@ describe('observeTriggers', () => {
     });
 
     it('stops observing every source on unsubscribe', () => {
-        install([CLICK_CREATE_FLAG, APPEAR_TOAST]);
+        install([
+            CLICK_CREATE_FLAG,
+            APPEAR_TOAST,
+            { on: 'event', name: 'flag-created' },
+        ]);
         expect(clickObserver.isInstalled()).toBe(true);
         expect(appearObserver.isInstalled()).toBe(true);
+        expect(eventObserver.observedNames()).not.toBeNull();
 
         unsubscribe?.();
 
         expect(pageObserver.isInstalled()).toBe(false);
         expect(clickObserver.isInstalled()).toBe(false);
         expect(appearObserver.isInstalled()).toBe(false);
+        expect(eventObserver.observedNames()).toBeNull();
     });
 });

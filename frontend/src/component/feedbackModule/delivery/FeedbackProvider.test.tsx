@@ -47,15 +47,18 @@ const fakeTriggerObserver = (initialPath: string) => {
         navigate: (path: string) => emit({ on: 'page', path }),
         click: (target: Element) =>
             emit({ on: 'click', path: currentPath, target }),
+        dispatch: (name: string) => {
+            const observesEvent = installed?.triggers.some(
+                (trigger) => trigger.on === 'event' && trigger.name === name,
+            );
+            if (observesEvent) {
+                emit({ on: 'event', path: currentPath, name });
+            }
+        },
         isInstalled: () => installed !== null,
         installedTriggers: () => installed?.triggers ?? null,
     };
 };
-
-const dispatchEvent = (name: string) =>
-    act(() => {
-        document.dispatchEvent(new CustomEvent(name));
-    });
 
 let triggerObserver: ReturnType<typeof fakeTriggerObserver>;
 
@@ -517,26 +520,7 @@ describe('FeedbackProvider', () => {
         );
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
 
-        dispatchEvent('flag-created');
-
-        expect(await screen.findByText('Survey A')).toBeInTheDocument();
-    });
-
-    it('matches an event against the page the user is currently on', async () => {
-        renderSurvey(
-            testUnleashClient([
-                surveyFlag('survey-a', 'Survey A', {
-                    ...EVENT_FLAG_CREATED,
-                    path: '/projects/:projectId',
-                }),
-            ]),
-        );
-        dispatchEvent('flag-created');
-        await runPendingSurveyTimers();
-        expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
-
-        triggerObserver.navigate('/projects/default');
-        dispatchEvent('flag-created');
+        triggerObserver.dispatch('flag-created');
 
         expect(await screen.findByText('Survey A')).toBeInTheDocument();
     });
@@ -554,7 +538,7 @@ describe('FeedbackProvider', () => {
                 surveyFlag('survey-a', 'Survey A', EVENT_FLAG_CREATED),
             ]),
         );
-        dispatchEvent('flag-archived');
+        triggerObserver.dispatch('flag-archived');
 
         expect(await screen.findByText('Survey B')).toBeInTheDocument();
     });

@@ -1,9 +1,9 @@
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { PayloadSchemaPreview } from './PayloadSchemaPreview.tsx';
 
-test('renders every property as an input, in declaration order, with its description', () => {
+test('renders an input for each supported property type, with a fallback', () => {
     const schema = {
         type: 'object',
         properties: {
@@ -24,17 +24,20 @@ test('renders every property as an input, in declaration order, with its descrip
     const labels = [
         ...new Set(
             screen
-                .getAllByText(/^(Email|Tier|Enabled|Color|Tags)$/)
+                .getAllByText(/^(Email|Tier|Enabled|Color|Tags):?$/)
                 .map((el) => el.textContent),
         ),
     ];
-    expect(labels).toEqual(['Email', 'Tier', 'Enabled', 'Color', 'Tags']);
-    expect(screen.getByLabelText('Enabled')).toBeInTheDocument();
-    expect(screen.getByLabelText('Color')).toBeInTheDocument();
-    expect(screen.getByLabelText('Tags')).toBeInTheDocument();
+    expect(labels).toEqual(['Email', 'Tier', 'Enabled:', 'Color:', 'Tags:']);
+    expect(screen.getByLabelText('Email')).toBeInTheDocument();
+    expect(screen.getByLabelText('Tier')).toBeInTheDocument();
     expect(
         screen.getByText('Billing tier for this account.'),
     ).toBeInTheDocument();
+    expect(screen.queryByLabelText('Enabled')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Color')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Tags')).not.toBeInTheDocument();
+    expect(screen.getAllByText(/not supported in a form view/)).toHaveLength(3);
 });
 
 test('shows a placeholder instead of crashing when the schema is not an object yet', () => {
@@ -43,7 +46,51 @@ test('shows a placeholder instead of crashing when the schema is not an object y
     expect(screen.getByText(/write a valid json schema/i)).toBeInTheDocument();
 });
 
-test("initializes the preview with the schema's first example instance", () => {
+test('carries numeric and string constraints onto the input as native HTML attributes, and disables readOnly properties', () => {
+    const schema = {
+        type: 'object',
+        properties: {
+            maxTokens: {
+                type: 'integer',
+                title: 'Max tokens',
+                minimum: 1,
+                maximum: 128000,
+                multipleOf: 1,
+            },
+            name: {
+                type: 'string',
+                title: 'Name',
+                minLength: 2,
+                maxLength: 50,
+                pattern: '^[a-z]+$',
+                readOnly: true,
+            },
+            website: { type: 'string', title: 'Website', format: 'uri' },
+        },
+    };
+
+    render(<PayloadSchemaPreview schema={schema} />);
+
+    expect(screen.getByLabelText('Max tokens')).toMatchObject({
+        type: 'number',
+        min: '1',
+        max: '128000',
+        step: '1',
+    });
+
+    const { minLength, maxLength, pattern, disabled } =
+        screen.getByLabelText<HTMLInputElement>('Name');
+    expect({ minLength, maxLength, pattern, disabled }).toEqual({
+        minLength: 2,
+        maxLength: 50,
+        pattern: '^[a-z]+$',
+        disabled: true,
+    });
+
+    expect(screen.getByLabelText('Website')).toHaveAttribute('type', 'url');
+});
+
+test("initializes the preview with the schema's first example instance, and resets it when the schema changes", () => {
     const schema = {
         type: 'object',
         examples: [{ name: 'Ada' }],
@@ -52,7 +99,40 @@ test("initializes the preview with the schema's first example instance", () => {
         },
     };
 
-    render(<PayloadSchemaPreview schema={schema} />);
+    const { rerender } = render(<PayloadSchemaPreview schema={schema} />);
 
     expect(screen.getByLabelText('Name')).toHaveValue('Ada');
+
+    rerender(
+        <PayloadSchemaPreview
+            schema={{
+                ...schema,
+                examples: [{ name: 'Grace' }],
+            }}
+        />,
+    );
+
+    expect(screen.getByLabelText('Name')).toHaveValue('Grace');
+});
+
+test('renders a datetime-local input for a date-time format, converting the stored ISO value for display and back on change', () => {
+    const schema = {
+        type: 'object',
+        examples: [{ until: '2024-03-10T08:30:00.000Z' }],
+        properties: {
+            until: { type: 'string', title: 'Until', format: 'date-time' },
+        },
+    };
+
+    render(<PayloadSchemaPreview schema={schema} />);
+
+    const until = screen.getByLabelText('Until');
+    expect(until).toMatchObject({
+        type: 'datetime-local',
+        value: '2024-03-10T08:30',
+    });
+
+    fireEvent.change(until, { target: { value: '2024-04-01T12:00' } });
+
+    expect(until).toHaveValue('2024-04-01T12:00');
 });

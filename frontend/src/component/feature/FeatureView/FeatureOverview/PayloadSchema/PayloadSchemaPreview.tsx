@@ -4,6 +4,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import type { JsonSchemaProperty } from './payloadSchemaTypes.ts';
 import { SchemaForm } from './SchemaForm.tsx';
 import { formValueWithExamplesAsDefaults } from './previewSchema.ts';
+import { isObjectSchema } from './schemaMatchers.ts';
 
 type ObjectSchema = JsonSchemaProperty & { type: 'object' };
 
@@ -30,11 +31,6 @@ const PreviewFallback = ({ message }: { message: string }) => (
         <StyledEmpty>{message}</StyledEmpty>
     </StyledPreview>
 );
-
-const isObjectSchema = (schema: unknown): schema is ObjectSchema =>
-    typeof schema === 'object' &&
-    schema !== null &&
-    (schema as { type?: unknown }).type === 'object';
 
 const SchemaPreviewForm = ({ schema }: { schema: ObjectSchema }) => {
     const [value, setValue] = useState<Record<string, unknown>>(() =>

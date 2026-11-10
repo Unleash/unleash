@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { styled, Typography } from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
 import type { JsonSchemaProperty } from './payloadSchemaTypes.ts';
+import { SchemaForm } from './SchemaForm.tsx';
+import { formValueWithExamplesAsDefaults } from './previewSchema.ts';
 
 type ObjectSchema = JsonSchemaProperty & { type: 'object' };
 
@@ -33,6 +36,18 @@ const isObjectSchema = (schema: unknown): schema is ObjectSchema =>
     schema !== null &&
     (schema as { type?: unknown }).type === 'object';
 
+const SchemaPreviewForm = ({ schema }: { schema: ObjectSchema }) => {
+    const [value, setValue] = useState<Record<string, unknown>>(() =>
+        formValueWithExamplesAsDefaults(schema),
+    );
+
+    return (
+        <StyledPreview>
+            <SchemaForm schema={schema} value={value} onChange={setValue} />
+        </StyledPreview>
+    );
+};
+
 export const PayloadSchemaPreview = ({
     schema,
 }: IPayloadSchemaPreviewProps) => {
@@ -49,7 +64,7 @@ export const PayloadSchemaPreview = ({
                 <PreviewFallback message="This schema can't be rendered as a form yet." />
             )}
         >
-            <PreviewFallback message='Preview will come here (TODO).' />
+            <SchemaPreviewForm key={JSON.stringify(schema)} schema={schema} />
         </ErrorBoundary>
     );
 };

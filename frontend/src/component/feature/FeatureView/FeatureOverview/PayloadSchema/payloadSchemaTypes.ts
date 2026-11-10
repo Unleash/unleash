@@ -4,6 +4,7 @@ export type JsonSchemaProperty = Record<string, unknown> & {
     description?: string;
     enum?: Array<string | number>;
     const?: unknown;
+    default?: unknown;
     examples?: unknown;
     properties?: Record<string, JsonSchemaProperty>;
     additionalProperties?: boolean;

@@ -259,8 +259,8 @@ importers:
         specifier: 0.11.14
         version: 0.11.14(supports-color@10.2.2)
       db-migrate-pg:
-        specifier: 1.5.2
-        version: 1.5.2
+        specifier: 1.7.1
+        version: 1.7.1
       db-migrate-shared:
         specifier: 1.2.0
         version: 1.2.0
@@ -3407,11 +3407,11 @@ packages:
   dayjs@1.11.23:
     resolution: {integrity: sha512-QDTCU0M0MxR3hQfnlDJfwekQiaanm1ubOD231u73WBckQ/fsamwRLiE2GBz6D3a/xF1NgfiDLJjXBa1hYOYTtQ==}
 
-  db-migrate-base@2.3.1:
-    resolution: {integrity: sha512-HewYQ3HPmy7NOWmhhMLg9TzN1StEtSqGL3w8IbBRCxEsJ+oM3bDUQ/z5fqpYKfIUK07mMXieCmZYwFpwWkSHDw==}
+  db-migrate-base@2.5.1:
+    resolution: {integrity: sha512-CsDOwzbGzNjMMVpnxEcY1jOgSpkZH7X1RCihmJXfQCUI+yHb+XyVZt2OSgvp/+K/UVsmrQ2ish84K9b60+QM7g==}
 
-  db-migrate-pg@1.5.2:
-    resolution: {integrity: sha512-agbT9biJi43E7wld9JgnpMKadYgIobMlRXdtRO8JLRWHI1Jc7mObl9pM7iv4AQ4UTLDgjtkqUqtXlfeWtRuRbA==}
+  db-migrate-pg@1.7.1:
+    resolution: {integrity: sha512-s8oXQfQiOCTmJi/dilc4p+83lwMI4tq4G/YvtFEBSOGrRajbdccDeuEWb+SpC/Zx2I8Q6W2QDbg5fz7WMhhwfQ==}
 
   db-migrate-shared@1.2.0:
     resolution: {integrity: sha512-65k86bVeHaMxb2L0Gw3y5V+CgZSRwhVQMwDMydmw5MvIpHHwD6SmBciqIwHsZfzJ9yzV/yYhdRefRM6FV5/siw==}
@@ -9006,14 +9006,14 @@ snapshots:
 
   dayjs@1.11.23: {}
 
-  db-migrate-base@2.3.1:
+  db-migrate-base@2.5.1:
     dependencies:
       bluebird: 3.7.2
 
-  db-migrate-pg@1.5.2:
+  db-migrate-pg@1.7.1:
     dependencies:
       bluebird: 3.7.2
-      db-migrate-base: 2.3.1
+      db-migrate-base: 2.5.1
       pg: 8.23.0
       semver: 7.7.4
     transitivePeerDependencies:

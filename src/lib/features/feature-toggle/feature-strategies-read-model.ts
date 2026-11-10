@@ -29,6 +29,7 @@ export class FeatureStrategiesReadModel implements IFeatureStrategiesReadModel {
         const rows: { id: string; variants: IStrategyVariant[] }[] =
             await this.activeStrategies()
                 .where('feature_strategies.feature_name', featureName)
+                .whereNull('feature_strategies.milestone_id')
                 .select('feature_strategies.id', 'feature_strategies.variants');
 
         return rows.flatMap((row) =>

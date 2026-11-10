@@ -201,6 +201,9 @@ export const outlinedInputSizing = (ownerState?: { size?: unknown }) => {
             paddingTop: 0,
             paddingBottom: 0,
             paddingLeft: paddingX,
+            '&:-webkit-autofill': {
+                borderRadius: 0,
+            },
         },
         // Multiline fields: match the single-line horizontal padding (MUI's
         // stock multiline padding is different and looks inconsistent), and

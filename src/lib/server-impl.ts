@@ -193,6 +193,7 @@ import { SegmentReadModel } from './features/segment/segment-read-model.js';
 import { FeaturesReadModel } from './features/feature-toggle/features-read-model.js';
 import { hasJsonPayload } from './features/feature-toggle/variant-json-payload.js';
 import { FakeFeaturesReadModel } from './features/feature-toggle/fakes/fake-features-read-model.js';
+import { FakeFeatureStrategiesReadModel } from './features/feature-toggle/fake-feature-strategies-read-model.js';
 import type { IFeaturesReadModel } from './features/feature-toggle/types/features-read-model-type.js';
 import type ExportImportService from './features/export-import-toggles/export-import-service.js';
 import { FeatureEnvironmentStore } from './db/feature-environment-store.js';
@@ -567,6 +568,7 @@ export {
     SegmentReadModel,
     FeaturesReadModel,
     FakeFeaturesReadModel,
+    FakeFeatureStrategiesReadModel,
     hasJsonPayload,
     FeatureEnvironmentStore,
     ChangeRequestAccessReadModel,

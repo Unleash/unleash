@@ -2,7 +2,7 @@ import { StyledHelpText, StyledTitle } from '../IntegrationForm.styles';
 import { Alert, Box, Button, styled } from '@mui/material';
 import type { AddonSchema, AddonTypeSchema } from 'openapi';
 import useQueryParams from 'hooks/useQueryParams';
-import { formatApiPath } from 'utils/formatPath';
+import { basePath, formatApiPath } from 'utils/formatPath';
 import { integrationActionsApiPath } from '../../integrationPaths.ts';
 
 export interface IIntegrationServerInstallProps {
@@ -37,6 +37,7 @@ const installQuery = (
     if (projectId) {
         query.set('project', projectId);
     }
+    query.set('unleashUrl', `${window.location.origin}${basePath}`);
     return query;
 };
 

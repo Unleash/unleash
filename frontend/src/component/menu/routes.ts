@@ -21,6 +21,7 @@ import EditFeature from 'component/feature/EditFeature/EditFeature';
 import ContextList from 'component/context/ContextList/ContextList/ContextList';
 import { CreateIntegration } from 'component/integrations/CreateIntegration/CreateIntegration';
 import { EditIntegration } from 'component/integrations/EditIntegration/EditIntegration';
+import { IntegrationConnected } from 'component/integrations/IntegrationConnected/IntegrationConnected';
 import { CopyFeatureToggle } from 'component/feature/CopyFeature/CopyFeature';
 import { EventPage } from 'component/events/EventPage/EventPage';
 import { CreateStrategy } from 'component/strategies/CreateStrategy/CreateStrategy';
@@ -438,6 +439,14 @@ export const routes: IRoute[] = [
         parent: '/integrations',
         title: 'Edit',
         component: EditIntegration,
+        type: 'protected',
+        menu: {},
+    },
+    {
+        path: '/integrations/connected/:providerId',
+        parent: '/integrations',
+        title: 'Connecting',
+        component: IntegrationConnected,
         type: 'protected',
         menu: {},
     },

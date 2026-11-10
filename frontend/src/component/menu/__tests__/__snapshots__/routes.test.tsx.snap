@@ -342,6 +342,13 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
+    "menu": {},
+    "parent": "/integrations",
+    "path": "/integrations/connected/:providerId",
+    "title": "Connecting",
+    "type": "protected",
+  },
+  {
     "hidden": false,
     "menu": {
       "main": true,

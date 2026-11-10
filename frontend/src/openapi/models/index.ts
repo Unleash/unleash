@@ -1902,6 +1902,7 @@ export * from './upsertFeaturePayloadSchema400.ts';
 export * from './upsertFeaturePayloadSchema401.ts';
 export * from './upsertFeaturePayloadSchema403.ts';
 export * from './upsertFeaturePayloadSchema404.ts';
+export * from './upsertFeaturePayloadSchema409.ts';
 export * from './upsertFeaturePayloadSchema415.ts';
 export * from './upsertPayloadSchemaSchema.ts';
 export * from './upsertPayloadSchemaSchemaSchema.ts';

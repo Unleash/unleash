@@ -4,14 +4,7 @@ import type {
     IFeatureStrategiesReadModel,
     StrategyVariantJsonPayload,
 } from './types/feature-strategies-read-model-type.js';
-
-type JsonPayloadVariant = IStrategyVariant & {
-    payload: { type: 'json'; value: string };
-};
-
-const hasJsonPayload = (
-    variant: IStrategyVariant,
-): variant is JsonPayloadVariant => variant.payload?.type === 'json';
+import { hasJsonPayload } from './variant-json-payload.js';
 
 export class FeatureStrategiesReadModel implements IFeatureStrategiesReadModel {
     private db: Db;

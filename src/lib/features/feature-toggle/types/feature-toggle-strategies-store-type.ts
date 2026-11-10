@@ -60,7 +60,7 @@ export type IQueryOperator =
 export interface IQueryParam {
     field: string;
     operator: IQueryOperator;
-    values: (string | null)[];
+    values: readonly (string | null)[];
 }
 
 export interface StrategyBelongsToFeatureAndProjectParams {

@@ -9,10 +9,12 @@ import {
     DateTimeField,
     LocalizationProvider,
     StaticDateTimePicker,
+    type StaticDateTimePickerProps,
 } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { dateTimePickerTabsClasses } from '@mui/x-date-pickers/DateTimePicker';
 import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
+import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
 import { enUS } from 'date-fns/locale';
 import { pickersInputSizing } from 'themes/controls.ts';
 import { useLocationSettings } from 'hooks/useLocationSettings';
@@ -72,6 +74,8 @@ const calendarSx = {
             margin: 0,
         },
 };
+
+type PickerView = NonNullable<StaticDateTimePickerProps['view']>;
 
 type Props = {
     value: string;
@@ -166,10 +170,10 @@ export const ConstraintDateInput: FC<Props> = ({
     };
 
     // Enter submits only on the last view (minutes)
-    const [pickerView, setPickerView] = useState('day');
+    const [pickerView, setPickerView] = useState<PickerView>('day');
     const pickerRef = useRef<HTMLDivElement>(null);
 
-    const onViewChange = (view: string) => {
+    const onViewChange = (view: PickerView) => {
         setPickerView(view);
         // MUI's TimeClock autoFocus is `!!focusedView`, unchanged across an
         // hours->minutes switch, so its own refocus effect never re-fires
@@ -198,6 +202,13 @@ export const ConstraintDateInput: FC<Props> = ({
     const onFocusEscape = () =>
         focusEscapedToMui(document.activeElement, pickerRef.current) &&
         reclaimPickerFocus(pickerRef.current);
+
+    // v8+ splits DateTimePicker views into a date step and a time step and
+    // only auto-advances within a step, so hop from day to hours ourselves
+    const onPickerChange = (newValue: Date | null) => {
+        onFieldChange(newValue);
+        if (pickerView === 'day' && newValue) onViewChange('hours');
+    };
 
     const onPickerKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
         if (e.key !== 'Enter') return;
@@ -270,8 +281,14 @@ export const ConstraintDateInput: FC<Props> = ({
                 >
                     <StaticDateTimePicker
                         value={value ? new Date(value) : null}
-                        onChange={onFieldChange}
+                        onChange={onPickerChange}
+                        view={pickerView}
                         onViewChange={onViewChange}
+                        viewRenderers={{
+                            hours: renderTimeViewClock,
+                            minutes: renderTimeViewClock,
+                            seconds: renderTimeViewClock,
+                        }}
                         sx={calendarSx}
                         slotProps={{
                             actionBar: { actions: [] },

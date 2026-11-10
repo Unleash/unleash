@@ -114,6 +114,7 @@ export type UiFlags = {
     dashboardV2?: boolean;
     dashboardOnboardingAI?: boolean | Variant;
     changeRequestSubmitRedirect?: boolean;
+    improvedSidebarNavigation?: boolean;
 };
 
 export interface IVersionInfo {

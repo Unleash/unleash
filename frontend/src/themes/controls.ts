@@ -1,6 +1,6 @@
 import type { Components, Theme } from '@mui/material/styles';
 // noinspection ES6UnusedImports
-import type {} from '@mui/x-date-pickers/themeAugmentation'; // pulls the MuiPickers* keys into the Components<Theme> type
+import type {} from '@mui/x-date-pickers/themeAugmentation'; // pulls the MuiPicker(s)* keys into the Components<Theme> type
 import { focusOutline, switchBaseIconFocusOutlineOffset } from './themeStyles';
 import { IS_DEV } from 'constants/env';
 
@@ -409,7 +409,7 @@ export const controlOverrides: Components<Theme> = {
             },
         },
     },
-    MuiPickersDay: {
+    MuiPickerDay: {
         styleOverrides: {
             root: pickersCalendarCell,
         },

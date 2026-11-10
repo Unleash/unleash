@@ -10,9 +10,9 @@ import {
     LocalizationProvider,
     StaticDateTimePicker,
 } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
-import { dateTimePickerTabsClasses } from '@mui/x-date-pickers/DateTimePicker/dateTimePickerTabsClasses';
-import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout/pickersLayoutClasses';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { dateTimePickerTabsClasses } from '@mui/x-date-pickers/DateTimePicker';
+import { pickersLayoutClasses } from '@mui/x-date-pickers/PickersLayout';
 import { enUS } from 'date-fns/locale';
 import { pickersInputSizing } from 'themes/controls.ts';
 import { useLocationSettings } from 'hooks/useLocationSettings';
@@ -224,7 +224,6 @@ export const ConstraintDateInput: FC<Props> = ({
             <DateTimeField
                 id={inputId}
                 label='Constraint Value'
-                enableAccessibleFieldDOMStructure
                 value={value ? new Date(value) : null}
                 onChange={onFieldChange}
                 onKeyDown={onFieldKeyDown}

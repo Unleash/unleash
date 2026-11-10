@@ -14,6 +14,7 @@ import ClientMetricsController from '../../features/metrics/client-metrics/clien
 import TagController from './tag.js';
 import TagTypeController from '../../features/tag-type/tag-type.js';
 import AddonController from './addon.js';
+import { SlackAppIntegrationController } from '../../addons/slack-app-integration-controller.js';
 import { ApiTokenController } from './api-token.js';
 import UserAdminController from './user-admin.js';
 import EmailController from './email.js';
@@ -112,6 +113,10 @@ export class AdminApi extends Controller {
             new TagTypeController(config, services).router,
         );
         this.app.use('/addons', new AddonController(config, services).router);
+        this.app.use(
+            '/integrations/slack-app',
+            new SlackAppIntegrationController(config, services).router,
+        );
         this.app.use(
             '/api-tokens',
             new ApiTokenController(config, services).router,

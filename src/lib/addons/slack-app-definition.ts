@@ -172,4 +172,20 @@ const slackAppDefinition: IAddonDefinition = {
     ],
 };
 
+export const slackAppServerInstallDefinition: IAddonDefinition = {
+    ...slackAppDefinition,
+    installation: undefined,
+    serverInstallation: {
+        path: 'slack-app/install',
+        title: 'Connect to Slack',
+        helpText:
+            'Install & connect asks you to allow the app in Slack, then brings you back to the saved integration, where you choose its events. The access token goes from Slack to Unleash without being shown.',
+    },
+    parameters: slackAppDefinition.parameters!.map((parameter) =>
+        parameter.name === 'accessToken'
+            ? { ...parameter, description: 'Set by Install & connect.' }
+            : parameter,
+    ),
+};
+
 export default slackAppDefinition;

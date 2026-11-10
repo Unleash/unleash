@@ -34,7 +34,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v5
+      - uses: pnpm/action-setup@v6
       - name: Use Node.js 22.x
         uses: actions/setup-node@v7
         with:

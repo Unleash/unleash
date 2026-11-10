@@ -54,7 +54,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "11.14.1",
     "@mui/icons-material": "9.4.0",
-    "@mui/lab": "9.0.0-beta.5",
+    "@mui/lab": "9.0.0-beta.10",
     "@mui/material": "9.4.0",
     "@mui/system": "9.4.0",
     "@mui/utils": "9.4.0",

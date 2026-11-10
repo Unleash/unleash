@@ -7,41 +7,16 @@ import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { testUnleashClient } from 'utils/testUnleashClient';
 import UIContext from 'contexts/UIContext';
-import { SURVEY_KIND, SURVEY_VERSION } from 'component/feedbackModule/survey';
 import { FeedbackProvider } from 'component/feedbackModule/delivery/FeedbackProvider';
 import { FeedbackSurvey } from 'component/feedbackModule/delivery/FeedbackSurvey';
 import type { TriggerObserver } from 'component/feedbackModule/observers/observeTriggers';
 import { shouldShowSurvey } from 'component/feedbackModule/delivery/surveyStorage';
+import { surveyFlag } from 'component/feedbackModule/delivery/testSurveyFlag';
 import { FeedbackNPS } from './FeedbackNPS.tsx';
 
 const server = testServerSetup();
 
 const PNPS_PROMPT = 'Hi. Do you have 2 minutes to help us improve Unleash?';
-
-const surveyFlag = (name: string, title: string): IToggle => ({
-    name,
-    enabled: true,
-    impressionData: false,
-    variant: {
-        name: 'survey',
-        enabled: true,
-        feature_enabled: true,
-        payload: {
-            type: 'json',
-            value: JSON.stringify({
-                kind: SURVEY_KIND,
-                version: SURVEY_VERSION,
-                environmentId: 'production',
-                title,
-                questions: [
-                    { id: 'comment', type: 'free-text', prompt: 'Comment' },
-                ],
-                submitBase: 'https://hosted.example.com/hosted',
-                trigger: { on: 'page' },
-            }),
-        },
-    },
-});
 
 const observeHomePage: TriggerObserver = (_triggers, onTrigger) => {
     onTrigger({ on: 'page', path: '/' });

@@ -7,23 +7,11 @@ import {
     useMemo,
     useState,
 } from 'react';
-import {
-    type IToggle,
-    useFlags,
-    useUnleashClient,
-} from '@unleash/proxy-client-react';
-import type { IContext } from 'unleash-proxy-client';
-import {
-    parseSurveyPayload,
-    type Survey,
-    type SurveyAnswers,
-} from '../survey.ts';
-import {
-    recordSurveyImpression,
-    recordSurveyInteraction,
-    shouldShowSurvey,
-} from './surveyStorage.ts';
-import { submitSurveyResponse } from './submitSurveyResponse.ts';
+import type { Survey, SurveyAnswers } from '../survey.ts';
+import { recordSurveyImpression, shouldShowSurvey } from './surveyStorage.ts';
+import type { IdentifyUser } from './identifyUser.ts';
+import { useSurveys } from './useSurveys.ts';
+import { useSurveyActions } from './useSurveyActions.ts';
 import { matchTriggers } from '../triggers/matchTriggers.ts';
 import type { TriggerEvent } from '../triggers/triggerEvent.ts';
 import {
@@ -45,12 +33,6 @@ interface TriggeredSurvey {
     survey: Survey;
     triggerOccurredAt: number;
 }
-
-const parseSurveys = (flags: IToggle[]): Survey[] =>
-    flags
-        .toSorted((a, b) => a.name.localeCompare(b.name))
-        .map((flag) => parseSurveyPayload(flag.name, flag.variant?.payload))
-        .filter((survey) => survey !== null);
 
 const findEligibleSurvey = (
     surveys: Survey[],
@@ -93,8 +75,6 @@ const SurveyEventListener = ({ name, onEvent }: SurveyEventListenerProps) => {
     return null;
 };
 
-export type IdentifyUser = (context: IContext) => string | undefined;
-
 interface FeedbackProviderProps {
     children: ReactNode;
     identifyUser: IdentifyUser;
@@ -106,9 +86,7 @@ export const FeedbackProvider = ({
     identifyUser,
     observeTriggers = observeBrowserTriggers,
 }: FeedbackProviderProps) => {
-    const flags = useFlags();
-    const surveys = useMemo(() => parseSurveys(flags), [flags]);
-    const client = useUnleashClient();
+    const surveys = useSurveys();
     const [path, setPath] = useState<string | null>(null);
     const [storedTriggered, setTriggered] = useState<TriggeredSurvey | null>(
         null,
@@ -169,34 +147,23 @@ export const FeedbackProvider = ({
 
     const eventNames = useMemo(() => customEventNames(surveys), [surveys]);
 
-    const flagName = shownSurvey?.flagName;
-    useEffect(() => {
-        if (flagName) {
-            recordSurveyImpression(flagName);
-        }
-    }, [flagName]);
-
-    const submit = (answers: SurveyAnswers) => {
-        if (!shownSurvey) {
-            return;
-        }
-        recordSurveyInteraction(shownSurvey.flagName);
-        submitSurveyResponse({
-            flagName: shownSurvey.flagName,
-            submitBase: shownSurvey.submitBase,
-            environmentId: shownSurvey.environmentId,
-            respondentId: identifyUser(client.getContext()),
-            answers,
-        }).catch(() => {});
-    };
-
-    const dismiss = () => {
-        if (shownSurvey) {
-            recordSurveyInteraction(shownSurvey.flagName);
-        }
+    const closeSurvey = () => {
         setTriggered(null);
         setShownSurvey(null);
     };
+
+    const shownFlagName = shownSurvey?.flagName;
+    useEffect(() => {
+        if (shownFlagName) {
+            recordSurveyImpression(shownFlagName);
+        }
+    }, [shownFlagName]);
+
+    const { submit, dismiss } = useSurveyActions({
+        shownSurvey,
+        identifyUser,
+        closeSurvey,
+    });
 
     return (
         <FeedbackContext.Provider

@@ -1,56 +1,26 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import FlagProvider, { type IToggle } from '@unleash/proxy-client-react';
+import FlagProvider from '@unleash/proxy-client-react';
 import type { UnleashClient } from 'unleash-proxy-client';
 import { http, HttpResponse } from 'msw';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { testUnleashClient } from 'utils/testUnleashClient';
-import { SURVEY_KIND, SURVEY_VERSION } from '../survey.ts';
+import { SURVEY_VERSION } from '../survey.ts';
 import type { SurveyTrigger } from '../triggers/surveyTrigger.ts';
 import type { TriggerEvent } from '../triggers/triggerEvent.ts';
 import type { TriggerObserver } from '../observers/observeTriggers.ts';
-import type { IdentifyUser } from './FeedbackProvider.tsx';
+import type { IdentifyUser } from './identifyUser.ts';
+import { SURVEY_SUBMIT_BASE, surveyFlag } from './testSurveyFlag.ts';
 
 const server = testServerSetup();
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
-const SUBMIT_BASE = 'https://hosted.example.com/hosted';
-
 const DELAY_MS = 5000;
 
 const runPendingSurveyTimers = () =>
     act(() => new Promise((resolve) => setTimeout(resolve, 0)));
-
-const surveyFlag = (
-    name: string,
-    title: string,
-    trigger: SurveyTrigger = { on: 'page' },
-): IToggle => ({
-    name,
-    enabled: true,
-    impressionData: false,
-    variant: {
-        name: 'survey',
-        enabled: true,
-        feature_enabled: true,
-        payload: {
-            type: 'json',
-            value: JSON.stringify({
-                kind: SURVEY_KIND,
-                version: SURVEY_VERSION,
-                environmentId: 'production',
-                title,
-                questions: [
-                    { id: 'comment', type: 'free-text', prompt: 'Comment' },
-                ],
-                submitBase: SUBMIT_BASE,
-                trigger,
-            }),
-        },
-    },
-});
 
 const fakeTriggerObserver = (initialPath: string) => {
     let currentPath = initialPath;
@@ -153,7 +123,7 @@ const submitComment = async (comment: string) => {
 const surveyResponsesRoute = () =>
     testServerRoute(
         server,
-        `${SUBMIT_BASE}/feedback/features/survey-a/survey-responses`,
+        `${SURVEY_SUBMIT_BASE}/feedback/features/survey-a/survey-responses`,
         null,
         'post',
         201,
@@ -263,7 +233,7 @@ describe('FeedbackProvider', () => {
         const credentials: RequestCredentials[] = [];
         server.use(
             http.post(
-                `${SUBMIT_BASE}/feedback/features/survey-a/survey-responses`,
+                `${SURVEY_SUBMIT_BASE}/feedback/features/survey-a/survey-responses`,
                 ({ request }) => {
                     credentials.push(request.credentials);
                     return new HttpResponse(null, { status: 201 });
@@ -293,7 +263,7 @@ describe('FeedbackProvider', () => {
     it('thanks the user even when the answers cannot be sent', async () => {
         server.use(
             http.post(
-                `${SUBMIT_BASE}/feedback/features/survey-a/survey-responses`,
+                `${SURVEY_SUBMIT_BASE}/feedback/features/survey-a/survey-responses`,
                 () => HttpResponse.error(),
             ),
         );

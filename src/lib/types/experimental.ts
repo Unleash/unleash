@@ -86,6 +86,7 @@ export type IFlagKey =
     | 'feedbackModuleDisplaySurvey'
     | 'feedbackModuleSubmitResponses'
     | 'playgroundFeatureEvaluation'
+    | 'dashboardV2'
     | 'slackAppAuthV2'
     | 'redactFeatureLabelInMetrics'
     | keyof IFlagKeyOverrides;
@@ -394,6 +395,10 @@ const flags: IFlags = {
     ),
     playgroundFeatureEvaluation: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PLAYGROUND_FEATURE_EVALUATION,
+        false,
+    ),
+    dashboardV2: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DASHBOARD_V2,
         false,
     ),
 };

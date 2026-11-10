@@ -3,7 +3,7 @@ import { SWRConfig, type Middleware } from 'swr';
 import type { Story, StoryMeta } from 'component/stories/types';
 import type {
     FeatureSearchEnvironmentSchema,
-    FeatureSearchResponseSchema,
+    UserRecentFlagSchema,
 } from 'openapi';
 import type { RemoteData } from './RemoteData.ts';
 import { formatApiPath } from 'utils/formatPath';
@@ -46,8 +46,10 @@ const Setup = ({
     </SWRConfig>
 );
 
-const daysAgo = (days: number) =>
-    new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+const minutesAgo = (minutes: number) =>
+    new Date(Date.now() - minutes * 60 * 1000).toISOString();
+
+const daysAgo = (days: number) => minutesAgo(days * 24 * 60);
 
 const environment = (
     name: string,
@@ -62,8 +64,8 @@ const environment = (
 });
 
 const flag = (
-    overrides: Partial<FeatureSearchResponseSchema> & { name: string },
-): FeatureSearchResponseSchema => ({
+    overrides: Partial<UserRecentFlagSchema> & { name: string },
+): UserRecentFlagSchema => ({
     description: null,
     type: 'release',
     project: 'default',
@@ -81,10 +83,11 @@ const flag = (
         environment('production', false),
     ],
     lifecycle: { stage: 'pre-live', enteredStageAt: daysAgo(10) },
+    userLastUpdatedAt: daysAgo(1),
     ...overrides,
 });
 
-const flags: FeatureSearchResponseSchema[] = [
+const flags: UserRecentFlagSchema[] = [
     flag({
         name: 'new-checkout-flow',
         description: 'Redesigned checkout with fewer steps',
@@ -96,6 +99,7 @@ const flags: FeatureSearchResponseSchema[] = [
             environment('production', true),
         ],
         lifecycle: { stage: 'live', enteredStageAt: daysAgo(3) },
+        userLastUpdatedAt: minutesAgo(4),
     }),
     flag({
         name: 'dark-mode',
@@ -103,6 +107,7 @@ const flags: FeatureSearchResponseSchema[] = [
         createdAt: daysAgo(2),
         lifecycle: { stage: 'initial', enteredStageAt: daysAgo(2) },
         environments: [],
+        userLastUpdatedAt: minutesAgo(3 * 60),
     }),
     flag({
         name: 'payments-kill-switch',
@@ -110,27 +115,25 @@ const flags: FeatureSearchResponseSchema[] = [
         project: 'payments',
         stale: true,
         lifecycle: { stage: 'completed', enteredStageAt: daysAgo(60) },
+        userLastUpdatedAt: daysAgo(2),
     }),
     flag({
         name: 'a-flag-with-a-really-long-name-to-check-how-the-table-handles-truncation',
         description:
             'And an equally long description that keeps going to see how it wraps inside the name column of the table',
         dependencyType: 'child',
+        userLastUpdatedAt: daysAgo(21),
     }),
 ];
 
 const loaded = (
-    data: FeatureSearchResponseSchema[],
-): RemoteData<FeatureSearchResponseSchema[]> => ({
+    data: UserRecentFlagSchema[],
+): RemoteData<UserRecentFlagSchema[]> => ({
     state: 'success',
     data,
 });
 
-const Panel = ({
-    flags,
-}: {
-    flags: RemoteData<FeatureSearchResponseSchema[]>;
-}) => (
+const Panel = ({ flags }: { flags: RemoteData<UserRecentFlagSchema[]> }) => (
     <RecentFlagsPanelView
         flags={flags}
         onFavorite={() => {}}
@@ -149,7 +152,10 @@ export const ManyFlags: Story = () => (
         <Panel
             flags={loaded(
                 Array.from({ length: 20 }, (_, index) =>
-                    flag({ name: `flag-${index + 1}` }),
+                    flag({
+                        name: `flag-${index + 1}`,
+                        userLastUpdatedAt: daysAgo(index),
+                    }),
                 ),
             )}
         />

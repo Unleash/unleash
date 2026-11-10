@@ -6,14 +6,13 @@ import {
     getCoreRowModel,
     useReactTable,
 } from '@tanstack/react-table';
-import type { FeatureSchema, FeatureSearchResponseSchema } from 'openapi';
+import type { FeatureSchema, UserRecentFlagSchema } from 'openapi';
 import { PaginatedTable } from 'component/common/Table';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { DateCell } from 'component/common/Table/cells/DateCell/DateCell';
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
+import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { FeatureLifecycleCell } from 'component/common/Table/cells/FeatureSeenCell/FeatureEnvironmentSeenCell';
 import { createFeatureOverviewCell } from 'component/common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
-import { AvatarCell } from 'component/project/Project/PaginatedProjectFeatureToggles/AvatarCell';
 import { StatusCell } from 'component/feature/FeatureToggleList/StatusCell/StatusCell';
 import { featuresPlaceholder } from 'component/feature/FeatureToggleList/FeatureToggleListTable';
 import { useUserRecentFlags } from 'hooks/api/getters/useUserRecentFlags/useUserRecentFlags';
@@ -23,9 +22,12 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useLoading from 'hooks/useLoading';
 import useToast from 'hooks/useToast';
 import { useEventTracker } from 'hooks/useEventTracker';
+import { formatDateYMDHMS } from 'utils/formatDate';
 import type { RemoteData } from './RemoteData.ts';
 
 const RECENT_FLAGS_LIMIT = 25;
+
+const LAST_CHANGE_HEADER = 'Your last change';
 
 const Panel = styled('section')(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
@@ -70,10 +72,25 @@ const PanelMessage = styled(Typography)(({ theme }) => ({
     textAlign: 'center',
 }));
 
-const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
+const LastChangeHeader = styled('span')({
+    whiteSpace: 'nowrap',
+});
+
+const lastChangeTooltip = (date?: string) =>
+    date ? `${LAST_CHANGE_HEADER}: ${date}` : '';
+
+const placeholder: UserRecentFlagSchema[] = featuresPlaceholder.map((flag) => ({
+    ...flag,
+    userLastUpdatedAt: new Date(2022, 1, 1).toISOString(),
+}));
+
+// Not for sorting: marks the API's order so the header gets aria-sort.
+const sorting = [{ id: 'userLastUpdatedAt', desc: true }];
+
+const columnHelper = createColumnHelper<UserRecentFlagSchema>();
 
 type RecentFlagsPanelViewProps = {
-    flags: RemoteData<FeatureSearchResponseSchema[]>;
+    flags: RemoteData<UserRecentFlagSchema[]>;
     onFavorite: (feature: FeatureSchema) => void;
     onFlagClick: () => void;
 };
@@ -105,17 +122,6 @@ export const RecentFlagsPanelView = ({
                     onFlagClick,
                 ),
                 meta: { width: '100%', align: 'left' },
-            }),
-            columnHelper.accessor('createdBy', {
-                id: 'createdBy',
-                header: 'By',
-                cell: AvatarCell(),
-                meta: { width: '1%', align: 'center' },
-            }),
-            columnHelper.accessor('createdAt', {
-                header: 'Created',
-                cell: ({ getValue }) => <DateCell value={getValue()} />,
-                meta: { width: 102 },
             }),
             columnHelper.accessor('lifecycle', {
                 id: 'lifecycle',
@@ -159,6 +165,19 @@ export const RecentFlagsPanelView = ({
                     );
                 },
             }),
+            columnHelper.accessor('userLastUpdatedAt', {
+                header: () => (
+                    <LastChangeHeader>{LAST_CHANGE_HEADER}</LastChangeHeader>
+                ),
+                cell: ({ getValue }) => (
+                    <TimeAgoCell
+                        value={getValue()}
+                        title={lastChangeTooltip}
+                        dateFormat={formatDateYMDHMS}
+                    />
+                ),
+                meta: { width: '1%' },
+            }),
         ],
         [projects, isOss, onFavorite, onFlagClick, navigate],
     );
@@ -166,7 +185,7 @@ export const RecentFlagsPanelView = ({
     const data = useMemo(
         () =>
             flags.state === 'loading'
-                ? featuresPlaceholder
+                ? placeholder
                 : flags.state === 'success'
                   ? flags.data
                   : [],
@@ -178,6 +197,7 @@ export const RecentFlagsPanelView = ({
         data,
         getCoreRowModel: getCoreRowModel(),
         enableSorting: false,
+        state: { sorting },
     });
 
     return (
@@ -233,7 +253,7 @@ export const RecentFlagsPanel = () => {
         [favorite, unfavorite, refetch, setToastApiError],
     );
 
-    const remoteFlags: RemoteData<FeatureSearchResponseSchema[]> = error
+    const remoteFlags: RemoteData<UserRecentFlagSchema[]> = error
         ? { state: 'error', error }
         : loading
           ? { state: 'loading' }

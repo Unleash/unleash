@@ -66,6 +66,7 @@ export type IFlagKey =
     | 'hubspotChatEnabled'
     | 'allowDeprecatedApiTokenMiddleware'
     | 'serviceNowIntegration'
+    | 'dashboardOnboardingAI'
     | 'learningLab'
     | 'onboardingIntroTour'
     | 'onboardingIntroTourAdvancedTopics'
@@ -306,6 +307,10 @@ const flags: IFlags = {
     ),
     hubspotChatEnabled: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_HUBSPOT_CHAT_ENABLED,
+        false,
+    ),
+    dashboardOnboardingAI: parseEnvVarBooleanOrStringVariant(
+        process.env.UNLEASH_EXPERIMENTAL_DASHBOARD_ONBOARDING_AI,
         false,
     ),
     learningLab: {

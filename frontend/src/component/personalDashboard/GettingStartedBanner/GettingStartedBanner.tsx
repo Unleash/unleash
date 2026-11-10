@@ -7,6 +7,7 @@ import { Link } from 'react-router';
 import copy from 'copy-to-clipboard';
 import { Badge } from 'component/common/Badge/Badge';
 import useToast from 'hooks/useToast';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { getSetupPrompt, type SetupPromptContext } from './getSetupPrompt.ts';
 import illustration from 'assets/img/Legal.png';
 import { formatAssetPath } from 'utils/formatPath';
@@ -57,8 +58,13 @@ export const GettingStartedBanner = ({
     const headingId = useId();
     const { setToastData } = useToast();
 
+    const aiSetup = useUiFlag('dashboardOnboardingAI');
+    const aiEnabled = typeof aiSetup === 'boolean' ? aiSetup : aiSetup.enabled;
+
     const copySetupPrompt = () => {
-        if (copy(getSetupPrompt(instanceUrl, projectId, promptContext))) {
+        if (
+            copy(getSetupPrompt(instanceUrl, projectId, promptContext, aiSetup))
+        ) {
             setToastData({
                 type: 'success',
                 text: 'Setup prompt copied. Paste it into your coding agent.',
@@ -79,9 +85,11 @@ export const GettingStartedBanner = ({
         >
             <StyledLayout>
                 <StyledContent>
-                    <Badge color='primary' icon={<AutoAwesomeOutlined />}>
-                        Get started with AI
-                    </Badge>
+                    {aiEnabled ? (
+                        <Badge color='primary' icon={<AutoAwesomeOutlined />}>
+                            Get started with AI
+                        </Badge>
+                    ) : null}
                     <Typography id={headingId} component='h2' variant='h2'>
                         Create and connect your first flag
                     </Typography>
@@ -90,9 +98,9 @@ export const GettingStartedBanner = ({
                         color='text.secondary'
                         sx={{ maxWidth: '70ch' }}
                     >
-                        Let your AI coding agent connect Unleash to your
-                        application or build a demo. Copy the prompt and paste
-                        it into an agent with access to your local files.
+                        {aiEnabled
+                            ? 'Let your AI coding agent connect Unleash to your application or build a demo. Copy the prompt and paste it into an agent with access to your local files.'
+                            : 'Create your first feature flag and connect it to your application to see changes without redeploying.'}
                     </Typography>
                     <Stack
                         direction='row'
@@ -100,23 +108,27 @@ export const GettingStartedBanner = ({
                         spacing={2}
                         sx={{ flexWrap: 'wrap', mt: 1 }}
                     >
-                        <Button
-                            variant='contained'
-                            size='medium'
-                            endIcon={<ContentCopyOutlined />}
-                            onClick={copySetupPrompt}
-                        >
-                            Copy setup prompt
-                        </Button>
+                        {aiEnabled ? (
+                            <Button
+                                variant='contained'
+                                size='medium'
+                                endIcon={<ContentCopyOutlined />}
+                                onClick={copySetupPrompt}
+                            >
+                                Copy setup prompt
+                            </Button>
+                        ) : null}
                         <Button
                             component={Link}
                             nativeButton={false}
                             to={`/projects/${encodeURIComponent(projectId)}?create=true`}
-                            variant='outlined'
+                            variant={aiEnabled ? 'outlined' : 'contained'}
                             size='medium'
                             endIcon={<ArrowForward />}
                         >
-                            Create flag manually
+                            {aiEnabled
+                                ? 'Create flag manually'
+                                : 'Create your first flag'}
                         </Button>
                     </Stack>
                 </StyledContent>

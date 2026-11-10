@@ -1,4 +1,5 @@
 import { expect, test } from 'vitest';
+import { PayloadType } from 'utils/variants';
 import {
     ADMIN,
     CREATE_FEATURE,
@@ -100,4 +101,21 @@ test('reports remote MCP as unavailable on OSS without suggesting Enterprise set
     expect(prompt).not.toContain('/admin/remote-mcp');
     expect(prompt).toContain('Create projects: no');
     expect(prompt).toContain('Manage remote MCP: no');
+});
+
+test('appends instance context after the supplied instructions without rendering templates', () => {
+    const instructions = 'Use {{my preferred framework}}.\nKeep this wording.';
+    const prompt = getSetupPrompt(
+        'https://example.com/base/',
+        'default',
+        undefined,
+        {
+            name: 'custom',
+            enabled: true,
+            payload: { type: PayloadType.STRING, value: `  ${instructions}\n` },
+        },
+    );
+    expect(prompt).toBe(
+        `${instructions}\n\nContext from Unleash when this prompt was copied (verify access before making changes):\nMy Unleash instance is: https://example.com/base\nSuggested project: "default"\nProject: https://example.com/base/projects/default\nProject API access: https://example.com/base/projects/default/settings/api-access\nRemote MCP: unknown.\nRemote MCP endpoint: https://example.com/base/api/admin/mcp`,
+    );
 });

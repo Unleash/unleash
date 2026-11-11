@@ -140,10 +140,6 @@ export default class TagTypeService {
         auditUser: IAuditUser,
     ): Promise<ITagType> {
         const data = await tagTypeSchema.validateAsync(updatedTagType);
-        // Throws a NotFoundError for an unknown tag type. Without it the
-        // update matches no rows, but would still be reported as a success
-        // and recorded as an event.
-        await this.getTagType(data.name);
         await this.tagTypeStore.updateTagType(data);
         await this.eventService.storeEvent(
             new TagTypeUpdatedEvent({

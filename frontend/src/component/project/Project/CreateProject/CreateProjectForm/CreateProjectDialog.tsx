@@ -307,7 +307,7 @@ const ChangeRequestCheckbox: FC<ChangeRequestCheckboxProps> = ({
                         size='small'
                         value={searchText}
                         onChange={(event) => setSearchText(event.target.value)}
-                        hideLabel
+                        visuallyHideLabel
                         label='Filter environments'
                         placeholder='Filter environments'
                         slotProps={{

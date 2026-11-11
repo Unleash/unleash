@@ -16,6 +16,7 @@ interface IInputProps extends Omit<OutlinedTextFieldProps, 'variant'> {
     onBlur?: (e: any) => any;
     multiline?: boolean;
     rows?: number;
+    visuallyHideLabel?: boolean;
 }
 
 const Input = ({
@@ -30,10 +31,15 @@ const Input = ({
     onChange,
     size = 'large',
     slotProps,
+    visuallyHideLabel,
     ...rest
 }: IInputProps) => {
     return (
-        <FormField label={label} description={description}>
+        <FormField
+            label={label}
+            description={description}
+            visuallyHideLabel={visuallyHideLabel}
+        >
             <TextField
                 data-loading
                 size={size}

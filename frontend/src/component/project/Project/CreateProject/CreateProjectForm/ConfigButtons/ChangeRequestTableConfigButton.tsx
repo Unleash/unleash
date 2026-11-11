@@ -112,7 +112,7 @@ export const ChangeRequestTableConfigButton: FC<
                     size='small'
                     value={searchText}
                     onChange={(event) => setSearchText(event.target.value)}
-                    hideLabel
+                    visuallyHideLabel
                     label={search.label}
                     placeholder={search.placeholder}
                     autoFocus

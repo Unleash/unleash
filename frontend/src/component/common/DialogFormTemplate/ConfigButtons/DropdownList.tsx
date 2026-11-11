@@ -116,7 +116,7 @@ export function DropdownList<T = string>({
                         value={searchText}
                         onChange={(event) => setSearchText(event.target.value)}
                         label={search.label}
-                        hideLabel
+                        visuallyHideLabel
                         placeholder={search.placeholder}
                         autoFocus
                         slotProps={{

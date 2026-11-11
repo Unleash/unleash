@@ -1,11 +1,16 @@
 import { Children, cloneElement, isValidElement, useId } from 'react';
 import type { ReactElement, ReactNode } from 'react';
 import { styled } from '@mui/material';
+import { visuallyHidden } from '@mui/utils';
 
 const StyledFormField = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     width: '100%',
+    '&[data-visually-hide-label] label': visuallyHidden,
+    '&[data-visually-hide-label]:not([data-has-description]) > *:last-child': {
+        marginTop: 0,
+    },
 }));
 
 const StyledLabel = styled('label')(({ theme }) => ({
@@ -39,11 +44,18 @@ interface FormFieldProps {
     description?: ReactNode;
     /** The control. Its `label` prop (floating label) should be omitted. */
     children: ReactElement;
+    /** Keep the label for assistive tech, but don't show it or reserve space for it. */
+    visuallyHideLabel?: boolean;
 }
 
 export const formFieldLabelId = (controlId: string) => `${controlId}-label`;
 
-export const FormField = ({ label, description, children }: FormFieldProps) => {
+export const FormField = ({
+    label,
+    description,
+    children,
+    visuallyHideLabel,
+}: FormFieldProps) => {
     const generatedId = useId();
 
     const child = Children.only(children) as ReactElement<
@@ -71,7 +83,10 @@ export const FormField = ({ label, description, children }: FormFieldProps) => {
     });
 
     return (
-        <StyledFormField>
+        <StyledFormField
+            data-visually-hide-label={visuallyHideLabel || undefined}
+            data-has-description={Boolean(description) || undefined}
+        >
             <StyledLabel id={formFieldLabelId(id)} htmlFor={id}>
                 {label}
             </StyledLabel>

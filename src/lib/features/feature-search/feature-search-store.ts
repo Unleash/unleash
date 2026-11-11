@@ -966,21 +966,44 @@ const applyMultiQueryParams = (
 
             case 'INCLUDE_ALL_OF':
                 query.whereIn('features.name', (dbSubQuery) => {
-                    baseSubQuery(dbSubQuery)
-                        .groupBy('feature_name')
-                        .havingRaw('COUNT(*) = ?', [values.length]);
+                    havingAllValues(baseSubQuery(dbSubQuery), fields, values);
                 });
                 break;
 
             case 'EXCLUDE_ALL':
                 query.whereNotIn('features.name', (dbSubQuery) => {
-                    baseSubQuery(dbSubQuery)
-                        .groupBy('feature_name')
-                        .havingRaw('COUNT(*) = ?', [values.length]);
+                    havingAllValues(baseSubQuery(dbSubQuery), fields, values);
                 });
                 break;
         }
     });
+};
+
+/**
+ * Keeps the features that match every requested value.
+ *
+ * The base query can return the same value more than once per feature (a
+ * segment used by several strategies, for example in different environments),
+ * and the request can repeat a value. Compare distinct matches with distinct
+ * requested values instead of counting rows.
+ */
+const havingAllValues = (
+    subQuery: Knex.QueryBuilder,
+    fields: string | string[],
+    values: string[][],
+): Knex.QueryBuilder => {
+    const columns = Array.isArray(fields) ? fields : [fields];
+    const distinctValues = new Set(
+        values.map((value) => JSON.stringify(value)),
+    );
+    const distinctMatches =
+        columns.length === 1
+            ? 'COUNT(DISTINCT ??)'
+            : `COUNT(DISTINCT (${columns.map(() => '??').join(', ')}))`;
+
+    return subQuery
+        .groupBy('feature_name')
+        .havingRaw(`${distinctMatches} = ?`, [...columns, distinctValues.size]);
 };
 
 const createTagBaseQuery = (tags: string[][]) => {

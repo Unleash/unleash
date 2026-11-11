@@ -374,6 +374,15 @@ test('should filter features by tag', async () => {
         features: [{ name: 'my_feature_d' }],
     });
 
+    const { body: includeAllOfRepeated } = await filterFeaturesByTag(
+        'INCLUDE_ALL_OF:simple:my_tag, simple:my_tag',
+    );
+
+    expect(includeAllOfRepeated).toMatchObject({
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_d' }],
+    });
+    expect(includeAllOfRepeated.features).toHaveLength(2);
+
     const { body: includeAnyOf } = await filterFeaturesByTag(
         'INCLUDE_ANY_OF:simple:my_tag, simple:tag_c',
     );
@@ -974,6 +983,73 @@ test('should filter features by segment', async () => {
             { name: 'my_feature_c' },
         ],
     });
+});
+
+test('should count a segment once when a feature uses it in several strategies', async () => {
+    const { body: segmentA } = await app.createSegment({
+        name: 'my_segment_a',
+        constraints: [],
+    });
+    const { body: segmentC } = await app.createSegment({
+        name: 'my_segment_c',
+        constraints: [],
+    });
+
+    // uses only segment A, but in two environments
+    await app.createFeature('my_feature_reused');
+    await app.addStrategyToFeatureEnv(
+        { name: 'default', segments: [segmentA.id] },
+        DEFAULT_ENV,
+        'my_feature_reused',
+    );
+    await app.addStrategyToFeatureEnv(
+        { name: 'default', segments: [segmentA.id] },
+        'production',
+        'my_feature_reused',
+    );
+
+    // control: uses segment A and segment C once each
+    await app.createFeature('my_feature_both');
+    await app.addStrategyToFeatureEnv(
+        { name: 'default', segments: [segmentA.id] },
+        DEFAULT_ENV,
+        'my_feature_both',
+    );
+    await app.addStrategyToFeatureEnv(
+        { name: 'default', segments: [segmentC.id] },
+        DEFAULT_ENV,
+        'my_feature_both',
+    );
+
+    const names = (body: { features: { name: string }[] }) =>
+        body.features.map((feature) => feature.name).sort();
+
+    const { body: includeAllOfA } = await filterFeaturesBySegment(
+        'INCLUDE_ALL_OF:my_segment_a',
+    );
+    expect(names(includeAllOfA)).toEqual([
+        'my_feature_both',
+        'my_feature_reused',
+    ]);
+
+    const { body: includeAllOfBoth } = await filterFeaturesBySegment(
+        'INCLUDE_ALL_OF:my_segment_a, my_segment_c',
+    );
+    expect(names(includeAllOfBoth)).toEqual(['my_feature_both']);
+
+    const { body: excludeAll } = await filterFeaturesBySegment(
+        'EXCLUDE_ALL:my_segment_a, my_segment_c',
+    );
+    expect(names(excludeAll)).toEqual(['my_feature_reused']);
+
+    // a value repeated in the request is still one value to match
+    const { body: includeAllOfRepeated } = await filterFeaturesBySegment(
+        'INCLUDE_ALL_OF:my_segment_a, my_segment_a',
+    );
+    expect(names(includeAllOfRepeated)).toEqual([
+        'my_feature_both',
+        'my_feature_reused',
+    ]);
 });
 
 test('should filter status and segments independently across environments', async () => {

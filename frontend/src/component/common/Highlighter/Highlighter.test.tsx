@@ -59,3 +59,43 @@ test('highlights first match on conflict', () => {
     expect(container.innerHTML).toContain('<mark>Test</mark>');
     expect(container.innerHTML).not.toContain('<mark>stText</mark>');
 });
+
+test.each([
+    ['trailing comma', 'x,'],
+    ['leading comma', ',x'],
+    ['repeated commas', 'x,,'],
+    ['whitespace-only term', 'x, '],
+])('ignores empty search terms (%s)', (_description, search) => {
+    const { container } = render(
+        <Highlighter search={search}>Test Text</Highlighter>,
+    );
+
+    expect(container.textContent).toBe('Test Text');
+    expect(
+        Array.from(container.querySelectorAll('mark')).map(
+            (mark) => mark.textContent,
+        ),
+    ).toEqual(['x']);
+});
+
+test('keeps the text between matches when a term is empty', () => {
+    const { container } = render(
+        <Highlighter search='Test, '>my Test flag</Highlighter>,
+    );
+
+    expect(container.textContent).toBe('my Test flag');
+    expect(container.innerHTML).toContain('my <mark>Test</mark> flag');
+});
+
+test.each([
+    ['a comma', ','],
+    ['whitespace', '   '],
+    ['commas and whitespace', ' , ,'],
+])('renders plain text when the search is only %s', (_description, search) => {
+    const { container } = render(
+        <Highlighter search={search}>Test Text</Highlighter>,
+    );
+
+    expect(container.textContent).toBe('Test Text');
+    expect(container.querySelector('mark')).toBeNull();
+});

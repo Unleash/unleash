@@ -27,7 +27,17 @@ export const Highlighter: FC<IHighlighterProps> = ({
         return <>{children}</>;
     }
 
-    const searchTerms = search.split(',').map((term) => term.trim());
+    // An empty term would match the empty string at every position, which
+    // misaligns the split parts and the matches below.
+    const searchTerms = search
+        .split(',')
+        .map((term) => term.trim())
+        .filter(Boolean);
+
+    if (searchTerms.length === 0) {
+        return <>{children}</>;
+    }
+
     const searchRegex = searchTerms
         .map((term) => safeRegExp(term, '').source)
         .join('|');

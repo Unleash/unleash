@@ -759,8 +759,8 @@ importers:
         specifier: 3.0.7
         version: 3.0.7(supports-color@8.1.1)
       immer:
-        specifier: 9.0.21
-        version: 9.0.21
+        specifier: 11.2.9
+        version: 11.2.9
       jsdom:
         specifier: 25.0.1
         version: 25.0.1(supports-color@8.1.1)
@@ -823,7 +823,7 @@ importers:
         version: 1.5.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react-hooks-global-state:
         specifier: 2.1.0
-        version: 2.1.0(immer@9.0.21)(react@19.2.8)
+        version: 2.1.0(immer@11.2.9)(react@19.2.8)
       react-joyride:
         specifier: ^2.9.3
         version: 2.9.3(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -4115,8 +4115,8 @@ packages:
     resolution: {integrity: sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==}
     engines: {node: '>= 4'}
 
-  immer@9.0.21:
-    resolution: {integrity: sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==}
+  immer@11.2.9:
+    resolution: {integrity: sha512-IQ4UEtXjZjyefyWjtLEDXUSrF6T2hwjKPi6BIJl3bY/2XXW24d6cNGdXJSBOA/+KNnuiXkZY6DR0C3efolhitA==}
 
   immutable@5.1.9:
     resolution: {integrity: sha512-m8nVez3rwrgmWxtLMt1ZYXB2Lv7OKYn/disyxAlSDYAlKSlFoPPfIAmAM/M5xqL4m4C/wAPw7S2/CNaUii1Hxg==}
@@ -9859,7 +9859,7 @@ snapshots:
 
   ignore@7.0.5: {}
 
-  immer@9.0.21: {}
+  immer@11.2.9: {}
 
   immutable@5.1.9: {}
 
@@ -11253,10 +11253,10 @@ snapshots:
       react-resizable: 3.2.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       resize-observer-polyfill: 1.5.1
 
-  react-hooks-global-state@2.1.0(immer@9.0.21)(react@19.2.8):
+  react-hooks-global-state@2.1.0(immer@11.2.9)(react@19.2.8):
     dependencies:
       react: 19.2.8
-      zustand: 4.0.0(immer@9.0.21)(react@19.2.8)
+      zustand: 4.0.0(immer@11.2.9)(react@19.2.8)
     transitivePeerDependencies:
       - immer
 
@@ -12446,11 +12446,11 @@ snapshots:
 
   zod@4.6.7: {}
 
-  zustand@4.0.0(immer@9.0.21)(react@19.2.8):
+  zustand@4.0.0(immer@11.2.9)(react@19.2.8):
     dependencies:
       use-sync-external-store: 1.2.0(react@19.2.8)
     optionalDependencies:
-      immer: 9.0.21
+      immer: 11.2.9
       react: 19.2.8
 
   zwitch@2.0.4: {}

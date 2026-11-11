@@ -545,9 +545,7 @@ describe('FeedbackProvider', () => {
 
     describe('delayed surveys', () => {
         beforeEach(() => {
-            vi.useFakeTimers({
-                toFake: ['setTimeout', 'clearTimeout', 'Date'],
-            });
+            vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
         });
 
         it('shows a click survey only once its delay has passed since the click', () => {
@@ -587,7 +585,7 @@ describe('FeedbackProvider', () => {
             expect(screen.getByText('Survey A')).toBeInTheDocument();
         });
 
-        it('lets a later trigger take over from a delayed survey', () => {
+        it('keeps a delayed survey waiting when a later trigger occurs', () => {
             renderSurvey(
                 testUnleashClient([
                     surveyFlag('survey-a', 'Survey A', {
@@ -601,12 +599,34 @@ describe('FeedbackProvider', () => {
             triggerObserver.click(createFlagButton());
             act(() => vi.advanceTimersByTime(0));
 
-            expect(screen.getByText('Survey B')).toBeInTheDocument();
+            expect(screen.queryByText('Survey B')).not.toBeInTheDocument();
 
             act(() => vi.advanceTimersByTime(DELAY_MS));
 
-            expect(screen.getByText('Survey B')).toBeInTheDocument();
-            expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
+            expect(screen.getByText('Survey A')).toBeInTheDocument();
+            expect(screen.queryByText('Survey B')).not.toBeInTheDocument();
+        });
+
+        it('keeps a pending click survey when a page survey arrives with a flag refresh', () => {
+            const delayedClickSurvey = surveyFlag('survey-a', 'Survey A', {
+                ...CLICK_CREATE_FLAG,
+                delayMs: DELAY_MS,
+            });
+            const client = testUnleashClient([delayedClickSurvey]);
+            renderSurvey(client);
+            triggerObserver.click(createFlagButton());
+            act(() => vi.advanceTimersByTime(DELAY_MS - 1));
+
+            act(() =>
+                client.setFlags([
+                    delayedClickSurvey,
+                    surveyFlag('survey-b', 'Survey B', { on: 'page' }),
+                ]),
+            );
+            act(() => vi.advanceTimersByTime(1));
+
+            expect(screen.getByText('Survey A')).toBeInTheDocument();
+            expect(screen.queryByText('Survey B')).not.toBeInTheDocument();
         });
     });
 });

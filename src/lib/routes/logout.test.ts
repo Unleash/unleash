@@ -51,10 +51,16 @@ test('should redirect to "/basePath/signed-out" after logout when baseUriPath is
         .expect('Location', `${baseUriPath}/signed-out`);
 });
 
-test('should set "Clear-Site-Data" header', async () => {
+test.each([
+    false,
+    true,
+])('logout clears site data with timeout opt-out %s', async (disableClearSiteDataOnTimeout) => {
     const baseUriPath = '';
     const app = express();
-    const config = createTestConfig({ server: { baseUriPath } });
+    const config = createTestConfig({
+        server: { baseUriPath },
+        experimental: { flags: { disableClearSiteDataOnTimeout } },
+    });
     const sessionStore = new FakeSessionStore();
     const sessionService = new SessionService(
         { sessionStore },

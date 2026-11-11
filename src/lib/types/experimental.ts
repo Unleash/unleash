@@ -21,6 +21,7 @@ export type IFlagKey =
     | 'strictSchemaValidation'
     | 'personalAccessTokensKillSwitch'
     | 'sessionTimeouts'
+    | 'disableClearSiteDataOnTimeout'
     | 'migrationLock'
     | 'demo'
     | 'interactiveDemoKillSwitch'
@@ -97,6 +98,8 @@ export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 const flags: IFlags = {
     anonymiseEventLog: false,
     enableLicense: false,
+    // EG-4958: temporary opt-in until we fix preference persistence.
+    disableClearSiteDataOnTimeout: false,
     sessionTimeouts: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SESSION_TIMEOUTS,
         false,

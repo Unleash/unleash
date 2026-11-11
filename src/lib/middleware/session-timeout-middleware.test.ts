@@ -20,6 +20,8 @@ const createApp = ({
     idleTimeoutMinutes = 15,
     ttlHours = 48,
     flagEnabled = true,
+    disableClearSiteDataOnTimeout = false,
+    clearSiteDataOnLogout = true,
     rejectWrites = false,
 } = {}) => {
     const store = new session.MemoryStore();
@@ -80,7 +82,7 @@ const createApp = ({
         sessionTimeoutMiddleware({
             session: {
                 cookieName: COOKIE_NAME,
-                clearSiteDataOnLogout: true,
+                clearSiteDataOnLogout,
                 ttlHours,
                 idleTimeoutMinutes,
             },
@@ -92,7 +94,12 @@ const createApp = ({
                 warn: (message: string) => logged.push(message),
                 error: (message: string) => logged.push(message),
             }),
-            flagResolver: { isEnabled: () => flagEnabled },
+            flagResolver: {
+                isEnabled: (flag: string) =>
+                    flag === 'sessionTimeouts'
+                        ? flagEnabled
+                        : disableClearSiteDataOnTimeout,
+            },
         } as never),
     );
 
@@ -172,6 +179,24 @@ test('ends an idle session: one cookie, cleared, and the row is gone', async () 
         reason: 'idle',
     });
     expect(await storedSessions()).toHaveLength(0);
+});
+
+test.each([
+    { disableClearSiteDataOnTimeout: true },
+    { clearSiteDataOnLogout: false },
+])('ends idle sessions without clearing browser data with %j', async (options) => {
+    const { agent, storedSessions } = await signedIn(options);
+    await agent.post('/rewind?idle=1800000').expect(200);
+
+    const res = await agent.get('/api/admin/projects');
+
+    expect(res.status).toBe(401);
+    expect(res.body.reason).toBe('idle');
+    expect(res.headers['clear-site-data']).toBeUndefined();
+    expect(res.headers['set-cookie']).toHaveLength(1);
+    expect(String(res.headers['set-cookie'])).toContain(`${COOKIE_NAME}=;`);
+    expect(await storedSessions()).toHaveLength(0);
+    expect((await agent.get('/api/admin/projects')).body.userId).toBeNull();
 });
 
 test('ending a session at its max age leaves the site data alone', async () => {

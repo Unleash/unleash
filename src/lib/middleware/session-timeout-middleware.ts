@@ -51,7 +51,11 @@ export const sessionTimeoutMiddleware = (
                 sessionCookieOptions(config),
             );
 
-            if (reason === 'idle' && config.session.clearSiteDataOnLogout) {
+            if (
+                reason === 'idle' &&
+                config.session.clearSiteDataOnLogout &&
+                !config.flagResolver.isEnabled('disableClearSiteDataOnTimeout')
+            ) {
                 // idle-timeout: unattended screen, clear its data, not only session
                 res.set('Clear-Site-Data', '"cookies", "storage"');
             }

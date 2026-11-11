@@ -271,6 +271,35 @@ test('should support name prefix', async () => {
         });
 });
 
+test('should treat _ and % in the name prefix as literal characters', async () => {
+    await app.createFeature('c_test1');
+    await app.createFeature('c_test2');
+    await app.createFeature('cxtest1');
+    await app.createFeature('c-test1');
+
+    const namesFor = async (namePrefix: string) => {
+        const { body } = await app.request
+            .get(
+                `/api/client/features?namePrefix=${encodeURIComponent(namePrefix)}`,
+            )
+            .expect('Content-Type', /json/)
+            .expect(200);
+        return body.features.map(({ name }) => name).sort();
+    };
+
+    expect(await namesFor('c_')).toStrictEqual(['c_test1', 'c_test2']);
+    expect(await namesFor('c_test_')).toStrictEqual([]);
+    expect(await namesFor('_')).toStrictEqual([]);
+    expect(await namesFor('%')).toStrictEqual([]);
+    expect(await namesFor('c%1')).toStrictEqual([]);
+    expect(await namesFor('c')).toStrictEqual([
+        'c-test1',
+        'c_test1',
+        'c_test2',
+        'cxtest1',
+    ]);
+});
+
 test('should support filtering on project', async () => {
     expect.assertions(2);
     await app.services.projectService.createProject(

@@ -1,9 +1,11 @@
 import type { ReactNode } from 'react';
 import { styled, Typography } from '@mui/material';
 import Input from 'component/common/Input/Input';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { parseDateValue, parseValidDate } from 'component/common/util.ts';
 import {
     isDateTimeSchema,
+    isEnumSchema,
     isObjectWithPropertiesSchema,
     isPlainStringOrNumberSchema,
     type SchemaMatcher,
@@ -99,6 +101,31 @@ const SchemaFormField = ({
                     fullWidth
                 />
             ),
+        },
+        {
+            matches: isEnumSchema,
+            render: () => {
+                const enumOptions = (schema.enum ?? []).map((option) => ({
+                    key: String(option),
+                    label: String(option),
+                }));
+                const options = required
+                    ? enumOptions
+                    : [{ key: '', label: 'None' }, ...enumOptions];
+                return (
+                    <GeneralSelect
+                        label={label}
+                        description={schema.description}
+                        options={options}
+                        value={value === undefined ? '' : String(value)}
+                        onChange={(key) =>
+                            onChange(key === '' ? undefined : key)
+                        }
+                        disabled={Boolean(schema.readOnly)}
+                        fullWidth
+                    />
+                );
+            },
         },
         {
             matches: isPlainStringOrNumberSchema,

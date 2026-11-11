@@ -1,4 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { PayloadSchemaPreview } from './PayloadSchemaPreview.tsx';
@@ -28,16 +29,42 @@ test('renders an input for each supported property type, with a fallback', () =>
                 .map((el) => el.textContent),
         ),
     ];
-    expect(labels).toEqual(['Email', 'Tier', 'Enabled:', 'Color:', 'Tags:']);
+    expect(labels).toEqual(['Email', 'Tier', 'Enabled:', 'Color', 'Tags:']);
     expect(screen.getByLabelText('Email')).toBeInTheDocument();
     expect(screen.getByLabelText('Tier')).toBeInTheDocument();
     expect(
         screen.getByText('Billing tier for this account.'),
     ).toBeInTheDocument();
+    expect(screen.getByLabelText('Color')).toBeInTheDocument();
     expect(screen.queryByLabelText('Enabled')).not.toBeInTheDocument();
-    expect(screen.queryByLabelText('Color')).not.toBeInTheDocument();
     expect(screen.queryByLabelText('Tags')).not.toBeInTheDocument();
-    expect(screen.getAllByText(/not supported in a form view/)).toHaveLength(3);
+    expect(screen.getAllByText(/not supported in a form view/)).toHaveLength(2);
+});
+
+test('renders a select for an enum property, with not-set option only when not required', async () => {
+    const schema = {
+        type: 'object',
+        required: ['color'],
+        properties: {
+            color: { type: 'string', title: 'Color', enum: ['red', 'green'] },
+            size: { type: 'string', title: 'Size', enum: ['s', 'm'] },
+        },
+        examples: [{ color: 'green', size: 'm' }],
+    };
+
+    render(<PayloadSchemaPreview schema={schema} />);
+
+    await userEvent.click(screen.getByLabelText('Color'));
+    expect(
+        screen.queryByRole('option', { name: 'None' }),
+    ).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole('option', { name: 'red' }));
+    expect(screen.getByLabelText('Color')).toHaveTextContent('red');
+
+    await userEvent.click(screen.getByLabelText('Size'));
+    expect(screen.getByRole('option', { name: 'None' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('option', { name: 'None' }));
+    expect(screen.getByLabelText('Size')).not.toHaveTextContent('m');
 });
 
 test('shows a placeholder instead of crashing when the schema is not an object yet', () => {

@@ -23,3 +23,6 @@ export const isDateTimeSchema: SchemaMatcher = (schema) =>
 
 export const isObjectWithPropertiesSchema: SchemaMatcher = (schema) =>
     schema.type === 'object' && typeof schema.properties === 'object';
+
+export const isEnumSchema: SchemaMatcher = (schema) =>
+    Array.isArray(schema.enum);

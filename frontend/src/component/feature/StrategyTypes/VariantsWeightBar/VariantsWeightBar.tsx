@@ -194,6 +194,10 @@ const VariantsWeightBarComponent = ({
                 return handlePosition - weights[handleIndex];
             case 'End':
                 return handlePosition + weights[handleIndex + 1];
+            case 'PageUp':
+                return handlePosition + 5 * SLIDER_STEP;
+            case 'PageDown':
+                return handlePosition - 5 * SLIDER_STEP;
             case 'ArrowLeft':
             case 'ArrowDown':
                 return handlePosition - SLIDER_STEP;

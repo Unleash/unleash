@@ -112,6 +112,7 @@ export type UiFlags = {
     feedbackModuleDisplaySurvey?: boolean;
     playgroundFeatureEvaluation?: boolean;
     dashboardV2?: boolean;
+    dashboardV2Widgets?: boolean;
     dashboardOnboardingAI?: boolean | Variant;
     changeRequestSubmitRedirect?: boolean;
     improvedSidebarNavigation?: boolean;

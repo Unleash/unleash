@@ -28,6 +28,7 @@ import { useWelcomeDialogContext } from './WelcomeDialogContext.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ProjectCardsPanel } from './ProjectCardsPanel.tsx';
 import { RecentFlagsPanel } from './RecentFlagsPanel.tsx';
+import { DashboardOnboarding } from './DashboardOnboarding.tsx';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -282,6 +283,8 @@ export const PersonalDashboard = () => {
     const { setWelcomeDialog } = useWelcomeDialogContext();
     const { isOss } = useUiConfig();
     const dashboardV2 = useUiFlag('dashboardV2');
+    const dashboardV2Widgets = useUiFlag('dashboardV2Widgets');
+    const showOnboardingWidgets = dashboardV2 && dashboardV2Widgets;
 
     const name = user?.name || '';
 
@@ -295,9 +298,17 @@ export const PersonalDashboard = () => {
         });
     }, []);
 
+    const dashboardContent = (
+        <>
+            <EventTimelinePanel />
+            {dashboardV2 ? <ProjectCardsPanel /> : <ProjectPanel />}
+            {dashboardV2 ? <RecentFlagsPanel /> : <FlagPanel />}
+        </>
+    );
+
     return (
         <MainContent>
-            {isOss() && <InfoSection />}
+            {isOss() && !showOnboardingWidgets && <InfoSection />}
 
             <WelcomeSection>
                 <Typography component='h2' variant='h1'>
@@ -323,11 +334,11 @@ export const PersonalDashboard = () => {
                 </ViewKeyConceptsButton>
             </WelcomeSection>
 
-            <EventTimelinePanel />
-
-            {dashboardV2 ? <ProjectCardsPanel /> : <ProjectPanel />}
-
-            {dashboardV2 ? <RecentFlagsPanel /> : <FlagPanel />}
+            {showOnboardingWidgets ? (
+                <DashboardOnboarding>{dashboardContent}</DashboardOnboarding>
+            ) : (
+                dashboardContent
+            )}
         </MainContent>
     );
 };

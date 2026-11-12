@@ -87,6 +87,7 @@ export type IFlagKey =
     | 'feedbackModuleSubmitResponses'
     | 'playgroundFeatureEvaluation'
     | 'dashboardV2'
+    | 'dashboardV2Widgets'
     | 'slackAppAuthV2'
     | 'redactFeatureLabelInMetrics'
     | 'improvedSidebarNavigation'
@@ -402,6 +403,10 @@ const flags: IFlags = {
     ),
     dashboardV2: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DASHBOARD_V2,
+        false,
+    ),
+    dashboardV2Widgets: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DASHBOARD_V2_WIDGETS,
         false,
     ),
     improvedSidebarNavigation: parseEnvVarBoolean(

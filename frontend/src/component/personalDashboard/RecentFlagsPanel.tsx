@@ -30,7 +30,7 @@ import {
     openFullListTracking,
 } from './personalDashboardTracking.ts';
 
-const RECENT_FLAGS_LIMIT = 25;
+export const RECENT_FLAGS_LIMIT = 25;
 
 const LAST_CHANGE_HEADER = 'Your last change';
 

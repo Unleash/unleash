@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import { type ComponentType, useContext, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { SignupDialogSetPassword } from './SignupDialogSetPassword/SignupDialogSetPassword.tsx';
 import { SignupDialogAccountDetails } from './SignupDialogAccountDetails.tsx';
 import { SignupDialogDomainJoin } from './SignupDialogDomainJoin.tsx';
@@ -252,6 +253,8 @@ export const SignupDialog = () => {
     const { signupData, signupRequired, refetch } = useSignup();
     const { submitSignupData } = useSignupApi();
     const navigate = useNavigate();
+    const dashboardV2 = useUiFlag('dashboardV2');
+    const dashboardV2Widgets = useUiFlag('dashboardV2Widgets');
     const defaultProjectId = useDefaultProjectId();
     const { open: openIntro } = useIntro();
     const { isAdmin } = useContext(AccessContext);
@@ -316,7 +319,9 @@ export const SignupDialog = () => {
             setIsSubmitting(true);
             await submitSignupData(data);
             refetch();
-            navigate(`/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`);
+            if (!(dashboardV2 && dashboardV2Widgets)) {
+                navigate(`/projects/${defaultProjectId ?? DEFAULT_PROJECT_ID}`);
+            }
             if (eventType === 'tour') {
                 openIntro();
             }

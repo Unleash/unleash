@@ -29,16 +29,41 @@ test('renders an input for each supported property type, with a fallback', () =>
                 .map((el) => el.textContent),
         ),
     ];
-    expect(labels).toEqual(['Email', 'Tier', 'Enabled:', 'Color', 'Tags:']);
+    expect(labels).toEqual(['Email', 'Tier', 'Enabled', 'Color', 'Tags:']);
     expect(screen.getByLabelText('Email')).toBeInTheDocument();
     expect(screen.getByLabelText('Tier')).toBeInTheDocument();
     expect(
         screen.getByText('Billing tier for this account.'),
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Color')).toBeInTheDocument();
-    expect(screen.queryByLabelText('Enabled')).not.toBeInTheDocument();
+    expect(screen.getByLabelText('Enabled')).toBeInTheDocument();
     expect(screen.queryByLabelText('Tags')).not.toBeInTheDocument();
-    expect(screen.getAllByText(/not supported in a form view/)).toHaveLength(2);
+    expect(screen.getAllByText(/not supported in a form view/)).toHaveLength(1);
+});
+
+test('renders a checkbox for a boolean property', async () => {
+    const schema = {
+        type: 'object',
+        properties: {
+            enabled: {
+                type: 'boolean',
+                title: 'Enabled',
+                description: 'Whether this feature is turned on.',
+            },
+        },
+        examples: [{ enabled: true }],
+    };
+
+    render(<PayloadSchemaPreview schema={schema} />);
+
+    const enabled = screen.getByLabelText('Enabled');
+    expect(enabled).toMatchObject({ checked: true, disabled: false });
+    expect(
+        screen.getByText('Whether this feature is turned on.'),
+    ).toBeInTheDocument();
+
+    await userEvent.click(enabled);
+    expect(enabled).not.toBeChecked();
 });
 
 test('renders a select for an enum property, with not-set option only when not required', async () => {

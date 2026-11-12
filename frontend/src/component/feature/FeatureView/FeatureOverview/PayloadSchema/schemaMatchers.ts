@@ -26,3 +26,6 @@ export const isObjectWithPropertiesSchema: SchemaMatcher = (schema) =>
 
 export const isEnumSchema: SchemaMatcher = (schema) =>
     Array.isArray(schema.enum);
+
+export const isBooleanSchema: SchemaMatcher = (schema) =>
+    schema.type === 'boolean';

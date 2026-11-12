@@ -1,9 +1,10 @@
-import type { ReactNode } from 'react';
-import { styled, Typography } from '@mui/material';
+import { useId, type ReactNode } from 'react';
+import { Checkbox, FormControlLabel, styled, Typography } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { parseDateValue, parseValidDate } from 'component/common/util.ts';
 import {
+    isBooleanSchema,
     isDateTimeSchema,
     isEnumSchema,
     isObjectWithPropertiesSchema,
@@ -29,6 +30,19 @@ const StyledGroup = styled('fieldset')(({ theme }) => ({
     flexDirection: 'column',
     gap: theme.spacing(2),
 }));
+
+const FieldDescription = ({
+    description,
+    id,
+}: {
+    description?: ReactNode;
+    id?: string;
+}) =>
+    description ? (
+        <Typography id={id} variant='body2' sx={{ color: 'text.secondary' }}>
+            {description}
+        </Typography>
+    ) : null;
 
 const toDateTimeInputValue = (value: unknown): string =>
     typeof value === 'string' && parseValidDate(value)
@@ -60,6 +74,7 @@ const SchemaFormField = ({
     required,
 }: ISchemaFormFieldProps) => {
     const label = schema.title ?? name;
+    const descriptionId = useId();
 
     const renderers: {
         matches: SchemaMatcher;
@@ -72,17 +87,41 @@ const SchemaFormField = ({
                     <Typography component='legend' variant='subtitle2'>
                         {label}
                     </Typography>
-                    {schema.description ? (
-                        <Typography variant='body2' color='text.secondary'>
-                            {schema.description}
-                        </Typography>
-                    ) : null}
+                    <FieldDescription description={schema.description} />
                     <SchemaForm
                         schema={schema}
                         value={(value as Record<string, unknown>) ?? {}}
                         onChange={onChange}
                     />
                 </StyledGroup>
+            ),
+        },
+        {
+            matches: isBooleanSchema,
+            render: () => (
+                <div>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={Boolean(value)}
+                                disabled={Boolean(schema.readOnly)}
+                                aria-describedby={
+                                    schema.description
+                                        ? descriptionId
+                                        : undefined
+                                }
+                                onChange={(event) =>
+                                    onChange(event.target.checked)
+                                }
+                            />
+                        }
+                        label={label}
+                    />
+                    <FieldDescription
+                        id={descriptionId}
+                        description={schema.description}
+                    />
+                </div>
             ),
         },
         {

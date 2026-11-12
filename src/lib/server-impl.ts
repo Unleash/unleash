@@ -192,6 +192,10 @@ import type { IContextFieldDto } from './features/context/context-field-store-ty
 import { SegmentReadModel } from './features/segment/segment-read-model.js';
 import { FeaturesReadModel } from './features/feature-toggle/features-read-model.js';
 import { compilePayloadSchema } from './features/payload-schema/payload-schema-compiler.js';
+import { PayloadSchemaStore } from './features/payload-schema/payload-schema-store.js';
+import { FakePayloadSchemaStore } from './features/payload-schema/fake-payload-schema-store.js';
+import { PayloadSchemaReadModel } from './features/payload-schema/payload-schema-read-model.js';
+import type { IPayloadSchemaStore } from './features/payload-schema/payload-schema-store-type.js';
 import { VariantPayloadValidator } from './features/payload-schema/variant-payload-validator.js';
 import { FakePayloadSchemaReadModel } from './features/payload-schema/fake-payload-schema-read-model.js';
 import type { IPayloadSchemaReadModel } from './features/payload-schema/payload-schema-read-model-type.js';
@@ -573,6 +577,9 @@ export {
     FeaturesReadModel,
     FakeFeaturesReadModel,
     compilePayloadSchema,
+    PayloadSchemaStore,
+    FakePayloadSchemaStore,
+    PayloadSchemaReadModel,
     VariantPayloadValidator,
     FakePayloadSchemaReadModel,
     FakeFeatureStrategiesReadModel,
@@ -683,6 +690,7 @@ export type {
     IClientInstance,
     IFeaturesReadModel,
     IPayloadSchemaReadModel,
+    IPayloadSchemaStore,
 };
 export * from './openapi/index.js';
 export * from './types/index.js';

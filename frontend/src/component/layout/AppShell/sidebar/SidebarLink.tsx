@@ -1,16 +1,23 @@
 import type { FC, ReactNode } from 'react';
 import { styled } from '@mui/material';
-import { Link } from 'react-router';
+import { NavLink } from 'react-router';
 import { SidebarItemIcon, sidebarItemStyles } from './SidebarItem.styles.ts';
 
-const StyledLink = styled(Link)(({ theme }) => sidebarItemStyles(theme));
+const StyledLink = styled(NavLink)(({ theme }) => ({
+    ...sidebarItemStyles(theme),
+    '&[aria-current="page"]': {
+        backgroundColor: theme.palette.action.selected,
+        fontWeight: theme.typography.fontWeightBold,
+    },
+}));
 
 export const SidebarLink: FC<{
     to: string;
     icon: ReactNode;
     label: string;
-}> = ({ to, icon, label }) => (
-    <StyledLink to={to}>
+    end?: boolean;
+}> = ({ to, icon, label, end }) => (
+    <StyledLink to={to} end={end}>
         <SidebarItemIcon>{icon}</SidebarItemIcon>
         {label}
     </StyledLink>

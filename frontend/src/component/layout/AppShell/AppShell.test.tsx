@@ -128,6 +128,34 @@ test('shows only Playground under More on oss', async () => {
     ).not.toBeInTheDocument();
 });
 
+test('marks the link of the current page as current', () => {
+    render(<AppShell>content</AppShell>, { route: '/search' });
+
+    expect(
+        screen.getByRole('link', { name: 'Flags overview' }),
+    ).toHaveAttribute('aria-current', 'page');
+    expect(screen.getByRole('link', { name: 'Home' })).not.toHaveAttribute(
+        'aria-current',
+    );
+});
+
+test('marks a link as current on its nested pages', () => {
+    render(<AppShell>content</AppShell>, { route: '/personal/some-tab' });
+
+    expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute(
+        'aria-current',
+        'page',
+    );
+});
+
+test('does not mark Projects as current inside a project', () => {
+    render(<AppShell>content</AppShell>, { route: '/projects/default' });
+
+    expect(screen.getByRole('link', { name: 'Projects' })).not.toHaveAttribute(
+        'aria-current',
+    );
+});
+
 test('shows change requests on enterprise', async () => {
     testServerRoute(server, '/api/admin/ui-config', {
         versionInfo: { current: { enterprise: 'version' } },

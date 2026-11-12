@@ -111,6 +111,7 @@ const WorkspaceSection: FC = () => {
                 to='/projects'
                 icon={<GridViewOutlinedIcon />}
                 label='Projects'
+                end
             />
             <SidebarLink
                 to='/search'

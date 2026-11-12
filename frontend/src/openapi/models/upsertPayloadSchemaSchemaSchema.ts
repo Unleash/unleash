@@ -5,6 +5,6 @@
  */
 
 /**
- * A JSON Schema document, draft 2020-12. It replaces the schema the flag already has, if any.
+ * A JSON Schema document, draft 2020-12.
  */
 export type UpsertPayloadSchemaSchemaSchema = { [key: string]: unknown };

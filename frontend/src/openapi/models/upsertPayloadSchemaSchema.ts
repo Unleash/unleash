@@ -9,6 +9,6 @@ import type { UpsertPayloadSchemaSchemaSchema } from './upsertPayloadSchemaSchem
  * The schema that the variant payloads of a feature flag have to match.
  */
 export interface UpsertPayloadSchemaSchema {
-    /** A JSON Schema document, draft 2020-12. It replaces the schema the flag already has, if any. */
+    /** A JSON Schema document, draft 2020-12. */
     schema: UpsertPayloadSchemaSchemaSchema;
 }

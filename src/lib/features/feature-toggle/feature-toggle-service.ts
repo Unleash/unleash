@@ -108,6 +108,8 @@ import { sortStrategies } from '../../util/sortStrategies.js';
 import type FeatureLinkService from '../feature-links/feature-link-service.js';
 import type { IFeatureLink } from '../feature-links/feature-links-read-model-type.js';
 import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
+import type { VariantPayloadValidator } from '../payload-schema/variant-payload-validator.js';
+import type { IStrategyVariant } from '../../types/model.js';
 interface IFeatureContext {
     featureName: string;
     projectId: string;
@@ -163,6 +165,7 @@ export type ServicesAndReadModels = {
     featureLinksReadModel: IFeatureLinksReadModel;
     resourceLimitsService: ResourceLimitsService;
     constraintValidator: IConstraintValidator;
+    variantPayloadValidator: VariantPayloadValidator;
 };
 
 export class FeatureToggleService {
@@ -210,6 +213,8 @@ export class FeatureToggleService {
 
     private resourceLimitsService: ResourceLimitsService;
 
+    private variantPayloadValidator: VariantPayloadValidator;
+
     constructor(
         {
             featureStrategiesStore,
@@ -234,6 +239,7 @@ export class FeatureToggleService {
             featureLinkService,
             resourceLimitsService,
             constraintValidator,
+            variantPayloadValidator,
         }: ServicesAndReadModels,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
@@ -258,6 +264,7 @@ export class FeatureToggleService {
         this.featureLinkService = featureLinkService;
         this.eventBus = eventBus;
         this.resourceLimitsService = resourceLimitsService;
+        this.variantPayloadValidator = variantPayloadValidator;
     }
 
     async validateFeaturesContext(
@@ -681,6 +688,10 @@ export class FeatureToggleService {
             featureName,
             strategyConfig,
         );
+        await this.validateVariantPayloads(
+            featureName,
+            standardizedConfig.variants,
+        );
 
         await this.validateStrategyLimit({
             featureName,
@@ -800,6 +811,19 @@ export class FeatureToggleService {
         }
     }
 
+    private async validateVariantPayloads(
+        featureName: string,
+        variants: IStrategyVariant[] | undefined,
+    ): Promise<void> {
+        if (!this.flagResolver.isEnabled('payloadSchemas')) {
+            return;
+        }
+        await this.variantPayloadValidator.validateVariants(
+            featureName,
+            variants ?? [],
+        );
+    }
+
     async unprotectedUpdateStrategy(
         id: string,
         updates: Partial<IStrategyConfig>,
@@ -818,6 +842,9 @@ export class FeatureToggleService {
             projectId,
             updates.segments,
         );
+        if (updates.variants) {
+            await this.validateVariantPayloads(featureName, updates.variants);
+        }
         const existingSegments = await this.segmentService.getByStrategy(id);
 
         if (existingStrategy.id === id) {

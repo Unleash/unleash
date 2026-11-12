@@ -63,6 +63,9 @@ import {
 } from '../feature-links/createFeatureLinkService.js';
 import { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
 import { ConstraintValidator } from '../constraints/constraint-validator.js';
+import { VariantPayloadValidator } from '../payload-schema/variant-payload-validator.js';
+import { PayloadSchemaReadModel } from '../payload-schema/payload-schema-read-model.js';
+import { FakePayloadSchemaReadModel } from '../payload-schema/fake-payload-schema-read-model.js';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -137,6 +140,9 @@ export const createFeatureToggleService = (
     const resourceLimitsService = new ResourceLimitsService(config);
 
     const constraintValidator = new ConstraintValidator(contextFieldStore);
+    const variantPayloadValidator = new VariantPayloadValidator(
+        new PayloadSchemaReadModel(db),
+    );
 
     const featureToggleService = new FeatureToggleService(
         {
@@ -162,12 +168,18 @@ export const createFeatureToggleService = (
             featureLinkService,
             resourceLimitsService,
             constraintValidator,
+            variantPayloadValidator,
         },
     );
     return featureToggleService;
 };
 
-export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
+export const createFakeFeatureToggleService = (
+    config: IUnleashConfig,
+    {
+        payloadSchemaReadModel = new FakePayloadSchemaReadModel(),
+    }: { payloadSchemaReadModel?: FakePayloadSchemaReadModel } = {},
+) => {
     const { getLogger, flagResolver } = config;
     const _eventStore = new FakeEventStore();
     const strategyStore = new FakeStrategiesStore();
@@ -207,6 +219,9 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
     // not using fake as validation is checked in tests.
     // TODO: think if this should be refactored
     const constraintValidator = new ConstraintValidator(contextFieldStore);
+    const variantPayloadValidator = new VariantPayloadValidator(
+        payloadSchemaReadModel,
+    );
 
     const resourceLimitsService = new ResourceLimitsService(config);
 
@@ -238,6 +253,7 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
             featureLinkService,
             resourceLimitsService,
             constraintValidator,
+            variantPayloadValidator,
         },
     );
     return {

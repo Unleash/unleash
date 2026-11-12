@@ -31,6 +31,9 @@ export class VariantPayloadValidator {
             variantName: variant.name,
             payload: parseJsonPayload(variant.name, variant.payload.value),
         }));
+        if (jsonPayloads.length === 0) {
+            return;
+        }
 
         const schema =
             await this.payloadSchemaReadModel.getPayloadSchema(featureName);

@@ -4,6 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { formatPayloadSchemaPath } from './payloadSchemaPaths.ts';
+import { schemaFields } from './schemaFields.ts';
 import type { JsonSchemaProperty } from './payloadSchemaTypes.ts';
 import {
     StyledMetaDataItem,
@@ -41,43 +42,13 @@ interface IPayloadSchemaRowProps {
     payloadSchema?: JsonSchemaProperty;
 }
 
-interface FieldsSummary {
-    count: number;
-    hasAdditionalProperties: boolean;
-}
-
-const countFields = (schema?: JsonSchemaProperty): FieldsSummary => {
-    const hasAdditionalProperties = Boolean(schema?.additionalProperties);
-    const properties = schema?.properties;
-
-    if (!properties) {
-        return { count: 0, hasAdditionalProperties };
-    }
-
-    return Object.values(properties).reduce<FieldsSummary>(
-        (summary, property) => {
-            const nested =
-                property.type === 'object' ? countFields(property) : null;
-
-            return {
-                count: summary.count + (nested ? nested.count : 1),
-                hasAdditionalProperties:
-                    summary.hasAdditionalProperties ||
-                    Boolean(nested?.hasAdditionalProperties),
-            };
-        },
-        { count: 0, hasAdditionalProperties },
-    );
-};
-
 export const PayloadSchemaOverview = ({
     projectId,
     featureId,
     payloadSchema,
 }: IPayloadSchemaRowProps) => {
     const navigate = useNavigate();
-    const { count: fieldsCount, hasAdditionalProperties } =
-        countFields(payloadSchema);
+    const { fieldNames, hasAdditionalProperties } = schemaFields(payloadSchema);
 
     return (
         <StyledContainer>
@@ -102,9 +73,9 @@ export const PayloadSchemaOverview = ({
                         JSON schema:
                     </StyledMetaDataItemLabel>
                     <StyledMetaDataItemValue>
-                        {fieldsCount}
+                        {fieldNames.length}
                         {hasAdditionalProperties ? '+' : ''} field
-                        {fieldsCount === 1 && !hasAdditionalProperties
+                        {fieldNames.length === 1 && !hasAdditionalProperties
                             ? ''
                             : 's'}
                     </StyledMetaDataItemValue>

@@ -9,11 +9,17 @@ import UnleashLogoWhite from 'assets/img/logoWithWhiteText.svg?react';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
+import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
+import InsightsIcon from '@mui/icons-material/Insights';
+import QueryStatsOutlinedIcon from '@mui/icons-material/QueryStatsOutlined';
 import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequestIcon';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { SearchButton } from './sidebar/SearchButton.tsx';
 import { SidebarLink } from './sidebar/SidebarLink.tsx';
 import { SidebarList } from './sidebar/SidebarList.tsx';
+import { SidebarMoreToggle } from './sidebar/SidebarMoreToggle.tsx';
 import { SidebarSection } from './sidebar/SidebarSection.tsx';
 
 const SIDEBAR_WIDTH = 240;
@@ -85,19 +91,60 @@ const Sidebar: FC = () => {
                     />
                 ) : null}
             </SidebarList>
-            <SidebarSection title='Workspace'>
-                <SidebarLink
-                    to='/projects'
-                    icon={<GridViewOutlinedIcon />}
-                    label='Projects'
-                />
-                <SidebarLink
-                    to='/search'
-                    icon={<FlagOutlinedIcon />}
-                    label='Flags overview'
-                />
-            </SidebarSection>
+            <WorkspaceSection />
         </StyledSidebar>
+    );
+};
+
+const WorkspaceSection: FC = () => {
+    const { isOss } = useUiConfig();
+    const impactViewsEnabled = useUiFlag('impactViews');
+    const [moreState, setMoreState] = useLocalStorageState<'open' | 'closed'>(
+        'app-shell:workspace-more',
+        'closed',
+    );
+    const expanded = moreState === 'open';
+
+    return (
+        <SidebarSection title='Workspace'>
+            <SidebarLink
+                to='/projects'
+                icon={<GridViewOutlinedIcon />}
+                label='Projects'
+            />
+            <SidebarLink
+                to='/search'
+                icon={<FlagOutlinedIcon />}
+                label='Flags overview'
+            />
+            {expanded ? (
+                <>
+                    <SidebarLink
+                        to='/playground'
+                        icon={<AutoFixNormalIcon />}
+                        label='Playground'
+                    />
+                    {!isOss() ? (
+                        <SidebarLink
+                            to='/insights'
+                            icon={<InsightsIcon />}
+                            label='Analytics'
+                        />
+                    ) : null}
+                    {!isOss() && impactViewsEnabled ? (
+                        <SidebarLink
+                            to='/impact-views'
+                            icon={<QueryStatsOutlinedIcon />}
+                            label='Impact views'
+                        />
+                    ) : null}
+                </>
+            ) : null}
+            <SidebarMoreToggle
+                expanded={expanded}
+                onToggle={() => setMoreState(expanded ? 'closed' : 'open')}
+            />
+        </SidebarSection>
     );
 };
 

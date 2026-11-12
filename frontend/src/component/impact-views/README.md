@@ -166,10 +166,13 @@ template/system-health/`normalize`/`autoFollowFlags` + comments → point import
 - Frontend: `impactViews` in `frontend/src/interfaces/uiConfig.ts` (`UiFlags`).
 - Route: `/impact-views` in `frontend/src/component/menu/routes.ts` (`flag: 'impactViews'`).
 - Nav: gated `PrimaryListItem` in
-  `frontend/src/component/layout/MainLayout/NavigationSidebar/NavigationList.tsx`.
+  `frontend/src/component/layout/MainLayout/NavigationSidebar/NavigationList.tsx`, and a gated
+  `SidebarLink` in the "More" section of
+  `frontend/src/component/layout/AppShell/AppShell.tsx` (new navigation).
 
 ## Deletion contract
 
 Removing the feature is: delete this `component/impact-views/` directory, the one
 `/impact-views` entry in `routes.ts`, the gated nav line in `NavigationList.tsx`,
-and the two `impactViews` flag declarations (backend + frontend).
+the gated `/impact-views` `SidebarLink` (and its `useUiFlag('impactViews')`) in
+`AppShell.tsx`, and the two `impactViews` flag declarations (backend + frontend).

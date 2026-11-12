@@ -6,6 +6,11 @@ import { SkipNavTarget } from 'component/common/SkipNavLink/SkipNavTarget';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
 import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
 import UnleashLogoWhite from 'assets/img/logoWithWhiteText.svg?react';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequestIcon';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { SearchButton } from './sidebar/SearchButton.tsx';
+import { SidebarLink } from './sidebar/SidebarLink.tsx';
 
 const SIDEBAR_WIDTH = 240;
 
@@ -33,6 +38,16 @@ const StyledLogoLink = styled(Link)(({ theme }) => ({
     '& svg': { width: 110, height: 'auto' },
 }));
 
+const StyledSearchSlot = styled('div')(({ theme }) => ({
+    margin: theme.spacing(1.5, 0, 2),
+}));
+
+const StyledNavList = styled('div')({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1px',
+});
+
 const StyledContent = styled('main')(({ theme }) => ({
     flex: 1,
     minWidth: 0,
@@ -44,16 +59,37 @@ const StyledContent = styled('main')(({ theme }) => ({
     },
 }));
 
-const Sidebar: FC = () => (
-    <StyledSidebar aria-label='Main'>
-        <StyledLogoLink to='/' aria-label='Home'>
-            <ThemeMode
-                darkmode={<UnleashLogoWhite aria-label='Unleash logo' />}
-                lightmode={<UnleashLogo aria-label='Unleash logo' />}
-            />
-        </StyledLogoLink>
-    </StyledSidebar>
-);
+const Sidebar: FC = () => {
+    const { isEnterprise } = useUiConfig();
+
+    return (
+        <StyledSidebar aria-label='Main'>
+            <StyledLogoLink to='/' aria-label='Unleash'>
+                <ThemeMode
+                    darkmode={<UnleashLogoWhite aria-label='Unleash logo' />}
+                    lightmode={<UnleashLogo aria-label='Unleash logo' />}
+                />
+            </StyledLogoLink>
+            <StyledSearchSlot>
+                <SearchButton />
+            </StyledSearchSlot>
+            <StyledNavList>
+                <SidebarLink
+                    to='/personal'
+                    icon={<HomeOutlinedIcon />}
+                    label='Home'
+                />
+                {isEnterprise() ? (
+                    <SidebarLink
+                        to='/change-requests'
+                        icon={<ChangeRequestIcon />}
+                        label='Change requests'
+                    />
+                ) : null}
+            </StyledNavList>
+        </StyledSidebar>
+    );
+};
 
 export const AppShell: FC<{ children: ReactNode }> = ({ children }) => (
     <EventTimelineProvider>

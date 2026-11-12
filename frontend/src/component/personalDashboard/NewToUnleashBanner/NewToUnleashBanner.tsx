@@ -7,27 +7,43 @@ import {
 } from '@mui/material';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import { useIntro } from 'component/onboarding/intro/IntroProvider.tsx';
-import { useLocalStorageState } from 'hooks/useLocalStorageState';
+import { useState } from 'react';
+import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
+import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
 import { OnboardingBanner } from '../OnboardingBanner.tsx';
 
 const StyledButton = styled(Button)<ButtonProps<'a'>>(({ theme }) => ({
     borderColor: theme.palette.divider,
 }));
 
-export const NewToUnleashBanner = () => {
-    const { open: openIntro } = useIntro();
-    const [state, setState] = useLocalStorageState<'open' | 'closed'>(
-        'new-to-unleash-banner:v1',
-        'open',
-    );
+const NEW_TO_UNLEASH_BANNER_SPLASH_ID = 'new-to-unleash-banner';
 
-    if (state === 'closed') return null;
+export const NewToUnleashBanner = () => {
+    const { splash, refetchSplash } = useAuthSplash();
+    const { setSplashSeen } = useSplashApi();
+    const [dismissed, setDismissed] = useState(false);
+
+    if (!splash || dismissed || splash[NEW_TO_UNLEASH_BANNER_SPLASH_ID]) {
+        return null;
+    }
+
+    const onDismiss = () => {
+        setDismissed(true);
+        setSplashSeen(NEW_TO_UNLEASH_BANNER_SPLASH_ID).then(refetchSplash);
+    };
+
+    return <NewToUnleashBannerView onDismiss={onDismiss} />;
+};
+
+export const NewToUnleashBannerView = ({
+    onDismiss,
+}: {
+    onDismiss: () => void;
+}) => {
+    const { open: openIntro } = useIntro();
 
     return (
-        <OnboardingBanner
-            title='New to Unleash?'
-            onDismiss={() => setState('closed')}
-        >
+        <OnboardingBanner title='New to Unleash?' onDismiss={onDismiss}>
             <Typography
                 variant='body2'
                 color='text.secondary'

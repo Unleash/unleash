@@ -65,7 +65,10 @@ const Handle = styled('span')(({ theme }) => ({
     fontSize: theme.typography.caption.fontSize,
     cursor: 'col-resize',
     touchAction: 'none',
-    '&:focus-visible': focusOutline(theme),
+    '&:focus-visible': {
+        ...focusOutline(theme),
+        zIndex: 1,
+    },
 }));
 
 type BarVariant = Pick<IFeatureVariantEdit, 'id' | 'name' | 'weight'> & {

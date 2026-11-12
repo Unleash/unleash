@@ -1,6 +1,7 @@
 import type { FC, ReactNode } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { MainLayout } from '../MainLayout/MainLayout.tsx';
+import { AppShell } from '../AppShell/AppShell.tsx';
 
 interface ILayoutPickerProps {
     children: ReactNode;
@@ -10,10 +11,14 @@ interface ILayoutPickerProps {
 export const LayoutPicker: FC<ILayoutPickerProps> = ({
     isStandalone,
     children,
-}) => (
-    <ConditionallyRender
-        condition={isStandalone === true}
-        show={children}
-        elseShow={<MainLayout>{children}</MainLayout>}
-    />
-);
+}) => {
+    const improvedSidebarNavigation = useUiFlag('improvedSidebarNavigation');
+
+    if (isStandalone === true) {
+        return children;
+    }
+    if (improvedSidebarNavigation) {
+        return <AppShell>{children}</AppShell>;
+    }
+    return <MainLayout>{children}</MainLayout>;
+};

@@ -105,6 +105,11 @@ declare module '@mui/material/styles' {
             rowHover: string;
         };
 
+        appShell: {
+            background: string;
+            sidebar: string;
+        };
+
         /**
          * Colors for event log output
          */

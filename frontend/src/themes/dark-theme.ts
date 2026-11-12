@@ -176,6 +176,11 @@ const theme = {
             rowHover: '#262536',
         },
 
+        appShell: {
+            background: '#2B2A3C',
+            sidebar: '#302E42',
+        },
+
         /**
          * Text highlight effect color. Used when filtering/searching over content
          */

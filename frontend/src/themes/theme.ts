@@ -232,6 +232,11 @@ const theme = {
             rowHover: colors.grey[100],
         },
 
+        appShell: {
+            background: colors.grey[100],
+            sidebar: colors.grey[200],
+        },
+
         /**
          * Text highlight effect color. Used when filtering/searching over content
          */

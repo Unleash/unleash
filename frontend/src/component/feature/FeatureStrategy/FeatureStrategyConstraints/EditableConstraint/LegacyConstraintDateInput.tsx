@@ -1,7 +1,7 @@
 import Input from 'component/common/Input/Input';
 import { parseDateValue, parseValidDate } from 'component/common/util';
 
-import { useId, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useState } from 'react';
 import { styled } from '@mui/material';
 import { getAllTimezones } from 'countries-and-timezones';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
@@ -45,7 +45,14 @@ export const ConstraintDateInput = ({
     }));
     const { timeZone: localTimezoneName } =
         Intl.DateTimeFormat().resolvedOptions();
-    const [pickedDate, setPickedDate] = useState(value || '');
+    const [pickedDate, setPickedDate] = useState(
+        () => value || new Date().toISOString(),
+    );
+    useEffect(() => {
+        if (!value) {
+            setValue(pickedDate);
+        }
+    }, [value, pickedDate, setValue]);
     const inputId = useId();
     const helpId = useId();
 

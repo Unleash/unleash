@@ -51,6 +51,12 @@ const rowToUser = (row) => {
     });
 };
 
+const rowToTokenAccount = (row): User => {
+    const account = rowToUser(row);
+    account.accountToken = { id: row.account_token_id };
+    return account;
+};
+
 export class AccountStore implements IAccountStore {
     private db: Db;
 
@@ -154,6 +160,7 @@ export class AccountStore implements IAccountStore {
     private getAccountByTokenQuery() {
         return this.activeAccounts()
             .select(USER_COLUMNS.map((column) => `${TABLE}.${column}`))
+            .select('personal_access_tokens.id as account_token_id')
             .leftJoin(
                 'personal_access_tokens',
                 'personal_access_tokens.user_id',
@@ -169,7 +176,7 @@ export class AccountStore implements IAccountStore {
             .whereNull('selector')
             .andWhere('expires_at', '>', 'now()')
             .first();
-        return row ? rowToUser(row) : undefined;
+        return row ? rowToTokenAccount(row) : undefined;
     }
 
     async getAccountByTokenSelector(
@@ -181,7 +188,7 @@ export class AccountStore implements IAccountStore {
             .andWhere('expires_at', '>', 'now()')
             .first();
         return row
-            ? { account: rowToUser(row), verifier: row.verifier }
+            ? { account: rowToTokenAccount(row), verifier: row.verifier }
             : undefined;
     }
 

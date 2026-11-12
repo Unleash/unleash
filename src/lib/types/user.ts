@@ -37,6 +37,7 @@ export interface IUser {
     isAPI: boolean;
     imageUrl?: string;
     accountType?: AccountType;
+    accountToken?: { id: number };
     scimId?: string;
     seatType?: SeatType;
     companyRole?: string;
@@ -93,6 +94,8 @@ export class User implements IUser {
     createdAt?: Date;
 
     accountType?: AccountType = 'User';
+
+    accountToken?: { id: number };
 
     scimId?: string;
 

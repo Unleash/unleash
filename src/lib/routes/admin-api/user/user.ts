@@ -239,7 +239,7 @@ class UserController extends Controller {
             await this.userFeedbackService.getAllUserFeedback(user);
         const splash = await this.userSplashService.getAllUserSplashes(user);
 
-        const { isAPI, ...responseUser } = user;
+        const { isAPI, accountToken, ...responseUser } = user;
         const responseData: MeSchema = {
             user: serializeDates(responseUser),
             permissions,

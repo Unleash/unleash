@@ -28,7 +28,7 @@ const isEditable = (state: FormState) =>
 export const usePayloadSchemaForm = (savedSchema?: Record<string, unknown>) => {
     const [state, setState] = useState<FormState>({
         status: 'editing',
-        content: savedSchema ? { json: savedSchema } : { text: '{}' },
+        content: savedSchema ? { json: savedSchema } : { text: '' },
     });
 
     const json = useMemo(() => parseJson(state.content), [state.content]);

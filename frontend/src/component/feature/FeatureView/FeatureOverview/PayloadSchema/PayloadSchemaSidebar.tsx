@@ -1,5 +1,6 @@
 import React, { Suspense, useState } from 'react';
-import { Button, styled } from '@mui/material';
+import { Alert, Button, styled, Tab, Tabs, Typography } from '@mui/material';
+import { tabClasses } from '@mui/material/Tab';
 import { useNavigate } from 'react-router';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
@@ -29,8 +30,38 @@ const LazyPayloadSchemaPreview = React.lazy(() =>
     })),
 );
 
-const StyledTemplateRow = styled('div')(({ theme }) => ({
+const StyledSchemaSourceRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(2),
     marginBottom: theme.spacing(2),
+}));
+
+const Pill = styled(Tab)(({ theme }) => ({
+    minHeight: 0,
+    minWidth: 0,
+    height: theme.spacing(4),
+    padding: theme.spacing(0, 1.75),
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadiusExtraLarge,
+    background: theme.palette.background.paper,
+    fontSize: theme.typography.body2.fontSize,
+    fontWeight: theme.typography.fontWeightMedium,
+    color: theme.palette.text.primary,
+    '&:hover': {
+        backgroundColor: theme.palette.background.paper,
+    },
+    [`&.${tabClasses.selected}`]: {
+        borderColor: theme.palette.primary.containerBorder,
+        background: theme.palette.primary.container,
+        color: theme.palette.primary.onContainer,
+    },
+}));
+
+const StyledTemplatePane = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'flex-start',
+    padding: theme.spacing(2),
 }));
 
 const StyledButtons = styled('div')(({ theme }) => ({
@@ -75,6 +106,8 @@ const templateOptions = payloadSchemaTemplateGroups.map((group) => ({
     })),
 }));
 
+type SchemaSource = 'template' | 'import';
+
 interface IPayloadSchemaFormProps {
     projectId: string;
     featureId: string;
@@ -94,6 +127,8 @@ const PayloadSchemaForm = ({
     const { state, editable, canSave, parsedSchema, edit, save } =
         usePayloadSchemaForm(feature.payloadSchema);
     const [templateKey, setTemplateKey] = useState('');
+    const [schemaSource, setSchemaSource] = useState<SchemaSource>('template');
+    const isCreateMode = !feature.payloadSchema;
 
     const applyTemplate = (key: string) => {
         setTemplateKey(key);
@@ -129,9 +164,7 @@ const PayloadSchemaForm = ({
             layout='modal'
             fitContainerHeight
             title={
-                feature.payloadSchema
-                    ? 'Edit payload schema'
-                    : 'Create payload schema'
+                isCreateMode ? 'Create payload schema' : 'Edit payload schema'
             }
             showGuidance={false}
             description=''
@@ -144,36 +177,67 @@ const PayloadSchemaForm = ({
                         disabled={!canSave}
                         onClick={saveAndClose}
                     >
-                        Save schema
+                        Save {isCreateMode ? 'schema' : 'changes'}
                     </PermissionButton>
                 </StyledButtons>
             }
         >
-            <StyledTemplateRow>
-                <GeneralSelect
-                    label='Start from a template'
-                    options={templateOptions}
-                    value={templateKey}
-                    onChange={applyTemplate}
-                    disabled={!editable}
-                    fullWidth
-                />
-            </StyledTemplateRow>
+            {isCreateMode ? (
+                <>
+                    <Alert severity='info' sx={{ mb: 2 }}>
+                        <strong>Where you use this schema:</strong> when you add
+                        a strategy to a flag, add a variant, set its payload
+                        type to JSON and choose this schema. The variant's
+                        payload is then checked against it.
+                    </Alert>
+                    <StyledSchemaSourceRow>
+                        <Typography variant='body2'>Start from</Typography>
+                        <Tabs
+                            value={schemaSource}
+                            onChange={(_event, value) => setSchemaSource(value)}
+                            aria-label='Start from'
+                            sx={{ minHeight: 0, overflow: 'visible' }}
+                            slotProps={{
+                                indicator: { sx: { display: 'none' } },
+                                scroller: { style: { overflow: 'visible' } },
+                                list: { sx: { flexWrap: 'wrap', gap: 1 } },
+                            }}
+                        >
+                            <Pill value='template' label='Use a template' />
+                            <Pill value='import' label='Import JSON Schema' />
+                        </Tabs>
+                    </StyledSchemaSourceRow>
+                </>
+            ) : null}
+
             <StyledSplit>
                 <StyledPane>
-                    <Suspense fallback={null}>
-                        <LazyReactJSONEditor
-                            content={state.content}
-                            validationError={
-                                state.status === 'rejected'
-                                    ? state.error
-                                    : undefined
-                            }
-                            onChange={editContent}
-                            readOnly={!editable}
-                            editorStyle='fill'
-                        />
-                    </Suspense>
+                    {isCreateMode && schemaSource === 'template' ? (
+                        <StyledTemplatePane>
+                            <GeneralSelect
+                                label='Choose a template'
+                                options={templateOptions}
+                                value={templateKey}
+                                onChange={applyTemplate}
+                                disabled={!editable}
+                                fullWidth
+                            />
+                        </StyledTemplatePane>
+                    ) : (
+                        <Suspense fallback={null}>
+                            <LazyReactJSONEditor
+                                content={state.content}
+                                validationError={
+                                    state.status === 'rejected'
+                                        ? state.error
+                                        : undefined
+                                }
+                                onChange={editContent}
+                                readOnly={!editable}
+                                editorStyle='fill'
+                            />
+                        </Suspense>
+                    )}
                 </StyledPane>
                 <StyledPane>
                     <Suspense fallback={null}>

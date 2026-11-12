@@ -8,7 +8,8 @@ import type { StrategyVariantSchema } from 'openapi';
 import { StrategyVariants } from './StrategyVariants.tsx';
 import {
     absorbWeightChange,
-    weightsFromDraggedHandle,
+    FIXED_WEIGHT_EXPLANATION,
+    weightsAfterHandleDrag,
 } from './variantWeights.ts';
 
 const server = testServerSetup();
@@ -50,6 +51,11 @@ const VariantsEditor = ({
 const pillLabels = () =>
     screen.getAllByRole('tab').map((pill) => pill.textContent);
 
+const fixedWeightsOnBar = () =>
+    screen
+        .queryAllByLabelText(FIXED_WEIGHT_EXPLANATION)
+        .map((segment) => segment.textContent);
+
 test('adding a variant splits 100% as evenly as the percents allow, with the leftover going to the first variants', async () => {
     setupContextApi();
     render(<VariantsEditor />);
@@ -74,12 +80,14 @@ test('dragging a handle rounds the dragged weight to a whole percent and trades 
         />,
     );
 
-    fireEvent.change(
-        screen.getByRole('slider', { name: 'Split between a and b' }),
-        { target: { value: '270' } },
-    );
+    const handle = screen.getByRole('slider', {
+        name: 'Split between a and b',
+    });
+    fireEvent.keyDown(handle, { key: 'ArrowRight' });
+    fireEvent.keyDown(handle, { key: 'ArrowRight' });
 
     expect(pillLabels()).toEqual(['a27%', 'b23.5%', 'c24.8%', 'd24.7%']);
+    expect(fixedWeightsOnBar()).toEqual(['27%', '23.5%']);
     expect(await screen.findByLabelText('Weight')).toHaveValue(27);
 });
 
@@ -96,6 +104,29 @@ test('a weight typed in the variant form flows to the pills, the neighbour absor
     });
 
     expect(pillLabels()).toEqual(['a50%', 'b17%', 'c33%']);
+    expect(fixedWeightsOnBar()).toEqual(['50%']);
+});
+
+test('a typed weight is capped at what the fixed weights of the other variants leave', async () => {
+    setupContextApi();
+    render(
+        <VariantsEditor
+            variants={[
+                variant('a', 400, 'fix'),
+                variant('b', 300),
+                variant('c', 300),
+            ]}
+        />,
+    );
+
+    fireEvent.click(screen.getByRole('tab', { name: /b/ }));
+    fireEvent.change(await screen.findByLabelText('Weight'), {
+        target: { value: '90' },
+    });
+
+    expect(screen.getByLabelText('Weight')).toHaveValue(60);
+    expect(pillLabels()).toEqual(['a40%', 'b60%', 'c0%']);
+    expect(fixedWeightsOnBar()).toEqual(['40%', '60%']);
 });
 
 test('a changed weight trades with its following neighbours first, draining each before the next, and trades leftward only from the last variant', () => {
@@ -110,7 +141,7 @@ test('a changed weight trades with its following neighbours first, draining each
     ).toEqual([330, 170, 500]);
 });
 
-test('a locked variant keeps its weight while others are added and retyped', async () => {
+test('a fixed-weight variant keeps its weight while others are added and retyped', async () => {
     setupContextApi();
     render(
         <VariantsEditor
@@ -120,33 +151,34 @@ test('a locked variant keeps its weight while others are added and retyped', asy
 
     expect(
         await screen.findByLabelText('Weight'),
-        "the locked variant's own weight input",
-    ).toBeDisabled();
+        "the fixed variant's weight input stays editable",
+    ).toBeEnabled();
 
     fireEvent.click(screen.getByTestId('ADD_STRATEGY_VARIANT_BUTTON'));
-    expect(pillLabels()).toEqual(['a40%Locked weight', 'b30%', '30%']);
+    expect(pillLabels()).toEqual(['a40%', 'b30%', '30%']);
+    expect(fixedWeightsOnBar()).toEqual(['40%']);
 
     fireEvent.click(screen.getByRole('tab', { name: /b/ }));
     fireEvent.change(await screen.findByLabelText('Weight'), {
         target: { value: '50' },
     });
-    expect(pillLabels()).toEqual(['a40%Locked weight', 'b50%', '10%']);
+    expect(pillLabels()).toEqual(['a40%', 'b50%', '10%']);
+    expect(fixedWeightsOnBar()).toEqual(['40%', '50%']);
 });
 
 test('a repeated drag event at the same position changes nothing, so a held pointer cannot drain other variants', () => {
     const evenEighths = [125, 125, 125, 125, 125, 125, 125, 125];
-    const pointerAt510 = [125, 250, 375, 510, 625, 750, 875];
 
-    const afterFirstDrag = weightsFromDraggedHandle({
+    const afterFirstDrag = weightsAfterHandleDrag({
         previousWeights: evenEighths,
-        splitPositions: pointerAt510,
+        targetPosition: 510,
         draggedHandleIndex: 3,
     });
     expect(afterFirstDrag).toEqual([125, 125, 125, 140, 110, 125, 125, 125]);
 
-    const afterRepeatedEvent = weightsFromDraggedHandle({
+    const afterRepeatedEvent = weightsAfterHandleDrag({
         previousWeights: afterFirstDrag,
-        splitPositions: pointerAt510,
+        targetPosition: 510,
         draggedHandleIndex: 3,
     });
     expect(afterRepeatedEvent).toEqual(afterFirstDrag);
@@ -165,10 +197,50 @@ test('a drag stops when the shrinking neighbor runs out of weight instead of mov
         />,
     );
 
-    fireEvent.change(
-        screen.getByRole('slider', { name: 'Split between a and b' }),
-        { target: { value: '600' } },
-    );
+    const handle = screen.getByRole('slider', {
+        name: 'Split between a and b',
+    });
+    fireEvent.keyDown(handle, { key: 'End' });
 
     expect(pillLabels()).toEqual(['a50%', 'b0%', 'c25%', 'd25%']);
+    expect(fixedWeightsOnBar()).toEqual(['50%', '0%']);
+
+    fireEvent.keyDown(handle, { key: 'ArrowRight' });
+    expect(pillLabels()).toEqual(['a50%', 'b0%', 'c25%', 'd25%']);
+});
+
+test('dragging fixes the weights of the two variants it separates, always leaving at least one variable variant', async () => {
+    setupContextApi();
+    render(
+        <VariantsEditor variants={[variant('a', 500), variant('b', 500)]} />,
+    );
+
+    fireEvent.keyDown(
+        screen.getByRole('slider', { name: 'Split between a and b' }),
+        { key: 'ArrowRight' },
+    );
+
+    expect(pillLabels()).toEqual(['a51%', 'b49%']);
+    expect(fixedWeightsOnBar()).toEqual(['51%']);
+});
+
+test('with the last variant already fixed, only the left side of the pair gets fixed', async () => {
+    setupContextApi();
+    render(
+        <VariantsEditor
+            variants={[
+                variant('a', 300),
+                variant('b', 350),
+                variant('c', 350, 'fix'),
+            ]}
+        />,
+    );
+
+    fireEvent.keyDown(
+        screen.getByRole('slider', { name: 'Split between a and b' }),
+        { key: 'ArrowRight' },
+    );
+
+    expect(pillLabels()).toEqual(['a31%', 'b34%', 'c35%']);
+    expect(fixedWeightsOnBar()).toEqual(['31%', '35%']);
 });

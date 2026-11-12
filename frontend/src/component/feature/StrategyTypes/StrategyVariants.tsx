@@ -31,6 +31,28 @@ interface StrategyVariantsProps<T extends StrategyFormState> {
     canRenamePreexistingVariants?: boolean;
 }
 
+const indicesToFixAroundHandle = (
+    variants: IFeatureVariantEdit[],
+    draggedHandleIndex: number,
+): number[] => {
+    const leftIndex = draggedHandleIndex;
+    const rightIndex = draggedHandleIndex + 1;
+    const isVariable = (index: number) =>
+        variants[index].weightType === WeightType.VARIABLE;
+
+    const variableVariantsOutsidePair = variants.some(
+        (_, index) =>
+            isVariable(index) && index !== leftIndex && index !== rightIndex,
+    );
+    if (variableVariantsOutsidePair) {
+        return [leftIndex, rightIndex];
+    }
+    if (isVariable(rightIndex)) {
+        return [leftIndex];
+    }
+    return [];
+};
+
 export const StrategyVariants = <T extends StrategyFormState>({
     strategy,
     setStrategy,
@@ -107,7 +129,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
             const changedIndex = prevVariants.findIndex(
                 (variant) => variant.id === id,
             );
-            const lockedIndexes = prevVariants.flatMap((variant, index) =>
+            const fixedIndices = prevVariants.flatMap((variant, index) =>
                 variant.weightType === WeightType.FIX ? [index] : [],
             );
             const nextWeights = absorbWeightChange({
@@ -115,11 +137,15 @@ export const StrategyVariants = <T extends StrategyFormState>({
                     index === changedIndex ? weight : variant.weight,
                 ),
                 changedIndex,
-                lockedIndexes,
+                fixedIndices,
             });
             return prevVariants.map((variant, index) => ({
                 ...variant,
                 weight: nextWeights[index],
+                weightType:
+                    index === changedIndex
+                        ? WeightType.FIX
+                        : variant.weightType,
             }));
         });
     };
@@ -160,6 +186,22 @@ export const StrategyVariants = <T extends StrategyFormState>({
         [],
     );
 
+    const fixDraggedVariants = useCallback(
+        (draggedHandleIndex: number) =>
+            setVariantsEdit((prevVariants) => {
+                const indicesToFix = indicesToFixAroundHandle(
+                    prevVariants,
+                    draggedHandleIndex,
+                );
+                return prevVariants.map((variant, index) =>
+                    indicesToFix.includes(index)
+                        ? { ...variant, weightType: WeightType.FIX }
+                        : variant,
+                );
+            }),
+        [],
+    );
+
     const selectVariant = useCallback(
         (_: unknown, id: string) => setSelectedVariantId(id),
         [],
@@ -188,7 +230,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
                 name: variant.name,
                 weight: variant.weight,
                 color: variantColor(index),
-                locked: variant.weightType === WeightType.FIX,
+                hasFixedWeight: variant.weightType === WeightType.FIX,
             })),
         [variantsEdit, variantColor],
     );
@@ -231,6 +273,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
                 variants={barVariants}
                 weightsError={variantWeightsError}
                 onWeightsChange={changeWeights}
+                onDragStart={fixDraggedVariants}
             />
             <PillRow>
                 <Tabs
@@ -253,7 +296,6 @@ export const StrategyVariants = <T extends StrategyFormState>({
                             name={variant.name}
                             weight={variant.weight}
                             color={variantColor(index)}
-                            locked={variant.weightType === WeightType.FIX}
                         />
                     ))}
                 </Tabs>

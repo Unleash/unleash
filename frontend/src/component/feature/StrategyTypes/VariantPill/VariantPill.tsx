@@ -1,6 +1,5 @@
 import { memo } from 'react';
 import { styled, Tab, type TabProps } from '@mui/material';
-import Lock from '@mui/icons-material/Lock';
 import { Truncator } from 'component/common/Truncator/Truncator';
 
 const Pill = styled(Tab)(({ theme }) => ({
@@ -46,23 +45,16 @@ const Weight = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const LockMark = styled(Lock)(({ theme }) => ({
-    fontSize: theme.typography.body2.fontSize,
-    color: theme.palette.text.secondary,
-}));
-
 type VariantPillProps = Omit<TabProps, 'label' | 'icon'> & {
     name: string;
     weight: number;
     color: string;
-    locked?: boolean;
 };
 
 export const VariantPill = memo(function VariantPill({
     name,
     weight,
     color,
-    locked,
     ...tabProps
 }: VariantPillProps) {
     return (
@@ -82,7 +74,6 @@ export const VariantPill = memo(function VariantPill({
                         {name}
                     </Truncator>
                     <Weight>{weight / 10}%</Weight>
-                    {locked ? <LockMark titleAccess='Locked weight' /> : null}
                 </Label>
             }
         />

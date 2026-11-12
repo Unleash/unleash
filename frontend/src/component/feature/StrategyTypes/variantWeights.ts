@@ -3,35 +3,37 @@ import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/Feature
 
 export const TOTAL_WEIGHT = 1000;
 
-export const splitPositionsFromWeights = (weights: number[]): number[] =>
-    weights
-        .slice(0, -1)
-        .map((_, index) =>
-            weights
-                .slice(0, index + 1)
-                .reduce((sum, weight) => sum + weight, 0),
-        );
+export const SLIDER_STEP = 10; // one whole percent
+
+export const FIXED_WEIGHT_EXPLANATION =
+    "This weight was set manually, so it's not automatically redistributed.";
+
+export const splitPositionsFromWeights = (weights: number[]): number[] => {
+    const positions: number[] = [];
+    let runningTotal = 0;
+    for (const weight of weights.slice(0, -1)) {
+        runningTotal += weight;
+        positions.push(runningTotal);
+    }
+    return positions;
+};
 
 export const absorbWeightChange = ({
     weights,
     changedIndex,
-    lockedIndexes = [],
+    fixedIndices = [],
 }: {
     weights: number[];
     changedIndex: number;
-    lockedIndexes?: number[];
+    fixedIndices?: number[];
 }): number[] => {
-    const indexesAfter = weights
-        .map((_, index) => index)
-        .slice(changedIndex + 1);
-    const indexesBefore = weights
-        .map((_, index) => index)
-        .slice(0, changedIndex)
-        .reverse();
-    const absorberIndexes = [...indexesAfter, ...indexesBefore].filter(
-        (index) => !lockedIndexes.includes(index),
+    const allIndices = weights.map((_, index) => index);
+    const indicesAfter = allIndices.slice(changedIndex + 1);
+    const indicesBefore = allIndices.slice(0, changedIndex).reverse();
+    const absorberIndices = [...indicesAfter, ...indicesBefore].filter(
+        (index) => !fixedIndices.includes(index),
     );
-    if (absorberIndexes.length === 0) {
+    if (absorberIndices.length === 0) {
         return weights;
     }
 
@@ -40,12 +42,12 @@ export const absorbWeightChange = ({
     const nextWeights = [...weights];
 
     if (excess <= 0) {
-        nextWeights[absorberIndexes[0]] += -excess;
+        nextWeights[absorberIndices[0]] += -excess;
         return nextWeights;
     }
 
     let leftToTake = excess;
-    for (const index of absorberIndexes) {
+    for (const index of absorberIndices) {
         const taken = Math.min(leftToTake, nextWeights[index]);
         nextWeights[index] -= taken;
         leftToTake -= taken;
@@ -56,80 +58,44 @@ export const absorbWeightChange = ({
     return nextWeights;
 };
 
-const roundChangedWeights = ({
+export const weightsAfterHandleDrag = ({
     previousWeights,
-    nextWeights,
-    lockedIndexes,
-}: {
-    previousWeights: number[];
-    nextWeights: number[];
-    lockedIndexes: number[];
-}): number[] => {
-    const changedIndexes = nextWeights
-        .map((_, index) => index)
-        .filter((index) => nextWeights[index] !== previousWeights[index]);
-    if (changedIndexes.length === 0) {
-        return nextWeights;
-    }
-
-    const lastChangedIndex = changedIndexes[changedIndexes.length - 1];
-    const changedTotal = changedIndexes.reduce(
-        (sum, index) => sum + nextWeights[index],
-        0,
-    );
-    const roundedWeights = nextWeights.map((weight, index) =>
-        changedIndexes.includes(index) && index !== lastChangedIndex
-            ? Math.round(weight / 10) * 10
-            : weight,
-    );
-    const roundedChangedTotal = changedIndexes
-        .filter((index) => index !== lastChangedIndex)
-        .reduce((sum, index) => sum + roundedWeights[index], 0);
-    const lastChangedComplement = changedTotal - roundedChangedTotal;
-    roundedWeights[lastChangedIndex] = Math.max(lastChangedComplement, 0);
-    if (lastChangedComplement >= 0) {
-        return roundedWeights;
-    }
-    return absorbWeightChange({
-        weights: roundedWeights,
-        changedIndex: lastChangedIndex,
-        lockedIndexes,
-    });
-};
-
-export const weightsFromDraggedHandle = ({
-    previousWeights,
-    splitPositions,
+    targetPosition,
     draggedHandleIndex,
-    lockedIndexes = [],
 }: {
     previousWeights: number[];
-    splitPositions: number[]; // the handle positions (e.g. 850 puts a handle 85% of the way across the bar)
+    targetPosition: number; // where the handle should land (e.g. 850 puts it 85% of the way across the bar)
     draggedHandleIndex: number;
-    lockedIndexes?: number[];
 }): number[] => {
     const previousPositions = splitPositionsFromWeights(previousWeights);
-    const unDraggedPositions = previousPositions.filter(
-        (_, index) => index !== draggedHandleIndex,
-    );
-    const draggedPosition =
-        splitPositions.find(
-            (position, index) => position !== unDraggedPositions[index],
-        ) ?? previousPositions[draggedHandleIndex];
+    if (targetPosition === previousPositions[draggedHandleIndex]) {
+        return previousWeights;
+    }
 
-    const growingVariantIndex = draggedHandleIndex;
-    const shrinkingVariantIndex = draggedHandleIndex + 1;
-    const draggedDelta =
-        draggedPosition - previousPositions[draggedHandleIndex];
-    const appliedDelta = Math.min(
-        Math.max(draggedDelta, -previousWeights[growingVariantIndex]),
-        previousWeights[shrinkingVariantIndex],
+    const leftVariantIndex = draggedHandleIndex;
+    const rightVariantIndex = draggedHandleIndex + 1;
+    const pairTotal =
+        previousWeights[leftVariantIndex] + previousWeights[rightVariantIndex];
+    const pairStart =
+        previousPositions[draggedHandleIndex] -
+        previousWeights[leftVariantIndex];
+
+    const exactLeftWeight = Math.min(
+        Math.max(targetPosition - pairStart, 0),
+        pairTotal,
     );
+    const draggedToPairEnd = exactLeftWeight === pairTotal;
+    const leftWeight = draggedToPairEnd
+        ? pairTotal // rounding to whole percents strands the remainder of an uneven pair total in the right variant, making 0 unreachable
+        : Math.min(
+              Math.round(exactLeftWeight / SLIDER_STEP) * SLIDER_STEP,
+              pairTotal,
+          );
 
     const nextWeights = [...previousWeights];
-    nextWeights[growingVariantIndex] += appliedDelta;
-    nextWeights[shrinkingVariantIndex] -= appliedDelta;
-    return roundChangedWeights({ previousWeights, nextWeights, lockedIndexes });
+    nextWeights[leftVariantIndex] = leftWeight;
+    nextWeights[rightVariantIndex] = pairTotal - leftWeight;
+    return nextWeights;
 };
 
 const distributeWholeParts = (total: number, count: number): number[] => {
@@ -143,16 +109,16 @@ const distributeWholeParts = (total: number, count: number): number[] => {
 export const splitWeightsEvenly = (
     variants: IFeatureVariantEdit[],
 ): IFeatureVariantEdit[] => {
-    const lockedVariants = variants.filter(
+    const fixedVariants = variants.filter(
         (variant) => variant.weightType === WeightType.FIX,
     );
-    const lockedWeight = lockedVariants.reduce(
+    const fixedWeight = fixedVariants.reduce(
         (sum, variant) => sum + variant.weight,
         0,
     );
-    const variableCount = variants.length - lockedVariants.length;
+    const variableCount = variants.length - fixedVariants.length;
     const shares = distributeWholeParts(
-        TOTAL_WEIGHT - lockedWeight,
+        TOTAL_WEIGHT - fixedWeight,
         variableCount,
     );
     let shareIndex = 0;

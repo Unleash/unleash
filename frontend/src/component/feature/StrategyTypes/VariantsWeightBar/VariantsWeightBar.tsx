@@ -1,12 +1,14 @@
-import { type HTMLAttributes, memo, type PointerEvent, useRef } from 'react';
+import { type KeyboardEvent, memo, type PointerEvent, useRef } from 'react';
 import type { IFeatureVariantEdit } from '../../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
-import { alpha, Slider, styled } from '@mui/material';
+import { alpha, styled, Tooltip } from '@mui/material';
 import DragIndicator from '@mui/icons-material/DragIndicator';
 import { focusOutline } from 'themes/themeStyles';
 import {
+    FIXED_WEIGHT_EXPLANATION,
     splitPositionsFromWeights,
     TOTAL_WEIGHT,
-    weightsFromDraggedHandle,
+    SLIDER_STEP,
+    weightsAfterHandleDrag,
 } from '../variantWeights.ts';
 
 const Bar = styled('div', {
@@ -29,7 +31,7 @@ const Segments = styled('div')(({ theme }) => ({
     overflow: 'hidden',
 }));
 
-const lockedStripes = (color: string) =>
+const fixedWeightStripes = (color: string) =>
     `repeating-linear-gradient(135deg, ${color} 0, ${color} 4px, ${alpha(color, 0.5)} 4px, ${alpha(color, 0.5)} 8px)`;
 
 const Segment = styled('div')(({ theme }) => ({
@@ -38,20 +40,14 @@ const Segment = styled('div')(({ theme }) => ({
     justifyContent: 'center',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
-    minWidth: theme.spacing(0.5),
     color: theme.palette.text.primary,
     fontSize: theme.typography.caption.fontSize,
     fontWeight: theme.typography.fontWeightBold,
 }));
 
-const HandleSlider = styled(Slider)({
-    position: 'absolute',
-    inset: 0,
-    height: '100%',
-    padding: 0,
-});
+const HANDLE_WIDTH_PX = 24;
 
-const Grip = styled('span')(({ theme }) => ({
+const Handle = styled('span')(({ theme }) => ({
     position: 'absolute',
     top: '50%',
     transform: 'translate(-50%, -50%)',
@@ -60,139 +56,220 @@ const Grip = styled('span')(({ theme }) => ({
     justifyContent: 'center',
     boxSizing: 'border-box',
     borderRadius: '50%',
-    width: theme.spacing(2),
-    height: theme.spacing(2),
+    width: HANDLE_WIDTH_PX,
+    height: HANDLE_WIDTH_PX,
     background: theme.palette.background.paper,
     border: `1px solid ${theme.palette.divider}`,
     boxShadow: theme.shadows[1],
     color: theme.palette.text.secondary,
     fontSize: theme.typography.caption.fontSize,
     cursor: 'col-resize',
-    '&.Mui-focusVisible': focusOutline(theme),
+    touchAction: 'none',
+    '&:focus-visible': focusOutline(theme),
 }));
-
-type GripThumbProps = HTMLAttributes<HTMLSpanElement> & {
-    'data-index'?: number;
-    hiddenHandleIndexes?: number[];
-};
-
-const GripThumb = ({
-    children,
-    hiddenHandleIndexes = [],
-    ...thumbProps
-}: GripThumbProps) => {
-    const handleIsHidden = hiddenHandleIndexes.includes(
-        thumbProps['data-index'] ?? -1,
-    );
-    if (handleIsHidden) {
-        return null;
-    }
-    return (
-        <Grip {...thumbProps}>
-            {children}
-            <DragIndicator fontSize='inherit' />
-        </Grip>
-    );
-};
-
-const ignorePressesOutsideHandles = (event: PointerEvent<HTMLElement>) => {
-    const pressedHandle = (event.target as HTMLElement).closest('[data-index]'); // MUI attribute for each handle
-    if (!pressedHandle) {
-        event.preventDefault();
-    }
-};
 
 type BarVariant = Pick<IFeatureVariantEdit, 'id' | 'name' | 'weight'> & {
     color: string;
-    locked: boolean;
+    hasFixedWeight: boolean;
 };
 
 type VariantsWeightBarProps = {
     variants: BarVariant[];
     weightsError?: boolean;
     onWeightsChange: (weights: number[]) => void;
+    onDragStart: (draggedHandleIndex: number) => void;
+};
+
+type HandleDrag = {
+    handleIndex: number;
+    pressClientX: number;
+    pressSplitPosition: number;
+    barWidth: number;
+    started: boolean;
 };
 
 const VariantsWeightBarComponent = ({
     variants,
     weightsError = false,
     onWeightsChange,
+    onDragStart,
 }: VariantsWeightBarProps) => {
     const weights = variants.map((variant) => variant.weight);
     const splitPositions = splitPositionsFromWeights(weights);
-    const draggedHandleIndexRef = useRef<number | null>(null);
+    const barRef = useRef<HTMLDivElement>(null);
+    const dragRef = useRef<HandleDrag | null>(null);
 
-    const hiddenHandleIndexes = splitPositions.flatMap((_, handleIndex) => {
-        const variantLeftOfHandle = variants[handleIndex];
-        const variantRightOfHandle = variants[handleIndex + 1];
-        return variantLeftOfHandle.locked || variantRightOfHandle.locked
-            ? [handleIndex]
-            : [];
-    });
-    const changeSplitPositions = (
-        value: number | number[],
-        activeHandleIndex: number,
+    const handleCount = splitPositions.length;
+    const handlePixelOffsets = splitPositions.map(
+        (splitPosition, handleIndex) => {
+            const handleWidthsBeforeHandleCenter =
+                (handleIndex + 0.5) * HANDLE_WIDTH_PX;
+            const handleWidthsSpreadByWeight =
+                (splitPosition / TOTAL_WEIGHT) * handleCount * HANDLE_WIDTH_PX;
+            return handleWidthsBeforeHandleCenter - handleWidthsSpreadByWeight;
+        },
+    );
+
+    const segmentBasePixels = (index: number) => {
+        const halfHandleOnTheLeft = index > 0 ? HANDLE_WIDTH_PX / 2 : 0;
+        const halfHandleOnTheRight =
+            index < weights.length - 1 ? HANDLE_WIDTH_PX / 2 : 0;
+        return halfHandleOnTheLeft + halfHandleOnTheRight;
+    };
+
+    const moveHandleTo = (
+        handleIndex: number,
+        targetPosition: number,
+        notifyDragStart: () => void,
     ) => {
-        const nextSplitPositions = Array.isArray(value) ? value : [value];
-        const draggedHandleIndex =
-            draggedHandleIndexRef.current ?? activeHandleIndex;
-        draggedHandleIndexRef.current = draggedHandleIndex;
-        const lockedIndexes = variants.flatMap((variant, index) =>
-            variant.locked ? [index] : [],
-        );
-        const nextWeights = weightsFromDraggedHandle({
+        const nextWeights = weightsAfterHandleDrag({
             previousWeights: weights,
-            splitPositions: nextSplitPositions,
-            draggedHandleIndex,
-            lockedIndexes,
+            targetPosition,
+            draggedHandleIndex: handleIndex,
         });
+        const weightsChanged = nextWeights.some(
+            (nextWeight, index) => nextWeight !== weights[index],
+        );
+        if (!weightsChanged) {
+            return;
+        }
+        notifyDragStart();
         onWeightsChange(nextWeights);
     };
 
+    const startHandleDrag =
+        (handleIndex: number) => (event: PointerEvent<HTMLElement>) => {
+            const barWidth = barRef.current?.getBoundingClientRect().width ?? 0;
+            if (barWidth === 0) {
+                return;
+            }
+            event.currentTarget.setPointerCapture(event.pointerId);
+            dragRef.current = {
+                handleIndex,
+                pressClientX: event.clientX,
+                pressSplitPosition: splitPositions[handleIndex],
+                barWidth,
+                started: false,
+            };
+        };
+
+    const moveHandleDrag = (event: PointerEvent<HTMLElement>) => {
+        const drag = dragRef.current;
+        if (!drag) {
+            return;
+        }
+        if (event.buttons === 0) {
+            dragRef.current = null; // the press ended without us seeing it, so this is a hover, not a drag
+            return;
+        }
+        const draggedWeight =
+            ((event.clientX - drag.pressClientX) / drag.barWidth) *
+            TOTAL_WEIGHT;
+        moveHandleTo(
+            drag.handleIndex,
+            drag.pressSplitPosition + draggedWeight,
+            () => {
+                if (!drag.started) {
+                    drag.started = true;
+                    onDragStart(drag.handleIndex);
+                }
+            },
+        );
+    };
+
+    const endHandleDrag = () => {
+        dragRef.current = null;
+    };
+
+    const keyboardTargetPosition = (
+        handleIndex: number,
+        key: string,
+    ): number | undefined => {
+        const handlePosition = splitPositions[handleIndex];
+        switch (key) {
+            case 'Home':
+                return handlePosition - weights[handleIndex];
+            case 'End':
+                return handlePosition + weights[handleIndex + 1];
+            case 'ArrowLeft':
+            case 'ArrowDown':
+                return handlePosition - SLIDER_STEP;
+            case 'ArrowRight':
+            case 'ArrowUp':
+                return handlePosition + SLIDER_STEP;
+            default:
+                return undefined;
+        }
+    };
+
+    const nudgeHandleWithKeyboard =
+        (handleIndex: number) => (event: KeyboardEvent<HTMLElement>) => {
+            const targetPosition = keyboardTargetPosition(
+                handleIndex,
+                event.key,
+            );
+            if (targetPosition === undefined) {
+                return;
+            }
+            event.preventDefault();
+            moveHandleTo(handleIndex, targetPosition, () =>
+                onDragStart(handleIndex),
+            );
+        };
+
     return (
-        <Bar hasError={weightsError}>
+        <Bar ref={barRef} hasError={weightsError}>
             <Segments>
                 {variants.map((variant, index) => (
-                    <Segment
+                    <Tooltip
                         key={variant.id}
-                        style={{
-                            flex: `${weights[index]} 0 0`,
-                            background: variant.locked
-                                ? lockedStripes(variant.color)
-                                : variant.color,
-                        }}
+                        title={
+                            variant.hasFixedWeight
+                                ? FIXED_WEIGHT_EXPLANATION
+                                : ''
+                        }
+                        placement='top'
+                        arrow
                     >
-                        {weights[index] / 10}%
-                    </Segment>
+                        <Segment
+                            style={{
+                                flex: `${weights[index]} 0 ${segmentBasePixels(index)}px`,
+                                background: variant.hasFixedWeight
+                                    ? fixedWeightStripes(variant.color)
+                                    : variant.color,
+                            }}
+                        >
+                            {weights[index] / 10}%
+                        </Segment>
+                    </Tooltip>
                 ))}
             </Segments>
-            {variants.length > 1 ? (
-                <HandleSlider
-                    onPointerDown={ignorePressesOutsideHandles} // only adjust weights by dragging handles
-                    value={splitPositions}
-                    min={0}
-                    max={TOTAL_WEIGHT}
-                    step={10}
-                    track={false}
-                    slots={{ thumb: GripThumb }}
-                    slotProps={{
-                        thumb: { hiddenHandleIndexes } as GripThumbProps,
-                        rail: { style: { display: 'none' } },
-                    }}
-                    getAriaLabel={(index) =>
-                        `Split between ${variants[index].name} and ${variants[index + 1].name}`
-                    }
-                    getAriaValueText={(splitPosition) =>
-                        `${splitPosition / 10}%`
-                    }
-                    onChange={(_, value, activeHandleIndex) =>
-                        changeSplitPositions(value, activeHandleIndex)
-                    }
-                    onChangeCommitted={() => {
-                        draggedHandleIndexRef.current = null;
-                    }}
-                />
-            ) : null}
+            {variants.length > 1
+                ? splitPositions.map((splitPosition, handleIndex) => (
+                      <Handle
+                          key={variants[handleIndex].id}
+                          role='slider'
+                          tabIndex={0}
+                          aria-orientation='horizontal'
+                          aria-label={`Split between ${variants[handleIndex].name} and ${variants[handleIndex + 1].name}`}
+                          aria-valuemin={0}
+                          aria-valuemax={100}
+                          aria-valuenow={splitPosition / 10}
+                          aria-valuetext={`${splitPosition / 10}%`}
+                          style={{
+                              left: `calc(${(splitPosition / TOTAL_WEIGHT) * 100}% + ${handlePixelOffsets[handleIndex]}px)`,
+                          }}
+                          onPointerDown={startHandleDrag(handleIndex)}
+                          onPointerMove={moveHandleDrag}
+                          onPointerUp={endHandleDrag}
+                          onPointerCancel={endHandleDrag}
+                          onLostPointerCapture={endHandleDrag}
+                          onKeyDown={nudgeHandleWithKeyboard(handleIndex)}
+                      >
+                          <DragIndicator fontSize='inherit' />
+                      </Handle>
+                  ))
+                : null}
         </Bar>
     );
 };
@@ -209,5 +286,6 @@ export const VariantsWeightBar = memo(
     (previousProps, nextProps) =>
         previousProps.weightsError === nextProps.weightsError &&
         previousProps.onWeightsChange === nextProps.onWeightsChange &&
+        previousProps.onDragStart === nextProps.onDragStart &&
         barVariantsAreEqual(previousProps.variants, nextProps.variants),
 );

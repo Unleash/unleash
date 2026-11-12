@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -21,6 +21,19 @@ test('links Home to the personal dashboard', () => {
         'href',
         '/personal',
     );
+});
+
+test('links Projects and Flags overview in the Workspace section', () => {
+    render(<AppShell>content</AppShell>);
+
+    const workspace = within(screen.getByRole('region', { name: 'Workspace' }));
+    expect(workspace.getByRole('link', { name: 'Projects' })).toHaveAttribute(
+        'href',
+        '/projects',
+    );
+    expect(
+        workspace.getByRole('link', { name: 'Flags overview' }),
+    ).toHaveAttribute('href', '/search');
 });
 
 test('shows change requests on enterprise', async () => {

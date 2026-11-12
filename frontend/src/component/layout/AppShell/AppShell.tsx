@@ -7,10 +7,14 @@ import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimel
 import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
 import UnleashLogoWhite from 'assets/img/logoWithWhiteText.svg?react';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequestIcon';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { SearchButton } from './sidebar/SearchButton.tsx';
 import { SidebarLink } from './sidebar/SidebarLink.tsx';
+import { SidebarList } from './sidebar/SidebarList.tsx';
+import { SidebarSection } from './sidebar/SidebarSection.tsx';
 
 const SIDEBAR_WIDTH = 240;
 
@@ -42,12 +46,6 @@ const StyledSearchSlot = styled('div')(({ theme }) => ({
     margin: theme.spacing(1.5, 0, 2),
 }));
 
-const StyledNavList = styled('div')({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '1px',
-});
-
 const StyledContent = styled('main')(({ theme }) => ({
     flex: 1,
     minWidth: 0,
@@ -73,7 +71,7 @@ const Sidebar: FC = () => {
             <StyledSearchSlot>
                 <SearchButton />
             </StyledSearchSlot>
-            <StyledNavList>
+            <SidebarList>
                 <SidebarLink
                     to='/personal'
                     icon={<HomeOutlinedIcon />}
@@ -86,7 +84,19 @@ const Sidebar: FC = () => {
                         label='Change requests'
                     />
                 ) : null}
-            </StyledNavList>
+            </SidebarList>
+            <SidebarSection title='Workspace'>
+                <SidebarLink
+                    to='/projects'
+                    icon={<GridViewOutlinedIcon />}
+                    label='Projects'
+                />
+                <SidebarLink
+                    to='/search'
+                    icon={<FlagOutlinedIcon />}
+                    label='Flags overview'
+                />
+            </SidebarSection>
         </StyledSidebar>
     );
 };

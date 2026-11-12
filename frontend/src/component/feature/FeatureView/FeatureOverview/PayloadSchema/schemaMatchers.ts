@@ -29,3 +29,9 @@ export const isEnumSchema: SchemaMatcher = (schema) =>
 
 export const isBooleanSchema: SchemaMatcher = (schema) =>
     schema.type === 'boolean';
+
+export const isArraySchema: SchemaMatcher = (schema) =>
+    schema.type === 'array' &&
+    typeof schema.items === 'object' &&
+    schema.items !== null &&
+    !Array.isArray(schema.items);

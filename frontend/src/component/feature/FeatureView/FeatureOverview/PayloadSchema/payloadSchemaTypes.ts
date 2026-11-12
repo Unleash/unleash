@@ -19,4 +19,6 @@ export type JsonSchemaProperty = Record<string, unknown> & {
     maxLength?: number;
     pattern?: string;
     format?: string;
+    items?: JsonSchemaProperty;
+    maxItems?: number;
 };

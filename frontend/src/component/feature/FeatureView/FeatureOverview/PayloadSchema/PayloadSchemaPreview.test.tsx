@@ -16,7 +16,11 @@ test('renders an input for each supported property type, with a fallback', () =>
             },
             enabled: { type: 'boolean', title: 'Enabled' },
             color: { type: 'string', title: 'Color', enum: ['red', 'green'] },
-            tags: { type: 'array', title: 'Tags', items: { type: 'string' } },
+            webhook: {
+                type: 'string',
+                title: 'Webhook',
+                oneOf: [{ const: 'slack' }, { const: 'teams' }],
+            },
         },
     };
 
@@ -25,11 +29,11 @@ test('renders an input for each supported property type, with a fallback', () =>
     const labels = [
         ...new Set(
             screen
-                .getAllByText(/^(Email|Tier|Enabled|Color|Tags):?$/)
+                .getAllByText(/^(Email|Tier|Enabled|Color|Webhook):?$/)
                 .map((el) => el.textContent),
         ),
     ];
-    expect(labels).toEqual(['Email', 'Tier', 'Enabled', 'Color', 'Tags:']);
+    expect(labels).toEqual(['Email', 'Tier', 'Enabled', 'Color', 'Webhook:']);
     expect(screen.getByLabelText('Email')).toBeInTheDocument();
     expect(screen.getByLabelText('Tier')).toBeInTheDocument();
     expect(
@@ -37,8 +41,94 @@ test('renders an input for each supported property type, with a fallback', () =>
     ).toBeInTheDocument();
     expect(screen.getByLabelText('Color')).toBeInTheDocument();
     expect(screen.getByLabelText('Enabled')).toBeInTheDocument();
-    expect(screen.queryByLabelText('Tags')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Webhook')).not.toBeInTheDocument();
     expect(screen.getAllByText(/not supported in a form view/)).toHaveLength(1);
+});
+
+test('renders an array property as a list of groups, with add/remove controls', async () => {
+    const schema = {
+        type: 'object',
+        properties: {
+            tags: {
+                type: 'array',
+                title: 'Tags',
+                items: { type: 'string' },
+                maxItems: 2,
+            },
+        },
+        examples: [{ tags: ['first'] }],
+    };
+
+    render(<PayloadSchemaPreview schema={schema} />);
+
+    expect(screen.getByLabelText('Tags 1')).toHaveValue('first');
+    expect(screen.getByText('Tags')).toBeInTheDocument(); // group heading
+    expect(screen.getByText('1 of 2')).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Add item' }));
+    expect(screen.getAllByRole('textbox')).toHaveLength(2);
+    expect(screen.getByLabelText('Tags 1')).toBeInTheDocument();
+    expect(screen.getByLabelText('Tags 2')).toBeInTheDocument();
+    expect(screen.getByText('2 of 2')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Add item' })).toBeDisabled();
+
+    await userEvent.click(
+        screen.getByRole('button', { name: 'Remove Tags 1' }),
+    );
+    expect(screen.getAllByRole('textbox')).toHaveLength(1);
+    expect(screen.getAllByRole('textbox')[0]).toHaveValue('');
+    expect(screen.getByLabelText('Tags 1')).toBeInTheDocument();
+    expect(screen.getByText('1 of 2')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Add item' })).toBeEnabled();
+});
+
+test('renders an array of objects as a list of nested-object groups', async () => {
+    const schema = {
+        type: 'object',
+        properties: {
+            contacts: {
+                type: 'array',
+                title: 'Contacts',
+                items: {
+                    type: 'object',
+                    properties: {
+                        name: { type: 'string', title: 'Name' },
+                    },
+                },
+            },
+        },
+    };
+
+    render(<PayloadSchemaPreview schema={schema} />);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Add item' }));
+    await userEvent.type(screen.getByLabelText('Name'), 'Ada');
+
+    expect(screen.getByLabelText('Name')).toHaveValue('Ada');
+});
+
+test('falls back to "not supported" for a tuple-form array (items as a list of positional schemas)', () => {
+    const schema = {
+        type: 'object',
+        properties: {
+            coordinate: {
+                type: 'array',
+                title: 'Coordinate',
+                items: [
+                    { type: 'number', title: 'Latitude' },
+                    { type: 'number', title: 'Longitude' },
+                ],
+            },
+        },
+        examples: [{ coordinate: [59.9, 10.7] }],
+    };
+
+    render(<PayloadSchemaPreview schema={schema} />);
+
+    expect(
+        screen.getByText(/not supported in a form view/),
+    ).toBeInTheDocument();
+    expect(screen.queryByLabelText('Latitude')).not.toBeInTheDocument();
 });
 
 test('renders a checkbox for a boolean property', async () => {

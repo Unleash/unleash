@@ -1,9 +1,17 @@
-import { useId, type ReactNode } from 'react';
-import { Checkbox, FormControlLabel, styled, Typography } from '@mui/material';
+import { type ReactNode, useId } from 'react';
+import {
+    Box,
+    Checkbox,
+    FormControlLabel,
+    styled,
+    Typography,
+} from '@mui/material';
+import { visuallyHidden } from '@mui/utils';
 import Input from 'component/common/Input/Input';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { parseDateValue, parseValidDate } from 'component/common/util.ts';
 import {
+    isArraySchema,
     isBooleanSchema,
     isDateTimeSchema,
     isEnumSchema,
@@ -12,6 +20,8 @@ import {
     type SchemaMatcher,
 } from './schemaMatchers.ts';
 import type { JsonSchemaProperty } from './payloadSchemaTypes.ts';
+import { SchemaFormArrayField } from './SchemaFormCollectionField.tsx';
+import { SchemaFieldDescription } from './SchemaFieldDescription.tsx';
 
 const StyledUnsupported = styled('div')(({ theme }) => ({
     padding: theme.spacing(1.5),
@@ -30,19 +40,6 @@ const StyledGroup = styled('fieldset')(({ theme }) => ({
     flexDirection: 'column',
     gap: theme.spacing(2),
 }));
-
-const FieldDescription = ({
-    description,
-    id,
-}: {
-    description?: ReactNode;
-    id?: string;
-}) =>
-    description ? (
-        <Typography id={id} variant='body2' sx={{ color: 'text.secondary' }}>
-            {description}
-        </Typography>
-    ) : null;
 
 const toDateTimeInputValue = (value: unknown): string =>
     typeof value === 'string' && parseValidDate(value)
@@ -64,14 +61,16 @@ interface ISchemaFormFieldProps {
     value: unknown;
     onChange: (value: unknown) => void;
     required?: boolean;
+    hideLabel?: boolean;
 }
 
-const SchemaFormField = ({
+export const SchemaFormField = ({
     name,
     schema,
     value,
     onChange,
     required,
+    hideLabel,
 }: ISchemaFormFieldProps) => {
     const label = schema.title ?? name;
     const descriptionId = useId();
@@ -87,13 +86,24 @@ const SchemaFormField = ({
                     <Typography component='legend' variant='subtitle2'>
                         {label}
                     </Typography>
-                    <FieldDescription description={schema.description} />
+                    <SchemaFieldDescription description={schema.description} />
                     <SchemaForm
                         schema={schema}
                         value={(value as Record<string, unknown>) ?? {}}
                         onChange={onChange}
                     />
                 </StyledGroup>
+            ),
+        },
+        {
+            matches: isArraySchema,
+            render: () => (
+                <SchemaFormArrayField
+                    name={name}
+                    schema={schema}
+                    value={value}
+                    onChange={onChange}
+                />
             ),
         },
         {
@@ -115,9 +125,17 @@ const SchemaFormField = ({
                                 }
                             />
                         }
-                        label={label}
+                        label={
+                            hideLabel ? (
+                                <Box component='span' sx={visuallyHidden}>
+                                    {label}
+                                </Box>
+                            ) : (
+                                label
+                            )
+                        }
                     />
-                    <FieldDescription
+                    <SchemaFieldDescription
                         id={descriptionId}
                         description={schema.description}
                     />
@@ -129,6 +147,7 @@ const SchemaFormField = ({
             render: () => (
                 <Input
                     label={label}
+                    visuallyHideLabel={hideLabel}
                     description={schema.description}
                     required={required}
                     disabled={Boolean(schema.readOnly)}
@@ -154,6 +173,7 @@ const SchemaFormField = ({
                 return (
                     <GeneralSelect
                         label={label}
+                        visuallyHideLabel={hideLabel}
                         description={schema.description}
                         options={options}
                         value={value === undefined ? '' : String(value)}
@@ -171,6 +191,7 @@ const SchemaFormField = ({
             render: () => (
                 <Input
                     label={label}
+                    visuallyHideLabel={hideLabel}
                     description={schema.description}
                     required={required}
                     disabled={Boolean(schema.readOnly)}

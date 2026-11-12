@@ -22,8 +22,13 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useLoading from 'hooks/useLoading';
 import useToast from 'hooks/useToast';
 import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import type { RemoteData } from './RemoteData.ts';
+import {
+    filterFlagsTracking,
+    openFullListTracking,
+} from './personalDashboardTracking.ts';
 
 const RECENT_FLAGS_LIMIT = 25;
 
@@ -104,20 +109,26 @@ export const RecentFlagsPanelView = ({
     const { isOss } = useUiConfig();
     const navigate = useNavigate();
     const loadingRef = useLoading(flags.state === 'loading');
+    const trackFilterFlags = useTracking(filterFlagsTracking);
+    const trackOpenFullList = useTracking(openFullListTracking);
 
     const columns = useMemo(
         () => [
             columnHelper.accessor('name', {
                 header: 'Name',
                 cell: createFeatureOverviewCell(
-                    (tag) =>
+                    (tag) => {
+                        trackFilterFlags('succeeded', { filterKey: 'tag' });
                         navigate(
                             `/search?tag=${encodeURIComponent(`INCLUDE:${tag}`)}`,
-                        ),
-                    (type) =>
+                        );
+                    },
+                    (type) => {
+                        trackFilterFlags('succeeded', { filterKey: 'type' });
                         navigate(
                             `/search?type=${encodeURIComponent(`IS:${type}`)}`,
-                        ),
+                        );
+                    },
                     onFavorite,
                     onFlagClick,
                 ),
@@ -179,7 +190,7 @@ export const RecentFlagsPanelView = ({
                 meta: { width: '1%' },
             }),
         ],
-        [projects, isOss, onFavorite, onFlagClick, navigate],
+        [projects, isOss, onFavorite, onFlagClick, navigate, trackFilterFlags],
     );
 
     const data = useMemo(
@@ -220,7 +231,17 @@ export const RecentFlagsPanelView = ({
                 <PanelMessage>You don’t have any flags here yet.</PanelMessage>
             ) : (
                 <PanelFooter>
-                    <AllFlagsLink to='/search'>View all flags</AllFlagsLink>
+                    <AllFlagsLink
+                        to='/search'
+                        onClick={() =>
+                            trackOpenFullList('succeeded', {
+                                list: 'flags',
+                                method: 'more-link',
+                            })
+                        }
+                    >
+                        View all flags
+                    </AllFlagsLink>
                 </PanelFooter>
             )}
         </Panel>

@@ -5,6 +5,7 @@ import { Button, styled, Typography } from '@mui/material';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import useLoading from 'hooks/useLoading';
 import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
 import type { ProjectSchema } from 'openapi';
 import { ProjectCard } from 'component/project/ProjectCard/ProjectCard';
 import { ProjectCreationButton } from 'component/project/ProjectList/ProjectCreationButton/ProjectCreationButton';
@@ -13,6 +14,7 @@ import { useMyProjects } from 'component/project/ProjectList/hooks/useMyProjects
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { TablePlaceholder } from 'component/common/Table/TablePlaceholder/TablePlaceholder';
 import type { RemoteData } from './RemoteData.ts';
+import { openFullListTracking } from './personalDashboardTracking.ts';
 
 const Panel = styled('section')(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
@@ -101,6 +103,7 @@ export const ProjectCardsPanelView = ({
     const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
     const ref = useLoading(projects.state === 'loading');
     const { gridRef, cardsPerRow } = useCardsPerRow();
+    const trackOpenFullList = useTracking(openFullListTracking);
     // A single card looks odd on narrow screens
     const visibleCount = cardsPerRow === 1 ? 3 : cardsPerRow;
 
@@ -137,6 +140,12 @@ export const ProjectCardsPanelView = ({
                             component={Link}
                             nativeButton={false}
                             to='/projects'
+                            onClick={() =>
+                                trackOpenFullList('succeeded', {
+                                    list: 'projects',
+                                    method: 'empty-state',
+                                })
+                            }
                         >
                             View projects
                         </Button>
@@ -161,7 +170,15 @@ export const ProjectCardsPanelView = ({
                 </CardGrid>
             )}
             {hiddenCount > 0 && (
-                <MoreProjectsLink to='/projects'>
+                <MoreProjectsLink
+                    to='/projects'
+                    onClick={() =>
+                        trackOpenFullList('succeeded', {
+                            list: 'projects',
+                            method: 'more-link',
+                        })
+                    }
+                >
                     View {hiddenCount} more
                 </MoreProjectsLink>
             )}

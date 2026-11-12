@@ -11,3 +11,13 @@ export const toggleDashboardSectionTracking: Tracking = {
     event: 'personal-dashboard',
     type: 'toggle-section',
 };
+
+export const filterFlagsTracking: Tracking = {
+    event: 'personal-dashboard',
+    type: 'filter-flags',
+};
+
+export const openFullListTracking: Tracking = {
+    event: 'personal-dashboard',
+    type: 'open-full-list',
+};

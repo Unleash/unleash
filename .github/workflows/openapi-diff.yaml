@@ -47,7 +47,7 @@ jobs:
           echo "BASE_SHA=$BASE_SHA" >> $GITHUB_ENV
       - name: Checkout baseline commit
         run: git checkout "${BASE_SHA}"
-      - uses: pnpm/action-setup@v5
+      - uses: pnpm/action-setup@v6
       - name: Install node
         uses: actions/setup-node@v7
         with:
@@ -109,7 +109,7 @@ jobs:
           --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
       - uses: actions/checkout@v7
-      - uses: pnpm/action-setup@v5
+      - uses: pnpm/action-setup@v6
       - name: Install node
         uses: actions/setup-node@v7
         with:

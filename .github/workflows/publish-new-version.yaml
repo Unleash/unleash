@@ -59,7 +59,7 @@ jobs:
         run: |
           git config user.name "Github Actions Bot"
           git config user.email "<>"
-      - uses: pnpm/action-setup@v5
+      - uses: pnpm/action-setup@v6
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v7
         with:
@@ -123,7 +123,7 @@ jobs:
         run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
-      - uses: pnpm/action-setup@v5
+      - uses: pnpm/action-setup@v6
       - name: Use Node js 22
         uses: actions/setup-node@v7
         with:

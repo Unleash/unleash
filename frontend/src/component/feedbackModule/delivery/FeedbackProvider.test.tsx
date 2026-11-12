@@ -469,23 +469,52 @@ describe('FeedbackProvider', () => {
         expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
     });
 
-    it('hands the observer no triggers only while a survey is shown', async () => {
+    it('counts the occurrences of an event while another survey is shown', async () => {
+        vi.useFakeTimers({ toFake: ['Date'] });
         renderSurvey(
             testUnleashClient([
-                surveyFlag('survey-a', 'Survey A', APPEAR_FLAG_CREATED_TOAST),
-                surveyFlag('survey-b', 'Survey B', { on: 'page' }),
+                surveyFlag('survey-a', 'Survey A', { on: 'page' }),
+                surveyFlag('survey-b', 'Survey B', {
+                    ...EVENT_FLAG_CREATED,
+                    onOccurrence: 2,
+                }),
             ]),
         );
-        await screen.findByText('Survey B');
-        expect(triggerObserver.isInstalled()).toBe(true);
-        expect(triggerObserver.installedTriggers()).toEqual([]);
-
+        await screen.findByText('Survey A');
+        triggerObserver.dispatch('flag-created');
         await userEvent.click(screen.getByRole('button', { name: 'Close' }));
+        vi.setSystemTime(Date.now() + SEVEN_DAYS_MS + 1);
 
-        expect(triggerObserver.installedTriggers()).toEqual([
-            APPEAR_FLAG_CREATED_TOAST,
-            { on: 'page' },
-        ]);
+        triggerObserver.dispatch('flag-created');
+
+        expect(await screen.findByText('Survey B')).toBeInTheDocument();
+    });
+
+    it('waits for the next occurrence when the defined one was reached during the grace period', async () => {
+        vi.useFakeTimers({ toFake: ['Date'] });
+        renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', { on: 'page' }),
+                surveyFlag('survey-b', 'Survey B', {
+                    ...EVENT_FLAG_CREATED,
+                    onOccurrence: 2,
+                }),
+            ]),
+        );
+        await userEvent.click(
+            await screen.findByRole('button', { name: 'Close' }),
+        );
+        triggerObserver.dispatch('flag-created');
+        triggerObserver.dispatch('flag-created');
+
+        vi.setSystemTime(Date.now() + SEVEN_DAYS_MS + 1);
+        await runPendingSurveyTimers();
+
+        expect(screen.queryByText('Survey B')).not.toBeInTheDocument();
+
+        triggerObserver.dispatch('flag-created');
+
+        expect(await screen.findByText('Survey B')).toBeInTheDocument();
     });
 
     it('observes the triggers of the surveys in the current flags', () => {
@@ -541,6 +570,27 @@ describe('FeedbackProvider', () => {
         triggerObserver.dispatch('flag-archived');
 
         expect(await screen.findByText('Survey B')).toBeInTheDocument();
+    });
+
+    it('shows a survey on the defined occurrence of its trigger', async () => {
+        renderSurvey(
+            testUnleashClient([
+                surveyFlag('survey-a', 'Survey A', {
+                    ...EVENT_FLAG_CREATED,
+                    onOccurrence: 3,
+                }),
+            ]),
+        );
+
+        triggerObserver.dispatch('flag-created');
+        triggerObserver.dispatch('flag-created');
+        await runPendingSurveyTimers();
+
+        expect(screen.queryByText('Survey A')).not.toBeInTheDocument();
+
+        triggerObserver.dispatch('flag-created');
+
+        expect(await screen.findByText('Survey A')).toBeInTheDocument();
     });
 
     describe('delayed surveys', () => {

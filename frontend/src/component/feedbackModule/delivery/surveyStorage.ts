@@ -1,37 +1,40 @@
 /**
- * Rules that keep surveys from annoying users:
- * - Interaction: the user submitted or dismissed the survey. It never shows
- *   again. Answering some questions and leaving does not count.
- * - Grace period: after any survey interaction, or once PNPS is due, no
- *   survey shows for 7 days.
- * - Impressions: how many page loads a survey appeared on. An ignored survey
- *   stops showing after MAX_IMPRESSIONS.
+ * What the browser remembers about surveys. Whether a survey may show is
+ * decided in useSurveyScheduler.
+ * - Interaction: the user submitted or dismissed the survey. Answering some
+ *   questions and leaving does not count.
+ * - Grace period: starts after any survey interaction, or once PNPS is due,
+ *   and lasts 7 days.
+ * - Impressions: how many page loads a survey appeared on.
+ * - Occurrences: how many times the scheduler counted the trigger of a
+ *   survey.
  */
 import { createLocalStorage } from 'utils/createLocalStorage';
 
 const INTERACTIONS_KEY = 'feedback-module-survey-interactions:v1';
 const GRACE_KEY = 'feedback-module-survey-grace:v1';
 const IMPRESSIONS_KEY = 'feedback-module-survey-impressions:v1';
+const OCCURRENCES_KEY = 'feedback-module-survey-occurrences:v1';
 const MAX_INTERACTIONS = 50;
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
 
-const MAX_IMPRESSIONS = 3;
-
-type Impressions = Record<string, number>;
+type Counts = Record<string, number>;
 
 const interactions = () => createLocalStorage<string[]>(INTERACTIONS_KEY, []);
 
 const gracePeriod = () =>
     createLocalStorage<string>(GRACE_KEY, '', SEVEN_DAYS_MS);
 
-const impressions = () => createLocalStorage<Impressions>(IMPRESSIONS_KEY, {});
+const impressions = () => createLocalStorage<Counts>(IMPRESSIONS_KEY, {});
+
+const occurrences = () => createLocalStorage<Counts>(OCCURRENCES_KEY, {});
 
 const toFlagNames = (value: unknown): string[] =>
     Array.isArray(value)
         ? value.filter((name): name is string => typeof name === 'string')
         : [];
 
-const toImpressions = (value: unknown): Impressions =>
+const toCounts = (value: unknown): Counts =>
     value && typeof value === 'object' && !Array.isArray(value)
         ? Object.fromEntries(
               Object.entries(value).filter(
@@ -41,18 +44,19 @@ const toImpressions = (value: unknown): Impressions =>
           )
         : {};
 
-const hasInteractedWithSurvey = (flagName: string): boolean =>
+const increment = (value: unknown, flagName: string): Counts => {
+    const counts = toCounts(value);
+    return { ...counts, [flagName]: (counts[flagName] ?? 0) + 1 };
+};
+
+export const hasInteractedWithSurvey = (flagName: string): boolean =>
     toFlagNames(interactions().value).includes(flagName);
 
-const isInSurveyGracePeriod = (): boolean => gracePeriod().value === 'active';
+export const isInSurveyGracePeriod = (): boolean =>
+    gracePeriod().value === 'active';
 
-const hasReachedImpressionCap = (flagName: string): boolean =>
-    (toImpressions(impressions().value)[flagName] ?? 0) >= MAX_IMPRESSIONS;
-
-export const shouldShowSurvey = (flagName: string): boolean =>
-    !hasInteractedWithSurvey(flagName) &&
-    !isInSurveyGracePeriod() &&
-    !hasReachedImpressionCap(flagName);
+export const surveyImpressionCount = (flagName: string): number =>
+    toCounts(impressions().value)[flagName] ?? 0;
 
 export const startSurveyGracePeriod = (): void => {
     gracePeriod().setValue('active');
@@ -75,8 +79,12 @@ export const recordSurveyImpression = (flagName: string): void => {
         return;
     }
     recordedThisPageLoad.add(flagName);
-    impressions().setValue((current) => {
-        const counts = toImpressions(current);
-        return { ...counts, [flagName]: (counts[flagName] ?? 0) + 1 };
-    });
+    impressions().setValue((current) => increment(current, flagName));
+};
+
+export const surveyOccurrenceCount = (flagName: string): number =>
+    toCounts(occurrences().value)[flagName] ?? 0;
+
+export const recordSurveyOccurrence = (flagName: string): void => {
+    occurrences().setValue((current) => increment(current, flagName));
 };

@@ -7,7 +7,7 @@ import {
     useMemo,
 } from 'react';
 import type { Survey, SurveyAnswers } from '../survey.ts';
-import { recordSurveyImpression, shouldShowSurvey } from './surveyStorage.ts';
+import * as surveyStorage from './surveyStorage.ts';
 import type { IdentifyUser } from './identifyUser.ts';
 import { useSurveys } from './useSurveys.ts';
 import { useSurveyActions } from './useSurveyActions.ts';
@@ -42,11 +42,11 @@ export const FeedbackProvider = ({
         shown,
         process,
         dismiss: closeSurvey,
-    } = useSurveyScheduler(surveys, shouldShowSurvey);
+    } = useSurveyScheduler(surveys, surveyStorage);
 
     const triggers = useMemo(
-        () => (shown === null ? surveys.map((survey) => survey.trigger) : []),
-        [surveys, shown],
+        () => surveys.map((survey) => survey.trigger),
+        [surveys],
     );
 
     const onTrigger = useEffectEvent((event: TriggerEvent) => process(event));
@@ -59,7 +59,7 @@ export const FeedbackProvider = ({
     const shownFlagName = shown?.flagName;
     useEffect(() => {
         if (shownFlagName) {
-            recordSurveyImpression(shownFlagName);
+            surveyStorage.recordSurveyImpression(shownFlagName);
         }
     }, [shownFlagName]);
 

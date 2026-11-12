@@ -10,7 +10,7 @@ import UIContext from 'contexts/UIContext';
 import { FeedbackProvider } from 'component/feedbackModule/delivery/FeedbackProvider';
 import { FeedbackSurvey } from 'component/feedbackModule/delivery/FeedbackSurvey';
 import type { TriggerObserver } from 'component/feedbackModule/observers/observeTriggers';
-import { shouldShowSurvey } from 'component/feedbackModule/delivery/surveyStorage';
+import { isInSurveyGracePeriod } from 'component/feedbackModule/delivery/surveyStorage';
 import { surveyFlag } from 'component/feedbackModule/delivery/testSurveyFlag';
 import { FeedbackNPS } from './FeedbackNPS.tsx';
 
@@ -55,9 +55,7 @@ const triggerPNPS = () =>
 // PNPS only acts once the user's feedback history has loaded.
 const triggerHeldBackPNPS = async () => {
     await triggerPNPS();
-    await waitFor(() =>
-        expect(shouldShowSurvey('never-shown-survey')).toBe(false),
-    );
+    await waitFor(() => expect(isInSurveyGracePeriod()).toBe(true));
 };
 
 describe('FeedbackNPS', () => {

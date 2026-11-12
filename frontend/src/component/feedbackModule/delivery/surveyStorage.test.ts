@@ -13,6 +13,8 @@ const INTERACTIONS_RAW_KEY =
     ':feedback-module-survey-interactions:v1:localStorage:v2';
 const IMPRESSIONS_RAW_KEY =
     ':feedback-module-survey-impressions:v1:localStorage:v2';
+const OCCURRENCES_RAW_KEY =
+    ':feedback-module-survey-occurrences:v1:localStorage:v2';
 
 const seedRaw = (key: string, value: unknown) =>
     window.localStorage.setItem(key, JSON.stringify({ value, expiry: null }));
@@ -22,8 +24,6 @@ const interactWithMany = (storage: SurveyStorage, count: number) => {
         storage.recordSurveyInteraction(`survey-${index}`);
     }
 };
-
-const endGracePeriod = () => vi.advanceTimersByTime(SEVEN_DAYS_MS + 1);
 
 describe('surveyStorage', () => {
     beforeEach(() => {
@@ -35,40 +35,37 @@ describe('surveyStorage', () => {
         vi.useRealTimers();
     });
 
-    test('never shows a survey again once the user interacted with it', async () => {
+    test('remembers an interaction across page loads', async () => {
         const firstPage = await loadPage();
-        expect(firstPage.shouldShowSurvey('survey-a')).toBe(true);
+        expect(firstPage.hasInteractedWithSurvey('survey-a')).toBe(false);
 
         firstPage.recordSurveyInteraction('survey-a');
-        endGracePeriod();
 
         const nextPage = await loadPage();
-        expect(nextPage.shouldShowSurvey('survey-a')).toBe(false);
-        expect(nextPage.shouldShowSurvey('survey-b')).toBe(true);
+        expect(nextPage.hasInteractedWithSurvey('survey-a')).toBe(true);
+        expect(nextPage.hasInteractedWithSurvey('survey-b')).toBe(false);
     });
 
-    test('shows no survey for 7 days after any interaction', async () => {
+    test('keeps the grace period for 7 days after an interaction', async () => {
         const storage = await loadPage();
+        expect(storage.isInSurveyGracePeriod()).toBe(false);
 
         storage.recordSurveyInteraction('survey-a');
 
         vi.advanceTimersByTime(SEVEN_DAYS_MS - 1);
-        expect(storage.shouldShowSurvey('survey-b')).toBe(false);
+        expect(storage.isInSurveyGracePeriod()).toBe(true);
 
         vi.advanceTimersByTime(2);
-        expect(storage.shouldShowSurvey('survey-b')).toBe(true);
+        expect(storage.isInSurveyGracePeriod()).toBe(false);
     });
 
-    test('stops showing a survey after 3 impressions', async () => {
-        for (let pageLoad = 1; pageLoad <= 3; pageLoad++) {
-            const storage = await loadPage();
-            expect(storage.shouldShowSurvey('survey-a')).toBe(true);
-            storage.recordSurveyImpression('survey-a');
-        }
-
+    test('starts the grace period without an interaction', async () => {
         const storage = await loadPage();
-        expect(storage.shouldShowSurvey('survey-a')).toBe(false);
-        expect(storage.shouldShowSurvey('survey-b')).toBe(true);
+
+        storage.startSurveyGracePeriod();
+
+        expect(storage.isInSurveyGracePeriod()).toBe(true);
+        expect(storage.hasInteractedWithSurvey('survey-a')).toBe(false);
     });
 
     test('counts one impression per page load', async () => {
@@ -77,27 +74,25 @@ describe('surveyStorage', () => {
             firstPage.recordSurveyImpression('survey-a');
         }
 
+        expect(firstPage.surveyImpressionCount('survey-a')).toBe(1);
+
         const secondPage = await loadPage();
         secondPage.recordSurveyImpression('survey-a');
         secondPage.recordSurveyImpression('survey-a');
-        expect(secondPage.shouldShowSurvey('survey-a')).toBe(true);
 
-        const thirdPage = await loadPage();
-        thirdPage.recordSurveyImpression('survey-a');
-        expect(thirdPage.shouldShowSurvey('survey-a')).toBe(false);
+        expect(secondPage.surveyImpressionCount('survey-a')).toBe(2);
+        expect(secondPage.surveyImpressionCount('survey-b')).toBe(0);
     });
 
     test('forgets the oldest interaction once 50 are remembered', async () => {
         const storage = await loadPage();
         interactWithMany(storage, 50);
-        endGracePeriod();
-        expect(storage.shouldShowSurvey('survey-1')).toBe(false);
+        expect(storage.hasInteractedWithSurvey('survey-1')).toBe(true);
 
         storage.recordSurveyInteraction('survey-51');
-        endGracePeriod();
 
-        expect(storage.shouldShowSurvey('survey-1')).toBe(true);
-        expect(storage.shouldShowSurvey('survey-51')).toBe(false);
+        expect(storage.hasInteractedWithSurvey('survey-1')).toBe(false);
+        expect(storage.hasInteractedWithSurvey('survey-51')).toBe(true);
     });
 
     test('remembers a survey interacted with twice only once', async () => {
@@ -105,18 +100,32 @@ describe('surveyStorage', () => {
         interactWithMany(storage, 50);
 
         storage.recordSurveyInteraction('survey-50');
-        endGracePeriod();
 
-        expect(storage.shouldShowSurvey('survey-1')).toBe(false);
+        expect(storage.hasInteractedWithSurvey('survey-1')).toBe(true);
+    });
+
+    test('counts the occurrences of each survey across page loads', async () => {
+        const firstPage = await loadPage();
+        firstPage.recordSurveyOccurrence('survey-a');
+        firstPage.recordSurveyOccurrence('survey-a');
+
+        const nextPage = await loadPage();
+        nextPage.recordSurveyOccurrence('survey-a');
+
+        expect(nextPage.surveyOccurrenceCount('survey-a')).toBe(3);
+        expect(nextPage.surveyOccurrenceCount('survey-b')).toBe(0);
     });
 
     test('treats corrupted storage as empty', async () => {
         seedRaw(INTERACTIONS_RAW_KEY, { 'survey-a': true });
         seedRaw(IMPRESSIONS_RAW_KEY, { 'survey-a': '5' });
+        seedRaw(OCCURRENCES_RAW_KEY, { 'survey-a': '5' });
 
         const storage = await loadPage();
 
-        expect(storage.shouldShowSurvey('survey-a')).toBe(true);
+        expect(storage.hasInteractedWithSurvey('survey-a')).toBe(false);
+        expect(storage.surveyImpressionCount('survey-a')).toBe(0);
+        expect(storage.surveyOccurrenceCount('survey-a')).toBe(0);
     });
 
     test('replaces corrupted storage when the user interacts with a survey', async () => {
@@ -124,8 +133,7 @@ describe('surveyStorage', () => {
         const storage = await loadPage();
 
         storage.recordSurveyInteraction('survey-b');
-        endGracePeriod();
 
-        expect(storage.shouldShowSurvey('survey-b')).toBe(false);
+        expect(storage.hasInteractedWithSurvey('survey-b')).toBe(true);
     });
 });

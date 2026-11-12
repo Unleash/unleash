@@ -871,52 +871,6 @@ export class FeatureToggleService {
         throw new NotFoundError(`Could not find strategy with id ${id}`);
     }
 
-    async updateStrategyParameter(
-        id: string,
-        name: string,
-        value: string | number,
-        context: IFeatureStrategyContext,
-        auditUser: IAuditUser,
-    ): Promise<Saved<IStrategyConfig>> {
-        const { projectId, environment, featureName } = context;
-
-        const existingStrategy = await this.featureStrategiesStore.get(id);
-        if (existingStrategy === undefined) {
-            throw new NotFoundError(`Could not find strategy with id ${id}`);
-        }
-        this.validateUpdatedProperties(context, existingStrategy);
-
-        if (existingStrategy.id === id) {
-            existingStrategy.parameters[name] = String(value);
-            const existingSegments =
-                await this.segmentService.getByStrategy(id);
-            const strategy = await this.featureStrategiesStore.updateStrategy(
-                id,
-                existingStrategy,
-            );
-            const segments = await this.segmentService.getByStrategy(
-                strategy.id,
-            );
-            const data = this.featureStrategyToPublic(strategy, segments);
-            const preData = this.featureStrategyToPublic(
-                existingStrategy,
-                existingSegments,
-            );
-            await this.eventService.storeEvent(
-                new FeatureStrategyUpdateEvent({
-                    featureName,
-                    project: projectId,
-                    environment,
-                    data,
-                    preData,
-                    auditUser,
-                }),
-            );
-            return data;
-        }
-        throw new NotFoundError(`Could not find strategy with id ${id}`);
-    }
-
     // updateStrategy would rewrite the whole row and undo a concurrent edit
     async setStrategySegments(
         id: string,
@@ -1601,15 +1555,6 @@ export class FeatureToggleService {
         });
     }
 
-    async removeAllStrategiesForEnv(
-        toggleName: string,
-        environment: string = DEFAULT_ENV,
-    ): Promise<void> {
-        await this.featureStrategiesStore.removeAllStrategiesForFeatureEnv(
-            toggleName,
-            environment,
-        );
-    }
     async strategyBelongsToFeatureAndProject(
         params: StrategyBelongsToFeatureAndProjectParams,
     ): Promise<boolean> {
@@ -1674,21 +1619,6 @@ export class FeatureToggleService {
             strategies,
             defaultStrategy,
         };
-    }
-
-    // todo: store events for this change.
-    async deleteEnvironment(
-        projectId: string,
-        environment: string,
-    ): Promise<void> {
-        await this.featureStrategiesStore.deleteConfigurationsForProjectAndEnvironment(
-            projectId,
-            environment,
-        );
-        await this.projectStore.deleteEnvironmentForProject(
-            projectId,
-            environment,
-        );
     }
 
     /** Validations  */

@@ -243,18 +243,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
         return mapRow(rows[0]);
     }
 
-    async removeAllStrategiesForFeatureEnv(
-        featureName: string,
-        environment: string,
-    ): Promise<void> {
-        await this.db('feature_strategies')
-            .where({
-                feature_name: featureName,
-                environment,
-            })
-            .del();
-    }
-
     async getAll(): Promise<IFeatureStrategy[]> {
         const stopTimer = this.timer('getAll');
         const rows = await this.db
@@ -817,18 +805,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             delete strategy.id;
         }
         return strategy;
-    }
-
-    async deleteConfigurationsForProjectAndEnvironment(
-        projectId: String,
-        environment: String,
-    ): Promise<void> {
-        await this.db(T.featureStrategies)
-            .where({
-                project_name: projectId,
-                environment,
-            })
-            .del();
     }
 
     async setProjectForStrategiesBelongingToFeature(

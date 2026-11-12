@@ -102,26 +102,6 @@ export default class FakeFeatureStrategiesStore
         throw new Error('Method not implemented.');
     }
 
-    async removeAllStrategiesForFeatureEnv(
-        feature_name: string,
-        environment: string,
-    ): Promise<void> {
-        const toRemove = this.featureStrategies.filter(
-            (fS) =>
-                fS.featureName === feature_name &&
-                fS.environment === environment,
-        );
-        this.featureStrategies = this.featureStrategies.filter(
-            (f) =>
-                !toRemove.some(
-                    (r) =>
-                        r.featureName === f.featureName &&
-                        r.environment === f.environment,
-                ),
-        );
-        return Promise.resolve();
-    }
-
     async getAll(): Promise<IFeatureStrategy[]> {
         return Promise.resolve(this.featureStrategies);
     }
@@ -292,15 +272,6 @@ export default class FakeFeatureStrategiesStore
         return Promise.resolve(
             this.featureStrategies.find((f) => f.id === id)!,
         );
-    }
-
-    async deleteConfigurationsForProjectAndEnvironment(
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        _projectId: String,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        _environment: String,
-    ): Promise<void> {
-        return Promise.resolve();
     }
 
     async isEnvironmentEnabled(

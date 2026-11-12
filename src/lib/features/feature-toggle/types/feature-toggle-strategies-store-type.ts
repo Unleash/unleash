@@ -75,11 +75,6 @@ export interface IFeatureStrategiesStore
         strategyConfig: Omit<IFeatureStrategy, 'id' | 'createdAt'>,
     ): Promise<IFeatureStrategy>;
 
-    removeAllStrategiesForFeatureEnv(
-        featureName: string,
-        environment: string,
-    ): Promise<void>;
-
     getStrategiesForFeatureEnv(
         projectId: string,
         featureName: string,
@@ -108,11 +103,6 @@ export interface IFeatureStrategiesStore
         id: string,
         updates: Partial<IFeatureStrategy>,
     ): Promise<IFeatureStrategy>;
-
-    deleteConfigurationsForProjectAndEnvironment(
-        projectId: String,
-        environment: String,
-    ): Promise<void>;
 
     setProjectForStrategiesBelongingToFeature(
         featureName: string,

@@ -69,7 +69,6 @@ export type IFlagKey =
     | 'serviceNowIntegration'
     | 'dashboardOnboardingAI'
     | 'learningLab'
-    | 'onboardingIntroTour'
     | 'onboardingIntroTourAdvancedTopics'
     | 'secureAccountTokenStorage'
     | 'recordSdkFlavorMetrics'

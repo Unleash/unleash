@@ -21,3 +21,30 @@ export const openFullListTracking: Tracking = {
     event: 'personal-dashboard',
     type: 'open-full-list',
 };
+
+export const viewOnboardingWidgetTracking: Tracking = {
+    event: 'personal-dashboard',
+    type: 'view-onboarding-widget',
+};
+
+export const selectOnboardingSetupTracking: Tracking = {
+    event: 'personal-dashboard',
+    type: 'select-onboarding-setup',
+};
+
+export const openOnboardingResourceTracking: Tracking = {
+    event: 'personal-dashboard',
+    type: 'open-onboarding-resource',
+};
+
+export const dismissOnboardingBannerTracking: Tracking = {
+    event: 'personal-dashboard',
+    type: 'cancel-onboarding-banner',
+};
+
+export type OnboardingWidget =
+    | 'getting-started'
+    | 'new-to-unleash'
+    | 'help'
+    | 'import'
+    | 'enterprise';

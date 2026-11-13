@@ -1,4 +1,4 @@
-import { useId, type ReactNode } from 'react';
+import { useEffect, useId, type ReactNode } from 'react';
 import {
     alpha,
     Button,
@@ -14,6 +14,12 @@ import OpenInNew from '@mui/icons-material/OpenInNew';
 import EnterpriseBadge from 'assets/icons/pro-enterprise-feature-badge-light.svg?react';
 import { Badge } from 'component/common/Badge/Badge';
 import { EnterpriseBenefits } from '../EnterpriseBenefits.tsx';
+import {
+    type OnboardingWidget,
+    viewOnboardingWidgetTracking,
+    openOnboardingResourceTracking,
+} from '../personalDashboardTracking.ts';
+import { useTracking } from 'hooks/useTracking';
 
 const StyledResources = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -40,23 +46,39 @@ const ResourceButton = ({
     href,
     children,
     color = 'primary',
+    widget,
+    destination,
 }: {
     href: string;
     children: ReactNode;
     color?: ButtonProps['color'];
-}) => (
-    <StyledButton
-        target='_blank'
-        rel='noopener noreferrer'
-        variant='outlined'
-        size='medium'
-        endIcon={<OpenInNew />}
-        href={href}
-        color={color}
-    >
-        {children}
-    </StyledButton>
-);
+    widget: OnboardingWidget;
+    destination:
+        | 'docs'
+        | 'architecture'
+        | 'learning-lab'
+        | 'import-oss'
+        | 'enterprise';
+}) => {
+    const trackResource = useTracking({
+        ...openOnboardingResourceTracking,
+        props: { widget },
+    });
+    return (
+        <StyledButton
+            target='_blank'
+            rel='noopener noreferrer'
+            variant='outlined'
+            size='medium'
+            endIcon={<OpenInNew />}
+            href={href}
+            onClick={() => trackResource('succeeded', { destination })}
+            color={color}
+        >
+            {children}
+        </StyledButton>
+    );
+};
 
 const ResourceCard = ({
     title,
@@ -64,14 +86,23 @@ const ResourceCard = ({
     children,
     links,
     className,
+    widget,
 }: {
     title: string;
     icon: ReactNode;
     children: ReactNode;
     links: ReactNode;
     className?: string;
+    widget: OnboardingWidget;
 }) => {
     const headingId = useId();
+    const trackView = useTracking({
+        ...viewOnboardingWidgetTracking,
+        props: { widget },
+    });
+    useEffect(() => {
+        trackView('succeeded');
+    }, [trackView]);
     return (
         <StyledCard
             className={className}
@@ -115,17 +146,30 @@ const StyledAlternativeCard = styled(ResourceCard)(({ theme }) => ({
 
 export const DashboardHelpCard = () => (
     <ResourceCard
+        widget='help'
         title='Need help?'
         icon={<HelpOutlineOutlined color='primary' />}
         links={
             <>
-                <ResourceButton href='https://docs.getunleash.io/'>
+                <ResourceButton
+                    widget='help'
+                    destination='docs'
+                    href='https://docs.getunleash.io/'
+                >
                     Go to docs
                 </ResourceButton>
-                <ResourceButton href='https://docs.getunleash.io/get-started/unleash-overview'>
+                <ResourceButton
+                    widget='help'
+                    destination='architecture'
+                    href='https://docs.getunleash.io/get-started/unleash-overview'
+                >
                     View architecture
                 </ResourceButton>
-                <ResourceButton href='https://learning.getunleash.io/'>
+                <ResourceButton
+                    widget='help'
+                    destination='learning-lab'
+                    href='https://learning.getunleash.io/'
+                >
                     Learning lab
                 </ResourceButton>
             </>
@@ -142,6 +186,7 @@ export const DashboardImportCard = ({
 }) =>
     edition === 'oss' ? (
         <StyledAlternativeCard
+            widget='enterprise'
             title='Get unlimited projects and environments'
             icon={
                 <Stack
@@ -158,6 +203,8 @@ export const DashboardImportCard = ({
             links={
                 <ResourceButton
                     color='inherit'
+                    widget='enterprise'
+                    destination='enterprise'
                     href='https://www.getunleash.io/upgrade-unleash?utm_source=oss&utm_medium=feature&utm_content=dashboard'
                 >
                     View full Enterprise offering
@@ -168,11 +215,14 @@ export const DashboardImportCard = ({
         </StyledAlternativeCard>
     ) : (
         <StyledAlternativeCard
+            widget='import'
             title='Import from open source?'
             icon={<FileDownloadOutlined />}
             links={
                 <ResourceButton
                     color='inherit'
+                    widget='import'
+                    destination='import-oss'
                     href='https://docs.getunleash.io/guides/migrate-from-open-source'
                 >
                     Import from OSS

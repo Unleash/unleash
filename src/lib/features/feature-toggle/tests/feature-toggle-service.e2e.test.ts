@@ -879,7 +879,11 @@ test('Should enable disabled strategies on feature environment enabled', async (
     );
 
     const strategy = await service.getStrategy(createdConfig.id);
-    expect(strategy).toMatchObject({ ...config, disabled: false });
+    expect(strategy).toMatchObject({
+        ...config,
+        disabled: false,
+        variants: [{ ...config.variants![0], weight: 1000 }],
+    });
 });
 
 test('Should add links from templates when creating a feature flag', async () => {

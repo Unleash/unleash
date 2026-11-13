@@ -66,6 +66,7 @@ import { ConstraintValidator } from '../constraints/constraint-validator.js';
 import { VariantPayloadValidator } from '../payload-schema/variant-payload-validator.js';
 import { PayloadSchemaReadModel } from '../payload-schema/payload-schema-read-model.js';
 import { FakePayloadSchemaReadModel } from '../payload-schema/fake-payload-schema-read-model.js';
+import { StrategyValidationService } from './strategy-validation-service.js';
 
 export const createFeatureToggleService = (
     db: Db,
@@ -144,6 +145,14 @@ export const createFeatureToggleService = (
         new PayloadSchemaReadModel(db),
     );
 
+    const strategyValidationService = new StrategyValidationService({
+        strategyStore,
+        constraintValidator,
+        resourceLimitsService,
+        segmentService,
+        featureStrategiesStore,
+    });
+
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -152,7 +161,6 @@ export const createFeatureToggleService = (
             projectStore,
             featureTagStore,
             featureEnvironmentStore,
-            strategyStore,
         },
         { getLogger, flagResolver, eventBus },
         {
@@ -167,8 +175,8 @@ export const createFeatureToggleService = (
             featureLinksReadModel,
             featureLinkService,
             resourceLimitsService,
-            constraintValidator,
             variantPayloadValidator,
+            strategyValidationService,
         },
     );
     return featureToggleService;
@@ -181,6 +189,7 @@ export const createFakeFeatureToggleService = (
     }: { payloadSchemaReadModel?: FakePayloadSchemaReadModel } = {},
 ) => {
     const { getLogger, flagResolver } = config;
+    const eventBus = new EventEmitter();
     const _eventStore = new FakeEventStore();
     const strategyStore = new FakeStrategiesStore();
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
@@ -225,6 +234,14 @@ export const createFakeFeatureToggleService = (
 
     const resourceLimitsService = new ResourceLimitsService(config);
 
+    const strategyValidationService = new StrategyValidationService({
+        strategyStore,
+        constraintValidator,
+        resourceLimitsService,
+        segmentService,
+        featureStrategiesStore,
+    });
+
     const featureToggleService = new FeatureToggleService(
         {
             featureStrategiesStore,
@@ -233,12 +250,11 @@ export const createFakeFeatureToggleService = (
             projectStore,
             featureTagStore,
             featureEnvironmentStore,
-            strategyStore,
         },
         {
             getLogger,
             flagResolver,
-            eventBus: new EventEmitter(),
+            eventBus,
         },
         {
             segmentService,
@@ -252,8 +268,8 @@ export const createFakeFeatureToggleService = (
             featureLinksReadModel,
             featureLinkService,
             resourceLimitsService,
-            constraintValidator,
             variantPayloadValidator,
+            strategyValidationService,
         },
     );
     return {
@@ -262,5 +278,7 @@ export const createFakeFeatureToggleService = (
         projectStore,
         featureStrategiesStore,
         contextFieldStore,
+        strategyValidationService,
+        eventBus,
     };
 };

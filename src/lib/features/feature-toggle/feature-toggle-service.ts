@@ -17,7 +17,6 @@ import {
     type FeatureToggleView,
     type FeatureToggleWithEnvironment,
     type IAuditUser,
-    type IConstraint,
     type IDependency,
     type IFeatureCollaboratorsReadModel,
     type IFeatureEnvironmentInfo,
@@ -37,7 +36,6 @@ import {
     type IProjectStore,
     type ISegment,
     type IStrategyConfig,
-    type IStrategyStore,
     type IUnleashConfig,
     type IUnleashStores,
     type IVariant,
@@ -49,7 +47,6 @@ import {
     SYSTEM_USER_AUDIT,
     type Unsaved,
     UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
-    WeightType,
 } from '../../types/index.js';
 import { addDays } from 'date-fns';
 import type { Logger } from '../../logger.js';
@@ -78,7 +75,6 @@ import { DEFAULT_ENV } from '../../util/index.js';
 import type { Operation } from 'fast-json-patch';
 import fastJsonPatch from 'fast-json-patch';
 const { applyPatch, deepClone } = fastJsonPatch;
-import type { IConstraintValidator } from '../constraints/constraint-validator-type.js';
 import type { SetStrategySortOrderSchema } from '../../openapi/spec/set-strategy-sort-order-schema.js';
 import {
     getDefaultStrategy,
@@ -110,6 +106,10 @@ import type { IFeatureLink } from '../feature-links/feature-links-read-model-typ
 import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
 import type { VariantPayloadValidator } from '../payload-schema/variant-payload-validator.js';
 import type { IStrategyVariant } from '../../types/model.js';
+import {
+    type StrategyValidationService,
+    StrategyValidationLimitError,
+} from './strategy-validation-service.js';
 interface IFeatureContext {
     featureName: string;
     projectId: string;
@@ -144,7 +144,6 @@ export type Stores = Pick<
     | 'projectStore'
     | 'featureTagStore'
     | 'featureEnvironmentStore'
-    | 'strategyStore'
 >;
 
 export type Config = Pick<
@@ -164,16 +163,14 @@ export type ServicesAndReadModels = {
     featureLinkService: FeatureLinkService;
     featureLinksReadModel: IFeatureLinksReadModel;
     resourceLimitsService: ResourceLimitsService;
-    constraintValidator: IConstraintValidator;
     variantPayloadValidator: VariantPayloadValidator;
+    strategyValidationService: StrategyValidationService;
 };
 
 export class FeatureToggleService {
     private logger: Logger;
 
     private featureStrategiesStore: IFeatureStrategiesStore;
-
-    private strategyStore: IStrategyStore;
 
     private featureToggleStore: IFeatureToggleStore;
 
@@ -185,7 +182,7 @@ export class FeatureToggleService {
 
     private projectStore: IProjectStore;
 
-    private constraintValidator: IConstraintValidator;
+    private strategyValidationService: StrategyValidationService;
 
     private segmentService: ISegmentService;
 
@@ -223,7 +220,6 @@ export class FeatureToggleService {
             projectStore,
             featureTagStore,
             featureEnvironmentStore,
-            strategyStore,
         }: Stores,
         { getLogger, flagResolver, eventBus }: Config,
         {
@@ -238,19 +234,18 @@ export class FeatureToggleService {
             featureLinksReadModel,
             featureLinkService,
             resourceLimitsService,
-            constraintValidator,
             variantPayloadValidator,
+            strategyValidationService,
         }: ServicesAndReadModels,
     ) {
         this.logger = getLogger('services/feature-toggle-service.ts');
         this.featureStrategiesStore = featureStrategiesStore;
-        this.strategyStore = strategyStore;
         this.featureToggleStore = featureToggleStore;
         this.clientFeatureToggleStore = clientFeatureToggleStore;
         this.tagStore = featureTagStore;
         this.projectStore = projectStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
-        this.constraintValidator = constraintValidator;
+        this.strategyValidationService = strategyValidationService;
         this.segmentService = segmentService;
         this.accessService = accessService;
         this.eventService = eventService;
@@ -372,8 +367,6 @@ export class FeatureToggleService {
         environment: string;
         featureName: string;
     }) {
-        const { featureEnvironmentStrategies: limit } =
-            await this.resourceLimitsService.getResourceLimits();
         const existingCount = (
             await this.featureStrategiesStore.getStrategiesForFeatureEnv(
                 featureEnv.projectId,
@@ -381,70 +374,23 @@ export class FeatureToggleService {
                 featureEnv.environment,
             )
         ).length;
-        if (existingCount >= limit) {
-            throwExceedsLimitError(this.eventBus, {
-                resource: 'strategy',
-                limit,
-            });
-        }
-    }
-
-    private async validateConstraintsLimit(constraints: {
-        updated: IConstraint[];
-        existing: IConstraint[];
-    }) {
-        const {
-            constraints: constraintsLimit,
-            constraintValues: constraintValuesLimit,
-        } = await this.resourceLimitsService.getResourceLimits();
-
-        if (
-            constraints.updated.length > constraintsLimit &&
-            constraints.updated.length > constraints.existing.length
-        ) {
-            throwExceedsLimitError(this.eventBus, {
-                resource: 'constraints',
-                limit: constraintsLimit,
-            });
-        }
-
-        const isSameLength =
-            constraints.existing.length === constraints.updated.length;
-        const constraintOverLimit = constraints.updated.find(
-            (constraint, i) => {
-                const updatedCount = constraint.values?.length ?? 0;
-                const existingCount =
-                    constraints.existing[i]?.values?.length ?? 0;
-
-                const isOverLimit =
-                    Array.isArray(constraint.values) &&
-                    updatedCount > constraintValuesLimit;
-                const allowAnyway =
-                    isSameLength && existingCount >= updatedCount;
-
-                return isOverLimit && !allowAnyway;
-            },
+        await this.withStrategyValidationMetrics(() =>
+            this.strategyValidationService.validateStrategyCount(
+                existingCount + 1,
+            ),
         );
-
-        if (constraintOverLimit) {
-            throwExceedsLimitError(this.eventBus, {
-                resource: `constraint values for ${constraintOverLimit.contextName}`,
-                limit: constraintValuesLimit,
-                resourceNameOverride: 'constraint values',
-            });
-        }
     }
 
-    async validateStrategyType(
-        strategyName: string | undefined,
-    ): Promise<void> {
-        if (strategyName !== undefined) {
-            const exists = await this.strategyStore.exists(strategyName);
-            if (!exists) {
-                throw new BadDataError(
-                    `Could not find strategy type with name ${strategyName}`,
-                );
+    private async withStrategyValidationMetrics<T>(
+        validate: () => Promise<T>,
+    ): Promise<T> {
+        try {
+            return await validate();
+        } catch (error) {
+            if (error instanceof StrategyValidationLimitError) {
+                throwExceedsLimitError(this.eventBus, error);
             }
+            throw error;
         }
     }
 
@@ -596,79 +542,20 @@ export class FeatureToggleService {
         );
     }
 
-    private async parametersWithDefaults(
-        projectId: string,
-        featureName: string,
-        strategyName: string,
-        params: IFeatureStrategy['parameters'] | undefined,
-    ) {
-        if (strategyName === 'flexibleRollout') {
-            const stickiness =
-                !params?.stickiness || params?.stickiness === ''
-                    ? await this.featureStrategiesStore.getDefaultStickiness(
-                          projectId,
-                      )
-                    : params?.stickiness;
-            return {
-                ...params,
-                rollout: params?.rollout ?? '100',
-                stickiness,
-                groupId: params?.groupId || featureName,
-            };
-        } else {
-            // We don't really have good defaults for the other kinds of known strategies, so return an empty map.
-            return params ?? {};
-        }
-    }
     private async standardizeStrategyConfig(
         projectId: string,
         featureName: string,
         strategyConfig: Unsaved<IStrategyConfig>,
         existing?: IFeatureStrategy,
-    ): Promise<
-        { name: string } & Pick<
-            Partial<IStrategyConfig>,
-            | 'title'
-            | 'disabled'
-            | 'variants'
-            | 'sortOrder'
-            | 'constraints'
-            | 'parameters'
-        >
-    > {
-        const { name, title, disabled, sortOrder } = strategyConfig;
-        let { constraints, parameters, variants } = strategyConfig;
-        if (constraints && constraints.length > 0) {
-            await this.validateConstraintsLimit({
-                updated: constraints,
-                existing: existing?.constraints ?? [],
-            });
-            constraints =
-                await this.constraintValidator.validateConstraints(constraints);
-        }
-
-        parameters = await this.parametersWithDefaults(
-            projectId,
-            featureName,
-            name,
-            strategyConfig.parameters,
+    ) {
+        return this.withStrategyValidationMetrics(() =>
+            this.strategyValidationService.normalize(strategyConfig, {
+                existingConstraints: existing?.constraints,
+                destination: { projectId, featureName },
+            }),
         );
-        if (variants && variants.length > 0) {
-            await variantsArraySchema.validateAsync(variants);
-            const fixedVariants = this.fixVariantWeights(variants);
-            variants = fixedVariants;
-        }
-
-        return {
-            name,
-            title,
-            disabled,
-            sortOrder,
-            constraints,
-            variants,
-            parameters,
-        };
     }
+
     async unprotectedCreateStrategy(
         strategyConfig: Unsaved<IStrategyConfig>,
         context: IFeatureStrategyContext,
@@ -676,12 +563,6 @@ export class FeatureToggleService {
     ): Promise<Saved<IStrategyConfig>> {
         const { featureName, projectId, environment } = context;
         await this.validateFeatureBelongsToProject(context);
-
-        await this.validateStrategyType(strategyConfig.name);
-        await this.segmentService.validateProjectCanAccessSegments(
-            projectId,
-            strategyConfig.segments,
-        );
 
         const standardizedConfig = await this.standardizeStrategyConfig(
             projectId,
@@ -837,11 +718,6 @@ export class FeatureToggleService {
             throw new NotFoundError(`Could not find strategy with id ${id}`);
         }
         this.validateUpdatedProperties(context, existingStrategy);
-        await this.validateStrategyType(updates.name);
-        await this.segmentService.validateProjectCanAccessSegments(
-            projectId,
-            updates.segments,
-        );
         if (updates.variants) {
             await this.validateVariantPayloads(featureName, updates.variants);
         }
@@ -2445,44 +2321,7 @@ export class FeatureToggleService {
     }
 
     fixVariantWeights(variants: IVariant[]): IVariant[] {
-        let variableVariants = variants.filter((x) => {
-            return x.weightType === WeightType.VARIABLE;
-        });
-
-        if (variants.length > 0 && variableVariants.length === 0) {
-            throw new BadDataError(
-                'There must be at least one "variable" variant',
-            );
-        }
-
-        const fixedVariants = variants.filter((x) => {
-            return x.weightType === WeightType.FIX;
-        });
-
-        const fixedWeights = fixedVariants.reduce((a, v) => a + v.weight, 0);
-
-        if (fixedWeights > 1000) {
-            throw new BadDataError(
-                'The traffic distribution total must equal 100%',
-            );
-        }
-
-        const averageWeight = Math.floor(
-            (1000 - fixedWeights) / variableVariants.length,
-        );
-        let remainder = (1000 - fixedWeights) % variableVariants.length;
-
-        variableVariants = variableVariants.map((x) => {
-            x.weight = averageWeight;
-            if (remainder > 0) {
-                x.weight += 1;
-                remainder--;
-            }
-            return x;
-        });
-        return variableVariants
-            .concat(fixedVariants)
-            .sort((a, b) => a.name.localeCompare(b.name));
+        return this.strategyValidationService.normalizeVariantWeights(variants);
     }
 
     private async stopWhenChangeRequestsEnabled(

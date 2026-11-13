@@ -1,12 +1,15 @@
 import type { FC } from 'react';
 import { styled } from '@mui/material';
 import { Link } from 'react-router';
-import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { useMyProjects } from 'component/project/ProjectList/hooks/useMyProjects';
 import { sidebarItemStyles } from '../sidebar/SidebarItem.styles.ts';
-import { SidebarLink } from '../sidebar/SidebarLink.tsx';
 import { SidebarSection } from '../sidebar/SidebarSection.tsx';
+import {
+    ProjectNavGroup,
+    type ProjectNavExpansion,
+} from './ProjectNavGroup.tsx';
 
 const StyledEmptyLink = styled(Link)(({ theme }) => ({
     ...sidebarItemStyles(theme),
@@ -17,6 +20,9 @@ export const MyProjectsSection: FC = () => {
     const { projects, loading, error } = useProjects();
     const { myProjects, profileLoading, profileError } =
         useMyProjects(projects);
+    const [expansion, setExpansion] = useLocalStorageState<
+        Record<string, ProjectNavExpansion>
+    >('app-shell:project-expansion', {});
 
     if (loading || profileLoading || error || profileError) {
         return null;
@@ -30,11 +36,19 @@ export const MyProjectsSection: FC = () => {
                 </StyledEmptyLink>
             ) : (
                 myProjects.map((project) => (
-                    <SidebarLink
+                    <ProjectNavGroup
                         key={project.id}
-                        to={`/projects/${project.id}`}
-                        icon={<FolderOutlinedIcon />}
-                        label={project.name}
+                        project={project}
+                        expansion={expansion[project.id]}
+                        onExpansionChange={(change) =>
+                            setExpansion((previous) => ({
+                                ...previous,
+                                [project.id]: {
+                                    ...previous[project.id],
+                                    ...change,
+                                },
+                            }))
+                        }
                     />
                 ))
             )}

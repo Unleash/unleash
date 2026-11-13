@@ -10,6 +10,7 @@ import {
     SLIDER_STEP,
     weightsAfterHandleDrag,
 } from '../variantWeights.ts';
+import { calculateVariantWeight } from 'component/common/util.ts';
 
 const Bar = styled('div', {
     shouldForwardProp: (prop) => prop !== 'hasError',
@@ -224,6 +225,14 @@ const VariantsWeightBarComponent = ({
             );
         };
 
+    const variantName = (variant: BarVariant, variantIndex: number) =>
+        variant.name || `Variant ${variantIndex + 1}, unnamed,`;
+
+    const variantValueText = (variant: BarVariant) => {
+        const fixedText = variant.hasFixedWeight ? ' (fixed)' : '';
+        return `${calculateVariantWeight(variant.weight)}%${fixedText}`;
+    };
+
     return (
         <Bar ref={barRef} hasError={weightsError}>
             <Segments>
@@ -252,30 +261,41 @@ const VariantsWeightBarComponent = ({
                 ))}
             </Segments>
             {variants.length > 1
-                ? splitPositions.map((splitPosition, handleIndex) => (
-                      <Handle
-                          key={variants[handleIndex].id}
-                          role='slider'
-                          tabIndex={0}
-                          aria-orientation='horizontal'
-                          aria-label={`Split between ${variants[handleIndex].name} and ${variants[handleIndex + 1].name}`}
-                          aria-valuemin={0}
-                          aria-valuemax={100}
-                          aria-valuenow={splitPosition / 10}
-                          aria-valuetext={`${splitPosition / 10}%`}
-                          style={{
-                              left: `calc(${(splitPosition / TOTAL_WEIGHT) * 100}% + ${handlePixelOffsets[handleIndex]}px)`,
-                          }}
-                          onPointerDown={startHandleDrag(handleIndex)}
-                          onPointerMove={moveHandleDrag}
-                          onPointerUp={endHandleDrag}
-                          onPointerCancel={endHandleDrag}
-                          onLostPointerCapture={endHandleDrag}
-                          onKeyDown={nudgeHandleWithKeyboard(handleIndex)}
-                      >
-                          <DragIndicator fontSize='inherit' />
-                      </Handle>
-                  ))
+                ? splitPositions.map((splitPosition, handleIndex) => {
+                      const left = variants[handleIndex];
+                      const right = variants[handleIndex + 1];
+                      const leftName = variantName(left, handleIndex);
+                      const rightName = variantName(right, handleIndex + 1);
+
+                      return (
+                          <Handle
+                              key={variants[handleIndex].id}
+                              role='slider'
+                              tabIndex={0}
+                              aria-orientation='horizontal'
+                              aria-label={`Split between ${leftName} and ${rightName}`}
+                              aria-valuemin={0}
+                              aria-valuemax={calculateVariantWeight(
+                                  left.weight + right.weight,
+                              )}
+                              aria-valuenow={calculateVariantWeight(
+                                  left.weight,
+                              )}
+                              aria-valuetext={`${leftName}: ${variantValueText(left)}, ${rightName}: ${variantValueText(right)}`}
+                              style={{
+                                  left: `calc(${(splitPosition / TOTAL_WEIGHT) * 100}% + ${handlePixelOffsets[handleIndex]}px)`,
+                              }}
+                              onPointerDown={startHandleDrag(handleIndex)}
+                              onPointerMove={moveHandleDrag}
+                              onPointerUp={endHandleDrag}
+                              onPointerCancel={endHandleDrag}
+                              onLostPointerCapture={endHandleDrag}
+                              onKeyDown={nudgeHandleWithKeyboard(handleIndex)}
+                          >
+                              <DragIndicator fontSize='inherit' />
+                          </Handle>
+                      );
+                  })
                 : null}
         </Bar>
     );

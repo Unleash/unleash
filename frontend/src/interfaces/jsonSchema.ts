@@ -9,6 +9,7 @@ export type JsonSchemaProperty = Record<string, unknown> & {
     properties?: Record<string, JsonSchemaProperty>;
     additionalProperties?: boolean | JsonSchemaProperty;
     required?: string[];
+    maxProperties?: number;
     oneOf?: JsonSchemaProperty[];
     anyOf?: JsonSchemaProperty[];
     readOnly?: boolean;

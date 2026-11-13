@@ -1,7 +1,9 @@
+import { Fragment, type ReactNode, useRef, useState } from 'react';
 import { Button, IconButton, styled, Typography } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import Input from 'component/common/Input/Input';
 import { isObjectWithPropertiesSchema } from './schemaMatchers.ts';
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 import { SchemaForm, SchemaFormField } from './SchemaForm.tsx';
@@ -51,9 +53,23 @@ const StyledArrayItemContent = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
+const StyledKeyValueRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: theme.spacing(2),
+    flex: 1,
+    '& > *': {
+        flex: 1,
+        minWidth: 0,
+    },
+}));
+
 const RemoveButton = styled(IconButton)(({ theme }) => ({
     marginTop: theme.spacing(0.75),
 }));
+
+const isPlainObject = (value: unknown): value is Record<string, unknown> =>
+    typeof value === 'object' && value !== null && !Array.isArray(value);
 
 const defaultItemValue = (itemSchema: JsonSchemaProperty): unknown => {
     if (itemSchema.default !== undefined) return itemSchema.default;
@@ -61,12 +77,108 @@ const defaultItemValue = (itemSchema: JsonSchemaProperty): unknown => {
     return undefined;
 };
 
+function useKeyedItems<Item>(
+    initialItems: Item[],
+    onChange: (items: (Item & { id: number })[]) => void,
+) {
+    const nextId = useRef(0);
+    const [items, setItems] = useState<(Item & { id: number })[]>(() =>
+        initialItems.map((item) => ({ ...item, id: nextId.current++ })),
+    );
+
+    const commit = (nextItems: (Item & { id: number })[]) => {
+        setItems(nextItems);
+        onChange(nextItems);
+    };
+
+    return {
+        items,
+        setItem: (index: number, next: Item) =>
+            commit(
+                items.map((item, i) =>
+                    i === index ? { ...next, id: item.id } : item,
+                ),
+            ),
+        removeItem: (index: number) =>
+            commit(items.filter((_, i) => i !== index)),
+        addItem: (item: Item) =>
+            commit([...items, { ...item, id: nextId.current++ }]),
+    };
+}
+
+interface ISchemaFormCollectionFieldProps<T extends { id: number }> {
+    label: string;
+    description?: string;
+    items: T[];
+    max?: number;
+    addLabel: string;
+    onAdd: () => void;
+    onRemove: (index: number) => void;
+    renderItem: (entry: T, index: number, removeButton: ReactNode) => ReactNode;
+}
+
+const SchemaFormCollectionField = <T extends { id: number }>({
+    label,
+    description,
+    items,
+    max,
+    addLabel,
+    onAdd,
+    onRemove,
+    renderItem,
+}: ISchemaFormCollectionFieldProps<T>) => {
+    const atMax = typeof max === 'number' && items.length >= max;
+
+    return (
+        <StyledArrayGroup>
+            <Typography
+                component='legend'
+                variant='body2'
+                sx={{ fontWeight: 'bold' }}
+            >
+                {label}
+            </Typography>
+            <SchemaFieldDescription description={description} />
+            {items.map((entry, index) => (
+                <Fragment key={entry.id}>
+                    {renderItem(
+                        entry,
+                        index,
+                        <RemoveButton
+                            size='small'
+                            aria-label={`Remove ${label} ${index + 1}`}
+                            onClick={() => onRemove(index)}
+                        >
+                            <DeleteOutlinedIcon fontSize='small' />
+                        </RemoveButton>,
+                    )}
+                </Fragment>
+            ))}
+            <StyledArrayFooter>
+                <Button
+                    size='medium'
+                    startIcon={<AddIcon />}
+                    onClick={onAdd}
+                    disabled={atMax}
+                >
+                    {addLabel}
+                </Button>
+                {typeof max === 'number' ? (
+                    <Typography variant='body2' color='text.secondary'>
+                        {items.length} of {max}
+                    </Typography>
+                ) : null}
+            </StyledArrayFooter>
+        </StyledArrayGroup>
+    );
+};
+
 interface ISchemaFormArrayItemProps {
     itemLabel: string;
     itemSchema: JsonSchemaProperty;
     itemValue: unknown;
     onChange: (value: unknown) => void;
-    onRemove: () => void;
+    removeButton: ReactNode;
 }
 
 const SchemaFormArrayItem = ({
@@ -74,18 +186,8 @@ const SchemaFormArrayItem = ({
     itemSchema,
     itemValue,
     onChange,
-    onRemove,
+    removeButton,
 }: ISchemaFormArrayItemProps) => {
-    const removeButton = (
-        <RemoveButton
-            size='small'
-            aria-label={`Remove ${itemLabel}`}
-            onClick={onRemove}
-        >
-            <DeleteOutlinedIcon fontSize='small' />
-        </RemoveButton>
-    );
-
     if (isObjectWithPropertiesSchema(itemSchema)) {
         return (
             <StyledArrayItem>
@@ -133,6 +235,10 @@ interface ISchemaFormArrayFieldProps {
     onChange: (value: unknown) => void;
 }
 
+interface ISchemaFormItem {
+    value: unknown;
+}
+
 export const SchemaFormArrayField = ({
     name,
     schema,
@@ -140,51 +246,147 @@ export const SchemaFormArrayField = ({
     onChange,
 }: ISchemaFormArrayFieldProps) => {
     const label = schema.title ?? name;
-    const items = Array.isArray(value) ? value : [];
     const itemSchema = schema.items as JsonSchemaProperty;
 
+    const {
+        items,
+        setItem,
+        removeItem,
+        addItem: appendItem,
+    } = useKeyedItems<ISchemaFormItem>(
+        (Array.isArray(value) ? value : []).map((itemValue) => ({
+            value: itemValue,
+        })),
+        (items) => onChange(items.map((item) => item.value)),
+    );
+
     const updateItem = (index: number) => (next: unknown) =>
-        onChange(items.with(index, next));
-    const removeItem = (index: number) => onChange(items.toSpliced(index, 1));
-    const addItem = () => onChange([...items, defaultItemValue(itemSchema)]);
-    const atMax =
-        typeof schema.maxItems === 'number' && items.length >= schema.maxItems;
+        setItem(index, { value: next });
+    const addItem = () => appendItem({ value: defaultItemValue(itemSchema) });
 
     return (
-        <StyledArrayGroup>
-            <Typography
-                component='legend'
-                variant='body2'
-                sx={{ fontWeight: 'bold' }}
-            >
-                {label}
-            </Typography>
-            <SchemaFieldDescription description={schema.description} />
-            {items.map((itemValue, index) => (
+        <SchemaFormCollectionField
+            label={label}
+            description={schema.description}
+            items={items}
+            max={schema.maxItems}
+            addLabel='Add item'
+            onAdd={addItem}
+            onRemove={removeItem}
+            renderItem={(item, index, removeButton) => (
                 <SchemaFormArrayItem
-                    key={index}
                     itemLabel={`${label} ${index + 1}`}
                     itemSchema={itemSchema}
-                    itemValue={itemValue}
+                    itemValue={item.value}
                     onChange={updateItem(index)}
-                    onRemove={() => removeItem(index)}
+                    removeButton={removeButton}
                 />
-            ))}
-            <StyledArrayFooter>
-                <Button
-                    size='medium'
-                    startIcon={<AddIcon />}
-                    onClick={addItem}
-                    disabled={atMax}
-                >
-                    Add item
-                </Button>
-                {typeof schema.maxItems === 'number' ? (
-                    <Typography variant='body2' color='text.secondary'>
-                        {items.length} of {schema.maxItems}
-                    </Typography>
-                ) : null}
-            </StyledArrayFooter>
-        </StyledArrayGroup>
+            )}
+        />
+    );
+};
+
+interface ISchemaFormDictionaryItemProps {
+    itemKey: string;
+    itemValue: unknown;
+    valueSchema: JsonSchemaProperty;
+    onChange: (key: string, value: unknown) => void;
+    removeButton: ReactNode;
+}
+
+const SchemaFormDictionaryItem = ({
+    itemKey,
+    itemValue,
+    valueSchema,
+    onChange,
+    removeButton,
+}: ISchemaFormDictionaryItemProps) => {
+    return (
+        <StyledArrayItem>
+            <StyledArrayItemRow>
+                <StyledKeyValueRow>
+                    <Input
+                        label='Key'
+                        value={itemKey}
+                        onChange={(event) =>
+                            onChange(event.target.value, itemValue)
+                        }
+                        fullWidth
+                    />
+                    <SchemaFormField
+                        name='Value'
+                        schema={valueSchema}
+                        value={itemValue}
+                        onChange={(next) => onChange(itemKey, next)}
+                    />
+                </StyledKeyValueRow>
+                {removeButton}
+            </StyledArrayItemRow>
+        </StyledArrayItem>
+    );
+};
+
+interface ISchemaFormDictionaryFieldProps {
+    name: string;
+    schema: JsonSchemaProperty;
+    value: unknown;
+    onChange: (value: unknown) => void;
+}
+
+interface ISchemaFormDictionaryItem {
+    key: string;
+    value: unknown;
+}
+
+export const SchemaFormDictionaryField = ({
+    name,
+    schema,
+    value,
+    onChange,
+}: ISchemaFormDictionaryFieldProps) => {
+    const label = schema.title ?? name;
+    const valueSchema = schema.additionalProperties as JsonSchemaProperty;
+
+    const {
+        items,
+        setItem,
+        removeItem,
+        addItem: appendItem,
+    } = useKeyedItems<ISchemaFormDictionaryItem>(
+        Object.entries(isPlainObject(value) ? value : {}).map(([key, val]) => ({
+            key,
+            value: val,
+        })),
+        (items) =>
+            onChange(
+                Object.fromEntries(items.map((item) => [item.key, item.value])),
+            ),
+    );
+
+    const updateItem =
+        (index: number) => (nextKey: string, nextValue: unknown) =>
+            setItem(index, { key: nextKey, value: nextValue });
+    const addItem = () =>
+        appendItem({ key: '', value: defaultItemValue(valueSchema) });
+
+    return (
+        <SchemaFormCollectionField
+            label={label}
+            description={schema.description}
+            items={items}
+            max={schema.maxProperties}
+            addLabel='Add entry'
+            onAdd={addItem}
+            onRemove={removeItem}
+            renderItem={(item, index, removeButton) => (
+                <SchemaFormDictionaryItem
+                    itemKey={item.key}
+                    itemValue={item.value}
+                    valueSchema={valueSchema}
+                    onChange={updateItem(index)}
+                    removeButton={removeButton}
+                />
+            )}
+        />
     );
 };

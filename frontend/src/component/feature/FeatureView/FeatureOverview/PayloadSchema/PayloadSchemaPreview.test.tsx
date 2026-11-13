@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react';
+import { fireEvent, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
@@ -93,18 +93,143 @@ test('renders an array of objects as a list of nested-object groups', async () =
                     type: 'object',
                     properties: {
                         name: { type: 'string', title: 'Name' },
+                        tags: {
+                            type: 'object',
+                            title: 'Tags',
+                            additionalProperties: { type: 'string' },
+                        },
                     },
                 },
             },
         },
+        examples: [
+            {
+                contacts: [
+                    { name: 'Alice', tags: { a: 'first' } },
+                    { name: 'Bob', tags: { b: 'second' } },
+                    { name: 'Carol', tags: { c: 'third' } },
+                ],
+            },
+        ],
     };
 
     render(<PayloadSchemaPreview schema={schema} />);
 
-    await userEvent.click(screen.getByRole('button', { name: 'Add item' }));
-    await userEvent.type(screen.getByLabelText('Name'), 'Ada');
+    await userEvent.click(
+        screen.getAllByRole('button', { name: /Remove Contacts/ })[1],
+    );
 
-    expect(screen.getByLabelText('Name')).toHaveValue('Ada');
+    expect(
+        screen
+            .getAllByLabelText('Name')
+            .map((el) => (el as HTMLInputElement).value),
+    ).toEqual(['Alice', 'Carol']);
+    expect(
+        screen
+            .getAllByLabelText('Key')
+            .map((el) => (el as HTMLInputElement).value),
+    ).toEqual(['a', 'c']);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Add item' }));
+    await userEvent.type(
+        screen.getAllByLabelText('Name').at(-1) as HTMLElement,
+        'Dave',
+    );
+
+    expect(screen.getAllByLabelText('Name').at(-1)).toHaveValue('Dave');
+});
+
+test('renders a dictionary (additionalProperties) property as a list of key/value entries, with add/remove controls', async () => {
+    const schema = {
+        type: 'object',
+        properties: {
+            loggers: {
+                type: 'object',
+                title: 'Per-logger overrides',
+                description: 'Keyed by logger name.',
+                additionalProperties: {
+                    type: 'string',
+                    enum: ['trace', 'debug', 'info', 'warn', 'error', 'fatal'],
+                },
+            },
+            tagSets: {
+                type: 'object',
+                title: 'Tag sets',
+                additionalProperties: {
+                    type: 'array',
+                    items: { type: 'string' },
+                },
+            },
+        },
+        examples: [
+            {
+                loggers: { api: 'debug' },
+                tagSets: { x: ['p'], y: ['q'], z: ['r'] },
+            },
+        ],
+    };
+
+    render(<PayloadSchemaPreview schema={schema} />);
+
+    const loggers = within(
+        screen.getByRole('group', { name: 'Per-logger overrides' }),
+    );
+    expect(loggers.getByLabelText('Key')).toHaveValue('api');
+    expect(loggers.getByLabelText('Value')).toHaveTextContent('debug');
+
+    await userEvent.click(loggers.getByRole('button', { name: 'Add entry' }));
+    expect(loggers.getAllByLabelText('Key')).toHaveLength(2);
+
+    await userEvent.type(loggers.getAllByLabelText('Key')[1], 'db');
+    expect(loggers.getAllByLabelText('Key')[1]).toHaveValue('db');
+
+    await userEvent.click(
+        loggers.getByRole('button', { name: 'Remove Per-logger overrides 1' }),
+    );
+    expect(loggers.getAllByLabelText('Key')).toHaveLength(1);
+    expect(loggers.getByLabelText('Key')).toHaveValue('db');
+
+    const tagSets = within(screen.getByRole('group', { name: 'Tag sets' }));
+    await userEvent.click(
+        tagSets.getAllByRole('button', { name: /Remove Tag sets/ })[1],
+    );
+
+    expect(
+        tagSets
+            .getAllByLabelText('Key')
+            .map((el) => (el as HTMLInputElement).value),
+    ).toEqual(['x', 'z']);
+    expect(
+        tagSets
+            .getAllByLabelText('Value 1')
+            .map((el) => (el as HTMLInputElement).value),
+    ).toEqual(['p', 'r']);
+});
+
+test('disables adding a dictionary entry once maxProperties is reached, and re-enables it after removing one', async () => {
+    const schema = {
+        type: 'object',
+        properties: {
+            loggers: {
+                type: 'object',
+                title: 'Loggers',
+                additionalProperties: { type: 'string' },
+                maxProperties: 1,
+            },
+        },
+        examples: [{ loggers: { api: 'debug' } }],
+    };
+
+    render(<PayloadSchemaPreview schema={schema} />);
+
+    expect(screen.getByText('1 of 1')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Add entry' })).toBeDisabled();
+
+    await userEvent.click(
+        screen.getByRole('button', { name: 'Remove Loggers 1' }),
+    );
+    expect(screen.getByText('0 of 1')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Add entry' })).toBeEnabled();
 });
 
 test('falls back to "not supported" for a tuple-form array (items as a list of positional schemas)', () => {
@@ -182,7 +307,7 @@ test('renders a select for an enum property, with not-set option only when not r
     expect(screen.getByLabelText('Size')).not.toHaveTextContent('m');
 });
 
-test('shows a placeholder instead of crashing when the schema is not an object yet', () => {
+test('shows a placeholder when the schema is not an object yet', () => {
     render(<PayloadSchemaPreview schema={undefined} />);
 
     expect(screen.getByText(/write a valid json schema/i)).toBeInTheDocument();

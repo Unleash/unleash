@@ -14,13 +14,17 @@ import {
     isArraySchema,
     isBooleanSchema,
     isDateTimeSchema,
+    isDictionarySchema,
     isEnumSchema,
     isObjectWithPropertiesSchema,
     isPlainStringOrNumberSchema,
     type SchemaMatcher,
 } from './schemaMatchers.ts';
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
-import { SchemaFormArrayField } from './SchemaFormCollectionField.tsx';
+import {
+    SchemaFormArrayField,
+    SchemaFormDictionaryField,
+} from './SchemaFormCollectionField.tsx';
 import { SchemaFieldDescription } from './SchemaFieldDescription.tsx';
 
 const StyledUnsupported = styled('div')(({ theme }) => ({
@@ -99,6 +103,17 @@ export const SchemaFormField = ({
             matches: isArraySchema,
             render: () => (
                 <SchemaFormArrayField
+                    name={name}
+                    schema={schema}
+                    value={value}
+                    onChange={onChange}
+                />
+            ),
+        },
+        {
+            matches: isDictionarySchema,
+            render: () => (
+                <SchemaFormDictionaryField
                     name={name}
                     schema={schema}
                     value={value}

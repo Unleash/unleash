@@ -102,6 +102,48 @@ describe('NewFeatureStrategyCreate', () => {
         expect(slider).toHaveValue('100');
     });
 
+    test('each failed save selects the next unnamed variant and shows the error on its name field, until every name is filled in', async () => {
+        setupUiConfigEndpoint({ singlePageStrategyForm: true });
+        setupComponent({ defaultStrategy: false });
+
+        await screen.findByText('Gradual rollout');
+        fireEvent.click(
+            await screen.findByRole('button', { name: /^Variants/ }),
+        );
+        fireEvent.click(screen.getByTestId('ADD_STRATEGY_VARIANT_BUTTON'));
+        fireEvent.click(screen.getByTestId('ADD_STRATEGY_VARIANT_BUTTON'));
+
+        fireEvent.click(screen.getByText('Save strategy'));
+
+        expect(
+            await screen.findByText('Variant name is required.'),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByLabelText(/Variant name/),
+            'the first unnamed variant gets selected so its error is visible',
+        ).toHaveValue('');
+
+        fireEvent.change(screen.getByLabelText(/Variant name/), {
+            target: { value: 'c' },
+        });
+        fireEvent.click(screen.getByText('Save strategy'));
+
+        expect(
+            await screen.findByText('Variant name is required.'),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByLabelText(/Variant name/),
+            'the next unnamed variant gets selected',
+        ).toHaveValue('');
+
+        fireEvent.change(screen.getByLabelText(/Variant name/), {
+            target: { value: 'd' },
+        });
+        expect(
+            screen.queryByText('Variant name is required.'),
+        ).not.toBeInTheDocument();
+    });
+
     describe('singlePageStrategyForm off (legacy tabbed form)', () => {
         beforeEach(() => {
             setupUiConfigEndpoint();

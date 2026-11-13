@@ -11,6 +11,10 @@ import Add from '@mui/icons-material/Add';
 import { VariantPill } from './VariantPill/VariantPill.tsx';
 import { VariantsWeightBar } from './VariantsWeightBar/VariantsWeightBar.tsx';
 import { absorbWeightChange, splitWeightsEvenly } from './variantWeights.ts';
+import {
+    isValidVariant,
+    weightsAddUpTo100,
+} from './strategyVariantsValidation.ts';
 
 const EmptyStateDescription = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(2),
@@ -25,9 +29,15 @@ const PillRow = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
+export type FailedVariantsSubmit = {
+    selectFirstInvalid: boolean;
+};
+
 interface StrategyVariantsProps<T extends StrategyFormState> {
     setStrategy: React.Dispatch<React.SetStateAction<T>>;
     strategy: T;
+    failedVariantsSubmit?: FailedVariantsSubmit;
+    clearFailedVariantsSubmit?: () => void;
     canRenamePreexistingVariants?: boolean;
 }
 
@@ -56,16 +66,20 @@ const indicesToFixAroundHandle = (
 export const StrategyVariants = <T extends StrategyFormState>({
     strategy,
     setStrategy,
+    failedVariantsSubmit,
+    clearFailedVariantsSubmit,
     canRenamePreexistingVariants,
 }: StrategyVariantsProps<T>) => {
     const { trackEvent } = useEventTracker();
-    const initialVariants = (strategy.variants || []).map((variant) => ({
-        ...variant,
-        new: canRenamePreexistingVariants || false,
-        isValid: true,
-        id: createUuid(),
-        overrides: [],
-    }));
+    const initialVariants = (strategy.variants || []).map(
+        (variant, _, allVariants) => ({
+            ...variant,
+            new: canRenamePreexistingVariants || false,
+            isValid: isValidVariant(variant, allVariants),
+            id: createUuid(),
+            overrides: [],
+        }),
+    );
     const [variantsEdit, setVariantsEdit] =
         useState<IFeatureVariantEdit[]>(initialVariants);
     const [selectedVariantId, setSelectedVariantId] = useState(
@@ -235,11 +249,31 @@ export const StrategyVariants = <T extends StrategyFormState>({
         [variantsEdit, variantColor],
     );
 
-    const variantWeightsError =
-        variantsEdit.reduce(
-            (acc, variant) => acc + (variant.weight || 0),
-            0,
-        ) !== 1000;
+    const variantWeightsError = !weightsAddUpTo100(variantsEdit);
+
+    const submitAttemptFailed = Boolean(failedVariantsSubmit);
+
+    const variantsAtSubmitAttempt = useRef(variantsEdit);
+    variantsAtSubmitAttempt.current = variantsEdit;
+
+    useEffect(() => {
+        if (!failedVariantsSubmit?.selectFirstInvalid) return;
+        const variants = variantsAtSubmitAttempt.current;
+        const firstInvalid = variants.find((variant) => !variant.isValid);
+        if (firstInvalid) {
+            setSelectedVariantId(firstInvalid.id);
+        }
+    }, [failedVariantsSubmit]);
+
+    const allVariantsAreValid =
+        variantsEdit.length === 0 ||
+        (variantsEdit.every((variant) => variant.isValid) &&
+            !variantWeightsError);
+    useEffect(() => {
+        if (submitAttemptFailed && allVariantsAreValid) {
+            clearFailedVariantsSubmit?.();
+        }
+    }, [submitAttemptFailed, allVariantsAreValid, clearFailedVariantsSubmit]);
 
     if (variantsEdit.length === 0) {
         return (
@@ -296,6 +330,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
                             name={variant.name}
                             weight={variant.weight}
                             color={variantColor(index)}
+                            hasError={submitAttemptFailed && !variant.isValid}
                         />
                     ))}
                 </Tabs>
@@ -323,6 +358,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
                 removeVariant={() => removeVariant(selectedVariant.id)}
                 decorationColor={variantColor(selectedIndex)}
                 weightsError={variantWeightsError}
+                failedVariantsSubmit={failedVariantsSubmit}
             />
         </>
     );

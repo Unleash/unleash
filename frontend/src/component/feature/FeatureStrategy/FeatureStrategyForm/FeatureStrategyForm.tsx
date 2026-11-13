@@ -32,6 +32,8 @@ import type { Tracking } from 'utils/trackingEvents';
 import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests.tsx';
 import { StrategyFormBodySelector } from './StrategyFormBodySelector.tsx';
 import type { ParametersSchema } from 'openapi/index.ts';
+import { strategyVariantsAreValid } from 'component/feature/StrategyTypes/strategyVariantsValidation';
+import type { FailedVariantsSubmit } from 'component/feature/StrategyTypes/StrategyVariants';
 
 export interface IFeatureStrategyFormProps<T extends StrategyFormState> {
     feature: IFeatureToggle;
@@ -89,6 +91,8 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
     const trackStrategyForm = useTracking(tracking);
     const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
     const [showProdGuard, setShowProdGuard] = useState(false);
+    const [failedVariantsSubmit, setFailedVariantsSubmit] =
+        useState<FailedVariantsSubmit>();
     const hasValidConstraints = useConstraintsValidation(strategy.constraints, {
         ignoreIncompleteConstraints: singlePageStrategyForm,
     });
@@ -182,8 +186,22 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
         }
     };
 
+    const validateVariants = (selectFirstInvalid: boolean): boolean => {
+        const variantsAreValid =
+            !singlePageStrategyForm ||
+            strategyVariantsAreValid(strategy.variants ?? []);
+        setFailedVariantsSubmit(
+            variantsAreValid ? undefined : { selectFirstInvalid },
+        );
+        return variantsAreValid;
+    };
+
     const onSubmitWithValidation = async () => {
-        if (!validateAllParameters()) {
+        const parametersAreValid = validateAllParameters();
+        const variantsAreValid = validateVariants(
+            hasValidConstraints && parametersAreValid,
+        );
+        if (!hasValidConstraints || !parametersAreValid || !variantsAreValid) {
             trackStrategyForm.validationFailed();
             return;
         }
@@ -194,6 +212,10 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
             onSubmit();
         }
     };
+
+    const legacyFormHasBlockingErrors =
+        !singlePageStrategyForm &&
+        (!hasValidConstraints || errors.hasFormErrors());
 
     const changeRequestAlert = hasChangeRequestInReviewForEnvironment ? (
         changeRequestInReviewOrApprovedAlert
@@ -207,6 +229,8 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
             setStrategy={setStrategy}
             strategyDefinition={strategyDefinition}
             errors={errors}
+            failedVariantsSubmit={failedVariantsSubmit}
+            clearFailedVariantsSubmit={() => setFailedVariantsSubmit(undefined)}
             validateParameter={validateParameter}
             canRenamePreexistingVariants={canRenamePreexistingVariants}
             alertContent={
@@ -266,12 +290,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                 variant='contained'
                 color='primary'
                 type='submit'
-                disabled={
-                    disabled ||
-                    loading ||
-                    !hasValidConstraints ||
-                    errors.hasFormErrors()
-                }
+                disabled={disabled || loading || legacyFormHasBlockingErrors}
                 data-testid={STRATEGY_FORM_SUBMIT_ID}
             >
                 {changeRequestsEnabled

@@ -10,6 +10,7 @@ import {
     absorbWeightChange,
     weightsAfterHandleDrag,
 } from './variantWeights.ts';
+import { strategyVariantsAreValid } from './strategyVariantsValidation.ts';
 
 const server = testServerSetup();
 
@@ -251,4 +252,14 @@ test('with the last variant already fixed, only the left side of the pair gets f
 
     expect(pillLabels()).toEqual(['a31%', 'b34%', 'c35%']);
     expect(fixedWeightsOnBar()).toEqual(['31%', '35%']);
+});
+
+test('strategyVariantsAreValid accepts an empty list and rejects duplicate names and wrong weight sums', () => {
+    expect(strategyVariantsAreValid([])).toBe(true);
+    expect(
+        strategyVariantsAreValid([variant('a', 500), variant('a', 500)]),
+    ).toBe(false);
+    expect(
+        strategyVariantsAreValid([variant('a', 500), variant('b', 400)]),
+    ).toBe(false);
 });

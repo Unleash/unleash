@@ -24,6 +24,13 @@ const Pill = styled(Tab)(({ theme }) => ({
     '& > span': {
         color: 'inherit',
     },
+    '&[data-error]': {
+        borderColor: theme.palette.error.main,
+    },
+    '&[data-error].Mui-selected': {
+        borderColor: theme.palette.error.main,
+        boxShadow: `inset 0 0 0 1px ${theme.palette.error.main}`,
+    },
 }));
 
 const Dot = styled('span', {
@@ -49,17 +56,20 @@ type VariantPillProps = Omit<TabProps, 'label' | 'icon'> & {
     name: string;
     weight: number;
     color: string;
+    hasError?: boolean;
 };
 
 export const VariantPill = memo(function VariantPill({
     name,
     weight,
     color,
+    hasError,
     ...tabProps
 }: VariantPillProps) {
     return (
         <Pill
             {...tabProps}
+            data-error={hasError || undefined}
             icon={<Dot aria-hidden color={color} />}
             iconPosition='start'
             label={

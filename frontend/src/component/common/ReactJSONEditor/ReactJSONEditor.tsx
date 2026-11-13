@@ -1,11 +1,11 @@
 import { json, jsonParseLinter } from '@codemirror/lang-json';
 import { linter } from '@codemirror/lint';
-import ErrorIcon from '@mui/icons-material/Error';
 import FormatIndentIncrease from '@mui/icons-material/FormatIndentIncrease';
 import {
     Box,
     Button,
     type ButtonProps,
+    FormHelperText,
     styled,
     type Theme,
     useTheme,
@@ -182,21 +182,6 @@ const StyledStatusBar = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
 
-const StyledValidationMessage = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    flexShrink: 0,
-    gap: theme.spacing(1),
-    marginTop: theme.spacing(0.75),
-    padding: theme.spacing(1, 1.5),
-    border: `1px solid ${theme.palette.error.containerBorder}`,
-    borderRadius: theme.shape.borderRadiusMedium,
-    backgroundColor: theme.palette.error.container,
-    color: theme.palette.error.onContainer,
-    fontSize: theme.fontSizes.smallBody,
-    lineHeight: 1.4,
-}));
-
 const StyledEditorContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'editorStyle',
 })<{ editorStyle: EditorStyle }>(({ editorStyle }) => ({
@@ -327,10 +312,9 @@ const ReactJSONEditor: FC<IReactJSONEditorProps> = ({
                 {statusBar ? <StyledStatusBar>JSON</StyledStatusBar> : null}
             </StyledEditorWrapper>
             {visibleValidationError ? (
-                <StyledValidationMessage role='alert'>
-                    <ErrorIcon fontSize='small' />
+                <FormHelperText error role='alert'>
                     {visibleValidationError}
-                </StyledValidationMessage>
+                </FormHelperText>
             ) : null}
         </StyledEditorContainer>
     );

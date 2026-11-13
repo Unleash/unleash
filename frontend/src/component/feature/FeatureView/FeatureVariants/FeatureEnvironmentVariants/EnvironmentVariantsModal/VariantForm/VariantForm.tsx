@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
 import Input from 'component/common/Input/Input';
 import SelectMenu from 'component/common/select';
 import {
@@ -9,6 +9,10 @@ import {
     Tooltip,
 } from '@mui/material';
 import type { IPayload } from 'interfaces/featureToggle';
+import {
+    isNameUnique,
+    isValidPayload,
+} from 'component/feature/StrategyTypes/strategyVariantsValidation';
 import { WeightType } from 'constants/variantTypes';
 import {
     FIXED_WEIGHT_EXPLANATION,
@@ -19,6 +23,7 @@ import { calculateVariantWeight } from 'component/common/util';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import type { IFeatureVariantEdit } from '../EnvironmentVariantsModal.tsx';
+import type { FailedVariantsSubmit } from 'component/feature/StrategyTypes/StrategyVariants';
 import Delete from '@mui/icons-material/Delete';
 
 const LazyReactJSONEditor = React.lazy(
@@ -138,6 +143,34 @@ interface IVariantFormErrors {
     [ErrorField.PAYLOAD]?: string;
 }
 
+const takenNameMessage =
+    'A variant with that name already exists for this environment.';
+
+const payloadError = (payload: IPayload): string | undefined => {
+    if (isValidPayload(payload)) return;
+
+    return payload.type === 'json' ? 'Invalid JSON' : 'Invalid number';
+};
+
+const submitAttemptErrors = ({
+    name,
+    payload,
+    otherVariants,
+    canRenameVariant,
+}: {
+    name: string;
+    payload: IPayload;
+    otherVariants: { name: string }[];
+    canRenameVariant: boolean;
+}): IVariantFormErrors => ({
+    [ErrorField.NAME]: !name
+        ? 'Variant name is required.'
+        : canRenameVariant && !isNameUnique(name, otherVariants)
+          ? takenNameMessage
+          : undefined,
+    [ErrorField.PAYLOAD]: payloadError(payload),
+});
+
 interface IVariantFormProps {
     variant: IFeatureVariantEdit;
     variants: IFeatureVariantEdit[];
@@ -146,6 +179,7 @@ interface IVariantFormProps {
     removeVariant: (variantId: string) => void;
     decorationColor?: string;
     weightsError?: boolean;
+    failedVariantsSubmit?: FailedVariantsSubmit;
 }
 
 export const VariantForm = ({
@@ -156,6 +190,7 @@ export const VariantForm = ({
     removeVariant,
     decorationColor,
     weightsError,
+    failedVariantsSubmit,
 }: IVariantFormProps) => {
     const [name, setName] = useState(variant.name);
     const hasFixedWeight = variant.weightType === WeightType.FIX;
@@ -176,7 +211,7 @@ export const VariantForm = ({
         setErrors((errors) => ({ ...errors, [field]: error }));
     };
 
-    const editing = !variant.new;
+    const canRenameVariant = Boolean(variant.new);
     const weightInputVisible =
         variants.filter(
             ({ id, weightType }) =>
@@ -200,22 +235,18 @@ export const VariantForm = ({
         );
     };
 
+    const otherVariants = variants.filter((other) => other.id !== variant.id);
+
     const onSetName = (name: string) => {
         clearError(ErrorField.NAME);
-        if (!isNameUnique(name, variant.id)) {
-            setError(
-                ErrorField.NAME,
-                'A variant with that name already exists for this environment.',
-            );
+        if (canRenameVariant && !isNameUnique(name, otherVariants)) {
+            setError(ErrorField.NAME, takenNameMessage);
         }
         setName(name.trim());
     };
 
-    const fixedWeightOfOtherVariants = variants
-        .filter(
-            (other) =>
-                other.id !== variant.id && other.weightType === WeightType.FIX,
-        )
+    const fixedWeightOfOtherVariants = otherVariants
+        .filter((other) => other.weightType === WeightType.FIX)
         .reduce((sum, other) => sum + other.weight, 0);
     const maxPercentage = (TOTAL_WEIGHT - fixedWeightOfOtherVariants) / 10;
 
@@ -236,37 +267,19 @@ export const VariantForm = ({
     };
 
     const validatePayload = (payload: IPayload) => {
-        if (!isValidPayload(payload)) {
-            setError(
-                ErrorField.PAYLOAD,
-                payload.type === 'json' ? 'Invalid JSON' : 'Invalid number',
-            );
+        const error = payloadError(payload);
+        if (error) {
+            setError(ErrorField.PAYLOAD, error);
         }
     };
 
     const isNameNotEmpty = (name: string) => Boolean(name.length);
-    const isNameUnique = (name: string, id: string) =>
-        editing ||
-        !variants.some((variant) => variant.name === name && variant.id !== id);
     const isValidPercentage = (percentage: string) => {
         if (percentage === '') return false;
         if (percentage.match(/\.[0-9]{2,}$/)) return false;
 
         const percentageNumber = Number(percentage);
         return percentageNumber >= 0 && percentageNumber <= 100;
-    };
-    const isValidPayload = (payload: IPayload): boolean => {
-        try {
-            if (payload.type === 'json' && payload.value.trim() !== '') {
-                JSON.parse(payload.value);
-            }
-            if (payload.type === 'number') {
-                return !Number.isNaN(Number(payload.value));
-            }
-            return true;
-        } catch (_e: unknown) {
-            return false;
-        }
     };
     useEffect(() => {
         const newVariant: IFeatureVariantEdit = {
@@ -278,7 +291,7 @@ export const VariantForm = ({
             payload: payload.value ? payload : undefined,
             isValid:
                 isNameNotEmpty(name) &&
-                isNameUnique(name, variant.id) &&
+                (!canRenameVariant || isNameUnique(name, otherVariants)) &&
                 isValidPercentage(percentage) &&
                 isValidPayload(payload),
         };
@@ -288,6 +301,24 @@ export const VariantForm = ({
     useEffect(() => {
         setPercentage(String(calculateVariantWeight(variant.weight)));
     }, [variant.weight]);
+
+    const fieldsAtSubmitAttempt = useRef({
+        name,
+        payload,
+        otherVariants,
+        canRenameVariant,
+    });
+    fieldsAtSubmitAttempt.current = {
+        name,
+        payload,
+        otherVariants,
+        canRenameVariant,
+    };
+
+    useEffect(() => {
+        if (!failedVariantsSubmit) return;
+        setErrors(submitAttemptErrors(fieldsAtSubmitAttempt.current));
+    }, [failedVariantsSubmit]);
 
     const weightError = weightsError ? 'Total weight may not exceed 100%' : '';
 
@@ -315,7 +346,7 @@ export const VariantForm = ({
                     errorText={errors.name}
                     value={name}
                     onChange={(e) => onSetName(e.target.value)}
-                    disabled={editing}
+                    disabled={!canRenameVariant}
                     required
                 />
                 {weightInputVisible ? (

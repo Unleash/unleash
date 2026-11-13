@@ -20,7 +20,10 @@ import {
     type TargetAudience,
 } from './FeatureStrategyTargetAudience/FeatureStrategyTargetAudience.tsx';
 import { formatStrategyName } from 'utils/strategyNames';
-import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
+import {
+    StrategyVariants,
+    type FailedVariantsSubmit,
+} from 'component/feature/StrategyTypes/StrategyVariants';
 import type { ParametersSchema } from 'openapi/index.ts';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { parseParameterNumber } from 'utils/parseParameter.ts';
@@ -31,6 +34,8 @@ export interface StrategyFormBodyProps<T extends StrategyFormState> {
     setStrategy: React.Dispatch<React.SetStateAction<T>>;
     strategyDefinition: IStrategy;
     errors: IFormErrors;
+    failedVariantsSubmit?: FailedVariantsSubmit;
+    clearFailedVariantsSubmit?: () => void;
 
     validateParameter?: (name: string, value: ParametersSchema[string]) => void;
     canRenamePreexistingVariants?: boolean;
@@ -146,6 +151,8 @@ export const StrategyFormBody = <T extends StrategyFormState>({
     setStrategy,
     strategyDefinition,
     errors,
+    failedVariantsSubmit,
+    clearFailedVariantsSubmit,
     validateParameter,
     canRenamePreexistingVariants,
     alertContent,
@@ -158,6 +165,13 @@ export const StrategyFormBody = <T extends StrategyFormState>({
 }: StrategyFormBodyProps<T>) => {
     const theme = useTheme();
     const strategyName = strategy?.name || strategy?.strategyName;
+    const [variantsExpanded, setVariantsExpanded] = useState(false);
+    const variantsHaveError = Boolean(failedVariantsSubmit);
+    useEffect(() => {
+        if (variantsHaveError) {
+            setVariantsExpanded(true);
+        }
+    }, [variantsHaveError]);
 
     const stickiness =
         strategy?.parameters && 'stickiness' in strategy?.parameters
@@ -249,6 +263,7 @@ export const StrategyFormBody = <T extends StrategyFormState>({
 
     return (
         <StyledForm
+            noValidate
             onSubmit={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -324,7 +339,12 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                     </StyledAccordion>
 
                     {showVariants && (
-                        <StyledAccordion>
+                        <StyledAccordion
+                            expanded={variantsExpanded}
+                            onChange={(_, expanded) =>
+                                setVariantsExpanded(expanded)
+                            }
+                        >
                             <AccordionSummary
                                 expandIcon={<ExpandMore />}
                                 slotProps={accordionSummarySlotProps(theme)}
@@ -345,6 +365,10 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                                 <StrategyVariants
                                     strategy={strategy}
                                     setStrategy={setStrategy}
+                                    failedVariantsSubmit={failedVariantsSubmit}
+                                    clearFailedVariantsSubmit={
+                                        clearFailedVariantsSubmit
+                                    }
                                     canRenamePreexistingVariants={
                                         canRenamePreexistingVariants
                                     }

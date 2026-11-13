@@ -132,8 +132,7 @@ test('expands a project to Flags and Change requests when clicked', async () => 
 });
 
 test('reveals Event log and Configure project under More', async () => {
-    await renderSection();
-    await userEvent.click(projectToggle('Alpha'));
+    await renderSection('/projects/alpha');
     const group = projectGroup('Alpha');
 
     await userEvent.click(group.getByRole('button', { name: 'More' }));
@@ -159,9 +158,73 @@ test('collapses an expanded project when clicked again', async () => {
     ).not.toBeInTheDocument();
 });
 
-test('keeps More open after the project is collapsed and reopened', async () => {
-    await renderSection();
+test('expands the project the current page belongs to', async () => {
+    await renderSection('/projects/alpha/change-requests');
+
+    expect(projectToggle('Alpha')).toHaveAttribute('aria-expanded', 'true');
+    expect(projectToggle('Beta')).toHaveAttribute('aria-expanded', 'false');
+});
+
+test('marks the current page in its project', async () => {
+    await renderSection('/projects/alpha/change-requests/1');
+
+    expect(projectToggle('Alpha')).toHaveAttribute('aria-current', 'location');
+    expect(projectToggle('Beta')).not.toHaveAttribute('aria-current');
+    const group = projectGroup('Alpha');
+    expect(
+        group.getByRole('link', { name: 'Change requests' }),
+    ).toHaveAttribute('aria-current', 'page');
+    expect(group.getByRole('link', { name: 'Flags' })).not.toHaveAttribute(
+        'aria-current',
+    );
+});
+
+test('marks Flags as current on a flag page', async () => {
+    await renderSection('/projects/alpha/features/my-flag');
+
+    expect(
+        projectGroup('Alpha').getByRole('link', { name: 'Flags' }),
+    ).toHaveAttribute('aria-current', 'page');
+});
+
+test.each([
+    ['/projects/alpha/logs', 'Event log'],
+    ['/projects/alpha/settings/access', 'Configure project'],
+])('opens More when the current page %s is in it', async (route, label) => {
+    await renderSection(route);
+    const group = projectGroup('Alpha');
+
+    expect(group.getByRole('button', { name: 'Less' })).toHaveAttribute(
+        'aria-expanded',
+        'true',
+    );
+    expect(group.getByRole('link', { name: label })).toHaveAttribute(
+        'aria-current',
+        'page',
+    );
+});
+
+test('marks only the project as current on a project page outside the sidebar', async () => {
+    await renderSection('/projects/alpha/applications');
+
+    expect(projectToggle('Alpha')).toHaveAttribute('aria-current', 'location');
+    expect(
+        projectGroup('Alpha').getByRole('link', { name: 'Flags' }),
+    ).not.toHaveAttribute('aria-current');
+});
+
+test('keeps a collapsed current project collapsed after the sidebar remounts', async () => {
+    const { unmount } = await renderSection('/projects/alpha/logs');
     await userEvent.click(projectToggle('Alpha'));
+    unmount();
+
+    await renderSection('/projects/alpha/logs');
+
+    expect(projectToggle('Alpha')).toHaveAttribute('aria-expanded', 'false');
+});
+
+test('keeps More open after the project is collapsed and reopened', async () => {
+    await renderSection('/projects/alpha');
     await userEvent.click(
         projectGroup('Alpha').getByRole('button', { name: 'More' }),
     );
@@ -177,8 +240,7 @@ test('keeps More open after the project is collapsed and reopened', async () => 
 test('hides Change requests on oss', async () => {
     setupApi({ edition: 'oss' });
 
-    await renderSection();
-    await userEvent.click(projectToggle('Alpha'));
+    await renderSection('/projects/alpha');
 
     expect(
         projectGroup('Alpha').queryByRole('link', { name: 'Change requests' }),
@@ -188,8 +250,7 @@ test('hides Change requests on oss', async () => {
 test('links Configure project to API access on oss', async () => {
     setupApi({ edition: 'oss' });
 
-    await renderSection();
-    await userEvent.click(projectToggle('Alpha'));
+    await renderSection('/projects/alpha');
     const group = projectGroup('Alpha');
     await userEvent.click(group.getByRole('button', { name: 'More' }));
 

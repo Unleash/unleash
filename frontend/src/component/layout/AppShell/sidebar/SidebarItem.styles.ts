@@ -22,6 +22,10 @@ export const sidebarItemStyles = (theme: Theme) => ({
         outline: `2px solid ${theme.palette.primary.main}`,
         outlineOffset: -2,
     },
+    '&[aria-current="page"]': {
+        backgroundColor: theme.palette.action.selected,
+        fontWeight: theme.typography.fontWeightBold,
+    },
 });
 
 export const SidebarItemIcon = styled('span')(({ theme }) => ({

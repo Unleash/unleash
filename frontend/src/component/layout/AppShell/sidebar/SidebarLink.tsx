@@ -3,13 +3,7 @@ import { styled } from '@mui/material';
 import { NavLink } from 'react-router';
 import { SidebarItemIcon, sidebarItemStyles } from './SidebarItem.styles.ts';
 
-const StyledLink = styled(NavLink)(({ theme }) => ({
-    ...sidebarItemStyles(theme),
-    '&[aria-current="page"]': {
-        backgroundColor: theme.palette.action.selected,
-        fontWeight: theme.typography.fontWeightBold,
-    },
-}));
+const StyledLink = styled(NavLink)(({ theme }) => sidebarItemStyles(theme));
 
 export const SidebarLink: FC<{
     to: string;

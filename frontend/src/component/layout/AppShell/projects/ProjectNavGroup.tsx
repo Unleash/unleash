@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { ButtonBase, styled } from '@mui/material';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -10,6 +10,11 @@ import {
     sidebarItemStyles,
 } from '../sidebar/SidebarItem.styles.ts';
 import { SidebarList } from '../sidebar/SidebarList.tsx';
+import {
+    getProjectPage,
+    isInProject,
+    type ProjectPage,
+} from './getProjectPage.ts';
 
 const SUB_ITEM_INDENT = 3.875;
 
@@ -20,11 +25,14 @@ export type ProjectNavExpansion = {
     more?: ExpansionState;
 };
 
-type ProjectNavItem = { label: string; to: string };
+type ProjectNavItem = { page: ProjectPage; label: string; to: string };
 
-const StyledProjectToggle = styled(ButtonBase)(({ theme }) =>
-    sidebarItemStyles(theme),
-);
+const StyledProjectToggle = styled(ButtonBase)(({ theme }) => ({
+    ...sidebarItemStyles(theme),
+    '&[aria-current="location"]': {
+        fontWeight: theme.typography.fontWeightBold,
+    },
+}));
 
 const StyledLabel = styled('span')({
     minWidth: 0,
@@ -64,19 +72,21 @@ const useProjectNavItems = (projectId: string) => {
     const base = `/projects/${projectId}`;
 
     const primary: ProjectNavItem[] = [
-        { label: 'Flags', to: base },
+        { page: 'flags', label: 'Flags', to: base },
         ...(isOss()
             ? []
             : [
                   {
+                      page: 'change-requests' as const,
                       label: 'Change requests',
                       to: `${base}/change-requests`,
                   },
               ]),
     ];
     const more: ProjectNavItem[] = [
-        { label: 'Event log', to: `${base}/logs` },
+        { page: 'logs', label: 'Event log', to: `${base}/logs` },
         {
+            page: 'settings',
             label: 'Configure project',
             to: isOss() ? `${base}/settings/api-access` : `${base}/settings`,
         },
@@ -90,14 +100,23 @@ export const ProjectNavGroup: FC<{
     expansion?: ProjectNavExpansion;
     onExpansionChange: (change: ProjectNavExpansion) => void;
 }> = ({ project, expansion, onExpansionChange }) => {
+    const { pathname } = useLocation();
     const { primary, more } = useProjectNavItems(project.id);
-    const expanded = expansion?.project === 'open';
-    const moreExpanded = expansion?.more === 'open';
+    const isCurrent = isInProject(pathname, project.id);
+    const currentPage = getProjectPage(pathname, project.id);
+
+    const expanded = expansion?.project
+        ? expansion.project === 'open'
+        : isCurrent;
+    const moreExpanded = expansion?.more
+        ? expansion.more === 'open'
+        : more.some(({ page }) => page === currentPage);
     const items = moreExpanded ? [...primary, ...more] : primary;
 
     return (
         <>
             <StyledProjectToggle
+                aria-current={isCurrent ? 'location' : undefined}
                 aria-expanded={expanded}
                 onClick={() =>
                     onExpansionChange({ project: expanded ? 'closed' : 'open' })
@@ -111,8 +130,14 @@ export const ProjectNavGroup: FC<{
             </StyledProjectToggle>
             {expanded ? (
                 <SidebarList role='group' aria-label={project.name}>
-                    {items.map(({ label, to }) => (
-                        <StyledSubLink key={label} to={to}>
+                    {items.map(({ page, label, to }) => (
+                        <StyledSubLink
+                            key={page}
+                            to={to}
+                            aria-current={
+                                page === currentPage ? 'page' : undefined
+                            }
+                        >
                             {label}
                         </StyledSubLink>
                     ))}

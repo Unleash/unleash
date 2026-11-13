@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { styled, Typography } from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
-import { SchemaForm } from './SchemaForm.tsx';
+import { SchemaForm } from 'component/common/SchemaForm/SchemaForm.tsx';
 import { formValueWithExamplesAsDefaults } from './previewSchema.ts';
-import { isObjectSchema } from './schemaMatchers.ts';
+import { isObjectSchema } from 'component/common/SchemaForm/schemaMatchers.ts';
 
 type ObjectSchema = JsonSchemaProperty & { type: 'object' };
 

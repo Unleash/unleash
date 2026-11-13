@@ -1,5 +1,5 @@
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
-import { isObjectWithPropertiesSchema } from './schemaMatchers.ts';
+import { isObjectWithPropertiesSchema } from 'component/common/SchemaForm/schemaMatchers.ts';
 
 const firstExample = (schema: JsonSchemaProperty): unknown => {
     const { examples } = schema;

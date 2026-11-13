@@ -1,7 +1,9 @@
+import type { JsonSchemaProperty } from './payloadSchemaTypes.ts';
+
 export type PayloadSchemaTemplate = {
     key: string;
     label: string;
-    schema: Record<string, unknown>;
+    schema: JsonSchemaProperty;
 };
 
 export type PayloadSchemaTemplateGroup = {

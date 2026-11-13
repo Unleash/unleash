@@ -7,7 +7,7 @@ export type JsonSchemaProperty = Record<string, unknown> & {
     default?: unknown;
     examples?: unknown;
     properties?: Record<string, JsonSchemaProperty>;
-    additionalProperties?: boolean;
+    additionalProperties?: boolean | JsonSchemaProperty;
     required?: string[];
     oneOf?: JsonSchemaProperty[];
     anyOf?: JsonSchemaProperty[];

@@ -3,7 +3,6 @@ import { Alert, Button, styled, Tab, Tabs, Typography } from '@mui/material';
 import { tabClasses } from '@mui/material/Tab';
 import { useNavigate } from 'react-router';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import type { JSONContent } from 'component/common/ReactJSONEditor/ReactJSONEditor';
 import { formatFeaturePath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
@@ -14,10 +13,8 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useToast from 'hooks/useToast';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import {
-    findPayloadSchemaTemplate,
-    payloadSchemaTemplateGroups,
-} from './payloadSchemaTemplates';
+import { findPayloadSchemaTemplate } from './payloadSchemaTemplates';
+import { PayloadSchemaTemplateList } from './PayloadSchemaTemplateList';
 import { usePayloadSchemaForm } from './usePayloadSchemaForm.ts';
 
 const LazyReactJSONEditor = React.lazy(
@@ -58,12 +55,6 @@ const Pill = styled(Tab)(({ theme }) => ({
     },
 }));
 
-const StyledTemplatePane = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'flex-start',
-    padding: theme.spacing(2),
-}));
-
 const StyledButtons = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
@@ -96,14 +87,6 @@ const StyledPane = styled('div')(({ theme }) => ({
         flex: 1,
         height: '100%',
     },
-}));
-
-const templateOptions = payloadSchemaTemplateGroups.map((group) => ({
-    groupHeader: group.groupHeader,
-    options: group.templates.map((template) => ({
-        key: template.key,
-        label: template.label,
-    })),
 }));
 
 type SchemaSource = 'template' | 'import';
@@ -213,16 +196,11 @@ const PayloadSchemaForm = ({
             <StyledSplit>
                 <StyledPane>
                     {isCreateMode && schemaSource === 'template' ? (
-                        <StyledTemplatePane>
-                            <GeneralSelect
-                                label='Choose a template'
-                                options={templateOptions}
-                                value={templateKey}
-                                onChange={applyTemplate}
-                                disabled={!editable}
-                                fullWidth
-                            />
-                        </StyledTemplatePane>
+                        <PayloadSchemaTemplateList
+                            templateKey={templateKey}
+                            disabled={!editable}
+                            onSelect={applyTemplate}
+                        />
                     ) : (
                         <Suspense fallback={null}>
                             <LazyReactJSONEditor

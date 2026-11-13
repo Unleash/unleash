@@ -65,9 +65,8 @@ test('shows why the server refused a payload schema until the schema changes', a
     await screen.findByText('Create payload schema');
     screen.getByText(/Where you use this schema/);
 
-    await userEvent.click(screen.getByLabelText('Choose a template'));
     await userEvent.click(
-        await screen.findByRole('option', { name: 'Log level' }),
+        await screen.findByRole('button', { name: /^Log level/ }),
     );
 
     await userEvent.click(
@@ -83,9 +82,8 @@ test('shows why the server refused a payload schema until the schema changes', a
     ).not.toHaveAttribute('aria-disabled');
 
     await userEvent.click(screen.getByRole('tab', { name: 'Use a template' }));
-    await userEvent.click(screen.getByLabelText('Choose a template'));
     await userEvent.click(
-        await screen.findByRole('option', { name: 'Maintenance mode' }),
+        await screen.findByRole('button', { name: /^Maintenance mode/ }),
     );
 
     expect(screen.queryByText('Invalid payload schema')).toBeNull();

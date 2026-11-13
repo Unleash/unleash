@@ -159,5 +159,5 @@ pnpm test:backend  # Backend only
 | Composition Root | `/src/lib/services/index.ts` |
 | API Hook (GET) | `/frontend/src/hooks/api/getters/useFeature/useFeature.ts` |
 | API Hook (mutation) | `/frontend/src/hooks/api/actions/useFeatureApi.ts` |
-| Fake Store | `/src/test/fixtures/fake-feature-toggle-store.ts` |
+| Fake Store | `/src/lib/features/feature-toggle/fakes/fake-feature-toggle-store.ts` |
 

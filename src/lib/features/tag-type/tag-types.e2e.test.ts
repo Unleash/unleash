@@ -8,6 +8,7 @@ import {
 } from '../../../test/e2e/helpers/test-helper.js';
 import getLogger from '../../../test/fixtures/no-logger.js';
 import { RoleName } from '../../types/index.js';
+import TagTypeStore from './tag-type-store.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -204,6 +205,57 @@ test('Can update a tag type color', async () => {
         .expect(200);
 
     expect(res.body.tagType.color).toBe('#00FF00');
+});
+
+test('Updating a tag type that does not exist yields 404 and stores no event', async () => {
+    const { body: before } = await app.getRecordedEvents();
+
+    await app.request
+        .put('/api/admin/tag-types/non-existent')
+        .send({
+            description: 'new description',
+        })
+        .expect(404);
+
+    await app.request.get('/api/admin/tag-types/non-existent').expect(404);
+
+    const { body: after } = await app.getRecordedEvents();
+    expect(after.total).toBe(before.total);
+    expect(
+        after.events.filter(({ data }) => data?.name === 'non-existent'),
+    ).toHaveLength(0);
+});
+
+test('A tag type deleted before the update yields 404 and stores no update event', async () => {
+    const name = 'deleted-before-update';
+    await db.stores.tagTypeStore.createTagType({ name });
+    const { body: before } = await app.getRecordedEvents();
+    const updateTagType = TagTypeStore.prototype.updateTagType;
+    const update = vi
+        .spyOn(TagTypeStore.prototype, 'updateTagType')
+        .mockImplementationOnce(async function (this: TagTypeStore, tagType) {
+            // Commit the delete on a separate connection after any existence
+            // lookup, but before the real UPDATE executes in its transaction.
+            await db.stores.tagTypeStore.delete(name);
+            return updateTagType.call(this, tagType);
+        });
+
+    try {
+        await app.request
+            .put(`/api/admin/tag-types/${name}`)
+            .send({ description: 'new description' })
+            .expect(404);
+        expect(update).toHaveBeenCalledOnce();
+    } finally {
+        update.mockRestore();
+    }
+
+    await app.request.get(`/api/admin/tag-types/${name}`).expect(404);
+    const { body: after } = await app.getRecordedEvents();
+    expect(after.total).toBe(before.total);
+    expect(after.events.filter(({ data }) => data?.name === name)).toHaveLength(
+        0,
+    );
 });
 
 test('Numbers are coerced to strings for icons and descriptions', async () => {

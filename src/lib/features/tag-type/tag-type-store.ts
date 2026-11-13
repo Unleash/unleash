@@ -104,10 +104,13 @@ export default class TagTypeStore implements ITagTypeStore {
         color,
     }: ITagType): Promise<void> {
         const stopTimer = this.timer('updateTagType');
-        await this.db(TABLE)
+        const updatedRows = await this.db(TABLE)
             .where({ name })
             .update({ description, icon, color });
         stopTimer();
+        if (updatedRows === 0) {
+            throw new NotFoundError('Could not find tag-type');
+        }
     }
 
     destroy(): void {}

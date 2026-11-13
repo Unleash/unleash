@@ -90,6 +90,7 @@ export * from './feature-metrics-schema.js';
 export * from './feature-schema.js';
 export * from './feature-search-environment-schema.js';
 export * from './feature-search-response-schema.js';
+export * from './feature-strategies-schema.js';
 export * from './feature-strategy-schema.js';
 export * from './feature-strategy-segment-schema.js';
 export * from './feature-tag-schema.js';

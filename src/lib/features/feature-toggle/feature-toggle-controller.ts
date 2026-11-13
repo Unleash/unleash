@@ -268,7 +268,7 @@ export default class ProjectFeaturesController extends Controller {
                     description:
                         'Get strategies defined for a feature flag in the specified environment.',
                     responses: {
-                        200: createResponseSchema('featureStrategySchema'),
+                        200: createResponseSchema('featureStrategiesSchema'),
                         ...getStandardResponses(401, 403, 404),
                     },
                 }),

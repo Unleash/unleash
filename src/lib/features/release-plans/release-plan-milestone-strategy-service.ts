@@ -6,10 +6,14 @@ import type {
 import type { ReleasePlanMilestoneStrategy } from './release-plan-milestone-strategy.js';
 import type { IUser } from '../../types/user.js';
 import type { Logger } from '../../logger.js';
-import type { IReleasePlanMilestoneStrategyStore } from './release-plan-milestone-strategy-store.js';
+import type {
+    IReleasePlanMilestoneStrategyStore,
+    MilestoneStrategyContext,
+} from './release-plan-milestone-strategy-store.js';
 import type { FeatureToggleService } from '../feature-toggle/feature-toggle-service.js';
 import type { VariantPayloadValidator } from '../payload-schema/variant-payload-validator.js';
 import type { IFlagResolver } from '../../types/index.js';
+import NotFoundError from '../../error/notfound-error.js';
 import {
     PermissionError,
     SKIP_CHANGE_REQUEST,
@@ -17,12 +21,6 @@ import {
     type IUnleashServices,
     type IUnleashStores,
 } from '../../server-impl.js';
-
-type MilestoneStrategyContext = {
-    projectId: string;
-    environment: string;
-    featureName: string;
-};
 
 export class ReleasePlanMilestoneStrategyService {
     private readonly logger: Logger;
@@ -102,6 +100,17 @@ export class ReleasePlanMilestoneStrategyService {
         user?: IUser,
     ): Promise<ReleasePlanMilestoneStrategy> {
         const { projectId, environment, featureName } = context;
+
+        const belongsToContext =
+            await this.milestoneStrategyStore.existsInFeatureEnvironmentPlan(
+                id,
+                context,
+            );
+        if (!belongsToContext) {
+            throw new NotFoundError(
+                `Milestone strategy with id ${id} not found`,
+            );
+        }
 
         await this.milestoneStrategyStore.get(id); // Validate milestone strategy exists
         if (

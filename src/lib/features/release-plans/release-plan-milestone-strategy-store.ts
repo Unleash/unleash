@@ -14,6 +14,12 @@ export type ReleasePlanMilestoneStrategyWriteModel = Omit<
     'id' | 'strategyName'
 >;
 
+export type MilestoneStrategyContext = {
+    projectId: string;
+    environment: string;
+    featureName: string;
+};
+
 export interface IReleasePlanMilestoneStrategyStore
     extends Store<ReleasePlanMilestoneStrategy, string> {
     insert(
@@ -28,6 +34,10 @@ export interface IReleasePlanMilestoneStrategyStore
         updates: Partial<MilestoneStrategyConfigUpdate>,
     ): Promise<ReleasePlanMilestoneStrategy>;
     deleteStrategiesForMilestone(milestoneId: string): Promise<void>;
+    existsInFeatureEnvironmentPlan(
+        id: string,
+        context: MilestoneStrategyContext,
+    ): Promise<boolean>;
 }
 
 const fromRow = (row: any): ReleasePlanMilestoneStrategy => {
@@ -175,5 +185,28 @@ export class ReleasePlanMilestoneStrategyStore
         await this.db('milestone_strategies')
             .where('milestone_id', milestoneId)
             .delete();
+    }
+
+    async existsInFeatureEnvironmentPlan(
+        id: string,
+        { projectId, featureName, environment }: MilestoneStrategyContext,
+    ): Promise<boolean> {
+        const row = await this.db(`${TABLE} as ms`)
+            .join('milestones as m', 'm.id', 'ms.milestone_id')
+            .join(
+                'release_plan_definitions as rpd',
+                'rpd.id',
+                'm.release_plan_definition_id',
+            )
+            .join('features as f', 'f.name', 'rpd.feature_name')
+            .where({
+                'ms.id': id,
+                'rpd.discriminator': 'plan',
+                'rpd.feature_name': featureName,
+                'rpd.environment': environment,
+                'f.project': projectId,
+            })
+            .first('ms.id');
+        return Boolean(row);
     }
 }

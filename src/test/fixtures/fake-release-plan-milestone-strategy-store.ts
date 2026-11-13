@@ -1,6 +1,7 @@
 import type { ReleasePlanMilestoneStrategy } from '../../lib/features/release-plans/release-plan-milestone-strategy.js';
 import type {
     IReleasePlanMilestoneStrategyStore,
+    MilestoneStrategyContext,
     ReleasePlanMilestoneStrategyWriteModel,
 } from '../../lib/features/release-plans/release-plan-milestone-strategy-store.js';
 import type { MilestoneStrategyConfigUpdate } from '../../lib/types/model.js';
@@ -39,6 +40,13 @@ export class FakeReleasePlanMilestoneStrategyStore
         _strategy: Partial<MilestoneStrategyConfigUpdate>,
     ): Promise<ReleasePlanMilestoneStrategy> {
         return {} as ReleasePlanMilestoneStrategy;
+    }
+
+    async existsInFeatureEnvironmentPlan(
+        id: string,
+        _context: MilestoneStrategyContext,
+    ): Promise<boolean> {
+        return this.exists(id);
     }
 
     async deleteStrategiesForMilestone(_milestoneId: string): Promise<void> {

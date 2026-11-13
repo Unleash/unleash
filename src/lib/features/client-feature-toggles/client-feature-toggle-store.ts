@@ -22,6 +22,7 @@ import FeatureToggleStore from '../feature-toggle/feature-toggle-store.js';
 import type { Db } from '../../db/db.js';
 type Raw<T = any> = Knex.Raw<T>;
 import { sortStrategies } from '../../util/sortStrategies.js';
+import { escapeLikePattern } from '../../util/escape-like.js';
 import type { ITag } from '../../tags/index.js';
 
 export interface IGetAllFeatures {
@@ -183,7 +184,7 @@ export default class FeatureToggleClientStore
                 query = query.where(
                     'features.name',
                     'like',
-                    `${featureQuery.namePrefix}%`,
+                    `${escapeLikePattern(featureQuery.namePrefix)}%`,
                 );
             }
         }

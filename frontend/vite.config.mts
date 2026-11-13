@@ -123,10 +123,12 @@ export default defineConfig(({ mode }) => {
                     name: 'html-rewrite',
                     apply: 'serve',
                     transformIndexHtml(html) {
-                        return html.replace(
-                            /::unleashToken::/gi,
-                            UNLEASH_FRONTEND_TOKEN,
-                        );
+                        return html
+                            .replace(
+                                /::unleashToken::/gi,
+                                UNLEASH_FRONTEND_TOKEN,
+                            )
+                            .replace('::baseUriPath::', '');
                     },
                 },
                 {

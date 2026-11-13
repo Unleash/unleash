@@ -11,7 +11,12 @@ import {
     differenceInCalendarDays,
     differenceInCalendarMonths,
 } from 'date-fns';
-import { formatDay, formatMonth, parseDateString } from './dates.js';
+import {
+    formatDay,
+    formatMonth,
+    parseDateString,
+    parseMonthString,
+} from './dates.js';
 import type { ChartDataSelection } from './chart-data-selection.js';
 export type ChartDatasetType = ChartDataset<'bar'>;
 
@@ -149,7 +154,7 @@ const requestTypes = `${otherLabels.toReversed().join(', ')}, and ${lastLabel}`;
 
 export const getChartLabel = (selectedPeriod: ChartDataSelection) =>
     selectedPeriod.grouping === 'daily'
-        ? `A bar chart showing daily traffic usage for ${new Date(
+        ? `A bar chart showing daily traffic usage for ${parseMonthString(
               selectedPeriod.month,
           ).toLocaleDateString('en-US', {
               month: 'long',

@@ -248,6 +248,7 @@ const VariantsWeightBarComponent = ({
                         arrow
                     >
                         <Segment
+                            aria-hidden='true'
                             style={{
                                 flex: `${weights[index]} 0 ${segmentBasePixels(index)}px`,
                                 background: variant.hasFixedWeight

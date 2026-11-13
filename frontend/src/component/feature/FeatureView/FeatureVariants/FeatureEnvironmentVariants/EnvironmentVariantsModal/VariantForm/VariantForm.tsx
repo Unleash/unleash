@@ -13,8 +13,10 @@ import { WeightType } from 'constants/variantTypes';
 import {
     FIXED_WEIGHT_EXPLANATION,
     TOTAL_WEIGHT,
+    VARIABLE_WEIGHT_EXPLANATION,
 } from 'component/feature/StrategyTypes/variantWeights';
 import { calculateVariantWeight } from 'component/common/util';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import type { IFeatureVariantEdit } from '../EnvironmentVariantsModal.tsx';
 import Delete from '@mui/icons-material/Delete';
@@ -291,6 +293,9 @@ export const VariantForm = ({
 
     const weightInputId = `variant-weight-input-${variant.id}`;
     const weightExplanationId = `${weightInputId}-explanation`;
+    const weightExplanation = hasFixedWeight
+        ? FIXED_WEIGHT_EXPLANATION
+        : VARIABLE_WEIGHT_EXPLANATION;
     const valueInputId = `variant-payload-value-${variant.id}`;
 
     return (
@@ -319,6 +324,7 @@ export const VariantForm = ({
                             <FieldLabel htmlFor={weightInputId}>
                                 Weight
                             </FieldLabel>
+                            <HelpIcon tooltip={weightExplanation} />
                         </FieldLabelRow>
                         <WeightInput
                             id={weightInputId}
@@ -341,17 +347,13 @@ export const VariantForm = ({
                                     min: 0,
                                     max: maxPercentage,
                                     step: 'any', // auto-split weights have decimals; the browser's default step of 1 would reject them on submit
-                                    'aria-describedby': hasFixedWeight
-                                        ? weightExplanationId
-                                        : undefined,
+                                    'aria-describedby': weightExplanationId,
                                 },
                             }}
                         />
-                        {hasFixedWeight ? (
-                            <ScreenReaderOnly id={weightExplanationId}>
-                                {FIXED_WEIGHT_EXPLANATION}
-                            </ScreenReaderOnly>
-                        ) : null}
+                        <ScreenReaderOnly id={weightExplanationId}>
+                            {weightExplanation}
+                        </ScreenReaderOnly>
                     </Field>
                 ) : null}
                 <PayloadTypeSelect

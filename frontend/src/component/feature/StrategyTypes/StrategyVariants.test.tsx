@@ -8,7 +8,6 @@ import type { StrategyVariantSchema } from 'openapi';
 import { StrategyVariants } from './StrategyVariants.tsx';
 import {
     absorbWeightChange,
-    FIXED_WEIGHT_EXPLANATION,
     weightsAfterHandleDrag,
 } from './variantWeights.ts';
 
@@ -51,10 +50,19 @@ const VariantsEditor = ({
 const pillLabels = () =>
     screen.getAllByRole('tab').map((pill) => pill.textContent);
 
-const fixedWeightsOnBar = () =>
-    screen
-        .queryAllByLabelText(FIXED_WEIGHT_EXPLANATION)
-        .map((segment) => segment.textContent);
+const fixedWeightsOnBar = () => {
+    const handleValueTexts = screen
+        .queryAllByRole('slider')
+        .map((handle) => handle.getAttribute('aria-valuetext') ?? '');
+    const variantValueTexts = handleValueTexts.flatMap((valueText, index) => {
+        const [left, right] = valueText.split(', ');
+        return index === 0 ? [left, right] : [right];
+    });
+    return variantValueTexts.flatMap((valueText) => {
+        const fixedWeight = valueText.match(/: (\S+%) \(fixed\)$/);
+        return fixedWeight ? [fixedWeight[1]] : [];
+    });
+};
 
 test('adding a variant splits 100% as evenly as the percents allow, with the leftover going to the first variants', async () => {
     setupContextApi();

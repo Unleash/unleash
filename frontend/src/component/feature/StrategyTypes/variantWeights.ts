@@ -8,6 +8,9 @@ export const SLIDER_STEP = 10; // one whole percent
 export const FIXED_WEIGHT_EXPLANATION =
     "This weight was set manually, so it's not automatically redistributed.";
 
+export const VARIABLE_WEIGHT_EXPLANATION =
+    'This weight adjusts automatically when other weights change.';
+
 export const splitPositionsFromWeights = (weights: number[]): number[] => {
     const positions: number[] = [];
     let runningTotal = 0;

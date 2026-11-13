@@ -185,8 +185,12 @@ test.each([
     '/api/admin/ui-config',
 ])('does not infer onboarding from failed data at %s', async (path) => {
     testServerRoute(server, path, {}, 'get', 500);
-    render(<DashboardOnboarding />);
-    await settleProviders();
+    render(
+        <DashboardOnboarding>
+            <div>Normal dashboard</div>
+        </DashboardOnboarding>,
+    );
+    await screen.findByText('Normal dashboard');
 
     expect(screen.queryByRole('region')).not.toBeInTheDocument();
 });
@@ -199,22 +203,71 @@ test('does not interpret missing permissions as denied permission', async () => 
     expect(screen.queryByRole('region')).not.toBeInTheDocument();
 });
 
-test('waits for projects to finish loading', async () => {
+test.each([
+    ['/api/admin/projects', { projects: [{ id: 'default' }] }],
+    ['/api/admin/user/recent-flags', { flags: [] }],
+    [
+        '/api/admin/user',
+        {
+            user: { id: 1 },
+            permissions: [{ permission: CREATE_FEATURE, project: 'default' }],
+            splash: {},
+        },
+    ],
+])('does not flash normal dashboard content while loading %s', async (path, response) => {
     let finishLoading: () => void = () => {};
     const loading = new Promise<void>((resolve) => {
         finishLoading = resolve;
     });
     server.use(
-        http.get('/api/admin/projects', async () => {
+        http.get(path, async () => {
             await loading;
-            return HttpResponse.json({ projects: [{ id: 'default' }] });
+            return HttpResponse.json(response);
         }),
     );
-    render(<DashboardOnboarding />);
+    render(
+        <DashboardOnboarding>
+            <div>Normal dashboard</div>
+        </DashboardOnboarding>,
+    );
     await settleProviders();
-    expect(screen.queryByRole('region')).not.toBeInTheDocument();
 
-    finishLoading();
+    try {
+        expect(screen.queryByText('Normal dashboard')).not.toBeInTheDocument();
+        expect(screen.queryByRole('region')).not.toBeInTheDocument();
+    } finally {
+        finishLoading();
+    }
+    expect(
+        await screen.findByRole('region', {
+            name: 'Create and connect your first flag',
+        }),
+    ).toBeInTheDocument();
+});
+
+test('does not flash dashboard panels before widget flags have loaded', async () => {
+    let finishLoading: () => void = () => {};
+    const loading = new Promise<void>((resolve) => {
+        finishLoading = resolve;
+    });
+    server.use(
+        http.get('/api/admin/ui-config', async () => {
+            await loading;
+            return HttpResponse.json(config);
+        }),
+    );
+    render(
+        <WelcomeDialogProvider>
+            <PersonalDashboard />
+        </WelcomeDialogProvider>,
+    );
+    await settleProviders();
+
+    try {
+        expect(screen.queryByText('Event timeline')).not.toBeInTheDocument();
+    } finally {
+        finishLoading();
+    }
     expect(
         await screen.findByRole('region', {
             name: 'Create and connect your first flag',

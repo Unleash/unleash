@@ -52,11 +52,11 @@ export const DashboardOnboarding = ({ children }: { children?: ReactNode }) => {
         error: configError,
     } = useUiConfig();
 
-    if (!permissions || !flags || projectsLoading || configLoading) {
-        return children;
-    }
     if (permissionsError || flagsError || projectsError || configError) {
         return children;
+    }
+    if (!permissions || !flags || projectsLoading || configLoading) {
+        return null;
     }
 
     const writableProjects = projects.filter((project) =>

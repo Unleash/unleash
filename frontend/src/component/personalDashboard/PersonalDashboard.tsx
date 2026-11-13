@@ -281,7 +281,7 @@ export const PersonalDashboard = () => {
     const { expandFlags, expandProjects, expandTimeline } = useDashboardState();
     const trackDashboard = useTracking(personalDashboardTracking);
     const { setWelcomeDialog } = useWelcomeDialogContext();
-    const { isOss } = useUiConfig();
+    const { isOss, loading: configLoading } = useUiConfig();
     const dashboardV2 = useUiFlag('dashboardV2');
     const dashboardV2Widgets = useUiFlag('dashboardV2Widgets');
     const showOnboardingWidgets = dashboardV2 && dashboardV2Widgets;
@@ -297,6 +297,10 @@ export const PersonalDashboard = () => {
             timelineSection: sectionState(expandTimeline),
         });
     }, []);
+
+    if (configLoading) {
+        return null;
+    }
 
     const dashboardContent = (
         <>

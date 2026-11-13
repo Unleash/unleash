@@ -21,6 +21,7 @@ import { SidebarLink } from './sidebar/SidebarLink.tsx';
 import { SidebarList } from './sidebar/SidebarList.tsx';
 import { SidebarMoreToggle } from './sidebar/SidebarMoreToggle.tsx';
 import { SidebarSection } from './sidebar/SidebarSection.tsx';
+import { MyProjectsSection } from './projects/MyProjectsSection.tsx';
 
 const SIDEBAR_WIDTH = 240;
 
@@ -38,6 +39,7 @@ const StyledSidebar = styled('nav')(({ theme }) => ({
     flex: 'none',
     display: 'flex',
     flexDirection: 'column',
+    overflowY: 'auto',
     padding: theme.spacing(1.5),
     backgroundColor: theme.palette.appShell.sidebar,
 }));
@@ -92,6 +94,7 @@ const Sidebar: FC = () => {
                 ) : null}
             </SidebarList>
             <WorkspaceSection />
+            <MyProjectsSection />
         </StyledSidebar>
     );
 };

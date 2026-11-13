@@ -61,6 +61,45 @@ describe('validate incoming feature naming data', () => {
         }
     });
 
+    test('every branch of a top-level alternation has to match the whole example', () => {
+        const pattern = 'release-[a-z]+|exp-[a-z]+';
+
+        for (const example of ['release-checkout', 'exp-checkout']) {
+            expect(checkFeatureNamingData({ pattern, example })).toMatchObject({
+                state: 'valid',
+            });
+        }
+
+        for (const example of [
+            'release-checkout-2',
+            'my-exp-checkout',
+            'release-',
+        ]) {
+            expect(checkFeatureNamingData({ pattern, example })).toMatchObject({
+                state: 'invalid',
+            });
+        }
+    });
+
+    test.each([
+        '[a-z',
+        '(release',
+        'release-)|(exp-',
+        '+',
+    ])('patterns that are not valid regular expressions (%s) are invalid, with or without an example', (pattern) => {
+        for (const data of [{ pattern }, { pattern, example: 'release-' }]) {
+            const result = checkFeatureNamingData(data);
+
+            if (result.state === 'valid') {
+                expect.fail('Expected invalid result');
+            }
+
+            expect(result.reasons).toStrictEqual([
+                expect.stringContaining("isn't a valid regular expression"),
+            ]);
+        }
+    });
+
     test.each([
         ' ',
         '\\t',
@@ -150,6 +189,47 @@ describe('validate feature flag names against a pattern', () => {
         );
 
         expect(result).toMatchObject({ state: 'valid' });
+    });
+
+    test('should apply ^ and $ to every branch of a top-level alternation', async () => {
+        const pattern = 'release-[a-z]+|exp-[a-z]+';
+        const validFeatures = ['release-checkout', 'exp-checkout'];
+        const invalidFeatures = [
+            'release-checkout-2',
+            'release-x and anything else',
+            'my-exp-checkout',
+            'checkout',
+        ];
+
+        expect(
+            checkFeatureFlagNamesAgainstPattern(
+                [...validFeatures, ...invalidFeatures],
+                pattern,
+            ),
+        ).toMatchObject({
+            state: 'invalid',
+            invalidNames: new Set(invalidFeatures),
+        });
+
+        expect(
+            checkFeatureFlagNamesAgainstPattern(validFeatures, pattern),
+        ).toMatchObject({ state: 'valid' });
+    });
+
+    test.each([
+        '^release-[a-z]+$|^exp-[a-z]+$',
+        '(release|exp)-[a-z]+',
+        '(?:release|exp)-[a-z]+',
+    ])('should keep treating the already anchored or grouped pattern %s the same way', async (pattern) => {
+        expect(
+            checkFeatureFlagNamesAgainstPattern(
+                ['release-checkout', 'exp-checkout', 'my-exp-checkout-2'],
+                pattern,
+            ),
+        ).toMatchObject({
+            state: 'invalid',
+            invalidNames: new Set(['my-exp-checkout-2']),
+        });
     });
 
     test('should validate names as if the pattern is surrounded by ^ and $.', async () => {

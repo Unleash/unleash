@@ -55,4 +55,19 @@ describe('validateFeatureNaming', () => {
 
         expect(result.state).toBe('invalid');
     });
+
+    test.each([
+        ['valid', 'release-checkout'],
+        ['valid', 'exp-checkout'],
+        ['invalid', 'release-checkout-2'],
+        ['invalid', 'my-exp-checkout'],
+    ])('the implicit ^ and $ apply to every branch of a top-level alternation: %s for %s', (state, example) => {
+        const result = validateFeatureNamingExample({
+            pattern: 'release-[a-z]+|exp-[a-z]+',
+            example,
+            featureNamingPatternError: undefined,
+        });
+
+        expect(result.state).toBe(state);
+    });
 });

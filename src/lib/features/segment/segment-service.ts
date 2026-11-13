@@ -20,6 +20,7 @@ import type {
     StrategiesUsingSegment,
 } from './segment-service-interface.js';
 import {
+    ConflictError,
     InvalidOperationError,
     NotFoundError,
     PermissionError,
@@ -282,6 +283,14 @@ export class SegmentService implements ISegmentService {
 
     async unprotectedDelete(id: number, auditUser: IAuditUser): Promise<void> {
         const segment = await this.segmentStore.get(id);
+        // pending change requests don't count: one that uses the segment fails at its own apply
+        const strategies =
+            await this.featureStrategiesStore.getStrategiesBySegment(id);
+        if (strategies.length > 0) {
+            throw new ConflictError(
+                `Segment "${segment?.name}" is in use. To delete it, first remove it from all flags.`,
+            );
+        }
         await this.segmentStore.delete(id);
         await this.eventService.storeEvent(
             new SegmentDeletedEvent({

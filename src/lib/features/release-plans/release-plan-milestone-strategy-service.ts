@@ -8,6 +8,8 @@ import type { IUser } from '../../types/user.js';
 import type { Logger } from '../../logger.js';
 import type { IReleasePlanMilestoneStrategyStore } from './release-plan-milestone-strategy-store.js';
 import type { FeatureToggleService } from '../feature-toggle/feature-toggle-service.js';
+import type { VariantPayloadValidator } from '../payload-schema/variant-payload-validator.js';
+import type { IFlagResolver } from '../../types/index.js';
 import {
     PermissionError,
     SKIP_CHANGE_REQUEST,
@@ -27,6 +29,8 @@ export class ReleasePlanMilestoneStrategyService {
     private readonly milestoneStrategyStore: IReleasePlanMilestoneStrategyStore;
     private readonly featureToggleService: FeatureToggleService;
     private changeRequestAccessReadModel: IChangeRequestAccessReadModel;
+    private readonly variantPayloadValidator: VariantPayloadValidator;
+    private readonly flagResolver: IFlagResolver;
 
     constructor(
         {
@@ -36,7 +40,11 @@ export class ReleasePlanMilestoneStrategyService {
             featureToggleService,
         }: Pick<IUnleashServices, 'featureToggleService'>,
         changeRequestAccessReadModel: IChangeRequestAccessReadModel,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        variantPayloadValidator: VariantPayloadValidator,
+        {
+            getLogger,
+            flagResolver,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
     ) {
         this.logger = getLogger(
             'services/release-plan-milestone-strategy-service.ts',
@@ -44,6 +52,8 @@ export class ReleasePlanMilestoneStrategyService {
         this.milestoneStrategyStore = milestoneStrategyStore;
         this.featureToggleService = featureToggleService;
         this.changeRequestAccessReadModel = changeRequestAccessReadModel;
+        this.variantPayloadValidator = variantPayloadValidator;
+        this.flagResolver = flagResolver;
     }
 
     async updateStrategy(
@@ -94,6 +104,15 @@ export class ReleasePlanMilestoneStrategyService {
         const { projectId, environment, featureName } = context;
 
         await this.milestoneStrategyStore.get(id); // Validate milestone strategy exists
+        if (
+            strategy.variants &&
+            this.flagResolver.isEnabled('payloadSchemas')
+        ) {
+            await this.variantPayloadValidator.validateVariants(
+                featureName,
+                strategy.variants,
+            );
+        }
 
         let isActive: boolean;
         try {

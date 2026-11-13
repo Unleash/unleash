@@ -10,6 +10,8 @@ import {
     SKIP_CHANGE_REQUEST,
 } from '../../server-impl.js';
 import type FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store.js';
+import { FakePayloadSchemaReadModel } from '../payload-schema/fake-payload-schema-read-model.js';
+import { VariantPayloadValidator } from '../payload-schema/variant-payload-validator.js';
 
 const defaultContext = {
     projectId: 'default',
@@ -83,6 +85,7 @@ test('throws PermissionError when user cannot bypass change requests', async () 
         { releasePlanMilestoneStrategyStore: milestoneStrategyStore },
         { featureToggleService },
         new FakeChangeRequestAccessReadModel(false),
+        new VariantPayloadValidator(new FakePayloadSchemaReadModel()),
         config,
     );
 
@@ -99,4 +102,60 @@ test('throws PermissionError when user cannot bypass change requests', async () 
             TEST_AUDIT_USER,
         ),
     ).rejects.toThrow(SKIP_CHANGE_REQUEST);
+});
+
+const createServiceWithPayloadSchemas = () => {
+    const payloadSchemaReadModel = new FakePayloadSchemaReadModel();
+    const service = createFakeReleasePlanMilestoneStrategyService(
+        createTestConfig({ experimental: { flags: { payloadSchemas: true } } }),
+        { payloadSchemaReadModel },
+    );
+    return { ...service, payloadSchemaReadModel };
+};
+
+const insertInactiveMilestoneStrategy = (
+    store: FakeReleasePlanMilestoneStrategyStore,
+) =>
+    store.insert({
+        milestoneId: 'milestone-1',
+        name: 'default',
+        sortOrder: 0,
+        parameters: {},
+        constraints: [],
+        variants: [],
+    });
+
+const jsonVariant = (value: string) => ({
+    name: 'blue',
+    weight: 1000,
+    weightType: 'variable' as const,
+    stickiness: 'default',
+    payload: { type: 'json' as const, value },
+});
+
+test("a milestone strategy cannot be changed to a variant payload that breaks the flag's payload schema", async () => {
+    const {
+        milestoneStrategyStore,
+        releasePlanMilestoneStrategyService,
+        payloadSchemaReadModel,
+    } = createServiceWithPayloadSchemas();
+    payloadSchemaReadModel.setPayloadSchema(defaultContext.featureName, {
+        type: 'object',
+        properties: { color: { type: 'string' } },
+    });
+    const milestoneStrategy = await insertInactiveMilestoneStrategy(
+        milestoneStrategyStore,
+    );
+
+    const update =
+        releasePlanMilestoneStrategyService.unprotectedUpdateStrategy(
+            milestoneStrategy.id,
+            { variants: [jsonVariant('{"color":1}')] },
+            defaultContext,
+            TEST_AUDIT_USER,
+        );
+
+    await expect(update).rejects.toThrow(
+        'does not match the payload schema of feature "Demo"',
+    );
 });

@@ -6,6 +6,8 @@ import {
     type ButtonProps,
     InputAdornment,
     styled,
+    ToggleButton,
+    ToggleButtonGroup,
     Tooltip,
 } from '@mui/material';
 import type { IPayload } from 'interfaces/featureToggle';
@@ -25,6 +27,9 @@ import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReader
 import type { IFeatureVariantEdit } from '../EnvironmentVariantsModal.tsx';
 import type { FailedVariantsSubmit } from 'component/feature/StrategyTypes/StrategyVariants';
 import Delete from '@mui/icons-material/Delete';
+import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
+import { useUiFlag } from 'hooks/useUiFlag';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const LazyReactJSONEditor = React.lazy(
     () => import('component/common/ReactJSONEditor/ReactJSONEditor'),
@@ -78,6 +83,13 @@ const FieldLabelRow = styled('div')(({ theme }) => ({
     height: theme.spacing(2.5),
 }));
 
+const ValueFieldLabelRow = styled(FieldLabelRow)(({ theme }) => ({
+    justifyContent: 'space-between',
+    '&[data-with-toggle]': {
+        marginBottom: theme.spacing(1),
+    },
+}));
+
 const FieldLabel = styled('label')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     fontWeight: theme.typography.fontWeightBold,
@@ -112,6 +124,19 @@ const ValueInput = styled(Input)({
         fontFamily: 'monospace',
     },
 });
+
+const CompactToggleButton = styled(ToggleButton)(({ theme }) => ({
+    padding: theme.spacing(0.25, 1),
+    lineHeight: 1.5,
+}));
+
+const SchemaFormPlaceholder = styled('div')(({ theme }) => ({
+    padding: theme.spacing(1.5),
+    border: `1px dashed ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadiusMedium,
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.body2.fontSize,
+}));
 
 const RemoveButton = styled(Button)(({ theme }) => ({
     alignSelf: 'flex-start',
@@ -179,6 +204,7 @@ interface IVariantFormProps {
     removeVariant: (variantId: string) => void;
     decorationColor?: string;
     weightsError?: boolean;
+    payloadSchema?: JsonSchemaProperty;
     failedVariantsSubmit?: FailedVariantsSubmit;
 }
 
@@ -190,8 +216,16 @@ export const VariantForm = ({
     removeVariant,
     decorationColor,
     weightsError,
+    payloadSchema,
     failedVariantsSubmit,
 }: IVariantFormProps) => {
+    const { isEnterprise } = useUiConfig();
+    const payloadSchemasEnabled = useUiFlag('payloadSchemas') && isEnterprise();
+    const schemaActive = payloadSchemasEnabled && Boolean(payloadSchema);
+    const [jsonEditMode, setJsonEditMode] = useState<'form' | 'json'>(
+        schemaActive ? 'form' : 'json',
+    );
+
     const [name, setName] = useState(variant.name);
     const hasFixedWeight = variant.weightType === WeightType.FIX;
     const [percentage, setPercentage] = useState(
@@ -328,6 +362,7 @@ export const VariantForm = ({
         ? FIXED_WEIGHT_EXPLANATION
         : VARIABLE_WEIGHT_EXPLANATION;
     const valueInputId = `variant-payload-value-${variant.id}`;
+    const showJsonEditModeToggle = schemaActive && payload.type === 'json';
 
     return (
         <StyledVariantForm data-testid='VARIANT'>
@@ -403,10 +438,36 @@ export const VariantForm = ({
                 />
             </TopRow>
             <Field>
-                <FieldLabelRow>
+                <ValueFieldLabelRow data-with-toggle={showJsonEditModeToggle}>
                     <FieldLabel htmlFor={valueInputId}>Value</FieldLabel>
-                </FieldLabelRow>
-                {payload.type === 'json' ? (
+                    {showJsonEditModeToggle ? (
+                        <ToggleButtonGroup
+                            size='small'
+                            color='primary'
+                            value={jsonEditMode}
+                            exclusive
+                            onChange={(_event, value) => {
+                                if (value !== null) {
+                                    setJsonEditMode(value);
+                                }
+                            }}
+                        >
+                            <CompactToggleButton value='form'>
+                                Form
+                            </CompactToggleButton>
+                            <CompactToggleButton value='json'>
+                                JSON
+                            </CompactToggleButton>
+                        </ToggleButtonGroup>
+                    ) : null}
+                </ValueFieldLabelRow>
+                {payload.type === 'json' &&
+                jsonEditMode === 'form' &&
+                schemaActive ? (
+                    <SchemaFormPlaceholder>
+                        Schema-based form — coming soon.
+                    </SchemaFormPlaceholder>
+                ) : payload.type === 'json' ? (
                     <Suspense fallback={null}>
                         <LazyReactJSONEditor
                             content={{ text: payload.value }}

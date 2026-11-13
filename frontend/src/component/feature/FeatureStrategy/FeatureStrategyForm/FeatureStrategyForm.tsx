@@ -233,6 +233,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
             clearFailedVariantsSubmit={() => setFailedVariantsSubmit(undefined)}
             validateParameter={validateParameter}
             canRenamePreexistingVariants={canRenamePreexistingVariants}
+            payloadSchema={feature.payloadSchema}
             alertContent={
                 changeRequestAlert ? (
                     <StyledAlertBox>{changeRequestAlert}</StyledAlertBox>

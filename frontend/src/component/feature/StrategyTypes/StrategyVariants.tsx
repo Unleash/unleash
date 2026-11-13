@@ -6,6 +6,7 @@ import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/Feature
 import { WeightType } from '../../../constants/variantTypes.ts';
 import { styled, useTheme, Button, Tabs } from '@mui/material';
 import type { StrategyFormState } from 'interfaces/strategy';
+import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 import { useEventTracker } from 'hooks/useEventTracker';
 import Add from '@mui/icons-material/Add';
 import { VariantPill } from './VariantPill/VariantPill.tsx';
@@ -39,6 +40,7 @@ interface StrategyVariantsProps<T extends StrategyFormState> {
     failedVariantsSubmit?: FailedVariantsSubmit;
     clearFailedVariantsSubmit?: () => void;
     canRenamePreexistingVariants?: boolean;
+    payloadSchema?: JsonSchemaProperty;
 }
 
 const indicesToFixAroundHandle = (
@@ -69,6 +71,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
     failedVariantsSubmit,
     clearFailedVariantsSubmit,
     canRenamePreexistingVariants,
+    payloadSchema,
 }: StrategyVariantsProps<T>) => {
     const { trackEvent } = useEventTracker();
     const initialVariants = (strategy.variants || []).map(
@@ -349,6 +352,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
                 key={selectedVariant.id}
                 variant={selectedVariant}
                 variants={variantsEdit}
+                payloadSchema={payloadSchema}
                 changeWeight={(weight) =>
                     changeVariantWeight(weight, selectedVariant.id)
                 }

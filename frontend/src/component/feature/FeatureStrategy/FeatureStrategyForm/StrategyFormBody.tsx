@@ -10,6 +10,7 @@ import {
     type Theme,
 } from '@mui/material';
 import type { IStrategy, StrategyFormState } from 'interfaces/strategy';
+import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 import produce from 'immer';
 import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType.tsx';
 import type { IFormErrors } from 'hooks/useFormErrors';
@@ -39,6 +40,7 @@ export interface StrategyFormBodyProps<T extends StrategyFormState> {
 
     validateParameter?: (name: string, value: ParametersSchema[string]) => void;
     canRenamePreexistingVariants?: boolean;
+    payloadSchema?: JsonSchemaProperty;
 
     alertContent?: React.ReactNode;
     allowEnableDisable?: boolean;
@@ -155,6 +157,7 @@ export const StrategyFormBody = <T extends StrategyFormState>({
     clearFailedVariantsSubmit,
     validateParameter,
     canRenamePreexistingVariants,
+    payloadSchema,
     alertContent,
     allowEnableDisable,
     statusContent: environmentDisabledText, // todo: consider renaming prop when deleting singlePageStrategyForm flag
@@ -372,6 +375,7 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                                     canRenamePreexistingVariants={
                                         canRenamePreexistingVariants
                                     }
+                                    payloadSchema={payloadSchema}
                                 />
                             </AccordionDetails>
                         </StyledAccordion>

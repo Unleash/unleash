@@ -5,7 +5,7 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { formatPayloadSchemaPath } from './payloadSchemaPaths.ts';
 import { schemaFields } from './schemaFields.ts';
-import type { JsonSchemaProperty } from './payloadSchemaTypes.ts';
+import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 import {
     StyledMetaDataItem,
     StyledMetaDataItemLabel,

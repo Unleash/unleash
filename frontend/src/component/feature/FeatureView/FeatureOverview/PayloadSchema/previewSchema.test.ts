@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import type { JsonSchemaProperty } from './payloadSchemaTypes.ts';
+import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 import { formValueWithExamplesAsDefaults } from './previewSchema';
 
 test('resolves each property from its own default, then the root default, then its own example, then the root example', () => {

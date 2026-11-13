@@ -19,7 +19,7 @@ import {
     isPlainStringOrNumberSchema,
     type SchemaMatcher,
 } from './schemaMatchers.ts';
-import type { JsonSchemaProperty } from './payloadSchemaTypes.ts';
+import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 import { SchemaFormArrayField } from './SchemaFormCollectionField.tsx';
 import { SchemaFieldDescription } from './SchemaFieldDescription.tsx';
 

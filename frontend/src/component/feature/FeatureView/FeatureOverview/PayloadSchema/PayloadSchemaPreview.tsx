@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { styled, Typography } from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
-import type { JsonSchemaProperty } from './payloadSchemaTypes.ts';
+import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 import { SchemaForm } from './SchemaForm.tsx';
 import { formValueWithExamplesAsDefaults } from './previewSchema.ts';
 import { isObjectSchema } from './schemaMatchers.ts';

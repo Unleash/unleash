@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import type { JsonSchemaProperty } from './payloadSchemaTypes.ts';
+import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 import { schemaFields } from './schemaFields.ts';
 
 test('a schema without properties has no fields', () => {

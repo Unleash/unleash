@@ -7,6 +7,7 @@ import type { IFeatureStrategy } from './strategy.js';
 import type { ITag } from './tags.js';
 import type { IReleasePlan } from './releasePlans.js';
 import type { ISafeguard } from './safeguard.js';
+import type { JsonSchemaProperty } from './jsonSchema.js';
 
 /**
  * @deprecated use FeatureSchema from openapi
@@ -86,7 +87,7 @@ export interface IFeatureToggle {
     };
     collaborators?: CollaboratorData;
     links?: FeatureLink[];
-    payloadSchema?: Record<string, unknown>;
+    payloadSchema?: JsonSchemaProperty;
 }
 
 export interface IDependency {

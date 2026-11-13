@@ -1,4 +1,4 @@
-import type { JsonSchemaProperty } from './payloadSchemaTypes.ts';
+import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 import { isObjectWithPropertiesSchema } from './schemaMatchers.ts';
 
 const firstExample = (schema: JsonSchemaProperty): unknown => {

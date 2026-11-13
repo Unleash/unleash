@@ -82,7 +82,14 @@ const variantRowReducer = (acc, tokenRow) => {
         variant,
         count,
     } = tokenRow;
-    const key = `${featureName}_${appName}_${environment}_${timestamp}_${yes}_${no}`;
+    const key = JSON.stringify([
+        featureName,
+        appName,
+        environment,
+        timestamp,
+        yes,
+        no,
+    ]);
     if (!acc[key]) {
         acc[key] = {
             featureName,
@@ -113,9 +120,14 @@ const variantRowReducerV2 = (acc, tokenRow) => {
         variant,
         count,
     } = tokenRow;
-    const key = `${featureName}_${appName}_${environment}_${
-        timestamp || date
-    }_${yes}_${no}`;
+    const key = JSON.stringify([
+        featureName,
+        appName,
+        environment,
+        timestamp || date,
+        yes,
+        no,
+    ]);
     if (!acc[key]) {
         acc[key] = {
             featureName,

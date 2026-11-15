@@ -1,5 +1,11 @@
-import { expect, test } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { expect, test, vi } from 'vitest';
+import {
+    act,
+    fireEvent,
+    render,
+    screen,
+    waitFor,
+} from '@testing-library/react';
 import { useRef } from 'react';
 import { useOnBlur } from './useOnBlur.ts';
 
@@ -52,4 +58,60 @@ test('should call the callback when blurring outside of the container', async ()
     await waitFor(() => {
         expect(mockCallbackCallCount).toBe(1);
     });
+});
+
+const Fixture = ({ onBlur }: { onBlur: () => void }) => {
+    const ref = useRef<HTMLDivElement>(null);
+    useOnBlur(ref, onBlur);
+    return (
+        <>
+            <div ref={ref}>
+                <input aria-label='inside' />
+                <input aria-label='second' />
+            </div>
+            <button type='button'>outside</button>
+        </>
+    );
+};
+
+const flushBlur = async () => {
+    await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 10));
+    });
+};
+
+test('retains the inside-pointer exemption when mouseup precedes the deferred blur handler', async () => {
+    const onBlur = vi.fn();
+    render(<Fixture onBlur={onBlur} />);
+    const input = screen.getByLabelText('inside');
+    input.focus();
+    fireEvent.mouseDown(input);
+    screen.getByRole('button').focus();
+    fireEvent.mouseUp(input);
+    await flushBlur();
+    expect(onBlur).not.toHaveBeenCalled();
+});
+
+test('does not fire when focus moves inside the container', async () => {
+    const onBlur = vi.fn();
+    render(<Fixture onBlur={onBlur} />);
+    screen.getByLabelText('inside').focus();
+    screen.getByLabelText('second').focus();
+    await flushBlur();
+    expect(onBlur).not.toHaveBeenCalled();
+});
+
+test.each([
+    false,
+    true,
+])('fires on focus leaving the container (outside pointer: %s)', async (pointer) => {
+    const onBlur = vi.fn();
+    render(<Fixture onBlur={onBlur} />);
+    screen.getByLabelText('inside').focus();
+    const outside = screen.getByRole('button');
+    if (pointer) fireEvent.mouseDown(outside);
+    outside.focus();
+    if (pointer) fireEvent.mouseUp(outside);
+    await flushBlur();
+    expect(onBlur).toHaveBeenCalledOnce();
 });

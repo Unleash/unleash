@@ -1,7 +1,7 @@
-import { expect, test } from 'vitest';
+import { expect, test, vi } from 'vitest';
 import { createLocalStorage } from 'utils/createLocalStorage';
 import { render } from 'utils/testRenderer';
-import { fireEvent, screen } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import { Search } from './Search.tsx';
 import { SEARCH_INPUT } from 'utils/testIds';
 
@@ -83,4 +83,30 @@ test('should not overwrite text the user is typing when a stale initial value ar
     rerender(<Search onChange={() => {}} initialValue='from-url' />);
 
     expect(input).toHaveValue('from-url');
+});
+
+test.each([
+    'Escape',
+    'focus-out',
+])('should close history on %s after a completed click in the focused input', async (exit) => {
+    const id = `completed-click-${exit}`;
+    const { setValue } = createLocalStorage(`Search:${id}:v1`, {});
+    setValue({ query: 'saved-click-query' });
+    const onBlur = vi.fn();
+    render(<Search onChange={() => {}} onBlur={onBlur} id={id} />);
+    const input = screen.getByTestId(SEARCH_INPUT);
+    await act(async () => input.focus());
+    await screen.findByText('saved-click-query');
+    fireEvent.mouseDown(input);
+    fireEvent.mouseUp(input);
+    fireEvent.click(input);
+    if (exit === 'Escape') {
+        fireEvent.keyDown(input, { key: 'Escape' });
+    } else {
+        await act(async () => input.blur());
+    }
+    await waitFor(() => {
+        expect(screen.queryByText('saved-click-query')).not.toBeInTheDocument();
+    });
+    expect(onBlur).toHaveBeenCalledOnce();
 });

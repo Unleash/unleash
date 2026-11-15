@@ -292,6 +292,7 @@ export const FeatureToggleListTable: FC = () => {
                                 Unknown flags
                             </Link>
                             <ExportFlags
+                                disabled={loading || data.length === 0}
                                 onClick={() => setShowExportDialog(true)}
                             />
                         </>

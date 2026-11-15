@@ -67,7 +67,10 @@ export const ExportDialog = ({
         ref.current?.removeChild(link);
     };
 
+    const noSelection = data.length === 0 && !project;
+
     const exportFlags = async () => {
+        if (noSelection) return;
         const res = await createExport({
             features: data.map((feature) => feature.name),
             environment: selected,
@@ -86,6 +89,7 @@ export const ExportDialog = ({
             onSubmit={exportFlags}
             onError={(error) => setToastApiError(formatUnknownError(error))}
             tracking={tracking}
+            disabledPrimaryButton={noSelection}
             primaryButtonText='Export selection'
             secondaryButtonText='Cancel'
         >
@@ -108,7 +112,9 @@ export const ExportDialog = ({
                     }
                     elseShow={
                         <span>
-                            You will export all feature flags from this project.
+                            {project
+                                ? 'You will export all feature flags from this project.'
+                                : 'No feature flags match the current selection.'}
                         </span>
                     }
                 />

@@ -14,6 +14,7 @@ import { OpenedProjectSection } from './OpenedProjectSection.tsx';
 const server = testServerSetup();
 
 beforeEach(() => {
+    sessionStorage.clear();
     testServerRoute(server, '/api/admin/projects', {
         projects: [
             { id: 'alpha', name: 'Alpha', favorite: true },
@@ -127,6 +128,26 @@ test('keeps More open on the opened project after leaving it', async () => {
     ).toHaveAttribute('aria-expanded', 'true');
 });
 
+test('keeps More open after returning to the opened project', async () => {
+    await renderSection(
+        '/projects/gamma',
+        <>
+            <Link to='/personal'>Go home</Link>
+            <Link to='/projects/gamma'>Back to Gamma</Link>
+        </>,
+    );
+    await userEvent.click(
+        projectGroup('Gamma').getByRole('button', { name: 'More' }),
+    );
+    await userEvent.click(screen.getByRole('link', { name: 'Go home' }));
+
+    await userEvent.click(screen.getByRole('link', { name: 'Back to Gamma' }));
+
+    expect(
+        projectGroup('Gamma').getByRole('button', { name: 'Less' }),
+    ).toHaveAttribute('aria-expanded', 'true');
+});
+
 test('starts the next opened project with More closed', async () => {
     await renderSection(
         '/projects/gamma',
@@ -201,11 +222,17 @@ test('hides the section until it is known which projects are mine', async () => 
     expect(openedSection()).not.toBeInTheDocument();
 });
 
-test('forgets the opened project after a reload', async () => {
+test('keeps the opened project with More open after a reload', async () => {
     const { unmount } = await renderSection('/projects/gamma');
+    await userEvent.click(
+        projectGroup('Gamma').getByRole('button', { name: 'More' }),
+    );
     unmount();
 
     await renderSection('/personal');
+    await userEvent.click(screen.getByRole('button', { name: 'Gamma' }));
 
-    expect(openedSection()).not.toBeInTheDocument();
+    expect(
+        projectGroup('Gamma').getByRole('button', { name: 'Less' }),
+    ).toHaveAttribute('aria-expanded', 'true');
 });

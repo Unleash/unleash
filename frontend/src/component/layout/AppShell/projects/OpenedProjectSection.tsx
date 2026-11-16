@@ -1,7 +1,8 @@
-import { type FC, useState } from 'react';
+import type { FC } from 'react';
 import { matchPath, useLocation } from 'react-router';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useMyProjects } from 'component/project/ProjectList/hooks/useMyProjects';
+import { useSessionStorageState } from 'hooks/useSessionStorageState';
 import { SidebarSection } from '../sidebar/SidebarSection.tsx';
 import {
     ProjectNavGroup,
@@ -20,7 +21,12 @@ export const OpenedProjectSection: FC = () => {
     const { projects } = useProjects();
     const { myProjects, profileLoading, profileError } =
         useMyProjects(projects);
-    const [openedProject, setOpenedProject] = useState<OpenedProject>();
+    // Some routes render without the sidebar, so the opened project has to
+    // outlive this component. Session storage, not local storage, because it
+    // should only be preserved within a single session.
+    const [openedProject, setOpenedProject] = useSessionStorageState<
+        OpenedProject | undefined
+    >('app-shell:opened-project', undefined);
 
     const isMine = (projectId: string) =>
         myProjects.some(({ id }) => id === projectId);

@@ -319,23 +319,25 @@ export const PersonalDashboard = () => {
                     Welcome {name}
                 </Typography>
 
-                <ViewKeyConceptsButton
-                    sx={{
-                        fontWeight: 'normal',
-                    }}
-                    size={'small'}
-                    variant='text'
-                    onClick={() => {
-                        trackEvent('personal-dashboard', {
-                            props: {
-                                eventType: 'open key concepts',
-                            },
-                        });
-                        setWelcomeDialog('open');
-                    }}
-                >
-                    View key concepts
-                </ViewKeyConceptsButton>
+                {!showOnboardingWidgets ? (
+                    <ViewKeyConceptsButton
+                        sx={{
+                            fontWeight: 'normal',
+                        }}
+                        size={'small'}
+                        variant='text'
+                        onClick={() => {
+                            trackEvent('personal-dashboard', {
+                                props: {
+                                    eventType: 'open key concepts',
+                                },
+                            });
+                            setWelcomeDialog('open');
+                        }}
+                    >
+                        View key concepts
+                    </ViewKeyConceptsButton>
+                ) : null}
             </WelcomeSection>
 
             {showOnboardingWidgets ? (

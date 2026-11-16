@@ -326,6 +326,9 @@ test.each([
     await settleProviders();
 
     expect(
+        screen.getByRole('button', { name: 'View key concepts' }),
+    ).toBeInTheDocument();
+    expect(
         screen.queryByRole('region', {
             name: 'Create and connect your first flag',
         }),
@@ -344,6 +347,9 @@ test('replaces normal dashboard content with setup widgets', async () => {
             name: 'Create and connect your first flag',
         }),
     ).toBeInTheDocument();
+    expect(
+        screen.queryByRole('button', { name: 'View key concepts' }),
+    ).not.toBeInTheDocument();
     expect(
         screen.queryByRole('region', { name: 'My projects' }),
     ).not.toBeInTheDocument();

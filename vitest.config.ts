@@ -2,6 +2,19 @@ import { defineConfig, configDefaults } from 'vitest/config';
 
 export default defineConfig({
     test: {
+        changed: process.env.CI_TEST_BASE || false,
+        passWithNoTests: Boolean(process.env.CI_TEST_BASE),
+        forceRerunTriggers: [
+            ...configDefaults.forceRerunTriggers,
+            // Runtime assets, dependencies and shared setup may bypass imports.
+            '**/pnpm-{lock,workspace}.yaml',
+            '**/.npmrc',
+            '**/.github/workflows/*.{yml,yaml}',
+            '**/scripts/*.{js,cjs,mjs,ts}',
+            '**/src/{test,tests,fixtures,migrations,mailtemplates}/**',
+            '**/src/**/*.json',
+            '**/*{setup,config}*.{ts,json}',
+        ],
         globals: true,
         globalSetup: ['./src/test-setup.ts'],
         setupFiles: [

@@ -277,65 +277,42 @@ export const CommandBar = () => {
         };
     };
 
-    useKeyboardShortcut(
-        {
-            key: 'ArrowDown',
-            preventDefault: true,
-            anchorRefs: [searchContainerRef],
-        },
-        () => {
-            const itemsAndIndex = findCommandBarLinksAndSelectedIndex();
-            if (!itemsAndIndex) return;
-            const { allCommandBarLinks, selectedIndex } = itemsAndIndex;
+    const onNavigationKeyDown = (event: React.KeyboardEvent) => {
+        if (
+            !showSuggestions ||
+            event.defaultPrevented ||
+            event.ctrlKey ||
+            event.metaKey ||
+            event.altKey ||
+            event.shiftKey ||
+            (event.key !== 'ArrowDown' && event.key !== 'ArrowUp')
+        ) {
+            return;
+        }
 
-            const newIndex = selectedIndex + 1;
-            if (newIndex >= allCommandBarLinks.length) {
-                const element = searchInputRef.current;
-                if (element) {
-                    element.focus();
-                    element.setSelectionRange(
-                        element.value.length,
-                        element.value.length,
-                    );
-                }
-            } else {
-                (allCommandBarLinks[newIndex] as HTMLElement).focus();
+        const itemsAndIndex = findCommandBarLinksAndSelectedIndex();
+        if (!itemsAndIndex) return;
+        const { allCommandBarLinks, selectedIndex } = itemsAndIndex;
+
+        if (selectedIndex === -1 && event.target !== searchInputRef.current) {
+            return;
+        }
+
+        event.preventDefault();
+        const newIndex = selectedIndex + (event.key === 'ArrowDown' ? 1 : -1);
+
+        if (newIndex === -1 || newIndex === allCommandBarLinks.length) {
+            const input = searchInputRef.current;
+            if (input) {
+                input.focus();
+                input.setSelectionRange(input.value.length, input.value.length);
             }
-        },
-    );
-    useKeyboardShortcut(
-        {
-            key: 'ArrowUp',
-            preventDefault: true,
-            anchorRefs: [searchContainerRef],
-        },
-        () => {
-            const itemsAndIndex = findCommandBarLinksAndSelectedIndex();
-            if (!itemsAndIndex) return;
-            const { allCommandBarLinks, selectedIndex } = itemsAndIndex;
-
-            const newIndex = selectedIndex - 1;
-
-            if (newIndex >= 0) {
-                (allCommandBarLinks[newIndex] as HTMLElement).focus();
-            } else if (newIndex === -1) {
-                const element = searchInputRef.current;
-                if (element) {
-                    element.focus();
-                    element.setSelectionRange(
-                        element.value.length,
-                        element.value.length,
-                    );
-                }
-            } else if (newIndex === -2) {
-                (
-                    allCommandBarLinks[
-                        allCommandBarLinks.length - 1
-                    ] as HTMLElement
-                ).focus();
-            }
-        },
-    );
+        } else {
+            const index =
+                newIndex === -2 ? allCommandBarLinks.length - 1 : newIndex;
+            (allCommandBarLinks[index] as HTMLElement).focus();
+        }
+    };
 
     useKeyboardShortcut({ key: 'Tab' }, () => {
         setShowSuggestions(false);
@@ -357,6 +334,7 @@ export const CommandBar = () => {
     const searchBar = (
         <StyledContainer
             ref={searchContainerRef}
+            onKeyDown={onNavigationKeyDown}
             active={showSuggestions}
             compact={isCompact}
         >

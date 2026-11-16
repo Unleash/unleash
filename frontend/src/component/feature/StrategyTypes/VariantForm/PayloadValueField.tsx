@@ -4,9 +4,12 @@ import {
     styled,
     ToggleButton,
     ToggleButtonGroup,
+    Tooltip,
 } from '@mui/material';
 import Input from 'component/common/Input/Input.tsx';
+import { SchemaForm } from 'component/common/SchemaForm/SchemaForm.tsx';
 import type { IPayload } from 'interfaces/featureToggle.ts';
+import type { JsonSchemaProperty } from 'interfaces/jsonSchema.ts';
 
 const LazyReactJSONEditor = React.lazy(
     () => import('component/common/ReactJSONEditor/ReactJSONEditor.tsx'),
@@ -47,13 +50,63 @@ const CompactToggleButton = styled(ToggleButton)(({ theme }) => ({
     lineHeight: 1.5,
 }));
 
-const SchemaFormPlaceholder = styled('div')(({ theme }) => ({
-    padding: theme.spacing(1.5),
-    border: `1px dashed ${theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadiusMedium,
-    color: theme.palette.text.secondary,
-    fontSize: theme.typography.body2.fontSize,
-}));
+const isPlainObject = (value: unknown): value is Record<string, unknown> =>
+    typeof value === 'object' && value !== null && !Array.isArray(value);
+
+const jsonFormValueFor = (
+    payload: IPayload,
+): Record<string, unknown> | undefined => {
+    if (payload.type !== 'json') return undefined;
+    if (!payload.value.trim()) return {};
+    try {
+        const parsed = JSON.parse(payload.value);
+        return isPlainObject(parsed) ? parsed : undefined;
+    } catch {
+        return undefined;
+    }
+};
+
+type JsonEditMode = 'form' | 'json';
+
+interface JsonEditModeToggleProps {
+    value: JsonEditMode;
+    onChange: (value: JsonEditMode) => void;
+    formOptionDisabled: boolean;
+}
+
+const JsonEditModeToggle = ({
+    value,
+    onChange,
+    formOptionDisabled,
+}: JsonEditModeToggleProps) => (
+    <ToggleButtonGroup
+        size='small'
+        color='primary'
+        value={value}
+        exclusive
+        onChange={(_event, next) => {
+            if (next !== null) {
+                onChange(next);
+            }
+        }}
+    >
+        <Tooltip
+            arrow
+            title={
+                formOptionDisabled
+                    ? 'The value must be a valid JSON object to edit it as a form'
+                    : ''
+            }
+        >
+            <span>
+                <CompactToggleButton value='form' disabled={formOptionDisabled}>
+                    Form
+                </CompactToggleButton>
+            </span>
+        </Tooltip>
+        <CompactToggleButton value='json'>JSON</CompactToggleButton>
+    </ToggleButtonGroup>
+);
 
 const formatButtonProps: ButtonProps = {
     size: 'small',
@@ -68,58 +121,54 @@ const formatButtonProps: ButtonProps = {
 interface PayloadValueFieldProps {
     value: IPayload;
     onChange: (payload: IPayload) => void;
-    schemaActive: boolean;
+    payloadSchema?: JsonSchemaProperty;
     id: string;
     error?: string;
     onBlur: () => void;
 }
 
-type JsonEditMode = 'form' | 'json';
-
 export const PayloadValueField = ({
     value,
     onChange,
-    schemaActive,
+    payloadSchema,
     id,
     error,
     onBlur,
 }: PayloadValueFieldProps) => {
+    const schemaActive = Boolean(payloadSchema);
     const [jsonEditMode, setJsonEditMode] = useState<JsonEditMode>(
         schemaActive ? 'form' : 'json',
     );
+
+    const jsonFormValue = jsonFormValueFor(value);
     const showJsonEditModeToggle = schemaActive && value.type === 'json';
+    const showSchemaForm = Boolean(
+        payloadSchema && jsonFormValue && jsonEditMode === 'form',
+    );
 
     return (
         <Field>
             <ValueFieldLabelRow data-with-toggle={showJsonEditModeToggle}>
                 <FieldLabel htmlFor={id}>Value</FieldLabel>
                 {showJsonEditModeToggle ? (
-                    <ToggleButtonGroup
-                        size='small'
-                        color='primary'
-                        value={jsonEditMode}
-                        exclusive
-                        onChange={(_event, value) => {
-                            if (value !== null) {
-                                setJsonEditMode(value);
-                            }
-                        }}
-                    >
-                        <CompactToggleButton value='form'>
-                            Form
-                        </CompactToggleButton>
-                        <CompactToggleButton value='json'>
-                            JSON
-                        </CompactToggleButton>
-                    </ToggleButtonGroup>
+                    <JsonEditModeToggle
+                        value={showSchemaForm ? 'form' : 'json'}
+                        onChange={setJsonEditMode}
+                        formOptionDisabled={jsonFormValue === undefined}
+                    />
                 ) : null}
             </ValueFieldLabelRow>
-            {value.type === 'json' &&
-            jsonEditMode === 'form' &&
-            schemaActive ? (
-                <SchemaFormPlaceholder>
-                    Schema-based form — coming soon.
-                </SchemaFormPlaceholder>
+            {showSchemaForm && payloadSchema && jsonFormValue ? (
+                <SchemaForm
+                    schema={payloadSchema}
+                    value={jsonFormValue}
+                    onChange={(next) =>
+                        onChange({
+                            ...value,
+                            value: JSON.stringify(next, null, 2),
+                        })
+                    }
+                />
             ) : value.type === 'json' ? (
                 <Suspense fallback={null}>
                     <LazyReactJSONEditor

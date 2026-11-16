@@ -104,7 +104,8 @@ const payloadOptions = [
     { key: 'number', label: 'number' },
 ];
 
-const EMPTY_PAYLOAD = { type: 'string' as const, value: '' };
+const emptyPayload = (schemaActive: boolean): IPayload =>
+    schemaActive ? { type: 'json', value: '' } : { type: 'string', value: '' };
 
 enum ErrorField {
     NAME = 'name',
@@ -177,7 +178,7 @@ export const VariantForm = ({
         String(calculateVariantWeight(variant.weight)),
     );
     const [payload, setPayload] = useState<IPayload>(
-        variant.payload || EMPTY_PAYLOAD,
+        variant.payload || emptyPayload(schemaActive),
     );
 
     const [errors, setErrors] = useState<IVariantFormErrors>({});
@@ -389,7 +390,7 @@ export const VariantForm = ({
                     clearError(ErrorField.PAYLOAD);
                     setPayload(next);
                 }}
-                schemaActive={schemaActive}
+                payloadSchema={schemaActive ? payloadSchema : undefined}
                 id={valueInputId}
                 error={errors.payload}
                 onBlur={() => validatePayload(payload)}

@@ -1,5 +1,5 @@
 import { WeightType } from '../../../constants/variantTypes.ts';
-import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
+import type { IFeatureVariantEdit } from 'component/feature/variantEdit';
 
 export const TOTAL_WEIGHT = 1000;
 

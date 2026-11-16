@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { updateWeightEdit } from './util.js';
+import { updateWeightEdit } from './variantWeights.js';
 
 const variantTemplate = {
     id: '0',

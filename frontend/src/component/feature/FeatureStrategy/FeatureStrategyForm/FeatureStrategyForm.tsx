@@ -33,7 +33,10 @@ import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/Feature
 import { StrategyFormBodySelector } from './StrategyFormBodySelector.tsx';
 import type { ParametersSchema } from 'openapi/index.ts';
 import { strategyVariantsAreValid } from 'component/feature/StrategyTypes/strategyVariantsValidation';
-import type { FailedVariantsSubmit } from 'component/feature/StrategyTypes/StrategyVariants';
+
+export type FailedVariantsSubmit = {
+    selectFirstInvalid: boolean;
+};
 
 export interface IFeatureStrategyFormProps<T extends StrategyFormState> {
     feature: IFeatureToggle;

@@ -1,11 +1,12 @@
 import { createUuid } from 'utils/createUuid';
-import { VariantForm } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm.tsx';
+import { VariantForm } from './VariantForm/VariantForm.tsx';
 import type React from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx';
+import type { IFeatureVariantEdit } from 'component/feature/variantEdit';
 import { WeightType } from '../../../constants/variantTypes.ts';
 import { styled, useTheme, Button, Tabs } from '@mui/material';
 import type { StrategyFormState } from 'interfaces/strategy';
+import type { FailedVariantsSubmit } from '../FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm.tsx';
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 import { useEventTracker } from 'hooks/useEventTracker';
 import Add from '@mui/icons-material/Add';
@@ -29,10 +30,6 @@ const PillRow = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     marginBottom: theme.spacing(2),
 }));
-
-export type FailedVariantsSubmit = {
-    selectFirstInvalid: boolean;
-};
 
 interface StrategyVariantsProps<T extends StrategyFormState> {
     setStrategy: React.Dispatch<React.SetStateAction<T>>;

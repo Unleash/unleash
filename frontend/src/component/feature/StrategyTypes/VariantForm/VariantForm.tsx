@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, useRef, useState } from 'react';
-import Input from 'component/common/Input/Input';
-import SelectMenu from 'component/common/select';
+import Input from 'component/common/Input/Input.tsx';
+import SelectMenu from 'component/common/select.tsx';
 import {
     Button,
     type ButtonProps,
@@ -10,29 +10,26 @@ import {
     ToggleButtonGroup,
     Tooltip,
 } from '@mui/material';
-import type { IPayload } from 'interfaces/featureToggle';
-import {
-    isNameUnique,
-    isValidPayload,
-} from 'component/feature/StrategyTypes/strategyVariantsValidation';
-import { WeightType } from 'constants/variantTypes';
+import type { IPayload } from 'interfaces/featureToggle.ts';
+import { isNameUnique, isValidPayload } from '../strategyVariantsValidation.ts';
+import { WeightType } from 'constants/variantTypes.ts';
 import {
     FIXED_WEIGHT_EXPLANATION,
     TOTAL_WEIGHT,
     VARIABLE_WEIGHT_EXPLANATION,
-} from 'component/feature/StrategyTypes/variantWeights';
-import { calculateVariantWeight } from 'component/common/util';
-import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
-import type { IFeatureVariantEdit } from '../EnvironmentVariantsModal.tsx';
-import type { FailedVariantsSubmit } from 'component/feature/StrategyTypes/StrategyVariants';
+} from '../variantWeights.ts';
+import { calculateVariantWeight } from 'component/common/util.ts';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.tsx';
+import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly.tsx';
+import type { IFeatureVariantEdit } from 'component/feature/variantEdit.ts';
+import type { FailedVariantsSubmit } from '../../FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm.tsx';
 import Delete from '@mui/icons-material/Delete';
-import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
-import { useUiFlag } from 'hooks/useUiFlag';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import type { JsonSchemaProperty } from 'interfaces/jsonSchema.ts';
+import { useUiFlag } from 'hooks/useUiFlag.ts';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 
 const LazyReactJSONEditor = React.lazy(
-    () => import('component/common/ReactJSONEditor/ReactJSONEditor'),
+    () => import('component/common/ReactJSONEditor/ReactJSONEditor.tsx'),
 );
 
 const StyledVariantForm = styled('div')(({ theme }) => ({
@@ -315,6 +312,8 @@ export const VariantForm = ({
         const percentageNumber = Number(percentage);
         return percentageNumber >= 0 && percentageNumber <= 100;
     };
+
+    // biome-ignore lint/correctness/useExhaustiveDependencies: needs follow-up
     useEffect(() => {
         const newVariant: IFeatureVariantEdit = {
             ...variant,

@@ -178,7 +178,7 @@
         "frontend/src/component/feature/FeatureView/FeatureOverview/ReleasePlan/SafeguardForm/SafeguardForm.tsx",
         "frontend/src/component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable.tsx",
         "frontend/src/component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/EnvironmentVariantsModal.tsx",
-        "frontend/src/component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm.tsx",
+        "frontend/src/component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/LegacyVariantForm.tsx",
         "frontend/src/component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/FeatureEnvironmentVariants.tsx",
         "frontend/src/component/feature/StrategyTypes/LegacyStrategyVariants.tsx",
         "frontend/src/component/filter/Filters/Filters.tsx",

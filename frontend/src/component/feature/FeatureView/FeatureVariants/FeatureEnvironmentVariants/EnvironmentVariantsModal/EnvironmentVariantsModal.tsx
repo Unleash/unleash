@@ -18,7 +18,8 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from 'component/providers/AccessProvider/permissions';
 import { WeightType } from 'constants/variantTypes';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext';
-import { updateWeightEdit } from 'component/common/util';
+import { updateWeightEdit } from './variantWeights.ts';
+import type { IFeatureVariantEdit } from 'component/feature/variantEdit';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import Loader from 'component/common/Loader/Loader';
@@ -111,12 +112,6 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
 const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
 }));
-
-export type IFeatureVariantEdit = VariantSchema & {
-    isValid: boolean;
-    new: boolean;
-    id: string;
-};
 
 interface IEnvironmentVariantModalProps {
     environment?: IFeatureEnvironment;

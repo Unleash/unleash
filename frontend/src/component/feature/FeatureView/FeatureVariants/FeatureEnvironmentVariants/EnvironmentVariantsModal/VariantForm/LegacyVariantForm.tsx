@@ -18,7 +18,7 @@ import type { IPayload } from 'interfaces/featureToggle';
 import { useOverrides } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantOverrides/useOverrides';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext';
 import { WeightType } from 'constants/variantTypes';
-import type { IFeatureVariantEdit } from '../EnvironmentVariantsModal.tsx';
+import type { IFeatureVariantEdit } from 'component/feature/variantEdit';
 import Delete from '@mui/icons-material/Delete';
 
 const LazyReactJSONEditor = React.lazy(
@@ -216,7 +216,6 @@ export const LegacyVariantForm = ({
         setErrors((errors) => ({ ...errors, [field]: error }));
     };
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: legacy copy of VariantForm, kept as-is
     useEffect(() => {
         clearError(ErrorField.PERCENTAGE);
         if (error?.includes('%')) {
@@ -321,7 +320,6 @@ export const LegacyVariantForm = ({
         }
     };
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: legacy copy of VariantForm, kept as-is
     useEffect(() => {
         const newVariant: IFeatureVariantEdit = {
             ...variant,
@@ -349,7 +347,6 @@ export const LegacyVariantForm = ({
         updateVariant(newVariant);
     }, [name, customPercentage, percentage, payload, overrides]);
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: legacy copy of VariantForm, kept as-is
     useEffect(() => {
         if (!customPercentage) {
             setPercentage(String(variant.weight / 10));

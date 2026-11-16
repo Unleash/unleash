@@ -1,9 +1,9 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { render } from 'utils/testRenderer';
+import { render } from 'utils/testRenderer.tsx';
 import { expect, test } from 'vitest';
-import { WeightType } from 'constants/variantTypes';
-import type { IFeatureVariantEdit } from '../EnvironmentVariantsModal.tsx';
+import { WeightType } from 'constants/variantTypes.ts';
+import type { IFeatureVariantEdit } from 'component/feature/variantEdit.ts';
 import { VariantForm } from './VariantForm.tsx';
 
 const defaultVariant: IFeatureVariantEdit = {

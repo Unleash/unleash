@@ -236,4 +236,24 @@ describe('secure project API tokens', () => {
             ]),
         );
     });
+
+    test('does not link a token to an application from the project route', async () => {
+        const appName = 'project-route-application';
+        await db.stores.clientApplicationsStore.upsert({ appName });
+
+        const { body } = await app.request
+            .post('/api/admin/projects/default/api-tokens')
+            .send({
+                tokenName: 'project-route-token',
+                type: 'backend',
+                environment: DEFAULT_ENV,
+                appName,
+            })
+            .expect(201);
+
+        expect(body.appName).toBeUndefined();
+        expect(
+            await db.stores.apiTokenV2Store.getUserDefinedTokens(appName),
+        ).toEqual([]);
+    });
 });

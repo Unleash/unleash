@@ -6,6 +6,7 @@ import {
 import getLogger from '../../../fixtures/no-logger.js';
 import { ApiTokenType, type IApiToken } from '../../../../lib/types/model.js';
 import { DEFAULT_ENV } from '../../../../lib/server-impl.js';
+import { SYSTEM_USER_AUDIT } from '../../../../lib/types/core.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -309,4 +310,44 @@ test('should not return instances older than 24h', async () => {
             instanceId: metrics.instanceId,
         },
     ]);
+});
+
+test('refuses to delete an application that a token is linked to, and keeps its instances', async () => {
+    const appName = 'linked-application';
+    await db.stores.clientApplicationsStore.upsert({ appName });
+    await db.stores.clientInstanceStore.upsert({
+        appName,
+        instanceId: 'linked-instance',
+        environment: DEFAULT_ENV,
+    });
+    const token = await app.services.transactionalApiTokenV2Service.create(
+        {
+            tokenName: 'linked-token',
+            type: ApiTokenType.BACKEND,
+            projects: ['default'],
+            environment: DEFAULT_ENV,
+            appName,
+            userCreated: true,
+        },
+        SYSTEM_USER_AUDIT,
+    );
+
+    // beforeEach empties client_applications, which fails while a token
+    // still points at the application, so remove the token whatever happens.
+    try {
+        const { body } = await app.request
+            .delete(`/api/admin/metrics/applications/${appName}`)
+            .expect(400);
+        expect(body.details[0].message).toBe(
+            'Application cannot be deleted while it is in use',
+        );
+        expect(await db.stores.clientApplicationsStore.exists(appName)).toBe(
+            true,
+        );
+        expect(
+            await db.stores.clientInstanceStore.getByAppName(appName),
+        ).toHaveLength(1);
+    } finally {
+        await db.stores.apiTokenV2Store.delete(token.selector);
+    }
 });

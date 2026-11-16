@@ -105,10 +105,10 @@ class MetricsController extends Controller {
                     release: { stable: '4.14.0' },
                     operationId: 'deleteApplication',
                     summary: 'Delete an application',
-                    description: `Delete the application specified in the request URL. Returns 200 OK if the application was successfully deleted or if it didn't exist`,
+                    description: `Delete the application specified in the request URL. Returns 200 OK if the application was successfully deleted or if it didn't exist. Returns 400 Bad Request if an API token is linked to the application.`,
                     responses: {
                         200: emptyResponse,
-                        ...getStandardResponses(401, 403),
+                        ...getStandardResponses(400, 401, 403),
                     },
                 }),
             ],

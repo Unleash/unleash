@@ -652,6 +652,7 @@ export * from './deleteAddon403.ts';
 export * from './deleteAddon404.ts';
 export * from './deleteApiToken401.ts';
 export * from './deleteApiToken403.ts';
+export * from './deleteApplication400.ts';
 export * from './deleteApplication401.ts';
 export * from './deleteApplication403.ts';
 export * from './deleteBanner401.ts';

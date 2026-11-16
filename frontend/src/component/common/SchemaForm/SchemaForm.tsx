@@ -35,6 +35,12 @@ const StyledUnsupported = styled('div')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
 }));
 
+const StyledSchemaFormFields = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+}));
+
 const StyledGroup = styled('fieldset')(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
@@ -254,7 +260,7 @@ export const SchemaForm = ({
     onChange,
 }: ISchemaFormFieldsProps) => {
     return (
-        <>
+        <StyledSchemaFormFields>
             {Object.entries(schema.properties ?? {}).map(
                 ([propName, propSchema]) => (
                     <SchemaFormField
@@ -269,6 +275,6 @@ export const SchemaForm = ({
                     />
                 ),
             )}
-        </>
+        </StyledSchemaFormFields>
     );
 };

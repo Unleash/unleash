@@ -12,9 +12,6 @@ const StyledPreview = styled('div')(({ theme }) => ({
     height: '100%',
     overflowY: 'auto',
     padding: theme.spacing(2),
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(2),
     backgroundColor: theme.palette.background.elevation1,
 }));
 

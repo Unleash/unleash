@@ -16,7 +16,6 @@ import produce from 'immer';
 import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType.tsx';
 import type { IFormErrors } from 'hooks/useFormErrors';
 import { FeatureStrategyTitle } from './FeatureStrategyTitle/FeatureStrategyTitle.tsx';
-import { FeatureStrategyEnabledDisabled } from './FeatureStrategyEnabledDisabled/FeatureStrategyEnabledDisabled.tsx';
 import {
     FeatureStrategyTargetAudience,
     type TargetAudience,
@@ -27,6 +26,7 @@ import type { ParametersSchema } from 'openapi/index.ts';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { parseParameterNumber } from 'utils/parseParameter.ts';
 import { PlainTextDescription } from './PlainTextDescription/PlainTextDescription.tsx';
+import { ActiveStateSelector } from './ActiveStateSelector.tsx';
 
 export interface StrategyFormBodyProps<T extends StrategyFormState> {
     strategy: T;
@@ -276,6 +276,19 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                     <StyledTitle>
                         {formatStrategyName(strategyName || '')}
                     </StyledTitle>
+                    {allowEnableDisable ? (
+                        <ActiveStateSelector
+                            currentState={
+                                strategy.disabled ? 'inactive' : 'active'
+                            }
+                            onChange={(status) =>
+                                setStrategy((prev) => ({
+                                    ...prev,
+                                    disabled: status === 'inactive',
+                                }))
+                            }
+                        />
+                    ) : null}
                 </StyledHeaderBox>
 
                 {alertContent}
@@ -378,18 +391,6 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                             </AccordionDetails>
                         </StyledAccordion>
                     )}
-
-                    {allowEnableDisable ? (
-                        <FeatureStrategyEnabledDisabled
-                            enabled={!strategy?.disabled}
-                            onToggleEnabled={() =>
-                                setStrategy((strategyState) => ({
-                                    ...strategyState,
-                                    disabled: !strategyState.disabled,
-                                }))
-                            }
-                        />
-                    ) : null}
 
                     {beforeFooter}
                 </FormMainContent>

@@ -97,6 +97,7 @@ export function DropdownList<T = string>({
         option.label.toLowerCase().includes(searchText.toLowerCase()),
     );
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: mount-only effect; focus should move into the list once, when the dropdown opens
     useEffect(() => {
         if (!hideSearch) return;
         // move focus into the select list on mount
@@ -106,7 +107,7 @@ export function DropdownList<T = string>({
         // search input is index 1, selectedIndex is -1 if no selection
         const targetIndex = Math.max(selectedIndex, 0) + 1;
         listRefs.current[targetIndex]?.focus();
-    });
+    }, []);
 
     return (
         <>

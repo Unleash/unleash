@@ -281,30 +281,33 @@ export const filterAccessibleProjects = (
     projectParam: string | undefined,
     projectAccess: ProjectAccess,
 ): string | undefined => {
-    if (projectAccess.mode !== 'all') {
-        const allowedProjects = projectAccess.projects;
-
-        if (!projectParam) {
-            return `IS_ANY_OF:${allowedProjects.join(',')}`;
-        } else {
-            const searchProjectList = projectParam.split(',');
-            const filteredProjects = searchProjectList
-                .filter((proj) =>
-                    allowedProjects.includes(
-                        proj.replace(/^(IS|IS_ANY_OF):/, ''),
-                    ),
-                )
-                .join(',');
-
-            if (!filteredProjects) {
-                throw new Error(
-                    'No accessible projects in the search parameters',
-                );
-            }
-
-            return filteredProjects;
-        }
+    if (projectAccess.mode === 'all') {
+        return projectParam;
     }
 
-    return projectParam;
+    const allowedProjects = projectAccess.projects;
+
+    if (!projectParam) {
+        return `IS_ANY_OF:${allowedProjects.join(',')}`;
+    }
+
+    // Only the operators the endpoint documents may scope projects: a negating
+    // operator would select the projects the user cannot access.
+    const parsed = parseSearchOperatorValue('project', projectParam);
+    if (
+        !parsed ||
+        (parsed.operator !== 'IS' && parsed.operator !== 'IS_ANY_OF')
+    ) {
+        throw new Error('No accessible projects in the search parameters');
+    }
+
+    const filteredProjects = parsed.values.filter(
+        (project) => project !== null && allowedProjects.includes(project),
+    );
+
+    if (filteredProjects.length === 0) {
+        throw new Error('No accessible projects in the search parameters');
+    }
+
+    return `${parsed.operator}:${filteredProjects.join(',')}`;
 };

@@ -1,4 +1,6 @@
+import type { ReactNode } from 'react';
 import { beforeEach, expect, test } from 'vitest';
+import { Link } from 'react-router';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
@@ -42,11 +44,12 @@ const UiConfigLoaded = () => {
     return loading ? null : 'ui config loaded';
 };
 
-const renderSection = async (route = '/') => {
+const renderSection = async (route = '/', extra?: ReactNode) => {
     const result = render(
         <>
             <MyProjectsSection />
             <UiConfigLoaded />
+            {extra}
         </>,
         { route },
     );
@@ -213,12 +216,70 @@ test('marks only the project as current on a project page outside the sidebar', 
     ).not.toHaveAttribute('aria-current');
 });
 
-test('keeps a collapsed current project collapsed after the sidebar remounts', async () => {
-    const { unmount } = await renderSection('/projects/alpha/logs');
+test('expands a collapsed project when it is opened by URL', async () => {
+    const { unmount } = await renderSection();
+    await userEvent.click(projectToggle('Alpha'));
     await userEvent.click(projectToggle('Alpha'));
     unmount();
 
-    await renderSection('/projects/alpha/logs');
+    await renderSection('/projects/alpha');
+
+    expect(projectToggle('Alpha')).toHaveAttribute('aria-expanded', 'true');
+});
+
+test('expands a collapsed project when navigating into it', async () => {
+    await renderSection('/', <Link to='/projects/alpha'>Open Alpha</Link>);
+    await userEvent.click(projectToggle('Alpha'));
+    await userEvent.click(projectToggle('Alpha'));
+
+    await userEvent.click(screen.getByRole('link', { name: 'Open Alpha' }));
+
+    expect(projectToggle('Alpha')).toHaveAttribute('aria-expanded', 'true');
+});
+
+test('collapses the current project when clicked', async () => {
+    await renderSection('/projects/alpha');
+
+    await userEvent.click(projectToggle('Alpha'));
+
+    expect(projectToggle('Alpha')).toHaveAttribute('aria-expanded', 'false');
+});
+
+test('expands the collapsed current project when navigating within it', async () => {
+    await renderSection(
+        '/projects/alpha',
+        <Link to='/projects/alpha/settings'>Open settings</Link>,
+    );
+    await userEvent.click(projectToggle('Alpha'));
+
+    await userEvent.click(screen.getByRole('link', { name: 'Open settings' }));
+
+    expect(projectToggle('Alpha')).toHaveAttribute('aria-expanded', 'true');
+});
+
+test('keeps an expanded project open after visiting and leaving it', async () => {
+    await renderSection(
+        '/',
+        <>
+            <Link to='/projects/beta'>Open Beta</Link>
+            <Link to='/'>Go home</Link>
+        </>,
+    );
+    await userEvent.click(projectToggle('Beta'));
+
+    await userEvent.click(screen.getByRole('link', { name: 'Open Beta' }));
+    await userEvent.click(screen.getByRole('link', { name: 'Go home' }));
+
+    expect(projectToggle('Beta')).toHaveAttribute('aria-expanded', 'true');
+});
+
+test('collapses a reopened project again after leaving it', async () => {
+    const { unmount } = await renderSection('/projects/alpha');
+    await userEvent.click(projectToggle('Alpha'));
+    unmount();
+    await renderSection('/projects/alpha', <Link to='/'>Go home</Link>);
+
+    await userEvent.click(screen.getByRole('link', { name: 'Go home' }));
 
     expect(projectToggle('Alpha')).toHaveAttribute('aria-expanded', 'false');
 });

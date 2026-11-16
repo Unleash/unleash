@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { type FC, useLayoutEffect } from 'react';
 import { ButtonBase, styled } from '@mui/material';
 import { Link, useLocation } from 'react-router';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
@@ -104,6 +104,16 @@ export const ProjectNavGroup: FC<{
     const { primary, more } = useProjectNavItems(project.id);
     const isCurrent = isInProject(pathname, project.id);
     const currentPage = getProjectPage(pathname, project.id);
+
+    // Layout effect so a page load doesn't paint the project collapsed first - avoid flickering ui.
+    // biome-ignore lint/correctness/useExhaustiveDependencies: runs only on navigation; re-running on expansion changes would undo collapsing the current project
+    useLayoutEffect(() => {
+        if (isCurrent && expansion?.project === 'closed') {
+            // Cleared rather than set to 'open' so the project collapses
+            // again once left, like a current project that was never toggled.
+            onExpansionChange({ project: undefined });
+        }
+    }, [pathname]);
 
     const expanded = expansion?.project
         ? expansion.project === 'open'

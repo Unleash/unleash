@@ -15,4 +15,8 @@ export class FakePayloadSchemaStore implements IPayloadSchemaStore {
     ): Promise<Record<string, unknown> | undefined> {
         return this.schemas.get(featureName);
     }
+
+    async delete(featureName: string): Promise<void> {
+        this.schemas.delete(featureName);
+    }
 }

@@ -30,4 +30,8 @@ export class PayloadSchemaStore implements IPayloadSchemaStore {
             .first('schema');
         return row?.schema;
     }
+
+    async delete(featureName: string): Promise<void> {
+        await this.db(TABLE).where('feature_name', featureName).del();
+    }
 }

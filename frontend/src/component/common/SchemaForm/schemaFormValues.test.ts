@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest';
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
-import { formValueWithExamplesAsDefaults } from './previewSchema';
+import { formValueWithExamplesAsDefaults } from './schemaFormValues';
 
 test('resolves each property from its own default, then the root default, then its own example, then the root example', () => {
     const schema: JsonSchemaProperty = {

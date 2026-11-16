@@ -8,6 +8,7 @@ import { isObjectWithPropertiesSchema } from './schemaMatchers.ts';
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 import { SchemaForm, SchemaFormField } from './SchemaForm.tsx';
 import { SchemaFieldDescription } from './SchemaFieldDescription.tsx';
+import { isPlainObject } from './schemaFormValues.ts';
 
 const StyledArrayGroup = styled('fieldset')(({ theme }) => ({
     border: 'none',
@@ -67,9 +68,6 @@ const StyledKeyValueRow = styled('div')(({ theme }) => ({
 const RemoveButton = styled(IconButton)(({ theme }) => ({
     marginTop: theme.spacing(0.75),
 }));
-
-const isPlainObject = (value: unknown): value is Record<string, unknown> =>
-    typeof value === 'object' && value !== null && !Array.isArray(value);
 
 const defaultItemValue = (itemSchema: JsonSchemaProperty): unknown => {
     if (itemSchema.default !== undefined) return itemSchema.default;

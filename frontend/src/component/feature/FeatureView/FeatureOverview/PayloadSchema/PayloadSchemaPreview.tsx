@@ -3,7 +3,7 @@ import { styled, Typography } from '@mui/material';
 import { ErrorBoundary } from 'react-error-boundary';
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 import { SchemaForm } from 'component/common/SchemaForm/SchemaForm.tsx';
-import { formValueWithExamplesAsDefaults } from './previewSchema.ts';
+import { formValueWithExamplesAsDefaults } from 'component/common/SchemaForm/schemaFormValues.ts';
 import { isObjectSchema } from 'component/common/SchemaForm/schemaMatchers.ts';
 
 type ObjectSchema = JsonSchemaProperty & { type: 'object' };

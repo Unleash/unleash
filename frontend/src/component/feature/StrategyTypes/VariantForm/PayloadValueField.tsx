@@ -8,6 +8,7 @@ import {
 } from '@mui/material';
 import Input from 'component/common/Input/Input.tsx';
 import { SchemaForm } from 'component/common/SchemaForm/SchemaForm.tsx';
+import { isPlainObject } from 'component/common/SchemaForm/schemaFormValues.ts';
 import type { IPayload } from 'interfaces/featureToggle.ts';
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema.ts';
 
@@ -49,9 +50,6 @@ const CompactToggleButton = styled(ToggleButton)(({ theme }) => ({
     padding: theme.spacing(0.25, 1),
     lineHeight: 1.5,
 }));
-
-const isPlainObject = (value: unknown): value is Record<string, unknown> =>
-    typeof value === 'object' && value !== null && !Array.isArray(value);
 
 const jsonFormValueFor = (
     payload: IPayload,

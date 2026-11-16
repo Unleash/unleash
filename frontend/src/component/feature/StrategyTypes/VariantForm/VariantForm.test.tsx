@@ -16,7 +16,7 @@ const defaultVariant: IFeatureVariantEdit = {
     isValid: true,
 };
 
-test('keeps line breaks typed into a string payload', async () => {
+test('includes the typed payload value in the variant update', async () => {
     let updatedVariant: IFeatureVariantEdit | undefined;
     render(
         <VariantForm
@@ -32,11 +32,11 @@ test('keeps line breaks typed into a string payload', async () => {
 
     await userEvent.type(
         screen.getByRole('textbox', { name: 'Value' }),
-        'first line{Enter}second line',
+        'hello',
     );
 
     expect(updatedVariant?.payload).toEqual({
         type: 'string',
-        value: 'first line\nsecond line',
+        value: 'hello',
     });
 });

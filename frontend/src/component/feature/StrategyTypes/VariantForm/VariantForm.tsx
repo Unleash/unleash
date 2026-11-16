@@ -1,15 +1,7 @@
-import React, { Suspense, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Input from 'component/common/Input/Input.tsx';
 import SelectMenu from 'component/common/select.tsx';
-import {
-    Button,
-    type ButtonProps,
-    InputAdornment,
-    styled,
-    ToggleButton,
-    ToggleButtonGroup,
-    Tooltip,
-} from '@mui/material';
+import { Button, InputAdornment, styled, Tooltip } from '@mui/material';
 import type { IPayload } from 'interfaces/featureToggle.ts';
 import { isNameUnique, isValidPayload } from '../strategyVariantsValidation.ts';
 import { WeightType } from 'constants/variantTypes.ts';
@@ -27,10 +19,7 @@ import Delete from '@mui/icons-material/Delete';
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema.ts';
 import { useUiFlag } from 'hooks/useUiFlag.ts';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
-
-const LazyReactJSONEditor = React.lazy(
-    () => import('component/common/ReactJSONEditor/ReactJSONEditor.tsx'),
-);
+import { PayloadValueField } from './PayloadValueField.tsx';
 
 const StyledVariantForm = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -80,28 +69,11 @@ const FieldLabelRow = styled('div')(({ theme }) => ({
     height: theme.spacing(2.5),
 }));
 
-const ValueFieldLabelRow = styled(FieldLabelRow)(({ theme }) => ({
-    justifyContent: 'space-between',
-    '&[data-with-toggle]': {
-        marginBottom: theme.spacing(1),
-    },
-}));
-
 const FieldLabel = styled('label')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     fontWeight: theme.typography.fontWeightBold,
     color: theme.palette.text.primary,
 }));
-
-const formatButtonProps: ButtonProps = {
-    size: 'small',
-    startIcon: null,
-    sx: (theme) => ({
-        padding: theme.spacing(0, 1),
-        minWidth: 0,
-        fontSize: theme.typography.body2.fontSize,
-    }),
-};
 
 const WeightInput = styled(Input)(({ theme }) => ({
     width: theme.spacing(12),
@@ -112,27 +84,6 @@ const WeightInput = styled(Input)(({ theme }) => ({
 
 const PayloadTypeSelect = styled(SelectMenu)(({ theme }) => ({
     minWidth: theme.spacing(20),
-}));
-
-const ValueInput = styled(Input)({
-    width: '100%',
-    '& textarea': {
-        resize: 'vertical',
-        fontFamily: 'monospace',
-    },
-});
-
-const CompactToggleButton = styled(ToggleButton)(({ theme }) => ({
-    padding: theme.spacing(0.25, 1),
-    lineHeight: 1.5,
-}));
-
-const SchemaFormPlaceholder = styled('div')(({ theme }) => ({
-    padding: theme.spacing(1.5),
-    border: `1px dashed ${theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadiusMedium,
-    color: theme.palette.text.secondary,
-    fontSize: theme.typography.body2.fontSize,
 }));
 
 const RemoveButton = styled(Button)(({ theme }) => ({
@@ -219,9 +170,6 @@ export const VariantForm = ({
     const { isEnterprise } = useUiConfig();
     const payloadSchemasEnabled = useUiFlag('payloadSchemas') && isEnterprise();
     const schemaActive = payloadSchemasEnabled && Boolean(payloadSchema);
-    const [jsonEditMode, setJsonEditMode] = useState<'form' | 'json'>(
-        schemaActive ? 'form' : 'json',
-    );
 
     const [name, setName] = useState(variant.name);
     const hasFixedWeight = variant.weightType === WeightType.FIX;
@@ -361,7 +309,6 @@ export const VariantForm = ({
         ? FIXED_WEIGHT_EXPLANATION
         : VARIABLE_WEIGHT_EXPLANATION;
     const valueInputId = `variant-payload-value-${variant.id}`;
-    const showJsonEditModeToggle = schemaActive && payload.type === 'json';
 
     return (
         <StyledVariantForm data-testid='VARIANT'>
@@ -436,75 +383,17 @@ export const VariantForm = ({
                     }}
                 />
             </TopRow>
-            <Field>
-                <ValueFieldLabelRow data-with-toggle={showJsonEditModeToggle}>
-                    <FieldLabel htmlFor={valueInputId}>Value</FieldLabel>
-                    {showJsonEditModeToggle ? (
-                        <ToggleButtonGroup
-                            size='small'
-                            color='primary'
-                            value={jsonEditMode}
-                            exclusive
-                            onChange={(_event, value) => {
-                                if (value !== null) {
-                                    setJsonEditMode(value);
-                                }
-                            }}
-                        >
-                            <CompactToggleButton value='form'>
-                                Form
-                            </CompactToggleButton>
-                            <CompactToggleButton value='json'>
-                                JSON
-                            </CompactToggleButton>
-                        </ToggleButtonGroup>
-                    ) : null}
-                </ValueFieldLabelRow>
-                {payload.type === 'json' &&
-                jsonEditMode === 'form' &&
-                schemaActive ? (
-                    <SchemaFormPlaceholder>
-                        Schema-based form — coming soon.
-                    </SchemaFormPlaceholder>
-                ) : payload.type === 'json' ? (
-                    <Suspense fallback={null}>
-                        <LazyReactJSONEditor
-                            content={{ text: payload.value }}
-                            placeholder='{"cta" : "Start free trial"}'
-                            formatButtonProps={formatButtonProps}
-                            onChange={(content) => {
-                                clearError(ErrorField.PAYLOAD);
-                                setPayload((payload) => ({
-                                    ...payload,
-                                    value:
-                                        'json' in content
-                                            ? JSON.stringify(content.json) || ''
-                                            : content.text,
-                                }));
-                            }}
-                        />
-                    </Suspense>
-                ) : (
-                    <ValueInput
-                        id={valueInputId}
-                        label=''
-                        multiline
-                        minRows={4}
-                        maxRows={14}
-                        value={payload.value}
-                        onChange={(e) => {
-                            clearError(ErrorField.PAYLOAD);
-                            setPayload((payload) => ({
-                                ...payload,
-                                value: e.target.value,
-                            }));
-                        }}
-                        onBlur={() => validatePayload(payload)}
-                        error={Boolean(errors.payload)}
-                        errorText={errors.payload}
-                    />
-                )}
-            </Field>
+            <PayloadValueField
+                value={payload}
+                onChange={(next) => {
+                    clearError(ErrorField.PAYLOAD);
+                    setPayload(next);
+                }}
+                schemaActive={schemaActive}
+                id={valueInputId}
+                error={errors.payload}
+                onBlur={() => validatePayload(payload)}
+            />
             <Tooltip
                 arrow
                 title={

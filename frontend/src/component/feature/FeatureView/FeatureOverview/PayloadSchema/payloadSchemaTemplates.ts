@@ -109,7 +109,6 @@ const anthropicConfig: PayloadSchemaTemplate = {
             system: {
                 type: 'string',
                 title: 'System prompt',
-                format: 'multiline',
             },
             stop_sequences: {
                 type: 'array',
@@ -174,7 +173,6 @@ const openAiConfig: PayloadSchemaTemplate = {
             system: {
                 type: 'string',
                 title: 'System prompt',
-                format: 'multiline',
             },
             stop: {
                 type: 'array',
@@ -209,7 +207,6 @@ const geminiConfig: PayloadSchemaTemplate = {
             systemInstruction: {
                 type: 'string',
                 title: 'System instruction',
-                format: 'multiline',
             },
             generationConfig: {
                 type: 'object',
@@ -302,7 +299,6 @@ const maintenanceMode: PayloadSchemaTemplate = {
             message: {
                 type: 'string',
                 title: 'Message',
-                format: 'multiline',
                 minLength: 1,
             },
             until: {
@@ -345,7 +341,6 @@ const minimumVersion: PayloadSchemaTemplate = {
             message: {
                 type: 'string',
                 title: 'Message',
-                format: 'multiline',
             },
             updateUrl: {
                 type: 'string',

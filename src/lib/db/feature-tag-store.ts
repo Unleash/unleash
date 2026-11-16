@@ -1,4 +1,4 @@
-import type { Logger, LogProvider } from '../logger.js';
+import type { LogProvider } from '../logger.js';
 import type { ITag } from '../tags/index.js';
 import type EventEmitter from 'events';
 import metricsHelper from '../util/metrics-helper.js';
@@ -25,13 +25,10 @@ interface FeatureTagTable {
 class FeatureTagStore implements IFeatureTagStore {
     private db: Db;
 
-    private logger: Logger;
-
     private readonly timer: Function;
 
     constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
-        this.logger = getLogger('feature-tag-store.ts');
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'feature-tag-toggle',
@@ -162,20 +159,16 @@ class FeatureTagStore implements IFeatureTagStore {
         await this.db<FeatureTagTable>(TABLE)
             .insert(this.featureAndTagToRow(featureName, tag, createdByUserId))
             .onConflict(COLUMNS)
-            .merge();
+            .ignore();
         stopTimer();
         return tag;
     }
 
     async untagFeatures(featureTags: IFeatureTag[]): Promise<void> {
         const stopTimer = this.timer('untagFeatures');
-        try {
-            await this.db(TABLE)
-                .whereIn(COLUMNS, featureTags.map(this.featureTagArray))
-                .delete();
-        } catch (err) {
-            this.logger.error(err);
-        }
+        await this.db(TABLE)
+            .whereIn(COLUMNS, featureTags.map(this.featureTagArray))
+            .delete();
         stopTimer();
     }
 
@@ -221,17 +214,13 @@ class FeatureTagStore implements IFeatureTagStore {
 
     async untagFeature(featureName: string, tag: ITag): Promise<void> {
         const stopTimer = this.timer('untagFeature');
-        try {
-            await this.db(TABLE)
-                .where({
-                    feature_name: featureName,
-                    tag_type: tag.type,
-                    tag_value: tag.value,
-                })
-                .delete();
-        } catch (err) {
-            this.logger.error(err);
-        }
+        await this.db(TABLE)
+            .where({
+                feature_name: featureName,
+                tag_type: tag.type,
+                tag_value: tag.value,
+            })
+            .delete();
         stopTimer();
     }
 

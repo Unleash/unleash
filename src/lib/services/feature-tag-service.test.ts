@@ -34,3 +34,30 @@ test('fails tagging a flag with a new tag when the tag-created event cannot be s
     ).rejects.toThrow('event write failed');
     expect(await featureTagService.listTags('tagged-flag')).toEqual([]);
 });
+
+test('bulk tagging writes the flag tag rows sorted by value, then type', async () => {
+    const stores = createStores();
+    const { featureTagService } = createServices(stores, createTestConfig());
+    await stores.featureToggleStore.create('default', {
+        name: 'sorted-flag',
+        createdByUserId: 1,
+    });
+
+    await featureTagService.updateTags(
+        'default',
+        ['sorted-flag'],
+        [
+            { type: 'simple', value: 'order-b' },
+            { type: 'team', value: 'order-a' },
+            { type: 'simple', value: 'order-a' },
+        ],
+        [],
+        TEST_AUDIT_USER,
+    );
+
+    expect(await featureTagService.listTags('sorted-flag')).toEqual([
+        { type: 'simple', value: 'order-a' },
+        { type: 'team', value: 'order-a' },
+        { type: 'simple', value: 'order-b' },
+    ]);
+});

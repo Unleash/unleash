@@ -122,6 +122,7 @@ import {
     createTagTypeService,
 } from '../features/tag-type/createTagTypeService.js';
 import { createFakeTagService, createTagService } from './createTagService.js';
+import { createFeatureTagService } from './createFeatureTagService.js';
 import {
     createFakeInstanceStatsService,
     createInstanceStatsService,
@@ -380,6 +381,9 @@ export const createServices = (
         config,
         eventService,
     );
+    const transactionalFeatureTagService = db
+        ? withTransactional(createFeatureTagService(config), db)
+        : withFakeTransactional(featureTagService);
     const favoritesService = new FavoritesService(stores, config, eventService);
     const projectService = db
         ? createProjectService(db, config)
@@ -602,6 +606,7 @@ export const createServices = (
         sessionService,
         userFeedbackService,
         featureTagService,
+        transactionalFeatureTagService,
         projectHealthService,
         userSplashService,
         segmentService,
@@ -734,6 +739,7 @@ export interface IUnleashServices {
     eventService: EventService;
     edgeService: WithTransactional<EdgeService>;
     featureTagService: FeatureTagService;
+    transactionalFeatureTagService: WithTransactional<FeatureTagService>;
     featureToggleService: FeatureToggleService;
     featureTypeService: FeatureTypeService;
     groupService: GroupService;

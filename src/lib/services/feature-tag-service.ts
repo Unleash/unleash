@@ -21,14 +21,19 @@ import {
     type IUnleashConfig,
     FeatureTaggedEvent,
 } from '../types/index.js';
-import {
-    BadDataError,
-    FOREIGN_KEY_VIOLATION,
-    UNIQUE_CONSTRAINT_VIOLATION,
-} from '../../lib/error/index.js';
+import { BadDataError, FOREIGN_KEY_VIOLATION } from '../../lib/error/index.js';
 import type EventService from '../features/events/event-service.js';
 import type { ITag } from '../tags/index.js';
 import type { Logger } from '../logger.js';
+
+const byCodeUnits = (a: string, b: string): number =>
+    a < b ? -1 : a > b ? 1 : 0;
+
+// writing tags in this order makes concurrent writes of the same tags lock them in the same order
+const sortedTags = (tags: ITag[]): ITag[] =>
+    tags.toSorted(
+        (a, b) => byCodeUnits(a.value, b.value) || byCodeUnits(a.type, b.type),
+    );
 
 class FeatureTagService {
     private tagStore: ITagStore;
@@ -98,6 +103,22 @@ class FeatureTagService {
         return validatedTag;
     }
 
+    async updateFeatureTags(
+        featureName: string,
+        addedTags: ITag[],
+        removedTags: ITag[],
+        auditUser: IAuditUser,
+    ): Promise<void> {
+        // one at a time: the transaction runs on a single connection
+        for (const addedTag of sortedTags(addedTags)) {
+            await this.addTag(featureName, addedTag, auditUser);
+        }
+
+        for (const removedTag of sortedTags(removedTags)) {
+            await this.removeTag(featureName, removedTag, auditUser);
+        }
+    }
+
     async updateTags(
         projectId: string,
         featureNames: string[],
@@ -115,12 +136,14 @@ class FeatureTagService {
                 'Tried to change tags of feature not belonging to project',
             );
         }
-        await Promise.all(
-            addedTags.map((tag) => this.createTagIfNeeded(tag, auditUser)),
-        );
+        const sortedAddedTags = sortedTags(addedTags);
+        // one at a time: the transaction runs on a single connection
+        for (const tag of sortedAddedTags) {
+            await this.createTagIfNeeded(tag, auditUser);
+        }
         const createdFeatureTags: IFeatureTagInsert[] = featureNames.flatMap(
             (featureName) =>
-                addedTags.map((addedTag) => ({
+                sortedAddedTags.map((addedTag) => ({
                     featureName,
                     tagType: addedTag.type,
                     tagValue: addedTag.value,
@@ -173,22 +196,25 @@ class FeatureTagService {
         } catch (error) {
             if (error instanceof NotFoundError) {
                 try {
-                    await this.tagStore.createTag(tag);
-                    await this.eventService.storeEvent({
-                        type: TAG_CREATED,
-                        ...auditEventFields(auditUser),
-                        data: tag,
-                    });
+                    // skips an existing tag: a unique violation would abort the transaction
+                    const [createdTag] = await this.tagStore.bulkImport([tag]);
+                    if (createdTag) {
+                        await this.eventService.storeEvent({
+                            type: TAG_CREATED,
+                            ...auditEventFields(auditUser),
+                            data: tag,
+                        });
+                    }
                 } catch (err) {
                     if (err.code === FOREIGN_KEY_VIOLATION) {
                         throw new BadDataError(
                             `Tag type '${tag.type}' does not exist`,
                         );
                     }
-                    if (err.code !== UNIQUE_CONSTRAINT_VIOLATION) {
-                        throw err;
-                    }
+                    throw err;
                 }
+            } else {
+                throw error;
             }
         }
     }

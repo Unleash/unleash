@@ -103,8 +103,15 @@ export default class FakeFeatureTagStore implements IFeatureTagStore {
         );
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    untagFeatures(_featureTags: IFeatureTag[]): Promise<void> {
-        throw new Error('Method not implemented.');
+    async untagFeatures(featureTags: IFeatureTag[]): Promise<void> {
+        this.featureTags = this.featureTags.filter(
+            (existing) =>
+                !featureTags.some(
+                    (removed) =>
+                        removed.featureName === existing.featureName &&
+                        removed.tagType === existing.tagType &&
+                        removed.tagValue === existing.tagValue,
+                ),
+        );
     }
 }

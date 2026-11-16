@@ -107,13 +107,13 @@ type ProjectFeaturesServices = Pick<
     | 'projectHealthService'
     | 'openApiService'
     | 'transactionalFeatureToggleService'
-    | 'featureTagService'
+    | 'transactionalFeatureTagService'
 >;
 
 export default class ProjectFeaturesController extends Controller {
     private featureService: FeatureToggleService;
 
-    private featureTagService: FeatureTagService;
+    private transactionalFeatureTagService: WithTransactional<FeatureTagService>;
 
     private transactionalFeatureToggleService: WithTransactional<FeatureToggleService>;
 
@@ -129,7 +129,7 @@ export default class ProjectFeaturesController extends Controller {
             featureToggleService,
             openApiService,
             transactionalFeatureToggleService,
-            featureTagService,
+            transactionalFeatureTagService,
         }: ProjectFeaturesServices,
     ) {
         super(config);
@@ -137,7 +137,7 @@ export default class ProjectFeaturesController extends Controller {
         this.transactionalFeatureToggleService =
             transactionalFeatureToggleService;
         this.openApiService = openApiService;
-        this.featureTagService = featureTagService;
+        this.transactionalFeatureTagService = transactionalFeatureTagService;
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('/admin-api/project/features.ts');
 
@@ -1218,12 +1218,14 @@ export default class ProjectFeaturesController extends Controller {
     ): Promise<void> {
         const { projectId } = req.params;
         const { features, tags } = req.body;
-        await this.featureTagService.updateTags(
-            projectId,
-            features,
-            tags.addedTags,
-            tags.removedTags,
-            req.audit,
+        await this.transactionalFeatureTagService.transactional((service) =>
+            service.updateTags(
+                projectId,
+                features,
+                tags.addedTags,
+                tags.removedTags,
+                req.audit,
+            ),
         );
         res.status(200).end();
     }

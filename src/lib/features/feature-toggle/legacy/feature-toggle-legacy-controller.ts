@@ -7,6 +7,7 @@ import type { FeatureToggleService } from '../feature-toggle-service.js';
 import { querySchema } from '../../../schema/feature-schema.js';
 import type { IFeatureToggleQuery } from '../../../types/model.js';
 import type FeatureTagService from '../../../services/feature-tag-service.js';
+import type { WithTransactional } from '../../../db/transaction.js';
 import type { IAuthRequest } from '../../../routes/unleash-types.js';
 import type { TagSchema } from '../../../openapi/spec/tag-schema.js';
 import type { TagsSchema } from '../../../openapi/spec/tags-schema.js';
@@ -26,23 +27,25 @@ import type { ValidateFeatureSchema } from '../../../openapi/spec/validate-featu
 const version = 1;
 
 class FeatureController extends Controller {
-    private tagService: FeatureTagService;
+    private tagService: WithTransactional<FeatureTagService>;
 
     private service: FeatureToggleService;
 
     constructor(
         config: IUnleashConfig,
         {
-            featureTagService,
+            transactionalFeatureTagService,
             featureToggleService,
             openApiService,
         }: Pick<
             IUnleashServices,
-            'featureTagService' | 'featureToggleService' | 'openApiService'
+            | 'transactionalFeatureTagService'
+            | 'featureToggleService'
+            | 'openApiService'
         >,
     ) {
         super(config);
-        this.tagService = featureTagService;
+        this.tagService = transactionalFeatureTagService;
         this.service = featureToggleService;
 
         this.route({
@@ -202,10 +205,8 @@ class FeatureController extends Controller {
         res: Response<TagSchema>,
     ): Promise<void> {
         const { featureName } = req.params;
-        const tag = await this.tagService.addTag(
-            featureName,
-            req.body,
-            req.audit,
+        const tag = await this.tagService.transactional((service) =>
+            service.addTag(featureName, req.body, req.audit),
         );
         res.status(201).header('location', `${featureName}/tags`).json(tag);
     }
@@ -222,15 +223,12 @@ class FeatureController extends Controller {
         const { featureName } = req.params;
         const { addedTags, removedTags } = req.body;
 
-        await Promise.all(
-            addedTags.map((addedTag) =>
-                this.tagService.addTag(featureName, addedTag, req.audit),
-            ),
-        );
-
-        await Promise.all(
-            removedTags.map((removedTag) =>
-                this.tagService.removeTag(featureName, removedTag, req.audit),
+        await this.tagService.transactional((service) =>
+            service.updateFeatureTags(
+                featureName,
+                addedTags,
+                removedTags,
+                req.audit,
             ),
         );
 
@@ -244,10 +242,8 @@ class FeatureController extends Controller {
         res: Response<void>,
     ): Promise<void> {
         const { featureName, type, value } = req.params;
-        await this.tagService.removeTag(
-            featureName,
-            { type, value },
-            req.audit,
+        await this.tagService.transactional((service) =>
+            service.removeTag(featureName, { type, value }, req.audit),
         );
         res.status(200).end();
     }

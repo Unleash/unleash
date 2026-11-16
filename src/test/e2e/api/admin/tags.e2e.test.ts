@@ -4,6 +4,10 @@ import {
     setupAppWithCustomConfig,
 } from '../../helpers/test-helper.js';
 import getLogger from '../../../fixtures/no-logger.js';
+import { ApiTokenType } from '../../../../lib/types/model.js';
+import { TEST_AUDIT_USER } from '../../../../lib/types/index.js';
+import type { ITag } from '../../../../lib/tags/index.js';
+import { randomId } from '../../../../lib/util/random-id.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -493,4 +497,207 @@ test('cannot rename a tag that does not exist', async () => {
         .post('/api/admin/tags/simple/does-not-exist/rename')
         .send({ value: 'whatever' })
         .expect(404);
+});
+
+test.each([
+    {
+        route: 'POST /api/admin/features/:featureName/tags',
+        tagged: false,
+        send: (featureName: string, tag: ITag) =>
+            app.request
+                .post(`/api/admin/features/${featureName}/tags`)
+                .send(tag),
+    },
+    {
+        route: 'PUT /api/admin/features/:featureName/tags',
+        tagged: false,
+        send: (featureName: string, tag: ITag) =>
+            app.request
+                .put(`/api/admin/features/${featureName}/tags`)
+                .send({ addedTags: [tag], removedTags: [] }),
+    },
+    {
+        route: 'DELETE /api/admin/features/:featureName/tags/:type/:value',
+        tagged: true,
+        send: (featureName: string, tag: ITag) =>
+            app.request.delete(
+                `/api/admin/features/${featureName}/tags/${tag.type}/${tag.value}`,
+            ),
+    },
+    {
+        route: 'PUT /api/admin/projects/:projectId/tags',
+        tagged: false,
+        send: (featureName: string, tag: ITag) =>
+            app.request.put('/api/admin/projects/default/tags').send({
+                features: [featureName],
+                tags: { addedTags: [tag], removedTags: [] },
+            }),
+    },
+])('does not save a tag change when its event fails to store: $route', async ({
+    tagged,
+    send,
+}) => {
+    const featureName = randomId();
+    const tag = { type: 'simple', value: randomId() };
+    await app.createFeature(featureName);
+    await db.stores.tagStore.createTag(tag);
+    if (tagged) {
+        await db.stores.featureTagStore.tagFeature(featureName, tag, -1337);
+    }
+    // events.created_by holds 255 characters; a token name has no limit
+    const token = await app.services.apiTokenService.createApiTokenWithProjects(
+        {
+            type: ApiTokenType.ADMIN,
+            projects: ['*'],
+            environment: '*',
+            tokenName: 'x'.repeat(256),
+        },
+    );
+
+    const res = await send(featureName, tag).set('Authorization', token.secret);
+
+    const { body } = await app.request.get(
+        `/api/admin/features/${featureName}/tags`,
+    );
+    expect(body.tags).toMatchObject(tagged ? [tag] : []);
+    expect(res.status).toBe(500);
+});
+
+test('saves none of a bulk tag request when a later tag fails', async () => {
+    const featureName = 'bulk.tag.rollback.feature';
+    await app.createFeature(featureName);
+
+    await app.request
+        .put('/api/admin/projects/default/tags')
+        .send({
+            features: [featureName],
+            tags: {
+                addedTags: [
+                    { type: 'simple', value: 'saved-first' },
+                    // tags are written sorted by value, so this one fails after saved-first is created
+                    { type: 'no-such-type', value: 'then-failing' },
+                ],
+                removedTags: [],
+            },
+        })
+        .expect(400);
+
+    await app.request.get('/api/admin/tags/simple/saved-first').expect(404);
+});
+
+test('answers 400 when removing a tag whose value has a NUL byte', async () => {
+    await app.createFeature('nul.untag.feature');
+
+    await app.request
+        .delete('/api/admin/features/nul.untag.feature/tags/simple/a%00b')
+        .expect(400);
+    await app.request
+        .put('/api/admin/projects/default/tags')
+        .send({
+            features: ['nul.untag.feature'],
+            tags: {
+                addedTags: [],
+                removedTags: [{ type: 'simple', value: 'a\u0000b' }],
+            },
+        })
+        .expect(400);
+});
+
+test('does not deadlock two transactions re-adding the flag tags in opposite order', async () => {
+    const featureName = 'retag.opposite.order.feature';
+    const tagA = { type: 'simple', value: 'retag-a' };
+    const tagB = { type: 'simple', value: 'retag-b' };
+    await app.createFeature(featureName);
+    for (const tag of [tagA, tagB]) {
+        await db.stores.tagStore.createTag(tag);
+        await db.stores.featureTagStore.tagFeature(featureName, tag, -1337);
+    }
+    const { transactionalFeatureTagService } = app.services;
+    const firstReAdded = Promise.withResolvers<void>();
+    const secondReAdded = Promise.withResolvers<void>();
+    const reAddTheOther = Promise.withResolvers<void>();
+
+    const first = transactionalFeatureTagService.transactional(
+        async (service) => {
+            await service.addTag(featureName, tagA, TEST_AUDIT_USER);
+            firstReAdded.resolve();
+            await reAddTheOther.promise;
+            await service.addTag(featureName, tagB, TEST_AUDIT_USER);
+        },
+    );
+    const second = transactionalFeatureTagService.transactional(
+        async (service) => {
+            await service.addTag(featureName, tagB, TEST_AUDIT_USER);
+            secondReAdded.resolve();
+            await reAddTheOther.promise;
+            await service.addTag(featureName, tagA, TEST_AUDIT_USER);
+        },
+    );
+    await Promise.all([firstReAdded.promise, secondReAdded.promise]);
+    reAddTheOther.resolve();
+
+    const results = await Promise.allSettled([first, second]);
+    expect(results.map(({ status }) => status)).toEqual([
+        'fulfilled',
+        'fulfilled',
+    ]);
+});
+
+test('writes added tags and legacy removals in the same order, whatever order they arrive in', async () => {
+    const featureName = 'write.order.feature';
+    const [tagA, tagB, tagC, tagD, newTagX, newTagY] = [
+        'order-a',
+        'order-b',
+        'order-c',
+        'order-d',
+        'order-x',
+        'order-y',
+    ].map((value) => ({ type: 'simple', value }));
+    await db.stores.tagTypeStore.createTagType({ name: 'order-type' });
+    const tagAOfOtherType = { type: 'order-type', value: 'order-a' };
+    await app.createFeature(featureName);
+    for (const tag of [tagA, tagAOfOtherType, tagB, tagC, tagD]) {
+        await db.stores.tagStore.createTag(tag);
+    }
+    for (const tag of [tagC, tagD]) {
+        await db.stores.featureTagStore.tagFeature(featureName, tag, -1337);
+    }
+
+    await app.request
+        .put(`/api/admin/features/${featureName}/tags`)
+        .send({
+            addedTags: [tagB, tagA, tagAOfOtherType],
+            removedTags: [tagD, tagC],
+        })
+        .expect(200);
+    await app.request
+        .put('/api/admin/projects/default/tags')
+        .send({
+            features: [featureName],
+            tags: { addedTags: [newTagY, newTagX], removedTags: [] },
+        })
+        .expect(200);
+
+    const events = (await db.stores.eventStore.getEvents()).toSorted(
+        (a, b) => a.id - b.id,
+    );
+    const tagsOf = (type: string, values: string[]) =>
+        events
+            .filter((event) => event.type === type)
+            .map((event) => event.data ?? event.preData)
+            .filter((tag) => values.includes(tag.value))
+            .map((tag) => `${tag.type}:${tag.value}`);
+    expect(tagsOf('feature-tagged', ['order-a', 'order-b'])).toEqual([
+        'order-type:order-a',
+        'simple:order-a',
+        'simple:order-b',
+    ]);
+    expect(tagsOf('feature-untagged', ['order-c', 'order-d'])).toEqual([
+        'simple:order-c',
+        'simple:order-d',
+    ]);
+    expect(tagsOf('tag-created', ['order-x', 'order-y'])).toEqual([
+        'simple:order-x',
+        'simple:order-y',
+    ]);
 });

@@ -27,8 +27,17 @@ export type ProjectNavExpansion = {
 
 type ProjectNavItem = { page: ProjectPage; label: string; to: string };
 
-const StyledProjectToggle = styled(ButtonBase)(({ theme }) => ({
+const StyledProjectToggle = styled(ButtonBase, {
+    shouldForwardProp: (prop) => prop !== 'muteWhenNotCurrent',
+})<{ muteWhenNotCurrent: boolean }>(({ theme, muteWhenNotCurrent }) => ({
     ...sidebarItemStyles(theme),
+    ...(muteWhenNotCurrent
+        ? {
+              '&:not([aria-current])': {
+                  color: theme.palette.text.secondary,
+              },
+          }
+        : {}),
     '&[aria-current="location"]': {
         fontWeight: theme.typography.fontWeightBold,
     },
@@ -80,7 +89,13 @@ export const ProjectNavGroup: FC<{
     project: Pick<ProjectSchema, 'id' | 'name'>;
     expansion?: ProjectNavExpansion;
     onExpansionChange: (change: ProjectNavExpansion) => void;
-}> = ({ project, expansion, onExpansionChange }) => {
+    muteWhenNotCurrent?: boolean;
+}> = ({
+    project,
+    expansion,
+    onExpansionChange,
+    muteWhenNotCurrent = false,
+}) => {
     const { pathname } = useLocation();
     const { primary, more } = useProjectNavItems(project.id);
     const isCurrent = isInProject(pathname, project.id);
@@ -107,6 +122,7 @@ export const ProjectNavGroup: FC<{
     return (
         <>
             <StyledProjectToggle
+                muteWhenNotCurrent={muteWhenNotCurrent}
                 aria-current={isCurrent ? 'location' : undefined}
                 aria-expanded={expanded}
                 onClick={() =>

@@ -58,6 +58,7 @@ export const OpenedProjectSection: FC = () => {
         <SidebarSection title='Opened projects'>
             <ProjectNavGroup
                 project={project}
+                muteWhenNotCurrent
                 expansion={openedProject.expansion}
                 onExpansionChange={(change) =>
                     setOpenedProject(

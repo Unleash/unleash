@@ -57,8 +57,8 @@ const StyledHeaderBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingLeft: theme.spacing(6),
-    paddingRight: theme.spacing(6),
+    flexFlow: 'row wrap',
+    paddingInline: 'var(--form-inset)',
     paddingTop: theme.spacing(2),
 }));
 

@@ -2,21 +2,21 @@ import { type FC, useLayoutEffect } from 'react';
 import { ButtonBase, styled } from '@mui/material';
 import { Link, useLocation } from 'react-router';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type { ProjectSchema } from 'openapi';
 import {
+    SidebarCaret,
     SidebarItemIcon,
     sidebarItemStyles,
+    SUB_ITEM_INDENT,
 } from '../sidebar/SidebarItem.styles.ts';
 import { SidebarList } from '../sidebar/SidebarList.tsx';
+import { SidebarMoreToggle } from '../sidebar/SidebarMoreToggle.tsx';
 import {
     getProjectPage,
     isInProject,
     type ProjectPage,
 } from './getProjectPage.ts';
-
-const SUB_ITEM_INDENT = 3.875;
 
 type ExpansionState = 'open' | 'closed';
 
@@ -41,30 +41,11 @@ const StyledLabel = styled('span')({
     whiteSpace: 'nowrap',
 });
 
-const StyledCaret = styled(ArrowDropDownIcon, {
-    shouldForwardProp: (prop) => prop !== 'expanded',
-})<{ expanded: boolean }>(({ theme, expanded }) => ({
-    flex: 'none',
-    fontSize: theme.spacing(2),
-    color: theme.palette.text.secondary,
-    transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-    transition: theme.transitions.create('transform', {
-        duration: theme.transitions.duration.shortest,
-    }),
-}));
-
-const StyledTrailingCaret = styled(StyledCaret)({ marginLeft: 'auto' });
+const StyledTrailingCaret = styled(SidebarCaret)({ marginLeft: 'auto' });
 
 const StyledSubLink = styled(Link)(({ theme }) => ({
     ...sidebarItemStyles(theme),
     paddingLeft: theme.spacing(SUB_ITEM_INDENT),
-}));
-
-const StyledMoreButton = styled(ButtonBase)(({ theme }) => ({
-    ...sidebarItemStyles(theme),
-    gap: theme.spacing(0.25),
-    paddingLeft: theme.spacing(SUB_ITEM_INDENT),
-    color: theme.palette.text.secondary,
 }));
 
 const useProjectNavItems = (projectId: string) => {
@@ -151,17 +132,15 @@ export const ProjectNavGroup: FC<{
                             {label}
                         </StyledSubLink>
                     ))}
-                    <StyledMoreButton
-                        aria-expanded={moreExpanded}
-                        onClick={() =>
+                    <SidebarMoreToggle
+                        variant='nested'
+                        expanded={moreExpanded}
+                        onToggle={() =>
                             onExpansionChange({
                                 more: moreExpanded ? 'closed' : 'open',
                             })
                         }
-                    >
-                        {moreExpanded ? 'Less' : 'More'}
-                        <StyledCaret expanded={moreExpanded} />
-                    </StyledMoreButton>
+                    />
                 </SidebarList>
             ) : null}
         </>

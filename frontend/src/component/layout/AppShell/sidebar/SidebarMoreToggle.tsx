@@ -1,20 +1,46 @@
 import type { FC } from 'react';
 import { ButtonBase, styled } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { SidebarItemIcon, sidebarItemStyles } from './SidebarItem.styles.ts';
+import {
+    SidebarCaret,
+    SidebarItemIcon,
+    sidebarItemStyles,
+    SUB_ITEM_INDENT,
+} from './SidebarItem.styles.ts';
 
 const StyledButton = styled(ButtonBase)(({ theme }) =>
     sidebarItemStyles(theme),
 );
 
+const StyledNestedButton = styled(ButtonBase)(({ theme }) => ({
+    ...sidebarItemStyles(theme),
+    gap: theme.spacing(0.25),
+    paddingLeft: theme.spacing(SUB_ITEM_INDENT),
+    color: theme.palette.text.secondary,
+}));
+
 export const SidebarMoreToggle: FC<{
     expanded: boolean;
     onToggle: () => void;
-}> = ({ expanded, onToggle }) => (
-    <StyledButton aria-expanded={expanded} onClick={onToggle}>
-        <SidebarItemIcon>
-            <MoreHorizIcon />
-        </SidebarItemIcon>
-        {expanded ? 'Less' : 'More'}
-    </StyledButton>
-);
+    variant?: 'top-level' | 'nested';
+}> = ({ expanded, onToggle, variant = 'top-level' }) => {
+    const label = expanded ? 'Less' : 'More';
+
+    if (variant === 'nested') {
+        return (
+            <StyledNestedButton aria-expanded={expanded} onClick={onToggle}>
+                {label}
+                <SidebarCaret expanded={expanded} />
+            </StyledNestedButton>
+        );
+    }
+
+    return (
+        <StyledButton aria-expanded={expanded} onClick={onToggle}>
+            <SidebarItemIcon>
+                <MoreHorizIcon />
+            </SidebarItemIcon>
+            {label}
+        </StyledButton>
+    );
+};

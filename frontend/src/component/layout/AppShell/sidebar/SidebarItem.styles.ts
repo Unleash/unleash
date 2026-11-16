@@ -1,4 +1,7 @@
 import { styled, type Theme } from '@mui/material';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+
+export const SUB_ITEM_INDENT = 3.875;
 
 export const sidebarItemStyles = (theme: Theme) => ({
     display: 'flex',
@@ -34,4 +37,16 @@ export const SidebarItemIcon = styled('span')(({ theme }) => ({
     '& svg': {
         fontSize: theme.spacing(2.25),
     },
+}));
+
+export const SidebarCaret = styled(ArrowDropDownIcon, {
+    shouldForwardProp: (prop) => prop !== 'expanded',
+})<{ expanded: boolean }>(({ theme, expanded }) => ({
+    flex: 'none',
+    fontSize: theme.spacing(2),
+    color: theme.palette.text.secondary,
+    transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+    transition: theme.transitions.create('transform', {
+        duration: theme.transitions.duration.shortest,
+    }),
 }));

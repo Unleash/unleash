@@ -9,7 +9,15 @@ import type { IAccessReadModel } from '../access/access-read-model-type.js';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import type { ProjectAccess } from '../private-project/privateProjectStore.js';
 import EventService, { filterAccessibleProjects } from './event-service.js';
-import { type IBaseEvent, USER_UPDATED } from '../../events/index.js';
+import {
+    FEATURE_CREATED,
+    type IBaseEvent,
+    USER_UPDATED,
+} from '../../events/index.js';
+import FakeEventStore from '../../../test/fixtures/fake-event-store.js';
+import { createTestConfig } from '../../../test/config/test-config.js';
+import { createFakeEventsService } from './createEventsService.js';
+import { createFakePrivateProjectChecker } from '../private-project/createPrivateProjectChecker.js';
 
 import { vi } from 'vitest';
 
@@ -127,6 +135,36 @@ describe('filterPrivateProjectsFromParams', () => {
         expect(() =>
             filterAccessibleProjects(projectParam, projectAccess),
         ).toThrow('No accessible projects in the search parameters');
+    });
+});
+
+describe('searchEvents', () => {
+    it('shows no events to a user without access to any project', async () => {
+        const eventStore = new FakeEventStore();
+        await eventStore.store({
+            type: FEATURE_CREATED,
+            project: 'private-project',
+            featureName: 'private-flag',
+            createdBy: 'project-owner',
+            createdByUserId: 2,
+            ip: '127.0.0.1',
+        });
+        const privateProjectChecker = createFakePrivateProjectChecker({
+            mode: 'limited',
+            projects: [],
+        });
+        const eventService = createFakeEventsService(createTestConfig(), {
+            eventStore,
+            privateProjectChecker,
+        });
+        const userId = 1;
+
+        const result = await eventService.searchEvents(
+            { limit: 10, offset: 0 },
+            userId,
+        );
+
+        expect(result).toEqual({ events: [], totalEvents: 0 });
     });
 });
 

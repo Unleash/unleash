@@ -1,5 +1,6 @@
 import type { Db, IUnleashConfig } from '../../types/index.js';
 import { PlaygroundService } from './playground-service.js';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import {
     createFakeFeatureToggleService,
     createFeatureToggleService,
@@ -35,9 +36,13 @@ export const createPlaygroundService = (
     return playgroundService;
 };
 
-export const createFakePlaygroundService = (config: IUnleashConfig) => {
+export const createFakePlaygroundService = (
+    config: IUnleashConfig,
+    {
+        privateProjectChecker = createFakePrivateProjectChecker(),
+    }: { privateProjectChecker?: IPrivateProjectChecker } = {},
+) => {
     const segmentReadModel = new FakeSegmentReadModel();
-    const privateProjectChecker = createFakePrivateProjectChecker();
     const { featureToggleService, featureToggleStore } =
         createFakeFeatureToggleService(config);
     const playgroundReadModel = new FakePlaygroundReadModel();

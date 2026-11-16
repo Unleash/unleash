@@ -73,6 +73,13 @@ export default class EventService {
         const projectAccess =
             await this.privateProjectChecker.getUserAccessibleProjects(userId);
 
+        if (
+            projectAccess.mode === 'limited' &&
+            projectAccess.projects.length === 0
+        ) {
+            return { events: [], totalEvents: 0 };
+        }
+
         search.project = filterAccessibleProjects(
             search.project,
             projectAccess,

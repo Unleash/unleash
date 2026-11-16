@@ -3,6 +3,7 @@ import { BadDataError, NotFoundError } from '../../error/index.js';
 import { PayloadType } from 'unleash-client';
 import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
 import { createFakePlaygroundService } from './createPlaygroundService.js';
+import { createFakePrivateProjectChecker } from '../private-project/createPrivateProjectChecker.js';
 
 const defaultUserId = 1;
 
@@ -36,15 +37,17 @@ describe('evaluateFeature', () => {
     });
 
     it('hides flags in projects the user can not access', async () => {
-        const {
-            playgroundService,
-            playgroundReadModel,
-            privateProjectChecker,
-        } = createFakePlaygroundService(createTestConfig());
+        const privateProjectChecker = createFakePrivateProjectChecker({
+            mode: 'limited',
+            projects: ['default'],
+        });
+        const { playgroundService, playgroundReadModel } =
+            createFakePlaygroundService(createTestConfig(), {
+                privateProjectChecker,
+            });
         playgroundReadModel.features = [
             createFeature({ name: 'private-flag', project: 'private' }),
         ];
-        privateProjectChecker.inaccessibleProjects = ['private'];
 
         await expect(
             playgroundService.evaluateFeature(

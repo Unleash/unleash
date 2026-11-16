@@ -1,5 +1,7 @@
 import type { Db, IUnleashConfig } from '../../types/index.js';
-import PrivateProjectStore from './privateProjectStore.js';
+import PrivateProjectStore, {
+    type ProjectAccess,
+} from './privateProjectStore.js';
 import { PrivateProjectChecker } from './privateProjectChecker.js';
 import { FakePrivateProjectChecker } from './fakePrivateProjectChecker.js';
 
@@ -18,7 +20,8 @@ export const createPrivateProjectChecker = (
     );
 };
 
-export const createFakePrivateProjectChecker =
-    (): FakePrivateProjectChecker => {
-        return new FakePrivateProjectChecker();
-    };
+export const createFakePrivateProjectChecker = (
+    projectAccess?: ProjectAccess,
+): FakePrivateProjectChecker => {
+    return new FakePrivateProjectChecker(projectAccess);
+};

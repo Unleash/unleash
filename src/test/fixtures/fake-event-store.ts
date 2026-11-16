@@ -113,9 +113,8 @@ class FakeEventStore implements IEventStore {
         return Promise.resolve(this.events.length);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    searchEventsCount(): Promise<number> {
-        return Promise.resolve(0);
+    async searchEventsCount(): Promise<number> {
+        return this.events.length;
     }
 
     destroy(): void {}
@@ -133,7 +132,7 @@ class FakeEventStore implements IEventStore {
     }
 
     async searchEvents(): Promise<IEvent[]> {
-        throw new Error('Method not implemented.');
+        return this.events;
     }
 
     async query(operations: IQueryOperations[]): Promise<IEvent[]> {

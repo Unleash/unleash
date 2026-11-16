@@ -13,6 +13,7 @@ import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker.js';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import {
     createAccessReadModel,
     createFakeAccessReadModel,
@@ -40,20 +41,22 @@ export const createEventsService: (
 
 export const createFakeEventsService: (
     config: IUnleashConfig,
-    stores?: {
+    overrides?: {
         eventStore?: IEventStore;
         featureTagStore?: IFeatureTagStore;
+        privateProjectChecker?: IPrivateProjectChecker;
     },
-) => EventService = (config, stores) => {
-    const eventStore = stores?.eventStore || new FakeEventStore();
+) => EventService = (config, overrides) => {
+    const eventStore = overrides?.eventStore || new FakeEventStore();
     const featureTagStore =
-        stores?.featureTagStore || new FakeFeatureTagStore();
-    const fakePrivateProjectChecker = createFakePrivateProjectChecker();
+        overrides?.featureTagStore || new FakeFeatureTagStore();
+    const privateProjectChecker =
+        overrides?.privateProjectChecker || createFakePrivateProjectChecker();
     const fakeAccessReadModel = createFakeAccessReadModel();
     return new EventService(
         { eventStore, featureTagStore },
         config,
-        fakePrivateProjectChecker,
+        privateProjectChecker,
         fakeAccessReadModel,
     );
 };

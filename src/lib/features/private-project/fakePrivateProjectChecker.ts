@@ -5,25 +5,34 @@ import {
 } from './privateProjectStore.js';
 
 export class FakePrivateProjectChecker implements IPrivateProjectChecker {
-    inaccessibleProjects: string[] = [];
+    private projectAccess: ProjectAccess;
+
+    constructor(projectAccess: ProjectAccess = ALL_PROJECT_ACCESS) {
+        this.projectAccess = projectAccess;
+    }
+
+    async getUserAccessibleProjects(_userId: number): Promise<ProjectAccess> {
+        return this.projectAccess;
+    }
 
     async filterUserAccessibleProjects(
         _userId: number,
         projects: string[],
     ): Promise<string[]> {
-        return projects.filter(
-            (project) => !this.inaccessibleProjects.includes(project),
-        );
-    }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    async getUserAccessibleProjects(_userId: number): Promise<ProjectAccess> {
-        return ALL_PROJECT_ACCESS;
+        return projects.filter((project) => this.canAccess(project));
     }
 
     async hasAccessToProject(
         _userId: number,
         projectId: string,
     ): Promise<boolean> {
-        return !this.inaccessibleProjects.includes(projectId);
+        return this.canAccess(projectId);
+    }
+
+    private canAccess(projectId: string): boolean {
+        return (
+            this.projectAccess.mode === 'all' ||
+            this.projectAccess.projects.includes(projectId)
+        );
     }
 }

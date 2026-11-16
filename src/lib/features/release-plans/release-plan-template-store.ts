@@ -182,6 +182,7 @@ export class ReleasePlanTemplateStore extends CRUDStore<
         const endTimer = this.timer('getById');
         const templateRows = await this.db(`${TABLE} AS rpd`)
             .where('rpd.id', id)
+            .where('rpd.discriminator', 'template')
             .leftJoin(
                 'milestones AS mi',
                 'mi.release_plan_definition_id',

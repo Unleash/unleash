@@ -71,6 +71,8 @@ import {
     createChangeRequestSegmentUsageReadModel,
     createFakeChangeRequestSegmentUsageReadModel,
 } from '../features/change-request-segment-usage-service/createChangeRequestSegmentUsageReadModel.js';
+import { ReleasePlanTemplateSegmentUsageReadModel } from '../features/release-plans/release-plan-template-segment-usage-read-model.js';
+import { FakeReleasePlanTemplateSegmentUsageReadModel } from '../features/release-plans/fake-release-plan-template-segment-usage-read-model.js';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service.js';
 import {
     createAccessService,
@@ -330,6 +332,10 @@ export const createServices = (
         ? createChangeRequestSegmentUsageReadModel(db)
         : createFakeChangeRequestSegmentUsageReadModel();
 
+    const releasePlanTemplateSegmentUsageReadModel = db
+        ? new ReleasePlanTemplateSegmentUsageReadModel(db)
+        : new FakeReleasePlanTemplateSegmentUsageReadModel();
+
     const constraintValidator = db
         ? new ConstraintValidator(stores.contextFieldStore)
         : new FakeConstraintValidator();
@@ -338,6 +344,7 @@ export const createServices = (
         stores,
         changeRequestAccessReadModel,
         changeRequestSegmentUsageReadModel,
+        releasePlanTemplateSegmentUsageReadModel,
         config,
         eventService,
         privateProjectChecker,

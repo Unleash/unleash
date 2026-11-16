@@ -29,6 +29,7 @@ import type { IChangeRequestAccessReadModel } from '../change-request-access-ser
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
 import type EventService from '../events/event-service.js';
 import type { IChangeRequestSegmentUsageReadModel } from '../change-request-segment-usage-service/change-request-segment-usage-read-model.js';
+import type { IReleasePlanTemplateSegmentUsageReadModel } from '../release-plans/release-plan-template-segment-usage-read-model-type.js';
 import type { UpsertSegmentSchema } from '../../openapi/index.js';
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error.js';
 import type { ResourceLimitsService } from '../resource-limits/resource-limits-service.js';
@@ -42,6 +43,8 @@ export class SegmentService implements ISegmentService {
     private changeRequestAccessReadModel: IChangeRequestAccessReadModel;
 
     private changeRequestSegmentUsageReadModel: IChangeRequestSegmentUsageReadModel;
+
+    private releasePlanTemplateSegmentUsageReadModel: IReleasePlanTemplateSegmentUsageReadModel;
 
     private config: IUnleashConfig;
 
@@ -62,6 +65,7 @@ export class SegmentService implements ISegmentService {
         }: Pick<IUnleashStores, 'segmentStore' | 'featureStrategiesStore'>,
         changeRequestAccessReadModel: IChangeRequestAccessReadModel,
         changeRequestSegmentUsageReadModel: IChangeRequestSegmentUsageReadModel,
+        releasePlanTemplateSegmentUsageReadModel: IReleasePlanTemplateSegmentUsageReadModel,
         config: IUnleashConfig,
         eventService: EventService,
         privateProjectChecker: IPrivateProjectChecker,
@@ -74,6 +78,8 @@ export class SegmentService implements ISegmentService {
         this.changeRequestAccessReadModel = changeRequestAccessReadModel;
         this.changeRequestSegmentUsageReadModel =
             changeRequestSegmentUsageReadModel;
+        this.releasePlanTemplateSegmentUsageReadModel =
+            releasePlanTemplateSegmentUsageReadModel;
         this.privateProjectChecker = privateProjectChecker;
         this.flagResolver = config.flagResolver;
         this.resourceLimitsService = resourceLimitsService;
@@ -271,6 +277,7 @@ export class SegmentService implements ISegmentService {
             return;
         }
         await this.stopWhenChangeRequestsEnabled(segment.project, user);
+        await this.stopWhenUsedByReleaseTemplate(id, segment.name);
         await this.segmentStore.delete(id);
         await this.eventService.storeEvent(
             new SegmentDeletedEvent({
@@ -291,6 +298,7 @@ export class SegmentService implements ISegmentService {
                 `Segment "${segment?.name}" is in use. To delete it, first remove it from all flags.`,
             );
         }
+        await this.stopWhenUsedByReleaseTemplate(id, segment?.name);
         await this.segmentStore.delete(id);
         await this.eventService.storeEvent(
             new SegmentDeletedEvent({
@@ -474,6 +482,18 @@ export class SegmentService implements ISegmentService {
             );
         if (!canBypass) {
             throw new PermissionError(SKIP_CHANGE_REQUEST);
+        }
+    }
+
+    private async stopWhenUsedByReleaseTemplate(id: number, name?: string) {
+        if (
+            await this.releasePlanTemplateSegmentUsageReadModel.isSegmentUsedInActiveTemplates(
+                id,
+            )
+        ) {
+            throw new ConflictError(
+                `Segment "${name}" is in use. To delete it, first remove it from all release templates or archive them.`,
+            );
         }
     }
 }

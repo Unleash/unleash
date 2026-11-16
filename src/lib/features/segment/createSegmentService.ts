@@ -13,6 +13,8 @@ import {
     createChangeRequestSegmentUsageReadModel,
     createFakeChangeRequestSegmentUsageReadModel,
 } from '../change-request-segment-usage-service/createChangeRequestSegmentUsageReadModel.js';
+import { ReleasePlanTemplateSegmentUsageReadModel } from '../release-plans/release-plan-template-segment-usage-read-model.js';
+import { FakeReleasePlanTemplateSegmentUsageReadModel } from '../release-plans/fake-release-plan-template-segment-usage-read-model.js';
 import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
@@ -50,6 +52,9 @@ export const createSegmentService = (
     const changeRequestSegmentUsageReadModel =
         createChangeRequestSegmentUsageReadModel(db);
 
+    const releasePlanTemplateSegmentUsageReadModel =
+        new ReleasePlanTemplateSegmentUsageReadModel(db);
+
     const privateProjectChecker = createPrivateProjectChecker(db, config);
 
     const eventService = createEventsService(db, config);
@@ -67,6 +72,7 @@ export const createSegmentService = (
         { segmentStore, featureStrategiesStore },
         changeRequestAccessReadModel,
         changeRequestSegmentUsageReadModel,
+        releasePlanTemplateSegmentUsageReadModel,
         config,
         eventService,
         privateProjectChecker,
@@ -83,6 +89,8 @@ export const createFakeSegmentService = (
     const changeRequestAccessReadModel = createFakeChangeRequestAccessService();
     const changeRequestSegmentUsageReadModel =
         createFakeChangeRequestSegmentUsageReadModel();
+    const releasePlanTemplateSegmentUsageReadModel =
+        new FakeReleasePlanTemplateSegmentUsageReadModel();
 
     const privateProjectChecker = createFakePrivateProjectChecker();
 
@@ -96,6 +104,7 @@ export const createFakeSegmentService = (
         { segmentStore, featureStrategiesStore },
         changeRequestAccessReadModel,
         changeRequestSegmentUsageReadModel,
+        releasePlanTemplateSegmentUsageReadModel,
         config,
         eventService,
         privateProjectChecker,

@@ -19,9 +19,17 @@ import { ApiTokenV2Store } from '../../../../lib/features/apitokensv2/api-token-
 let db: ITestDb;
 let app: IUnleashTest;
 
+const applicationOverviewEnabled = {
+    experimental: { flags: { applicationOverview: true } },
+};
+
 beforeAll(async () => {
     db = await dbInit('token_api_v2_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {}, db.rawDatabase);
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        applicationOverviewEnabled,
+        db.rawDatabase,
+    );
 });
 
 afterAll(async () => {
@@ -331,7 +339,11 @@ describe('application associations', () => {
     });
 
     test('association does not bypass token type creation permissions', async () => {
-        const authApp = await setupAppWithAuth(db.stores, {}, db.rawDatabase);
+        const authApp = await setupAppWithAuth(
+            db.stores,
+            applicationOverviewEnabled,
+            db.rawDatabase,
+        );
         try {
             await createUserWithRootRole({
                 app: authApp,
@@ -499,5 +511,100 @@ describe('application associations', () => {
                 }),
             ).toContainEqual(expect.objectContaining({ yes: 2, no: 1 }));
         }
+    });
+});
+
+describe('application associations with applicationOverview disabled', () => {
+    let gatedApp: IUnleashTest;
+
+    const payload = {
+        tokenName: 'gated-token',
+        type: ApiTokenType.BACKEND,
+        projects: ['default'],
+        environment: 'development',
+    };
+
+    beforeAll(async () => {
+        await db.stores.clientApplicationsStore.upsert({
+            appName: 'gated-app',
+        });
+        gatedApp = await setupAppWithCustomConfig(
+            db.stores,
+            {},
+            db.rawDatabase,
+        );
+    });
+
+    afterAll(async () => {
+        await gatedApp.destroy();
+    });
+
+    test('rejects a new association without creating a token', async () => {
+        const { body } = await gatedApp.request
+            .post('/api/admin/api-tokens')
+            .send({
+                ...payload,
+                tokenName: 'rejected-token',
+                appName: 'gated-app',
+            })
+            .expect(400);
+        expect(JSON.stringify(body)).toContain(
+            'Associating a token with an Application is not enabled',
+        );
+
+        const { body: list } = await gatedApp.request
+            .get('/api/admin/api-tokens')
+            .expect(200);
+        expect(
+            list.tokens.some((token) => token.tokenName === 'rejected-token'),
+        ).toBe(false);
+    });
+
+    test('still creates tokens that have no association', async () => {
+        const { body } = await gatedApp.request
+            .post('/api/admin/api-tokens')
+            .send(payload)
+            .expect(201);
+        expect(body.tokenName).toBe(payload.tokenName);
+        expect(body.appName).toBeUndefined();
+    });
+
+    test('a token associated earlier keeps reporting under its Application', async () => {
+        const token =
+            await gatedApp.services.transactionalApiTokenV2Service.create(
+                {
+                    tokenName: 'associated-before-disabling',
+                    type: ApiTokenType.BACKEND,
+                    projects: ['default'],
+                    environment: 'development',
+                    appName: 'gated-app',
+                    userCreated: true,
+                },
+                SYSTEM_USER_AUDIT,
+            );
+        await gatedApp.request
+            .post('/api/client/register')
+            .set('Authorization', token.secret)
+            .send({
+                appName: 'gated-sdk-name',
+                instanceId: 'gated-instance',
+                strategies: ['default'],
+                sdkVersion: 'unleash-client-test:1.0',
+                interval: 10,
+                started: Date.now(),
+            })
+            .expect(202);
+        await gatedApp.services.clientInstanceService.bulkAdd();
+
+        const instances =
+            await db.stores.clientInstanceStore.getByAppName('gated-app');
+        expect(
+            instances.some(
+                (instance) => instance.instanceId === 'gated-instance',
+            ),
+        ).toBe(true);
+        expect(
+            await db.stores.clientApplicationsStore.exists('gated-sdk-name'),
+        ).toBe(false);
     });
 });

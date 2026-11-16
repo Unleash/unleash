@@ -91,6 +91,7 @@ export type IFlagKey =
     | 'slackAppAuthV2'
     | 'redactFeatureLabelInMetrics'
     | 'improvedSidebarNavigation'
+    | 'applicationOverview'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -411,6 +412,10 @@ const flags: IFlags = {
     ),
     improvedSidebarNavigation: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_IMPROVED_SIDEBAR_NAVIGATION,
+        false,
+    ),
+    applicationOverview: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_APPLICATION_OVERVIEW,
         false,
     ),
 };

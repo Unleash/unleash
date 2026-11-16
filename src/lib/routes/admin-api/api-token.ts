@@ -41,7 +41,7 @@ import {
     getStandardResponses,
 } from '../../openapi/util/standard-responses.js';
 import type { FrontendApiService } from '../../features/frontend-api/frontend-api-service.js';
-import { OperationDeniedError } from '../../error/index.js';
+import { BadDataError, OperationDeniedError } from '../../error/index.js';
 import type { CreateApiTokenSchema } from '../../internals.js';
 import type { WithTransactional } from '../../server-impl.js';
 import { parseApiTokenV2Identifier } from '../../authentication/authorization-token.js';
@@ -308,6 +308,14 @@ export class ApiTokenController extends Controller {
             permissionRequired,
         );
         if (hasPermission) {
+            if (
+                createToken.appName !== undefined &&
+                !this.config.flagResolver.isEnabled('applicationOverview')
+            ) {
+                throw new BadDataError(
+                    'Associating a token with an Application is not enabled',
+                );
+            }
             const tokenV2 =
                 await this.transactionalApiTokenV2Service.transactional(
                     (service) =>

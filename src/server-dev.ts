@@ -71,6 +71,7 @@ process.nextTick(async () => {
                         perFlagLifetime: true,
                         slackAppAuthV2: true,
                         redactFeatureLabelInMetrics: true,
+                        applicationOverview: true,
                         improvedSidebarNavigation: false,
                     },
                 },

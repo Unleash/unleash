@@ -1,5 +1,5 @@
 import Search from '@mui/icons-material/Search';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     InputAdornment,
     List,
@@ -96,6 +96,17 @@ export function DropdownList<T = string>({
     const filteredOptions = options?.filter((option) =>
         option.label.toLowerCase().includes(searchText.toLowerCase()),
     );
+
+    useEffect(() => {
+        if (!hideSearch) return;
+        // move focus into the select list on mount
+        const selectedIndex = options.findIndex(
+            (option) => option.value === selectedValue,
+        );
+        // search input is index 1, selectedIndex is -1 if no selection
+        const targetIndex = Math.max(selectedIndex, 0) + 1;
+        listRefs.current[targetIndex]?.focus();
+    });
 
     return (
         <>

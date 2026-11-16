@@ -105,6 +105,11 @@ declare module '@mui/material/styles' {
             rowHover: string;
         };
 
+        /**
+         * Colors for the app shell of the navigation rework. Still in flux
+         * and may change or be removed without notice, so only use them
+         * inside the new navigation (`component/layout/AppShell`).
+         */
         appShell: {
             background: string;
             sidebar: string;

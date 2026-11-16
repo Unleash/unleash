@@ -22,6 +22,7 @@ import { SidebarList } from './sidebar/SidebarList.tsx';
 import { SidebarMoreToggle } from './sidebar/SidebarMoreToggle.tsx';
 import { SidebarSection } from './sidebar/SidebarSection.tsx';
 import { MyProjectsSection } from './projects/MyProjectsSection.tsx';
+import { OpenedProjectSection } from './projects/OpenedProjectSection.tsx';
 
 const SIDEBAR_WIDTH = 240;
 
@@ -94,6 +95,7 @@ const Sidebar: FC = () => {
                 ) : null}
             </SidebarList>
             <WorkspaceSection />
+            <OpenedProjectSection />
             <MyProjectsSection />
         </StyledSidebar>
     );

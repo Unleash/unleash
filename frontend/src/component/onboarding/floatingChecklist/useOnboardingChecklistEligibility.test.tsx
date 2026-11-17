@@ -2,9 +2,10 @@ import type { FC } from 'react';
 import { expect, test } from 'vitest';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { testServerSetup } from 'utils/testServer';
 import { ADMIN } from 'component/providers/AccessProvider/permissions.ts';
 import { useOnboardingChecklistEligibility } from './useOnboardingChecklistEligibility.ts';
+import { mockUserWithSplash } from './onboardingChecklistTestServer.ts';
 
 const server = testServerSetup();
 
@@ -13,13 +14,7 @@ const TestComponent: FC = () => {
     return <div>{eligible ? 'eligible' : 'not-eligible'}</div>;
 };
 
-const mockUser = (id: number) =>
-    testServerRoute(server, '/api/admin/user', {
-        user: { id },
-        permissions: [],
-        feedback: [],
-        splash: {},
-    });
+const mockUser = (id: number) => mockUserWithSplash(server, {}, id);
 
 test('non-admin is not eligible even when user id is 1', async () => {
     mockUser(1);

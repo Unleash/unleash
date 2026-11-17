@@ -11,16 +11,26 @@ export const CHECKLIST_ELIGIBLE_SPLASH = {
     [ONBOARDING_CHECKLIST_ELIGIBLE_SPLASH_ID]: true,
 };
 
+export const userResponseWithSplash = (
+    splash: Record<string, boolean>,
+    userId = 1,
+) => ({
+    user: { id: userId },
+    permissions: [],
+    feedback: [],
+    splash,
+});
+
 export const mockUserWithSplash = (
     server: SetupServer,
     splash: Record<string, boolean>,
+    userId = 1,
 ) =>
-    testServerRoute(server, '/api/admin/user', {
-        user: { id: 1 },
-        permissions: [],
-        feedback: [],
-        splash,
-    });
+    testServerRoute(
+        server,
+        '/api/admin/user',
+        userResponseWithSplash(splash, userId),
+    );
 
 export const mockChecklistProjectOnboardingStarted = (server: SetupServer) =>
     testServerRoute(

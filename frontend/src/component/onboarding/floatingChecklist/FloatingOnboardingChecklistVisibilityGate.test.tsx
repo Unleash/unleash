@@ -9,6 +9,10 @@ import {
     ONBOARDING_CHECKLIST_ELIGIBILITY_DECIDED_SPLASH_ID,
     ONBOARDING_CHECKLIST_ELIGIBLE_SPLASH_ID,
 } from './useOnboardingChecklistVisibility.ts';
+import {
+    CHECKLIST_ELIGIBLE_SPLASH,
+    userResponseWithSplash,
+} from './onboardingChecklistTestServer.ts';
 
 vi.mock('./FloatingOnboardingChecklist.tsx', () => ({
     FloatingOnboardingChecklist: () => <div>CHECKLIST</div>,
@@ -49,12 +53,7 @@ const setupMocks = ({
             }),
         ),
         http.get('*/api/admin/user', () =>
-            HttpResponse.json({
-                user: { id: 1 },
-                permissions: [],
-                feedback: [],
-                splash: { ...splash },
-            }),
+            HttpResponse.json(userResponseWithSplash({ ...splash })),
         ),
         http.get('*/api/admin/projects', () => {
             state.projectsFetches += 1;
@@ -98,10 +97,7 @@ const adminOpts = { permissions: [{ permission: ADMIN }] };
 describe('visibility gate', () => {
     test('shows the checklist immediately when the user is already known to be eligible', async () => {
         const mocks = setupMocks({
-            initialSplash: {
-                [ONBOARDING_CHECKLIST_ELIGIBILITY_DECIDED_SPLASH_ID]: true,
-                [ONBOARDING_CHECKLIST_ELIGIBLE_SPLASH_ID]: true,
-            },
+            initialSplash: CHECKLIST_ELIGIBLE_SPLASH,
             projects: ['onboarded'],
             defaultStatus: 'onboarded',
         });

@@ -1,9 +1,8 @@
-// webhook-fetcher.test.ts
 import http from 'node:http';
 import { describe, expect, test, vi } from 'vitest';
-import { fetchPinned } from './addon.js';
+import { fetchPinned } from './fetch.js';
 import type { ValidatedUrl } from './validate-url.js';
-import WebhookAddon from './webhook.js';
+import WebhookAddon from '../addons/webhook.js';
 import type { IAddonConfig, IFlagKey, IFlagResolver } from '../types/index.js';
 import noLogger from '../../test/fixtures/no-logger.js';
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service.js';

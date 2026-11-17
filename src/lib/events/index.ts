@@ -21,6 +21,10 @@ export const FEATURE_IMPORT = 'feature-import' as const;
 export const FEATURE_LINK_ADDED = 'feature-link-added' as const;
 export const FEATURE_LINK_REMOVED = 'feature-link-removed' as const;
 export const FEATURE_LINK_UPDATED = 'feature-link-updated' as const;
+export const FEATURE_PAYLOAD_SCHEMA_UPDATED =
+    'feature-payload-schema-updated' as const;
+export const FEATURE_PAYLOAD_SCHEMA_DELETED =
+    'feature-payload-schema-deleted' as const;
 export const FEATURE_TAGGED = 'feature-tagged' as const;
 export const FEATURE_TAG_IMPORT = 'feature-tag-import' as const;
 export const FEATURE_STRATEGY_UPDATE = 'feature-strategy-update' as const;
@@ -273,6 +277,8 @@ export const IEventTypes = [
     FEATURE_LINK_ADDED,
     FEATURE_LINK_REMOVED,
     FEATURE_LINK_UPDATED,
+    FEATURE_PAYLOAD_SCHEMA_UPDATED,
+    FEATURE_PAYLOAD_SCHEMA_DELETED,
     STRATEGY_ORDER_CHANGED,
     FEATURE_UNTAGGED,
     FEATURE_STALE_ON,

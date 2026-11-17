@@ -121,6 +121,8 @@ import {
     FEATURE_LINK_REMOVED,
     FEATURE_LINK_UPDATED,
     FEATURE_LINK_ADDED,
+    FEATURE_PAYLOAD_SCHEMA_UPDATED,
+    FEATURE_PAYLOAD_SCHEMA_DELETED,
     APPLICATION_CREATED,
     MILESTONE_PROGRESSION_DELETED,
     MILESTONE_PROGRESSION_CHANGED,
@@ -815,6 +817,55 @@ export class FeatureLinkRemovedEvent extends BaseEvent {
         auditUser: IAuditUser;
     }) {
         super(FEATURE_LINK_REMOVED, p.auditUser);
+        const { project, featureName, preData } = p;
+        this.project = project;
+        this.featureName = featureName;
+        this.data = null;
+        this.preData = preData;
+    }
+}
+
+export class FeaturePayloadSchemaUpdatedEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly featureName: string;
+
+    readonly data: { schema: Record<string, unknown> };
+
+    readonly preData: { schema: Record<string, unknown> } | null;
+
+    constructor(p: {
+        featureName: string;
+        project: string;
+        data: { schema: Record<string, unknown> };
+        preData: { schema: Record<string, unknown> } | null;
+        auditUser: IAuditUser;
+    }) {
+        super(FEATURE_PAYLOAD_SCHEMA_UPDATED, p.auditUser);
+        const { project, featureName, data, preData } = p;
+        this.project = project;
+        this.featureName = featureName;
+        this.data = data;
+        this.preData = preData;
+    }
+}
+
+export class FeaturePayloadSchemaDeletedEvent extends BaseEvent {
+    readonly project: string;
+
+    readonly featureName: string;
+
+    readonly preData: { schema: Record<string, unknown> };
+
+    readonly data: null;
+
+    constructor(p: {
+        featureName: string;
+        project: string;
+        preData: { schema: Record<string, unknown> };
+        auditUser: IAuditUser;
+    }) {
+        super(FEATURE_PAYLOAD_SCHEMA_DELETED, p.auditUser);
         const { project, featureName, preData } = p;
         this.project = project;
         this.featureName = featureName;

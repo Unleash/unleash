@@ -79,14 +79,9 @@ export const ActiveStateSelector = ({
                 <DropdownList<StrategyState>
                     options={options}
                     selectedValue={currentState}
-                    hideSearch
                     onChange={(value) => {
                         onChange(value);
                         setAnchorEl(null);
-                    }}
-                    search={{
-                        label: 'Filter strategy statuses',
-                        placeholder: 'Select strategy status',
                     }}
                 />
             </SelectorPopover>

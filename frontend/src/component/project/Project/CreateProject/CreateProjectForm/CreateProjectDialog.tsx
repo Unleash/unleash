@@ -558,8 +558,10 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
                             }))}
                             selectedOptions={projectEnvironments}
                             onChange={setProjectEnvironments}
-                            searchLabel='Filter project environments'
-                            searchPlaceholder='Select project environments'
+                            search={{
+                                label: 'Filter project environments',
+                                placeholder: 'Select project environments',
+                            }}
                         />
 
                         <SinglePillDropdown<string>
@@ -578,15 +580,16 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
                                 }),
                             )}
                             onChange={(value) => setProjectStickiness(value)}
-                            searchLabel='Filter stickiness options'
-                            searchPlaceholder='Select default stickiness'
+                            search={{
+                                label: 'Filter stickiness options',
+                                placeholder: 'Select default stickiness',
+                            }}
                         />
 
                         {isEnterprise() ? (
                             <SinglePillDropdown<string>
                                 label={`${projectModeLabel} project`}
                                 selectedValue={projectMode}
-                                hideSearch
                                 tooltip={{
                                     header: 'Set project collaboration mode',
                                 }}
@@ -594,8 +597,6 @@ export const CreateProjectDialog: FC<Props> = ({ open, onClose }) => {
                                 onChange={(value) =>
                                     setProjectMode(value as typeof projectMode)
                                 }
-                                searchLabel='Filter project mode options'
-                                searchPlaceholder='Select project mode'
                             />
                         ) : null}
                     </Section>

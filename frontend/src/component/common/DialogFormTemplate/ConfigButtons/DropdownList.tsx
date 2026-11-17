@@ -64,11 +64,10 @@ function useSelectionManagement<T>(handleToggle: (value: T) => () => void) {
 export type DropdownListProps<T> = {
     options: Array<{ label: string; value: T; description?: string }>;
     onChange: (value: T) => void;
-    search: {
+    search?: {
         label: string;
         placeholder: string;
     };
-    hideSearch?: boolean;
     header?: { header: string; description?: string };
     multiselect?: { selectedOptions: Set<T> };
     selectedValue?: T;
@@ -78,7 +77,6 @@ export function DropdownList<T = string>({
     options,
     onChange,
     search,
-    hideSearch,
     header,
     multiselect,
     selectedValue,
@@ -99,7 +97,7 @@ export function DropdownList<T = string>({
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: mount-only effect; focus should move into the list once, when the dropdown opens
     useEffect(() => {
-        if (!hideSearch) return;
+        if (search) return;
         // move focus into the select list on mount
         const selectedIndex = options.findIndex(
             (option) => option.value === selectedValue,
@@ -121,7 +119,7 @@ export function DropdownList<T = string>({
                     ) : null}
                 </StyledHeader>
             ) : null}
-            {hideSearch ? null : (
+            {search && (
                 <StyledDropdownSearchContainer>
                     <StyledDropdownSearch
                         size='small'

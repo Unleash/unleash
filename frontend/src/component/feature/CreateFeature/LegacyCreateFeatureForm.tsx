@@ -298,7 +298,6 @@ export const LegacyCreateFeatureForm = ({
                                     )?.name || 'Select flag type'
                                 }
                                 selectedValue={type}
-                                hideSearch
                                 tooltip={{
                                     header: 'Select a flag type',
                                 }}
@@ -312,8 +311,6 @@ export const LegacyCreateFeatureForm = ({
                                 onChange={(value) =>
                                     setType(value as typeof type)
                                 }
-                                searchLabel='Filter flag types'
-                                searchPlaceholder='Select flag type'
                             />
                             <MultiPillDropdown<string>
                                 label={
@@ -346,8 +343,10 @@ export const LegacyCreateFeatureForm = ({
                                     });
                                     setTags(new Set(normalized));
                                 }}
-                                searchLabel='Filter tags'
-                                searchPlaceholder='Select tags'
+                                search={{
+                                    label: 'Filter tags',
+                                    placeholder: 'Select tags',
+                                }}
                             />
                         </>
                     }

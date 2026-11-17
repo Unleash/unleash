@@ -16,7 +16,10 @@ import Input from 'component/common/Input/Input';
 import { NamingPatternInfo } from './NamingPatternInfo.tsx';
 import type { CreateFeatureNamingPatternSchema } from 'openapi';
 import { HeaderBreadcrumb } from './HeaderBreadcrumb.tsx';
-import { DropdownList } from './ConfigButtons/DropdownList.tsx';
+import {
+    DropdownList,
+    type DropdownListProps,
+} from './ConfigButtons/DropdownList.tsx';
 import { StyledPopover } from './ConfigButtons/shared.styles.tsx';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
 
@@ -141,10 +144,8 @@ type SinglePillProps<T> = {
     tooltip: Tooltip;
     options: DropdownOption<T>[];
     onChange: (value: T) => void;
-    searchLabel: string;
-    searchPlaceholder: string;
+    search?: DropdownListProps<T>['search'];
     selectedValue?: T;
-    hideSearch?: boolean;
 };
 
 export function SinglePillDropdown<T = string>({
@@ -152,10 +153,8 @@ export function SinglePillDropdown<T = string>({
     tooltip,
     options,
     onChange,
-    searchLabel,
-    searchPlaceholder,
+    search,
     selectedValue,
-    hideSearch,
 }: SinglePillProps<T>) {
     const ref = useRef<HTMLButtonElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -177,15 +176,11 @@ export function SinglePillDropdown<T = string>({
                     header={tooltip}
                     options={options}
                     selectedValue={selectedValue}
-                    hideSearch={hideSearch}
                     onChange={(value) => {
                         onChange(value);
                         setAnchorEl(null);
                     }}
-                    search={{
-                        label: searchLabel,
-                        placeholder: searchPlaceholder,
-                    }}
+                    search={search}
                 />
             </StyledPopover>
         </>
@@ -198,8 +193,7 @@ type MultiPillProps<T> = {
     options: DropdownOption<T>[];
     selectedOptions: Set<T>;
     onChange: (values: Set<T>) => void;
-    searchLabel: string;
-    searchPlaceholder: string;
+    search: DropdownListProps<T>['search'];
 };
 
 export function MultiPillDropdown<T = string>({
@@ -208,8 +202,7 @@ export function MultiPillDropdown<T = string>({
     options,
     selectedOptions,
     onChange,
-    searchLabel,
-    searchPlaceholder,
+    search,
 }: MultiPillProps<T>) {
     const ref = useRef<HTMLButtonElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -238,10 +231,7 @@ export function MultiPillDropdown<T = string>({
                     options={options}
                     multiselect={{ selectedOptions }}
                     onChange={toggle}
-                    search={{
-                        label: searchLabel,
-                        placeholder: searchPlaceholder,
-                    }}
+                    search={search}
                 />
             </StyledPopover>
         </>

@@ -139,14 +139,9 @@ export const FlagTypeFieldset = ({
                             header={{ header: 'Used for' }}
                             options={standardTypeOptions}
                             selectedValue={type}
-                            hideSearch
                             onChange={(value) => {
                                 onChange(value as CreateFeatureSchemaType);
                                 setUsedForAnchor(null);
-                            }}
-                            search={{
-                                label: 'Filter flag types',
-                                placeholder: 'Select flag type',
                             }}
                         />
                     </StyledPopover>

@@ -80,6 +80,24 @@ vi.mock('component/onboarding/intro/IntroProvider.tsx', () => ({
     ONBOARDING_INTRO_FINISHED_SPLASH_ID: 'intro-finished',
 }));
 
+vi.mock('../SearchDocs/SearchDocs.tsx', () => ({
+    SearchDocsChat: ({
+        open,
+        onOpenChange,
+    }: {
+        open: boolean;
+        onOpenChange: (open: boolean) => void;
+    }) =>
+        open ? (
+            <div>
+                Docs chat
+                <button type='button' onClick={() => onOpenChange(false)}>
+                    Close docs chat
+                </button>
+            </div>
+        ) : null,
+}));
+
 const withLearningLab = () =>
     testServerRoute(server, '/api/admin/ui-config', {
         flags: { learningLab: true },
@@ -333,4 +351,74 @@ test('surfaces the intro-closed hint after the intro closes from the menu', asyn
     await userEvent.click(screen.getByText('Unleash Intro'));
 
     expect(await screen.findByText(INTRO_HINT_TEXT)).toBeInTheDocument();
+});
+
+const withSearchDocsWidget = () =>
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: { searchDocsWidget: true },
+    });
+
+test('groups the menu items for the new sidebar with Search docs among the docs resources', async () => {
+    withSearchDocsWidget();
+    render(<HelpResources variant='sidebar' />);
+
+    await userEvent.click(
+        await screen.findByRole('button', { name: 'Help and resources' }),
+    );
+    await screen.findByRole('menuitem', { name: 'Search docs' });
+
+    expect(
+        Array.from(screen.getByRole('menu').children, (item) =>
+            item.tagName === 'HR' ? '---' : item.textContent,
+        ),
+    ).toEqual([
+        expect.stringContaining('Visit Learning Lab'),
+        'Unleash Intro',
+        '---',
+        'Search docs',
+        'Documentation',
+        'Learning Lab',
+        "What's new",
+        '---',
+        'GitHub',
+        'Slack community',
+        'Give feedback',
+    ]);
+});
+
+const openSearchDocsFromMenu = async () => {
+    await userEvent.click(
+        await screen.findByRole('button', { name: 'Help and resources' }),
+    );
+    await userEvent.click(
+        await screen.findByRole('menuitem', { name: 'Search docs' }),
+    );
+};
+
+test('opens the docs chat from the Search docs item', async () => {
+    withSearchDocsWidget();
+    render(<HelpResources variant='sidebar' />);
+
+    await openSearchDocsFromMenu();
+
+    expect(await screen.findByText('Docs chat')).toBeInTheDocument();
+    await waitFor(() =>
+        expect(screen.queryByRole('menu')).not.toBeInTheDocument(),
+    );
+});
+
+test('reopens the docs chat from the menu after the chat was closed', async () => {
+    withSearchDocsWidget();
+    render(<HelpResources variant='sidebar' />);
+    await openSearchDocsFromMenu();
+    await userEvent.click(
+        await screen.findByRole('button', { name: 'Close docs chat' }),
+    );
+    await waitFor(() =>
+        expect(screen.queryByText('Docs chat')).not.toBeInTheDocument(),
+    );
+
+    await openSearchDocsFromMenu();
+
+    expect(await screen.findByText('Docs chat')).toBeInTheDocument();
 });

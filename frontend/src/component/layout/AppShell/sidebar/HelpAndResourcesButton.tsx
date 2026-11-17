@@ -13,7 +13,7 @@ const StyledButton = styled(ButtonBase)(({ theme }) => ({
 
 export const HelpAndResourcesButton: FC = () => (
     <HelpResources
-        placement='right-end'
+        variant='sidebar'
         renderTrigger={({ ref, open, onClick }) => (
             <StyledButton
                 ref={ref}

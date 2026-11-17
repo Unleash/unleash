@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { styled, useTheme } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { AskAiChat } from '@fern-api/search-widget';
@@ -57,6 +58,42 @@ const SearchDocs = () => {
             </StyledTrigger>
             <AskAiChat.Panel />
         </AskAiChat.Root>
+    );
+};
+
+interface ISearchDocsChatProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+}
+
+export const SearchDocsChat = ({
+    open,
+    onOpenChange,
+}: ISearchDocsChatProps) => {
+    const theme = useTheme();
+    const { trackEvent } = useEventTracker();
+
+    // The parent controls open, so track when open changes, not in onOpenChange:
+    // the widget doesn't call onOpenChange when the parent opens the chat.
+    useEffect(() => {
+        if (!open) return;
+        trackEvent('search-docs', {
+            props: {
+                eventType: 'opened',
+            },
+        });
+    }, [open, trackEvent]);
+
+    return (
+        <AskAiChat
+            domain={DOCS_DOMAIN}
+            lang='en'
+            trigger='none'
+            theme={theme.palette.mode}
+            accentColor={theme.palette.primary.main}
+            open={open}
+            onOpenChange={onOpenChange}
+        />
     );
 };
 

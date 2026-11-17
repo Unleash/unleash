@@ -1,7 +1,8 @@
-import { type ReactNode, useContext, useState } from 'react';
+import { lazy, type ReactNode, Suspense, useContext, useState } from 'react';
 import {
     Badge,
     Box,
+    Divider,
     IconButton,
     Menu,
     MenuItem,
@@ -20,6 +21,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import NewReleasesOutlinedIcon from '@mui/icons-material/NewReleasesOutlined';
 import RocketLaunchOutlinedIcon from '@mui/icons-material/RocketLaunchOutlined';
 import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import LearningLabIcon from 'assets/icons/menu/learning-lab.svg?react';
 import { HelpMenuHint } from './HelpMenuHint.tsx';
 import { HelpMenuAnnouncement } from './HelpMenuAnnouncement.tsx';
@@ -38,6 +40,12 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { useVariant } from 'hooks/useVariant';
 import { useIntro } from 'component/onboarding/intro/IntroProvider.tsx';
 import { getLocalStorageItem, setLocalStorageItem } from 'utils/storage.ts';
+
+const LazySearchDocsChat = lazy(() =>
+    import('../SearchDocs/SearchDocs.tsx').then((module) => ({
+        default: module.SearchDocsChat,
+    })),
+);
 
 const RELOCATION_DOT_SEEN_KEY = 'help-menu-relocation:menu-opened:v1';
 
@@ -184,26 +192,32 @@ type HelpResourcesTriggerProps = {
     onClick: (event: React.MouseEvent<HTMLElement>) => void;
 };
 
-const MENU_PLACEMENTS = {
-    'bottom-end': {
-        anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
-        transformOrigin: { vertical: 'top', horizontal: 'right' },
+const PLACEMENTS = {
+    header: {
+        hint: 'bottom-end',
+        menu: {
+            anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
+            transformOrigin: { vertical: 'top', horizontal: 'right' },
+        },
     },
-    'right-end': {
-        anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
-        transformOrigin: { vertical: 'bottom', horizontal: 'left' },
-        marginThreshold: 8,
+    sidebar: {
+        hint: 'right-end',
+        menu: {
+            anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
+            transformOrigin: { vertical: 'bottom', horizontal: 'left' },
+            marginThreshold: 8,
+        },
     },
 } as const;
 
 interface IHelpResourcesProps {
+    variant?: keyof typeof PLACEMENTS;
     renderTrigger?: (props: HelpResourcesTriggerProps) => ReactNode;
-    placement?: keyof typeof MENU_PLACEMENTS;
 }
 
 export const HelpResources = ({
+    variant = 'header',
     renderTrigger,
-    placement = 'bottom-end',
 }: IHelpResourcesProps) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [buttonEl, setButtonEl] = useState<HTMLElement | null>(null);
@@ -211,6 +225,9 @@ export const HelpResources = ({
     const { trackEvent } = useEventTracker();
     const { open: openIntro } = useIntro();
     const learningLabFlag = useUiFlag('learningLab');
+    const searchDocsWidget = useUiFlag('searchDocsWidget');
+    const showSearchDocs = variant === 'sidebar' && searchDocsWidget;
+    const [searchDocsOpen, setSearchDocsOpen] = useState(false);
     const learningLabVariant = useVariant<ILearningLabVariant>(
         learningLabFlag || undefined,
     );
@@ -224,7 +241,9 @@ export const HelpResources = ({
         learningLabVariant?.visitLabel ?? LEARNING_LAB_DEFAULTS.visitLabel;
     const learningLabMenuLabel =
         learningLabVariant?.menuLabel ?? LEARNING_LAB_DEFAULTS.menuLabel;
-    const variant = learningLabFlag ? learningLabFlag.name : 'default';
+    const learningLabVariantName = learningLabFlag
+        ? learningLabFlag.name
+        : 'default';
 
     const floatingOnboardingChecklist = useContext(
         FloatingOnboardingChecklistContext,
@@ -266,7 +285,7 @@ export const HelpResources = ({
         trackEvent(EVENT_NAME, {
             props: {
                 eventType: 'opened',
-                variant,
+                variant: learningLabVariantName,
             },
         });
     };
@@ -278,7 +297,7 @@ export const HelpResources = ({
             props: {
                 eventType: 'click',
                 option,
-                variant,
+                variant: learningLabVariantName,
             },
         });
         handleClose();
@@ -287,6 +306,11 @@ export const HelpResources = ({
     const handleGetStarted = () => {
         handleOptionClick('get-started');
         floatingOnboardingChecklist?.open();
+    };
+
+    const handleSearchDocs = () => {
+        handleOptionClick('search-docs');
+        setSearchDocsOpen(true);
     };
 
     const { openFeedback } = useFeedback('general', 'automatic');
@@ -300,6 +324,141 @@ export const HelpResources = ({
                 'What could be improved to make Unleash work better for you? ',
         });
     };
+
+    const featuredLearningLabItem = (
+        <StyledFeaturedMenuItem
+            key='learning-lab-featured'
+            component='a'
+            href={learningLabUrl}
+            target='_blank'
+            rel='noopener noreferrer'
+            onClick={() => handleOptionClick('learning-lab-featured')}
+            disableGutters
+        >
+            <StyledLearningLabIcon />
+            <StyledLearningLabContent>
+                <StyledPortalTitle variant='subtitle2'>
+                    {learningLabTitle}
+                </StyledPortalTitle>
+                <StyledDimText variant='body2'>
+                    {learningLabDescription}
+                </StyledDimText>
+                <StyledVisitLink>
+                    <StyledBoldText variant='body2' color='inherit'>
+                        {learningLabVisitLabel}
+                    </StyledBoldText>
+                    <ArrowForwardIcon fontSize='small' />
+                </StyledVisitLink>
+            </StyledLearningLabContent>
+        </StyledFeaturedMenuItem>
+    );
+
+    const getStartedItem = showGetStarted ? (
+        <StyledMenuItem key='get-started' onClick={handleGetStarted}>
+            <RocketLaunchOutlinedIcon fontSize='small' />
+            Get started
+            <Box sx={{ flexGrow: 1 }} />
+            <OnboardingProgressBadge />
+        </StyledMenuItem>
+    ) : null;
+
+    const whatsNewItem = (
+        <StyledMenuItem
+            key='whats-new'
+            component={Link}
+            to='/whats-new'
+            onClick={() => handleOptionClick('whats-new')}
+        >
+            <NewReleasesOutlinedIcon fontSize='small' />
+            What's new
+        </StyledMenuItem>
+    );
+
+    const introItem = (
+        <StyledMenuItem
+            key='quick-tour'
+            onClick={() => {
+                handleOptionClick('quick-tour');
+                openIntro({
+                    onExited: () => showHelpButtonHint('intro-closed'),
+                });
+            }}
+            data-testid='QUICK_TOUR_BUTTON'
+        >
+            <ExploreOutlinedIcon fontSize='small' />
+            Unleash Intro
+        </StyledMenuItem>
+    );
+
+    const searchDocsItem = showSearchDocs ? (
+        <StyledMenuItem key='search-docs' onClick={handleSearchDocs}>
+            <AutoAwesomeIcon fontSize='small' />
+            Search docs
+        </StyledMenuItem>
+    ) : null;
+
+    const documentationItem = (
+        <StyledMenuItem
+            key='documentation'
+            component='a'
+            href={DOCUMENTATION_URL}
+            target='_blank'
+            rel='noopener noreferrer'
+            onClick={() => handleOptionClick('documentation')}
+        >
+            <MenuBookIcon fontSize='small' />
+            Documentation
+        </StyledMenuItem>
+    );
+
+    const learningLabItem = (
+        <StyledMenuItem
+            key='learning-lab'
+            component='a'
+            href={learningLabUrl}
+            target='_blank'
+            rel='noopener noreferrer'
+            onClick={() => handleOptionClick('learning-lab')}
+        >
+            <SchoolOutlinedIcon fontSize='small' />
+            {learningLabMenuLabel}
+        </StyledMenuItem>
+    );
+
+    const githubItem = (
+        <StyledMenuItem
+            key='github'
+            component='a'
+            href={GITHUB_URL}
+            target='_blank'
+            rel='noopener noreferrer'
+            onClick={() => handleOptionClick('github')}
+        >
+            <GitHubIcon fontSize='small' />
+            GitHub
+        </StyledMenuItem>
+    );
+
+    const giveFeedbackItem = (
+        <StyledMenuItem key='give-feedback' onClick={handleGiveFeedback}>
+            <ChatOutlinedIcon fontSize='small' />
+            Give feedback
+        </StyledMenuItem>
+    );
+
+    const slackItem = (
+        <StyledMenuItem
+            key='slack'
+            component='a'
+            href={SLACK_URL}
+            target='_blank'
+            rel='noopener noreferrer'
+            onClick={() => handleOptionClick('slack')}
+        >
+            <SlackIcon />
+            Slack community
+        </StyledMenuItem>
+    );
 
     return (
         <>
@@ -336,7 +495,7 @@ export const HelpResources = ({
             <HelpMenuHint
                 open={activeHint === 'get-started'}
                 anchorEl={buttonEl}
-                placement={placement}
+                placement={PLACEMENTS[variant].hint}
                 onClose={dismissHelpButtonHint}
             >
                 You can reopen the Get started checklist from here anytime
@@ -344,7 +503,7 @@ export const HelpResources = ({
             <HelpMenuHint
                 open={activeHint === 'intro-closed'}
                 anchorEl={buttonEl}
-                placement={placement}
+                placement={PLACEMENTS[variant].hint}
                 onClose={dismissHelpButtonHint}
             >
                 You can restart the <IntroHintIcon /> Unleash Intro from here
@@ -354,105 +513,43 @@ export const HelpResources = ({
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-                {...MENU_PLACEMENTS[placement]}
+                {...PLACEMENTS[variant].menu}
             >
-                <StyledFeaturedMenuItem
-                    component='a'
-                    href={learningLabUrl}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    onClick={() => handleOptionClick('learning-lab-featured')}
-                    disableGutters
-                >
-                    <StyledLearningLabIcon />
-                    <StyledLearningLabContent>
-                        <StyledPortalTitle variant='subtitle2'>
-                            {learningLabTitle}
-                        </StyledPortalTitle>
-                        <StyledDimText variant='body2'>
-                            {learningLabDescription}
-                        </StyledDimText>
-                        <StyledVisitLink>
-                            <StyledBoldText variant='body2' color='inherit'>
-                                {learningLabVisitLabel}
-                            </StyledBoldText>
-                            <ArrowForwardIcon fontSize='small' />
-                        </StyledVisitLink>
-                    </StyledLearningLabContent>
-                </StyledFeaturedMenuItem>
-                {showGetStarted && (
-                    <StyledMenuItem onClick={handleGetStarted}>
-                        <RocketLaunchOutlinedIcon fontSize='small' />
-                        Get started
-                        <Box sx={{ flexGrow: 1 }} />
-                        <OnboardingProgressBadge />
-                    </StyledMenuItem>
-                )}
-                <StyledMenuItem
-                    component={Link}
-                    to='/whats-new'
-                    onClick={() => handleOptionClick('whats-new')}
-                >
-                    <NewReleasesOutlinedIcon fontSize='small' />
-                    What's new
-                </StyledMenuItem>
-                <StyledMenuItem
-                    onClick={() => {
-                        handleOptionClick('quick-tour');
-                        openIntro({
-                            onExited: () => showHelpButtonHint('intro-closed'),
-                        });
-                    }}
-                    data-testid='QUICK_TOUR_BUTTON'
-                >
-                    <ExploreOutlinedIcon fontSize='small' />
-                    Unleash Intro
-                </StyledMenuItem>
-                <StyledMenuItem
-                    component='a'
-                    href={DOCUMENTATION_URL}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    onClick={() => handleOptionClick('documentation')}
-                >
-                    <MenuBookIcon fontSize='small' />
-                    Documentation
-                </StyledMenuItem>
-                <StyledMenuItem
-                    component='a'
-                    href={learningLabUrl}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    onClick={() => handleOptionClick('learning-lab')}
-                >
-                    <SchoolOutlinedIcon fontSize='small' />
-                    {learningLabMenuLabel}
-                </StyledMenuItem>
-                <StyledMenuItem
-                    component='a'
-                    href={GITHUB_URL}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    onClick={() => handleOptionClick('github')}
-                >
-                    <GitHubIcon fontSize='small' />
-                    GitHub
-                </StyledMenuItem>
-                <StyledMenuItem onClick={handleGiveFeedback}>
-                    <ChatOutlinedIcon fontSize='small' />
-                    Give feedback
-                </StyledMenuItem>
-                <StyledMenuItem
-                    component='a'
-                    href={SLACK_URL}
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    onClick={() => handleOptionClick('slack')}
-                >
-                    <SlackIcon />
-                    Slack community
-                </StyledMenuItem>
+                {variant === 'sidebar'
+                    ? [
+                          featuredLearningLabItem,
+                          getStartedItem,
+                          introItem,
+                          <Divider key='divider-learn' />,
+                          searchDocsItem,
+                          documentationItem,
+                          learningLabItem,
+                          whatsNewItem,
+                          <Divider key='divider-community' />,
+                          githubItem,
+                          slackItem,
+                          giveFeedbackItem,
+                      ]
+                    : [
+                          featuredLearningLabItem,
+                          getStartedItem,
+                          whatsNewItem,
+                          introItem,
+                          documentationItem,
+                          learningLabItem,
+                          githubItem,
+                          giveFeedbackItem,
+                          slackItem,
+                      ]}
             </StyledMenu>
+            {showSearchDocs && (
+                <Suspense fallback={null}>
+                    <LazySearchDocsChat
+                        open={searchDocsOpen}
+                        onOpenChange={setSearchDocsOpen}
+                    />
+                </Suspense>
+            )}
         </>
     );
 };

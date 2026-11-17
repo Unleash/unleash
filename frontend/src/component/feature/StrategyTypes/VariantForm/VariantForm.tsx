@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { defaultPayloadValue } from 'component/common/SchemaForm/schemaFormValues.ts';
 import Input from 'component/common/Input/Input.tsx';
 import SelectMenu from 'component/common/select.tsx';
 import { Button, InputAdornment, styled, Tooltip } from '@mui/material';
@@ -104,8 +105,13 @@ const payloadOptions = [
     { key: 'number', label: 'number' },
 ];
 
-const emptyPayload = (schemaActive: boolean): IPayload =>
-    schemaActive ? { type: 'json', value: '' } : { type: 'string', value: '' };
+const emptyPayload = (isNew: boolean, schema?: JsonSchemaProperty): IPayload =>
+    isNew && schema
+        ? {
+              type: 'json',
+              value: JSON.stringify(defaultPayloadValue(schema), null, 2),
+          }
+        : { type: 'string', value: '' };
 
 enum ErrorField {
     NAME = 'name',
@@ -178,7 +184,8 @@ export const VariantForm = ({
         String(calculateVariantWeight(variant.weight)),
     );
     const [payload, setPayload] = useState<IPayload>(
-        variant.payload || emptyPayload(schemaActive),
+        variant.payload ||
+            emptyPayload(variant.new, schemaActive ? payloadSchema : undefined),
     );
 
     const [errors, setErrors] = useState<IVariantFormErrors>({});

@@ -1,6 +1,9 @@
 import { expect, test } from 'vitest';
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
-import { formValueWithExamplesAsDefaults } from './schemaFormValues';
+import {
+    defaultPayloadValue,
+    formValueWithExamplesAsDefaults,
+} from './schemaFormValues';
 
 test('resolves each property from its own default, then the root default, then its own example, then the root example', () => {
     const schema: JsonSchemaProperty = {
@@ -94,4 +97,78 @@ test('ignores a non-object default or example at the root', () => {
     expect(formValueWithExamplesAsDefaults(schema)).toEqual({
         name: undefined,
     });
+});
+
+test('defaultPayloadValue fills every required gap with a type-appropriate empty value, preferring a declared default over an example', () => {
+    const schema: JsonSchemaProperty = {
+        type: 'object',
+        required: [
+            'name',
+            'fromExampleOnly',
+            'age',
+            'active',
+            'tags',
+            'labels',
+            'role',
+            'address',
+        ],
+        properties: {
+            name: { type: 'string', default: 'Jane' },
+            fromExampleOnly: { type: 'string', examples: ['an example'] },
+            age: { type: 'number' },
+            active: { type: 'boolean' },
+            tags: { type: 'array', items: { type: 'string' } },
+            labels: {
+                type: 'object',
+                additionalProperties: { type: 'string' },
+            },
+            role: { type: 'string', enum: ['admin', 'viewer'] },
+            address: {
+                type: 'object',
+                required: ['city'],
+                properties: { city: { type: 'string' } },
+            },
+        },
+    };
+
+    expect(defaultPayloadValue(schema)).toEqual({
+        name: 'Jane',
+        fromExampleOnly: '',
+        age: 0,
+        active: false,
+        tags: [],
+        labels: {},
+        role: 'admin',
+        address: { city: '' },
+    });
+});
+
+test('defaultPayloadValue omits an optional property with no declared default instead of inventing a skeleton value', () => {
+    const schema: JsonSchemaProperty = {
+        type: 'object',
+        required: ['name'],
+        properties: {
+            name: { type: 'string', default: 'Jane' },
+            notes: { type: 'string' },
+        },
+    };
+
+    expect(defaultPayloadValue(schema)).toEqual({ name: 'Jane' });
+});
+
+test('defaultPayloadValue omits an optional object even when one of its own properties is required', () => {
+    const schema: JsonSchemaProperty = {
+        type: 'object',
+        required: ['name'],
+        properties: {
+            name: { type: 'string', default: 'Jane' },
+            address: {
+                type: 'object',
+                required: ['city'],
+                properties: { city: { type: 'string' } },
+            },
+        },
+    };
+
+    expect(defaultPayloadValue(schema)).toEqual({ name: 'Jane' });
 });

@@ -94,3 +94,39 @@ describe('useNumericStringInput', () => {
         expect(result.current.inputValue).toBe('20');
     });
 });
+
+test.each([
+    ['1e2', 100, 100],
+    ['5e1', 50, 50],
+    ['1e-1', 0, 0.1],
+    ['-25.9', -25, -25.9],
+    ['25.9', 25, 25.9],
+])('parses %s before truncating in integer mode', (input, integer, float) => {
+    for (const [parseMode, expected] of [
+        ['integer', integer],
+        ['float', float],
+    ] as const) {
+        const onChange = vi.fn();
+        const { result, unmount } = renderHook(() =>
+            useNumericStringInput(10, onChange, { parseMode }),
+        );
+        act(() => result.current.handleInputChange(changeEvent(input)));
+        act(() => result.current.handleInputBlur());
+        expect(onChange).toHaveBeenCalledExactlyOnceWith(expected);
+        unmount();
+    }
+});
+
+test.each([
+    '',
+    'invalid',
+])('resets integer input %s without committing', (input) => {
+    const onChange = vi.fn();
+    const { result } = renderHook(() =>
+        useNumericStringInput(10, onChange, { parseMode: 'integer' }),
+    );
+    act(() => result.current.handleInputChange(changeEvent(input)));
+    act(() => result.current.handleInputBlur());
+    expect(onChange).not.toHaveBeenCalled();
+    expect(result.current.inputValue).toBe('10');
+});

@@ -13,7 +13,7 @@ import {
 import CodeMirror from '@uiw/react-codemirror';
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react';
 
-type EditorStyle = 'default' | 'sidePanel' | 'fill';
+export type EditorStyle = 'default' | 'embedded' | 'sidePanel' | 'fill';
 
 const fillOverrides = (theme: Theme) => ({
     height: '100%',
@@ -146,6 +146,13 @@ const StyledEditorWrapper = styled(Box, {
         '& .cm-diagnostic-error': {
             borderLeftColor: theme.palette.error.main,
         },
+        ...(editorStyle === 'embedded' &&
+            !hasError && {
+                borderColor: 'transparent',
+                '&:hover': {
+                    borderColor: 'transparent',
+                },
+            }),
         ...(editorStyle === 'sidePanel' && fillOverrides(theme)),
         ...(editorStyle === 'fill' && {
             ...fillOverrides(theme),

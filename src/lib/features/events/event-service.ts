@@ -13,7 +13,6 @@ import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strateg
 import { parseSearchOperatorValue } from '../feature-search/search-utils.js';
 import { addDays, formatISO } from 'date-fns';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
-import type { ProjectAccess } from '../private-project/privateProjectStore.js';
 import type { IAccessReadModel } from '../access/access-read-model-type.js';
 import lodash from 'lodash';
 import type { IEventList, IBaseEvent } from '../../events/index.js';
@@ -70,24 +69,12 @@ export default class EventService {
         search: IEventSearchParams,
         userId: number,
     ): Promise<IEventList> {
-        const projectAccess =
-            await this.privateProjectChecker.getUserAccessibleProjects(userId);
-
-        if (
-            projectAccess.mode === 'limited' &&
-            projectAccess.projects.length === 0
-        ) {
-            return { events: [], totalEvents: 0 };
-        }
-
-        search.project = filterAccessibleProjects(
-            search.project,
-            projectAccess,
-        );
-
         const queryParams = this.convertToDbParams(search);
         const projectFilter = await this.getProjectFilterForNonAdmins(userId);
         queryParams.push(...projectFilter);
+        const accessibleProjectsFilter =
+            await this.getAccessibleProjectsFilter(userId);
+        queryParams.push(...accessibleProjectsFilter);
 
         const totalEvents = await this.eventStore.searchEventsCount(
             queryParams,
@@ -282,39 +269,21 @@ export default class EventService {
         }
         return [];
     }
+
+    // The user's own project filter is left as written: this condition is
+    // combined with it, so the search can only match accessible projects.
+    async getAccessibleProjectsFilter(userId: number): Promise<IQueryParam[]> {
+        const projectAccess =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+        if (projectAccess.mode === 'all') {
+            return [];
+        }
+        return [
+            {
+                field: 'project',
+                operator: 'IS_ANY_OF',
+                values: projectAccess.projects,
+            },
+        ];
+    }
 }
-
-export const filterAccessibleProjects = (
-    projectParam: string | undefined,
-    projectAccess: ProjectAccess,
-): string | undefined => {
-    if (projectAccess.mode === 'all') {
-        return projectParam;
-    }
-
-    const allowedProjects = projectAccess.projects;
-
-    if (!projectParam) {
-        return `IS_ANY_OF:${allowedProjects.join(',')}`;
-    }
-
-    // Only the operators the endpoint documents may scope projects: a negating
-    // operator would select the projects the user cannot access.
-    const parsed = parseSearchOperatorValue('project', projectParam);
-    if (
-        !parsed ||
-        (parsed.operator !== 'IS' && parsed.operator !== 'IS_ANY_OF')
-    ) {
-        throw new Error('No accessible projects in the search parameters');
-    }
-
-    const filteredProjects = parsed.values.filter(
-        (project) => project !== null && allowedProjects.includes(project),
-    );
-
-    if (filteredProjects.length === 0) {
-        throw new Error('No accessible projects in the search parameters');
-    }
-
-    return `${parsed.operator}:${filteredProjects.join(',')}`;
-};

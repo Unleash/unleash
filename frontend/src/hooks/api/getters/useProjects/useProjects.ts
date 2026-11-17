@@ -5,8 +5,10 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
 import type { GetProjectsParams, ProjectsSchema } from 'openapi';
 
+export const PROJECTS_KEY = 'api/admin/projects';
+
 const useProjects = (options: SWRConfiguration & GetProjectsParams = {}) => {
-    const KEY = `api/admin/projects${options.archived ? '?archived=true' : ''}`;
+    const KEY = `${PROJECTS_KEY}${options.archived ? '?archived=true' : ''}`;
 
     const fetcher = () => {
         const path = formatApiPath(KEY);

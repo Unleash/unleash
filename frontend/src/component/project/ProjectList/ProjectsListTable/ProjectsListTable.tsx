@@ -3,7 +3,6 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
-import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import type { ProjectSchema } from 'openapi';
 import { useCallback, useMemo } from 'react';
 import {
@@ -22,7 +21,6 @@ type ProjectsListTableProps = {
 };
 
 export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
-    const { refetch } = useProjects();
     const { favorite, unfavorite } = useFavoriteProjectsApi();
     const isMediumScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
@@ -33,9 +31,8 @@ export const ProjectsListTable = ({ projects }: ProjectsListTableProps) => {
             } else {
                 await favorite(project.id);
             }
-            refetch();
         },
-        [refetch, favorite, unfavorite],
+        [favorite, unfavorite],
     );
 
     const columns = useMemo<ColumnDef<ProjectSchema, unknown>[]>(

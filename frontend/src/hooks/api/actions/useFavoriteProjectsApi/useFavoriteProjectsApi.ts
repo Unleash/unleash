@@ -1,8 +1,10 @@
 import { useCallback } from 'react';
+import { useSWRConfig } from 'swr';
 import useToast from 'hooks/useToast';
 import { useTracking } from 'hooks/useTracking';
 import type { Tracking } from 'utils/trackingEvents';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { PROJECTS_KEY } from 'hooks/api/getters/useProjects/useProjects';
 import useAPI from '../useApi/useApi.js';
 
 const toggleProjectFavoriteTracking: Tracking = {
@@ -15,6 +17,7 @@ export const useFavoriteProjectsApi = () => {
         propagateErrors: true,
     });
     const { setToastData, setToastApiError } = useToast();
+    const { mutate } = useSWRConfig();
     const trackToggleProjectFavorite = useTracking(
         toggleProjectFavoriteTracking,
     );
@@ -33,6 +36,7 @@ export const useFavoriteProjectsApi = () => {
                     () => makeLightRequest(req.caller, req.id),
                     { newState: 'favorited' },
                 );
+                mutate(PROJECTS_KEY);
 
                 setToastData({
                     text: 'Project added to favorites',
@@ -42,7 +46,7 @@ export const useFavoriteProjectsApi = () => {
                 setToastApiError(formatUnknownError(error));
             }
         },
-        [createRequest, makeLightRequest, trackToggleProjectFavorite],
+        [createRequest, makeLightRequest, trackToggleProjectFavorite, mutate],
     );
 
     const unfavorite = useCallback(
@@ -59,6 +63,7 @@ export const useFavoriteProjectsApi = () => {
                     () => makeLightRequest(req.caller, req.id),
                     { newState: 'unfavorited' },
                 );
+                mutate(PROJECTS_KEY);
 
                 setToastData({
                     text: 'Project removed from favorites',
@@ -68,7 +73,7 @@ export const useFavoriteProjectsApi = () => {
                 setToastApiError(formatUnknownError(error));
             }
         },
-        [createRequest, makeLightRequest, trackToggleProjectFavorite],
+        [createRequest, makeLightRequest, trackToggleProjectFavorite, mutate],
     );
 
     return {

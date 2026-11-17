@@ -234,6 +234,24 @@ test('keeps the opened project with More open after a reload', async () => {
     ).toHaveAttribute('aria-expanded', 'true');
 });
 
+test('hides the opened project once it is added to favorites', async () => {
+    server.use(
+        http.post('/api/admin/projects/gamma/favorites', () => {
+            testServerRoute(server, '/api/admin/projects', {
+                projects: [{ id: 'gamma', name: 'Gamma', favorite: true }],
+            });
+            return new Response(null, { status: 200 });
+        }),
+    );
+    await renderSection('/projects/gamma');
+
+    await userEvent.click(
+        screen.getByRole('button', { name: 'Add Gamma to favorites' }),
+    );
+
+    await waitFor(() => expect(openedSection()).not.toBeInTheDocument());
+});
+
 test('removes the opened project from the sidebar after leaving it', async () => {
     await renderSection('/projects/gamma', <Link to='/personal'>Go home</Link>);
     await userEvent.click(screen.getByRole('link', { name: 'Go home' }));

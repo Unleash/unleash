@@ -1,22 +1,7 @@
 import type { IFeatureToggle } from 'interfaces/featureToggle';
-import type {
-    IFeatureStrategy,
-    StrategyFormParameters,
-    StrategyFormState,
-} from 'interfaces/strategy';
-import type {
-    CreateFeatureStrategySchema,
-    ParametersSchema,
-} from 'openapi/index.js';
-
-const isDefined = (
-    parameter: [string, string | undefined],
-): parameter is [string, string] => parameter[1] !== undefined;
-
-const dropUndefined = (
-    parameters: StrategyFormParameters = {},
-): ParametersSchema =>
-    Object.fromEntries(Object.entries(parameters).filter(isDefined));
+import type { IFeatureStrategy, StrategyFormState } from 'interfaces/strategy';
+import type { CreateFeatureStrategySchema } from 'openapi/index.js';
+import { omitUndefined } from 'utils/omitUndefined';
 
 export const createStrategyPayload = (
     strategy: StrategyFormState,
@@ -24,7 +9,7 @@ export const createStrategyPayload = (
     name: strategy.name,
     title: strategy.title,
     constraints: strategy.constraints ?? [],
-    parameters: dropUndefined(strategy.parameters),
+    parameters: omitUndefined(strategy.parameters ?? {}),
     variants: strategy.variants ?? [],
     segments: strategy.segments ?? [],
     disabled: strategy.disabled ?? false,

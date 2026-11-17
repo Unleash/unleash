@@ -69,9 +69,7 @@ test('shows why the server refused a payload schema until the schema changes', a
         await screen.findByRole('button', { name: /^Log level/ }),
     );
 
-    await userEvent.click(
-        screen.getByRole('tab', { name: 'Import JSON Schema' }),
-    );
+    await userEvent.click(screen.getByRole('tab', { name: 'JSON Schema' }));
     expect(screen.queryByLabelText('Choose a template')).toBeNull();
 
     await userEvent.click(screen.getByRole('button', { name: 'Save schema' }));

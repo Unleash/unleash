@@ -89,7 +89,7 @@ const StyledPane = styled('div')(({ theme }) => ({
     },
 }));
 
-type SchemaSource = 'template' | 'import';
+type SchemaSource = 'template' | 'raw';
 
 interface IPayloadSchemaFormProps {
     projectId: string;
@@ -187,7 +187,7 @@ const PayloadSchemaForm = ({
                             }}
                         >
                             <Pill value='template' label='Use a template' />
-                            <Pill value='import' label='Import JSON Schema' />
+                            <Pill value='raw' label='JSON Schema' />
                         </Tabs>
                     </StyledSchemaSourceRow>
                 </>

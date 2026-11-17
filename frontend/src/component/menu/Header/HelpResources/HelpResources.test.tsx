@@ -15,10 +15,12 @@ import {
     FloatingOnboardingChecklistProvider,
 } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistContext.tsx';
 import type { FloatingOnboardingChecklistContextValue } from 'component/onboarding/floatingChecklist/useChecklistContextValue.ts';
+import { ONBOARDING_CHECKLIST_ELIGIBILITY_DECIDED_SPLASH_ID } from 'component/onboarding/floatingChecklist/useOnboardingChecklistVisibility.ts';
 import {
-    ONBOARDING_CHECKLIST_ELIGIBILITY_DECIDED_SPLASH_ID,
-    ONBOARDING_CHECKLIST_ELIGIBLE_SPLASH_ID,
-} from 'component/onboarding/floatingChecklist/useOnboardingChecklistVisibility.ts';
+    CHECKLIST_ELIGIBLE_SPLASH,
+    mockChecklistProjectOnboardingStarted,
+    mockUserWithSplash,
+} from 'component/onboarding/floatingChecklist/onboardingChecklistTestServer.ts';
 import { ADMIN } from 'component/providers/AccessProvider/permissions.ts';
 
 const HINT_TEXT = 'You can reopen the Get started checklist from here anytime';
@@ -179,17 +181,8 @@ test('tracks menu open and item click', async () => {
     });
 });
 
-const mockCheapGatePassingWithSplash = (splash: Record<string, boolean>) => {
-    testServerRoute(server, '/api/admin/user', {
-        user: { id: 1 },
-        permissions: [],
-        feedback: [],
-        splash,
-    });
-};
-
 test('hides Get started when the user is already known to be not eligible', async () => {
-    mockCheapGatePassingWithSplash({
+    mockUserWithSplash(server, {
         [ONBOARDING_CHECKLIST_ELIGIBILITY_DECIDED_SPLASH_ID]: true,
     });
 
@@ -205,10 +198,7 @@ test('hides Get started when the user is already known to be not eligible', asyn
 });
 
 test('shows Get started with progress badge when the user is already known to be eligible', async () => {
-    mockCheapGatePassingWithSplash({
-        [ONBOARDING_CHECKLIST_ELIGIBILITY_DECIDED_SPLASH_ID]: true,
-        [ONBOARDING_CHECKLIST_ELIGIBLE_SPLASH_ID]: true,
-    });
+    mockUserWithSplash(server, CHECKLIST_ELIGIBLE_SPLASH);
 
     renderWithChecklistContext(
         { completedCount: 1, totalSteps: 4 },
@@ -229,15 +219,8 @@ test('opens the closed dashboard V2 checklist from Help', async () => {
     testServerRoute(server, '/api/admin/ui-config', {
         flags: { dashboardV2: true },
     });
-    mockCheapGatePassingWithSplash({
-        [ONBOARDING_CHECKLIST_ELIGIBILITY_DECIDED_SPLASH_ID]: true,
-        [ONBOARDING_CHECKLIST_ELIGIBLE_SPLASH_ID]: true,
-    });
-    testServerRoute(server, '/api/admin/projects/default/overview', {
-        name: 'Default',
-        environments: [],
-        onboardingStatus: { status: 'onboarding-started' },
-    });
+    mockUserWithSplash(server, CHECKLIST_ELIGIBLE_SPLASH);
+    mockChecklistProjectOnboardingStarted(server);
     const ChecklistStatus = () => {
         const checklist = useContext(FloatingOnboardingChecklistContext);
         return (
@@ -270,7 +253,7 @@ test('opens the closed dashboard V2 checklist from Help', async () => {
 });
 
 test("hides Get started until the user's eligibility is known", async () => {
-    mockCheapGatePassingWithSplash({});
+    mockUserWithSplash(server, {});
 
     renderWithChecklistContext({}, { permissions: [{ permission: ADMIN }] });
 

@@ -4,6 +4,9 @@ import { Link } from 'react-router';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { SkipNavTarget } from 'component/common/SkipNavLink/SkipNavTarget';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
+import { FloatingOnboardingChecklistProvider } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistContext.tsx';
+import { FloatingOnboardingChecklistVisibilityGate } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistVisibilityGate.tsx';
+import { HelpButtonHintProvider } from 'component/menu/Header/HelpResources/HelpButtonHintContext.tsx';
 import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
 import UnleashLogoWhite from 'assets/img/logoWithWhiteText.svg?react';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
@@ -174,13 +177,18 @@ const WorkspaceSection: FC = () => {
 };
 
 export const AppShell: FC<{ children: ReactNode }> = ({ children }) => (
-    <EventTimelineProvider>
-        <StyledRoot>
-            <Sidebar />
-            <StyledContent>
-                <SkipNavTarget />
-                {children}
-            </StyledContent>
-        </StyledRoot>
-    </EventTimelineProvider>
+    <HelpButtonHintProvider>
+        <FloatingOnboardingChecklistProvider>
+            <EventTimelineProvider>
+                <StyledRoot>
+                    <Sidebar />
+                    <StyledContent>
+                        <SkipNavTarget />
+                        {children}
+                    </StyledContent>
+                </StyledRoot>
+                <FloatingOnboardingChecklistVisibilityGate />
+            </EventTimelineProvider>
+        </FloatingOnboardingChecklistProvider>
+    </HelpButtonHintProvider>
 );

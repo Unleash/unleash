@@ -4,6 +4,12 @@ import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { ADMIN } from 'component/providers/AccessProvider/permissions.ts';
+import {
+    CHECKLIST_ELIGIBLE_SPLASH,
+    mockChecklistProjectOnboardingStarted,
+    mockUserWithSplash,
+} from 'component/onboarding/floatingChecklist/onboardingChecklistTestServer.ts';
 import { AppShell } from './AppShell.tsx';
 
 const server = testServerSetup();
@@ -186,14 +192,38 @@ test('hides change requests on oss', async () => {
     ).not.toBeInTheDocument();
 });
 
-test('opens the help menu from Help & resources', async () => {
-    render(<AppShell>content</AppShell>);
+const renderForOnboardingAdmin = () => {
+    mockUserWithSplash(server, CHECKLIST_ELIGIBLE_SPLASH);
+    mockChecklistProjectOnboardingStarted(server);
+
+    render(<AppShell>content</AppShell>, {
+        permissions: [{ permission: ADMIN }],
+    });
+};
+
+test('opens the help menu with Get started from Help & resources', async () => {
+    renderForOnboardingAdmin();
     const button = screen.getByRole('button', { name: 'Help & resources' });
 
     await userEvent.click(button);
 
     expect(
-        await screen.findByRole('menuitem', { name: 'Documentation' }),
+        await screen.findByRole('menuitem', { name: /Get started/ }),
     ).toBeInTheDocument();
     expect(button).toHaveAttribute('aria-expanded', 'true');
+});
+
+test('points to Help & resources after closing the Get started checklist', async () => {
+    renderForOnboardingAdmin();
+    const checklist = await screen.findByLabelText('Get started');
+
+    await userEvent.click(
+        within(checklist).getByRole('button', { name: 'Close' }),
+    );
+
+    expect(
+        await screen.findByText(
+            'You can reopen the Get started checklist from here anytime',
+        ),
+    ).toBeInTheDocument();
 });

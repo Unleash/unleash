@@ -13,9 +13,9 @@ import {
 import { ONBOARDING_INTRO_FINISHED_SPLASH_ID } from 'component/onboarding/intro/IntroProvider.tsx';
 import { ONBOARDING_CHECKLIST_SPLASH_ID } from './useOnboardingChecklistEligibility.ts';
 import {
-    ONBOARDING_CHECKLIST_ELIGIBILITY_DECIDED_SPLASH_ID,
-    ONBOARDING_CHECKLIST_ELIGIBLE_SPLASH_ID,
-} from './useOnboardingChecklistVisibility.ts';
+    CHECKLIST_ELIGIBLE_SPLASH,
+    mockUserWithSplash,
+} from './onboardingChecklistTestServer.ts';
 import type { FloatingOnboardingChecklistState } from './floatingOnboardingChecklistState.ts';
 
 const server = testServerSetup();
@@ -52,16 +52,7 @@ const mockEligibleUser = ({
     testServerRoute(server, '/api/admin/ui-config', {
         flags: { dashboardV2 },
     });
-    testServerRoute(server, '/api/admin/user', {
-        user: { id: 1 },
-        permissions: [],
-        feedback: [],
-        splash: {
-            [ONBOARDING_CHECKLIST_ELIGIBILITY_DECIDED_SPLASH_ID]: true,
-            [ONBOARDING_CHECKLIST_ELIGIBLE_SPLASH_ID]: true,
-            ...splash,
-        },
-    });
+    mockUserWithSplash(server, { ...CHECKLIST_ELIGIBLE_SPLASH, ...splash });
 };
 
 const defaultProjectOverview = {

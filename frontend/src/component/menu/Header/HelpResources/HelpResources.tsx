@@ -336,6 +336,7 @@ export const HelpResources = ({
             <HelpMenuHint
                 open={activeHint === 'get-started'}
                 anchorEl={buttonEl}
+                placement={placement}
                 onClose={dismissHelpButtonHint}
             >
                 You can reopen the Get started checklist from here anytime
@@ -343,6 +344,7 @@ export const HelpResources = ({
             <HelpMenuHint
                 open={activeHint === 'intro-closed'}
                 anchorEl={buttonEl}
+                placement={placement}
                 onClose={dismissHelpButtonHint}
             >
                 You can restart the <IntroHintIcon /> Unleash Intro from here

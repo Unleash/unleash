@@ -1,7 +1,7 @@
 import {
     Histogram as PromHistogram,
     type HistogramConfiguration,
-} from 'prom-client';
+} from '@prometheus-io/client';
 
 export type Histogram<T extends string = string> = {
     histogram: PromHistogram<T>;
@@ -12,7 +12,7 @@ export type Histogram<T extends string = string> = {
 export const createHistogram = <T extends string>(
     options: HistogramConfiguration<T>,
 ): Histogram<T> => {
-    const histogram = new PromHistogram(options);
+    const histogram: PromHistogram<string> = new PromHistogram(options);
 
     const labels = (labels: Record<T, string | number>) =>
         histogram.labels(labels);

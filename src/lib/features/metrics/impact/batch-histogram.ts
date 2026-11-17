@@ -1,4 +1,4 @@
-import type { Registry } from 'prom-client';
+import type { Registry } from '@prometheus-io/client';
 
 interface BucketData {
     le: number | '+Inf';

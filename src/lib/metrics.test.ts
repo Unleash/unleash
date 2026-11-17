@@ -1,4 +1,4 @@
-import { register } from 'prom-client';
+import { register } from '@prometheus-io/client';
 import EventEmitter from 'events';
 import type { IEventStore } from './types/stores/event-store.js';
 import { createTestConfig } from '../test/config/test-config.js';

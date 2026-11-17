@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 import type { Knex } from 'knex';
-import { register } from 'prom-client';
+import { register } from '@prometheus-io/client';
 import { afterEach, expect, test, vi } from 'vitest';
 import { createTestConfig } from '../test/config/test-config.js';
 import createStores from '../test/fixtures/store.js';

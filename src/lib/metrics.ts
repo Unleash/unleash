@@ -1,4 +1,4 @@
-import { collectDefaultMetrics } from 'prom-client';
+import { collectDefaultMetrics } from '@prometheus-io/client';
 import memoizee from 'memoizee';
 import type EventEmitter from 'events';
 import type { Knex } from 'knex';

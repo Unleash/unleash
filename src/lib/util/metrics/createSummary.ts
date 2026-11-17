@@ -1,4 +1,7 @@
-import { Summary as PromSummary, type SummaryConfiguration } from 'prom-client';
+import {
+    Summary as PromSummary,
+    type SummaryConfiguration,
+} from '@prometheus-io/client';
 
 /**
  * A wrapped instance of prom-client's Summary, overriding some of its methods for enhanced functionality and type-safety.
@@ -22,7 +25,7 @@ export const createSummary = <T extends string>(
     /**
      * The underlying instance of prom-client's Summary.
      */
-    const summary = new PromSummary(options);
+    const summary: PromSummary<string> = new PromSummary(options);
 
     /**
      * Applies given labels to the summary. Labels are key-value pairs.

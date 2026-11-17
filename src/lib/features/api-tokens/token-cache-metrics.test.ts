@@ -1,4 +1,4 @@
-import { register } from 'prom-client';
+import { register } from '@prometheus-io/client';
 import { expect, test } from 'vitest';
 import { createTestConfig } from '../../../test/config/test-config.js';
 import createStores from '../../../test/fixtures/store.js';

@@ -5,7 +5,7 @@ import VersionService from '../../services/version-service.js';
 import { createFakeGetActiveUsers } from './getActiveUsers.js';
 import { createFakeGetProductionChanges } from './getProductionChanges.js';
 import { registerPrometheusMetrics } from '../../metrics.js';
-import { register } from 'prom-client';
+import { register } from '@prometheus-io/client';
 import type {
     IClientInstanceStore,
     IFlagResolver,

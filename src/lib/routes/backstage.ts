@@ -1,7 +1,7 @@
 import { writeHeapSnapshot } from 'v8';
 import { tmpdir } from 'os';
 import { join } from 'path';
-import { register as prometheusRegister } from 'prom-client';
+import { register as prometheusRegister } from '@prometheus-io/client';
 import { impactRegister } from '../features/metrics/impact/impact-register.js';
 import Controller from './controller.js';
 import type { IUnleashConfig } from '../types/option.js';

@@ -1,6 +1,6 @@
 import type { DeltaEvent } from './client-feature-toggle-delta-types.js';
 import { EventEmitter } from 'events';
-import { register } from 'prom-client';
+import { register } from '@prometheus-io/client';
 import {
     ClientFeatureToggleDelta,
     filterEventsByQuery,

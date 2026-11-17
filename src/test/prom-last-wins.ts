@@ -1,4 +1,4 @@
-import { register, type Metric } from 'prom-client';
+import { register, type Metric } from '@prometheus-io/client';
 
 // prom-client's default registry is process-global, but test infrastructure
 // executes app modules more than once per process: globalSetup runs once per

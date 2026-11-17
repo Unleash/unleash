@@ -1,6 +1,6 @@
 import { createTestConfig } from '../test/config/test-config.js';
 import { type Mock, vi } from 'vitest';
-import * as promClient from 'prom-client';
+import * as promClient from '@prometheus-io/client';
 // This mock setup MUST be at the top-level, before any other code that might trigger imports.
 vi.mock('compression', () => ({
     default: vi.fn().mockImplementation(() => {

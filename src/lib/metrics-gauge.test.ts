@@ -1,4 +1,4 @@
-import { register } from 'prom-client';
+import { register } from '@prometheus-io/client';
 import { createTestConfig } from '../test/config/test-config.js';
 import type { IUnleashConfig } from './types/index.js';
 import { DbMetricsMonitor } from './metrics-gauge.js';

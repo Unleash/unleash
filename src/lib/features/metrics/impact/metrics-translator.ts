@@ -1,4 +1,4 @@
-import { Counter, Gauge, type Registry } from 'prom-client';
+import { Counter, Gauge, type Registry } from '@prometheus-io/client';
 import { BatchHistogram } from './batch-histogram.js';
 
 export interface NumericMetricSample {

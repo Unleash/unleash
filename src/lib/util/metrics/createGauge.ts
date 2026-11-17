@@ -1,4 +1,7 @@
-import { Gauge as PromGauge, type GaugeConfiguration } from 'prom-client';
+import {
+    Gauge as PromGauge,
+    type GaugeConfiguration,
+} from '@prometheus-io/client';
 
 /**
  * A wrapped instance of prom-client's Gauge, overriding some of its methods for enhanced functionality and type-safety.
@@ -90,7 +93,9 @@ export const createGauge = <T extends string>(
         } as unknown as GaugeConfiguration<T>['collect'];
     }
 
-    const gauge = new PromGauge(gaugeOptions as GaugeConfiguration<T>);
+    const gauge: PromGauge<string> = new PromGauge(
+        gaugeOptions as GaugeConfiguration<T>,
+    );
 
     /**
      * Applies given labels to the gauge. Labels are key-value pairs.

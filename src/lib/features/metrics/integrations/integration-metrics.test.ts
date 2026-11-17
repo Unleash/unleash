@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { register } from 'prom-client';
+import { register } from '@prometheus-io/client';
 import noLogger from '../../../../test/fixtures/no-logger.js';
 import type { IAddonProviders } from '../../../addons/index.js';
 import type { IAddon } from '../../../types/stores/addon-store.js';

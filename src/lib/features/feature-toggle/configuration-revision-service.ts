@@ -9,14 +9,16 @@ import EventEmitter from 'events';
 import {
     Gauge as PromGauge,
     register as prometheusRegister,
-} from 'prom-client';
+} from '@prometheus-io/client';
 import { createGauge, type Gauge } from '../../util/metrics/index.js';
 
 export const UPDATE_REVISION = 'UPDATE_REVISION';
 
 const revisionIdMetricName = 'environment_revision_id';
 
-const asGaugeWrapper = <T extends string>(gauge: PromGauge<T>): Gauge<T> => ({
+const asGaugeWrapper = <T extends string>(
+    gauge: PromGauge<string>,
+): Gauge<T> => ({
     gauge,
     labels: (labels: Record<T, string | number>) => gauge.labels(labels),
     reset: () => gauge.reset(),

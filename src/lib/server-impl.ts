@@ -241,7 +241,7 @@ import ProjectStore from './features/project/project-store.js';
 import type { ReleasePlanMilestoneWriteModel } from './features/release-plans/release-plan-milestone.js';
 import { FakeChangeRequestAccessReadModel } from './features/change-request-access-service/fake-change-request-access-read-model.js';
 import { fakeImpactMetricsResolver } from '../test/fixtures/fake-impact-metrics.js';
-import { register as defaultMetricsRegister } from 'prom-client';
+import { register as defaultMetricsRegister } from '@prometheus-io/client';
 
 export async function initialServiceSetup(
     {

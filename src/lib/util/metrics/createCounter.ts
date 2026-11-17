@@ -1,4 +1,7 @@
-import { Counter as PromCounter, type CounterConfiguration } from 'prom-client';
+import {
+    Counter as PromCounter,
+    type CounterConfiguration,
+} from '@prometheus-io/client';
 
 /**
  * A wrapped instance of prom-client's Counter, overriding some of its methods for enhanced functionality and type-safety.
@@ -23,7 +26,7 @@ export const createCounter = <T extends string>(
     /**
      * The underlying instance of prom-client's Counter.
      */
-    const counter = new PromCounter<T>(options);
+    const counter: PromCounter<string> = new PromCounter(options);
 
     /**
      * Applies given labels to the counter. Labels are key-value pairs.

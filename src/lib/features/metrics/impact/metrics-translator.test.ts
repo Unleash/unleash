@@ -1,5 +1,5 @@
 import { MetricsTranslator } from './metrics-translator.js';
-import { Registry } from 'prom-client';
+import { Registry } from '@prometheus-io/client';
 
 describe('MetricsTranslator', () => {
     let translator: MetricsTranslator;

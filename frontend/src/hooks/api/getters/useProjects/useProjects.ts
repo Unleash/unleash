@@ -1,4 +1,4 @@
-import useSWR, { mutate, type SWRConfiguration } from 'swr';
+import useSWR, { type SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 
@@ -17,15 +17,13 @@ const useProjects = (options: SWRConfiguration & GetProjectsParams = {}) => {
             .then((res) => res.json());
     };
 
-    const { data, error } = useSWR<{ projects: ProjectsSchema['projects'] }>(
-        KEY,
-        fetcher,
-        options,
-    );
+    const { data, error, mutate } = useSWR<{
+        projects: ProjectsSchema['projects'];
+    }>(KEY, fetcher, options);
     const [loading, setLoading] = useState(!error && !data);
 
     const refetch = () => {
-        mutate(KEY);
+        mutate();
     };
 
     useEffect(() => {

@@ -1,4 +1,4 @@
-import { type FC, useLayoutEffect } from 'react';
+import { type FC, type ReactNode, useLayoutEffect } from 'react';
 import { ButtonBase, styled } from '@mui/material';
 import { Link, useLocation } from 'react-router';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
@@ -12,6 +12,7 @@ import {
 } from '../sidebar/SidebarItem.styles.ts';
 import { SidebarList } from '../sidebar/SidebarList.tsx';
 import { SidebarMoreToggle } from '../sidebar/SidebarMoreToggle.tsx';
+import { SIDEBAR_ROW_ACTION_SIZE } from '../sidebar/SidebarRowAction.tsx';
 import {
     getProjectPage,
     isInProject,
@@ -41,6 +42,44 @@ const StyledProjectToggle = styled(ButtonBase, {
     '&[aria-current="location"]': {
         fontWeight: theme.typography.fontWeightBold,
     },
+}));
+
+// The action sits on top of the toggle rather than inside it, because a button
+// can't contain another button.
+const StyledRow = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'withAction',
+})<{ withAction: boolean }>(({ theme, withAction }) =>
+    withAction
+        ? {
+              position: 'relative',
+              // Keeps the hover background while the pointer is on the action.
+              '&:hover [data-toggle]': {
+                  backgroundColor: theme.palette.action.hover,
+              },
+              '& [data-label]': {
+                  paddingRight: theme.spacing(SIDEBAR_ROW_ACTION_SIZE),
+              },
+              // Touch devices can't hover, so they always show the action.
+              '@media (hover: hover)': {
+                  '&:not(:hover):not(:focus-within)': {
+                      '& [data-label]': { paddingRight: 0 },
+                      '& [data-action]': { opacity: 0 },
+                  },
+              },
+          }
+        : {},
+);
+
+const StyledAction = styled('span')(({ theme }) => ({
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: theme.spacing(3),
+    display: 'flex',
+    alignItems: 'center',
+    transition: theme.transitions.create('opacity', {
+        duration: theme.transitions.duration.shortest,
+    }),
 }));
 
 const StyledLabel = styled('span')({
@@ -90,11 +129,13 @@ export const ProjectNavGroup: FC<{
     expansion?: ProjectNavExpansion;
     onExpansionChange: (change: ProjectNavExpansion) => void;
     muteWhenNotCurrent?: boolean;
+    action?: ReactNode;
 }> = ({
     project,
     expansion,
     onExpansionChange,
     muteWhenNotCurrent = false,
+    action,
 }) => {
     const { pathname } = useLocation();
     const { primary, more } = useProjectNavItems(project.id);
@@ -121,20 +162,28 @@ export const ProjectNavGroup: FC<{
 
     return (
         <>
-            <StyledProjectToggle
-                muteWhenNotCurrent={muteWhenNotCurrent}
-                aria-current={isCurrent ? 'location' : undefined}
-                aria-expanded={expanded}
-                onClick={() =>
-                    onExpansionChange({ project: expanded ? 'closed' : 'open' })
-                }
-            >
-                <SidebarItemIcon>
-                    <FolderOutlinedIcon />
-                </SidebarItemIcon>
-                <StyledLabel>{project.name}</StyledLabel>
-                <StyledTrailingCaret expanded={expanded} />
-            </StyledProjectToggle>
+            <StyledRow withAction={Boolean(action)}>
+                <StyledProjectToggle
+                    data-toggle
+                    muteWhenNotCurrent={muteWhenNotCurrent}
+                    aria-current={isCurrent ? 'location' : undefined}
+                    aria-expanded={expanded}
+                    onClick={() =>
+                        onExpansionChange({
+                            project: expanded ? 'closed' : 'open',
+                        })
+                    }
+                >
+                    <SidebarItemIcon>
+                        <FolderOutlinedIcon />
+                    </SidebarItemIcon>
+                    <StyledLabel data-label>{project.name}</StyledLabel>
+                    <StyledTrailingCaret expanded={expanded} />
+                </StyledProjectToggle>
+                {action ? (
+                    <StyledAction data-action>{action}</StyledAction>
+                ) : null}
+            </StyledRow>
             {expanded ? (
                 <SidebarList role='group' aria-label={project.name}>
                     {items.map(({ page, label, to }) => (

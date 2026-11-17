@@ -1,9 +1,11 @@
 import type { FC } from 'react';
 import { matchPath, useLocation } from 'react-router';
+import CloseIcon from '@mui/icons-material/Close';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useMyProjects } from 'component/project/ProjectList/hooks/useMyProjects';
 import { useSessionStorageState } from 'hooks/useSessionStorageState';
 import { SidebarSection } from '../sidebar/SidebarSection.tsx';
+import { SidebarRowAction } from '../sidebar/SidebarRowAction.tsx';
 import {
     ProjectNavGroup,
     type ProjectNavExpansion,
@@ -54,11 +56,23 @@ export const OpenedProjectSection: FC = () => {
         return null;
     }
 
+    // Removing the current project would only open it again straight away.
+    const action =
+        project.id === currentProjectId ? undefined : (
+            <SidebarRowAction
+                tooltip='Remove from sidebar'
+                label={`Remove ${project.name} from sidebar`}
+                icon={<CloseIcon />}
+                onClick={() => setOpenedProject(undefined)}
+            />
+        );
+
     return (
         <SidebarSection title='Opened projects'>
             <ProjectNavGroup
                 project={project}
                 muteWhenNotCurrent
+                action={action}
                 expansion={openedProject.expansion}
                 onExpansionChange={(change) =>
                     setOpenedProject(

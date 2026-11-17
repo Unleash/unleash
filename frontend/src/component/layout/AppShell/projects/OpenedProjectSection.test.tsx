@@ -4,7 +4,6 @@ import { Link } from 'react-router';
 import { http } from 'msw';
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useSWRConfig } from 'swr';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
@@ -41,12 +40,10 @@ const ProjectsLoaded = () => {
     return loading ? null : 'projects loaded';
 };
 
-// useProjects().refetch uses SWR's global cache, which the test renderer
-// replaces with its own.
 const RefetchProjects = () => {
-    const { mutate } = useSWRConfig();
+    const { refetch } = useProjects();
     return (
-        <button type='button' onClick={() => mutate('api/admin/projects')}>
+        <button type='button' onClick={refetch}>
             Refetch
         </button>
     );
@@ -235,4 +232,33 @@ test('keeps the opened project with More open after a reload', async () => {
     expect(
         projectGroup('Gamma').getByRole('button', { name: 'Less' }),
     ).toHaveAttribute('aria-expanded', 'true');
+});
+
+test('removes the opened project from the sidebar after leaving it', async () => {
+    await renderSection('/projects/gamma', <Link to='/personal'>Go home</Link>);
+    await userEvent.click(screen.getByRole('link', { name: 'Go home' }));
+
+    await userEvent.click(
+        screen.getByRole('button', { name: 'Remove Gamma from sidebar' }),
+    );
+
+    expect(openedSection()).not.toBeInTheDocument();
+});
+
+test('opens a removed project again when it is visited', async () => {
+    await renderSection(
+        '/projects/gamma',
+        <>
+            <Link to='/personal'>Go home</Link>
+            <Link to='/projects/gamma'>Back to Gamma</Link>
+        </>,
+    );
+    await userEvent.click(screen.getByRole('link', { name: 'Go home' }));
+    await userEvent.click(
+        screen.getByRole('button', { name: 'Remove Gamma from sidebar' }),
+    );
+
+    await userEvent.click(screen.getByRole('link', { name: 'Back to Gamma' }));
+
+    expect(openedProject('Gamma')).toBeInTheDocument();
 });

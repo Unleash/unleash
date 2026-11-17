@@ -130,7 +130,6 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
 
     const navigate = useNavigate();
 
-    const useNewStatusContent = useUiFlag('singlePageStrategyForm');
     const envIsEnabled =
         feature.environments.find((environment) => {
             return environment.name === environmentId;
@@ -226,6 +225,26 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
         <FeatureStrategyChangeRequestAlert environment={environmentId} />
     ) : null;
 
+    const alertContent = () => {
+        if (!changeRequestAlert) return null;
+        if (singlePageStrategyForm) return changeRequestAlert;
+
+        return <StyledAlertBox>{changeRequestAlert}</StyledAlertBox>;
+    };
+
+    const statusContent = () => {
+        if (changeRequestsEnabled) return null;
+        if (singlePageStrategyForm) return environmentDisabledText;
+
+        return (
+            <FeatureStrategyEnabled
+                projectId={feature.project}
+                featureId={feature.name}
+                environmentId={environmentId}
+            />
+        );
+    };
+
     return (
         <StrategyFormBodySelector
             strategy={strategy}
@@ -237,23 +256,9 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
             validateParameter={validateParameter}
             canRenamePreexistingVariants={canRenamePreexistingVariants}
             payloadSchema={feature.payloadSchema}
-            alertContent={
-                changeRequestAlert ? (
-                    <StyledAlertBox>{changeRequestAlert}</StyledAlertBox>
-                ) : null
-            }
+            alertContent={alertContent()}
             allowEnableDisable
-            statusContent={
-                changeRequestsEnabled ? null : useNewStatusContent ? (
-                    environmentDisabledText
-                ) : (
-                    <FeatureStrategyEnabled
-                        projectId={feature.project}
-                        featureId={feature.name}
-                        environmentId={environmentId}
-                    />
-                )
-            }
+            statusContent={statusContent()}
             onSubmit={onSubmitWithValidation}
             beforeFooter={
                 <>

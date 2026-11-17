@@ -135,15 +135,21 @@ const FormMainContent = styled('div')(({ theme }) => ({
     paddingInline: 'var(--form-inset)',
 }));
 
-const StyledButtons = styled('div')(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(1),
+const FooterContent = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(2),
     paddingInline: 'var(--form-inset)',
     backgroundColor: theme.palette.background.paper,
-    justifyContent: 'end',
     borderTop: `1px solid ${theme.palette.divider}`,
+    display: 'flex',
+    flexFlow: 'column',
+    gap: theme.spacing(2),
+}));
+
+const StyledButtons = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+    justifyContent: 'end',
 }));
 
 export const StrategyFormBody = <T extends StrategyFormState>({
@@ -156,7 +162,7 @@ export const StrategyFormBody = <T extends StrategyFormState>({
     validateParameter,
     canRenamePreexistingVariants,
     payloadSchema,
-    alertContent,
+    alertContent, // todo: rename to changeRequestAlert when deleting the singlePageStrategyForm flag
     allowEnableDisable,
     statusContent: environmentDisabledText, // todo: consider renaming prop when deleting singlePageStrategyForm flag
     beforeFooter,
@@ -291,8 +297,6 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                     ) : null}
                 </StyledHeaderBox>
 
-                {alertContent}
-
                 <FormMainContent>
                     <FeatureStrategyTitle
                         title={strategy.title || ''}
@@ -401,7 +405,10 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                 environmentDisabledText={environmentDisabledText}
             />
 
-            <StyledButtons>{children}</StyledButtons>
+            <FooterContent>
+                {alertContent}
+                <StyledButtons>{children}</StyledButtons>
+            </FooterContent>
         </StyledForm>
     );
 };

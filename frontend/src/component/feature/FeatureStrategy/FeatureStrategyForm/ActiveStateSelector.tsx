@@ -31,12 +31,6 @@ const TriggerButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-const SelectorPopover = styled(StyledPopover)({
-    '& .MuiPaper-root': {
-        paddingTop: 0,
-    },
-});
-
 const CurrentState = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
     marginInlineStart: '1ch',
@@ -69,7 +63,7 @@ export const ActiveStateSelector = ({
                 Strategy status
                 <CurrentState>{selectedLabel}</CurrentState>
             </TriggerButton>
-            <SelectorPopover
+            <StyledPopover
                 open={Boolean(anchorEl)}
                 anchorEl={anchorEl}
                 onClose={() => setAnchorEl(null)}
@@ -84,7 +78,7 @@ export const ActiveStateSelector = ({
                         setAnchorEl(null);
                     }}
                 />
-            </SelectorPopover>
+            </StyledPopover>
         </>
     );
 };

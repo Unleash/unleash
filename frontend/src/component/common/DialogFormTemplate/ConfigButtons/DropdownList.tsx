@@ -1,5 +1,5 @@
 import Search from '@mui/icons-material/Search';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import {
     InputAdornment,
     List,
@@ -82,6 +82,8 @@ export function DropdownList<T = string>({
     selectedValue,
 }: DropdownListProps<T>) {
     const [searchText, setSearchText] = useState('');
+    const headerId = useId();
+    const headerDescriptionId = useId();
 
     const onSelection = (selected: T) => {
         onChange(selected);
@@ -110,17 +112,19 @@ export function DropdownList<T = string>({
     return (
         <>
             {header ? (
-                <StyledHeader>
-                    <StyledHeaderTitle>{header.header}</StyledHeaderTitle>
+                <StyledHeader data-dropdown-header>
+                    <StyledHeaderTitle id={headerId}>
+                        {header.header}
+                    </StyledHeaderTitle>
                     {header.description ? (
-                        <StyledHeaderDescription>
+                        <StyledHeaderDescription id={headerDescriptionId}>
                             {header.description}
                         </StyledHeaderDescription>
                     ) : null}
                 </StyledHeader>
             ) : null}
             {search && (
-                <StyledDropdownSearchContainer>
+                <StyledDropdownSearchContainer data-dropdown-search>
                     <StyledDropdownSearch
                         size='small'
                         value={searchText}
@@ -147,7 +151,14 @@ export function DropdownList<T = string>({
                     />
                 </StyledDropdownSearchContainer>
             )}
-            <List sx={{ overflowY: 'auto' }} disablePadding>
+            <List
+                sx={{ overflowY: 'auto' }}
+                disablePadding
+                aria-labelledby={header ? headerId : undefined}
+                aria-describedby={
+                    header?.description ? headerDescriptionId : undefined
+                }
+            >
                 {filteredOptions.map((option, index) => {
                     const labelId = `checkbox-list-label-${option.value}`;
                     const isSelected =

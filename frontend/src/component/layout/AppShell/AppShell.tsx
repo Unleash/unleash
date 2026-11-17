@@ -16,6 +16,7 @@ import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequ
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
+import { HelpAndResourcesButton } from './sidebar/HelpAndResourcesButton.tsx';
 import { SearchButton } from './sidebar/SearchButton.tsx';
 import { SidebarLink } from './sidebar/SidebarLink.tsx';
 import { SidebarList } from './sidebar/SidebarList.tsx';
@@ -40,9 +41,18 @@ const StyledSidebar = styled('nav')(({ theme }) => ({
     flex: 'none',
     display: 'flex',
     flexDirection: 'column',
+    backgroundColor: theme.palette.appShell.sidebar,
+}));
+
+const StyledSidebarScrollArea = styled('div')(({ theme }) => ({
+    flex: 1,
     overflowY: 'auto',
     padding: theme.spacing(1.5),
-    backgroundColor: theme.palette.appShell.sidebar,
+}));
+
+const StyledSidebarFooter = styled('div')(({ theme }) => ({
+    flex: 'none',
+    padding: theme.spacing(0, 1.5, 1.5),
 }));
 
 const StyledLogoLink = styled(Link)(({ theme }) => ({
@@ -71,32 +81,41 @@ const Sidebar: FC = () => {
 
     return (
         <StyledSidebar aria-label='Main'>
-            <StyledLogoLink to='/' aria-label='Unleash'>
-                <ThemeMode
-                    darkmode={<UnleashLogoWhite aria-label='Unleash logo' />}
-                    lightmode={<UnleashLogo aria-label='Unleash logo' />}
-                />
-            </StyledLogoLink>
-            <StyledSearchSlot>
-                <SearchButton />
-            </StyledSearchSlot>
-            <SidebarList>
-                <SidebarLink
-                    to='/personal'
-                    icon={<HomeOutlinedIcon />}
-                    label='Home'
-                />
-                {isEnterprise() ? (
-                    <SidebarLink
-                        to='/change-requests'
-                        icon={<ChangeRequestIcon />}
-                        label='Change requests'
+            <StyledSidebarScrollArea>
+                <StyledLogoLink to='/' aria-label='Unleash'>
+                    <ThemeMode
+                        darkmode={
+                            <UnleashLogoWhite aria-label='Unleash logo' />
+                        }
+                        lightmode={<UnleashLogo aria-label='Unleash logo' />}
                     />
-                ) : null}
-            </SidebarList>
-            <WorkspaceSection />
-            <OpenedProjectSection />
-            <MyProjectsSection />
+                </StyledLogoLink>
+                <StyledSearchSlot>
+                    <SearchButton />
+                </StyledSearchSlot>
+                <SidebarList>
+                    <SidebarLink
+                        to='/personal'
+                        icon={<HomeOutlinedIcon />}
+                        label='Home'
+                    />
+                    {isEnterprise() ? (
+                        <SidebarLink
+                            to='/change-requests'
+                            icon={<ChangeRequestIcon />}
+                            label='Change requests'
+                        />
+                    ) : null}
+                </SidebarList>
+                <WorkspaceSection />
+                <OpenedProjectSection />
+                <MyProjectsSection />
+            </StyledSidebarScrollArea>
+            <StyledSidebarFooter>
+                <SidebarList>
+                    <HelpAndResourcesButton />
+                </SidebarList>
+            </StyledSidebarFooter>
         </StyledSidebar>
     );
 };

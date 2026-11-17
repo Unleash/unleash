@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { type ReactNode, useContext, useState } from 'react';
 import {
     Badge,
     Box,
@@ -178,9 +178,35 @@ const LEARNING_LAB_DEFAULTS: Required<ILearningLabVariant> = {
     menuLabel: 'Learning Lab',
 };
 
-export const HelpResources = () => {
+type HelpResourcesTriggerProps = {
+    ref: (element: HTMLElement | null) => void;
+    open: boolean;
+    onClick: (event: React.MouseEvent<HTMLElement>) => void;
+};
+
+const MENU_PLACEMENTS = {
+    'bottom-end': {
+        anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
+        transformOrigin: { vertical: 'top', horizontal: 'right' },
+    },
+    'right-end': {
+        anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
+        transformOrigin: { vertical: 'bottom', horizontal: 'left' },
+        marginThreshold: 8,
+    },
+} as const;
+
+interface IHelpResourcesProps {
+    renderTrigger?: (props: HelpResourcesTriggerProps) => ReactNode;
+    placement?: keyof typeof MENU_PLACEMENTS;
+}
+
+export const HelpResources = ({
+    renderTrigger,
+    placement = 'bottom-end',
+}: IHelpResourcesProps) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-    const [buttonEl, setButtonEl] = useState<HTMLButtonElement | null>(null);
+    const [buttonEl, setButtonEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
     const { trackEvent } = useEventTracker();
     const { open: openIntro } = useIntro();
@@ -277,26 +303,30 @@ export const HelpResources = () => {
 
     return (
         <>
-            <Tooltip title='Help & Resources' arrow>
-                <StyledBadge
-                    color='primary'
-                    variant='dot'
-                    overlap='circular'
-                    invisible={!showRelocationDot}
-                >
-                    <StyledIconButton
-                        ref={setButtonEl}
-                        size='large'
-                        open={open || hintHighlightsButton}
-                        onClick={handleOpen}
-                        aria-haspopup='true'
-                        aria-expanded={open}
-                        aria-label='Help and resources'
+            {renderTrigger ? (
+                renderTrigger({ ref: setButtonEl, open, onClick: handleOpen })
+            ) : (
+                <Tooltip title='Help & Resources' arrow>
+                    <StyledBadge
+                        color='primary'
+                        variant='dot'
+                        overlap='circular'
+                        invisible={!showRelocationDot}
                     >
-                        <HelpOutlineOutlinedIcon />
-                    </StyledIconButton>
-                </StyledBadge>
-            </Tooltip>
+                        <StyledIconButton
+                            ref={setButtonEl}
+                            size='large'
+                            open={open || hintHighlightsButton}
+                            onClick={handleOpen}
+                            aria-haspopup='true'
+                            aria-expanded={open}
+                            aria-label='Help and resources'
+                        >
+                            <HelpOutlineOutlinedIcon />
+                        </StyledIconButton>
+                    </StyledBadge>
+                </Tooltip>
+            )}
             <HelpMenuAnnouncement
                 open={activeHint === 'menu-regroup'}
                 anchorEl={buttonEl}
@@ -322,8 +352,7 @@ export const HelpResources = () => {
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                {...MENU_PLACEMENTS[placement]}
             >
                 <StyledFeaturedMenuItem
                     component='a'

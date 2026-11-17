@@ -185,3 +185,15 @@ test('hides change requests on oss', async () => {
         screen.queryByRole('link', { name: 'Change requests' }),
     ).not.toBeInTheDocument();
 });
+
+test('opens the help menu from Help & resources', async () => {
+    render(<AppShell>content</AppShell>);
+    const button = screen.getByRole('button', { name: 'Help & resources' });
+
+    await userEvent.click(button);
+
+    expect(
+        await screen.findByRole('menuitem', { name: 'Documentation' }),
+    ).toBeInTheDocument();
+    expect(button).toHaveAttribute('aria-expanded', 'true');
+});

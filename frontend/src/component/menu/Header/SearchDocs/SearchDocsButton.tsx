@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { searchDocsTracking } from './searchDocsTracking.ts';
 
 const LazySearchDocs = lazy(() => import('./SearchDocs.tsx'));
 
@@ -12,7 +13,7 @@ export const SearchDocsButton = () => {
 
     return (
         <Suspense fallback={null}>
-            <LazySearchDocs />
+            <LazySearchDocs tracking={searchDocsTracking('header')} />
         </Suspense>
     );
 };

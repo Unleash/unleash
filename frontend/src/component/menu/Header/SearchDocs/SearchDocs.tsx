@@ -3,7 +3,8 @@ import { styled, useTheme } from '@mui/material';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { AskAiChat } from '@fern-api/search-widget';
 import '@fern-api/search-widget/styles';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
+import type { Tracking } from 'utils/trackingEvents';
 
 const DOCS_DOMAIN = 'https://docs.getunleash.io';
 
@@ -32,17 +33,17 @@ const StyledTrigger = styled(AskAiChat.Trigger)(({ theme }) => ({
     },
 }));
 
-const SearchDocs = () => {
+interface ISearchDocsProps {
+    tracking: Tracking;
+}
+
+const SearchDocs = ({ tracking }: ISearchDocsProps) => {
     const theme = useTheme();
-    const { trackEvent } = useEventTracker();
+    const trackSearchDocs = useTracking(tracking);
 
     const trackOpen = (open: boolean) => {
         if (!open) return;
-        trackEvent('search-docs', {
-            props: {
-                eventType: 'opened',
-            },
-        });
+        trackSearchDocs('opened');
     };
 
     return (
@@ -64,25 +65,23 @@ const SearchDocs = () => {
 interface ISearchDocsChatProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    tracking: Tracking;
 }
 
 export const SearchDocsChat = ({
     open,
     onOpenChange,
+    tracking,
 }: ISearchDocsChatProps) => {
     const theme = useTheme();
-    const { trackEvent } = useEventTracker();
+    const trackSearchDocs = useTracking(tracking);
 
     // The parent controls open, so track when open changes, not in onOpenChange:
     // the widget doesn't call onOpenChange when the parent opens the chat.
     useEffect(() => {
         if (!open) return;
-        trackEvent('search-docs', {
-            props: {
-                eventType: 'opened',
-            },
-        });
-    }, [open, trackEvent]);
+        trackSearchDocs('opened');
+    }, [open, trackSearchDocs]);
 
     return (
         <AskAiChat

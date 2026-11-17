@@ -40,6 +40,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { useVariant } from 'hooks/useVariant';
 import { useIntro } from 'component/onboarding/intro/IntroProvider.tsx';
 import { getLocalStorageItem, setLocalStorageItem } from 'utils/storage.ts';
+import { searchDocsTracking } from '../SearchDocs/searchDocsTracking.ts';
 
 const LazySearchDocsChat = lazy(() =>
     import('../SearchDocs/SearchDocs.tsx').then((module) => ({
@@ -547,6 +548,7 @@ export const HelpResources = ({
                     <LazySearchDocsChat
                         open={searchDocsOpen}
                         onOpenChange={setSearchDocsOpen}
+                        tracking={searchDocsTracking('help-menu')}
                     />
                 </Suspense>
             )}

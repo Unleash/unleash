@@ -53,25 +53,6 @@ export class MetricsTranslator {
         );
     }
 
-    private hasNewBuckets(
-        existingHistogram: BatchHistogram,
-        newBuckets: Array<{ le: number | '+Inf'; count: number }>,
-    ): boolean {
-        const existingBoundaries = existingHistogram.bucketBoundaries;
-
-        if (existingBoundaries.size !== newBuckets.length) {
-            return true;
-        }
-
-        for (const bucket of newBuckets) {
-            if (!existingBoundaries.has(bucket.le)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     private buildLabels(
         sample: NumericMetricSample | BucketMetricSample,
         type: string,
@@ -148,7 +129,7 @@ export class MetricsTranslator {
             const needsRecreation =
                 !firstSample?.buckets ||
                 this.hasNewLabels(existing, labelNames) ||
-                this.hasNewBuckets(existing, firstSample.buckets);
+                !existing.acceptsBuckets(firstSample.buckets);
 
             if (!needsRecreation) {
                 return existing as BatchHistogram;

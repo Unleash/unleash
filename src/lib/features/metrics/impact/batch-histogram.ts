@@ -42,6 +42,13 @@ export class BatchHistogram {
         this.registry.registerMetric(this as any);
     }
 
+    acceptsBuckets(buckets: BucketData[]): boolean {
+        return (
+            buckets.length === this.bucketBoundaries.size &&
+            buckets.every((bucket) => this.bucketBoundaries.has(bucket.le))
+        );
+    }
+
     recordBatch(
         labels: Record<string, string | number>,
         data: BatchData,

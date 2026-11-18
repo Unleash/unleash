@@ -15,6 +15,7 @@ import Input from 'component/common/Input/Input';
 import { FormFieldControlAligner } from 'component/common/FormField/FormField';
 
 interface IStrategyInputList {
+    id: string;
     name: string;
     list: string[];
     setConfig: (field: string, value: string) => void;
@@ -44,6 +45,7 @@ const InputContainer = styled('div')(({ theme }) => ({
 }));
 
 const StrategyInputList = ({
+    id,
     name,
     list,
     setConfig,
@@ -128,7 +130,7 @@ const StrategyInputList = ({
                     name={`input_field`}
                     variant='outlined'
                     label='Add items'
-                    id='input-add-items'
+                    id={id}
                     value={input}
                     size='large'
                     placeholder=''

@@ -1,5 +1,5 @@
 import { createUuid } from 'utils/createUuid';
-import { VariantForm } from './VariantForm/VariantForm.tsx';
+import { VariantForm, variantNameInputId } from './VariantForm/VariantForm.tsx';
 import type React from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { IFeatureVariantEdit } from 'component/feature/variantEdit';
@@ -7,6 +7,10 @@ import { WeightType } from '../../../constants/variantTypes.ts';
 import { styled, useTheme, Button, Tabs } from '@mui/material';
 import type { StrategyFormState } from 'interfaces/strategy';
 import type { FailedVariantsSubmit } from '../FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm.tsx';
+import {
+    useFocusTarget,
+    variantsFocusKey,
+} from '../FeatureStrategy/FeatureStrategyForm/formFocus.tsx';
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 import { useEventTracker } from 'hooks/useEventTracker';
 import Add from '@mui/icons-material/Add';
@@ -30,6 +34,10 @@ const PillRow = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     marginBottom: theme.spacing(2),
 }));
+
+type FocusRequest =
+    | { target: 'pill' }
+    | { target: 'nameInput'; variantId: string };
 
 interface StrategyVariantsProps<T extends StrategyFormState> {
     setStrategy: React.Dispatch<React.SetStateAction<T>>;
@@ -86,15 +94,20 @@ export const StrategyVariants = <T extends StrategyFormState>({
         initialVariants[0]?.id,
     );
     const pillListRef = useRef<HTMLDivElement>(null);
-    const focusSelectedPillAfterRender = useRef(false);
+    const [focusRequest, setFocusRequest] = useState<FocusRequest>();
 
     useEffect(() => {
-        if (!focusSelectedPillAfterRender.current) return;
-        focusSelectedPillAfterRender.current = false;
-        pillListRef.current
-            ?.querySelector<HTMLElement>('[aria-selected="true"]')
+        if (!focusRequest) return;
+        if (focusRequest.target === 'pill') {
+            pillListRef.current
+                ?.querySelector<HTMLElement>('[aria-selected="true"]')
+                ?.focus();
+            return;
+        }
+        document
+            .getElementById(variantNameInputId(focusRequest.variantId))
             ?.focus();
-    });
+    }, [focusRequest]);
     const theme = useTheme();
 
     const stickiness =
@@ -181,7 +194,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
             ]),
         );
         setSelectedVariantId(id);
-        focusSelectedPillAfterRender.current = true;
+        setFocusRequest({ target: 'nameInput', variantId: id });
         trackEvent('strategy-variants', {
             props: {
                 eventType: 'variant added',
@@ -228,7 +241,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
         const remaining = variantsEdit.filter((variant) => variant.id !== id);
         setVariantsEdit(splitWeightsEvenly(remaining));
         setSelectedVariantId(remaining[Math.max(removedIndex - 1, 0)]?.id);
-        focusSelectedPillAfterRender.current = true;
+        setFocusRequest({ target: 'pill' });
     };
 
     const variantColor = useCallback(
@@ -253,17 +266,20 @@ export const StrategyVariants = <T extends StrategyFormState>({
 
     const submitAttemptFailed = Boolean(failedVariantsSubmit);
 
-    const variantsAtSubmitAttempt = useRef(variantsEdit);
-    variantsAtSubmitAttempt.current = variantsEdit;
+    const [erroredFieldFocusRequest, setErroredFieldFocusRequest] =
+        useState<Record<string, never>>();
 
-    useEffect(() => {
-        if (!failedVariantsSubmit?.selectFirstInvalid) return;
-        const variants = variantsAtSubmitAttempt.current;
-        const firstInvalid = variants.find((variant) => !variant.isValid);
-        if (firstInvalid) {
-            setSelectedVariantId(firstInvalid.id);
-        }
-    }, [failedVariantsSubmit]);
+    useFocusTarget(variantsFocusKey, {
+        reveal: () => {
+            const firstInvalid = variantsEdit.find(
+                (variant) => !variant.isValid,
+            );
+            if (firstInvalid) {
+                setSelectedVariantId(firstInvalid.id);
+            }
+        },
+        focus: () => setErroredFieldFocusRequest({}),
+    });
 
     const allVariantsAreValid =
         variantsEdit.length === 0 ||
@@ -271,6 +287,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
             !variantWeightsError);
     useEffect(() => {
         if (submitAttemptFailed && allVariantsAreValid) {
+            setErroredFieldFocusRequest(undefined);
             clearFailedVariantsSubmit?.();
         }
     }, [submitAttemptFailed, allVariantsAreValid, clearFailedVariantsSubmit]);
@@ -360,6 +377,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
                 decorationColor={variantColor(selectedIndex)}
                 weightsError={variantWeightsError}
                 failedVariantsSubmit={failedVariantsSubmit}
+                erroredFieldFocusRequest={erroredFieldFocusRequest}
             />
         </>
     );

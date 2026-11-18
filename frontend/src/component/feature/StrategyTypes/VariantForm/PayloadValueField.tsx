@@ -153,18 +153,24 @@ const formatButtonProps: ButtonProps = {
 };
 
 interface PayloadJsonEditorProps {
+    id: string;
+    autoFocus?: boolean;
     value: IPayload;
     onChange: (payload: IPayload) => void;
     editorStyle?: EditorStyle;
 }
 
 const PayloadJsonEditor = ({
+    id,
+    autoFocus,
     value,
     onChange,
     editorStyle,
 }: PayloadJsonEditorProps) => (
     <Suspense fallback={null}>
         <LazyReactJSONEditor
+            id={id}
+            autoFocus={autoFocus}
             content={{ text: value.value }}
             placeholder='{"cta" : "Start free trial"}'
             formatButtonProps={formatButtonProps}
@@ -187,6 +193,7 @@ interface PayloadValueFieldProps {
     onChange: (payload: IPayload) => void;
     payloadSchema?: JsonSchemaProperty;
     id: string;
+    autoFocusJsonEditor?: boolean;
     error?: string;
     onBlur: () => void;
 }
@@ -196,6 +203,7 @@ export const PayloadValueField = ({
     onChange,
     payloadSchema,
     id,
+    autoFocusJsonEditor,
     error,
     onBlur,
 }: PayloadValueFieldProps) => {
@@ -264,6 +272,8 @@ export const PayloadValueField = ({
             >
                 <PayloadEditorBody>
                     <PayloadJsonEditor
+                        id={id}
+                        autoFocus={autoFocusJsonEditor}
                         value={value}
                         onChange={onChange}
                         editorStyle='embedded'
@@ -277,7 +287,12 @@ export const PayloadValueField = ({
         <Field>
             <FieldLabel htmlFor={id}>Value</FieldLabel>
             {value.type === 'json' ? (
-                <PayloadJsonEditor value={value} onChange={onChange} />
+                <PayloadJsonEditor
+                    id={id}
+                    autoFocus={autoFocusJsonEditor}
+                    value={value}
+                    onChange={onChange}
+                />
             ) : (
                 <ValueInput
                     id={id}

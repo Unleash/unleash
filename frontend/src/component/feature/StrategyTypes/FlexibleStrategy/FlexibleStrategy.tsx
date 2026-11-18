@@ -1,4 +1,4 @@
-import { type ReactNode, useId } from 'react';
+import { type ReactNode, useId, useState } from 'react';
 import {
     Accordion,
     AccordionDetails,
@@ -25,6 +25,10 @@ import {
     parseParameterString,
 } from 'utils/parseParameter';
 import { RolloutSlider } from 'component/feature/StrategyTypes/RolloutSlider/RolloutSlider';
+import {
+    parameterFocusKey,
+    useFocusTarget,
+} from '../../FeatureStrategy/FeatureStrategyForm/formFocus.tsx';
 
 const SliderArea = styled('div')(({ theme }) => ({
     padding: theme.spacing(4, 3, 3),
@@ -121,6 +125,12 @@ export const FlexibleStrategy = ({
     const groupIdLabelId = useId();
     const groupIdInputId = useId();
 
+    const [advancedSettingsOpen, setAdvancedSettingsOpen] = useState(false);
+    useFocusTarget(parameterFocusKey('groupId'), {
+        reveal: () => setAdvancedSettingsOpen(true),
+        focus: () => document.getElementById(groupIdInputId)?.focus(),
+    });
+
     return (
         <>
             <SliderArea>
@@ -134,7 +144,11 @@ export const FlexibleStrategy = ({
                 />
             </SliderArea>
             <Divider />
-            <AdvancedSettingsAccordion disableGutters>
+            <AdvancedSettingsAccordion
+                disableGutters
+                expanded={advancedSettingsOpen}
+                onChange={(_, open) => setAdvancedSettingsOpen(open)}
+            >
                 <AccordionSummary
                     expandIcon={<ChevronRight />}
                     slotProps={advancedSettingsSummarySlotProps}

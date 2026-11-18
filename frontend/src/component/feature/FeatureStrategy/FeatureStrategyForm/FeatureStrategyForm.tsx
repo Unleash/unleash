@@ -33,10 +33,14 @@ import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/Feature
 import { StrategyFormBodySelector } from './StrategyFormBodySelector.tsx';
 import type { ParametersSchema } from 'openapi/index.ts';
 import { strategyVariantsAreValid } from 'component/feature/StrategyTypes/strategyVariantsValidation';
+import {
+    FormFocusProvider,
+    parameterFocusKey,
+    useFormFocus,
+    variantsFocusKey,
+} from './formFocus.tsx';
 
-export type FailedVariantsSubmit = {
-    selectFirstInvalid: boolean;
-};
+export type FailedVariantsSubmit = Record<string, never>;
 
 export interface IFeatureStrategyFormProps<T extends StrategyFormState> {
     feature: IFeatureToggle;
@@ -96,6 +100,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
     const [showProdGuard, setShowProdGuard] = useState(false);
     const [failedVariantsSubmit, setFailedVariantsSubmit] =
         useState<FailedVariantsSubmit>();
+    const { focusRegistry, focusFirst } = useFormFocus();
     const hasValidConstraints = useConstraintsValidation(strategy.constraints, {
         ignoreIncompleteConstraints: singlePageStrategyForm,
     });
@@ -188,23 +193,33 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
         }
     };
 
-    const validateVariants = (selectFirstInvalid: boolean): boolean => {
+    const validateVariants = (): boolean => {
         const variantsAreValid =
             !singlePageStrategyForm ||
             strategyVariantsAreValid(strategy.variants ?? []);
-        setFailedVariantsSubmit(
-            variantsAreValid ? undefined : { selectFirstInvalid },
-        );
+        setFailedVariantsSubmit(variantsAreValid ? undefined : {});
         return variantsAreValid;
     };
 
+    const invalidParameterNames = (): string[] =>
+        strategyDefinition.parameters
+            .filter((parameter) =>
+                validateParameterValue(
+                    parameter,
+                    strategy.parameters?.[parameter.name],
+                ),
+            )
+            .map((parameter) => parameter.name);
+
     const onSubmitWithValidation = async () => {
         const parametersAreValid = validateAllParameters();
-        const variantsAreValid = validateVariants(
-            hasValidConstraints && parametersAreValid,
-        );
+        const variantsAreValid = validateVariants();
         if (!hasValidConstraints || !parametersAreValid || !variantsAreValid) {
             trackStrategyForm.validationFailed();
+            focusFirst([
+                ...invalidParameterNames().map(parameterFocusKey),
+                ...(variantsAreValid ? [] : [variantsFocusKey]),
+            ]);
             return;
         }
 
@@ -246,73 +261,81 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
     };
 
     return (
-        <StrategyFormBodySelector
-            strategy={strategy}
-            setStrategy={setStrategy}
-            strategyDefinition={strategyDefinition}
-            errors={errors}
-            failedVariantsSubmit={failedVariantsSubmit}
-            clearFailedVariantsSubmit={() => setFailedVariantsSubmit(undefined)}
-            validateParameter={validateParameter}
-            canRenamePreexistingVariants={canRenamePreexistingVariants}
-            payloadSchema={feature.payloadSchema}
-            alertContent={alertContent()}
-            allowEnableDisable
-            statusContent={statusContent()}
-            onSubmit={onSubmitWithValidation}
-            beforeFooter={
-                <>
-                    <Box
-                        sx={{
-                            flex: 1,
-                            display: 'flex',
-                            alignItems: 'flex-end',
-                            ':empty': { display: 'none' },
-                        }}
-                    >
-                        {Limit}
-                    </Box>
+        <FormFocusProvider registry={focusRegistry}>
+            <StrategyFormBodySelector
+                strategy={strategy}
+                setStrategy={setStrategy}
+                strategyDefinition={strategyDefinition}
+                errors={errors}
+                failedVariantsSubmit={failedVariantsSubmit}
+                clearFailedVariantsSubmit={() =>
+                    setFailedVariantsSubmit(undefined)
+                }
+                validateParameter={validateParameter}
+                canRenamePreexistingVariants={canRenamePreexistingVariants}
+                payloadSchema={feature.payloadSchema}
+                alertContent={alertContent()}
+                allowEnableDisable
+                statusContent={statusContent()}
+                onSubmit={onSubmitWithValidation}
+                beforeFooter={
+                    <>
+                        <Box
+                            sx={{
+                                flex: 1,
+                                display: 'flex',
+                                alignItems: 'flex-end',
+                                ':empty': { display: 'none' },
+                            }}
+                        >
+                            {Limit}
+                        </Box>
 
-                    {showChangeRequestUpgrade ? (
-                        <UpgradeChangeRequests />
-                    ) : null}
-                </>
-            }
-        >
-            {incompleteConstraints.length > 0 ? (
-                <StyledIncompleteConstraintsNote>
-                    {incompleteConstraintsNote(incompleteConstraints.length)}
-                </StyledIncompleteConstraintsNote>
-            ) : null}
-            <Button
-                type='button'
-                color='primary'
-                onClick={onCancelWithTracking}
-                disabled={loading}
+                        {showChangeRequestUpgrade ? (
+                            <UpgradeChangeRequests />
+                        ) : null}
+                    </>
+                }
             >
-                Cancel
-            </Button>
-            <PermissionButton
-                permission={permission}
-                projectId={feature.project}
-                environmentId={environmentId}
-                variant='contained'
-                color='primary'
-                type='submit'
-                disabled={disabled || loading || legacyFormHasBlockingErrors}
-                data-testid={STRATEGY_FORM_SUBMIT_ID}
-            >
-                {changeRequestsEnabled
-                    ? changeRequestButtonText
-                    : 'Save strategy'}
-            </PermissionButton>
-            <FeatureStrategyProdGuard
-                open={showProdGuard}
-                onClose={() => setShowProdGuard(false)}
-                onClick={onSubmit}
-                loading={loading}
-                label='Save strategy'
-            />
-        </StrategyFormBodySelector>
+                {incompleteConstraints.length > 0 ? (
+                    <StyledIncompleteConstraintsNote>
+                        {incompleteConstraintsNote(
+                            incompleteConstraints.length,
+                        )}
+                    </StyledIncompleteConstraintsNote>
+                ) : null}
+                <Button
+                    type='button'
+                    color='primary'
+                    onClick={onCancelWithTracking}
+                    disabled={loading}
+                >
+                    Cancel
+                </Button>
+                <PermissionButton
+                    permission={permission}
+                    projectId={feature.project}
+                    environmentId={environmentId}
+                    variant='contained'
+                    color='primary'
+                    type='submit'
+                    disabled={
+                        disabled || loading || legacyFormHasBlockingErrors
+                    }
+                    data-testid={STRATEGY_FORM_SUBMIT_ID}
+                >
+                    {changeRequestsEnabled
+                        ? changeRequestButtonText
+                        : 'Save strategy'}
+                </PermissionButton>
+                <FeatureStrategyProdGuard
+                    open={showProdGuard}
+                    onClose={() => setShowProdGuard(false)}
+                    onClick={onSubmit}
+                    loading={loading}
+                    label='Save strategy'
+                />
+            </StrategyFormBodySelector>
+        </FormFocusProvider>
     );
 };

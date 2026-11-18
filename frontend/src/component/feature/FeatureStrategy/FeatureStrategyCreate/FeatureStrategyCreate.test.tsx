@@ -122,6 +122,11 @@ describe('NewFeatureStrategyCreate', () => {
             screen.getByLabelText(/Variant name/),
             'the first unnamed variant gets selected so its error is visible',
         ).toHaveValue('');
+        await waitFor(() => {
+            expect(document.activeElement).toBe(
+                screen.getByLabelText(/Variant name/),
+            );
+        });
 
         fireEvent.change(screen.getByLabelText(/Variant name/), {
             target: { value: 'c' },

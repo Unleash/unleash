@@ -10,7 +10,7 @@ import {
     type Theme,
     useTheme,
 } from '@mui/material';
-import CodeMirror from '@uiw/react-codemirror';
+import CodeMirror, { EditorView, type Extension } from '@uiw/react-codemirror';
 import { type FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 export type EditorStyle = 'default' | 'embedded' | 'sidePanel' | 'fill';
@@ -38,6 +38,8 @@ export type JSONContent = { text: string } | { json: unknown };
 type JSONEditorChange = (content: JSONContent) => void;
 
 interface IReactJSONEditorProps {
+    id?: string;
+    autoFocus?: boolean;
     content: JSONContent;
     onChange?: JSONEditorChange;
     onBlur?: () => void;
@@ -227,6 +229,8 @@ const getJsonValidationError = (value: string): string | undefined => {
 };
 
 const ReactJSONEditor: FC<IReactJSONEditorProps> = ({
+    id,
+    autoFocus,
     content,
     onChange,
     onBlur,
@@ -240,10 +244,16 @@ const ReactJSONEditor: FC<IReactJSONEditorProps> = ({
     const theme = useTheme();
     const value = useMemo(() => contentToText(content), [content]);
     const [validationError, setValidationError] = useState<string>();
-    const extensions = useMemo(
-        () => [json(), ...(readOnly ? [] : [linter(jsonParseLinter())])],
-        [readOnly],
-    );
+    const extensions = useMemo(() => {
+        const extensions: Extension[] = [json()];
+        if (id) {
+            extensions.push(EditorView.contentAttributes.of({ id }));
+        }
+        if (!readOnly) {
+            extensions.push(linter(jsonParseLinter()));
+        }
+        return extensions;
+    }, [id, readOnly]);
     const shouldValidateInternally =
         !readOnly && validationErrorProp === undefined;
 
@@ -300,6 +310,7 @@ const ReactJSONEditor: FC<IReactJSONEditorProps> = ({
                 ) : null}
                 <CodeMirror
                     value={value}
+                    autoFocus={autoFocus}
                     placeholder={placeholder}
                     minHeight={minHeight}
                     height={fillsHeight ? '100%' : undefined}

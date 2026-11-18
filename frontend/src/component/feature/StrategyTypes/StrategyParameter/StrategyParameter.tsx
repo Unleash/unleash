@@ -1,4 +1,5 @@
 import type React from 'react';
+import { useId } from 'react';
 import { FormControlLabel, Switch } from '@mui/material';
 import Input from 'component/common/Input/Input';
 import StrategyInputList from '../StrategyInputList/StrategyInputList.tsx';
@@ -14,6 +15,10 @@ import {
 } from 'utils/parseParameter';
 import { InputCaption } from 'component/common/InputCaption/InputCaption';
 import type { IFormErrors } from 'hooks/useFormErrors';
+import {
+    parameterFocusKey,
+    useFocusTarget,
+} from 'component/feature/FeatureStrategy/FeatureStrategyForm/formFocus.tsx';
 
 interface IStrategyParameterProps {
     definition: IStrategyParameter;
@@ -32,6 +37,11 @@ export const StrategyParameter = ({
     const value = parameters[name];
     const error = errors.getFormError(name);
     const label = required ? `${name} * ` : name;
+    const inputId = useId();
+
+    useFocusTarget(parameterFocusKey(name), {
+        focus: () => document.getElementById(inputId)?.focus(),
+    });
 
     const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         updateParameter(name, event.target.value);
@@ -72,6 +82,7 @@ export const StrategyParameter = ({
         return (
             <div>
                 <StrategyInputList
+                    id={inputId}
                     name={name}
                     list={parseParameterStrings(parameters[name])}
                     setConfig={onSetListConfig}
@@ -86,6 +97,7 @@ export const StrategyParameter = ({
         return (
             <div>
                 <Input
+                    id={inputId}
                     error={Boolean(error)}
                     helperText={error}
                     size='large'
@@ -123,6 +135,7 @@ export const StrategyParameter = ({
     return (
         <div>
             <Input
+                id={inputId}
                 rows={1}
                 placeholder=''
                 size='large'

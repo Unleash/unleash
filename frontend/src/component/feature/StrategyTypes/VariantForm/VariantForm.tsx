@@ -22,6 +22,12 @@ import { useUiFlag } from 'hooks/useUiFlag.ts';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 import { PayloadValueField } from './PayloadValueField.tsx';
 
+export const variantNameInputId = (variantId: string) =>
+    `variant-name-input-${variantId}`;
+
+const variantPayloadValueId = (variantId: string) =>
+    `variant-payload-value-${variantId}`;
+
 const StyledVariantForm = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -161,6 +167,8 @@ interface IVariantFormProps {
     weightsError?: boolean;
     payloadSchema?: JsonSchemaProperty;
     failedVariantsSubmit?: FailedVariantsSubmit;
+    // a fresh object asks the form to focus its first errored field
+    erroredFieldFocusRequest?: Record<string, never>;
 }
 
 export const VariantForm = ({
@@ -173,6 +181,7 @@ export const VariantForm = ({
     weightsError,
     payloadSchema,
     failedVariantsSubmit,
+    erroredFieldFocusRequest,
 }: IVariantFormProps) => {
     const { isEnterprise } = useUiConfig();
     const payloadSchemasEnabled = useUiFlag('payloadSchemas') && isEnterprise();
@@ -291,6 +300,8 @@ export const VariantForm = ({
         setPercentage(String(calculateVariantWeight(variant.weight)));
     }, [variant.weight]);
 
+    const [autoFocusPayloadEditor, setAutoFocusPayloadEditor] = useState(false);
+
     const fieldsAtSubmitAttempt = useRef({
         name,
         payload,
@@ -305,9 +316,36 @@ export const VariantForm = ({
     };
 
     useEffect(() => {
-        if (!failedVariantsSubmit) return;
+        if (!failedVariantsSubmit) {
+            setAutoFocusPayloadEditor(false);
+            return;
+        }
         setErrors(submitAttemptErrors(fieldsAtSubmitAttempt.current));
     }, [failedVariantsSubmit]);
+
+    useEffect(() => {
+        if (!erroredFieldFocusRequest || !failedVariantsSubmit) return;
+        const errors = submitAttemptErrors(fieldsAtSubmitAttempt.current);
+        const fieldsInFormOrder = [
+            { error: errors.name, inputId: variantNameInputId(variant.id) },
+            {
+                error: errors.payload,
+                inputId: variantPayloadValueId(variant.id),
+            },
+        ];
+        const firstErroredField = fieldsInFormOrder.find(
+            (field) => field.error,
+        );
+        if (!firstErroredField) return;
+        const target = document.getElementById(firstErroredField.inputId);
+        if (target) {
+            target.focus();
+            return;
+        }
+        // CodeMirror renders later than the rest of the form, so we let
+        // the editor focus itself once it's ready
+        setAutoFocusPayloadEditor(true);
+    }, [erroredFieldFocusRequest, failedVariantsSubmit, variant.id]);
 
     const weightError = weightsError ? 'Total weight may not exceed 100%' : '';
 
@@ -316,13 +354,13 @@ export const VariantForm = ({
     const weightExplanation = hasFixedWeight
         ? FIXED_WEIGHT_EXPLANATION
         : VARIABLE_WEIGHT_EXPLANATION;
-    const valueInputId = `variant-payload-value-${variant.id}`;
+    const valueInputId = variantPayloadValueId(variant.id);
 
     return (
         <StyledVariantForm data-testid='VARIANT'>
             <TopRow>
                 <Input
-                    id={`variant-name-input-${variant.id}`}
+                    id={variantNameInputId(variant.id)}
                     data-testid='VARIANT_NAME_INPUT'
                     label={
                         <>
@@ -399,6 +437,7 @@ export const VariantForm = ({
                 }}
                 payloadSchema={schemaActive ? payloadSchema : undefined}
                 id={valueInputId}
+                autoFocusJsonEditor={autoFocusPayloadEditor}
                 error={errors.payload}
                 onBlur={() => validatePayload(payload)}
             />

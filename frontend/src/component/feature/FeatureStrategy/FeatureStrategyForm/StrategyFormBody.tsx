@@ -27,6 +27,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import { parseParameterNumber } from 'utils/parseParameter.ts';
 import { PlainTextDescription } from './PlainTextDescription/PlainTextDescription.tsx';
 import { ActiveStateSelector } from './ActiveStateSelector.tsx';
+import { parameterFocusKey, useFocusSection } from './formFocus.tsx';
 
 export interface StrategyFormBodyProps<T extends StrategyFormState> {
     strategy: T;
@@ -172,13 +173,17 @@ export const StrategyFormBody = <T extends StrategyFormState>({
 }: StrategyFormBodyProps<T>) => {
     const theme = useTheme();
     const strategyName = strategy?.name || strategy?.strategyName;
+    const [parametersExpanded, setParametersExpanded] = useState(true);
+    const parameterFocusKeys = strategyDefinition.parameters.map((parameter) =>
+        parameterFocusKey(parameter.name),
+    );
+    useFocusSection(parameterFocusKeys, () => setParametersExpanded(true));
     const [variantsExpanded, setVariantsExpanded] = useState(false);
-    const variantsHaveError = Boolean(failedVariantsSubmit);
     useEffect(() => {
-        if (variantsHaveError) {
+        if (failedVariantsSubmit) {
             setVariantsExpanded(true);
         }
-    }, [variantsHaveError]);
+    }, [failedVariantsSubmit]);
 
     const stickiness =
         strategy?.parameters && 'stickiness' in strategy?.parameters
@@ -329,7 +334,12 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                         </AccordionDetails>
                     </StyledAccordion>
 
-                    <StyledAccordion defaultExpanded>
+                    <StyledAccordion
+                        expanded={parametersExpanded}
+                        onChange={(_, expanded) =>
+                            setParametersExpanded(expanded)
+                        }
+                    >
                         <AccordionSummary
                             expandIcon={<ExpandMore />}
                             slotProps={accordionSummarySlotProps(theme)}

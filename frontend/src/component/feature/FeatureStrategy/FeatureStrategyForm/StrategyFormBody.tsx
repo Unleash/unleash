@@ -20,7 +20,7 @@ import {
     FeatureStrategyTargetAudience,
     type TargetAudience,
 } from './FeatureStrategyTargetAudience/FeatureStrategyTargetAudience.tsx';
-import { formatStrategyName } from 'utils/strategyNames';
+import { BuiltInStrategies, formatStrategyName } from 'utils/strategyNames';
 import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
 import type { ParametersSchema } from 'openapi/index.ts';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -184,6 +184,9 @@ export const StrategyFormBody = <T extends StrategyFormState>({
             setVariantsExpanded(true);
         }
     }, [failedVariantsSubmit]);
+
+    const isCustomStrategy =
+        strategyName && !BuiltInStrategies.includes(strategyName);
 
     const stickiness =
         strategy?.parameters && 'stickiness' in strategy?.parameters
@@ -411,10 +414,12 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                 </FormMainContent>
             </FormScrollArea>
 
-            <PlainTextDescription
-                strategy={strategy}
-                environmentDisabledText={environmentDisabledText}
-            />
+            {!isCustomStrategy && (
+                <PlainTextDescription
+                    strategy={strategy}
+                    environmentDisabledText={environmentDisabledText}
+                />
+            )}
 
             <FooterContent>
                 {alertContent}

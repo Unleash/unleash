@@ -230,6 +230,36 @@ test('returns to the app navigation with Back to app', async () => {
     ).not.toBeInTheDocument();
 });
 
+test('links every workspace setting on enterprise', async () => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        versionInfo: { current: { enterprise: 'version' } },
+        environment: 'Enterprise',
+    });
+    render(<AppShell>content</AppShell>);
+    await openConfigureWorkspace();
+
+    const configureWorkspace = within(
+        screen.getByRole('region', { name: 'Configure workspace' }),
+    );
+    await configureWorkspace.findByRole('link', { name: 'Environments' });
+
+    expect(
+        configureWorkspace
+            .getAllByRole('link')
+            .map((link) => [link.textContent, link.getAttribute('href')]),
+    ).toEqual([
+        ['Applications', '/applications'],
+        ['Context fields', '/context'],
+        ['Feature flag types', '/feature-toggle-type'],
+        ['Strategy types', '/strategies'],
+        ['Environments', '/environments'],
+        ['Release templates', '/release-templates'],
+        ['Tag types', '/tag-types'],
+        ['Integrations', '/integrations'],
+        ['Segments', '/segments'],
+    ]);
+});
+
 const renderForOnboardingAdmin = () => {
     mockUserWithSplash(server, CHECKLIST_ELIGIBLE_SPLASH);
     mockChecklistProjectOnboardingStarted(server);

@@ -274,4 +274,29 @@ describe('MetricsTranslator', () => {
 
         expect(result).not.toContain('1numeric');
     });
+
+    it('ignores histogram samples whose buckets differ from the ones the histogram was created with', async () => {
+        const result = await translator.translateAndSerializeMetrics([
+            {
+                name: 'latency',
+                help: 'latency',
+                type: 'histogram' as const,
+                samples: [
+                    { count: 1, sum: 1, buckets: [{ le: 1, count: 1 }] },
+                    { count: 1, sum: 1, buckets: [{ le: 2, count: 1 }] },
+                ],
+            },
+        ]);
+
+        expect(result).toBe(
+            [
+                '# HELP latency latency',
+                '# TYPE latency histogram',
+                'latency_bucket{metric_type="histogram",origin="sdk",le="1"} 1',
+                'latency_sum{metric_type="histogram",origin="sdk"} 1',
+                'latency_count{metric_type="histogram",origin="sdk"} 1',
+                '',
+            ].join('\n'),
+        );
+    });
 });

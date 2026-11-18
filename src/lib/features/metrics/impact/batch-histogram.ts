@@ -43,6 +43,9 @@ export class BatchHistogram {
     }
 
     acceptsBuckets(buckets: BucketData[]): boolean {
+        if (this.bucketBoundaries.size === 0) {
+            return true;
+        }
         return (
             buckets.length === this.bucketBoundaries.size &&
             buckets.every((bucket) => this.bucketBoundaries.has(bucket.le))

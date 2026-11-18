@@ -209,6 +209,9 @@ export class MetricsTranslator {
                 metric.samples,
             );
             for (const sample of metric.samples) {
+                if (!histogram.acceptsBuckets(sample.buckets)) {
+                    continue;
+                }
                 histogram.recordBatch(this.buildLabels(sample, metric.type), {
                     count: sample.count,
                     sum: sample.sum,

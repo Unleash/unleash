@@ -109,6 +109,7 @@ export const histogramSampleSchema = joi
                     count: joi.number().required(),
                 }),
             )
+            .min(1)
             .max(30)
             .required(),
         labels: joi

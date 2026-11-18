@@ -1,6 +1,7 @@
 import { beforeEach, expect, test } from 'vitest';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { Link } from 'react-router';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -228,6 +229,65 @@ test('returns to the app navigation with Back to app', async () => {
     expect(
         screen.queryByRole('region', { name: 'Configure workspace' }),
     ).not.toBeInTheDocument();
+});
+
+test('opens the workspace configuration when landing on a workspace page', () => {
+    render(<AppShell>content</AppShell>, { route: '/context/create' });
+
+    expect(
+        screen.getByRole('region', { name: 'Configure workspace' }),
+    ).toBeInTheDocument();
+    expect(
+        screen.queryByRole('link', { name: 'Home' }),
+    ).not.toBeInTheDocument();
+});
+
+test('lets Back to app leave the workspace configuration on a workspace page', async () => {
+    render(<AppShell>content</AppShell>, { route: '/context' });
+
+    await userEvent.click(screen.getByRole('button', { name: 'Back to app' }));
+
+    expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
+});
+
+test('keeps the workspace configuration open when following its links', async () => {
+    render(<AppShell>content</AppShell>, { route: '/projects' });
+    await openConfigureWorkspace();
+
+    await userEvent.click(screen.getByRole('link', { name: 'Context fields' }));
+
+    expect(
+        screen.getByRole('region', { name: 'Configure workspace' }),
+    ).toBeInTheDocument();
+});
+
+test('returns to the app navigation when leaving the page it was opened on', async () => {
+    render(
+        <AppShell>
+            <Link to='/search'>Go to search</Link>
+        </AppShell>,
+        { route: '/projects' },
+    );
+    await openConfigureWorkspace();
+
+    await userEvent.click(screen.getByRole('link', { name: 'Go to search' }));
+
+    expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
+});
+
+test('does not reopen the workspace configuration when coming back to the page it was opened on', async () => {
+    render(
+        <AppShell>
+            <Link to='/search'>Go to search</Link>
+        </AppShell>,
+        { route: '/projects' },
+    );
+    await openConfigureWorkspace();
+    await userEvent.click(screen.getByRole('link', { name: 'Go to search' }));
+
+    await userEvent.click(screen.getByRole('link', { name: 'Projects' }));
+
+    expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
 });
 
 test('links every workspace setting on enterprise', async () => {

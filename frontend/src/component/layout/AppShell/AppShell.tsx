@@ -1,6 +1,6 @@
 import { type FC, type ReactNode, useState } from 'react';
 import { styled } from '@mui/material';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { SkipNavTarget } from 'component/common/SkipNavLink/SkipNavTarget';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
@@ -19,7 +19,10 @@ import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequ
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
-import { ConfigureWorkspaceNavigation } from './sidebar/ConfigureWorkspaceNavigation.tsx';
+import {
+    ConfigureWorkspaceNavigation,
+    isConfigureWorkspacePage,
+} from './sidebar/ConfigureWorkspaceNavigation.tsx';
 import { HelpAndResourcesMenu } from './sidebar/HelpAndResourcesMenu.tsx';
 import { SearchButton } from './sidebar/SearchButton.tsx';
 import { SettingsMenu } from './sidebar/SettingsMenu.tsx';
@@ -81,8 +84,20 @@ const StyledContent = styled('main')(({ theme }) => ({
     },
 }));
 
+type SidebarMode = 'app' | 'workspace';
+type ManualChoice = { mode: SidebarMode; locationKey: string };
+
 const Sidebar: FC = () => {
-    const [mode, setMode] = useState<'app' | 'workspace'>('app');
+    const { pathname, key: locationKey } = useLocation();
+    // A manual switch lasts only until the next navigation, including one to
+    // the same path.
+    const [choice, setChoice] = useState<ManualChoice | null>(null);
+    const pageMode: SidebarMode = isConfigureWorkspacePage(pathname)
+        ? 'workspace'
+        : 'app';
+    const mode = choice?.locationKey === locationKey ? choice.mode : pageMode;
+    const setMode = (next: SidebarMode) =>
+        setChoice({ mode: next, locationKey });
 
     return (
         <StyledSidebar aria-label='Main'>

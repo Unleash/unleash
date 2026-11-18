@@ -357,6 +357,11 @@ export default class AddonService {
             throw new NotFoundError();
         } // because getting an early 404 here makes more sense
         this.validateAddonBelongsToProject(existingConfig, project);
+        if (data.provider !== existingConfig.provider) {
+            throw new BadDataError(
+                `An integration's type cannot be changed. To use ${data.provider}, create a new integration.`,
+            );
+        }
         const addonConfig = await this.prepareAddonConfig(data, project);
         if (this.sensitiveParams[addonConfig.provider].length > 0) {
             addonConfig.parameters = Object.keys(addonConfig.parameters).reduce(

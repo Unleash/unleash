@@ -27,6 +27,7 @@ import {
 import { createFakeEventsService } from '../internals.js';
 import { createTestConfig } from '../../test/config/test-config.js';
 import NotFoundError from '../error/notfound-error.js';
+import { BadDataError } from '../error/index.js';
 import { IntegrationEventsService } from './index.js';
 import joi from 'joi';
 const { ValidationError } = joi;
@@ -806,6 +807,22 @@ test('should not overwrite masked values when updating', async () => {
     const updatedConfig = await stores.addonStore.get(addonConfig.id);
     expect(updatedConfig!.parameters.url).toBe('http://localhost/wh');
     expect(updatedConfig!.parameters.var).toBe('some-new-value');
+});
+
+test('should refuse to change the type of an integration', async () => {
+    const { addonService } = getSetup();
+    const addon = await addonService.createAddon(
+        simpleAddonFor(),
+        TEST_AUDIT_USER,
+    );
+
+    await expect(
+        addonService.updateAddon(
+            addon.id,
+            { ...simpleAddonFor(), provider: 'webhook' },
+            TEST_AUDIT_USER,
+        ),
+    ).rejects.toThrow(BadDataError);
 });
 
 test('should reject addon config with missing required parameter when creating', async () => {

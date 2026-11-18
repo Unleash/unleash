@@ -81,6 +81,16 @@ test('does not offer inviting people to non-admins', async () => {
     ).not.toBeInTheDocument();
 });
 
+test('offers configuring the workspace to everyone', async () => {
+    render(<SettingsMenu />);
+
+    await openSettings();
+
+    expect(
+        screen.getByRole('menuitem', { name: 'Configure workspace' }),
+    ).toHaveAccessibleDescription('Settings that apply to all projects');
+});
+
 test('closes the menu after choosing profile settings', async () => {
     render(<SettingsMenu />);
     const button = await openSettings();

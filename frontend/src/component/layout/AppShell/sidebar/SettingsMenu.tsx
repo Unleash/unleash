@@ -15,6 +15,7 @@ import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import PolicyOutlinedIcon from '@mui/icons-material/PolicyOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
+import DomainOutlinedIcon from '@mui/icons-material/DomainOutlined';
 import AccessContext from 'contexts/AccessContext';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
@@ -47,6 +48,11 @@ const menuItemSx = (theme: Theme) => ({
             fontSize: theme.spacing(2.5),
         },
     },
+});
+
+const twoLineMenuItemSx = (theme: Theme) => ({
+    ...menuItemSx(theme),
+    alignItems: 'flex-start',
 });
 
 const dividerSx = (theme: Theme) => ({
@@ -87,11 +93,24 @@ const StyledOpenInNew = styled(OpenInNewIcon)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
+const StyledTwoLineLabel = styled('span')({
+    display: 'flex',
+    flexDirection: 'column',
+});
+
+const StyledDescription = styled('span')(({ theme }) => ({
+    fontSize: theme.typography.caption.fontSize,
+    fontWeight: theme.typography.fontWeightRegular,
+    lineHeight: '16px',
+    color: theme.palette.text.secondary,
+}));
+
 export const SettingsMenu: FC = () => {
     const { user } = useAuthUser();
     const { isAdmin } = useContext(AccessContext);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const menuId = useId();
+    const configureWorkspaceId = useId();
     const open = Boolean(anchorEl);
     const close = () => setAnchorEl(null);
 
@@ -176,7 +195,7 @@ export const SettingsMenu: FC = () => {
                     <StyledOpenInNew />
                 </MenuItem>
                 <LogOutMenuItem sx={menuItemSx} icon={<LogoutIcon />} />
-                {isAdmin ? <Divider sx={dividerSx} /> : null}
+                <Divider sx={dividerSx} />
                 {isAdmin ? (
                     <MenuItem
                         component={RouterLink}
@@ -190,6 +209,25 @@ export const SettingsMenu: FC = () => {
                         Invite people
                     </MenuItem>
                 ) : null}
+                <MenuItem
+                    sx={twoLineMenuItemSx}
+                    aria-labelledby={`${configureWorkspaceId}-title`}
+                    aria-describedby={`${configureWorkspaceId}-description`}
+                >
+                    <ListItemIcon>
+                        <DomainOutlinedIcon />
+                    </ListItemIcon>
+                    <StyledTwoLineLabel>
+                        <span id={`${configureWorkspaceId}-title`}>
+                            Configure workspace
+                        </span>
+                        <StyledDescription
+                            id={`${configureWorkspaceId}-description`}
+                        >
+                            Settings that apply to all projects
+                        </StyledDescription>
+                    </StyledTwoLineLabel>
+                </MenuItem>
             </Menu>
         </>
     );

@@ -7,6 +7,7 @@ import {
     type Theme,
     type TooltipProps,
 } from '@mui/material';
+import { asSxArray } from 'utils/asSxArray';
 
 const HINT_DELAY_MS = 3000;
 
@@ -71,7 +72,7 @@ export const HintBadge = ({
         <HintDot
             sx={[
                 { visibility: active ? 'visible' : 'hidden' },
-                ...(Array.isArray(sx) ? sx : [sx]),
+                ...asSxArray(sx),
             ]}
         />
     </Tooltip>

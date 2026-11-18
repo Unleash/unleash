@@ -1,8 +1,7 @@
 import { MenuItem } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material';
 import { basePath } from 'utils/formatPath';
-
-const asSxArray = (sx: SxProps<Theme>) => (Array.isArray(sx) ? sx : [sx]);
+import { asSxArray } from 'utils/asSxArray';
 
 export const LogOutMenuItem = ({ sx }: { sx: SxProps<Theme> }) => (
     <form method='POST' action={`${basePath}/logout`}>

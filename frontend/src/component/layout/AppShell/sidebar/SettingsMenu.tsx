@@ -6,6 +6,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { Truncator } from 'component/common/Truncator/Truncator';
+import { ThemeSubmenu } from 'component/user/UserProfile/ThemeSubmenu/ThemeSubmenu';
 import { LogOutMenuItem } from 'component/user/UserProfile/LogOutMenuItem/LogOutMenuItem';
 import { SidebarMenuButton } from './SidebarMenuButton.tsx';
 
@@ -123,6 +124,12 @@ export const SettingsMenu: FC = () => {
                 >
                     Profile settings
                 </MenuItem>
+                <ThemeSubmenu
+                    onCloseAll={close}
+                    itemSx={menuItemSx}
+                    paperSx={menuPaperSx}
+                    trailing='current-mode'
+                />
                 <MenuItem
                     component='a'
                     href='https://www.getunleash.io/privacy-policy'

@@ -2,6 +2,7 @@ import { styled, type SxProps, type Theme } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import type React from 'react';
 import type { FC } from 'react';
+import { asSxArray } from 'utils/asSxArray';
 
 const StyledGrid = styled(Grid)(({ theme }) => ({
     flexWrap: 'nowrap',
@@ -18,7 +19,7 @@ export const GridRow: FC<{
             container
             sx={[
                 { justifyContent: 'space-between', alignItems: 'center' },
-                ...(Array.isArray(sx) ? sx : [sx]),
+                ...asSxArray(sx),
             ]}
         >
             {children}

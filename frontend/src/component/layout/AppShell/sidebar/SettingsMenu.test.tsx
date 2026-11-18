@@ -8,6 +8,7 @@ import { SettingsMenu } from './SettingsMenu.tsx';
 const server = testServerSetup();
 
 beforeEach(() => {
+    localStorage.removeItem('unleash-theme');
     testServerRoute(server, '/api/admin/user', {
         user: { id: 1, name: 'Jane Doe', email: 'jane@example.com' },
         permissions: [],
@@ -80,4 +81,30 @@ test('logs out by posting to the logout endpoint', async () => {
     const form = logOut.closest('form');
     expect(form).toHaveAttribute('action', '/logout');
     expect(form).toHaveAttribute('method', 'POST');
+});
+
+const chooseTheme = async (label: string) => {
+    await userEvent.click(screen.getByRole('menuitem', { name: /Theme/ }));
+    await userEvent.click(await screen.findByRole('menuitem', { name: label }));
+};
+
+test('switches the theme from the theme submenu', async () => {
+    render(<SettingsMenu />);
+    await openSettings();
+
+    await chooseTheme('Dark');
+    await openSettings();
+
+    expect(screen.getByRole('menuitem', { name: /Theme/ })).toHaveTextContent(
+        'Dark',
+    );
+});
+
+test('closes the menu after choosing a theme', async () => {
+    render(<SettingsMenu />);
+    const button = await openSettings();
+
+    await chooseTheme('Dark');
+
+    expect(button).toHaveAttribute('aria-expanded', 'false');
 });

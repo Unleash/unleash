@@ -1,15 +1,11 @@
-import { type KeyboardEvent, type MouseEvent, useState } from 'react';
 import { Menu, MenuItem, styled } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material';
 import OpenInNew from '@mui/icons-material/OpenInNew';
-import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
-import Check from '@mui/icons-material/Check';
 import { Link as RouterLink } from 'react-router';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { Truncator } from 'component/common/Truncator/Truncator';
-import { useThemeMode } from 'hooks/useThemeMode';
-import type { themeMode } from 'contexts/UIContext';
 import type { IUser } from 'interfaces/user';
+import { ThemeSubmenu } from '../ThemeSubmenu/ThemeSubmenu.tsx';
 import { LogOutMenuItem } from '../LogOutMenuItem/LogOutMenuItem.tsx';
 
 const menuItemSx: SxProps<Theme> = {
@@ -46,128 +42,6 @@ const StyledOpenInNew = styled(OpenInNew)(({ theme }) => ({
     color: theme.palette.text.secondary,
     alignSelf: 'flex-end',
 }));
-
-const StyledChevron = styled(KeyboardArrowRight)(({ theme }) => ({
-    marginLeft: 'auto',
-    fontSize: theme.spacing(2.5),
-    color: theme.palette.text.secondary,
-}));
-
-const StyledCheckSlot = styled('span')(({ theme }) => ({
-    display: 'inline-flex',
-    width: theme.spacing(2.5),
-    color: theme.palette.primary.main,
-    '& svg': {
-        fontSize: theme.spacing(2),
-    },
-}));
-
-const THEME_OPTIONS: { label: string; value: themeMode }[] = [
-    { label: 'Dark', value: 'dark' },
-    { label: 'Light', value: 'light' },
-    { label: 'System', value: 'system' },
-];
-
-const ThemeSubmenu = ({ onCloseAll }: { onCloseAll: () => void }) => {
-    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-    const { themeMode, setThemeMode } = useThemeMode();
-    const open = Boolean(anchorEl);
-
-    const openSubmenu = (event: MouseEvent<HTMLElement>) =>
-        setAnchorEl(event.currentTarget);
-    const closeSubmenu = () => setAnchorEl(null);
-
-    const handleSelect = (mode: themeMode) => {
-        setThemeMode(mode);
-        setAnchorEl(null);
-        onCloseAll();
-    };
-
-    // support keyboard accessibility by manually moving focus between the options with up/down arrows,
-    // and go back to the main menu (Theme trigger) with left arrow or escape
-    const handleOptionKeyDown = (event: KeyboardEvent<HTMLLIElement>) => {
-        if (event.key === 'ArrowLeft') {
-            event.preventDefault();
-            event.stopPropagation();
-            const trigger = anchorEl;
-            closeSubmenu();
-            trigger?.focus();
-            return;
-        }
-        if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
-        event.preventDefault();
-        event.stopPropagation();
-        const item = event.currentTarget;
-        const parent = item.parentElement;
-        if (!parent) {
-            return;
-        }
-        const next =
-            event.key === 'ArrowDown'
-                ? (item.nextElementSibling ?? parent.firstElementChild)
-                : (item.previousElementSibling ?? parent.lastElementChild);
-        (next as HTMLElement)?.focus();
-    };
-
-    // right arrow opens the submenu (mirrors left arrow closing it)
-    const handleTriggerKeyDown = (event: KeyboardEvent<HTMLLIElement>) => {
-        if (event.key === 'ArrowRight') {
-            event.preventDefault();
-            setAnchorEl(event.currentTarget);
-        }
-    };
-
-    return (
-        <>
-            <MenuItem
-                onClick={openSubmenu}
-                onMouseEnter={openSubmenu}
-                onMouseLeave={closeSubmenu}
-                onKeyDown={handleTriggerKeyDown}
-                sx={menuItemSx}
-                aria-haspopup='true'
-                aria-expanded={open}
-            >
-                Theme
-                <StyledChevron />
-            </MenuItem>
-            <Menu
-                anchorEl={anchorEl}
-                open={open}
-                onClose={closeSubmenu}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                slotProps={{
-                    root: { sx: { pointerEvents: 'none' } },
-                    paper: {
-                        onMouseLeave: closeSubmenu,
-                        onMouseEnter: openSubmenu,
-                        sx: {
-                            pointerEvents: 'auto',
-                            minWidth: (theme) => theme.spacing(15),
-                            borderRadius: (theme) =>
-                                theme.shape.borderRadiusSmall,
-                        },
-                    },
-                }}
-            >
-                {THEME_OPTIONS.map((option) => (
-                    <MenuItem
-                        key={option.value}
-                        onClick={() => handleSelect(option.value)}
-                        onKeyDown={handleOptionKeyDown}
-                        sx={menuItemSx}
-                    >
-                        <StyledCheckSlot>
-                            {themeMode === option.value ? <Check /> : null}
-                        </StyledCheckSlot>
-                        {option.label}
-                    </MenuItem>
-                ))}
-            </Menu>
-        </>
-    );
-};
 
 interface IUserProfileContentProps {
     id: string;
@@ -218,7 +92,7 @@ export const UserProfileContent = ({
             Profile settings
         </MenuItem>
 
-        <ThemeSubmenu onCloseAll={onClose} />
+        <ThemeSubmenu onCloseAll={onClose} itemSx={menuItemSx} />
 
         <MenuItem
             component='a'

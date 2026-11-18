@@ -35,7 +35,7 @@ export const useProjectDefaultStrategy = ({
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
     const { refetchFeature } = useFeature(projectId, featureId);
-    const trackCreateStrategy = useTracking(createStrategyTracking);
+    const trackCreateStrategy = useTracking(createStrategyTracking());
     const [applying, setApplying] = useState(false);
 
     const applyDefaultStrategy = async () => {

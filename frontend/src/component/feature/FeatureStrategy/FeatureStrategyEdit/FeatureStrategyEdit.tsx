@@ -33,7 +33,10 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { useTracking } from 'hooks/useTracking';
-import { editStrategyTracking as createEditStrategyTracking } from '../strategyActionsTracking.ts';
+import {
+    editStrategyTracking as createEditStrategyTracking,
+    strategyFormVersionProps,
+} from '../strategyActionsTracking.ts';
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 import { changeRequestsUpdatingStrategy } from './changeRequestsUpdatingStrategy.ts';
@@ -119,6 +122,7 @@ export const FeatureStrategyEdit = () => {
     const editStrategyTracking = createEditStrategyTracking({
         strategyScope,
         viaChangeRequest,
+        ...strategyFormVersionProps(singlePageStrategyForm),
     });
     const trackEditStrategy = useTracking(editStrategyTracking);
     const { changeRequests: scheduledChangeRequestsThatUseStrategy } =

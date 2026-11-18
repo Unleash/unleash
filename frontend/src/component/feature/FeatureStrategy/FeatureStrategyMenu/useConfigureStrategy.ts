@@ -3,8 +3,10 @@ import { useTracking } from 'hooks/useTracking.ts';
 import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrategyCreate.tsx';
 import {
     createStrategyTracking,
+    strategyFormVersionProps,
     strategyTypeProps,
 } from '../strategyActionsTracking.ts';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { useEnvironmentDefaultStrategy } from './useEnvironmentDefaultStrategy.ts';
 
 interface IConfigureStrategyContext {
@@ -25,7 +27,12 @@ export const useConfigureStrategy = ({
     onClose,
 }: IConfigureStrategyContext) => {
     const navigate = useNavigate();
-    const trackCreateStrategy = useTracking(createStrategyTracking);
+    const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
+    const trackCreateStrategy = useTracking(
+        createStrategyTracking(
+            strategyFormVersionProps(singlePageStrategyForm),
+        ),
+    );
     const { defaultStrategy } = useEnvironmentDefaultStrategy(
         projectId,
         environmentId,

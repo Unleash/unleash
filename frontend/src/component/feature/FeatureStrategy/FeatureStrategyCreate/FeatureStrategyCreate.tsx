@@ -31,7 +31,10 @@ import { Limit } from 'component/common/Limit/Limit';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 import type { CreateFeatureStrategySchema } from 'openapi/index.ts';
 import { summarizeStrategy } from '../summarizeStrategy.ts';
-import { createStrategyTracking } from '../strategyActionsTracking.ts';
+import {
+    createStrategyTracking,
+    strategyFormVersionProps,
+} from '../strategyActionsTracking.ts';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { withIncompleteConstraintsDiscarded } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 
@@ -82,7 +85,10 @@ export const FeatureStrategyCreate = () => {
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
-    const trackCreateStrategy = useTracking(createStrategyTracking);
+    const tracking = createStrategyTracking(
+        strategyFormVersionProps(singlePageStrategyForm),
+    );
+    const trackCreateStrategy = useTracking(tracking);
 
     useEffect(() => {
         if (shouldUseDefaultStrategy) {
@@ -195,7 +201,7 @@ export const FeatureStrategyCreate = () => {
                 setStrategy={setStrategy}
                 environmentId={environmentId}
                 onSubmit={onSubmit}
-                tracking={createStrategyTracking}
+                tracking={tracking}
                 loading={loading}
                 permission={CREATE_FEATURE_STRATEGY}
                 errors={errors}

@@ -19,7 +19,11 @@ import { Link } from 'react-router';
 import { UPDATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import { StrategyDraggableItem } from './StrategyDraggableItem.tsx';
 import { useTracking } from 'hooks/useTracking.ts';
-import { editStrategyTracking } from 'component/feature/FeatureStrategy/strategyActionsTracking';
+import {
+    editStrategyTracking,
+    strategyFormVersionProps,
+} from 'component/feature/FeatureStrategy/strategyActionsTracking';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 type EditControlsProps = {
     projectId: string;
@@ -40,8 +44,12 @@ const EditControls = ({
     otherEnvironments,
     scope,
 }: EditControlsProps) => {
+    const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
     const trackEditStrategy = useTracking(
-        editStrategyTracking({ strategyScope: scope }),
+        editStrategyTracking({
+            strategyScope: scope,
+            ...strategyFormVersionProps(singlePageStrategyForm),
+        }),
     );
     return (
         <>

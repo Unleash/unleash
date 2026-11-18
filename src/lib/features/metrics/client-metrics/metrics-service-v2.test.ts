@@ -7,15 +7,22 @@ import EventEmitter from 'events';
 import { LastSeenService } from '../last-seen/last-seen-service.js';
 import type {
     IClientMetricsStoreV2,
+    IFlagResolver,
     IUnleashConfig,
 } from '../../../../lib/types/index.js';
+import { createTestConfig } from '../../../../test/config/test-config.js';
 import { endOfDay, startOfHour, subDays, subHours } from 'date-fns';
 import type { IClientMetricsEnv } from './client-metrics-store-v2-type.js';
 import { UnknownFlagsService } from '../unknown-flags/unknown-flags-service.js';
+import { impactRegister } from '../impact/impact-register.js';
 
 import { vi } from 'vitest';
 
-function initClientMetrics() {
+const allFlagsEnabled = { isEnabled: () => true };
+
+function initClientMetrics(
+    flagResolver: Pick<IFlagResolver, 'isEnabled'> = allFlagsEnabled,
+) {
     const stores = createStores();
 
     const eventBus = new EventEmitter();
@@ -24,9 +31,7 @@ function initClientMetrics() {
     const config = {
         eventBus,
         getLogger,
-        flagResolver: {
-            isEnabled: () => true,
-        },
+        flagResolver,
     } as unknown as IUnleashConfig;
 
     const lastSeenService = new LastSeenService(
@@ -350,4 +355,55 @@ test('aggregate previous day metrics', async () => {
 
     expect(recordedWarning()).toBe('');
     expect(aggregationCalled()).toBe(true);
+});
+
+test('stores an impact metric at the size limits and drops the ones above them', async () => {
+    const { flagResolver: defaultFlags } = createTestConfig();
+    const { clientMetricsService } = initClientMetrics(defaultFlags);
+    const nameAtLimit = 'n'.repeat(200);
+    const nameAboveLimit = 'n'.repeat(201);
+    const histogram = ({
+        name,
+        help = 'h'.repeat(500),
+        bucketCount = 30,
+    }: {
+        name: string;
+        help?: string;
+        bucketCount?: number;
+    }) => ({
+        name,
+        help,
+        type: 'histogram' as const,
+        samples: [
+            {
+                count: 1,
+                sum: 1,
+                buckets: Array.from({ length: bucketCount }, (_, index) => ({
+                    le: index,
+                    count: 1,
+                })),
+            },
+        ],
+    });
+
+    await clientMetricsService.registerImpactMetrics([
+        histogram({ name: nameAtLimit }),
+    ]);
+    await clientMetricsService.registerImpactMetrics([
+        histogram({ name: nameAboveLimit }),
+    ]);
+    await clientMetricsService.registerImpactMetrics([
+        histogram({ name: 'help_above_limit', help: 'h'.repeat(501) }),
+    ]);
+    await clientMetricsService.registerImpactMetrics([
+        histogram({ name: 'buckets_above_limit', bucketCount: 31 }),
+    ]);
+
+    const storedNames = [
+        nameAtLimit,
+        nameAboveLimit,
+        'help_above_limit',
+        'buckets_above_limit',
+    ].filter((name) => Boolean(impactRegister.getSingleMetric(name)));
+    expect(storedNames).toEqual([nameAtLimit]);
 });

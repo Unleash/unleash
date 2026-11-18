@@ -109,6 +109,7 @@ export const histogramSampleSchema = joi
                     count: joi.number().required(),
                 }),
             )
+            .max(30)
             .required(),
         labels: joi
             .object()
@@ -123,8 +124,8 @@ export const impactMetricSchema = joi
     .object()
     .options({ stripUnknown: true })
     .keys({
-        name: joi.string().required(),
-        help: joi.string().required(),
+        name: joi.string().max(200).required(),
+        help: joi.string().max(500).required(),
         type: joi.string().required(),
         buckets: joi.array().items(joi.number()).optional(),
         samples: joi.when('type', {

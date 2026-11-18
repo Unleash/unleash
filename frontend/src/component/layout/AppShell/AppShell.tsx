@@ -19,8 +19,9 @@ import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequ
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
-import { HelpAndResourcesButton } from './sidebar/HelpAndResourcesButton.tsx';
+import { HelpAndResourcesMenu } from './sidebar/HelpAndResourcesMenu.tsx';
 import { SearchButton } from './sidebar/SearchButton.tsx';
+import { SettingsMenu } from './sidebar/SettingsMenu.tsx';
 import { SidebarLink } from './sidebar/SidebarLink.tsx';
 import { SidebarList } from './sidebar/SidebarList.tsx';
 import { SidebarMoreToggle } from './sidebar/SidebarMoreToggle.tsx';
@@ -116,7 +117,8 @@ const Sidebar: FC = () => {
             </StyledSidebarScrollArea>
             <StyledSidebarFooter>
                 <SidebarList>
-                    <HelpAndResourcesButton />
+                    <HelpAndResourcesMenu />
+                    <SettingsMenu />
                 </SidebarList>
             </StyledSidebarFooter>
         </StyledSidebar>

@@ -1,5 +1,9 @@
 import { Counter, Gauge, type Registry } from '@prometheus-io/client';
 import { BatchHistogram } from './batch-histogram.js';
+import {
+    MAX_IMPACT_METRIC_SERIES,
+    SeriesLruCache,
+} from './series-lru-cache.js';
 
 export interface NumericMetricSample {
     labels?: Record<string, string | number>;
@@ -32,8 +36,32 @@ export type Metric = NumericMetric | BucketMetric;
 export class MetricsTranslator {
     private registry: Registry;
 
-    constructor(registry: Registry) {
+    private seriesLruCache: SeriesLruCache;
+
+    constructor(registry: Registry, maxSeries = MAX_IMPACT_METRIC_SERIES) {
         this.registry = registry;
+        this.seriesLruCache = new SeriesLruCache(maxSeries);
+    }
+
+    private trackSeries(
+        name: string,
+        sample: NumericMetricSample | BucketMetricSample,
+        type: string,
+    ): Record<string, string | number> {
+        const labels = this.buildLabels(sample, type);
+        const evicted = this.seriesLruCache.touch(name, labels);
+        if (evicted?.type === 'metric') {
+            this.registry.removeSingleMetric(evicted.name);
+        }
+        if (evicted?.type === 'series') {
+            this.registry.getSingleMetric(evicted.name)?.remove(evicted.labels);
+        }
+        return labels;
+    }
+
+    private removeMetric(name: string): void {
+        this.seriesLruCache.deleteMetric(name);
+        this.registry.removeSingleMetric(name);
     }
 
     sanitizeName(name: string): string {
@@ -83,7 +111,7 @@ export class MetricsTranslator {
             if (!this.hasNewLabels(existing, labelNames)) {
                 return existing as Counter<string>;
             }
-            this.registry.removeSingleMetric(name);
+            this.removeMetric(name);
         }
 
         return new Counter({
@@ -105,7 +133,7 @@ export class MetricsTranslator {
             if (!this.hasNewLabels(existing, labelNames)) {
                 return existing as Gauge<string>;
             }
-            this.registry.removeSingleMetric(name);
+            this.removeMetric(name);
         }
 
         return new Gauge({
@@ -134,7 +162,7 @@ export class MetricsTranslator {
             if (!needsRecreation) {
                 return existing as BatchHistogram;
             }
-            this.registry.removeSingleMetric(name);
+            this.removeMetric(name);
         }
 
         return new BatchHistogram({
@@ -168,7 +196,7 @@ export class MetricsTranslator {
         const validName = /^[a-zA-Z_]/.test(sanitizedName);
         const labelNames = this.collectLabelNames(metric);
 
-        if (!validName) {
+        if (!validName || metric.samples.length === 0) {
             return null;
         }
 
@@ -179,10 +207,12 @@ export class MetricsTranslator {
                 labelNames,
             );
             for (const sample of metric.samples) {
-                counter.inc(
-                    this.buildLabels(sample, metric.type),
-                    sample.value,
+                const labels = this.trackSeries(
+                    sanitizedName,
+                    sample,
+                    metric.type,
                 );
+                counter.inc(labels, sample.value);
             }
 
             return null;
@@ -193,15 +223,16 @@ export class MetricsTranslator {
                 labelNames,
             );
             for (const sample of metric.samples) {
-                gauge.set(this.buildLabels(sample, metric.type), sample.value);
+                const labels = this.trackSeries(
+                    sanitizedName,
+                    sample,
+                    metric.type,
+                );
+                gauge.set(labels, sample.value);
             }
 
             return null;
         } else if (metric.type === 'histogram') {
-            if (!metric.samples || metric.samples.length === 0) {
-                return null;
-            }
-
             const histogram = this.resolveHistogram(
                 sanitizedName,
                 metric.help,
@@ -212,7 +243,12 @@ export class MetricsTranslator {
                 if (!histogram.acceptsBuckets(sample.buckets)) {
                     continue;
                 }
-                histogram.recordBatch(this.buildLabels(sample, metric.type), {
+                const labels = this.trackSeries(
+                    sanitizedName,
+                    sample,
+                    metric.type,
+                );
+                histogram.recordBatch(labels, {
                     count: sample.count,
                     sum: sample.sum,
                     buckets: sample.buckets,

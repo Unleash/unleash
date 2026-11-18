@@ -85,6 +85,10 @@ export class BatchHistogram {
         );
     }
 
+    remove(labels: Record<string, string | number>): void {
+        this.store.delete(this.createLabelKey(labels));
+    }
+
     reset(): void {
         this.store.clear();
         this.bucketBoundaries.clear();

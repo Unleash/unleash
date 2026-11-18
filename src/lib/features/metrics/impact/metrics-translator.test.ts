@@ -77,7 +77,7 @@ describe('MetricsTranslator', () => {
         );
     });
 
-    it('should skip histograms with empty samples', async () => {
+    it('skips metrics without samples', async () => {
         const result = await translator.translateAndSerializeMetrics([
             {
                 name: 'test_counter',
@@ -91,10 +91,28 @@ describe('MetricsTranslator', () => {
                 type: 'histogram' as const,
                 samples: [],
             },
+            {
+                name: 'empty_counter',
+                help: 'empty',
+                type: 'counter' as const,
+                samples: [],
+            },
+            {
+                name: 'empty_gauge',
+                help: 'empty',
+                type: 'gauge' as const,
+                samples: [],
+            },
         ]);
 
-        expect(result).toContain('# HELP test_counter test counter');
-        expect(result).not.toContain('empty_histogram');
+        expect(result).toBe(
+            [
+                '# HELP test_counter test counter',
+                '# TYPE test_counter counter',
+                'test_counter{origin="sdk",metric_type="counter"} 1',
+                '',
+            ].join('\n'),
+        );
     });
 
     it('should sanitize metric names and label names', async () => {
@@ -273,6 +291,169 @@ describe('MetricsTranslator', () => {
         ]);
 
         expect(result).not.toContain('1numeric');
+    });
+
+    const web = { appName: 'web' };
+    const ios = { appName: 'ios' };
+    const android = { appName: 'android' };
+    const production = { environment: 'production' };
+
+    const counter = (name: string, labels: Record<string, string>) => ({
+        name,
+        help: name,
+        type: 'counter' as const,
+        samples: [{ labels, value: 1 }],
+    });
+
+    const gauge = (name: string, labels: Record<string, string>) => ({
+        name,
+        help: name,
+        type: 'gauge' as const,
+        samples: [{ labels, value: 5 }],
+    });
+
+    const histogram = (name: string, labels: Record<string, string>) => ({
+        name,
+        help: name,
+        type: 'histogram' as const,
+        samples: [
+            {
+                labels,
+                count: 1,
+                sum: 1,
+                buckets: [{ le: '+Inf' as const, count: 1 }],
+            },
+        ],
+    });
+
+    const translatorWithRoomFor = (maxSeries: number) =>
+        new MetricsTranslator(new Registry(), maxSeries);
+
+    it('removes the series written longest ago from a counter once there are more than the limit', async () => {
+        const limited = translatorWithRoomFor(2);
+        limited.translateMetrics([counter('requests', web)]);
+        limited.translateMetrics([counter('requests', ios)]);
+
+        const result = await limited.translateAndSerializeMetrics([
+            counter('requests', android),
+        ]);
+
+        expect(result).toBe(
+            [
+                '# HELP requests requests',
+                '# TYPE requests counter',
+                'requests{origin="sdk",metric_type="counter",appName="ios"} 1',
+                'requests{origin="sdk",metric_type="counter",appName="android"} 1',
+                '',
+            ].join('\n'),
+        );
+    });
+
+    it('removes the series written longest ago from a histogram once there are more than the limit', async () => {
+        const limited = translatorWithRoomFor(2);
+        limited.translateMetrics([histogram('latency', web)]);
+        limited.translateMetrics([histogram('latency', ios)]);
+
+        const result = await limited.translateAndSerializeMetrics([
+            histogram('latency', android),
+        ]);
+
+        expect(result).toBe(
+            [
+                '# HELP latency latency',
+                '# TYPE latency histogram',
+                'latency_bucket{appName="ios",metric_type="histogram",origin="sdk",le="+Inf"} 1',
+                'latency_sum{appName="ios",metric_type="histogram",origin="sdk"} 1',
+                'latency_count{appName="ios",metric_type="histogram",origin="sdk"} 1',
+                'latency_bucket{appName="android",metric_type="histogram",origin="sdk",le="+Inf"} 1',
+                'latency_sum{appName="android",metric_type="histogram",origin="sdk"} 1',
+                'latency_count{appName="android",metric_type="histogram",origin="sdk"} 1',
+                '',
+            ].join('\n'),
+        );
+    });
+
+    it('removes a metric together with its last series', async () => {
+        const limited = translatorWithRoomFor(1);
+        limited.translateMetrics([counter('requests', web)]);
+
+        const result = await limited.translateAndSerializeMetrics([
+            gauge('memory', web),
+        ]);
+
+        expect(result).toBe(
+            [
+                '# HELP memory memory',
+                '# TYPE memory gauge',
+                'memory{origin="sdk",metric_type="gauge",appName="web"} 5',
+                '',
+            ].join('\n'),
+        );
+    });
+
+    it('the old series of recreated metrics take no room in the series limit', async () => {
+        const limited = translatorWithRoomFor(4);
+        limited.translateMetrics([
+            counter('written_first', web),
+            counter('requests', web),
+            gauge('memory', web),
+            histogram('latency', web),
+        ]);
+
+        const result = await limited.translateAndSerializeMetrics([
+            counter('requests', production),
+            gauge('memory', production),
+            histogram('latency', production),
+        ]);
+
+        expect(result).toBe(
+            [
+                '# HELP written_first written_first',
+                '# TYPE written_first counter',
+                'written_first{origin="sdk",metric_type="counter",appName="web"} 1',
+                '',
+                '# HELP requests requests',
+                '# TYPE requests counter',
+                'requests{origin="sdk",metric_type="counter",environment="production"} 1',
+                '',
+                '# HELP memory memory',
+                '# TYPE memory gauge',
+                'memory{origin="sdk",metric_type="gauge",environment="production"} 5',
+                '',
+                '# HELP latency latency',
+                '# TYPE latency histogram',
+                'latency_bucket{environment="production",metric_type="histogram",origin="sdk",le="+Inf"} 1',
+                'latency_sum{environment="production",metric_type="histogram",origin="sdk"} 1',
+                'latency_count{environment="production",metric_type="histogram",origin="sdk"} 1',
+                '',
+            ].join('\n'),
+        );
+    });
+
+    it('an empty counter left by a refused negative sample is evicted like any other metric', async () => {
+        const limited = translatorWithRoomFor(1);
+        const refunds = {
+            name: 'refunds',
+            help: 'refunds',
+            type: 'counter' as const,
+            samples: [{ value: -1 }],
+        };
+        expect(() => limited.translateMetrics([refunds])).toThrow(
+            'It is not possible to decrease a counter',
+        );
+
+        const result = await limited.translateAndSerializeMetrics([
+            gauge('memory', web),
+        ]);
+
+        expect(result).toBe(
+            [
+                '# HELP memory memory',
+                '# TYPE memory gauge',
+                'memory{origin="sdk",metric_type="gauge",appName="web"} 5',
+                '',
+            ].join('\n'),
+        );
     });
 
     it('ignores histogram samples whose buckets differ from the ones the histogram was created with', async () => {

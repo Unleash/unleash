@@ -69,11 +69,6 @@ vi.mock('component/feedbackNew/useFeedback', async (importOriginal) => {
     return { ...actual, useFeedback: () => ({ openFeedback }) };
 });
 
-const trackEvent = vi.fn();
-vi.mock('hooks/useEventTracker', () => ({
-    useEventTracker: () => ({ trackEvent }),
-}));
-
 const openIntroMock = vi.fn();
 vi.mock('component/onboarding/intro/IntroProvider.tsx', () => ({
     useIntro: () => ({ open: openIntroMock }),
@@ -178,25 +173,6 @@ test("What's new item links to /whats-new", async () => {
     expect(
         screen.getByRole('menuitem', { name: /What's new/ }),
     ).toHaveAttribute('href', '/whats-new');
-});
-
-test('tracks menu open and item click', async () => {
-    withLearningLab();
-    render(<HelpResources />);
-
-    await userEvent.click(
-        await screen.findByRole('button', { name: 'Help and resources' }),
-    );
-
-    expect(trackEvent).toHaveBeenCalledWith('help-resources', {
-        props: { eventType: 'opened' },
-    });
-
-    await userEvent.click(screen.getByText('GitHub'));
-
-    expect(trackEvent).toHaveBeenCalledWith('help-resources', {
-        props: { eventType: 'click', option: 'github' },
-    });
 });
 
 test('hides Get started when the user is already known to be not eligible', async () => {

@@ -35,7 +35,11 @@ import { useOnboardingChecklistVisibility } from 'component/onboarding/floatingC
 import { OnboardingProgressBadge } from 'component/onboarding/floatingChecklist/OnboardingProgressBadge.tsx';
 import { Link } from 'react-router';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
-import { useEventTracker } from 'hooks/useEventTracker';
+import { useTracking } from 'hooks/useTracking';
+import {
+    openHelpMenuTracking,
+    selectHelpResourceTracking,
+} from './helpResourcesTracking.ts';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useVariant } from 'hooks/useVariant';
 import { useIntro } from 'component/onboarding/intro/IntroProvider.tsx';
@@ -168,8 +172,6 @@ const GITHUB_URL = 'https://github.com/Unleash/unleash';
 const SLACK_URL = 'https://slack.unleash.run/';
 const LEARNING_LAB_URL = 'https://learning.getunleash.io/';
 
-const EVENT_NAME = 'help-resources';
-
 interface ILearningLabVariant {
     url?: string;
     title?: string;
@@ -223,7 +225,10 @@ export const HelpResources = ({
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [buttonEl, setButtonEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
-    const { trackEvent } = useEventTracker();
+    const trackOpenHelpMenu = useTracking(openHelpMenuTracking(variant));
+    const trackSelectHelpResource = useTracking(
+        selectHelpResourceTracking(variant),
+    );
     const { open: openIntro } = useIntro();
     const learningLabFlag = useUiFlag('learningLab');
     const searchDocsWidget = useUiFlag('searchDocsWidget');
@@ -242,9 +247,6 @@ export const HelpResources = ({
         learningLabVariant?.visitLabel ?? LEARNING_LAB_DEFAULTS.visitLabel;
     const learningLabMenuLabel =
         learningLabVariant?.menuLabel ?? LEARNING_LAB_DEFAULTS.menuLabel;
-    const learningLabVariantName = learningLabFlag
-        ? learningLabFlag.name
-        : 'default';
 
     const floatingOnboardingChecklist = useContext(
         FloatingOnboardingChecklistContext,
@@ -283,24 +285,13 @@ export const HelpResources = ({
             setRelocationDotSeen(true);
         }
         if (!isHintSeen('menu-regroup')) markHintSeen('menu-regroup');
-        trackEvent(EVENT_NAME, {
-            props: {
-                eventType: 'opened',
-                variant: learningLabVariantName,
-            },
-        });
+        trackOpenHelpMenu('succeeded');
     };
 
     const handleClose = () => setAnchorEl(null);
 
     const handleOptionClick = (option: string) => {
-        trackEvent(EVENT_NAME, {
-            props: {
-                eventType: 'click',
-                option,
-                variant: learningLabVariantName,
-            },
-        });
+        trackSelectHelpResource('succeeded', { option });
         handleClose();
     };
 

@@ -1,7 +1,6 @@
 import { type KeyboardEvent, type MouseEvent, useState } from 'react';
 import { Menu, MenuItem, styled } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material';
-import { basePath } from 'utils/formatPath';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import Check from '@mui/icons-material/Check';
@@ -11,6 +10,7 @@ import { Truncator } from 'component/common/Truncator/Truncator';
 import { useThemeMode } from 'hooks/useThemeMode';
 import type { themeMode } from 'contexts/UIContext';
 import type { IUser } from 'interfaces/user';
+import { LogOutMenuItem } from '../LogOutMenuItem/LogOutMenuItem.tsx';
 
 const menuItemSx: SxProps<Theme> = {
     display: 'flex',
@@ -232,14 +232,6 @@ export const UserProfileContent = ({
             <StyledOpenInNew />
         </MenuItem>
 
-        <form method='POST' action={`${basePath}/logout`}>
-            <MenuItem
-                component='button'
-                type='submit'
-                sx={{ ...menuItemSx, width: '100%' }}
-            >
-                Log out
-            </MenuItem>
-        </form>
+        <LogOutMenuItem sx={menuItemSx} />
     </Menu>
 );

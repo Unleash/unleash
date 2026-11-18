@@ -34,7 +34,7 @@ import { omitKeys } from '../util/index.js';
 import { BadDataError, NotFoundError } from '../error/index.js';
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service.js';
 import { type IEvent, type IEventType, IEventTypes } from '../events/index.js';
-import { validateUrl } from '../http/index.js';
+import { validateUrl } from '../addons/validate-url.js';
 const MASKED_VALUE = '*****';
 
 const WILDCARD_OPTION = '*';

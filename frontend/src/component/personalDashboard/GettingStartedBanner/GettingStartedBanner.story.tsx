@@ -72,6 +72,19 @@ export const WithResources: Story = () => (
     </Setup>
 );
 
+export const OpenSourceWithResources: Story = () => (
+    <Setup>
+        <Stack spacing={2}>
+            <GettingStartedBanner
+                instanceUrl='https://example.com/unleash'
+                projectId='default'
+                promptContext={{ ...instanceContext, isOss: true }}
+            />
+            <OnboardingResources edition='oss' />
+        </Stack>
+    </Setup>
+);
+
 export const Narrow: Story = () => (
     <Setup>
         <div style={{ maxWidth: 360 }}>

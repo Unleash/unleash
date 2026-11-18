@@ -195,7 +195,10 @@ export const DashboardImportCard = ({
                     sx={{ alignItems: 'center' }}
                 >
                     <EnterpriseBadge aria-hidden />
-                    <Badge color='primary' sx={{ textTransform: 'uppercase' }}>
+                    <Badge
+                        color='secondary'
+                        sx={{ textTransform: 'uppercase' }}
+                    >
                         Try Unleash Enterprise
                     </Badge>
                 </Stack>

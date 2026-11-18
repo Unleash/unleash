@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/vitest';
 import { beforeEach, expect, test, vi } from 'vitest';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import copy from 'copy-to-clipboard';
 import { render, settleProviders } from 'utils/testRenderer';
@@ -39,6 +39,11 @@ test('copies a self-contained prompt for this instance and links to manual flag 
         await screen.findByRole('button', { name: 'Copy setup prompt' }),
     );
 
+    expect(
+        await screen.findByRole('tooltip', { name: 'Copied!' }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText('Get started with AI')).not.toBeInTheDocument();
+
     const prompt = vi.mocked(copy).mock.calls[0][0];
     expect(prompt).toContain(
         'My Unleash instance is: https://example.com/unleash',
@@ -61,6 +66,14 @@ test('copies a self-contained prompt for this instance and links to manual flag 
     expect(
         screen.getByRole('link', { name: 'Create flag manually' }),
     ).toHaveAttribute('href', '/projects/my%20project?create=true');
+    await waitFor(
+        () => {
+            expect(
+                screen.queryByRole('tooltip', { name: 'Copied!' }),
+            ).not.toBeInTheDocument();
+        },
+        { timeout: 4000 },
+    );
 });
 
 test('reports a failed copy without claiming the prompt was copied', async () => {
@@ -81,6 +94,9 @@ test('reports a failed copy without claiming the prompt was copied', async () =>
     expect(setToastData).not.toHaveBeenCalledWith(
         expect.objectContaining({ type: 'success' }),
     );
+    expect(
+        screen.queryByRole('tooltip', { name: 'Copied!' }),
+    ).not.toBeInTheDocument();
 });
 
 test.each([

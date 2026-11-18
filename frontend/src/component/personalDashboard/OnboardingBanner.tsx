@@ -45,12 +45,10 @@ const StyledCloseButton = styled(IconButton)(({ theme }) => ({
 
 export const OnboardingBanner = ({
     title,
-    badge,
     children,
     onDismiss,
 }: {
     title: string;
-    badge?: ReactNode;
     children: ReactNode;
     onDismiss?: () => void;
 }) => {
@@ -74,7 +72,6 @@ export const OnboardingBanner = ({
             ) : null}
             <StyledLayout>
                 <StyledContent>
-                    {badge}
                     <Typography
                         id={headingId}
                         component='h2'

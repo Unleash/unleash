@@ -69,7 +69,6 @@ export const ProjectContextFields = () => {
                     </SidebarModal>
                 }
             />
-            {/* change this to be the context table */}
             <Route path='*' element={<ContextList variant='h2' />} />
         </Routes>
     );

@@ -1,5 +1,6 @@
 import { type FC, useMemo, useState } from 'react';
-import type { TypographyProps } from '@mui/material';
+import { Link as RouterLink } from 'react-router';
+import { Link, styled, Typography, type TypographyProps } from '@mui/material';
 import {
     type ColumnDef,
     flexRender,
@@ -29,6 +30,7 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { ContextActionsCell } from '../ContextActionsCell.tsx';
 import Adjust from '@mui/icons-material/Adjust';
+import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { Search } from 'component/common/Search/Search';
 import { UsedInCell } from '../UsedInCell.tsx';
@@ -52,6 +54,27 @@ type ContextRow = {
     usedInProjects?: number;
     usedInFeatures?: number;
 };
+
+const GlobalContextFieldsHint = styled(
+    ({ className }: { className?: string }) => (
+        <div className={className}>
+            <InfoOutlined />
+            <Typography>
+                For instance-wide context fields, use{' '}
+                <Link component={RouterLink} to={'/context'}>
+                    global context fields
+                </Link>
+                .
+            </Typography>
+        </div>
+    ),
+)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    marginBlockStart: theme.spacing(2),
+    color: theme.palette.text.secondary,
+}));
 
 const ContextList: FC<{ variant?: TypographyProps['variant'] }> = ({
     variant,
@@ -295,6 +318,7 @@ const ContextList: FC<{ variant?: TypographyProps['variant'] }> = ({
                     />
                 }
             />
+            {projectId && <GlobalContextFieldsHint />}
             <ConfirmDialogue
                 open={showDelDialogue}
                 onClick={onDeleteContext}

@@ -1,4 +1,5 @@
 import { PageContent } from 'component/common/PageContent/PageContent';
+import { Link as RouterLink } from 'react-router';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import {
     Table,
@@ -18,7 +19,13 @@ import {
 } from '@tanstack/react-table';
 import { CreateSegmentButton } from 'component/segments/CreateSegmentButton/CreateSegmentButton';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { useMediaQuery, type TypographyProps } from '@mui/material';
+import {
+    Link,
+    styled,
+    Typography,
+    useMediaQuery,
+    type TypographyProps,
+} from '@mui/material';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useMemo, useState } from 'react';
 import { SegmentEmpty } from 'component/segments/SegmentEmpty';
@@ -36,6 +43,26 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { UsedInCell } from 'component/context/ContextList/UsedInCell';
 import type { ISegment } from 'interfaces/segment';
+import InfoOutlined from '@mui/icons-material/InfoOutlined';
+
+const GlobalSegmentsHint = styled(({ className }: { className?: string }) => (
+    <div className={className}>
+        <InfoOutlined />
+        <Typography>
+            For instance-wide segments, use{' '}
+            <Link component={RouterLink} to={'/segments'}>
+                global segments
+            </Link>
+            .
+        </Typography>
+    </div>
+))(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    marginBlockStart: theme.spacing(2),
+    color: theme.palette.text.secondary,
+}));
 
 export const SegmentTable = ({
     variant,
@@ -177,6 +204,7 @@ export const SegmentTable = ({
                     </>
                 )}
             />
+            {projectId && <GlobalSegmentsHint />}
         </PageContent>
     );
 };

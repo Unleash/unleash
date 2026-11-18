@@ -48,8 +48,19 @@ const useTargetingDescription = ({
     return `${segmentText} ${constraintText}`.trim();
 };
 
-const describeRollout = (parameters: PlainTextStrategy['parameters']) => {
-    return `${parameters?.rollout ?? 100}%`;
+const deprecatedRolloutStrategies = [
+    'gradualRolloutRandom',
+    'gradualRolloutSessionId',
+    'gradualRolloutUserId',
+];
+
+const describeRollout = (strategy: PlainTextStrategy) => {
+    if (strategy.name === 'flexibleRollout')
+        return `${strategy.parameters?.rollout ?? 100}%`;
+    if (deprecatedRolloutStrategies.includes(strategy.name))
+        return `${strategy.parameters?.percentage ?? 100}%`;
+
+    return '100%';
 };
 
 const describeVariants = (variants: PlainTextStrategy['variants']) => {
@@ -92,7 +103,7 @@ const SimpleStrategyDescription = ({
     strategy: PlainTextStrategy;
 }) => {
     const targetingDescription = useTargetingDescription(strategy);
-    const rolloutDescription = describeRollout(strategy.parameters);
+    const rolloutDescription = describeRollout(strategy);
     const variantDescription = describeVariants(strategy.variants);
     const inactiveDescription = describeActiveState(strategy.disabled);
 
@@ -116,7 +127,7 @@ const ComplexStrategyDescription = ({
     strategy: PlainTextStrategy;
     totalRules: number;
 }) => {
-    const rolloutDescription = describeRollout(strategy.parameters);
+    const rolloutDescription = describeRollout(strategy);
     const variantDescription = describeVariants(strategy.variants);
     const inactiveDescription = describeActiveState(strategy.disabled);
     return (

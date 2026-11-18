@@ -30,7 +30,7 @@ export type StrategyFormState = Omit<
 
 export interface IStrategy {
     name: string;
-    displayName: string;
+    displayName: string | null;
     editable: boolean;
     deprecated: boolean;
     advanced?: boolean;

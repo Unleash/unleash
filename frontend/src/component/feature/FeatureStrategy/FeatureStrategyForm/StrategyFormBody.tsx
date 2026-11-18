@@ -347,7 +347,8 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                             <StyledAccordionHeading>
                                 {isFlexibleRollout
                                     ? 'Rollout percentage'
-                                    : strategyDefinition.displayName}
+                                    : strategyDefinition.displayName ||
+                                      'Parameters'}
                             </StyledAccordionHeading>
                             <StyledAccordionHint>
                                 {rolloutHint}

@@ -1,19 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useNavigate } from 'react-router';
 import useToast from 'hooks/useToast';
 import type { StrategyFormState } from 'interfaces/strategy';
-import {
-    featureStrategyDocsLink,
-    featureStrategyDocsLinkLabel,
-    featureStrategyHelp,
-    formatFeaturePath,
-} from '../FeatureStrategyEdit/FeatureStrategyEdit.tsx';
+import { formatFeaturePath } from '../FeatureStrategyEdit/FeatureStrategyEdit.tsx';
 import { createStrategyPayload } from '../featureStrategy.utils';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { useFormErrors } from 'hooks/useFormErrors';
@@ -37,6 +31,7 @@ import {
 } from '../strategyActionsTracking.ts';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { withIncompleteConstraintsDiscarded } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
+import { StrategyFormTemplate } from '../FeatureStrategyForm/StrategyFormTemplate.tsx';
 
 const useStrategyLimit = (strategyCount: number) => {
     const { uiConfig } = useUiConfig();
@@ -178,13 +173,7 @@ export const FeatureStrategyCreate = () => {
     if (emptyFeature) return null;
 
     return (
-        <FormTemplate
-            layout='modal'
-            fitContainerHeight={singlePageStrategyForm}
-            description={featureStrategyHelp}
-            documentationLink={featureStrategyDocsLink}
-            documentationLinkLabel={featureStrategyDocsLinkLabel}
-            disablePadding
+        <StrategyFormTemplate
             formatApiCode={() =>
                 formatAddStrategyApiCode(
                     projectId,
@@ -217,7 +206,7 @@ export const FeatureStrategyCreate = () => {
                 }
                 disabled={limitReached}
             />
-        </FormTemplate>
+        </StrategyFormTemplate>
     );
 };
 

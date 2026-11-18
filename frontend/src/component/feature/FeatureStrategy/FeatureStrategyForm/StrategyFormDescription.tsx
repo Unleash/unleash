@@ -9,6 +9,9 @@ import { useTracking } from 'hooks/useTracking';
 const strategyDocsLink =
     'https://docs.getunleash.io/concepts/activation-strategies';
 
+const defaultStrategyDocsLink =
+    'https://docs.getunleash.io/concepts/projects#project-default-strategy';
+
 const SidebarLink = styled((props: LinkProps) => {
     return (
         <Link
@@ -83,15 +86,38 @@ const InAppLinks = () => {
     );
 };
 
-export const StrategyFormDescription = () => {
+export type StrategyFormContext = 'projectDefaultStrategy';
+
+type StrategyFormDescriptionProps = {
+    formContext?: StrategyFormContext;
+};
+
+const StrategyLink = () => (
+    <span>
+        Read more about strategies in our{' '}
+        <DocsLink href={strategyDocsLink}>documentation</DocsLink>
+    </span>
+);
+
+const ProjectDefaultStrategyLink = () => (
+    <span>
+        Read more about default strategies in our{' '}
+        <DocsLink href={defaultStrategyDocsLink}>documentation</DocsLink>
+    </span>
+);
+
+export const StrategyFormDescription = ({
+    formContext,
+}: StrategyFormDescriptionProps) => {
     return (
         <Container>
             <Row>
                 <DocsIcon />
-                <span>
-                    Read more about strategies in our{' '}
-                    <DocsLink href={strategyDocsLink}>documentation</DocsLink>
-                </span>
+                {formContext === 'projectDefaultStrategy' ? (
+                    <ProjectDefaultStrategyLink />
+                ) : (
+                    <StrategyLink />
+                )}
             </Row>
             <InAppLinks />
         </Container>

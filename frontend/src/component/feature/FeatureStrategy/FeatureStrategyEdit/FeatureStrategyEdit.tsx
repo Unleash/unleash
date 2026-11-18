@@ -1,7 +1,6 @@
 // todo clean up unused exports in this file when removing the `singlePageStrategyForm` flag
 import { createUuid } from 'utils/createUuid';
 import { useEffect, useRef, useState } from 'react';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -38,6 +37,7 @@ import {
     strategyFormVersionProps,
 } from '../strategyActionsTracking.ts';
 import { FeatureStrategyForm } from '../FeatureStrategyForm/FeatureStrategyForm.tsx';
+import { StrategyFormTemplate } from '../FeatureStrategyForm/StrategyFormTemplate.tsx';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 import { changeRequestsUpdatingStrategy } from './changeRequestsUpdatingStrategy.ts';
 import { constraintId } from 'constants/constraintId.ts';
@@ -271,13 +271,7 @@ export const FeatureStrategyEdit = () => {
     if (!data) return null;
 
     return (
-        <FormTemplate
-            layout='modal'
-            fitContainerHeight={singlePageStrategyForm}
-            disablePadding
-            description={featureStrategyHelp}
-            documentationLink={featureStrategyDocsLink}
-            documentationLinkLabel={featureStrategyDocsLinkLabel}
+        <StrategyFormTemplate
             formatApiCode={() =>
                 formatUpdateStrategyApiCode({
                     strategyScope,
@@ -304,7 +298,7 @@ export const FeatureStrategyEdit = () => {
                 tracking={editStrategyTracking}
             />
             {staleDataNotification}
-        </FormTemplate>
+        </StrategyFormTemplate>
     );
 };
 
@@ -380,13 +374,3 @@ export const formatUpdateStrategyApiCode = ({
     --header 'Content-Type: application/json' \\
     --data-raw '${payload}'`;
 };
-
-export const featureStrategyHelp = `
-    An activation strategy will only run when a feature flag is enabled and provides a way to control who will get access to the feature.
-    If any of a feature flag's activation strategies returns true, the user will get access.
-`;
-
-export const featureStrategyDocsLink =
-    'https://docs.getunleash.io/concepts/activation-strategies';
-
-export const featureStrategyDocsLinkLabel = 'Strategies documentation';

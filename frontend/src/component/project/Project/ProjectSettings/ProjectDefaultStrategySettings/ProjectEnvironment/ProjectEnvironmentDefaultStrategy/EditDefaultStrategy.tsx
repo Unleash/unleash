@@ -5,7 +5,6 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { Button } from '@mui/material';
 import type { IStrategy, StrategyFormState } from 'interfaces/strategy';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
@@ -24,7 +23,7 @@ import { createStrategyPayload } from 'component/feature/FeatureStrategy/feature
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
-import { useUiFlag } from 'hooks/useUiFlag';
+import { StrategyFormTemplate } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormTemplate';
 
 export const useDefaultStrategy = (
     projectId: string,
@@ -50,7 +49,6 @@ export const useDefaultStrategy = (
 };
 
 const EditDefaultStrategy = () => {
-    const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
     const projectId = useRequiredPathParam('projectId');
     const environmentId = useRequiredQueryParam('environmentId');
     const { refetch: refetchProjectOverview } = useProjectOverview(projectId);
@@ -104,13 +102,8 @@ const EditDefaultStrategy = () => {
     };
 
     return (
-        <FormTemplate
-            layout='modal'
-            fitContainerHeight={singlePageStrategyForm}
-            disablePadding
-            description={projectDefaultStrategyHelp}
-            documentationLink={projectDefaultStrategyDocsLink}
-            documentationLinkLabel={projectDefaultStrategyDocsLinkLabel}
+        <StrategyFormTemplate
+            formContext='projectDefaultStrategy'
             formatApiCode={() =>
                 formatUpdateStrategyApiCode(
                     projectId,
@@ -159,7 +152,7 @@ const EditDefaultStrategy = () => {
                     Save strategy
                 </PermissionButton>
             </StrategyFormBodySelector>
-        </FormTemplate>
+        </StrategyFormTemplate>
     );
 };
 
@@ -192,15 +185,5 @@ const formatUpdateStrategyApiCode = (
     --header 'Content-Type: application/json' \\
     --data-raw '${payload}'`;
 };
-
-const projectDefaultStrategyHelp = `
-    An activation strategy will only run when a feature flag is enabled and provides a way to control who will get access to the feature.
-    If any of a feature flag's activation strategies returns true, the user will get access.
-`;
-
-const projectDefaultStrategyDocsLink =
-    'https://docs.getunleash.io/concepts/projects#project-default-strategy';
-
-const projectDefaultStrategyDocsLinkLabel = 'Default strategy documentation';
 
 export default EditDefaultStrategy;

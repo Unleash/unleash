@@ -1,6 +1,5 @@
 import { createUuid } from 'utils/createUuid';
 import { useEffect, useRef, useState } from 'react';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -27,12 +26,12 @@ import type {
 } from 'component/changeRequest/changeRequest.types';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { FeatureStrategyForm } from '../../../../feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm.tsx';
+import { StrategyFormTemplate } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormTemplate';
 import { constraintId } from 'constants/constraintId.ts';
 import { apiPayloadConstraintReplacer } from 'utils/api-payload-constraint-replacer.ts';
 import { getChangeStrategyName } from 'utils/getChangeStrategyName.ts';
 import { editChangeTracking } from 'component/changeRequest/changeRequestTracking';
 import { useTracking } from 'hooks/useTracking';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IEditChangeProps {
     change:
@@ -69,7 +68,6 @@ export const EditChange = ({
     onClose,
     featureId,
 }: IEditChangeProps) => {
-    const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
     const projectId = useRequiredPathParam('projectId');
     const { editChange } = useChangeRequestApi();
     const editTracking = editChangeTracking(change);
@@ -154,13 +152,7 @@ export const EditChange = ({
                 e.stopPropagation();
             }}
         >
-            <FormTemplate
-                layout='modal'
-                fitContainerHeight={singlePageStrategyForm}
-                disablePadding
-                description={featureStrategyHelp}
-                documentationLink={featureStrategyDocsLink}
-                documentationLinkLabel={featureStrategyDocsLinkLabel}
+            <StrategyFormTemplate
                 formatApiCode={() =>
                     formatUpdateStrategyApiCode(
                         projectId,
@@ -187,7 +179,7 @@ export const EditChange = ({
                 />
 
                 {staleDataNotification}
-            </FormTemplate>
+            </StrategyFormTemplate>
         </SidebarModal>
     );
 };
@@ -211,13 +203,3 @@ export const formatUpdateStrategyApiCode = (
     --header 'Content-Type: application/json' \\
     --data-raw '${payload}'`;
 };
-
-export const featureStrategyHelp = `
-    An activation strategy will only run when a feature flag is enabled and provides a way to control who will get access to the feature.
-    If any of a feature flag's activation strategies returns true, the user will get access.
-`;
-
-export const featureStrategyDocsLink =
-    'https://docs.getunleash.io/concepts/activation-strategies';
-
-export const featureStrategyDocsLinkLabel = 'Strategies documentation';

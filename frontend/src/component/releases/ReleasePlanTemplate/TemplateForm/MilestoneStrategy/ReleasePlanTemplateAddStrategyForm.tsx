@@ -1,17 +1,11 @@
 import { Button } from '@mui/material';
-import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
 import { useState } from 'react';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
-import {
-    featureStrategyDocsLink,
-    featureStrategyDocsLinkLabel,
-    featureStrategyHelp,
-} from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { StrategyFormBodySelector } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBodySelector.tsx';
-import { useUiFlag } from 'hooks/useUiFlag';
+import { StrategyFormTemplate } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormTemplate';
 
 export interface IReleasePlanTemplateAddStrategyFormProps {
     onCancel: () => void;
@@ -28,7 +22,6 @@ export const ReleasePlanTemplateAddStrategyForm = ({
     onAddUpdateStrategy,
     editMode,
 }: IReleasePlanTemplateAddStrategyFormProps) => {
-    const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
     const normalizedStrategyName = strategy.name || strategy.strategyName;
     const [currentStrategy, setCurrentStrategy] = useState({
         ...strategy,
@@ -45,14 +38,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
     }
 
     return (
-        <FormTemplate
-            layout='modal'
-            fitContainerHeight={singlePageStrategyForm}
-            disablePadding
-            description={featureStrategyHelp}
-            documentationLink={featureStrategyDocsLink}
-            documentationLinkLabel={featureStrategyDocsLinkLabel}
-        >
+        <StrategyFormTemplate>
             <StrategyFormBodySelector
                 strategy={currentStrategy}
                 setStrategy={setCurrentStrategy}
@@ -80,6 +66,6 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                     {editMode ? 'Add changes' : 'Add strategy'}
                 </Button>
             </StrategyFormBodySelector>
-        </FormTemplate>
+        </StrategyFormTemplate>
     );
 };

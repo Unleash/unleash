@@ -2,6 +2,7 @@ import { Link as RouterLink } from 'react-router';
 import { Link, type LinkProps, styled, Typography } from '@mui/material';
 import DocsIcon from '@mui/icons-material/MenuBook';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
 const strategyDocsLink =
     'https://docs.getunleash.io/concepts/activation-strategies';
@@ -49,27 +50,50 @@ const DocsLink = styled((props: LinkProps) => {
     textDecoration: 'underline',
 });
 
-const DocsLinkList = styled('ul')({
-    listStyle: 'none',
-    padding: 0,
-    margin: 0,
-});
-
 const Row = styled(Typography)(({ theme }) => ({
     display: 'flex',
     alignItems: 'start',
     flexFlow: 'row nowrap',
     gap: theme.spacing(1.5),
     svg: {
-        fontSize: theme.spacing(2),
+        fontSize: 'inherit',
+        inlineSize: theme.spacing(2),
         blockSize: '1lh',
     },
 })) as typeof Typography;
 
-const Container = styled('div')(({ theme }) => ({}));
+const Container = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'column nowrap',
+    gap: theme.spacing(1),
+}));
+
+const ActionLinkList = styled('ul')({ display: 'contents' });
+
+const InAppLinks = () => {
+    const projectId = useOptionalPathParam('projectId');
+    const hrefTo = (target: string) =>
+        projectId ? `/projects/${projectId}/settings/${target}` : `/${target}`;
+
+    return (
+        <ActionLinkList role='list'>
+            <Row component='li'>
+                <ArrowOutwardIcon />
+                <SidebarLink href={hrefTo('segments')}>
+                    Manage segments
+                </SidebarLink>
+            </Row>
+            <Row component='li'>
+                <ArrowOutwardIcon />
+                <SidebarLink href={hrefTo('context')}>
+                    Manage context fields
+                </SidebarLink>
+            </Row>
+        </ActionLinkList>
+    );
+};
 
 export const StrategyFormDescription = () => {
-    // todo: build actual links to segments and constraints
     return (
         <Container>
             <Row>
@@ -79,20 +103,7 @@ export const StrategyFormDescription = () => {
                     <DocsLink href={strategyDocsLink}>documentation</DocsLink>
                 </span>
             </Row>
-            <DocsLinkList role='list'>
-                <Row component='li'>
-                    <ArrowOutwardIcon />
-                    <SidebarLink href={'/segments'}>
-                        Manage segments
-                    </SidebarLink>
-                </Row>
-                <Row component='li'>
-                    <ArrowOutwardIcon />
-                    <SidebarLink href={'/constraints'}>
-                        Manage constraints
-                    </SidebarLink>
-                </Row>
-            </DocsLinkList>
+            <InAppLinks />
         </Container>
     );
 };

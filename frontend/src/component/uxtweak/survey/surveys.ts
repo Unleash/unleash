@@ -1,5 +1,6 @@
 import type { IToggle } from '@unleash/proxy-client-react';
 import { normalizePath } from 'utils/normalizePath';
+import { parseJsonObject } from 'utils/plainObject';
 import { PayloadType } from 'utils/variants';
 
 export const SURVEY_FLAG_PREFIX = 'uxtweak-survey-';
@@ -74,18 +75,8 @@ export const parseSurveyPayload = (
         return null;
     }
 
-    let parsed: unknown;
-    try {
-        parsed = JSON.parse(payload.value);
-    } catch {
-        return null;
-    }
-    if (typeof parsed !== 'object' || parsed === null) {
-        return null;
-    }
-    const raw = parsed as Record<string, unknown>;
-
-    if (raw.v !== 1) {
+    const raw = parseJsonObject(payload.value);
+    if (raw?.v !== 1) {
         return null;
     }
     if (

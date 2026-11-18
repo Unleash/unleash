@@ -11,7 +11,7 @@ import {
 import Input from 'component/common/Input/Input.tsx';
 import type { EditorStyle } from 'component/common/ReactJSONEditor/ReactJSONEditor.tsx';
 import { SchemaForm } from 'component/common/SchemaForm/SchemaForm.tsx';
-import { isPlainObject } from 'component/common/SchemaForm/schemaFormValues.ts';
+import { parseJsonObject } from 'utils/plainObject';
 import type { IPayload } from 'interfaces/featureToggle.ts';
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema.ts';
 
@@ -97,12 +97,7 @@ const jsonFormValueFor = (
 ): Record<string, unknown> | undefined => {
     if (payload.type !== 'json') return undefined;
     if (!payload.value.trim()) return {};
-    try {
-        const parsed = JSON.parse(payload.value);
-        return isPlainObject(parsed) ? parsed : undefined;
-    } catch {
-        return undefined;
-    }
+    return parseJsonObject(payload.value);
 };
 
 type JsonEditMode = 'form' | 'json';

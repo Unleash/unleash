@@ -1,3 +1,4 @@
+import { isPlainObject, parseJsonObject } from 'utils/plainObject';
 import { PayloadType } from 'utils/variants';
 import { parseTrigger, type SurveyTrigger } from './triggers/surveyTrigger.ts';
 
@@ -45,9 +46,6 @@ const isNonEmptyString = (value: unknown): value is string =>
 const parseOptionalText = (value: unknown): string | null =>
     typeof value === 'string' ? value : null;
 
-const isObject = (value: unknown): value is Record<string, unknown> =>
-    typeof value === 'object' && value !== null && !Array.isArray(value);
-
 export const parseSubmitBase = (value: unknown): string | null => {
     if (typeof value !== 'string') {
         return null;
@@ -89,7 +87,7 @@ const parseOptions = (options: unknown): string[] | null => {
 };
 
 const parseQuestion = (raw: unknown): SurveyQuestion | null => {
-    if (!isObject(raw)) {
+    if (!isPlainObject(raw)) {
         return null;
     }
     if (!isNonEmptyString(raw.id) || !isNonEmptyString(raw.prompt)) {
@@ -116,16 +114,6 @@ const parseQuestion = (raw: unknown): SurveyQuestion | null => {
         default:
             return null;
     }
-};
-
-const parseJsonObject = (json: string): Record<string, unknown> | null => {
-    let raw: unknown;
-    try {
-        raw = JSON.parse(json);
-    } catch {
-        return null;
-    }
-    return isObject(raw) ? raw : null;
 };
 
 const parseDefinition = (
@@ -166,7 +154,7 @@ export const parseSurveyDefinition = (
     json: string,
 ): SurveyDefinition | null => {
     const raw = parseJsonObject(json);
-    return raw === null ? null : parseDefinition(raw);
+    return raw === undefined ? null : parseDefinition(raw);
 };
 
 export const parseSurveyPayload = (
@@ -181,7 +169,7 @@ export const parseSurveyPayload = (
     }
 
     const raw = parseJsonObject(payload.value);
-    if (raw === null || !isNonEmptyString(raw.environmentId)) {
+    if (raw === undefined || !isNonEmptyString(raw.environmentId)) {
         return null;
     }
     const submitBase = parseSubmitBase(raw.submitBase);
@@ -192,7 +180,9 @@ export const parseSurveyPayload = (
     if (definition === null) {
         return null;
     }
-    const trigger = isObject(raw.trigger) ? parseTrigger(raw.trigger) : null;
+    const trigger = isPlainObject(raw.trigger)
+        ? parseTrigger(raw.trigger)
+        : null;
     if (trigger === null) {
         return null;
     }

@@ -8,7 +8,7 @@ import { isObjectWithPropertiesSchema } from './schemaMatchers.ts';
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 import { SchemaForm, SchemaFormField } from './SchemaForm.tsx';
 import { SchemaFieldDescription } from './SchemaFieldDescription.tsx';
-import { isPlainObject } from './schemaFormValues.ts';
+import { isPlainObject } from 'utils/plainObject';
 
 const StyledArrayGroup = styled('fieldset')(({ theme }) => ({
     border: 'none',

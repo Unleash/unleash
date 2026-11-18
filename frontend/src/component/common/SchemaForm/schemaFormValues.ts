@@ -6,6 +6,7 @@ import {
     isEnumSchema,
     isObjectWithPropertiesSchema,
 } from 'component/common/SchemaForm/schemaMatchers.ts';
+import { isPlainObject } from 'utils/plainObject';
 
 const firstExample = (schema: JsonSchemaProperty): unknown => {
     const { examples } = schema;
@@ -13,11 +14,6 @@ const firstExample = (schema: JsonSchemaProperty): unknown => {
         ? examples[0]
         : undefined;
 };
-
-export const isPlainObject = (
-    value: unknown,
-): value is Record<string, unknown> =>
-    typeof value === 'object' && value !== null && !Array.isArray(value);
 
 const asRecord = (value: unknown): Record<string, unknown> =>
     isPlainObject(value) ? value : {};

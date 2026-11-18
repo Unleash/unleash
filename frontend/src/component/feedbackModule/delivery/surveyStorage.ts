@@ -10,6 +10,7 @@
  *   survey.
  */
 import { createLocalStorage } from 'utils/createLocalStorage';
+import { isPlainObject } from 'utils/plainObject';
 
 const INTERACTIONS_KEY = 'feedback-module-survey-interactions:v1';
 const GRACE_KEY = 'feedback-module-survey-grace:v1';
@@ -35,7 +36,7 @@ const toFlagNames = (value: unknown): string[] =>
         : [];
 
 const toCounts = (value: unknown): Counts =>
-    value && typeof value === 'object' && !Array.isArray(value)
+    isPlainObject(value)
         ? Object.fromEntries(
               Object.entries(value).filter(
                   (entry): entry is [string, number] =>

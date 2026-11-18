@@ -34,27 +34,27 @@ describe('MetricsTranslator', () => {
         });
     });
 
-    it('should translate counters, gauges, and histograms', async () => {
+    it('should translate counters, gauges, and histograms under sanitized names', async () => {
         const result = await translator.translateAndSerializeMetrics([
             {
-                name: 'labeled_counter',
+                name: 'labeled-counter',
                 help: 'with labels',
                 type: 'counter' as const,
-                samples: [{ labels: { foo: 'bar' }, value: 5 }],
+                samples: [{ labels: { appName: 'web' }, value: 5 }],
             },
             {
-                name: 'test_gauge',
+                name: 'test.gauge',
                 help: 'gauge test',
                 type: 'gauge' as const,
-                samples: [{ labels: { env: 'prod' }, value: 10 }],
+                samples: [{ labels: { environment: 'prod' }, value: 10 }],
             },
             {
-                name: 'response_time',
+                name: 'response time',
                 help: 'response time',
                 type: 'histogram' as const,
                 samples: [
                     {
-                        labels: { service: 'api' },
+                        labels: { appName: 'api' },
                         count: 5,
                         sum: 2.5,
                         buckets: [
@@ -67,13 +67,13 @@ describe('MetricsTranslator', () => {
         ]);
 
         expect(result).toContain(
-            'labeled_counter{origin="sdk",metric_type="counter",foo="bar"} 5',
+            'labeled_counter{origin="sdk",metric_type="counter",appName="web"} 5',
         );
         expect(result).toContain(
-            'test_gauge{origin="sdk",metric_type="gauge",env="prod"} 10',
+            'test_gauge{origin="sdk",metric_type="gauge",environment="prod"} 10',
         );
         expect(result).toContain(
-            'response_time_bucket{metric_type="histogram",origin="sdk",service="api",le="1"} 3',
+            'response_time_bucket{appName="api",metric_type="histogram",origin="sdk",le="1"} 3',
         );
     });
 
@@ -115,120 +115,90 @@ describe('MetricsTranslator', () => {
         );
     });
 
-    it('should sanitize metric names and label names', async () => {
+    it('keeps only appName, environment and origin from the labels a sender provides', async () => {
         const result = await translator.translateAndSerializeMetrics([
             {
-                name: 'invalid-metric-name',
-                help: 'metric with invalid name',
+                name: 'requests',
+                help: 'requests',
                 type: 'counter' as const,
-                samples: [
-                    {
-                        labels: { 'invalid-label': 'value', '1numeric': 123 },
-                        value: 5,
-                    },
-                ],
-            },
-            {
-                name: '_valid_metric',
-                help: 'metric with valid prefix',
-                type: 'gauge' as const,
                 samples: [
                     {
                         labels: {
-                            'invalid:colon': 'value',
-                            'space label': 'test',
+                            appName: 'web',
+                            environment: 'production',
+                            origin: 'admin-api',
+                            user: 'a'.repeat(101),
+                            metric_type: 'histogram',
                         },
-                        value: 10,
+                        value: 1,
                     },
                 ],
             },
         ]);
 
-        expect(result).toContain('# HELP invalid_metric_name');
-        expect(result).toContain(
-            'invalid_metric_name{origin="sdk",metric_type="counter",invalid_label="value"} 5',
-        );
-        expect(result).toContain(
-            '_valid_metric{origin="sdk",metric_type="gauge",invalid_colon="value",space_label="test"} 10',
+        expect(result).toBe(
+            [
+                '# HELP requests requests',
+                '# TYPE requests counter',
+                'requests{origin="admin-api",metric_type="counter",appName="web",environment="production"} 1',
+                '',
+            ].join('\n'),
         );
     });
 
-    it('should handle re-labeling of metrics', async () => {
-        await translator.translateAndSerializeMetrics([
-            {
-                name: 'counter_with_labels',
-                help: 'counter with labels',
-                type: 'counter' as const,
-                samples: [{ labels: { foo: 'bar' }, value: 5 }],
-            },
-            {
-                name: 'gauge_with_labels',
-                help: 'gauge with labels',
-                type: 'gauge' as const,
-                samples: [{ labels: { env: 'prod' }, value: 10 }],
-            },
-            {
-                name: 'histogram_with_labels',
-                help: 'histogram with labels',
-                type: 'histogram' as const,
-                samples: [
-                    {
-                        labels: { service: 'api' },
-                        count: 5,
-                        sum: 2.5,
-                        buckets: [
-                            { le: 1, count: 3 },
-                            { le: '+Inf' as const, count: 5 },
-                        ],
-                    },
-                ],
-            },
-        ]);
+    it('drops samples with a label value longer than 100 characters, and a metric left with no samples', async () => {
+        const longestAllowed = 'a'.repeat(100);
+        const tooLong = 'a'.repeat(101);
 
         const result = await translator.translateAndSerializeMetrics([
             {
-                name: 'counter_with_labels',
-                help: 'counter with labels',
+                name: 'requests',
+                help: 'requests',
                 type: 'counter' as const,
-                samples: [{ labels: { foo: 'bar', baz: 'qux' }, value: 15 }],
-            },
-            {
-                name: 'gauge_with_labels',
-                help: 'gauge with labels',
-                type: 'gauge' as const,
                 samples: [
-                    { labels: { env: 'prod', region: 'us-east' }, value: 20 },
+                    { labels: { appName: longestAllowed }, value: 1 },
+                    { labels: { appName: tooLong }, value: 1 },
                 ],
             },
             {
-                name: 'histogram_with_labels',
-                help: 'histogram with labels',
-                type: 'histogram' as const,
+                name: 'only_too_long',
+                help: 'only too long',
+                type: 'counter' as const,
+                samples: [{ labels: { appName: tooLong }, value: 1 }],
+            },
+        ]);
+
+        expect(result).toBe(
+            [
+                '# HELP requests requests',
+                '# TYPE requests counter',
+                `requests{origin="sdk",metric_type="counter",appName="${longestAllowed}"} 1`,
+                '',
+            ].join('\n'),
+        );
+    });
+
+    it('keeps a known origin and records any other origin as sdk', async () => {
+        const result = await translator.translateAndSerializeMetrics([
+            {
+                name: 'requests',
+                help: 'requests',
+                type: 'counter' as const,
                 samples: [
-                    {
-                        labels: { service: 'api', region: 'us-east' },
-                        count: 3,
-                        sum: 1.8,
-                        buckets: [
-                            { le: 1, count: 2 },
-                            { le: '+Inf' as const, count: 3 },
-                        ],
-                    },
+                    { labels: { origin: 'edge' }, value: 1 },
+                    { labels: { origin: 'anything-else' }, value: 1 },
                 ],
             },
         ]);
 
-        expect(result).toContain(
-            'counter_with_labels{origin="sdk",metric_type="counter",foo="bar",baz="qux"} 15',
-        );
-        expect(result).toContain(
-            'gauge_with_labels{origin="sdk",metric_type="gauge",env="prod",region="us-east"} 20',
-        );
-        expect(result).toContain(
-            'histogram_with_labels_count{metric_type="histogram",origin="sdk",region="us-east",service="api"} 3',
-        );
-        expect(result).not.toContain(
-            'histogram_with_labels_count{metric_type="histogram",origin="sdk",service="api"} 5',
+        expect(result).toBe(
+            [
+                '# HELP requests requests',
+                '# TYPE requests counter',
+                'requests{origin="edge",metric_type="counter"} 1',
+                'requests{origin="sdk",metric_type="counter"} 1',
+                '',
+            ].join('\n'),
         );
     });
 
@@ -296,7 +266,6 @@ describe('MetricsTranslator', () => {
     const web = { appName: 'web' };
     const ios = { appName: 'ios' };
     const android = { appName: 'android' };
-    const production = { environment: 'production' };
 
     const counter = (name: string, labels: Record<string, string>) => ({
         name,
@@ -391,19 +360,52 @@ describe('MetricsTranslator', () => {
         );
     });
 
-    it('the old series of recreated metrics take no room in the series limit', async () => {
-        const limited = translatorWithRoomFor(4);
-        limited.translateMetrics([
-            counter('written_first', web),
-            counter('requests', web),
-            gauge('memory', web),
-            histogram('latency', web),
+    it('a histogram sample dropped for a too long label value does not decide the buckets', async () => {
+        translator.translateMetrics([histogram('latency', web)]);
+        const tooLongWithOtherBuckets = {
+            labels: { appName: 'a'.repeat(101) },
+            count: 1,
+            sum: 1,
+            buckets: [{ le: 1, count: 1 }],
+        };
+
+        const result = await translator.translateAndSerializeMetrics([
+            {
+                ...histogram('latency', web),
+                samples: [
+                    tooLongWithOtherBuckets,
+                    ...histogram('latency', web).samples,
+                ],
+            },
         ]);
 
+        expect(result).toBe(
+            [
+                '# HELP latency latency',
+                '# TYPE latency histogram',
+                'latency_bucket{appName="web",metric_type="histogram",origin="sdk",le="+Inf"} 2',
+                'latency_sum{appName="web",metric_type="histogram",origin="sdk"} 2',
+                'latency_count{appName="web",metric_type="histogram",origin="sdk"} 2',
+                '',
+            ].join('\n'),
+        );
+    });
+
+    it('the old series of a histogram recreated with other buckets take no room in the series limit', async () => {
+        const limited = translatorWithRoomFor(2);
+        limited.translateMetrics([
+            counter('written_first', web),
+            histogram('latency', web),
+        ]);
+        const iosWithOtherBuckets = {
+            labels: ios,
+            count: 1,
+            sum: 1,
+            buckets: [{ le: 1, count: 1 }],
+        };
+
         const result = await limited.translateAndSerializeMetrics([
-            counter('requests', production),
-            gauge('memory', production),
-            histogram('latency', production),
+            { ...histogram('latency', ios), samples: [iosWithOtherBuckets] },
         ]);
 
         expect(result).toBe(
@@ -412,19 +414,11 @@ describe('MetricsTranslator', () => {
                 '# TYPE written_first counter',
                 'written_first{origin="sdk",metric_type="counter",appName="web"} 1',
                 '',
-                '# HELP requests requests',
-                '# TYPE requests counter',
-                'requests{origin="sdk",metric_type="counter",environment="production"} 1',
-                '',
-                '# HELP memory memory',
-                '# TYPE memory gauge',
-                'memory{origin="sdk",metric_type="gauge",environment="production"} 5',
-                '',
                 '# HELP latency latency',
                 '# TYPE latency histogram',
-                'latency_bucket{environment="production",metric_type="histogram",origin="sdk",le="+Inf"} 1',
-                'latency_sum{environment="production",metric_type="histogram",origin="sdk"} 1',
-                'latency_count{environment="production",metric_type="histogram",origin="sdk"} 1',
+                'latency_bucket{appName="ios",metric_type="histogram",origin="sdk",le="1"} 1',
+                'latency_sum{appName="ios",metric_type="histogram",origin="sdk"} 1',
+                'latency_count{appName="ios",metric_type="histogram",origin="sdk"} 1',
                 '',
             ].join('\n'),
         );

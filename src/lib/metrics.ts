@@ -822,7 +822,6 @@ export function registerPrometheusMetrics(
             config.flagResolver.impactMetrics?.incrementCounter(
                 impactMetrics.REQUEST_COUNT,
                 1,
-                { flagNames: ['consumptionModel'], context: {} },
             );
             config.flagResolver.impactMetrics?.observeHistogram(
                 impactMetrics.REQUEST_TIME_MS,
@@ -1228,7 +1227,6 @@ export function registerPrometheusMetrics(
                 config.flagResolver.impactMetrics?.updateGauge(
                     impactMetrics.HEAP_MEMORY_TOTAL,
                     process.memoryUsage().heapUsed,
-                    { flagNames: ['consumptionModel'], context: {} },
                 );
                 featureTogglesArchivedTotal.reset();
                 featureTogglesArchivedTotal.set(

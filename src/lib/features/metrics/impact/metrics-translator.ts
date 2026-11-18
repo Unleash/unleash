@@ -33,6 +33,11 @@ export interface BucketMetric {
 
 export type Metric = NumericMetric | BucketMetric;
 
+const SDK_LABEL_NAMES = ['appName', 'environment'];
+const LABEL_NAMES = ['origin', 'metric_type', ...SDK_LABEL_NAMES];
+const ORIGINS = ['sdk', 'admin-api', 'edge'];
+const MAX_LABEL_VALUE_LENGTH = 100;
+
 export class MetricsTranslator {
     private registry: Registry;
 
@@ -70,15 +75,8 @@ export class MetricsTranslator {
         return name.replace(regex, '_');
     }
 
-    private hasNewLabels(
-        existingMetric: Counter<string> | Gauge<string> | BatchHistogram,
-        newLabelNames: string[],
-    ): boolean {
-        const existingLabelNames = (existingMetric as any).labelNames || [];
-
-        return newLabelNames.some(
-            (label) => !existingLabelNames.includes(label),
-        );
+    private knownOrigin(origin: string | number | undefined): string {
+        return ORIGINS.find((known) => known === origin) ?? 'sdk';
     }
 
     private buildLabels(
@@ -86,107 +84,74 @@ export class MetricsTranslator {
         type: string,
     ): Record<string, string | number> {
         const result: Record<string, string | number> = {
-            origin: sample.labels?.origin || 'sdk',
+            origin: this.knownOrigin(sample.labels?.origin),
             metric_type: type,
         };
-        if (sample.labels) {
-            for (const [key, value] of Object.entries(sample.labels)) {
-                const sanitized = this.sanitizeName(key);
-                if (/^[a-zA-Z_]/.test(sanitized)) {
-                    result[sanitized] = value;
-                }
+        for (const name of SDK_LABEL_NAMES) {
+            const value = sample.labels?.[name];
+            if (value !== undefined) {
+                result[name] = value;
             }
         }
         return result;
     }
 
-    private resolveCounter(
-        name: string,
-        help: string,
-        labelNames: string[],
-    ): Counter<string> {
+    private withShortLabelValues<
+        Sample extends NumericMetricSample | BucketMetricSample,
+    >(samples: Sample[], type: string): Sample[] {
+        return samples.filter((sample) =>
+            Object.values(this.buildLabels(sample, type)).every(
+                (value) => String(value).length <= MAX_LABEL_VALUE_LENGTH,
+            ),
+        );
+    }
+
+    private resolveCounter(name: string, help: string): Counter<string> {
         const existing = this.registry.getSingleMetric(name);
-
-        if (existing && existing instanceof Counter) {
-            if (!this.hasNewLabels(existing, labelNames)) {
-                return existing as Counter<string>;
-            }
-            this.removeMetric(name);
+        if (existing instanceof Counter) {
+            return existing;
         }
-
         return new Counter({
             name,
             help,
             registers: [this.registry],
-            labelNames,
+            labelNames: LABEL_NAMES,
         });
     }
 
-    private resolveGauge(
-        name: string,
-        help: string,
-        labelNames: string[],
-    ): Gauge<string> {
+    private resolveGauge(name: string, help: string): Gauge<string> {
         const existing = this.registry.getSingleMetric(name);
-
-        if (existing && existing instanceof Gauge) {
-            if (!this.hasNewLabels(existing, labelNames)) {
-                return existing as Gauge<string>;
-            }
-            this.removeMetric(name);
+        if (existing instanceof Gauge) {
+            return existing;
         }
-
         return new Gauge({
             name,
             help,
             registers: [this.registry],
-            labelNames,
+            labelNames: LABEL_NAMES,
         });
     }
 
     private resolveHistogram(
         name: string,
         help: string,
-        labelNames: string[],
-        samples: BucketMetricSample[],
+        buckets: BucketMetricSample['buckets'],
     ): BatchHistogram {
         const existing = this.registry.getSingleMetric(name);
-
-        if (existing && existing instanceof BatchHistogram) {
-            const firstSample = samples[0];
-            const needsRecreation =
-                !firstSample?.buckets ||
-                this.hasNewLabels(existing, labelNames) ||
-                !existing.acceptsBuckets(firstSample.buckets);
-
-            if (!needsRecreation) {
-                return existing as BatchHistogram;
-            }
+        if (
+            existing instanceof BatchHistogram &&
+            existing.acceptsBuckets(buckets)
+        ) {
+            return existing;
+        }
+        if (existing instanceof BatchHistogram) {
             this.removeMetric(name);
         }
-
         return new BatchHistogram({
             name,
             help,
             registry: this.registry,
-            labelNames,
         });
-    }
-
-    private collectLabelNames(metric: Metric): string[] {
-        const allPlain = new Set<string>(['origin', 'metric_type']);
-
-        for (const sample of metric.samples) {
-            if (sample.labels) {
-                for (const label of Object.keys(sample.labels)) {
-                    allPlain.add(label);
-                }
-            }
-        }
-
-        return Array.from(allPlain)
-            .map((l) => this.sanitizeName(l))
-            .filter((l) => /^[a-zA-Z_]/.test(l));
     }
 
     translateMetric(
@@ -194,19 +159,21 @@ export class MetricsTranslator {
     ): Counter<string> | Gauge<string> | BatchHistogram | null {
         const sanitizedName = this.sanitizeName(metric.name);
         const validName = /^[a-zA-Z_]/.test(sanitizedName);
-        const labelNames = this.collectLabelNames(metric);
 
-        if (!validName || metric.samples.length === 0) {
+        if (!validName) {
             return null;
         }
 
         if (metric.type === 'counter') {
-            const counter = this.resolveCounter(
-                sanitizedName,
-                metric.help,
-                labelNames,
+            const samples = this.withShortLabelValues(
+                metric.samples,
+                metric.type,
             );
-            for (const sample of metric.samples) {
+            if (samples.length === 0) {
+                return null;
+            }
+            const counter = this.resolveCounter(sanitizedName, metric.help);
+            for (const sample of samples) {
                 const labels = this.trackSeries(
                     sanitizedName,
                     sample,
@@ -217,12 +184,15 @@ export class MetricsTranslator {
 
             return null;
         } else if (metric.type === 'gauge') {
-            const gauge = this.resolveGauge(
-                sanitizedName,
-                metric.help,
-                labelNames,
+            const samples = this.withShortLabelValues(
+                metric.samples,
+                metric.type,
             );
-            for (const sample of metric.samples) {
+            if (samples.length === 0) {
+                return null;
+            }
+            const gauge = this.resolveGauge(sanitizedName, metric.help);
+            for (const sample of samples) {
                 const labels = this.trackSeries(
                     sanitizedName,
                     sample,
@@ -233,13 +203,20 @@ export class MetricsTranslator {
 
             return null;
         } else if (metric.type === 'histogram') {
+            const samples = this.withShortLabelValues(
+                metric.samples,
+                metric.type,
+            );
+            const [first] = samples;
+            if (!first) {
+                return null;
+            }
             const histogram = this.resolveHistogram(
                 sanitizedName,
                 metric.help,
-                labelNames,
-                metric.samples,
+                first.buckets,
             );
-            for (const sample of metric.samples) {
+            for (const sample of samples) {
                 if (!histogram.acceptsBuckets(sample.buckets)) {
                     continue;
                 }

@@ -15,7 +15,6 @@ export class BatchHistogram {
     private name: string;
     private help: string;
     private registry: Registry;
-    public labelNames: string[] = [];
     public bucketBoundaries: Set<number | '+Inf'> = new Set();
 
     // Store accumulated data for each label combination
@@ -32,12 +31,10 @@ export class BatchHistogram {
         name: string;
         help: string;
         registry: Registry;
-        labelNames?: string[];
     }) {
         this.name = config.name;
         this.help = config.help;
         this.registry = config.registry;
-        this.labelNames = config.labelNames || [];
 
         this.registry.registerMetric(this as any);
     }

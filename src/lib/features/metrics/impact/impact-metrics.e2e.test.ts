@@ -74,7 +74,7 @@ test('should store impact metrics in memory and be able to retrieve them', async
                 type: 'counter',
                 samples: [
                     {
-                        labels: { foo: 'bar' },
+                        labels: { appName: 'bar' },
                         value: 5,
                     },
                 ],
@@ -90,7 +90,7 @@ test('should store impact metrics in memory and be able to retrieve them', async
                 type: 'counter',
                 samples: [
                     {
-                        labels: { foo: 'bar' },
+                        labels: { appName: 'bar' },
                         value: 10,
                     },
                 ],
@@ -108,7 +108,7 @@ test('should store impact metrics in memory and be able to retrieve them', async
                 type: 'counter',
                 samples: [
                     {
-                        labels: { foo: 'bar' },
+                        labels: { appName: 'bar' },
                         value: 10,
                     },
                 ],
@@ -126,7 +126,7 @@ test('should store impact metrics in memory and be able to retrieve them', async
     expect(metricsText).toContain('# HELP labeled_counter with labels');
     expect(metricsText).toContain('# TYPE labeled_counter counter');
     expect(metricsText).toMatch(
-        /labeled_counter{origin="sdk",metric_type="counter",foo="bar"} 15/,
+        /labeled_counter{origin="sdk",metric_type="counter",appName="bar"} 15/,
     );
 });
 
@@ -138,7 +138,7 @@ test('should store impact metrics sent via bulk metrics endpoint', async () => {
             type: 'counter',
             samples: [
                 {
-                    labels: { source: 'bulk' },
+                    labels: { appName: 'bulk' },
                     value: 7,
                 },
             ],
@@ -152,7 +152,7 @@ test('should store impact metrics sent via bulk metrics endpoint', async () => {
             type: 'counter',
             samples: [
                 {
-                    labels: { source: 'bulk' },
+                    labels: { appName: 'bulk' },
                     value: 8,
                 },
             ],
@@ -173,7 +173,7 @@ test('should store impact metrics sent via bulk metrics endpoint', async () => {
     );
     expect(metricsText).toContain('# TYPE bulk_counter counter');
     expect(metricsText).toMatch(
-        /bulk_counter{origin="sdk",metric_type="counter",source="bulk"} 15/,
+        /bulk_counter{origin="sdk",metric_type="counter",appName="bulk"} 15/,
     );
 });
 
@@ -197,7 +197,7 @@ test('should store histogram metrics with batch data', async () => {
                 type: 'histogram',
                 samples: [
                     {
-                        labels: { foo: 'bar' },
+                        labels: { appName: 'bar' },
                         count: 10,
                         sum: 8.5,
                         buckets: [
@@ -218,7 +218,7 @@ test('should store histogram metrics with batch data', async () => {
                 type: 'histogram',
                 samples: [
                     {
-                        labels: { foo: 'bar' },
+                        labels: { appName: 'bar' },
                         count: 5,
                         sum: 3.2,
                         buckets: [
@@ -243,15 +243,15 @@ test('should store histogram metrics with batch data', async () => {
     );
     expect(metricsText).toContain('# TYPE response_time histogram');
     expect(metricsText).toContain(
-        'response_time_bucket{foo="bar",metric_type="histogram",origin="sdk",le="1"} 10',
+        'response_time_bucket{appName="bar",metric_type="histogram",origin="sdk",le="1"} 10',
     );
     expect(metricsText).toContain(
-        'response_time_bucket{foo="bar",metric_type="histogram",origin="sdk",le="+Inf"} 15',
+        'response_time_bucket{appName="bar",metric_type="histogram",origin="sdk",le="+Inf"} 15',
     );
     expect(metricsText).toContain(
-        'response_time_sum{foo="bar",metric_type="histogram",origin="sdk"} 11.7',
+        'response_time_sum{appName="bar",metric_type="histogram",origin="sdk"} 11.7',
     );
     expect(metricsText).toContain(
-        'response_time_count{foo="bar",metric_type="histogram",origin="sdk"} 15',
+        'response_time_count{appName="bar",metric_type="histogram",origin="sdk"} 15',
     );
 });

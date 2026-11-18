@@ -1141,7 +1141,7 @@ test('should accept impact metrics in frontend API metrics endpoint', async () =
                     type: 'counter',
                     samples: [
                         {
-                            labels: { source: 'frontend' },
+                            labels: { appName: 'frontend' },
                             value: 5,
                         },
                     ],
@@ -1155,7 +1155,7 @@ test('should accept impact metrics in frontend API metrics endpoint', async () =
         .expect(200);
 
     expect(response.text).toMatch(
-        /frontend_counter{origin="sdk",metric_type="counter",source="frontend"} 5/,
+        /frontend_counter{origin="sdk",metric_type="counter",appName="frontend"} 5/,
     );
 
     await localApp.destroy();

@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useId, useState } from 'react';
 import { Alert, Button, styled, Tab, Tabs, Typography } from '@mui/material';
 import { tabClasses } from '@mui/material/Tab';
 import { useNavigate } from 'react-router';
@@ -14,6 +14,7 @@ import useToast from 'hooks/useToast';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { findPayloadSchemaTemplate } from './payloadSchemaTemplates';
+import { PayloadSchemaPane } from './PayloadSchemaPane';
 import { PayloadSchemaTemplateList } from './PayloadSchemaTemplateList';
 import { usePayloadSchemaForm } from './usePayloadSchemaForm.ts';
 
@@ -73,23 +74,12 @@ const StyledSplit = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledPane = styled('div')(({ theme }) => ({
-    minWidth: 0,
-    minHeight: 0,
-    height: 400,
-    overflow: 'hidden',
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadiusMedium,
-    '& > *': {
-        height: '100%',
-    },
-    [theme.breakpoints.up('sm')]: {
-        flex: 1,
-        height: '100%',
-    },
-}));
-
 type SchemaSource = 'template' | 'raw';
+
+const paneTitles: Record<SchemaSource, string> = {
+    template: 'Choose a template',
+    raw: 'JSON Schema',
+};
 
 interface IPayloadSchemaFormProps {
     projectId: string;
@@ -110,8 +100,13 @@ const PayloadSchemaForm = ({
     const { state, editable, canSave, parsedSchema, edit, save } =
         usePayloadSchemaForm(feature.payloadSchema);
     const [templateKey, setTemplateKey] = useState('');
-    const [schemaSource, setSchemaSource] = useState<SchemaSource>('template');
     const isCreateMode = !feature.payloadSchema;
+    const sourceId = useId();
+    const tabId = (source: SchemaSource) => `${sourceId}-tab-${source}`;
+    const sourcePanelId = `${sourceId}-panel`;
+    const [schemaSource, setSchemaSource] = useState<SchemaSource>(
+        isCreateMode ? 'template' : 'raw',
+    );
 
     const applyTemplate = (key: string) => {
         setTemplateKey(key);
@@ -186,16 +181,29 @@ const PayloadSchemaForm = ({
                                 list: { sx: { flexWrap: 'wrap', gap: 1 } },
                             }}
                         >
-                            <Pill value='template' label='Use a template' />
-                            <Pill value='raw' label='JSON Schema' />
+                            <Pill
+                                value='template'
+                                label='Use a template'
+                                id={tabId('template')}
+                                aria-controls={sourcePanelId}
+                            />
+                            <Pill
+                                value='raw'
+                                label='JSON Schema'
+                                id={tabId('raw')}
+                                aria-controls={sourcePanelId}
+                            />
                         </Tabs>
                     </StyledSchemaSourceRow>
                 </>
             ) : null}
 
             <StyledSplit>
-                <StyledPane>
-                    {isCreateMode && schemaSource === 'template' ? (
+                <PayloadSchemaPane
+                    id={sourcePanelId}
+                    title={paneTitles[schemaSource]}
+                >
+                    {schemaSource === 'template' ? (
                         <PayloadSchemaTemplateList
                             templateKey={templateKey}
                             disabled={!editable}
@@ -216,12 +224,12 @@ const PayloadSchemaForm = ({
                             />
                         </Suspense>
                     )}
-                </StyledPane>
-                <StyledPane>
+                </PayloadSchemaPane>
+                <PayloadSchemaPane title='Preview'>
                     <Suspense fallback={null}>
                         <LazyPayloadSchemaPreview schema={parsedSchema} />
                     </Suspense>
-                </StyledPane>
+                </PayloadSchemaPane>
             </StyledSplit>
         </FormTemplate>
     );

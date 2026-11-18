@@ -3,7 +3,7 @@ import { InstanceStatusBar } from 'component/common/InstanceStatus/InstanceStatu
 import { InstancePlan, InstanceState } from 'interfaces/instance';
 import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
-import { addDays, subDays } from 'date-fns';
+import { addDays, subDays, subHours } from 'date-fns';
 import { INSTANCE_STATUS_BAR_ID } from 'utils/testIds';
 import { UNKNOWN_INSTANCE_STATUS } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
@@ -67,7 +67,7 @@ test('InstanceStatusBar should warn when the trial is about to expire', async ()
             instanceStatus={{
                 plan: InstancePlan.PRO,
                 state: InstanceState.TRIAL,
-                trialExpiry: addDays(new Date(), 5).toISOString(),
+                trialExpiry: subHours(addDays(new Date(), 5), 1).toISOString(),
             }}
             setDialogOpen={mockSetDialogOpen}
         />,
@@ -123,12 +123,12 @@ test('InstanceStatusBar should warn when the trial has expired for enterprise', 
     expect(await screen.findByTestId(INSTANCE_STATUS_BAR_ID)).toMatchSnapshot();
 });
 
-test('InstanceStatusBar should warn when the trial has churned', async () => {
+test('InstanceStatusBar should warn for deletable trials', async () => {
     render(
         <InstanceStatusBar
             instanceStatus={{
                 plan: InstancePlan.PRO,
-                state: InstanceState.CHURNED,
+                state: InstanceState.DELETABLE,
             }}
             setDialogOpen={mockSetDialogOpen}
         />,

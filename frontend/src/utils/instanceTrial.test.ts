@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
 import {
+    isTrialInstance,
     trialHasExpired,
     canExtendTrial,
     trialExpiresSoon,
@@ -43,7 +44,7 @@ test('trialHasExpired', () => {
     expect(
         trialHasExpired({
             plan: InstancePlan.UNKNOWN,
-            state: InstanceState.CHURNED,
+            state: InstanceState.DELETABLE,
         }),
     ).toEqual(true);
 });
@@ -79,4 +80,27 @@ test('canExtendTrial', () => {
             trialExtended: 1,
         }),
     ).toEqual(false);
+});
+
+test.each([
+    [InstanceState.TRIAL, true],
+    [InstanceState.EXPIRED, true],
+    [InstanceState.DELETABLE, true],
+    [InstanceState.CHURNED, false],
+    [InstanceState.ACTIVE, false],
+    [InstanceState.UNASSIGNED, false],
+] as const)('classifies state %s as a trial: %s', (state, expected) => {
+    expect(isTrialInstance({ plan: InstancePlan.UNKNOWN, state })).toBe(
+        expected,
+    );
+});
+
+test.each([
+    [InstancePlan.PRO, 'pay-as-you-go', false],
+    [InstancePlan.ENTERPRISE, 'subscription', false],
+    [InstancePlan.ENTERPRISE, 'pay-as-you-go', true],
+] as const)('preserves expired-trial treatment for churned %s with %s billing: %s', (plan, billing, expected) => {
+    expect(
+        trialHasExpired({ plan, billing, state: InstanceState.CHURNED }),
+    ).toBe(expected);
 });

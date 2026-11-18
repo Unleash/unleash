@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`InstanceStatusBar should warn when the trial has churned 1`] = `
+exports[`InstanceStatusBar should warn for deletable trials 1`] = `
 <aside
   class="mui-163g6kh"
   data-testid="INSTANCE_STATUS_BAR_ID"

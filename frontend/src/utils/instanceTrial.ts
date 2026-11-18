@@ -13,7 +13,7 @@ export const isTrialInstance = (
     return (
         instanceStatus?.state === InstanceState.TRIAL ||
         instanceStatus?.state === InstanceState.EXPIRED ||
-        instanceStatus?.state === InstanceState.CHURNED
+        instanceStatus?.state === InstanceState.DELETABLE
     );
 };
 
@@ -22,10 +22,10 @@ export const trialHasExpired = (
 ): boolean => {
     if (
         instanceStatus?.state === InstanceState.EXPIRED ||
-        instanceStatus?.state === InstanceState.CHURNED ||
+        instanceStatus?.state === InstanceState.DELETABLE ||
         (instanceStatus?.plan === InstancePlan.ENTERPRISE &&
             instanceStatus?.billing === 'pay-as-you-go' &&
-            instanceStatus?.state === InstanceState.DELETABLE)
+            instanceStatus?.state === InstanceState.CHURNED)
     ) {
         return true;
     }

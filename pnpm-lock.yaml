@@ -336,6 +336,9 @@ importers:
       log4js:
         specifier: ^6.9.1
         version: 6.9.1(supports-color@10.2.2)
+      lru-cache:
+        specifier: ^11.5.1
+        version: 11.5.1
       memoizee:
         specifier: ^0.4.17
         version: 0.4.17

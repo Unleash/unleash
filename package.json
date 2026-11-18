@@ -113,6 +113,7 @@
     "lodash": "^4.18.1",
     "lodash.groupby": "^4.6.0",
     "lodash.sortby": "^4.7.0",
+    "lru-cache": "^11.5.1",
     "log4js": "^6.9.1",
     "memoizee": "^0.4.17",
     "mime": "^4.1.0",

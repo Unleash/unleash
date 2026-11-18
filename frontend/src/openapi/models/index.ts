@@ -1898,6 +1898,7 @@ export * from './updateTagsSchema.ts';
 export * from './updateTagType400.ts';
 export * from './updateTagType401.ts';
 export * from './updateTagType403.ts';
+export * from './updateTagType404.ts';
 export * from './updateTagType415.ts';
 export * from './updateTagTypeSchema.ts';
 export * from './updateUser400.ts';

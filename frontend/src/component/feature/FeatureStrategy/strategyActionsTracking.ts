@@ -66,3 +66,8 @@ export const editStrategyTracking = (props: {
     type: 'edit-strategy',
     props,
 });
+
+export const strategyDocsLinkTracking: Tracking = {
+    event: 'flag-strategy',
+    type: 'open-strategy-docs',
+};

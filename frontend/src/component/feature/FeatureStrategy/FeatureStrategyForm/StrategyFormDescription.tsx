@@ -3,6 +3,8 @@ import { Link, type LinkProps, styled, Typography } from '@mui/material';
 import DocsIcon from '@mui/icons-material/MenuBook';
 import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import { strategyDocsLinkTracking } from '../strategyActionsTracking';
+import { useTracking } from 'hooks/useTracking';
 
 const strategyDocsLink =
     'https://docs.getunleash.io/concepts/activation-strategies';
@@ -25,25 +27,13 @@ const SidebarLink = styled((props: LinkProps) => {
     },
 })) as typeof Link;
 
-// const docsTracking: Tracking = { //todo: move it to strategyActionsTracking?
-//     event: 'strategy-form', // todo: we probably wanna know what version of the form this is (create, edit, template, default, etc)
-//     type: 'open-strategy-docs',
-// };
 const DocsLink = styled((props: LinkProps) => {
-    // const tracking = useTracking(docsTracking);
+    const trackDocsLinkClick = useTracking(strategyDocsLinkTracking);
 
     return (
         <SidebarLink
-            // todo: finish tracking
-            // onClick={() =>
-            //     trackEvent('docs-opened', {
-            //         props: {
-            //             href: props.href,
-            //             action: 'clicked',
-            //         },
-            //     })
-            // }
             {...props}
+            onClick={() => trackDocsLinkClick('succeeded')}
         />
     );
 })({

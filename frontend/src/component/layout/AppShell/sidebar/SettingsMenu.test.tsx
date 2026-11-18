@@ -94,6 +94,18 @@ test('offers configuring the workspace to everyone', async () => {
     ).toHaveAccessibleDescription('Settings that apply to all projects');
 });
 
+test('offers admin settings to everyone', async () => {
+    renderSettingsMenu();
+
+    await openSettings();
+
+    expect(
+        screen.getByRole('menuitem', { name: 'Admin settings' }),
+    ).toHaveAccessibleDescription(
+        'Users, access, API tokens, security and more',
+    );
+});
+
 test('closes the menu after choosing profile settings', async () => {
     renderSettingsMenu();
     const button = await openSettings();

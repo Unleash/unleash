@@ -1,4 +1,4 @@
-import { type FC, useContext, useId, useState } from 'react';
+import { type FC, type ReactNode, useContext, useId, useState } from 'react';
 import {
     Divider,
     ListItemIcon,
@@ -16,6 +16,7 @@ import PolicyOutlinedIcon from '@mui/icons-material/PolicyOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
 import DomainOutlinedIcon from '@mui/icons-material/DomainOutlined';
+import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import AccessContext from 'contexts/AccessContext';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
@@ -105,6 +106,32 @@ const StyledDescription = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
+const TwoLineMenuItem: FC<{
+    icon: ReactNode;
+    title: string;
+    description: string;
+    onClick?: () => void;
+}> = ({ icon, title, description, onClick }) => {
+    const id = useId();
+
+    return (
+        <MenuItem
+            onClick={onClick}
+            sx={twoLineMenuItemSx}
+            aria-labelledby={`${id}-title`}
+            aria-describedby={`${id}-description`}
+        >
+            <ListItemIcon>{icon}</ListItemIcon>
+            <StyledTwoLineLabel>
+                <span id={`${id}-title`}>{title}</span>
+                <StyledDescription id={`${id}-description`}>
+                    {description}
+                </StyledDescription>
+            </StyledTwoLineLabel>
+        </MenuItem>
+    );
+};
+
 export const SettingsMenu: FC<{ onConfigureWorkspace: () => void }> = ({
     onConfigureWorkspace,
 }) => {
@@ -112,7 +139,6 @@ export const SettingsMenu: FC<{ onConfigureWorkspace: () => void }> = ({
     const { isAdmin } = useContext(AccessContext);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const menuId = useId();
-    const configureWorkspaceId = useId();
     const open = Boolean(anchorEl);
     const close = () => setAnchorEl(null);
 
@@ -211,29 +237,20 @@ export const SettingsMenu: FC<{ onConfigureWorkspace: () => void }> = ({
                         Invite people
                     </MenuItem>
                 ) : null}
-                <MenuItem
+                <TwoLineMenuItem
+                    icon={<DomainOutlinedIcon />}
+                    title='Configure workspace'
+                    description='Settings that apply to all projects'
                     onClick={() => {
                         close();
                         onConfigureWorkspace();
                     }}
-                    sx={twoLineMenuItemSx}
-                    aria-labelledby={`${configureWorkspaceId}-title`}
-                    aria-describedby={`${configureWorkspaceId}-description`}
-                >
-                    <ListItemIcon>
-                        <DomainOutlinedIcon />
-                    </ListItemIcon>
-                    <StyledTwoLineLabel>
-                        <span id={`${configureWorkspaceId}-title`}>
-                            Configure workspace
-                        </span>
-                        <StyledDescription
-                            id={`${configureWorkspaceId}-description`}
-                        >
-                            Settings that apply to all projects
-                        </StyledDescription>
-                    </StyledTwoLineLabel>
-                </MenuItem>
+                />
+                <TwoLineMenuItem
+                    icon={<AdminPanelSettingsOutlinedIcon />}
+                    title='Admin settings'
+                    description='Users, access, API tokens, security and more'
+                />
             </Menu>
         </>
     );

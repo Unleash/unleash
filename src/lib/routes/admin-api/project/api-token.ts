@@ -40,7 +40,7 @@ import type {
     AdminApiTokenV2Service,
     ReadOnlyApiTokenV2Service,
 } from '../../../features/apitokensv2/api-token-v2-service.js';
-import { canReadApiToken } from '../api-token-permissions.js';
+import { canReadProjectApiToken } from '../api-token-permissions.js';
 
 interface ProjectTokenParam {
     token: string;
@@ -173,7 +173,7 @@ export class ProjectApiTokenController extends Controller {
         const permissions =
             await this.accessService.getPermissionsForUser(user);
         const readableTokens = projectTokens.filter((token) =>
-            canReadApiToken(permissions, token),
+            canReadProjectApiToken(permissions, token),
         );
         this.openApiService.respondWithValidation(
             200,

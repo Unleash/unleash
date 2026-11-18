@@ -5,9 +5,13 @@ import {
     CREATE_CLIENT_API_TOKEN,
     READ_CLIENT_API_TOKEN,
     READ_FRONTEND_API_TOKEN,
+    READ_PROJECT_API_TOKEN,
 } from '../../types/permissions.js';
 import type { IUserPermission } from '../../types/stores/access-store.js';
-import { canReadApiToken } from './api-token-permissions.js';
+import {
+    canReadApiToken,
+    canReadProjectApiToken,
+} from './api-token-permissions.js';
 
 const token = (type: ApiTokenType, projects: string[]): IApiToken =>
     ({ type, projects }) as IApiToken;
@@ -18,6 +22,54 @@ const permission = (name: string, project?: string): IUserPermission => ({
 });
 
 describe('canReadApiToken', () => {
+    test('project listing accepts project read permission for every token project', () => {
+        const permissions = [permission(READ_PROJECT_API_TOKEN, 'alpha')];
+        for (const type of [
+            ApiTokenType.CLIENT,
+            ApiTokenType.BACKEND,
+            ApiTokenType.FRONTEND,
+        ]) {
+            expect(
+                canReadProjectApiToken(permissions, token(type, ['alpha'])),
+            ).toBe(true);
+            expect(canReadApiToken(permissions, token(type, ['alpha']))).toBe(
+                false,
+            );
+            expect(
+                canReadProjectApiToken(
+                    permissions,
+                    token(type, ['alpha', 'beta']),
+                ),
+            ).toBe(false);
+            expect(
+                canReadProjectApiToken(
+                    [
+                        ...permissions,
+                        permission(READ_PROJECT_API_TOKEN, 'beta'),
+                    ],
+                    token(type, ['alpha', 'beta']),
+                ),
+            ).toBe(true);
+            expect(
+                canReadProjectApiToken(permissions, token(type, ['*'])),
+            ).toBe(false);
+        }
+        expect(
+            canReadProjectApiToken(
+                [permission(READ_PROJECT_API_TOKEN)],
+                token(ApiTokenType.CLIENT, ['*']),
+            ),
+        ).toBe(false);
+        expect(
+            canReadProjectApiToken(permissions, token(ApiTokenType.CLIENT, [])),
+        ).toBe(false);
+        expect(
+            canReadProjectApiToken(
+                permissions,
+                token(ApiTokenType.ADMIN, ['alpha']),
+            ),
+        ).toBe(false);
+    });
     test('requires the token type read permission on every project', () => {
         const client = token(ApiTokenType.CLIENT, ['alpha', 'beta']);
         expect(
@@ -62,6 +114,36 @@ describe('canReadApiToken', () => {
         ).toBe(true);
     });
 
+    test('global token read permission covers a specific project', () => {
+        const client = token(ApiTokenType.CLIENT, ['alpha']);
+        for (const project of [undefined, '*']) {
+            expect(
+                canReadApiToken(
+                    [permission(READ_CLIENT_API_TOKEN, project)],
+                    client,
+                ),
+            ).toBe(true);
+        }
+    });
+
+    test('project token read permission requires a specific matching project', () => {
+        for (const project of [undefined, '*']) {
+            const permissions = [permission(READ_PROJECT_API_TOKEN, project)];
+            expect(
+                canReadProjectApiToken(
+                    permissions,
+                    token(ApiTokenType.CLIENT, ['alpha']),
+                ),
+            ).toBe(false);
+            expect(
+                canReadProjectApiToken(
+                    permissions,
+                    token(ApiTokenType.CLIENT, ['*']),
+                ),
+            ).toBe(false);
+        }
+    });
+
     test('does not use other token permissions as read access', () => {
         const client = token(ApiTokenType.CLIENT, ['alpha']);
         expect(
@@ -82,5 +164,15 @@ describe('canReadApiToken', () => {
             false,
         );
         expect(canReadApiToken([permission(ADMIN)], admin)).toBe(true);
+        expect(canReadApiToken([permission(ADMIN, '*')], admin)).toBe(true);
+    });
+
+    test('project-scoped admin does not grant token access', () => {
+        const client = token(ApiTokenType.CLIENT, ['alpha']);
+        for (const canRead of [canReadApiToken, canReadProjectApiToken]) {
+            expect(canRead([permission(ADMIN, 'alpha')], client)).toBe(false);
+            expect(canRead([permission(ADMIN)], client)).toBe(true);
+            expect(canRead([permission(ADMIN, '*')], client)).toBe(true);
+        }
     });
 });

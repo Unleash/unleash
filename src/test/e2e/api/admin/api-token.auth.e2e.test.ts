@@ -62,6 +62,7 @@ const setupUser = async (
             'default',
         );
     }
+    return user;
 };
 
 beforeAll(async () => {
@@ -114,7 +115,7 @@ beforeAll(async () => {
     );
 });
 
-test('project token list only includes token types the user can read', async () => {
+test('project read permission includes both backend and frontend tokens', async () => {
     const clientSecret = 'default:environment.project_client_read_test';
     const frontendSecret = 'default:environment.project_frontend_read_test';
     await stores.apiTokenStore.insert(
@@ -149,12 +150,47 @@ test('project token list only includes token types the user can read', async () 
             .get('/api/admin/projects/default/api-tokens')
             .expect(200);
         expect(body.tokens.map(({ secret }) => secret)).toContain(clientSecret);
-        expect(body.tokens.map(({ secret }) => secret)).not.toContain(
+        expect(body.tokens.map(({ secret }) => secret)).toContain(
             frontendSecret,
         );
     } finally {
         await stores.apiTokenStore.delete(clientSecret);
         await stores.apiTokenStore.delete(frontendSecret);
+    }
+});
+
+test('viewer with a project role can list project tokens without root token permissions', async () => {
+    const secret = 'default:environment.project_role_read_test';
+    await stores.apiTokenStore.insert(
+        {
+            environment: 'environment',
+            projects: ['default'],
+            tokenName: 'project-role-read-test',
+            secret,
+            type: ApiTokenType.CLIENT,
+        },
+        SYSTEM_USER_ID,
+    );
+    try {
+        const user = await setupUser(
+            'project_role_reader@example.com',
+            RoleName.VIEWER,
+        );
+        const role = (await app.services.accessService.getPredefinedRole(
+            RoleName.MEMBER,
+        ))!;
+        await app.services.accessService.addUserToRole(
+            user.id,
+            role.id,
+            'default',
+        );
+        await app.login({ email: 'project_role_reader@example.com' });
+        const { body } = await app.request
+            .get('/api/admin/projects/default/api-tokens')
+            .expect(200);
+        expect(body.tokens.map(({ secret }) => secret)).toContain(secret);
+    } finally {
+        await stores.apiTokenStore.delete(secret);
     }
 });
 

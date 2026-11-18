@@ -3,14 +3,10 @@ import { ButtonBase, styled } from '@mui/material';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import {
     SidebarCaret,
-    SidebarItemIcon,
     sidebarItemStyles,
     SUB_ITEM_INDENT,
 } from './SidebarItem.styles.ts';
-
-const StyledButton = styled(ButtonBase)(({ theme }) =>
-    sidebarItemStyles(theme),
-);
+import { SidebarButton } from './SidebarButton.tsx';
 
 const StyledNestedButton = styled(ButtonBase)(({ theme }) => ({
     ...sidebarItemStyles(theme),
@@ -36,11 +32,11 @@ export const SidebarMoreToggle: FC<{
     }
 
     return (
-        <StyledButton aria-expanded={expanded} onClick={onToggle}>
-            <SidebarItemIcon>
-                <MoreHorizIcon />
-            </SidebarItemIcon>
-            {label}
-        </StyledButton>
+        <SidebarButton
+            icon={<MoreHorizIcon />}
+            label={label}
+            aria-expanded={expanded}
+            onClick={onToggle}
+        />
     );
 };

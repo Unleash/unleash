@@ -105,7 +105,9 @@ const StyledDescription = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-export const SettingsMenu: FC = () => {
+export const SettingsMenu: FC<{ onConfigureWorkspace: () => void }> = ({
+    onConfigureWorkspace,
+}) => {
     const { user } = useAuthUser();
     const { isAdmin } = useContext(AccessContext);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -210,6 +212,10 @@ export const SettingsMenu: FC = () => {
                     </MenuItem>
                 ) : null}
                 <MenuItem
+                    onClick={() => {
+                        close();
+                        onConfigureWorkspace();
+                    }}
                     sx={twoLineMenuItemSx}
                     aria-labelledby={`${configureWorkspaceId}-title`}
                     aria-describedby={`${configureWorkspaceId}-description`}

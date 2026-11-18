@@ -192,6 +192,44 @@ test('hides change requests on oss', async () => {
     ).not.toBeInTheDocument();
 });
 
+const openConfigureWorkspace = async () => {
+    await userEvent.click(screen.getByRole('button', { name: 'Settings' }));
+    await userEvent.click(
+        screen.getByRole('menuitem', { name: 'Configure workspace' }),
+    );
+};
+
+test('replaces the app navigation with the workspace configuration', async () => {
+    render(<AppShell>content</AppShell>);
+
+    await openConfigureWorkspace();
+
+    expect(
+        screen.getByRole('region', { name: 'Configure workspace' }),
+    ).toBeInTheDocument();
+    expect(
+        screen.queryByRole('link', { name: 'Unleash' }),
+    ).not.toBeInTheDocument();
+    expect(
+        screen.queryByRole('link', { name: 'Home' }),
+    ).not.toBeInTheDocument();
+    expect(
+        screen.queryByRole('region', { name: 'Workspace' }),
+    ).not.toBeInTheDocument();
+});
+
+test('returns to the app navigation with Back to app', async () => {
+    render(<AppShell>content</AppShell>);
+    await openConfigureWorkspace();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Back to app' }));
+
+    expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
+    expect(
+        screen.queryByRole('region', { name: 'Configure workspace' }),
+    ).not.toBeInTheDocument();
+});
+
 const renderForOnboardingAdmin = () => {
     mockUserWithSplash(server, CHECKLIST_ELIGIBLE_SPLASH);
     mockChecklistProjectOnboardingStarted(server);

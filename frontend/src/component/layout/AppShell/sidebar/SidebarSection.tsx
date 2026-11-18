@@ -11,7 +11,7 @@ const StyledTitle = styled('h2')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-export const SidebarSection: FC<{ title: string; children: ReactNode }> = ({
+export const SidebarSection: FC<{ title: string; children?: ReactNode }> = ({
     title,
     children,
 }) => {

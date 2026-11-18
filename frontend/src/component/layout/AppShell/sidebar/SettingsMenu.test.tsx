@@ -18,6 +18,9 @@ beforeEach(() => {
     });
 });
 
+const renderSettingsMenu = (options?: Parameters<typeof render>[1]) =>
+    render(<SettingsMenu onConfigureWorkspace={() => {}} />, options);
+
 const openSettings = async () => {
     const button = screen.getByRole('button', { name: 'Settings' });
     await userEvent.click(button);
@@ -25,7 +28,7 @@ const openSettings = async () => {
 };
 
 test('opens the settings menu with the signed-in user', async () => {
-    render(<SettingsMenu />);
+    renderSettingsMenu();
 
     const button = await openSettings();
 
@@ -41,7 +44,7 @@ test('shows the username when the user has no name', async () => {
         feedback: [],
         splash: {},
     });
-    render(<SettingsMenu />);
+    renderSettingsMenu();
 
     await openSettings();
 
@@ -49,7 +52,7 @@ test('shows the username when the user has no name', async () => {
 });
 
 test('links to the profile page and the external privacy policy', async () => {
-    render(<SettingsMenu />);
+    renderSettingsMenu();
 
     await openSettings();
 
@@ -62,7 +65,7 @@ test('links to the profile page and the external privacy policy', async () => {
 });
 
 test('lets admins invite people from the users page', async () => {
-    render(<SettingsMenu />, { permissions: [{ permission: ADMIN }] });
+    renderSettingsMenu({ permissions: [{ permission: ADMIN }] });
 
     await openSettings();
 
@@ -72,7 +75,7 @@ test('lets admins invite people from the users page', async () => {
 });
 
 test('does not offer inviting people to non-admins', async () => {
-    render(<SettingsMenu />);
+    renderSettingsMenu();
 
     await openSettings();
 
@@ -82,7 +85,7 @@ test('does not offer inviting people to non-admins', async () => {
 });
 
 test('offers configuring the workspace to everyone', async () => {
-    render(<SettingsMenu />);
+    renderSettingsMenu();
 
     await openSettings();
 
@@ -92,7 +95,7 @@ test('offers configuring the workspace to everyone', async () => {
 });
 
 test('closes the menu after choosing profile settings', async () => {
-    render(<SettingsMenu />);
+    renderSettingsMenu();
     const button = await openSettings();
 
     await userEvent.click(
@@ -103,7 +106,7 @@ test('closes the menu after choosing profile settings', async () => {
 });
 
 test('closes the menu after choosing to invite people', async () => {
-    render(<SettingsMenu />, { permissions: [{ permission: ADMIN }] });
+    renderSettingsMenu({ permissions: [{ permission: ADMIN }] });
     const button = await openSettings();
 
     await userEvent.click(
@@ -113,8 +116,19 @@ test('closes the menu after choosing to invite people', async () => {
     expect(button).toHaveAttribute('aria-expanded', 'false');
 });
 
+test('closes the menu after choosing to configure the workspace', async () => {
+    renderSettingsMenu();
+    const button = await openSettings();
+
+    await userEvent.click(
+        screen.getByRole('menuitem', { name: 'Configure workspace' }),
+    );
+
+    expect(button).toHaveAttribute('aria-expanded', 'false');
+});
+
 test('logs out by posting to the logout endpoint', async () => {
-    render(<SettingsMenu />);
+    renderSettingsMenu();
 
     await openSettings();
 
@@ -131,7 +145,7 @@ const chooseTheme = async (label: string) => {
 };
 
 test('switches the theme from the theme submenu', async () => {
-    render(<SettingsMenu />);
+    renderSettingsMenu();
     await openSettings();
 
     await chooseTheme('Dark');
@@ -143,7 +157,7 @@ test('switches the theme from the theme submenu', async () => {
 });
 
 test('closes the menu after choosing a theme', async () => {
-    render(<SettingsMenu />);
+    renderSettingsMenu();
     const button = await openSettings();
 
     await chooseTheme('Dark');

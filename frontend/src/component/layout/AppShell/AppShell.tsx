@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import { type FC, type ReactNode, useState } from 'react';
 import { styled } from '@mui/material';
 import { Link } from 'react-router';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
@@ -19,6 +19,7 @@ import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequ
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
+import { ConfigureWorkspaceNavigation } from './sidebar/ConfigureWorkspaceNavigation.tsx';
 import { HelpAndResourcesMenu } from './sidebar/HelpAndResourcesMenu.tsx';
 import { SearchButton } from './sidebar/SearchButton.tsx';
 import { SettingsMenu } from './sidebar/SettingsMenu.tsx';
@@ -81,47 +82,63 @@ const StyledContent = styled('main')(({ theme }) => ({
 }));
 
 const Sidebar: FC = () => {
-    const { isEnterprise } = useUiConfig();
+    const [mode, setMode] = useState<'app' | 'workspace'>('app');
 
     return (
         <StyledSidebar aria-label='Main'>
             <StyledSidebarScrollArea>
-                <StyledLogoLink to='/' aria-label='Unleash'>
-                    <ThemeMode
-                        darkmode={
-                            <UnleashLogoWhite aria-label='Unleash logo' />
-                        }
-                        lightmode={<UnleashLogo aria-label='Unleash logo' />}
+                {mode === 'workspace' ? (
+                    <ConfigureWorkspaceNavigation
+                        onBack={() => setMode('app')}
                     />
-                </StyledLogoLink>
-                <StyledSearchSlot>
-                    <SearchButton />
-                </StyledSearchSlot>
-                <SidebarList>
-                    <SidebarLink
-                        to='/personal'
-                        icon={<HomeOutlinedIcon />}
-                        label='Home'
-                    />
-                    {isEnterprise() ? (
-                        <SidebarLink
-                            to='/change-requests'
-                            icon={<ChangeRequestIcon />}
-                            label='Change requests'
-                        />
-                    ) : null}
-                </SidebarList>
-                <WorkspaceSection />
-                <OpenedProjectSection />
-                <MyProjectsSection />
+                ) : (
+                    <AppNavigation />
+                )}
             </StyledSidebarScrollArea>
             <StyledSidebarFooter>
                 <SidebarList>
                     <HelpAndResourcesMenu />
-                    <SettingsMenu />
+                    <SettingsMenu
+                        onConfigureWorkspace={() => setMode('workspace')}
+                    />
                 </SidebarList>
             </StyledSidebarFooter>
         </StyledSidebar>
+    );
+};
+
+const AppNavigation: FC = () => {
+    const { isEnterprise } = useUiConfig();
+
+    return (
+        <>
+            <StyledLogoLink to='/' aria-label='Unleash'>
+                <ThemeMode
+                    darkmode={<UnleashLogoWhite aria-label='Unleash logo' />}
+                    lightmode={<UnleashLogo aria-label='Unleash logo' />}
+                />
+            </StyledLogoLink>
+            <StyledSearchSlot>
+                <SearchButton />
+            </StyledSearchSlot>
+            <SidebarList>
+                <SidebarLink
+                    to='/personal'
+                    icon={<HomeOutlinedIcon />}
+                    label='Home'
+                />
+                {isEnterprise() ? (
+                    <SidebarLink
+                        to='/change-requests'
+                        icon={<ChangeRequestIcon />}
+                        label='Change requests'
+                    />
+                ) : null}
+            </SidebarList>
+            <WorkspaceSection />
+            <OpenedProjectSection />
+            <MyProjectsSection />
+        </>
     );
 };
 

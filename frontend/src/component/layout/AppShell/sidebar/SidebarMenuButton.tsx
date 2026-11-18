@@ -1,9 +1,8 @@
 import type { FC, MouseEvent, ReactNode, Ref } from 'react';
-import { ButtonBase, styled } from '@mui/material';
-import { SidebarItemIcon, sidebarItemStyles } from './SidebarItem.styles.ts';
+import { styled } from '@mui/material';
+import { SidebarButton } from './SidebarButton.tsx';
 
-const StyledButton = styled(ButtonBase)(({ theme }) => ({
-    ...sidebarItemStyles(theme),
+const StyledButton = styled(SidebarButton)(({ theme }) => ({
     '&[aria-expanded="true"]': {
         backgroundColor: theme.palette.action.hover,
     },
@@ -19,12 +18,11 @@ export const SidebarMenuButton: FC<{
 }> = ({ ref, icon, label, open, menuId, onClick }) => (
     <StyledButton
         ref={ref}
+        icon={icon}
+        label={label}
         onClick={onClick}
         aria-haspopup='menu'
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
-    >
-        <SidebarItemIcon>{icon}</SidebarItemIcon>
-        {label}
-    </StyledButton>
+    />
 );

@@ -1,8 +1,21 @@
-import { type FC, useId, useState } from 'react';
-import { Menu, MenuItem, styled, type Theme } from '@mui/material';
+import { type FC, useContext, useId, useState } from 'react';
+import {
+    Divider,
+    ListItemIcon,
+    Menu,
+    MenuItem,
+    styled,
+    type Theme,
+} from '@mui/material';
 import { Link as RouterLink } from 'react-router';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import PolicyOutlinedIcon from '@mui/icons-material/PolicyOutlined';
+import LogoutIcon from '@mui/icons-material/Logout';
+import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
+import AccessContext from 'contexts/AccessContext';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { Truncator } from 'component/common/Truncator/Truncator';
@@ -20,13 +33,24 @@ const menuPaperSx = (theme: Theme) => ({
 const menuItemSx = (theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
-    gap: theme.spacing(0.5),
+    gap: theme.spacing(1.25),
     minHeight: 'auto',
     padding: theme.spacing(1, 1.25),
     borderRadius: `${theme.shape.borderRadius}px`,
     fontSize: theme.typography.body2.fontSize,
     fontWeight: theme.typography.fontWeightMedium,
     lineHeight: '20px',
+    '& .MuiListItemIcon-root': {
+        minWidth: 0,
+        color: theme.palette.text.secondary,
+        '& svg': {
+            fontSize: theme.spacing(2.5),
+        },
+    },
+});
+
+const dividerSx = (theme: Theme) => ({
+    marginBlock: theme.spacing(0.5),
 });
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -65,6 +89,7 @@ const StyledOpenInNew = styled(OpenInNewIcon)(({ theme }) => ({
 
 export const SettingsMenu: FC = () => {
     const { user } = useAuthUser();
+    const { isAdmin } = useContext(AccessContext);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const menuId = useId();
     const open = Boolean(anchorEl);
@@ -117,12 +142,16 @@ export const SettingsMenu: FC = () => {
                         </StyledIdentity>
                     </StyledHeader>
                 ) : null}
+                {user ? <Divider sx={dividerSx} /> : null}
                 <MenuItem
                     component={RouterLink}
                     to='/profile'
                     onClick={close}
                     sx={menuItemSx}
                 >
+                    <ListItemIcon>
+                        <PersonOutlinedIcon />
+                    </ListItemIcon>
                     Profile settings
                 </MenuItem>
                 <ThemeSubmenu
@@ -130,6 +159,7 @@ export const SettingsMenu: FC = () => {
                     itemSx={menuItemSx}
                     paperSx={menuPaperSx}
                     trailing='current-mode'
+                    icon={<DarkModeOutlinedIcon />}
                 />
                 <MenuItem
                     component='a'
@@ -139,10 +169,27 @@ export const SettingsMenu: FC = () => {
                     onClick={close}
                     sx={menuItemSx}
                 >
+                    <ListItemIcon>
+                        <PolicyOutlinedIcon />
+                    </ListItemIcon>
                     Privacy policy
                     <StyledOpenInNew />
                 </MenuItem>
-                <LogOutMenuItem sx={menuItemSx} />
+                <LogOutMenuItem sx={menuItemSx} icon={<LogoutIcon />} />
+                {isAdmin ? <Divider sx={dividerSx} /> : null}
+                {isAdmin ? (
+                    <MenuItem
+                        component={RouterLink}
+                        to='/admin/users'
+                        onClick={close}
+                        sx={menuItemSx}
+                    >
+                        <ListItemIcon>
+                            <PersonAddOutlinedIcon />
+                        </ListItemIcon>
+                        Invite people
+                    </MenuItem>
+                ) : null}
             </Menu>
         </>
     );

@@ -1,5 +1,5 @@
-import { type KeyboardEvent, useRef, useState } from 'react';
-import { Menu, MenuItem, styled } from '@mui/material';
+import { type KeyboardEvent, type ReactNode, useRef, useState } from 'react';
+import { ListItemIcon, Menu, MenuItem, styled } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import Check from '@mui/icons-material/Check';
@@ -41,6 +41,7 @@ interface IThemeSubmenuProps {
     itemSx: SxProps<Theme>;
     paperSx?: SxProps<Theme>;
     trailing?: 'chevron' | 'current-mode';
+    icon?: ReactNode;
 }
 
 export const ThemeSubmenu = ({
@@ -48,6 +49,7 @@ export const ThemeSubmenu = ({
     itemSx,
     paperSx,
     trailing = 'chevron',
+    icon,
 }: IThemeSubmenuProps) => {
     const triggerRef = useRef<HTMLLIElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -109,6 +111,7 @@ export const ThemeSubmenu = ({
                 aria-haspopup='true'
                 aria-expanded={open}
             >
+                {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
                 Theme
                 {trailing === 'current-mode' ? (
                     <StyledCurrentMode>{currentModeLabel}</StyledCurrentMode>

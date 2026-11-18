@@ -3,6 +3,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { SettingsMenu } from './SettingsMenu.tsx';
 
 const server = testServerSetup();
@@ -60,12 +61,43 @@ test('links to the profile page and the external privacy policy', async () => {
     ).toHaveAttribute('href', 'https://www.getunleash.io/privacy-policy');
 });
 
+test('lets admins invite people from the users page', async () => {
+    render(<SettingsMenu />, { permissions: [{ permission: ADMIN }] });
+
+    await openSettings();
+
+    expect(
+        screen.getByRole('menuitem', { name: 'Invite people' }),
+    ).toHaveAttribute('href', '/admin/users');
+});
+
+test('does not offer inviting people to non-admins', async () => {
+    render(<SettingsMenu />);
+
+    await openSettings();
+
+    expect(
+        screen.queryByRole('menuitem', { name: 'Invite people' }),
+    ).not.toBeInTheDocument();
+});
+
 test('closes the menu after choosing profile settings', async () => {
     render(<SettingsMenu />);
     const button = await openSettings();
 
     await userEvent.click(
         screen.getByRole('menuitem', { name: 'Profile settings' }),
+    );
+
+    expect(button).toHaveAttribute('aria-expanded', 'false');
+});
+
+test('closes the menu after choosing to invite people', async () => {
+    render(<SettingsMenu />, { permissions: [{ permission: ADMIN }] });
+    const button = await openSettings();
+
+    await userEvent.click(
+        screen.getByRole('menuitem', { name: 'Invite people' }),
     );
 
     expect(button).toHaveAttribute('aria-expanded', 'false');

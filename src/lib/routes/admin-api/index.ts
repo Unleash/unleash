@@ -33,6 +33,7 @@ import MaintenanceController from '../../features/maintenance/maintenance-contro
 import type { Db } from '../../db/db.js';
 import ExportImportController from '../../features/export-import-toggles/export-import-controller.js';
 import { SegmentsController } from '../../features/segment/segment-controller.js';
+import { ApplicationsController } from '../../features/applications/applications-controller.js';
 import { InactiveUsersController } from '../../users/inactive/inactive-users-controller.js';
 import { UiObservabilityController } from '../../features/ui-observability-controller/ui-observability-controller.js';
 import { SearchApi } from './search/index.js';
@@ -76,6 +77,10 @@ export class AdminApi extends Controller {
         this.app.use(
             '/metrics',
             new MetricsController(config, services).router,
+        );
+        this.app.use(
+            '/applications',
+            new ApplicationsController(config, services).router,
         );
         this.app.use(
             '/client-metrics',

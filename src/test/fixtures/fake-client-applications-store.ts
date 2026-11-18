@@ -3,8 +3,10 @@ import type {
     IClientApplications,
     IClientApplicationsSearchParams,
     IClientApplicationsStore,
+    ICreateClientApplication,
 } from '../../lib/types/stores/client-applications-store.js';
 import NotFoundError from '../../lib/error/notfound-error.js';
+import NameExistsError from '../../lib/error/name-exists-error.js';
 import type { IApplicationOverview } from '../../lib/features/metrics/instance/models.js';
 
 export default class FakeClientApplicationsStore
@@ -94,5 +96,23 @@ export default class FakeClientApplicationsStore
 
     async removeInactiveApplications(): Promise<number> {
         return 0;
+    }
+
+    async create(
+        application: ICreateClientApplication,
+    ): Promise<IClientApplication> {
+        if (this.apps.some((app) => app.appName === application.appName)) {
+            throw new NameExistsError(
+                `An application named "${application.appName}" already exists`,
+            );
+        }
+        const created = {
+            ...application,
+            createdAt: new Date(),
+            announced: true,
+            strategies: [],
+        } as unknown as IClientApplication;
+        this.apps.push(created);
+        return created;
     }
 }

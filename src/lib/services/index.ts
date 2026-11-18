@@ -28,6 +28,11 @@ import { ProjectHealthFeaturesReadModel } from '../domain/project-health/feature
 import { FakeProjectHealthFeaturesReadModel } from '../domain/project-health/fake-features-read-model.js';
 import UserSplashService from './user-splash-service.js';
 import { SegmentService } from '../features/segment/segment-service.js';
+import type { ApplicationService } from '../features/applications/application-service.js';
+import {
+    createApplicationService,
+    createFakeApplicationService,
+} from '../features/applications/createApplicationService.js';
 import { OpenApiService } from './openapi-service.js';
 import { ClientSpecService } from './client-spec-service.js';
 import { PlaygroundService } from '../features/playground/playground-service.js';
@@ -356,6 +361,12 @@ export const createServices = (
         ? withTransactional((db) => createSegmentService(db, config), db)
         : withFakeTransactional(segmentService);
 
+    const transactionalApplicationService = db
+        ? withTransactional((db) => createApplicationService(db, config), db)
+        : withFakeTransactional(
+              createFakeApplicationService(stores, eventService),
+          );
+
     const clientInstanceService = new ClientInstanceService(
         stores,
         config,
@@ -611,6 +622,7 @@ export const createServices = (
         userSplashService,
         segmentService,
         transactionalSegmentService,
+        transactionalApplicationService,
         openApiService,
         clientSpecService,
         playgroundService,
@@ -764,6 +776,7 @@ export interface IUnleashServices {
     userSplashService: UserSplashService;
     segmentService: ISegmentService;
     transactionalSegmentService: WithTransactional<ISegmentService>;
+    transactionalApplicationService: WithTransactional<ApplicationService>;
     openApiService: OpenApiService;
     clientSpecService: ClientSpecService;
     patService: PatService;

@@ -13,6 +13,11 @@ import type { ParametersSchema } from './parametersSchema.ts';
 export interface CreateReleasePlanMilestoneStrategySchema {
     /** A list of the constraints attached to the strategy. See https://docs.getunleash.io/concepts/activation-strategies#constraints */
     constraints?: ConstraintSchema[];
+    /**
+     * A toggle to disable the strategy. defaults to false. Disabled strategies are not evaluated or returned to the SDKs
+     * @nullable
+     */
+    disabled?: boolean | null;
     /** The name of the strategy type */
     name?: string;
     /** An object containing the parameters for the strategy */
@@ -33,4 +38,5 @@ export interface CreateReleasePlanMilestoneStrategySchema {
     title?: string | null;
     /** Strategy level variants */
     variants?: CreateStrategyVariantSchema[];
+    [key: string]: unknown;
 }

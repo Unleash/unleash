@@ -23,6 +23,12 @@ export interface IClientApplication {
     environment?: string;
 }
 
+export interface ICreateClientApplication {
+    appName: string;
+    description?: string;
+    createdBy: string;
+}
+
 export interface IClientApplications {
     applications: IClientApplication[];
     total: number;
@@ -48,4 +54,5 @@ export interface IClientApplicationsStore
     getApplicationOverview(appName: string): Promise<IApplicationOverview>;
     mapApplicationOverviewData(rows: any[], existingStrategies: string[]);
     removeInactiveApplications(): Promise<number>;
+    create(application: ICreateClientApplication): Promise<IClientApplication>;
 }

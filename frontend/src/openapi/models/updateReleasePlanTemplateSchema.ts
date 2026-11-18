@@ -14,8 +14,6 @@ export interface UpdateReleasePlanTemplateSchema {
      * @nullable
      */
     description?: string | null;
-    /** The release plan/template's ID. Release template IDs are ulids. */
-    id: string;
     /**
      * A list of the milestones in this release template.
      * @nullable
@@ -23,4 +21,5 @@ export interface UpdateReleasePlanTemplateSchema {
     milestones?: CreateReleasePlanMilestoneSchema[] | null;
     /** The name of the release template. */
     name: string;
+    [key: string]: unknown;
 }

@@ -1,13 +1,18 @@
 import type EventEmitter from 'events';
 import NotFoundError from '../error/notfound-error.js';
 import BadDataError from '../error/bad-data-error.js';
-import { FOREIGN_KEY_VIOLATION } from '../error/db-error.js';
+import NameExistsError from '../error/name-exists-error.js';
+import {
+    FOREIGN_KEY_VIOLATION,
+    UNIQUE_CONSTRAINT_VIOLATION,
+} from '../error/db-error.js';
 import type {
     IClientApplication,
     IClientApplications,
     IClientApplicationsSearchParams,
     IClientApplicationsStore,
     IClientApplicationUsage,
+    ICreateClientApplication,
 } from '../types/stores/client-applications-store.js';
 import type { Logger, LogProvider } from '../logger.js';
 import type { Db } from './db.js';
@@ -259,6 +264,31 @@ export default class ClientApplicationsStore
         const { present } = result.rows[0];
         stopTimer();
         return present;
+    }
+
+    async create(
+        application: ICreateClientApplication,
+    ): Promise<IClientApplication> {
+        const stopTimer = this.timer('create');
+        try {
+            const [row] = await this.db(TABLE)
+                .insert({
+                    app_name: application.appName,
+                    description: application.description,
+                    created_by: application.createdBy,
+                })
+                .returning(COLUMNS);
+            return mapRow(row);
+        } catch (error) {
+            if (error.code === UNIQUE_CONSTRAINT_VIOLATION) {
+                throw new NameExistsError(
+                    `An application named "${application.appName}" already exists`,
+                );
+            }
+            throw error;
+        } finally {
+            stopTimer();
+        }
     }
 
     async getAll(): Promise<IClientApplication[]> {

@@ -18,4 +18,5 @@ export interface CreateReleasePlanTemplateSchema {
     milestones?: CreateReleasePlanMilestoneSchema[];
     /** The name of the release template. */
     name: string;
+    [key: string]: unknown;
 }

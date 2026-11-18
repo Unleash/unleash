@@ -18,4 +18,5 @@ export interface CreateReleasePlanMilestoneSchema {
     strategies?: CreateReleasePlanMilestoneStrategySchema[];
     /** When set, release plans created from this template automatically progress from this milestone to the next one once the condition is met. */
     transitionCondition?: CreateReleasePlanMilestoneSchemaTransitionCondition;
+    [key: string]: unknown;
 }

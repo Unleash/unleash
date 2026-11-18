@@ -8,6 +8,7 @@ import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import { ThemeSubmenu } from 'component/user/UserProfile/ThemeSubmenu/ThemeSubmenu';
 import { LogOutMenuItem } from 'component/user/UserProfile/LogOutMenuItem/LogOutMenuItem';
+import { PRIVACY_POLICY_URL } from 'constants/links';
 import { SidebarMenuButton } from './SidebarMenuButton.tsx';
 
 const menuPaperSx = (theme: Theme) => ({
@@ -132,7 +133,7 @@ export const SettingsMenu: FC = () => {
                 />
                 <MenuItem
                     component='a'
-                    href='https://www.getunleash.io/privacy-policy'
+                    href={PRIVACY_POLICY_URL}
                     rel='noopener noreferrer'
                     target='_blank'
                     onClick={close}

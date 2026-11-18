@@ -14,6 +14,7 @@ import GitHubIcon from 'assets/img/inviteSignup/github.svg?react';
 import useLoading from 'hooks/useLoading';
 import useToast from 'hooks/useToast';
 import { CREATED, OK } from 'constants/statusCodes';
+import { PRIVACY_POLICY_URL } from 'constants/links';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useInviteTokenApi } from 'hooks/api/actions/useInviteTokenApi/useInviteTokenApi';
 import { useAuthResetPasswordApi } from 'hooks/api/actions/useAuthResetPasswordApi/useAuthResetPasswordApi';
@@ -349,7 +350,7 @@ export const InviteSignup = () => {
                     </StyledFinePrintLink>{' '}
                     and{' '}
                     <StyledFinePrintLink
-                        href='https://www.getunleash.io/privacy-policy'
+                        href={PRIVACY_POLICY_URL}
                         target='_blank'
                         rel='noopener noreferrer'
                     >

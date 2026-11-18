@@ -5,6 +5,7 @@ import { Link as RouterLink } from 'react-router';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import type { IUser } from 'interfaces/user';
+import { PRIVACY_POLICY_URL } from 'constants/links';
 import { ThemeSubmenu } from '../ThemeSubmenu/ThemeSubmenu.tsx';
 import { LogOutMenuItem } from '../LogOutMenuItem/LogOutMenuItem.tsx';
 
@@ -96,7 +97,7 @@ export const UserProfileContent = ({
 
         <MenuItem
             component='a'
-            href='https://www.getunleash.io/privacy-policy'
+            href={PRIVACY_POLICY_URL}
             rel='noopener noreferrer'
             target='_blank'
             onClick={onClose}

@@ -77,7 +77,9 @@ export class BatchHistogram {
 
     private createLabelKey(labels: Record<string, string | number>): string {
         const sortedKeys = Object.keys(labels).sort();
-        return JSON.stringify(sortedKeys.map((key) => [key, labels[key]]));
+        return JSON.stringify(
+            sortedKeys.map((key) => [key, String(labels[key])]),
+        );
     }
 
     reset(): void {

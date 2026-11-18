@@ -227,4 +227,27 @@ describe('BatchHistogram', () => {
         expect(metrics).toMatch(/test_histogram_sum{service="test"} 7\.5/);
         expect(metrics).toMatch(/test_histogram_count{service="test"} 5/);
     });
+
+    test('a label value written as a number and as text is the same series', async () => {
+        const oneObservation = {
+            count: 1,
+            sum: 1,
+            buckets: [{ le: '+Inf' as const, count: 1 }],
+        };
+        histogram.recordBatch({ status: 200 }, oneObservation);
+        histogram.recordBatch({ status: '200' }, oneObservation);
+
+        const metrics = await registry.metrics();
+
+        expect(metrics).toBe(
+            [
+                '# HELP test_histogram Test histogram',
+                '# TYPE test_histogram histogram',
+                'test_histogram_bucket{status="200",le="+Inf"} 2',
+                'test_histogram_sum{status="200"} 2',
+                'test_histogram_count{status="200"} 2',
+                '',
+            ].join('\n'),
+        );
+    });
 });

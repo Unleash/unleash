@@ -206,6 +206,25 @@ test('Can update a tag type color', async () => {
     expect(res.body.tagType.color).toBe('#00FF00');
 });
 
+test('Updating a tag type that does not exist yields 404 and stores no event', async () => {
+    const { body: before } = await app.getRecordedEvents();
+
+    await app.request
+        .put('/api/admin/tag-types/non-existent')
+        .send({
+            description: 'new description',
+        })
+        .expect(404);
+
+    await app.request.get('/api/admin/tag-types/non-existent').expect(404);
+
+    const { body: after } = await app.getRecordedEvents();
+    expect(after.total).toBe(before.total);
+    expect(
+        after.events.filter(({ data }) => data?.name === 'non-existent'),
+    ).toHaveLength(0);
+});
+
 test('Numbers are coerced to strings for icons and descriptions', async () => {
     await app.request.get('/api/admin/tag-types/simple').expect(200);
     await app.request

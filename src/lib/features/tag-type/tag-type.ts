@@ -175,7 +175,7 @@ class TagTypeController extends Controller {
                         'Update the configuration for the specified tag type.',
                     responses: {
                         200: emptyResponse,
-                        ...getStandardResponses(400, 401, 403, 415),
+                        ...getStandardResponses(400, 401, 403, 404, 415),
                     },
                     requestBody: createRequestSchema('updateTagTypeSchema'),
                 }),

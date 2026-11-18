@@ -45,8 +45,12 @@ export default class FakeTagTypeStore implements ITagTypeStore {
         return this.tagTypes;
     }
 
-    async updateTagType(tagType: ITagType): Promise<void> {
-        await this.delete(tagType.name);
-        return this.createTagType(tagType);
+    async updateTagType(tagType: ITagType): Promise<boolean> {
+        const index = this.tagTypes.findIndex((tt) => tt.name === tagType.name);
+        if (index === -1) {
+            return false;
+        }
+        this.tagTypes[index] = tagType;
+        return true;
     }
 }

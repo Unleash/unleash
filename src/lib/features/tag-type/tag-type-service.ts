@@ -140,7 +140,10 @@ export default class TagTypeService {
         auditUser: IAuditUser,
     ): Promise<ITagType> {
         const data = await tagTypeSchema.validateAsync(updatedTagType);
-        await this.tagTypeStore.updateTagType(data);
+        const updated = await this.tagTypeStore.updateTagType(data);
+        if (!updated) {
+            throw new NotFoundError('Could not find tag-type');
+        }
         await this.eventService.storeEvent(
             new TagTypeUpdatedEvent({
                 data,

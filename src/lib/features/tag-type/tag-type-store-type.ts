@@ -10,5 +10,5 @@ export interface ITagType {
 export interface ITagTypeStore extends Store<ITagType, string> {
     createTagType(newTagType: ITagType): Promise<void>;
     bulkImport(tagTypes: ITagType[]): Promise<ITagType[]>;
-    updateTagType(tagType: ITagType): Promise<void>;
+    updateTagType(tagType: ITagType): Promise<boolean>;
 }

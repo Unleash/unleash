@@ -102,12 +102,13 @@ export default class TagTypeStore implements ITagTypeStore {
         description,
         icon,
         color,
-    }: ITagType): Promise<void> {
+    }: ITagType): Promise<boolean> {
         const stopTimer = this.timer('updateTagType');
-        await this.db(TABLE)
+        const updatedRows = await this.db(TABLE)
             .where({ name })
             .update({ description, icon, color });
         stopTimer();
+        return updatedRows > 0;
     }
 
     destroy(): void {}

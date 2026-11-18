@@ -86,13 +86,15 @@ test('should delete addon configuration', async () => {
 });
 
 test('should update addon configuration', async () => {
-    expect.assertions(2);
+    expect.assertions(4);
 
     const config = {
         provider: 'webhook',
         enabled: true,
         parameters: {
             url: 'http://localhost:4242/webhook',
+            contentType: 'text/plain',
+            authorization: 'some-credential',
             bodyTemplate: "{'name': '{{event.data.name}}' }",
         },
         events: ['feature-updated', 'feature-created'],
@@ -109,7 +111,9 @@ test('should update addon configuration', async () => {
         ...config,
         parameters: {
             url: 'http://example.com',
+            authorization: MASKED_VALUE,
             bodyTemplate: "{'name': '{{event.data.name}}' }",
+            notDefinedByProvider: 'value',
         },
     };
 
@@ -117,6 +121,21 @@ test('should update addon configuration', async () => {
         .put(`/api/admin/addons/${id}`)
         .send(updatedConfig)
         .expect(200);
+
+    const [event] = await db.stores.eventStore.getAll({
+        type: 'addon-config-updated',
+    });
+    expect(event.data.changedParameters).toEqual(['url', 'contentType']);
+
+    await app.request
+        .put(`/api/admin/addons/${id}`)
+        .send(updatedConfig)
+        .expect(200);
+
+    const [latestEvent] = await db.stores.eventStore.getAll({
+        type: 'addon-config-updated',
+    });
+    expect(latestEvent.id).toBe(event.id);
 
     return app.request
         .get(`/api/admin/addons/${id}`)

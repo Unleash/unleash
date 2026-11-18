@@ -1,6 +1,8 @@
 import memoizee from 'memoizee';
 import joi from 'joi';
 const { ValidationError } = joi;
+import lodash from 'lodash';
+const { isEqual } = lodash;
 import { getAddons, type IAddonProviders } from '../addons/index.js';
 import type Addon from '../addons/addon.js';
 import {
@@ -371,10 +373,18 @@ export default class AddonService {
             );
         }
         const result = await this.addonStore.update(id, addonConfig);
+        const eventData: Record<string, unknown> = omitKeys(
+            result,
+            'parameters',
+        );
+        const changedParameters = this.getChangedKeys(existingConfig, result);
+        if (changedParameters.length > 0) {
+            eventData.changedParameters = changedParameters;
+        }
         await this.eventService.storeEvent(
             new AddonConfigUpdatedEvent({
                 preData: omitKeys(existingConfig, 'parameters'),
-                data: omitKeys(result, 'parameters'),
+                data: eventData,
                 auditUser,
             }),
         );
@@ -491,6 +501,15 @@ export default class AddonService {
                 p.type,
             ]),
         );
+
+    private getChangedKeys(before: IAddon, after: IAddon): string[] {
+        const parameterNames = Array.from(
+            this.getProviderParamTypes(after.provider).keys(),
+        );
+        return parameterNames.filter(
+            (name) => !isEqual(before.parameters[name], after.parameters[name]),
+        );
+    }
 
     validateParameterTypes({ provider, parameters }): void {
         const paramTypes = this.getProviderParamTypes(provider);

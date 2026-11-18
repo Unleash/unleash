@@ -222,8 +222,9 @@ describe('EditableConstraint', () => {
             });
         });
 
-        test('moves focus to the add value button after deleting the last chip', async () => {
+        test('an open multi-value editor keeps focus when its disabled "Add" is clicked, stays put while a chip\'s remove button is held, then focus moves to the add value button', async () => {
             setupApi();
+            const user = userEvent.setup();
 
             const { container } = render(
                 <EditableConstraint
@@ -237,15 +238,36 @@ describe('EditableConstraint', () => {
                 />,
             );
 
-            await screen.findByText('only-value');
-            const deleteIcon = container.querySelector('.MuiChip-deleteIcon');
-            expect(deleteIcon).not.toBeNull();
-            fireEvent.click(deleteIcon as Element);
-
-            const addButton = await screen.findByTestId(
-                'CONSTRAINT_ADD_VALUES_BUTTON',
+            await user.click(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
             );
-            expect(addButton).toHaveFocus();
+            const input = await screen.findByLabelText('Constraint Value');
+
+            const disabledAddButton = screen.getByTestId(
+                'CONSTRAINT_VALUES_ADD_BUTTON',
+            );
+            expect(disabledAddButton).toBeDisabled();
+            await user.click(
+                disabledAddButton.closest('.MuiInputAdornment-root') as Element,
+            );
+            expect(input).toHaveFocus();
+
+            const deleteIcon = container.querySelector('.MuiChip-deleteIcon');
+            await user.pointer({
+                keys: '[MouseLeft>]',
+                target: deleteIcon as Element,
+            });
+            await new Promise((resolve) => setTimeout(resolve, 0));
+            expect(input).toBeInTheDocument();
+
+            await user.pointer({
+                keys: '[/MouseLeft]',
+                target: deleteIcon as Element,
+            });
+            expect(screen.queryByText('only-value')).not.toBeInTheDocument();
+            expect(
+                await screen.findByTestId('CONSTRAINT_ADD_VALUES_BUTTON'),
+            ).toHaveFocus();
         });
 
         test('moves focus to the new chip after picking a single legal value', async () => {

@@ -19,10 +19,55 @@ import {
     type ReactNode,
     type Ref,
     type RefObject,
+    useEffect,
     useMemo,
     useRef,
     useState,
 } from 'react';
+import { useDebouncedCallback } from 'hooks/useDebouncedCallback';
+
+const useAfterPointerPress = () => {
+    const isPointerDown = useRef(false);
+    const pendingCallback = useRef<(() => void) | undefined>(undefined);
+    const runOnNextTick = useDebouncedCallback(
+        (callback: () => void) => callback(),
+        0,
+    );
+
+    useEffect(() => {
+        const onPointerDown = () => {
+            isPointerDown.current = true;
+        };
+        const onPointerRelease = () => {
+            isPointerDown.current = false;
+            const callback = pendingCallback.current;
+            pendingCallback.current = undefined;
+            if (callback) runOnNextTick(callback);
+        };
+
+        document.addEventListener('pointerdown', onPointerDown, true);
+        document.addEventListener('pointerup', onPointerRelease, true);
+        document.addEventListener('pointercancel', onPointerRelease, true);
+
+        return () => {
+            document.removeEventListener('pointerdown', onPointerDown, true);
+            document.removeEventListener('pointerup', onPointerRelease, true);
+            document.removeEventListener(
+                'pointercancel',
+                onPointerRelease,
+                true,
+            );
+        };
+    }, [runOnNextTick]);
+
+    return (callback: () => void) => {
+        if (isPointerDown.current) {
+            pendingCallback.current = callback;
+        } else {
+            callback();
+        }
+    };
+};
 
 const usePopperAnchor = (
     onClose: (manageFocus: boolean) => void,
@@ -32,20 +77,20 @@ const usePopperAnchor = (
     onFocusEscape?: () => boolean,
 ) => {
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
-    const blurTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(
-        undefined,
-    );
+    const afterPointerPress = useAfterPointerPress();
 
-    const onContainerBlur = () => {
-        // a single focus change can blur more than once before settling;
-        // coalesce bursts so only the last one is acted on
-        clearTimeout(blurTimeout.current);
-        blurTimeout.current = setTimeout(() => {
-            if (anchorEl?.contains(document.activeElement)) return;
-            if (onFocusEscape?.()) return;
-            onClose(false);
-        }, 0);
+    const closeIfFocusEscaped = () => {
+        if (anchorEl?.contains(document.activeElement)) return;
+        if (onFocusEscape?.()) return;
+        onClose(false);
     };
+
+    // a single focus change can blur more than once before settling;
+    // coalesce bursts so only the last one is acted on
+    const onContainerBlur = useDebouncedCallback(
+        () => afterPointerPress(closeIfFocusEscaped),
+        0,
+    );
 
     const onPanelKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
         if (e.key === 'Escape') {
@@ -214,10 +259,9 @@ export const AddValueButton: FC<{ value: string; onClick: () => void }> = ({
     value,
     onClick,
 }) => (
-    <InputAdornment position='end'>
+    <InputAdornment position='end' onMouseDown={(e) => e.preventDefault()}>
         <AddAdornmentButton
             disabled={!value?.trim()}
-            onMouseDown={(e) => e.preventDefault()}
             onClick={onClick}
             data-testid='CONSTRAINT_VALUES_ADD_BUTTON'
         >

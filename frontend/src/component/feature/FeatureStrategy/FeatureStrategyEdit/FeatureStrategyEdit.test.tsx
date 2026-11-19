@@ -4,6 +4,7 @@ import type { IFeatureStrategy, IStrategy } from 'interfaces/strategy';
 import { screen, waitFor, within, fireEvent } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { Route, Routes } from 'react-router';
+import { SWRConfig, type Middleware } from 'swr';
 
 import {
     CREATE_FEATURE_STRATEGY,
@@ -27,17 +28,25 @@ const featureName = 'my-new-feature';
 const variantName = 'Blue';
 const project = 'default';
 
+const pollEveryFiveMs: Middleware = (useSWRNext) => (key, fetcher, config) =>
+    useSWRNext(key, fetcher, {
+        ...config,
+        refreshInterval: config.refreshInterval ? 5 : 0,
+    });
+
 const setupComponent = () => {
     return {
         wrapper: render(
-            <Routes>
-                <Route
-                    path={
-                        '/projects/:projectId/features/:featureId/strategies/edit'
-                    }
-                    element={<FeatureStrategyEdit />}
-                />
-            </Routes>,
+            <SWRConfig value={{ use: [pollEveryFiveMs] }}>
+                <Routes>
+                    <Route
+                        path={
+                            '/projects/:projectId/features/:featureId/strategies/edit'
+                        }
+                        element={<FeatureStrategyEdit />}
+                    />
+                </Routes>
+            </SWRConfig>,
             {
                 route: `/projects/${project}/features/${featureName}/strategies/edit?environmentId=development&strategyId=1`,
                 permissions: [

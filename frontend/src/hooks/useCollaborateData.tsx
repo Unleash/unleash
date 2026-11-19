@@ -15,7 +15,10 @@ const formatUnleashGetter = <Type,>({
     options = {},
     params = [''],
 }: IGetterOptions): IFormatUnleashGetterOutput<Type> => {
-    const result = unleashGetter(...params, { refreshInterval: 5, ...options });
+    const result = unleashGetter(...params, {
+        refreshInterval: 5_000,
+        ...options,
+    });
 
     return { data: result[dataKey], refetch: result[refetchFunctionKey] };
 };

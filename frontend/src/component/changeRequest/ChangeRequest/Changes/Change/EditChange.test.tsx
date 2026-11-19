@@ -1,6 +1,7 @@
 import { beforeEach, expect, test } from 'vitest';
 import { screen } from '@testing-library/react';
 import { Route, Routes } from 'react-router';
+import { SWRConfig, type Middleware } from 'swr';
 import { render } from 'utils/testRenderer';
 import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import type { IChangeRequestUpdateStrategy } from 'component/changeRequest/changeRequest.types';
@@ -15,6 +16,12 @@ import {
 import { EditChange } from './EditChange.tsx';
 
 const featureName = 'my-new-feature';
+
+const pollEveryFiveMs: Middleware = (useSWRNext) => (key, fetcher, config) =>
+    useSWRNext(key, fetcher, {
+        ...config,
+        refreshInterval: config.refreshInterval ? 5 : 0,
+    });
 
 const strategy = {
     name: 'flexibleRollout',
@@ -36,22 +43,24 @@ const updateStrategyChange: IChangeRequestUpdateStrategy = {
 
 const renderEditor = (change: IChangeRequestUpdateStrategy) =>
     render(
-        <Routes>
-            <Route
-                path='/projects/:projectId/change-requests/:id'
-                element={
-                    <EditChange
-                        change={change}
-                        changeRequestId={1}
-                        featureId={featureName}
-                        environment='development'
-                        open
-                        onSubmit={() => {}}
-                        onClose={() => {}}
-                    />
-                }
-            />
-        </Routes>,
+        <SWRConfig value={{ use: [pollEveryFiveMs] }}>
+            <Routes>
+                <Route
+                    path='/projects/:projectId/change-requests/:id'
+                    element={
+                        <EditChange
+                            change={change}
+                            changeRequestId={1}
+                            featureId={featureName}
+                            environment='development'
+                            open
+                            onSubmit={() => {}}
+                            onClose={() => {}}
+                        />
+                    }
+                />
+            </Routes>
+        </SWRConfig>,
         {
             route: '/projects/default/change-requests/1',
             permissions: [

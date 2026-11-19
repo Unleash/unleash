@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { withStyles } from 'tss-react/mui';
 import { Slider, Box, styled, TextField, InputAdornment } from '@mui/material';
 import { ROLLOUT_SLIDER_ID } from 'utils/testIds';
@@ -88,16 +89,35 @@ export const RolloutSlider = ({
     disabled = false,
     step = 1,
 }: IRolloutSliderProps) => {
+    const [dragValue, setDragValue] = useState<number | null>(null);
+    const displayedValue = dragValue ?? value;
+
+    const commitValue = (numValue: number) => {
+        const event = new Event('input', { bubbles: true });
+        onChange(event, numValue);
+    };
+
     // Bounds validation stays in component - hook only handles parsing
     const handleValueChange = (numValue: number) => {
         if (numValue >= 0 && numValue <= 100) {
-            const event = new Event('input', { bubbles: true });
-            onChange(event, numValue);
+            commitValue(numValue);
         }
     };
 
+    const handleSliderDrag = (_: Event, newValue: number | number[]) => {
+        setDragValue(newValue as number);
+    };
+
+    const handleSliderRelease = (
+        _: Event | React.SyntheticEvent,
+        newValue: number | number[],
+    ) => {
+        setDragValue(null);
+        commitValue(newValue as number);
+    };
+
     const { inputValue, handleInputChange, handleInputBlur, handleKeyDown } =
-        useNumericStringInput(value, handleValueChange, {
+        useNumericStringInput(displayedValue, handleValueChange, {
             parseMode: 'integer',
         });
 
@@ -109,13 +129,14 @@ export const RolloutSlider = ({
                 <StyledSlider
                     min={0}
                     max={100}
-                    value={value}
+                    value={displayedValue}
                     getAriaValueText={valuetext}
                     aria-label={name}
                     step={step}
                     data-testid={ROLLOUT_SLIDER_ID}
                     marks={marks}
-                    onChange={onChange}
+                    onChange={handleSliderDrag}
+                    onChangeCommitted={handleSliderRelease}
                     valueLabelDisplay='on'
                     disabled={disabled}
                 />

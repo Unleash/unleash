@@ -13,11 +13,6 @@ import type { ParametersSchema } from './parametersSchema.ts';
 export interface UpdateReleasePlanMilestoneStrategySchema {
     /** A list of the constraints attached to the strategy. See https://docs.getunleash.io/concepts/activation-strategies#constraints */
     constraints?: ConstraintSchema[];
-    /**
-     * A toggle to disable the strategy. defaults to false. Disabled strategies are not evaluated or returned to the SDKs
-     * @nullable
-     */
-    disabled?: boolean | null;
     /** The milestone strategy's ID. Milestone strategy IDs are ulids. */
     id?: string;
     /** The ID of the milestone that this strategy belongs to. */

@@ -1,6 +1,6 @@
 import type { IConstraint, StrategyFormState } from 'interfaces/strategy';
 import type React from 'react';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 const filterConstraints = (constraint: any) => {
     if (
@@ -33,15 +33,18 @@ export const useFeatureStrategyConstraints = <T extends StrategyFormState>(
         };
     }, [setStrategy]);
 
-    const setConstraints = (value: React.SetStateAction<IConstraint[]>) => {
-        setStrategy((prev: T) => ({
-            ...prev,
-            constraints:
-                value instanceof Function
-                    ? value(prev.constraints || [])
-                    : value,
-        }));
-    };
+    const setConstraints = useCallback(
+        (value: React.SetStateAction<IConstraint[]>) => {
+            setStrategy((prev: T) => ({
+                ...prev,
+                constraints:
+                    value instanceof Function
+                        ? value(prev.constraints || [])
+                        : value,
+            }));
+        },
+        [setStrategy],
+    );
 
     return [strategy.constraints || [], setConstraints];
 };

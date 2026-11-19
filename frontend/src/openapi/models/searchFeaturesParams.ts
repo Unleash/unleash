@@ -36,7 +36,7 @@ export type SearchFeaturesParams = {
      */
     createdBy?: string;
     /**
-     * The list of feature tags to filter by. Feature tag has to specify a type and a value joined with a colon.
+     * The feature tags to filter by, as type:value entries. Separate entries with commas; if a tag value contains a comma, append _JSON to the operator and pass a JSON string array, for example INCLUDE_JSON:["simple:sales,marketing"].
      * @pattern ^(INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL):([^:,]+:.+?)(,\s*[^:,]+:.+?)*$
      */
     tag?: string;

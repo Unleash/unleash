@@ -8,6 +8,7 @@ import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureS
 import {
     BooleansStringParam,
     FilterItemParam,
+    TagFilterItemParam,
 } from 'utils/serializeQueryParams';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
@@ -38,7 +39,7 @@ export const useProjectFeatureSearch = (
         sortBy: withDefault(StringParam, 'createdAt'),
         sortOrder: withDefault(StringParam, 'desc'),
         columns: ArrayParam,
-        tag: FilterItemParam,
+        tag: TagFilterItemParam,
         state: FilterItemParam,
         createdAt: FilterItemParam,
         lastSeenAt: FilterItemParam,

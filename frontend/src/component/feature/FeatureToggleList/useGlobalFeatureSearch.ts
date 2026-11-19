@@ -4,6 +4,7 @@ import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureS
 import {
     BooleansStringParam,
     FilterItemParam,
+    TagFilterItemParam,
 } from 'utils/serializeQueryParams';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import mapValues from 'lodash.mapvalues';
@@ -23,7 +24,7 @@ export const useGlobalFeatureSearch = (pageLimit = DEFAULT_PAGE_LIMIT) => {
         sortBy: withDefault(StringParam, 'createdAt'),
         sortOrder: withDefault(StringParam, 'desc'),
         project: FilterItemParam,
-        tag: FilterItemParam,
+        tag: TagFilterItemParam,
         state: FilterItemParam,
         segment: FilterItemParam,
         createdAt: FilterItemParam,

@@ -106,7 +106,6 @@ describe('NewFeatureStrategyCreate', () => {
         setupUiConfigEndpoint({ singlePageStrategyForm: true });
         setupComponent({ defaultStrategy: false });
 
-        await screen.findByText('Configure strategy');
         fireEvent.click(
             await screen.findByRole('button', { name: /^Variants/ }),
         );
@@ -157,8 +156,6 @@ describe('NewFeatureStrategyCreate', () => {
         test('should navigate tabs', async () => {
             setupComponent();
 
-            const titleEl = await screen.findByText('Gradual rollout');
-            expect(titleEl).toBeInTheDocument();
             const saveButton = await screen.findByText('Save strategy');
             expect(saveButton).not.toBeDisabled();
 
@@ -183,9 +180,6 @@ describe('NewFeatureStrategyCreate', () => {
         test('should change general settings', async () => {
             const { expectedGroupId, expectedSliderValue } = setupComponent();
 
-            const titleEl = await screen.findByText('Gradual rollout');
-            expect(titleEl).toBeInTheDocument();
-
             const slider = await screen.findByRole('slider', {
                 name: /rollout/i,
             });
@@ -209,10 +203,7 @@ describe('NewFeatureStrategyCreate', () => {
             const { expectedConstraintValue, expectedSegmentName } =
                 setupComponent();
 
-            const titleEl = await screen.findByText('Gradual rollout');
-            expect(titleEl).toBeInTheDocument();
-
-            const targetingEl = screen.getByText('Targeting');
+            const targetingEl = await screen.findByText('Targeting');
             fireEvent.click(targetingEl);
 
             const addConstraintEl = await screen.findByRole('button', {
@@ -249,10 +240,7 @@ describe('NewFeatureStrategyCreate', () => {
         test('should change variants settings', async () => {
             const { expectedVariantName } = setupComponent();
 
-            const titleEl = await screen.findByText('Gradual rollout');
-            expect(titleEl).toBeInTheDocument();
-
-            const variantsEl = screen.getByText('Variants');
+            const variantsEl = await screen.findByText('Variants');
             fireEvent.click(variantsEl);
 
             const addVariantEl = await screen.findByText('Add variant');
@@ -284,10 +272,7 @@ describe('NewFeatureStrategyCreate', () => {
         test('should change variant name after changing tab', async () => {
             const { expectedVariantName } = setupComponent();
 
-            const titleEl = await screen.findByText('Gradual rollout');
-            expect(titleEl).toBeInTheDocument();
-
-            const variantsEl = screen.getByText('Variants');
+            const variantsEl = await screen.findByText('Variants');
             fireEvent.click(variantsEl);
 
             const addVariantEl = await screen.findByText('Add variant');
@@ -313,10 +298,7 @@ describe('NewFeatureStrategyCreate', () => {
         test('should remove empty variants when changing tabs', async () => {
             setupComponent();
 
-            const titleEl = await screen.findByText('Gradual rollout');
-            expect(titleEl).toBeInTheDocument();
-
-            const variantsEl = screen.getByText('Variants');
+            const variantsEl = await screen.findByText('Variants');
             fireEvent.click(variantsEl);
 
             const addVariantEl = await screen.findByText('Add variant');
@@ -340,10 +322,7 @@ describe('NewFeatureStrategyCreate', () => {
         test('Should remove constraint when no valid values are set and moving between tabs', async () => {
             setupComponent();
 
-            const titleEl = await screen.findByText('Gradual rollout');
-            expect(titleEl).toBeInTheDocument();
-
-            const targetingEl = screen.getByText('Targeting');
+            const targetingEl = await screen.findByText('Targeting');
             fireEvent.click(targetingEl);
 
             const addConstraintEl = await screen.findByText('Add constraint');

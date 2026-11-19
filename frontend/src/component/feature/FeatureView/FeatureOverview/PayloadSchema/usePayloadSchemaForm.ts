@@ -64,6 +64,7 @@ export const usePayloadSchemaForm = (savedSchema?: Record<string, unknown>) => {
         editable: isEditable(state),
         canSave: isEditable(state) && json.valid,
         parsedSchema: json.valid ? json.value : undefined,
+        isEmpty: 'text' in state.content && state.content.text === '',
         edit: (content: JSONContent) =>
             setState((s) =>
                 isEditable(s) ? { status: 'editing', content } : s,

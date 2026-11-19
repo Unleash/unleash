@@ -47,12 +47,6 @@ const StyledTemplateOption = styled(ButtonBase)(({ theme }) => ({
         borderColor: theme.palette.primary.containerBorder,
         background: theme.palette.primary.container,
     },
-    '&:disabled': {
-        opacity: 0.5,
-        '&:hover': {
-            borderColor: theme.palette.divider,
-        },
-    },
 }));
 
 const StyledTemplateFields = styled(Truncator)(({ theme }) => ({
@@ -64,14 +58,12 @@ const StyledTemplateFields = styled(Truncator)(({ theme }) => ({
 interface ITemplateOptionProps {
     template: PayloadSchemaTemplate;
     selected: boolean;
-    disabled: boolean;
     onSelect: (template: PayloadSchemaTemplate) => void;
 }
 
 const TemplateOption = ({
     template,
     selected,
-    disabled,
     onSelect,
 }: ITemplateOptionProps) => {
     const { fieldNames, hasAdditionalProperties } = schemaFields(
@@ -82,7 +74,6 @@ const TemplateOption = ({
     return (
         <StyledTemplateOption
             aria-pressed={selected}
-            disabled={disabled}
             onClick={() => onSelect(template)}
         >
             <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
@@ -101,12 +92,10 @@ const TemplateOption = ({
 };
 
 interface IPayloadSchemaTemplateListProps {
-    disabled: boolean;
     onSelect: (template: PayloadSchemaTemplate) => void;
 }
 
 export const PayloadSchemaTemplateList = ({
-    disabled,
     onSelect,
 }: IPayloadSchemaTemplateListProps) => {
     const [selectedKey, setSelectedKey] = useState('');
@@ -128,7 +117,6 @@ export const PayloadSchemaTemplateList = ({
                             key={template.key}
                             template={template}
                             selected={selectedKey === template.key}
-                            disabled={disabled}
                             onSelect={selectTemplate}
                         />
                     ))}

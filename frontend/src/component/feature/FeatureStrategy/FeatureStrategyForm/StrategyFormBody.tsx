@@ -8,6 +8,7 @@ import {
     AccordionSummary,
     AccordionDetails,
     type Theme,
+    Typography,
 } from '@mui/material';
 import type { IStrategy, StrategyFormState } from 'interfaces/strategy';
 import type { FailedVariantsSubmit } from './FeatureStrategyForm.tsx';
@@ -20,7 +21,7 @@ import {
     FeatureStrategyTargetAudience,
     type TargetAudience,
 } from './FeatureStrategyTargetAudience/FeatureStrategyTargetAudience.tsx';
-import { BuiltInStrategies, formatStrategyName } from 'utils/strategyNames';
+import { BuiltInStrategies } from 'utils/strategyNames';
 import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
 import type { ParametersSchema } from 'openapi/index.ts';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -60,15 +61,8 @@ const StyledHeaderBox = styled(Box)(({ theme }) => ({
     justifyContent: 'space-between',
     flexFlow: 'row wrap',
     paddingInline: 'var(--form-inset)',
-    paddingTop: theme.spacing(2),
-}));
-
-const StyledTitle = styled('h1')(({ theme }) => ({
-    ...theme.typography.h1,
-    display: 'flex',
-    alignItems: 'center',
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
+    paddingBlock: theme.spacing(1),
+    borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
@@ -287,9 +281,9 @@ export const StrategyFormBody = <T extends StrategyFormState>({
         >
             <FormScrollArea>
                 <StyledHeaderBox>
-                    <StyledTitle>
-                        {formatStrategyName(strategyName || '')}
-                    </StyledTitle>
+                    <Typography variant='h3' component='h1'>
+                        Configure strategy
+                    </Typography>
                     {allowEnableDisable ? (
                         <ActiveStateSelector
                             currentState={

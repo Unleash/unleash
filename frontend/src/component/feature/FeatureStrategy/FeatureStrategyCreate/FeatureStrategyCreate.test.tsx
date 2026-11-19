@@ -106,7 +106,7 @@ describe('NewFeatureStrategyCreate', () => {
         setupUiConfigEndpoint({ singlePageStrategyForm: true });
         setupComponent({ defaultStrategy: false });
 
-        await screen.findByText('Gradual rollout');
+        await screen.findByText('Configure strategy');
         fireEvent.click(
             await screen.findByRole('button', { name: /^Variants/ }),
         );

@@ -4,7 +4,6 @@ import { tabClasses } from '@mui/material/Tab';
 import { useNavigate } from 'react-router';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import type { JSONContent } from 'component/common/ReactJSONEditor/ReactJSONEditor';
 import { formatFeaturePath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { usePayloadSchemaApi } from 'hooks/api/actions/usePayloadSchemaApi/usePayloadSchemaApi';
@@ -13,7 +12,6 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useToast from 'hooks/useToast';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { findPayloadSchemaTemplate } from './payloadSchemaTemplates';
 import { PayloadSchemaPane } from './PayloadSchemaPane';
 import { PayloadSchemaTemplateList } from './PayloadSchemaTemplateList';
 import { usePayloadSchemaForm } from './usePayloadSchemaForm.ts';
@@ -99,7 +97,6 @@ const PayloadSchemaForm = ({
     const navigate = useNavigate();
     const { state, editable, canSave, parsedSchema, edit, save } =
         usePayloadSchemaForm(feature.payloadSchema);
-    const [templateKey, setTemplateKey] = useState('');
     const isCreateMode = !feature.payloadSchema;
     const sourceId = useId();
     const tabId = (source: SchemaSource) => `${sourceId}-tab-${source}`;
@@ -107,19 +104,6 @@ const PayloadSchemaForm = ({
     const [schemaSource, setSchemaSource] = useState<SchemaSource>(
         isCreateMode ? 'template' : 'raw',
     );
-
-    const applyTemplate = (key: string) => {
-        setTemplateKey(key);
-        const template = findPayloadSchemaTemplate(key);
-        if (template) {
-            edit({ json: template.schema });
-        }
-    };
-
-    const editContent = (newContent: JSONContent) => {
-        edit(newContent);
-        setTemplateKey('');
-    };
 
     const closeSidebar = () =>
         navigate(formatFeaturePath(projectId, featureId));
@@ -205,9 +189,10 @@ const PayloadSchemaForm = ({
                 >
                     {schemaSource === 'template' ? (
                         <PayloadSchemaTemplateList
-                            templateKey={templateKey}
                             disabled={!editable}
-                            onSelect={applyTemplate}
+                            onSelect={(template) =>
+                                edit({ json: template.schema })
+                            }
                         />
                     ) : (
                         <Suspense fallback={null}>
@@ -218,7 +203,7 @@ const PayloadSchemaForm = ({
                                         ? state.error
                                         : undefined
                                 }
-                                onChange={(text) => editContent({ text })}
+                                onChange={(text) => edit({ text })}
                                 readOnly={!editable}
                                 editorStyle='fill'
                             />

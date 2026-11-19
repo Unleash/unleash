@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ButtonBase, styled, Typography } from '@mui/material';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import { schemaFields } from './schemaFields.ts';
@@ -64,7 +65,7 @@ interface ITemplateOptionProps {
     template: PayloadSchemaTemplate;
     selected: boolean;
     disabled: boolean;
-    onSelect: (key: string) => void;
+    onSelect: (template: PayloadSchemaTemplate) => void;
 }
 
 const TemplateOption = ({
@@ -82,7 +83,7 @@ const TemplateOption = ({
         <StyledTemplateOption
             aria-pressed={selected}
             disabled={disabled}
-            onClick={() => onSelect(template.key)}
+            onClick={() => onSelect(template)}
         >
             <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
                 {template.label}
@@ -100,32 +101,39 @@ const TemplateOption = ({
 };
 
 interface IPayloadSchemaTemplateListProps {
-    templateKey: string;
     disabled: boolean;
-    onSelect: (key: string) => void;
+    onSelect: (template: PayloadSchemaTemplate) => void;
 }
 
 export const PayloadSchemaTemplateList = ({
-    templateKey,
     disabled,
     onSelect,
-}: IPayloadSchemaTemplateListProps) => (
-    <StyledTemplateList role='group' aria-label='Choose a template'>
-        {payloadSchemaTemplateGroups.map((group) => (
-            <StyledTemplateGroup key={group.groupHeader}>
-                <StyledTemplateGroupHeader>
-                    {group.groupHeader}
-                </StyledTemplateGroupHeader>
-                {group.templates.map((template) => (
-                    <TemplateOption
-                        key={template.key}
-                        template={template}
-                        selected={templateKey === template.key}
-                        disabled={disabled}
-                        onSelect={onSelect}
-                    />
-                ))}
-            </StyledTemplateGroup>
-        ))}
-    </StyledTemplateList>
-);
+}: IPayloadSchemaTemplateListProps) => {
+    const [selectedKey, setSelectedKey] = useState('');
+
+    const selectTemplate = (template: PayloadSchemaTemplate) => {
+        setSelectedKey(template.key);
+        onSelect(template);
+    };
+
+    return (
+        <StyledTemplateList role='group' aria-label='Choose a template'>
+            {payloadSchemaTemplateGroups.map((group) => (
+                <StyledTemplateGroup key={group.groupHeader}>
+                    <StyledTemplateGroupHeader>
+                        {group.groupHeader}
+                    </StyledTemplateGroupHeader>
+                    {group.templates.map((template) => (
+                        <TemplateOption
+                            key={template.key}
+                            template={template}
+                            selected={selectedKey === template.key}
+                            disabled={disabled}
+                            onSelect={selectTemplate}
+                        />
+                    ))}
+                </StyledTemplateGroup>
+            ))}
+        </StyledTemplateList>
+    );
+};

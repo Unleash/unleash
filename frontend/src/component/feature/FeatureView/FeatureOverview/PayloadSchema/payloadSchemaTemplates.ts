@@ -545,10 +545,3 @@ export const payloadSchemaTemplateGroups: PayloadSchemaTemplateGroup[] = [
         templates: [retryAndTimeoutPolicy, rateLimit, circuitBreaker],
     },
 ];
-
-export const findPayloadSchemaTemplate = (
-    key: string,
-): PayloadSchemaTemplate | undefined =>
-    payloadSchemaTemplateGroups
-        .flatMap((group) => group.templates)
-        .find((template) => template.key === key);

@@ -88,6 +88,9 @@ test.each([
     'feature-stale-off',
     'feature-payload-schema-updated',
     'feature-payload-schema-deleted',
+    'impact-metric-created',
+    'impact-metric-updated',
+    'impact-metric-deleted',
 ] as const)('configuration filter ignores %s but retains audit history', async (type) => {
     await eventStore.store({
         type: FEATURE_CREATED,

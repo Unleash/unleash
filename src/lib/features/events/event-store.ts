@@ -20,6 +20,9 @@ import {
     type IBaseEvent,
     type IEvent,
     type IEventType,
+    IMPACT_METRIC_CREATED,
+    IMPACT_METRIC_UPDATED,
+    IMPACT_METRIC_DELETED,
     SEGMENT_CREATED,
     SEGMENT_DELETED,
     SEGMENT_UPDATED,
@@ -269,6 +272,9 @@ export class EventStore implements IEventStore {
                 FEATURE_UNCOMPLETED,
                 FEATURE_STALE_ON,
                 FEATURE_STALE_OFF,
+                IMPACT_METRIC_CREATED,
+                IMPACT_METRIC_UPDATED,
+                IMPACT_METRIC_DELETED,
             ])
             .whereNot('type', 'LIKE', 'change-%');
 

@@ -14,13 +14,8 @@ const sampleJson = {
 };
 
 const Controlled = ({ initial }: { initial: string }) => {
-    const [content, setContent] = useState<{ text: string }>({ text: initial });
-    return (
-        <ReactJSONEditor
-            content={content}
-            onChange={(c) => setContent(c as { text: string })}
-        />
-    );
+    const [text, setText] = useState(initial);
+    return <ReactJSONEditor content={{ text }} onChange={setText} />;
 };
 
 export const Default: Story = () => (
@@ -28,16 +23,8 @@ export const Default: Story = () => (
 );
 
 const ControlledWithStatusBar = () => {
-    const [content, setContent] = useState<{ text: string }>({
-        text: JSON.stringify(sampleJson, undefined, 2),
-    });
-    return (
-        <ReactJSONEditor
-            content={content}
-            onChange={(c) => setContent(c as { text: string })}
-            statusBar
-        />
-    );
+    const [text, setText] = useState(JSON.stringify(sampleJson, undefined, 2));
+    return <ReactJSONEditor content={{ text }} onChange={setText} statusBar />;
 };
 
 export const WithStatusBar: Story = () => <ControlledWithStatusBar />;

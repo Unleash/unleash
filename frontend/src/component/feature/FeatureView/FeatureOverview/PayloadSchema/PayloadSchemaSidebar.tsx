@@ -218,7 +218,7 @@ const PayloadSchemaForm = ({
                                         ? state.error
                                         : undefined
                                 }
-                                onChange={editContent}
+                                onChange={(text) => editContent({ text })}
                                 readOnly={!editable}
                                 editorStyle='fill'
                             />

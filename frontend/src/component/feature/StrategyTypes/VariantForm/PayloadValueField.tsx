@@ -175,13 +175,10 @@ const PayloadJsonEditor = ({
             placeholder='{"cta" : "Start free trial"}'
             formatButtonProps={formatButtonProps}
             editorStyle={editorStyle}
-            onChange={(content) => {
+            onChange={(text) => {
                 onChange({
                     ...value,
-                    value:
-                        'json' in content
-                            ? JSON.stringify(content.json) || ''
-                            : content.text,
+                    value: text,
                 });
             }}
         />

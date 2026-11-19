@@ -468,19 +468,14 @@ export const LegacyVariantForm = ({
                                     <Suspense fallback={null}>
                                         <LazyReactJSONEditor
                                             content={{ text: payload.value }}
-                                            onChange={(content) =>
+                                            onChange={(text) =>
                                                 setPayload((payload) => {
                                                     clearError(
                                                         ErrorField.PAYLOAD,
                                                     );
                                                     return {
                                                         ...payload,
-                                                        value:
-                                                            'json' in content
-                                                                ? JSON.stringify(
-                                                                      content.json,
-                                                                  ) || ''
-                                                                : content.text,
+                                                        value: text,
                                                     };
                                                 })
                                             }

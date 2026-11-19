@@ -35,7 +35,7 @@ const fillOverrides = (theme: Theme) => ({
 
 export type JSONContent = { text: string } | { json: unknown };
 
-type JSONEditorChange = (content: JSONContent) => void;
+type JSONEditorChange = (text: string) => void;
 
 interface IReactJSONEditorProps {
     id?: string;
@@ -270,7 +270,7 @@ const ReactJSONEditor: FC<IReactJSONEditorProps> = ({
             if (shouldValidateInternally) {
                 setValidationError(getJsonValidationError(value));
             }
-            onChange?.({ text: value });
+            onChange?.(value);
         },
         [onChange, shouldValidateInternally],
     );
@@ -284,7 +284,7 @@ const ReactJSONEditor: FC<IReactJSONEditorProps> = ({
             return;
         }
 
-        onChange?.({ text: formatted });
+        onChange?.(formatted);
     }, [onChange, value]);
 
     const fillsHeight = editorStyle === 'sidePanel' || editorStyle === 'fill';

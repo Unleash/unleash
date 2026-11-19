@@ -321,7 +321,7 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                             </StyledAccordionHeading>
                             <StyledAccordionHint>
                                 {targetAudience === 'everyone'
-                                    ? 'Everyone in production'
+                                    ? `Everyone in the selected environment`
                                     : 'A subset of users'}
                             </StyledAccordionHint>
                         </AccordionSummary>

@@ -161,7 +161,8 @@ export const FeatureStrategyTargetAudience = <T extends StrategyFormState>({
                         <>
                             <StyledOptionLabel>Everyone</StyledOptionLabel>
                             <StyledOptionDescription id={everyoneDescriptionId}>
-                                The entire user base in production
+                                The entire user base in the selected
+                                environment.
                             </StyledOptionDescription>
                         </>
                     }

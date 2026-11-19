@@ -140,7 +140,9 @@ describe('StrategyFormBody', () => {
 
         const targetAudience = await findSectionButton('Target audience');
         expect(
-            within(targetAudience).getByText('Everyone in production'),
+            within(targetAudience).getByText(
+                'Everyone in the selected environment',
+            ),
         ).toBeInTheDocument();
 
         rerender(

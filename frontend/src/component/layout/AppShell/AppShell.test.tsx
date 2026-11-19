@@ -373,6 +373,53 @@ test('switches from the workspace configuration to admin settings', async () => 
 });
 
 test.each([
+    'Configure workspace',
+    'Admin settings',
+])('moves focus to Back to app after choosing %s with the keyboard', async (item) => {
+    render(<AppShell>content</AppShell>);
+    screen.getByRole('button', { name: 'Settings' }).focus();
+    await userEvent.keyboard('{Enter}');
+    await screen.findByRole('menu', { name: 'Settings' });
+
+    screen.getByRole('menuitem', { name: item }).focus();
+    await userEvent.keyboard('{Enter}');
+
+    expect(screen.getByRole('button', { name: 'Back to app' })).toHaveFocus();
+});
+
+test('moves focus to the start of the app navigation with Back to app', async () => {
+    render(<AppShell>content</AppShell>, { route: '/context' });
+    screen.getByRole('button', { name: 'Back to app' }).focus();
+
+    await userEvent.keyboard('{Enter}');
+
+    expect(screen.getByRole('link', { name: 'Unleash' })).toHaveFocus();
+});
+
+test('leaves focus alone when the page loads', () => {
+    render(<AppShell>content</AppShell>, { route: '/context' });
+
+    expect(document.body).toHaveFocus();
+});
+
+test('does not move focus when navigation changes the sidebar', async () => {
+    render(
+        <AppShell>
+            <Link to='/context'>Go to context</Link>
+        </AppShell>,
+    );
+    const link = screen.getByRole('link', { name: 'Go to context' });
+    link.focus();
+
+    await userEvent.keyboard('{Enter}');
+
+    expect(
+        screen.getByRole('region', { name: 'Configure workspace' }),
+    ).toBeInTheDocument();
+    expect(link).toHaveFocus();
+});
+
+test.each([
     ['/admin/users/1/edit', 'Users'],
     ['/history', 'Event log'],
 ])('opens admin settings when landing on %s', async (route, currentPage) => {

@@ -1,4 +1,4 @@
-import { type FC, type ReactNode, useState } from 'react';
+import { type FC, type ReactNode, useEffect, useRef, useState } from 'react';
 import { styled } from '@mui/material';
 import { Link, useLocation } from 'react-router';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
@@ -108,10 +108,20 @@ const Sidebar: FC = () => {
             : getPageMode(pathname);
     const setMode = (next: SidebarMode) =>
         setChoice({ mode: next, locationKey });
+    const panelRef = useRef<HTMLDivElement>(null);
+
+    // Only manual switches move focus, not navigation. This runs after the
+    // Settings menu returns focus to its button, so it wins.
+    useEffect(() => {
+        if (!choice) return;
+        panelRef.current
+            ?.querySelector<HTMLElement>('a[href], button')
+            ?.focus();
+    }, [choice]);
 
     return (
         <StyledSidebar aria-label='Main'>
-            <StyledSidebarScrollArea>
+            <StyledSidebarScrollArea ref={panelRef}>
                 {mode === 'app' ? <AppNavigation /> : null}
                 {mode === 'workspace' ? (
                     <ConfigureWorkspaceNavigation

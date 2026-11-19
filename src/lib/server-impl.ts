@@ -1,4 +1,5 @@
 import stoppable, { type StoppableServer } from 'stoppable';
+import { randomBytes } from 'node:crypto';
 import { promisify } from 'util';
 import version from './util/version.js';
 import { migrateDb, requiresMigration, resetDb } from '../migrator.js';
@@ -290,6 +291,18 @@ async function waitForFlagResolverReady(
     logger.info(`Flag resolver is ready after ${Date.now() - start}ms`);
 }
 
+const resolveServerSecret = async (
+    settingStore: Pick<IUnleashStores['settingStore'], 'get' | 'insert'>,
+): Promise<string> => {
+    const stored = await settingStore.get<string>('unleash.secret');
+    if (stored) {
+        return stored;
+    }
+    const secret = randomBytes(20).toString('hex');
+    await settingStore.insert('unleash.secret', JSON.stringify(secret));
+    return secret;
+};
+
 export async function createApp(
     config: IUnleashConfig,
     startApp: boolean,
@@ -319,6 +332,9 @@ export async function createApp(
     const serverVersion = config.enterpriseVersion ?? version;
     const db = fm.createDb(config);
     const stores = fm.createStores(config, db);
+    if (!config.server.secret) {
+        config.server.secret = await resolveServerSecret(stores.settingStore);
+    }
     await compareAndLogPostgresVersion(config, stores.settingStore);
     const services = fm.createServices(stores, config, db);
     await initialServiceSetup(config, services);
@@ -349,10 +365,6 @@ export async function createApp(
         await db.destroy();
     };
 
-    if (!config.server.secret) {
-        const secret = await stores.settingStore.get<string>('unleash.secret');
-        config.server.secret = secret!;
-    }
     const app = await getApp(config, stores, services, unleashSession, db);
 
     await metricsMonitor.startMonitoring(

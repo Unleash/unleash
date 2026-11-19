@@ -382,7 +382,7 @@ const defaultServerOption: IServerOption = {
         process.env.GRACEFUL_SHUTDOWN_TIMEOUT,
         secondsToMilliseconds(1),
     ),
-    secret: process.env.UNLEASH_SECRET || 'super-secret',
+    secret: process.env.UNLEASH_SECRET || '',
     enableScheduledCreatedByMigration: parseEnvVarBoolean(
         process.env.ENABLE_SCHEDULED_CREATED_BY_MIGRATION,
         false,

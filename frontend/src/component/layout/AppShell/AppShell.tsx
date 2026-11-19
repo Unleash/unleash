@@ -89,7 +89,7 @@ const StyledContent = styled('main')(({ theme }) => ({
 }));
 
 type SidebarMode = 'app' | 'workspace' | 'admin';
-type ManualChoice = { mode: SidebarMode; locationKey: string };
+type ManualChoice = { mode: SidebarMode; pathname: string };
 
 const getPageMode = (pathname: string): SidebarMode => {
     if (isConfigureWorkspacePage(pathname)) return 'workspace';
@@ -98,16 +98,16 @@ const getPageMode = (pathname: string): SidebarMode => {
 };
 
 const Sidebar: FC = () => {
-    const { pathname, key: locationKey } = useLocation();
-    // A manual switch lasts only until the next navigation, including one to
-    // the same path.
+    const { pathname } = useLocation();
+    // A manual switch lasts until the pathname changes, so sorting or searching
+    // a table, which only changes the query string, keeps it. It is cleared
+    // rather than ignored so that coming back to the page does not revive it.
     const [choice, setChoice] = useState<ManualChoice | null>(null);
-    const mode =
-        choice?.locationKey === locationKey
-            ? choice.mode
-            : getPageMode(pathname);
-    const setMode = (next: SidebarMode) =>
-        setChoice({ mode: next, locationKey });
+    if (choice && choice.pathname !== pathname) {
+        setChoice(null);
+    }
+    const mode = choice ? choice.mode : getPageMode(pathname);
+    const setMode = (next: SidebarMode) => setChoice({ mode: next, pathname });
     const panelRef = useRef<HTMLDivElement>(null);
 
     // Only manual switches move focus, not navigation. This runs after the

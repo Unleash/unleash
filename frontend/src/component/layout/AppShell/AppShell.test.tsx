@@ -294,6 +294,20 @@ test('does not reopen the workspace configuration when coming back to the page i
     expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
 });
 
+test('keeps the app navigation on a workspace page when only the query string changes', async () => {
+    render(
+        <AppShell>
+            <Link to='/applications?sortOrder=asc'>Sort by name</Link>
+        </AppShell>,
+        { route: '/applications' },
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Back to app' }));
+
+    await userEvent.click(screen.getByRole('link', { name: 'Sort by name' }));
+
+    expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
+});
+
 test('links every workspace setting on enterprise', async () => {
     mockEnterprise();
     render(<AppShell>content</AppShell>);

@@ -259,7 +259,13 @@ export default class ClientMetricsServiceV2 {
         try {
             const value =
                 await impactMetricsSchema.validateAsync(impactMetrics);
-            this.impactMetricsTranslator.translateMetrics(value);
+            const { evictedSeries } =
+                this.impactMetricsTranslator.translateMetrics(value);
+            if (evictedSeries > 0) {
+                this.logger.warn(
+                    `Impact metrics: evicted ${evictedSeries} series to stay within the series limit`,
+                );
+            }
         } catch (e) {
             // impact metrics should not affect other metrics on failure
             this.logger.warn('Impact metrics registration failed:', e);

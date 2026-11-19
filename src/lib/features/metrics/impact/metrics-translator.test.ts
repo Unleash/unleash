@@ -424,6 +424,19 @@ describe('MetricsTranslator', () => {
         );
     });
 
+    it('tells how many series a request evicted', () => {
+        const limited = translatorWithRoomFor(1);
+        limited.translateMetrics([counter('requests', web)]);
+        limited.translateMetrics([counter('requests', ios)]);
+
+        const summary = limited.translateMetrics([
+            counter('requests', android),
+            gauge('memory', web),
+        ]);
+
+        expect(summary).toEqual({ evictedSeries: 2 });
+    });
+
     it('an empty counter left by a refused negative sample is evicted like any other metric', async () => {
         const limited = translatorWithRoomFor(1);
         const refunds = {

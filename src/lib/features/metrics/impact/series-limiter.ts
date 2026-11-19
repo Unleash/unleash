@@ -6,6 +6,8 @@ export class SeriesLimiter {
 
     private seriesLruCache: SeriesLruCache;
 
+    evictedSeries = 0;
+
     constructor(registry: Registry, maxSeries: number) {
         this.registry = registry;
         this.seriesLruCache = new SeriesLruCache(maxSeries);
@@ -13,6 +15,9 @@ export class SeriesLimiter {
 
     track(name: string, labels: Record<string, string | number>): void {
         const evicted = this.seriesLruCache.touch(name, labels);
+        if (evicted) {
+            this.evictedSeries += 1;
+        }
         if (evicted?.type === 'metric') {
             this.registry.removeSingleMetric(evicted.name);
         }

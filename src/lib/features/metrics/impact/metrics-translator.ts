@@ -225,12 +225,15 @@ export class MetricsTranslator {
         return null;
     }
 
-    translateMetrics(metrics: Metric[]): Registry {
+    translateMetrics(metrics: Metric[]): { evictedSeries: number } {
+        const evictedBefore = this.seriesLimiter.evictedSeries;
         for (const metric of metrics) {
             this.translateMetric(metric);
         }
 
-        return this.registry;
+        return {
+            evictedSeries: this.seriesLimiter.evictedSeries - evictedBefore,
+        };
     }
 
     serializeMetrics(): Promise<string> {

@@ -320,6 +320,72 @@ test('links every workspace setting on enterprise', async () => {
     ]);
 });
 
+const openAdminSettings = async () => {
+    await userEvent.click(screen.getByRole('button', { name: 'Settings' }));
+    await userEvent.click(
+        screen.getByRole('menuitem', { name: 'Admin settings' }),
+    );
+};
+
+test('replaces the app navigation with admin settings', async () => {
+    render(<AppShell>content</AppShell>);
+
+    await openAdminSettings();
+
+    expect(
+        screen.getByRole('region', { name: 'Admin settings' }),
+    ).toBeInTheDocument();
+    expect(
+        screen.queryByRole('link', { name: 'Unleash' }),
+    ).not.toBeInTheDocument();
+    expect(
+        screen.queryByRole('link', { name: 'Home' }),
+    ).not.toBeInTheDocument();
+    expect(
+        screen.queryByRole('region', { name: 'Workspace' }),
+    ).not.toBeInTheDocument();
+});
+
+test('returns from admin settings to the app navigation with Back to app', async () => {
+    render(<AppShell>content</AppShell>);
+    await openAdminSettings();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Back to app' }));
+
+    expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
+    expect(
+        screen.queryByRole('region', { name: 'Admin settings' }),
+    ).not.toBeInTheDocument();
+});
+
+test('switches from the workspace configuration to admin settings', async () => {
+    render(<AppShell>content</AppShell>);
+    await openConfigureWorkspace();
+
+    await openAdminSettings();
+
+    expect(
+        screen.getByRole('region', { name: 'Admin settings' }),
+    ).toBeInTheDocument();
+    expect(
+        screen.queryByRole('region', { name: 'Configure workspace' }),
+    ).not.toBeInTheDocument();
+});
+
+test.each([
+    '/admin/users/1/edit',
+    '/history',
+])('opens admin settings when landing on %s', (route) => {
+    render(<AppShell>content</AppShell>, { route });
+
+    expect(
+        screen.getByRole('region', { name: 'Admin settings' }),
+    ).toBeInTheDocument();
+    expect(
+        screen.queryByRole('link', { name: 'Home' }),
+    ).not.toBeInTheDocument();
+});
+
 const renderForOnboardingAdmin = () => {
     mockUserWithSplash(server, CHECKLIST_ELIGIBLE_SPLASH);
     mockChecklistProjectOnboardingStarted(server);

@@ -19,7 +19,13 @@ beforeEach(() => {
 });
 
 const renderSettingsMenu = (options?: Parameters<typeof render>[1]) =>
-    render(<SettingsMenu onConfigureWorkspace={() => {}} />, options);
+    render(
+        <SettingsMenu
+            onConfigureWorkspace={() => {}}
+            onAdminSettings={() => {}}
+        />,
+        options,
+    );
 
 const openSettings = async () => {
     const button = screen.getByRole('button', { name: 'Settings' });
@@ -134,6 +140,17 @@ test('closes the menu after choosing to configure the workspace', async () => {
 
     await userEvent.click(
         screen.getByRole('menuitem', { name: 'Configure workspace' }),
+    );
+
+    expect(button).toHaveAttribute('aria-expanded', 'false');
+});
+
+test('closes the menu after choosing admin settings', async () => {
+    renderSettingsMenu();
+    const button = await openSettings();
+
+    await userEvent.click(
+        screen.getByRole('menuitem', { name: 'Admin settings' }),
     );
 
     expect(button).toHaveAttribute('aria-expanded', 'false');

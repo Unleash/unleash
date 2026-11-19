@@ -23,6 +23,10 @@ import {
     ConfigureWorkspaceNavigation,
     isConfigureWorkspacePage,
 } from './sidebar/ConfigureWorkspaceNavigation.tsx';
+import {
+    AdminSettingsNavigation,
+    isAdminSettingsPage,
+} from './sidebar/AdminSettingsNavigation.tsx';
 import { HelpAndResourcesMenu } from './sidebar/HelpAndResourcesMenu.tsx';
 import { SearchButton } from './sidebar/SearchButton.tsx';
 import { SettingsMenu } from './sidebar/SettingsMenu.tsx';
@@ -84,37 +88,46 @@ const StyledContent = styled('main')(({ theme }) => ({
     },
 }));
 
-type SidebarMode = 'app' | 'workspace';
+type SidebarMode = 'app' | 'workspace' | 'admin';
 type ManualChoice = { mode: SidebarMode; locationKey: string };
+
+const getPageMode = (pathname: string): SidebarMode => {
+    if (isConfigureWorkspacePage(pathname)) return 'workspace';
+    if (isAdminSettingsPage(pathname)) return 'admin';
+    return 'app';
+};
 
 const Sidebar: FC = () => {
     const { pathname, key: locationKey } = useLocation();
     // A manual switch lasts only until the next navigation, including one to
     // the same path.
     const [choice, setChoice] = useState<ManualChoice | null>(null);
-    const pageMode: SidebarMode = isConfigureWorkspacePage(pathname)
-        ? 'workspace'
-        : 'app';
-    const mode = choice?.locationKey === locationKey ? choice.mode : pageMode;
+    const mode =
+        choice?.locationKey === locationKey
+            ? choice.mode
+            : getPageMode(pathname);
     const setMode = (next: SidebarMode) =>
         setChoice({ mode: next, locationKey });
 
     return (
         <StyledSidebar aria-label='Main'>
             <StyledSidebarScrollArea>
+                {mode === 'app' ? <AppNavigation /> : null}
                 {mode === 'workspace' ? (
                     <ConfigureWorkspaceNavigation
                         onBack={() => setMode('app')}
                     />
-                ) : (
-                    <AppNavigation />
-                )}
+                ) : null}
+                {mode === 'admin' ? (
+                    <AdminSettingsNavigation onBack={() => setMode('app')} />
+                ) : null}
             </StyledSidebarScrollArea>
             <StyledSidebarFooter>
                 <SidebarList>
                     <HelpAndResourcesMenu />
                     <SettingsMenu
                         onConfigureWorkspace={() => setMode('workspace')}
+                        onAdminSettings={() => setMode('admin')}
                     />
                 </SidebarList>
             </StyledSidebarFooter>

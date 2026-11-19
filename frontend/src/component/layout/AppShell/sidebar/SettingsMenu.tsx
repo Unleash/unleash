@@ -110,7 +110,7 @@ const TwoLineMenuItem: FC<{
     icon: ReactNode;
     title: string;
     description: string;
-    onClick?: () => void;
+    onClick: () => void;
 }> = ({ icon, title, description, onClick }) => {
     const id = useId();
 
@@ -132,9 +132,10 @@ const TwoLineMenuItem: FC<{
     );
 };
 
-export const SettingsMenu: FC<{ onConfigureWorkspace: () => void }> = ({
-    onConfigureWorkspace,
-}) => {
+export const SettingsMenu: FC<{
+    onConfigureWorkspace: () => void;
+    onAdminSettings: () => void;
+}> = ({ onConfigureWorkspace, onAdminSettings }) => {
     const { user } = useAuthUser();
     const { isAdmin } = useContext(AccessContext);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -250,6 +251,10 @@ export const SettingsMenu: FC<{ onConfigureWorkspace: () => void }> = ({
                     icon={<AdminPanelSettingsOutlinedIcon />}
                     title='Admin settings'
                     description='Users, access, API tokens, security and more'
+                    onClick={() => {
+                        close();
+                        onAdminSettings();
+                    }}
                 />
             </Menu>
         </>

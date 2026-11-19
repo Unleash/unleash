@@ -7,17 +7,14 @@ import { IconRenderer } from '../../MainLayout/NavigationSidebar/IconRenderer.ts
 import { SidebarButton } from './SidebarButton.tsx';
 import { SidebarLink } from './SidebarLink.tsx';
 import { SidebarSection } from './SidebarSection.tsx';
+import { createPageMatcher } from './createPageMatcher.ts';
 
-// Unfiltered on purpose: the filtered list lacks plan-gated entries until
-// ui-config loads, which would flash the app sidebar on a deep link.
-const workspacePaths = getNavRoutes().map(
-    (route) => normalizeRoutePath(route).path,
+// Matches every workspace path regardless of plan: the filtered list depends on
+// ui-config and instance status, so a deep link would show the app navigation
+// until they load.
+export const isConfigureWorkspacePage = createPageMatcher(
+    getNavRoutes().map((route) => normalizeRoutePath(route).path),
 );
-
-export const isConfigureWorkspacePage = (pathname: string) =>
-    workspacePaths.some(
-        (path) => pathname === path || pathname.startsWith(`${path}/`),
-    );
 
 export const ConfigureWorkspaceNavigation: FC<{ onBack: () => void }> = ({
     onBack,

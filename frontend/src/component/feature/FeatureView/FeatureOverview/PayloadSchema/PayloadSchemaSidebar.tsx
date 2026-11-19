@@ -210,7 +210,17 @@ const PayloadSchemaForm = ({
                         </Suspense>
                     )}
                 </PayloadSchemaPane>
-                <PayloadSchemaPane title='Preview'>
+                <PayloadSchemaPane
+                    title='Preview'
+                    aside={
+                        <Typography
+                            variant='caption'
+                            sx={{ color: 'text.secondary' }}
+                        >
+                            The form people fill in to add a value
+                        </Typography>
+                    }
+                >
                     <Suspense fallback={null}>
                         <LazyPayloadSchemaPreview schema={parsedSchema} />
                     </Suspense>

@@ -22,7 +22,7 @@ const StyledPaneHeader = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     flexShrink: 0,
     height: theme.spacing(7.5),
-    padding: theme.spacing(0, 1, 0, 1.75),
+    padding: theme.spacing(2),
     borderBottom: `1px solid ${theme.palette.divider}`,
     backgroundColor: theme.palette.background.elevation1,
 }));
@@ -39,6 +39,12 @@ const StyledTitle = styled('h2')(({ theme }) => ({
     whiteSpace: 'nowrap',
 }));
 
+const StyledAside = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+}));
+
 const StyledPaneBody = styled('div')({
     flex: 1,
     minHeight: 0,
@@ -50,12 +56,12 @@ const StyledPaneBody = styled('div')({
 
 type IPayloadSchemaPaneProps = Omit<ComponentProps<'section'>, 'title'> & {
     title: string;
-    actions?: ReactNode;
+    aside?: ReactNode;
 };
 
 export const PayloadSchemaPane = ({
     title,
-    actions,
+    aside,
     children,
     ...sectionProps
 }: IPayloadSchemaPaneProps) => {
@@ -65,7 +71,7 @@ export const PayloadSchemaPane = ({
         <StyledPane aria-labelledby={titleId} {...sectionProps}>
             <StyledPaneHeader>
                 <StyledTitle id={titleId}>{title}</StyledTitle>
-                {actions}
+                <StyledAside>{aside}</StyledAside>
             </StyledPaneHeader>
             <StyledPaneBody>{children}</StyledPaneBody>
         </StyledPane>

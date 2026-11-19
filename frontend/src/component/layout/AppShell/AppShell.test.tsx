@@ -26,6 +26,12 @@ const UiConfigLoaded = () => {
     return loading ? null : 'ui config loaded';
 };
 
+const mockEnterprise = () =>
+    testServerRoute(server, '/api/admin/ui-config', {
+        versionInfo: { current: { enterprise: 'version' } },
+        environment: 'Enterprise',
+    });
+
 test('links Home to the personal dashboard', () => {
     render(<AppShell>content</AppShell>);
 
@@ -164,10 +170,7 @@ test('does not mark Projects as current inside a project', () => {
 });
 
 test('shows change requests on enterprise', async () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        versionInfo: { current: { enterprise: 'version' } },
-        environment: 'Enterprise',
-    });
+    mockEnterprise();
 
     render(<AppShell>content</AppShell>);
 
@@ -291,10 +294,7 @@ test('does not reopen the workspace configuration when coming back to the page i
 });
 
 test('links every workspace setting on enterprise', async () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        versionInfo: { current: { enterprise: 'version' } },
-        environment: 'Enterprise',
-    });
+    mockEnterprise();
     render(<AppShell>content</AppShell>);
     await openConfigureWorkspace();
 
@@ -373,9 +373,9 @@ test('switches from the workspace configuration to admin settings', async () => 
 });
 
 test.each([
-    '/admin/users/1/edit',
-    '/history',
-])('opens admin settings when landing on %s', (route) => {
+    ['/admin/users/1/edit', 'Users'],
+    ['/history', 'Event log'],
+])('opens admin settings when landing on %s', async (route, currentPage) => {
     render(<AppShell>content</AppShell>, { route });
 
     expect(
@@ -383,6 +383,97 @@ test.each([
     ).toBeInTheDocument();
     expect(
         screen.queryByRole('link', { name: 'Home' }),
+    ).not.toBeInTheDocument();
+    expect(
+        await screen.findByRole('link', { name: currentPage }),
+    ).toHaveAttribute('aria-current', 'page');
+});
+
+test('opens admin settings when landing on an admin page outside the menu', () => {
+    render(<AppShell>content</AppShell>, { route: '/admin' });
+
+    expect(
+        screen.getByRole('region', { name: 'Admin settings' }),
+    ).toBeInTheDocument();
+});
+
+test('links every admin setting on enterprise', async () => {
+    mockEnterprise();
+    render(<AppShell>content</AppShell>);
+    await openAdminSettings();
+
+    const adminSettings = within(
+        screen.getByRole('region', { name: 'Admin settings' }),
+    );
+    await adminSettings.findByRole('link', { name: 'Remote MCP server' });
+
+    expect(
+        adminSettings
+            .getAllByRole('button')
+            .map((button) => button.textContent),
+    ).toEqual([
+        'User config',
+        'Access control',
+        'Single sign-on',
+        'Network',
+        'Instance config',
+    ]);
+    expect(
+        adminSettings
+            .getAllByRole('link')
+            .map((link) => [link.textContent, link.getAttribute('href')]),
+    ).toEqual([
+        ['Service accounts', '/admin/service-accounts'],
+        ['Enterprise Edge', '/admin/enterprise-edge'],
+        ['Remote MCP server', '/admin/remote-mcp'],
+        ['Impact Metrics', '/admin/impact-metrics'],
+        ['Event log', '/history'],
+    ]);
+});
+
+test('highlights the current admin page and its group', async () => {
+    mockEnterprise();
+    render(<AppShell>content</AppShell>, {
+        route: '/admin/roles/project-roles',
+    });
+
+    const userConfig = within(
+        await screen.findByRole('group', { name: 'User config' }),
+    );
+
+    expect(screen.getByRole('button', { name: 'User config' })).toHaveAttribute(
+        'aria-current',
+        'location',
+    );
+    expect(
+        userConfig.getByRole('link', { name: 'Project roles' }),
+    ).toHaveAttribute('aria-current', 'page');
+    expect(
+        userConfig.getByRole('link', { name: 'Root roles' }),
+    ).not.toHaveAttribute('aria-current');
+    expect(
+        screen.queryByRole('group', { name: 'Access control' }),
+    ).not.toBeInTheDocument();
+});
+
+test('toggles an admin group', async () => {
+    render(<AppShell>content</AppShell>);
+    await openAdminSettings();
+    const toggle = screen.getByRole('button', { name: 'Access control' });
+
+    await userEvent.click(toggle);
+
+    expect(
+        within(screen.getByRole('group', { name: 'Access control' })).getByRole(
+            'link',
+            { name: 'API access' },
+        ),
+    ).toHaveAttribute('href', '/admin/api');
+
+    await userEvent.click(toggle);
+
+    expect(
+        screen.queryByRole('group', { name: 'Access control' }),
     ).not.toBeInTheDocument();
 });
 

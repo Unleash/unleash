@@ -1,9 +1,7 @@
 import { Counter, Gauge, type Registry } from '@prometheus-io/client';
 import { BatchHistogram } from './batch-histogram.js';
-import {
-    MAX_IMPACT_METRIC_SERIES,
-    SeriesLruCache,
-} from './series-lru-cache.js';
+import { SeriesLimiter } from './series-limiter.js';
+import { MAX_IMPACT_METRIC_SERIES } from './series-lru-cache.js';
 
 export interface NumericMetricSample {
     labels?: Record<string, string | number>;
@@ -41,11 +39,11 @@ const MAX_LABEL_VALUE_LENGTH = 100;
 export class MetricsTranslator {
     private registry: Registry;
 
-    private seriesLruCache: SeriesLruCache;
+    private seriesLimiter: SeriesLimiter;
 
     constructor(registry: Registry, maxSeries = MAX_IMPACT_METRIC_SERIES) {
         this.registry = registry;
-        this.seriesLruCache = new SeriesLruCache(maxSeries);
+        this.seriesLimiter = new SeriesLimiter(registry, maxSeries);
     }
 
     private trackSeries(
@@ -54,19 +52,8 @@ export class MetricsTranslator {
         type: string,
     ): Record<string, string | number> {
         const labels = this.buildLabels(sample, type);
-        const evicted = this.seriesLruCache.touch(name, labels);
-        if (evicted?.type === 'metric') {
-            this.registry.removeSingleMetric(evicted.name);
-        }
-        if (evicted?.type === 'series') {
-            this.registry.getSingleMetric(evicted.name)?.remove(evicted.labels);
-        }
+        this.seriesLimiter.track(name, labels);
         return labels;
-    }
-
-    private removeMetric(name: string): void {
-        this.seriesLruCache.deleteMetric(name);
-        this.registry.removeSingleMetric(name);
     }
 
     sanitizeName(name: string): string {
@@ -145,7 +132,7 @@ export class MetricsTranslator {
             return existing;
         }
         if (existing instanceof BatchHistogram) {
-            this.removeMetric(name);
+            this.seriesLimiter.removeMetric(name);
         }
         return new BatchHistogram({
             name,

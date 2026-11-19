@@ -19,10 +19,12 @@ const Dot = styled('span')(({ theme }) => ({
 
 type PendingAccessRequestsIndicatorProps = {
     showTooltip?: boolean;
+    className?: string;
 };
 
 const AdminPendingAccessRequestsIndicator = ({
     showTooltip = true,
+    className,
 }: PendingAccessRequestsIndicatorProps) => {
     const { accessRequests } = useUserAccessRequests();
 
@@ -30,7 +32,9 @@ const AdminPendingAccessRequestsIndicator = ({
         return null;
     }
 
-    const dot = <Dot aria-label='Pending access requests' />;
+    const dot = (
+        <Dot aria-label='Pending access requests' className={className} />
+    );
 
     if (!showTooltip) {
         return dot;

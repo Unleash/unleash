@@ -11,6 +11,7 @@ import {
     mockChecklistProjectOnboardingStarted,
     mockUserWithSplash,
 } from 'component/onboarding/floatingChecklist/onboardingChecklistTestServer.ts';
+import { mockPendingAccessRequest } from 'component/admin/users/AccessRequestsNotifications/accessRequestsTestServer.ts';
 import { AppShell } from './AppShell.tsx';
 
 const server = testServerSetup();
@@ -321,9 +322,9 @@ test('links every workspace setting on enterprise', async () => {
 });
 
 const openAdminSettings = async () => {
-    await userEvent.click(screen.getByRole('button', { name: 'Settings' }));
+    await userEvent.click(screen.getByRole('button', { name: /^Settings/ }));
     await userEvent.click(
-        screen.getByRole('menuitem', { name: 'Admin settings' }),
+        screen.getByRole('menuitem', { name: /^Admin settings/ }),
     );
 };
 
@@ -521,6 +522,36 @@ test('toggles an admin group', async () => {
 
     expect(
         screen.queryByRole('group', { name: 'Access control' }),
+    ).not.toBeInTheDocument();
+});
+
+test('moves the pending access requests dot from User config to Users when the group expands', async () => {
+    mockEnterprise();
+    mockPendingAccessRequest(server);
+    render(<AppShell>content</AppShell>, {
+        permissions: [{ permission: ADMIN }],
+    });
+    await openAdminSettings();
+    const toggle = screen.getByRole('button', { name: /User config/ });
+
+    expect(
+        await within(toggle).findByLabelText('Pending access requests'),
+    ).toBeInTheDocument();
+
+    await userEvent.click(toggle);
+
+    expect(
+        within(toggle).queryByLabelText('Pending access requests'),
+    ).not.toBeInTheDocument();
+    expect(
+        within(screen.getByRole('link', { name: /^Users/ })).getByLabelText(
+            'Pending access requests',
+        ),
+    ).toBeInTheDocument();
+    expect(
+        within(
+            screen.getByRole('link', { name: 'Root roles' }),
+        ).queryByLabelText('Pending access requests'),
     ).not.toBeInTheDocument();
 });
 

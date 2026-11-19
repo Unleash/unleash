@@ -8,6 +8,7 @@ import type { INavigationMenuItem } from 'interfaces/route';
 import { IconRenderer as AdminIconRenderer } from '../../MainLayout/AdminMenu/AdminMenuIcons.tsx';
 import { SidebarButton } from './SidebarButton.tsx';
 import {
+    SidebarPendingAccessRequestsIndicator,
     SidebarCaret,
     SidebarItemIcon,
     sidebarItemStyles,
@@ -101,6 +102,9 @@ const AdminNavGroup: FC<{ group: AdminGroup; currentPath?: string }> = ({
                     <AdminIconRenderer path={group.key} active={false} />
                 </SidebarItemIcon>
                 {group.title}
+                {!expanded && group.key === 'users' ? (
+                    <SidebarPendingAccessRequestsIndicator />
+                ) : null}
                 <StyledTrailingCaret expanded={expanded} />
             </StyledGroupToggle>
             {expanded ? (
@@ -114,6 +118,9 @@ const AdminNavGroup: FC<{ group: AdminGroup; currentPath?: string }> = ({
                             }
                         >
                             {route.title}
+                            {route.path === '/admin/users' ? (
+                                <SidebarPendingAccessRequestsIndicator />
+                            ) : null}
                         </StyledSubLink>
                     ))}
                 </SidebarList>

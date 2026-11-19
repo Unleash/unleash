@@ -4,25 +4,20 @@ import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { PendingAccessRequestsIndicator } from './PendingAccessRequestsIndicator.tsx';
+import { mockPendingAccessRequest } from './accessRequestsTestServer.ts';
 
 const server = testServerSetup();
 
-const setupApi = ({ requests }: { requests: number }) => {
+const setupApi = () => {
     testServerRoute(server, '/api/admin/ui-config', {
         versionInfo: { current: { enterprise: '1.0.0' } },
     });
-    testServerRoute(server, '/api/admin/user-access-requests', {
-        userAccessRequests: Array.from({ length: requests }, (_, i) => ({
-            id: String(i),
-            email: `u${i}@test.com`,
-            requestedAt: '2026-01-01T00:00:00Z',
-        })),
-    });
+    mockPendingAccessRequest(server);
 };
 
 describe('PendingAccessRequestsIndicator', () => {
     test('shows the dot for admins with pending requests', async () => {
-        setupApi({ requests: 1 });
+        setupApi();
 
         render(<PendingAccessRequestsIndicator />, {
             permissions: [{ permission: ADMIN }],
@@ -34,7 +29,7 @@ describe('PendingAccessRequestsIndicator', () => {
     });
 
     test('renders nothing for non-admin users even when requests exist', () => {
-        setupApi({ requests: 1 });
+        setupApi();
 
         render(<PendingAccessRequestsIndicator />, {
             permissions: [],

@@ -24,6 +24,8 @@ import { Truncator } from 'component/common/Truncator/Truncator';
 import { ThemeSubmenu } from 'component/user/UserProfile/ThemeSubmenu/ThemeSubmenu';
 import { LogOutMenuItem } from 'component/user/UserProfile/LogOutMenuItem/LogOutMenuItem';
 import { PRIVACY_POLICY_URL } from 'constants/links';
+import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequestsNotifications/PendingAccessRequestsIndicator';
+import { SidebarPendingAccessRequestsIndicator } from './SidebarItem.styles.ts';
 import { SidebarMenuButton } from './SidebarMenuButton.tsx';
 
 const menuPaperSx = (theme: Theme) => ({
@@ -106,12 +108,18 @@ const StyledDescription = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
+const StyledTitle = styled('span')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(0.5),
+}));
+
 const TwoLineMenuItem: FC<{
     icon: ReactNode;
     title: string;
+    badge?: ReactNode;
     description: string;
     onClick: () => void;
-}> = ({ icon, title, description, onClick }) => {
+}> = ({ icon, title, badge, description, onClick }) => {
     const id = useId();
 
     return (
@@ -123,7 +131,10 @@ const TwoLineMenuItem: FC<{
         >
             <ListItemIcon>{icon}</ListItemIcon>
             <StyledTwoLineLabel>
-                <span id={`${id}-title`}>{title}</span>
+                <StyledTitle id={`${id}-title`}>
+                    {title}
+                    {badge}
+                </StyledTitle>
                 <StyledDescription id={`${id}-description`}>
                     {description}
                 </StyledDescription>
@@ -150,6 +161,7 @@ export const SettingsMenu: FC<{
             <SidebarMenuButton
                 icon={<SettingsOutlinedIcon />}
                 label='Settings'
+                badge={<SidebarPendingAccessRequestsIndicator />}
                 open={open}
                 menuId={menuId}
                 onClick={(event) => setAnchorEl(event.currentTarget)}
@@ -250,6 +262,7 @@ export const SettingsMenu: FC<{
                 <TwoLineMenuItem
                     icon={<AdminPanelSettingsOutlinedIcon />}
                     title='Admin settings'
+                    badge={<PendingAccessRequestsIndicator />}
                     description='Users, access, API tokens, security and more'
                     onClick={() => {
                         close();

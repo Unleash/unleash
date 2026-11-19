@@ -1,9 +1,10 @@
 import { beforeEach, expect, test } from 'vitest';
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { mockPendingAccessRequest } from 'component/admin/users/AccessRequestsNotifications/accessRequestsTestServer.ts';
 import { SettingsMenu } from './SettingsMenu.tsx';
 
 const server = testServerSetup();
@@ -110,6 +111,27 @@ test('offers admin settings to everyone', async () => {
     ).toHaveAccessibleDescription(
         'Users, access, API tokens, security and more',
     );
+});
+
+test('points admins to pending access requests through admin settings', async () => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        versionInfo: { current: { enterprise: 'version' } },
+    });
+    mockPendingAccessRequest(server);
+    renderSettingsMenu({ permissions: [{ permission: ADMIN }] });
+    const button = screen.getByRole('button', { name: /Settings/ });
+
+    expect(
+        await within(button).findByLabelText('Pending access requests'),
+    ).toBeInTheDocument();
+
+    await userEvent.click(button);
+
+    expect(
+        within(
+            screen.getByRole('menuitem', { name: /Admin settings/ }),
+        ).getByLabelText('Pending access requests'),
+    ).toBeInTheDocument();
 });
 
 test('closes the menu after choosing profile settings', async () => {

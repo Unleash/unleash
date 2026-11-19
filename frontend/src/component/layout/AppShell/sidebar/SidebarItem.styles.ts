@@ -1,5 +1,6 @@
 import { styled, type Theme } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequestsNotifications/PendingAccessRequestsIndicator';
 
 export const SUB_ITEM_INDENT = 3.875;
 
@@ -49,4 +50,12 @@ export const SidebarCaret = styled(ArrowDropDownIcon, {
     transition: theme.transitions.create('transform', {
         duration: theme.transitions.duration.shortest,
     }),
+}));
+
+// Moves the dot closer to the text and a bit lower, so it doesn't touch the top edge of the hover highlight.
+export const SidebarPendingAccessRequestsIndicator = styled(
+    PendingAccessRequestsIndicator,
+)(({ theme }) => ({
+    marginLeft: theme.spacing(-0.375),
+    marginTop: theme.spacing(0.5),
 }));

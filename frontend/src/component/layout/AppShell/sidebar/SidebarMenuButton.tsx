@@ -12,14 +12,16 @@ export const SidebarMenuButton: FC<{
     ref?: Ref<HTMLButtonElement>;
     icon: ReactNode;
     label: string;
+    badge?: ReactNode;
     open: boolean;
     menuId?: string;
     onClick: (event: MouseEvent<HTMLElement>) => void;
-}> = ({ ref, icon, label, open, menuId, onClick }) => (
+}> = ({ ref, icon, label, badge, open, menuId, onClick }) => (
     <StyledButton
         ref={ref}
         icon={icon}
         label={label}
+        badge={badge}
         onClick={onClick}
         aria-haspopup='menu'
         aria-expanded={open}

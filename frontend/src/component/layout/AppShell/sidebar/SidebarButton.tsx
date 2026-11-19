@@ -10,10 +10,12 @@ export const SidebarButton: FC<
     Omit<ComponentProps<typeof ButtonBase>, 'children'> & {
         icon: ReactNode;
         label: string;
+        badge?: ReactNode;
     }
-> = ({ icon, label, ...props }) => (
+> = ({ icon, label, badge, ...props }) => (
     <StyledButton {...props}>
         <SidebarItemIcon>{icon}</SidebarItemIcon>
         {label}
+        {badge}
     </StyledButton>
 );

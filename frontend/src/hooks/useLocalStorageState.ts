@@ -13,16 +13,19 @@ export const useLocalStorageState = <T extends object | string>(
     );
 
     const [localValue, setLocalValue] = useState<T>(initialStoredValue);
+    const localValueRef = useRef(initialStoredValue);
 
     useEffect(() => {
-        setStoredValue(localValue);
-    }, [localValue, setStoredValue]);
+        // A child effect may have updated storage since the initial render.
+        setStoredValue((value) => value, localValueRef.current);
+    }, [setStoredValue]);
 
     return [
         localValue,
         (value: T | ((prevState: T) => T)) => {
-            setStoredValue(value);
-            setLocalValue(value);
+            const nextValue = setStoredValue(value, localValueRef.current);
+            localValueRef.current = nextValue;
+            setLocalValue(nextValue);
         },
     ] as const;
 };

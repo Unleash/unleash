@@ -4,7 +4,7 @@ import {
     setSessionStorageItem,
     getSessionStorageItem,
 } from './storage.js';
-import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Mocking the global localStorage
 const localStorageMock = (() => {
@@ -58,6 +58,22 @@ describe('localStorage with TTL', () => {
         localStorage.clear();
         sessionStorage.clear();
         vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+        vi.useRealTimers();
+    });
+
+    test('reports whether a local storage write succeeds', () => {
+        expect(setLocalStorageItem('testKey', 'saved')).toBe(true);
+        vi.spyOn(console, 'warn').mockImplementation(() => {});
+        vi.spyOn(localStorage, 'setItem').mockImplementationOnce(() => {
+            throw new DOMException('Storage full', 'QuotaExceededError');
+        });
+
+        expect(setLocalStorageItem('testKey', 'unsaved')).toBe(false);
+        expect(getLocalStorageItem('testKey')).toBe('saved');
     });
 
     test('object should not be retrievable after TTL expires', () => {

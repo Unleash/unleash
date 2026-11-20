@@ -56,7 +56,7 @@ export function getLocalStorageItem<T>(key: string): T | undefined {
 }
 
 // Store an item in localStorage.
-// Does nothing if the browser denies access.
+// Returns false if the browser denies access or cannot store the value.
 export function setLocalStorageItem<T>(
     key: string,
     value: T | undefined = undefined,
@@ -68,8 +68,10 @@ export function setLocalStorageItem<T>(
             expiry: timeToLive !== undefined ? Date.now() + timeToLive : null,
         };
         window.localStorage.setItem(key, JSON.stringify(item, customReplacer));
+        return true;
     } catch (err: unknown) {
         console.warn(err);
+        return false;
     }
 }
 

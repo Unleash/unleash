@@ -16,7 +16,7 @@ import {
 } from './SidebarItem.styles.ts';
 import { SidebarList } from './SidebarList.tsx';
 import { SidebarSection } from './SidebarSection.tsx';
-import { createPageMatcher, isWithinPath } from './createPageMatcher.ts';
+import { createPageMatcher, findCurrentRoute } from './createPageMatcher.ts';
 
 // Matches every admin path regardless of plan: the filtered list depends on
 // ui-config and instance status, so a deep link would show the app navigation
@@ -57,13 +57,6 @@ const groupAdminRoutes = (routes: INavigationMenuItem[]): AdminNavEntry[] => {
     }
     return entries;
 };
-
-// The most specific match wins, so Project roles doesn't also mark Root roles.
-const findCurrentPath = (pathname: string, routes: INavigationMenuItem[]) =>
-    routes
-        .map((route) => route.path)
-        .filter((path) => isWithinPath(pathname, path))
-        .sort((a, b) => b.length - a.length)[0];
 
 const StyledLink = styled(Link)(({ theme }) => sidebarItemStyles(theme));
 
@@ -134,7 +127,7 @@ export const AdminSettingsNavigation: FC<{ onBack: () => void }> = ({
 }) => {
     const { pathname } = useLocation();
     const routes = useAdminRoutes().filter((route) => route.menu.adminSettings);
-    const currentPath = findCurrentPath(pathname, routes);
+    const currentPath = findCurrentRoute(pathname, routes)?.path;
 
     return (
         <>

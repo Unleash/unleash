@@ -121,6 +121,15 @@ export default async function getApp(
     app.use(express.urlencoded({ extended: true }));
     app.use(favicon(path.join(publicFolder, 'favicon.ico')));
     app.use(baseUriPath, favicon(path.join(publicFolder, 'favicon.ico')));
+    // The versioned v1 path is what makes immutable caching safe.
+    app.use(
+        `${baseUriPath}/fonts`,
+        express.static(path.join(publicFolder, 'fonts'), {
+            index: false,
+            immutable: true,
+            maxAge: '365d',
+        }),
+    );
     app.use(baseUriPath, express.static(publicFolder, { index: false }));
 
     if (config.enableOAS && services.openApiService) {

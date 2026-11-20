@@ -1,0 +1,7 @@
+@font-face {
+    font-family: "Sen";
+    font-style: normal;
+    font-weight: 400 800;
+    font-display: swap;
+    src: url("./sen-variable.woff2") format("woff2");
+}

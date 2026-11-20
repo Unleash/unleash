@@ -11,7 +11,7 @@ import {
     Typography,
 } from '@mui/material';
 import type { IStrategy, StrategyFormState } from 'interfaces/strategy';
-import type { FailedVariantsSubmit } from './FeatureStrategyForm.tsx';
+import type { FailedVariantsSubmit } from './useStrategyFormValidation.ts';
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 import produce from 'immer';
 import { FeatureStrategyType } from '../FeatureStrategyType/FeatureStrategyType.tsx';

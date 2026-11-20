@@ -15,7 +15,7 @@ import { calculateVariantWeight } from 'component/common/util.ts';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.tsx';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly.tsx';
 import type { IFeatureVariantEdit } from 'component/feature/variantEdit.ts';
-import type { FailedVariantsSubmit } from '../../FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm.tsx';
+import type { FailedVariantsSubmit } from '../../FeatureStrategy/FeatureStrategyForm/useStrategyFormValidation.ts';
 import Delete from '@mui/icons-material/Delete';
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema.ts';
 import { useUiFlag } from 'hooks/useUiFlag.ts';

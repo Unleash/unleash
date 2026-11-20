@@ -20,10 +20,13 @@ import {
 } from '@server/types/permissions';
 import { StrategyFormBodySelector } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBodySelector.tsx';
 import { createStrategyPayload } from 'component/feature/FeatureStrategy/featureStrategy.utils';
-import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
+import { withIncompleteConstraintsDiscarded } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
+import { useUiFlag } from 'hooks/useUiFlag';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
 import { StrategyFormTemplate } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormTemplate';
+import { FormFocusProvider } from 'component/feature/FeatureStrategy/FeatureStrategyForm/formFocus.tsx';
+import { useStrategyFormValidation } from 'component/feature/FeatureStrategy/FeatureStrategyForm/useStrategyFormValidation.ts';
 
 export const useDefaultStrategy = (
     projectId: string,
@@ -71,13 +74,32 @@ const EditDefaultStrategy = () => {
     const { unleashUrl } = uiConfig;
     const navigate = useNavigate();
     const { trackEvent } = useEventTracker();
-    const hasValidConstraints = useConstraintsValidation(strategy.constraints);
+    const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
+    const {
+        focusRegistry,
+        failedVariantsSubmit,
+        clearFailedVariantsSubmit,
+        validateParameter,
+        formIsValid,
+        validatingConstraints,
+        legacyFormHasBlockingErrors,
+    } = useStrategyFormValidation({
+        strategy,
+        strategyDefinition,
+        errors,
+    });
 
     if (!strategyDefinition) return null;
 
-    const payload = createStrategyPayload(strategy);
+    const payload = createStrategyPayload(
+        singlePageStrategyForm
+            ? withIncompleteConstraintsDiscarded(strategy)
+            : strategy,
+    );
 
     const onSubmit = async () => {
+        if (!(await formIsValid())) return;
+
         const path = `/projects/${projectId}/settings/default-strategy`;
         try {
             await updateDefaultStrategy(projectId, environmentId, payload);
@@ -114,44 +136,49 @@ const EditDefaultStrategy = () => {
                 )
             }
         >
-            <StrategyFormBodySelector
-                strategy={strategy}
-                setStrategy={setStrategy}
-                strategyDefinition={strategyDefinition}
-                errors={errors}
-                groupIdTooltip='Defaults to the feature flag name if not set.'
-                onSubmit={onSubmit}
-            >
-                <Button
-                    type='button'
-                    onClick={() =>
-                        navigate(
-                            `/projects/${projectId}/settings/default-strategy`,
-                        )
-                    }
+            <FormFocusProvider registry={focusRegistry}>
+                <StrategyFormBodySelector
+                    strategy={strategy}
+                    setStrategy={setStrategy}
+                    strategyDefinition={strategyDefinition}
+                    errors={errors}
+                    failedVariantsSubmit={failedVariantsSubmit}
+                    clearFailedVariantsSubmit={clearFailedVariantsSubmit}
+                    validateParameter={validateParameter}
+                    groupIdTooltip='Defaults to the feature flag name if not set.'
+                    onSubmit={onSubmit}
                 >
-                    Cancel
-                </Button>
-                <PermissionButton
-                    permission={[
-                        PROJECT_DEFAULT_STRATEGY_WRITE,
-                        UPDATE_PROJECT,
-                    ]}
-                    projectId={projectId}
-                    environmentId={environmentId}
-                    variant='contained'
-                    color='primary'
-                    type='submit'
-                    disabled={
-                        loading ||
-                        !hasValidConstraints ||
-                        errors.hasFormErrors()
-                    }
-                    data-testid={STRATEGY_FORM_SUBMIT_ID}
-                >
-                    Save strategy
-                </PermissionButton>
-            </StrategyFormBodySelector>
+                    <Button
+                        type='button'
+                        onClick={() =>
+                            navigate(
+                                `/projects/${projectId}/settings/default-strategy`,
+                            )
+                        }
+                    >
+                        Cancel
+                    </Button>
+                    <PermissionButton
+                        permission={[
+                            PROJECT_DEFAULT_STRATEGY_WRITE,
+                            UPDATE_PROJECT,
+                        ]}
+                        projectId={projectId}
+                        environmentId={environmentId}
+                        variant='contained'
+                        color='primary'
+                        type='submit'
+                        disabled={
+                            loading ||
+                            validatingConstraints ||
+                            legacyFormHasBlockingErrors
+                        }
+                        data-testid={STRATEGY_FORM_SUBMIT_ID}
+                    >
+                        Save strategy
+                    </PermissionButton>
+                </StrategyFormBodySelector>
+            </FormFocusProvider>
         </StrategyFormTemplate>
     );
 };

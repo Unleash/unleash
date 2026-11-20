@@ -6,7 +6,7 @@ import type { IFeatureVariantEdit } from 'component/feature/variantEdit';
 import { WeightType } from '../../../constants/variantTypes.ts';
 import { styled, useTheme, Button, Tabs } from '@mui/material';
 import type { StrategyFormState } from 'interfaces/strategy';
-import type { FailedVariantsSubmit } from '../FeatureStrategy/FeatureStrategyForm/FeatureStrategyForm.tsx';
+import type { FailedVariantsSubmit } from '../FeatureStrategy/FeatureStrategyForm/useStrategyFormValidation.ts';
 import {
     useFocusTarget,
     variantsFocusKey,

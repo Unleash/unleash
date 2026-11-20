@@ -2,26 +2,15 @@ import type React from 'react';
 import { useState, type JSX } from 'react';
 import { useNavigate } from 'react-router';
 import { Button, styled, Box } from '@mui/material';
-import type {
-    IStrategyParameter,
-    StrategyFormState,
-} from 'interfaces/strategy';
+import type { StrategyFormState } from 'interfaces/strategy';
 import { FeatureStrategyEnabled } from './FeatureStrategyEnabled/FeatureStrategyEnabled.tsx';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
-import {
-    constraintHasValues,
-    useConstraintsValidation,
-    validateConstraints,
-} from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
-import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
-import useToast from 'hooks/useToast';
-import { formatUnknownError } from 'utils/formatUnknownError';
+import { constraintHasValues } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import type { IFormErrors } from 'hooks/useFormErrors';
-import { validateParameterValue } from 'utils/validateParameterValue';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { FeatureStrategyChangeRequestAlert } from './FeatureStrategyChangeRequestAlert/FeatureStrategyChangeRequestAlert.tsx';
 import {
@@ -35,16 +24,8 @@ import { useTracking } from 'hooks/useTracking';
 import type { Tracking } from 'utils/trackingEvents';
 import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests/UpgradeChangeRequests.tsx';
 import { StrategyFormBodySelector } from './StrategyFormBodySelector.tsx';
-import type { ParametersSchema } from 'openapi/index.ts';
-import { strategyVariantsAreValid } from 'component/feature/StrategyTypes/strategyVariantsValidation';
-import {
-    FormFocusProvider,
-    parameterFocusKey,
-    useFormFocus,
-    variantsFocusKey,
-} from './formFocus.tsx';
-
-export type FailedVariantsSubmit = Record<string, never>;
+import { FormFocusProvider } from './formFocus.tsx';
+import { useStrategyFormValidation } from './useStrategyFormValidation.ts';
 
 export interface IFeatureStrategyFormProps<T extends StrategyFormState> {
     feature: IFeatureToggle;
@@ -102,16 +83,6 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
     const trackStrategyForm = useTracking(tracking);
     const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
     const [showProdGuard, setShowProdGuard] = useState(false);
-    const [failedVariantsSubmit, setFailedVariantsSubmit] =
-        useState<FailedVariantsSubmit>();
-    const { focusRegistry, focusFirst } = useFormFocus();
-    const [validatingConstraints, setValidatingConstraints] = useState(false);
-    const { validateConstraint } = useFeatureApi();
-    const { setToastApiError } = useToast();
-    // the new form validates constraints on submit instead of on every edit
-    const hasValidConstraints = useConstraintsValidation(
-        singlePageStrategyForm ? [] : strategy.constraints,
-    );
     const incompleteConstraints = singlePageStrategyForm
         ? (strategy.constraints ?? []).filter(
               (constraint) => !constraintHasValues(constraint),
@@ -119,6 +90,19 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
         : [];
     const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
     const { strategyDefinition } = useStrategy(strategy.name);
+    const {
+        focusRegistry,
+        failedVariantsSubmit,
+        clearFailedVariantsSubmit,
+        validateParameter,
+        formIsValid,
+        validatingConstraints,
+        legacyFormHasBlockingErrors,
+    } = useStrategyFormValidation({
+        strategy,
+        strategyDefinition,
+        errors,
+    });
 
     const foundEnvironment = feature.environments.find(
         (environment) => environment.name === environmentId,
@@ -161,36 +145,6 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
         return null;
     }
 
-    const findParameterDefinition = (name: string): IStrategyParameter => {
-        return strategyDefinition.parameters.find((parameterDefinition) => {
-            return parameterDefinition.name === name;
-        })!;
-    };
-
-    const validateParameter = (
-        name: string,
-        value?: ParametersSchema[string],
-    ): boolean => {
-        const parameterValueError = validateParameterValue(
-            findParameterDefinition(name),
-            value,
-        );
-        if (parameterValueError) {
-            errors.setFormError(name, parameterValueError);
-            return false;
-        } else {
-            errors.removeFormError(name);
-            return true;
-        }
-    };
-
-    const validateAllParameters = (): boolean => {
-        return strategyDefinition.parameters
-            .map((parameter) => parameter.name)
-            .map((name) => validateParameter(name, strategy.parameters?.[name]))
-            .every(Boolean);
-    };
-
     const onCancelWithTracking = () => {
         trackStrategyForm('dismissed', { method: 'cancel-button' });
 
@@ -201,53 +155,8 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
         }
     };
 
-    const validateVariants = (): boolean => {
-        const variantsAreValid =
-            !singlePageStrategyForm ||
-            strategyVariantsAreValid(strategy.variants ?? []);
-        setFailedVariantsSubmit(variantsAreValid ? undefined : {});
-        return variantsAreValid;
-    };
-
-    const invalidParameterNames = (): string[] =>
-        strategyDefinition.parameters
-            .filter((parameter) =>
-                validateParameterValue(
-                    parameter,
-                    strategy.parameters?.[parameter.name],
-                ),
-            )
-            .map((parameter) => parameter.name);
-
-    const constraintsAreValidOnServer = async (): Promise<boolean> => {
-        setValidatingConstraints(true);
-        try {
-            await validateConstraints(
-                strategy.constraints ?? [],
-                validateConstraint,
-            );
-            return true;
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-            return false;
-        } finally {
-            setValidatingConstraints(false);
-        }
-    };
-
     const onSubmitWithValidation = async () => {
-        const parametersAreValid = validateAllParameters();
-        const variantsAreValid = validateVariants();
-        if (!hasValidConstraints || !parametersAreValid || !variantsAreValid) {
-            trackStrategyForm.validationFailed();
-            focusFirst([
-                ...invalidParameterNames().map(parameterFocusKey),
-                ...(variantsAreValid ? [] : [variantsFocusKey]),
-            ]);
-            return;
-        }
-
-        if (singlePageStrategyForm && !(await constraintsAreValidOnServer())) {
+        if (!(await formIsValid())) {
             trackStrategyForm.validationFailed();
             return;
         }
@@ -258,10 +167,6 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
             onSubmit();
         }
     };
-
-    const legacyFormHasBlockingErrors =
-        !singlePageStrategyForm &&
-        (!hasValidConstraints || errors.hasFormErrors());
 
     const changeRequestAlert = hasChangeRequestInReviewForEnvironment ? (
         changeRequestInReviewOrApprovedAlert
@@ -297,9 +202,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                 strategyDefinition={strategyDefinition}
                 errors={errors}
                 failedVariantsSubmit={failedVariantsSubmit}
-                clearFailedVariantsSubmit={() =>
-                    setFailedVariantsSubmit(undefined)
-                }
+                clearFailedVariantsSubmit={clearFailedVariantsSubmit}
                 validateParameter={validateParameter}
                 canRenamePreexistingVariants={canRenamePreexistingVariants}
                 payloadSchema={feature.payloadSchema}

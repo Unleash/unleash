@@ -153,7 +153,13 @@ test('returns dependencies', async () => {
         .expect('Content-Type', /json/)
         .expect(200)
         .expect((res) => {
-            expect(res.body.features[0]).toMatchObject({
+            const featureY = res.body.features.find(
+                (feature) => feature.name === 'featureY',
+            );
+            const featureX = res.body.features.find(
+                (feature) => feature.name === 'featureX',
+            );
+            expect(featureY).toMatchObject({
                 name: 'featureY',
                 dependencies: [
                     {
@@ -163,7 +169,7 @@ test('returns dependencies', async () => {
                     },
                 ],
             });
-            expect(res.body.features[1].dependencies).toBe(undefined);
+            expect(featureX.dependencies).toBe(undefined);
         });
 });
 

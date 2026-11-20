@@ -14,7 +14,11 @@ import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
 import {
     constraintHasValues,
     useConstraintsValidation,
+    validateConstraints,
 } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
+import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import type { IFormErrors } from 'hooks/useFormErrors';
 import { validateParameterValue } from 'utils/validateParameterValue';
@@ -101,9 +105,13 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
     const [failedVariantsSubmit, setFailedVariantsSubmit] =
         useState<FailedVariantsSubmit>();
     const { focusRegistry, focusFirst } = useFormFocus();
-    const hasValidConstraints = useConstraintsValidation(strategy.constraints, {
-        ignoreIncompleteConstraints: singlePageStrategyForm,
-    });
+    const [validatingConstraints, setValidatingConstraints] = useState(false);
+    const { validateConstraint } = useFeatureApi();
+    const { setToastApiError } = useToast();
+    // the new form validates constraints on submit instead of on every edit
+    const hasValidConstraints = useConstraintsValidation(
+        singlePageStrategyForm ? [] : strategy.constraints,
+    );
     const incompleteConstraints = singlePageStrategyForm
         ? (strategy.constraints ?? []).filter(
               (constraint) => !constraintHasValues(constraint),
@@ -211,6 +219,22 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
             )
             .map((parameter) => parameter.name);
 
+    const constraintsAreValidOnServer = async (): Promise<boolean> => {
+        setValidatingConstraints(true);
+        try {
+            await validateConstraints(
+                strategy.constraints ?? [],
+                validateConstraint,
+            );
+            return true;
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+            return false;
+        } finally {
+            setValidatingConstraints(false);
+        }
+    };
+
     const onSubmitWithValidation = async () => {
         const parametersAreValid = validateAllParameters();
         const variantsAreValid = validateVariants();
@@ -220,6 +244,11 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                 ...invalidParameterNames().map(parameterFocusKey),
                 ...(variantsAreValid ? [] : [variantsFocusKey]),
             ]);
+            return;
+        }
+
+        if (singlePageStrategyForm && !(await constraintsAreValidOnServer())) {
+            trackStrategyForm.validationFailed();
             return;
         }
 
@@ -320,7 +349,10 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                     color='primary'
                     type='submit'
                     disabled={
-                        disabled || loading || legacyFormHasBlockingErrors
+                        disabled ||
+                        loading ||
+                        validatingConstraints ||
+                        legacyFormHasBlockingErrors
                     }
                     data-testid={STRATEGY_FORM_SUBMIT_ID}
                 >

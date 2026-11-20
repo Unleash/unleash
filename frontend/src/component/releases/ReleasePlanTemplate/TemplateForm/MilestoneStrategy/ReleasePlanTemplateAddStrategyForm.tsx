@@ -9,6 +9,7 @@ import { StrategyFormBodySelector } from 'component/feature/FeatureStrategy/Feat
 import { StrategyFormTemplate } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormTemplate';
 import { FormFocusProvider } from 'component/feature/FeatureStrategy/FeatureStrategyForm/formFocus.tsx';
 import { useStrategyFormValidation } from 'component/feature/FeatureStrategy/FeatureStrategyForm/useStrategyFormValidation.ts';
+import { IncompleteConstraintsNote } from 'component/feature/FeatureStrategy/FeatureStrategyForm/IncompleteConstraintsNote.tsx';
 
 export interface IReleasePlanTemplateAddStrategyFormProps {
     onCancel: () => void;
@@ -82,6 +83,9 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                     }
                     onSubmit={onSubmit}
                 >
+                    <IncompleteConstraintsNote
+                        constraints={currentStrategy.constraints}
+                    />
                     <Button onClick={onCancel}>Cancel</Button>
                     <Button
                         variant='contained'

@@ -27,6 +27,7 @@ import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
 import { StrategyFormTemplate } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormTemplate';
 import { FormFocusProvider } from 'component/feature/FeatureStrategy/FeatureStrategyForm/formFocus.tsx';
 import { useStrategyFormValidation } from 'component/feature/FeatureStrategy/FeatureStrategyForm/useStrategyFormValidation.ts';
+import { IncompleteConstraintsNote } from 'component/feature/FeatureStrategy/FeatureStrategyForm/IncompleteConstraintsNote.tsx';
 
 export const useDefaultStrategy = (
     projectId: string,
@@ -148,6 +149,9 @@ const EditDefaultStrategy = () => {
                     groupIdTooltip='Defaults to the feature flag name if not set.'
                     onSubmit={onSubmit}
                 >
+                    <IncompleteConstraintsNote
+                        constraints={strategy.constraints}
+                    />
                     <Button
                         type='button'
                         onClick={() =>

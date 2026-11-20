@@ -8,7 +8,6 @@ import type { IFeatureToggle } from 'interfaces/featureToggle';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { STRATEGY_FORM_SUBMIT_ID } from 'utils/testIds';
-import { constraintHasValues } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import type { IFormErrors } from 'hooks/useFormErrors';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
@@ -26,6 +25,7 @@ import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/Feature
 import { StrategyFormBodySelector } from './StrategyFormBodySelector.tsx';
 import { FormFocusProvider } from './formFocus.tsx';
 import { useStrategyFormValidation } from './useStrategyFormValidation.ts';
+import { IncompleteConstraintsNote } from './IncompleteConstraintsNote.tsx';
 
 export interface IFeatureStrategyFormProps<T extends StrategyFormState> {
     feature: IFeatureToggle;
@@ -53,17 +53,6 @@ const StyledAlertBox = styled(Box)(({ theme }) => ({
     },
 }));
 
-const StyledIncompleteConstraintsNote = styled('span')(({ theme }) => ({
-    flexGrow: 1,
-    display: 'flex',
-    alignItems: 'center',
-    color: theme.palette.warning.dark,
-    fontSize: theme.typography.body2.fontSize,
-}));
-
-const incompleteConstraintsNote = (count: number): string =>
-    `${count} constraint${count === 1 ? '' : 's'} without values will be discarded unless you fill ${count === 1 ? 'it' : 'them'} in.`;
-
 export const FeatureStrategyForm = <T extends StrategyFormState>({
     feature,
     environmentId,
@@ -83,11 +72,6 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
     const trackStrategyForm = useTracking(tracking);
     const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
     const [showProdGuard, setShowProdGuard] = useState(false);
-    const incompleteConstraints = singlePageStrategyForm
-        ? (strategy.constraints ?? []).filter(
-              (constraint) => !constraintHasValues(constraint),
-          )
-        : [];
     const enableProdGuard = useFeatureStrategyProdGuard(feature, environmentId);
     const { strategyDefinition } = useStrategy(strategy.name);
     const {
@@ -229,13 +213,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                     </>
                 }
             >
-                {incompleteConstraints.length > 0 ? (
-                    <StyledIncompleteConstraintsNote>
-                        {incompleteConstraintsNote(
-                            incompleteConstraints.length,
-                        )}
-                    </StyledIncompleteConstraintsNote>
-                ) : null}
+                <IncompleteConstraintsNote constraints={strategy.constraints} />
                 <Button
                     type='button'
                     color='primary'

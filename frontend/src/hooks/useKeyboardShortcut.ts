@@ -1,6 +1,8 @@
-import { type RefObject, useEffect, useMemo } from 'react';
+import { type RefObject, useEffect } from 'react';
 import { useIsAppleDevice } from './useIsAppleDevice.js';
 import { isHiddenByVisibleDialog } from 'utils/isHiddenByVisibleDialog.js';
+
+export type Modifier = 'ctrl' | 'alt' | 'shift';
 
 export const useKeyboardShortcut = (
     {
@@ -10,7 +12,7 @@ export const useKeyboardShortcut = (
         anchorRefs,
     }: {
         key: string;
-        modifiers?: Array<'ctrl' | 'alt' | 'shift'>;
+        modifiers?: Modifier[];
         preventDefault?: boolean;
         anchorRefs?: Array<RefObject<Element | null>>;
     },
@@ -52,26 +54,29 @@ export const useKeyboardShortcut = (
             window.removeEventListener('keydown', onKeyDown);
         };
     }, [isAppleDevice, key, modifiers, preventDefault, anchorRefs, callback]);
-
-    const formattedModifiers = useMemo(
-        () =>
-            modifiers.map(
-                (modifier) =>
-                    ({
-                        ctrl: isAppleDevice ? '⌘' : 'Ctrl',
-                        alt: 'Alt',
-                        shift: 'Shift',
-                    })[modifier],
-            ),
-        [isAppleDevice, modifiers],
-    );
-
-    return useMemo(
-        () =>
-            [
-                ...formattedModifiers,
-                `${key[0].toUpperCase()}${key.slice(1)}`,
-            ].join('+'),
-        [formattedModifiers, key],
-    );
 };
+
+export const useKeyboardShortcutLabel = (
+    key: string,
+    modifiers: Modifier[],
+) => {
+    const isAppleDevice = useIsAppleDevice();
+    return formatShortcutLabel(key, modifiers, isAppleDevice);
+};
+
+const formatShortcutLabel = (
+    key: string,
+    modifiers: Modifier[],
+    isAppleDevice: boolean | undefined,
+) =>
+    [
+        ...modifiers.map(
+            (modifier) =>
+                ({
+                    ctrl: isAppleDevice ? '⌘' : 'Ctrl',
+                    alt: 'Alt',
+                    shift: 'Shift',
+                })[modifier],
+        ),
+        `${key[0].toUpperCase()}${key.slice(1)}`,
+    ].join('+');

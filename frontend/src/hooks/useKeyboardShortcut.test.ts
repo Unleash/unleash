@@ -1,7 +1,10 @@
-import { renderHook } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
 import type { RefObject } from 'react';
 import { afterEach, expect, test, vi } from 'vitest';
-import { useKeyboardShortcut } from './useKeyboardShortcut.js';
+import {
+    useKeyboardShortcut,
+    useKeyboardShortcutLabel,
+} from './useKeyboardShortcut.js';
 
 const pressKey = (
     key: string,
@@ -16,6 +19,7 @@ const refTo = (element: Element | null): RefObject<Element | null> => ({
 
 afterEach(() => {
     document.body.innerHTML = '';
+    vi.restoreAllMocks();
 });
 
 test('triggers the callback when the key is pressed', () => {
@@ -158,4 +162,22 @@ test('with anchorRefs, invisible backdrops (e.g. an open menu) do not suppress t
     pressKey('k');
 
     expect(callback).toHaveBeenCalledTimes(1);
+});
+
+test('labels the shortcut with Ctrl outside Apple devices', () => {
+    const { result } = renderHook(() =>
+        useKeyboardShortcutLabel('k', ['ctrl', 'shift']),
+    );
+
+    expect(result.current).toBe('Ctrl+Shift+K');
+});
+
+test('labels the shortcut with ⌘ on Apple devices', async () => {
+    vi.spyOn(navigator, 'platform', 'get').mockReturnValue('MacIntel');
+
+    const { result } = renderHook(() =>
+        useKeyboardShortcutLabel('k', ['ctrl']),
+    );
+
+    await waitFor(() => expect(result.current).toBe('⌘+K'));
 });

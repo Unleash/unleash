@@ -604,3 +604,11 @@ test('points to Help & resources after closing the Get started checklist', async
         ),
     ).toBeInTheDocument();
 });
+
+test('shows the command bar shortcut on the Search button', () => {
+    render(<AppShell>content</AppShell>);
+
+    expect(screen.getByRole('button', { name: /^Search/ })).toHaveTextContent(
+        'Ctrl+K',
+    );
+});

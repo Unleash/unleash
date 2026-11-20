@@ -1,14 +1,21 @@
 import type { RefObject } from 'react';
-import { useKeyboardShortcut } from './useKeyboardShortcut.js';
+import {
+    type Modifier,
+    useKeyboardShortcut,
+    useKeyboardShortcutLabel,
+} from './useKeyboardShortcut.js';
+
+const KEY = 'c';
+const MODIFIERS: Modifier[] = ['ctrl'];
 
 export const useKeyboardCopy = (
     handler: () => void,
     anchorRefs?: Array<RefObject<Element | null>>,
-) =>
+) => {
     useKeyboardShortcut(
         {
-            key: 'c',
-            modifiers: ['ctrl'],
+            key: KEY,
+            modifiers: MODIFIERS,
             preventDefault: false,
             anchorRefs,
         },
@@ -22,3 +29,5 @@ export const useKeyboardCopy = (
             }
         },
     );
+    return useKeyboardShortcutLabel(KEY, MODIFIERS);
+};

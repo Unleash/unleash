@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { ButtonBase, styled } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { useIsAppleDevice } from 'hooks/useIsAppleDevice';
+import { useCommandBarHotkeyLabel } from 'component/commandBar/useCommandBarHotkey';
 
 const StyledSearchButton = styled(ButtonBase)(({ theme }) => ({
     display: 'flex',
@@ -28,13 +28,13 @@ const StyledHotkey = styled('kbd')(({ theme }) => ({
 }));
 
 export const SearchButton: FC = () => {
-    const isAppleDevice = useIsAppleDevice();
+    const hotkey = useCommandBarHotkeyLabel();
 
     return (
         <StyledSearchButton>
             <SearchIcon />
             Search
-            <StyledHotkey>{isAppleDevice ? '⌘+K' : 'Ctrl+K'}</StyledHotkey>
+            <StyledHotkey>{hotkey}</StyledHotkey>
         </StyledSearchButton>
     );
 };

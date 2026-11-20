@@ -14,13 +14,20 @@ import SearchIcon from '@mui/icons-material/Search';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SearchSuggestions } from './SearchSuggestions/SearchSuggestions.tsx';
 import type { IGetSearchContextOutput } from 'hooks/useSearch';
-import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
+import {
+    type Modifier,
+    useKeyboardShortcut,
+    useKeyboardShortcutLabel,
+} from 'hooks/useKeyboardShortcut';
 import { SEARCH_INPUT } from 'utils/testIds';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import { useSavedQuery } from './useSavedQuery.ts';
 import { useOnBlur } from 'hooks/useOnBlur';
 import { SearchHistory } from './SearchSuggestions/SearchHistory.tsx';
 import { useEventTracker } from 'hooks/useEventTracker';
+
+const HOTKEY = 'k';
+const HOTKEY_MODIFIERS: Modifier[] = ['ctrl', 'shift'];
 
 interface ISearchProps {
     id?: string;
@@ -132,10 +139,10 @@ export const Search = ({
         setSavedQuery(value);
     };
 
-    const hotkey = useKeyboardShortcut(
+    useKeyboardShortcut(
         {
-            modifiers: ['ctrl', 'shift'],
-            key: 'k',
+            modifiers: HOTKEY_MODIFIERS,
+            key: HOTKEY,
             preventDefault: true,
             anchorRefs: [searchContainerRef],
         },
@@ -177,6 +184,7 @@ export const Search = ({
             }
         },
     );
+    const hotkey = useKeyboardShortcutLabel(HOTKEY, HOTKEY_MODIFIERS);
     const placeholder = `${customPlaceholder ?? 'Search'} (${hotkey})`;
 
     useOnClickOutside([searchContainerRef], hideSuggestions);

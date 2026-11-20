@@ -33,6 +33,10 @@ import { CommandSearchPages } from './CommandSearchPages.tsx';
 import { CommandBarFeedback } from './CommandBarFeedback.tsx';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { useCommandBarRoutes } from './useCommandBarRoutes.ts';
+import {
+    useCommandBarHotkey,
+    useCommandBarPlaceholder,
+} from './useCommandBarHotkey.ts';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -221,27 +225,19 @@ export const CommandBar = () => {
         if (isCompact) setCompactExpanded(false);
     };
 
-    const hotkey = useKeyboardShortcut(
-        {
-            modifiers: ['ctrl'],
-            key: 'k',
-            preventDefault: true,
-            anchorRefs: [compactIconRef, searchContainerRef],
-        },
-        () => {
-            if (isCompact) {
-                if (compactExpanded) {
-                    hideSuggestions();
-                } else {
-                    setCompactExpanded(true);
-                }
-            } else if (document.activeElement === searchInputRef.current) {
-                searchInputRef.current?.blur();
+    useCommandBarHotkey([compactIconRef, searchContainerRef], () => {
+        if (isCompact) {
+            if (compactExpanded) {
+                hideSuggestions();
             } else {
-                searchInputRef.current?.focus();
+                setCompactExpanded(true);
             }
-        },
-    );
+        } else if (document.activeElement === searchInputRef.current) {
+            searchInputRef.current?.blur();
+        } else {
+            searchInputRef.current?.focus();
+        }
+    });
     useKeyboardShortcut(
         { key: 'Escape', anchorRefs: [searchContainerRef] },
         () => {
@@ -255,7 +251,7 @@ export const CommandBar = () => {
             }
         },
     );
-    const placeholder = `Command menu (${hotkey})`;
+    const placeholder = useCommandBarPlaceholder();
 
     const findCommandBarLinksAndSelectedIndex = () => {
         const allCommandBarLinks =

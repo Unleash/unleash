@@ -24,7 +24,9 @@ beforeEach(() => {
 test('collapses to a search icon below the md breakpoint', () => {
     render(<CommandBar />);
 
-    expect(screen.getByRole('button', { name: /command menu/i })).toBeVisible();
+    expect(
+        screen.getByRole('button', { name: 'Command menu (Ctrl+K)' }),
+    ).toBeVisible();
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
 });
 

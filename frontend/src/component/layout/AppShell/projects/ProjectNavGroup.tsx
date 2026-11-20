@@ -2,7 +2,6 @@ import { type FC, type ReactNode, useLayoutEffect } from 'react';
 import { ButtonBase, styled } from '@mui/material';
 import { Link, useLocation } from 'react-router';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type { ProjectSchema } from 'openapi';
 import {
     SidebarCaret,
@@ -13,11 +12,8 @@ import {
 import { SidebarList } from '../sidebar/SidebarList.tsx';
 import { SidebarMoreToggle } from '../sidebar/SidebarMoreToggle.tsx';
 import { SIDEBAR_ROW_ACTION_SIZE } from '../sidebar/SidebarRowAction.tsx';
-import {
-    getProjectPage,
-    isInProject,
-    type ProjectPage,
-} from './getProjectPage.ts';
+import { getProjectPage, isInProject } from './getProjectPage.ts';
+import { useProjectNavItems } from './useProjectNavItems.ts';
 
 type ExpansionState = 'open' | 'closed';
 
@@ -25,8 +21,6 @@ export type ProjectNavExpansion = {
     project?: ExpansionState;
     more?: ExpansionState;
 };
-
-type ProjectNavItem = { page: ProjectPage; label: string; to: string };
 
 const StyledProjectToggle = styled(ButtonBase, {
     shouldForwardProp: (prop) => prop !== 'muteWhenNotCurrent',
@@ -95,34 +89,6 @@ const StyledSubLink = styled(Link)(({ theme }) => ({
     ...sidebarItemStyles(theme),
     paddingLeft: theme.spacing(SUB_ITEM_INDENT),
 }));
-
-const useProjectNavItems = (projectId: string) => {
-    const { isOss } = useUiConfig();
-    const base = `/projects/${projectId}`;
-
-    const primary: ProjectNavItem[] = [
-        { page: 'flags', label: 'Flags', to: base },
-        ...(isOss()
-            ? []
-            : [
-                  {
-                      page: 'change-requests' as const,
-                      label: 'Change requests',
-                      to: `${base}/change-requests`,
-                  },
-              ]),
-    ];
-    const more: ProjectNavItem[] = [
-        { page: 'logs', label: 'Event log', to: `${base}/logs` },
-        {
-            page: 'settings',
-            label: 'Configure project',
-            to: isOss() ? `${base}/settings/api-access` : `${base}/settings`,
-        },
-    ];
-
-    return { primary, more };
-};
 
 export const ProjectNavGroup: FC<{
     project: Pick<ProjectSchema, 'id' | 'name'>;

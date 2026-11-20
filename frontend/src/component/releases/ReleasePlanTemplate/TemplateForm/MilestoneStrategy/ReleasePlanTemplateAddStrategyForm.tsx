@@ -2,10 +2,13 @@ import { Button } from '@mui/material';
 import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
 import { useState } from 'react';
 import { useFormErrors } from 'hooks/useFormErrors';
-import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
+import { withIncompleteConstraintsDiscarded } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { StrategyFormBodySelector } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormBodySelector.tsx';
 import { StrategyFormTemplate } from 'component/feature/FeatureStrategy/FeatureStrategyForm/StrategyFormTemplate';
+import { FormFocusProvider } from 'component/feature/FeatureStrategy/FeatureStrategyForm/formFocus.tsx';
+import { useStrategyFormValidation } from 'component/feature/FeatureStrategy/FeatureStrategyForm/useStrategyFormValidation.ts';
 
 export interface IReleasePlanTemplateAddStrategyFormProps {
     onCancel: () => void;
@@ -27,45 +30,71 @@ export const ReleasePlanTemplateAddStrategyForm = ({
         ...strategy,
         name: normalizedStrategyName || '',
     });
-    const hasValidConstraints = useConstraintsValidation(
-        currentStrategy?.constraints,
-    );
+    const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
     const errors = useFormErrors();
     const { strategyDefinition } = useStrategy(normalizedStrategyName);
+    const {
+        focusRegistry,
+        failedVariantsSubmit,
+        clearFailedVariantsSubmit,
+        validateParameter,
+        formIsValid,
+        validatingConstraints,
+        legacyFormHasBlockingErrors,
+    } = useStrategyFormValidation({
+        strategy: currentStrategy,
+        strategyDefinition,
+        errors,
+    });
 
     if (!strategyDefinition) {
         return null;
     }
 
+    const onSubmit = async () => {
+        if (!(await formIsValid())) return;
+
+        onAddUpdateStrategy(
+            singlePageStrategyForm
+                ? withIncompleteConstraintsDiscarded(currentStrategy)
+                : currentStrategy,
+        );
+    };
+
     return (
         <StrategyFormTemplate>
-            <StrategyFormBodySelector
-                strategy={currentStrategy}
-                setStrategy={setCurrentStrategy}
-                strategyDefinition={strategyDefinition}
-                errors={errors}
-                canRenamePreexistingVariants
-                groupIdTooltip={
-                    <>
-                        Supports <strong>{'{{featureName}}'}</strong> as a
-                        template variable. If not set, defaults to the feature
-                        flag name.
-                    </>
-                }
-                onSubmit={(_) => {
-                    onAddUpdateStrategy(currentStrategy);
-                }}
-            >
-                <Button onClick={onCancel}>Cancel</Button>
-                <Button
-                    variant='contained'
-                    color='primary'
-                    type='submit'
-                    disabled={!hasValidConstraints || errors.hasFormErrors()}
+            <FormFocusProvider registry={focusRegistry}>
+                <StrategyFormBodySelector
+                    strategy={currentStrategy}
+                    setStrategy={setCurrentStrategy}
+                    strategyDefinition={strategyDefinition}
+                    errors={errors}
+                    failedVariantsSubmit={failedVariantsSubmit}
+                    clearFailedVariantsSubmit={clearFailedVariantsSubmit}
+                    validateParameter={validateParameter}
+                    canRenamePreexistingVariants
+                    groupIdTooltip={
+                        <>
+                            Supports <strong>{'{{featureName}}'}</strong> as a
+                            template variable. If not set, defaults to the
+                            feature flag name.
+                        </>
+                    }
+                    onSubmit={onSubmit}
                 >
-                    {editMode ? 'Add changes' : 'Add strategy'}
-                </Button>
-            </StrategyFormBodySelector>
+                    <Button onClick={onCancel}>Cancel</Button>
+                    <Button
+                        variant='contained'
+                        color='primary'
+                        type='submit'
+                        disabled={
+                            validatingConstraints || legacyFormHasBlockingErrors
+                        }
+                    >
+                        {editMode ? 'Add changes' : 'Add strategy'}
+                    </Button>
+                </StrategyFormBodySelector>
+            </FormFocusProvider>
         </StrategyFormTemplate>
     );
 };

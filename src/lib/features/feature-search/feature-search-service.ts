@@ -8,7 +8,10 @@ import type {
     IQueryParam,
 } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType.js';
-import { parseSearchOperatorValue } from './search-utils.js';
+import {
+    parseSearchOperatorValue,
+    parseTagSearchOperatorValue,
+} from './search-utils.js';
 
 export class FeatureSearchService {
     private featureSearchStore: IFeatureSearchStore;
@@ -101,7 +104,12 @@ export class FeatureSearchService {
             if (parsed) queryParams.push(parsed);
         }
 
-        ['tag', 'segment', 'project'].forEach((field) => {
+        if (params.tag) {
+            const parsed = parseTagSearchOperatorValue(params.tag);
+            if (parsed) queryParams.push(parsed);
+        }
+
+        ['segment', 'project'].forEach((field) => {
             if (params[field]) {
                 const parsed = parseSearchOperatorValue(field, params[field]);
                 if (parsed) queryParams.push(parsed);

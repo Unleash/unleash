@@ -1,3 +1,4 @@
+import BadDataError from '../../error/bad-data-error.js';
 import type { Knex } from 'knex';
 import type {
     IQueryOperator,
@@ -121,4 +122,39 @@ export const parseSearchOperatorValue = (
     }
 
     return null;
+};
+
+const structuredTagFilter =
+    /^(INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL)_JSON:([\s\S]*)$/;
+
+export const parseTagSearchOperatorValue = (
+    value: string,
+): IQueryParam | null => {
+    const match = structuredTagFilter.exec(value);
+    if (!match) {
+        return parseSearchOperatorValue('tag', value);
+    }
+
+    const [, operator, payload] = match;
+    let values: unknown;
+    try {
+        values = JSON.parse(payload);
+    } catch {
+        throw new BadDataError(
+            'Expected a JSON array of tags with type:value entries.',
+        );
+    }
+    if (
+        !Array.isArray(values) ||
+        values.length === 0 ||
+        !values.every(
+            (tag) => typeof tag === 'string' && /^[^:,]+:\s*\S/.test(tag),
+        )
+    ) {
+        throw new BadDataError(
+            'Expected a non-empty JSON array of tags with type:value entries.',
+        );
+    }
+
+    return { field: 'tag', operator: operator as IQueryOperator, values };
 };

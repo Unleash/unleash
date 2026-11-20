@@ -315,6 +315,42 @@ test('should filter features by created by', async () => {
     });
 });
 
+test('filters by exact tags containing commas without changing legacy filters', async () => {
+    await app.createFeature('with_comma');
+    await app.addTag('with_comma', {
+        type: 'simple',
+        value: 'sales, marketing',
+    });
+
+    await app.createFeature('without_comma');
+    await app.addTag('without_comma', { type: 'simple', value: 'sales' });
+    await app.addTag('without_comma', { type: 'simple', value: 'marketing' });
+
+    const exact = `INCLUDE_JSON:${JSON.stringify(['simple:sales, marketing'])}`;
+    const { body: exactResults } = await filterFeaturesByTag(
+        encodeURIComponent(exact),
+    );
+    expect(exactResults).toMatchObject({
+        features: [{ name: 'with_comma' }],
+    });
+
+    const legacy = 'INCLUDE:simple:sales,simple:marketing';
+    const { body: legacyResults } = await filterFeaturesByTag(legacy);
+    expect(legacyResults).toMatchObject({
+        features: [{ name: 'without_comma' }],
+    });
+});
+
+test.each([
+    'INCLUDE_JSON:["simple:sales,marketing"',
+    'INCLUDE_JSON:[]',
+    'INCLUDE_JSON:[42]',
+    'INCLUDE_JSON:["missing-tag-type"]',
+    'INCLUDE_JSON:["simple:   "]',
+])('rejects malformed JSON tag filter %s instead of ignoring it', async (tag) => {
+    await filterFeaturesByTag(encodeURIComponent(tag), 400);
+});
+
 test('should filter features by tag', async () => {
     await app.createFeature('my_feature_a');
     await app.addTag('my_feature_a', {

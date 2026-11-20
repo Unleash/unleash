@@ -16,11 +16,11 @@ beforeEach(() => {
     localStorage.clear();
 });
 
-const setupApi = () => {
+const setupApi = (tag = 'sdk') => {
     const features = [
         {
             name: 'featureA',
-            tags: [{ type: 'backend', value: 'sdk' }],
+            tags: [{ type: 'backend', value: tag }],
             type: 'operational',
             createdBy: { id: 1, name: 'author' },
         },
@@ -40,7 +40,7 @@ const setupApi = () => {
         },
     });
     testServerRoute(server, '/api/admin/tags', {
-        tags: [{ type: 'backend', value: 'sdk' }],
+        tags: [{ type: 'backend', value: tag }],
     });
     testServerRoute(server, '/api/admin/projects/default/flag-creators', [
         { id: 1, name: 'AuthorA' },
@@ -98,6 +98,43 @@ test('filters by flag type', async () => {
 
     await screen.findByText('Flag type');
     await screen.findByText('Operational');
+});
+
+test('preserves a comma-containing tag from the project table in the API filter', async () => {
+    setupApi('sales, marketing');
+    const encoded = 'INCLUDE_JSON:["backend:sales, marketing"]';
+    testServerRoute(
+        server,
+        '/api/admin/search/features',
+        {
+            features: [{ name: 'filtered-feature', type: 'operational' }],
+            total: 1,
+        },
+        'get',
+        200,
+        { tag: encoded },
+    );
+
+    render(
+        <Routes>
+            <Route
+                path='/projects/:projectId'
+                element={
+                    <ProjectFeatureToggles
+                        environments={['development', 'production']}
+                    />
+                }
+            />
+        </Routes>,
+        { route: '/projects/default' },
+    );
+    await screen.findByText('featureA');
+    fireEvent.click(await screen.findByText('backend:sales, marketing'));
+
+    await screen.findByText('filtered-feature');
+    expect(new URLSearchParams(window.location.search).get('tag')).toBe(
+        encoded,
+    );
 });
 
 test('selects project features', async () => {

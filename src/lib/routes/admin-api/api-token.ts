@@ -46,6 +46,10 @@ import type { CreateApiTokenSchema } from '../../internals.js';
 import type { WithTransactional } from '../../server-impl.js';
 import { parseApiTokenV2Identifier } from '../../authentication/authorization-token.js';
 import { canReadApiToken } from './api-token-permissions.js';
+import {
+    type ApiTokensQueryParameters,
+    apiTokensQueryParameters,
+} from '../../openapi/spec/api-tokens-query-parameters.js';
 import type {
     AdminApiTokenV2Service,
     ReadOnlyApiTokenV2Service,
@@ -154,10 +158,11 @@ export class ApiTokenController extends Controller {
                     operationId: 'getAllApiTokens',
                     summary: 'Get API tokens',
                     description:
-                        'Retrieves all API tokens that exist in the Unleash instance.',
+                        'Retrieves all API tokens that exist in the Unleash instance. Use `appName` to get only the tokens linked to an application.',
+                    parameters: [...apiTokensQueryParameters],
                     responses: {
                         200: createResponseSchema('apiTokensSchema'),
-                        ...getStandardResponses(401, 403),
+                        ...getStandardResponses(400, 401, 403),
                     },
                 }),
             ],
@@ -265,11 +270,12 @@ export class ApiTokenController extends Controller {
     }
 
     async getAllApiTokens(
-        req: IAuthRequest,
+        req: IAuthRequest<any, any, any, ApiTokensQueryParameters>,
         res: Response<ApiTokensSchema>,
     ): Promise<void> {
         const { user } = req;
-        const tokens = await this.accessibleTokens(user);
+        const appName = req.query.appName?.slice('IS:'.length);
+        const tokens = await this.accessibleTokens(user, appName);
         this.openApiService.respondWithValidation(
             200,
             res,
@@ -432,13 +438,20 @@ export class ApiTokenController extends Controller {
         return allTokens.filter((token) => token.tokenName === tokenName);
     }
 
-    private async accessibleTokens(user: IUser): Promise<IApiToken[]> {
-        const allTokens = (
-            await Promise.all([
-                this.apiTokenService.getUserDefinedTokens(),
-                this.apiTokenV2Service.getUserDefinedTokens(),
-            ])
-        ).flat();
+    private async accessibleTokens(
+        user: IUser,
+        appName?: string,
+    ): Promise<IApiToken[]> {
+        const allTokens =
+            appName === undefined
+                ? (
+                      await Promise.all([
+                          this.apiTokenService.getUserDefinedTokens(),
+                          this.apiTokenV2Service.getUserDefinedTokens(),
+                      ])
+                  ).flat()
+                : // only v2 tokens can be linked to an application
+                  await this.apiTokenV2Service.getUserDefinedTokens(appName);
         if (user.isAPI && user.permissions.includes(ADMIN)) {
             return allTokens;
         }

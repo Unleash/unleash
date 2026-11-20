@@ -3,6 +3,7 @@ import {
     SYSTEM_USER_AUDIT,
     SYSTEM_USER_ID,
     RoleName,
+    READ_FRONTEND_API_TOKEN,
 } from '../../../../lib/types/index.js';
 import { AuthorizationTokenKind } from '../../../../lib/authentication/authorization-token.js';
 import getLogger from '../../../fixtures/no-logger.js';
@@ -251,6 +252,127 @@ describe('application associations', () => {
                 .send({ ...payload, ...overrides })
                 .expect(201)
         ).body;
+
+    test('lists only the tokens linked to an application', async () => {
+        await create({ tokenName: 'filter-linked' });
+        await create({ tokenName: 'filter-unlinked', appName: undefined });
+        await db.stores.apiTokenStore.insert(
+            {
+                projects: ['default'],
+                tokenName: 'filter-legacy',
+                secret: 'default:development.filter-legacy',
+                type: ApiTokenType.BACKEND,
+                environment: 'development',
+            },
+            SYSTEM_USER_ID,
+        );
+
+        const { body } = await app.request
+            .get('/api/admin/api-tokens?appName=IS:configured-app')
+            .expect(200);
+
+        const names = body.tokens.map((token) => token.tokenName);
+        expect(names).toContain('filter-linked');
+        expect(names).not.toContain('filter-unlinked');
+        expect(names).not.toContain('filter-legacy');
+        expect(
+            body.tokens.every((token) => token.appName === 'configured-app'),
+        ).toBe(true);
+    });
+
+    test('an application without linked tokens gets an empty list', async () => {
+        const { body } = await app.request
+            .get('/api/admin/api-tokens?appName=IS:no-such-app')
+            .expect(200);
+
+        expect(body.tokens).toEqual([]);
+    });
+
+    test('the application filter takes a name with a comma as one name', async () => {
+        for (const appName of ['comma-app', 'comma-app,other']) {
+            await db.stores.clientApplicationsStore.upsert({ appName });
+            await create({ tokenName: `token-of-${appName}`, appName });
+        }
+
+        const { body } = await app.request
+            .get(
+                `/api/admin/api-tokens?appName=IS:${encodeURIComponent('comma-app,other')}`,
+            )
+            .expect(200);
+
+        expect(body.tokens.map((token) => token.tokenName)).toEqual([
+            'token-of-comma-app,other',
+        ]);
+    });
+
+    test('the application filter returns only the token types the user may read', async () => {
+        await db.stores.clientApplicationsStore.upsert({
+            appName: 'two-type-app',
+        });
+        await create({
+            tokenName: 'two-type-frontend',
+            type: ApiTokenType.FRONTEND,
+            appName: 'two-type-app',
+        });
+        await create({
+            tokenName: 'two-type-backend',
+            appName: 'two-type-app',
+        });
+        const authApp = await setupAppWithAuth(
+            db.stores,
+            applicationOverviewEnabled,
+            db.rawDatabase,
+        );
+        try {
+            const { accessService } = authApp.services;
+            const user = await createUserWithRootRole({
+                app: authApp,
+                stores: db.stores,
+                email: 'frontend-reader@example.com',
+                roleName: RoleName.VIEWER,
+            });
+            const frontendReader = await accessService.createRole(
+                {
+                    name: 'frontend-token-reader',
+                    description: 'Reads frontend tokens only',
+                    permissions: [{ name: READ_FRONTEND_API_TOKEN }],
+                    type: 'root-custom',
+                    createdByUserId: SYSTEM_USER_ID,
+                },
+                SYSTEM_USER_AUDIT,
+            );
+            await accessService.addUserToRole(
+                user.id,
+                frontendReader.id,
+                'default',
+            );
+            await authApp.login({ email: 'frontend-reader@example.com' });
+
+            const { body } = await authApp.request
+                .get('/api/admin/api-tokens?appName=IS:two-type-app')
+                .expect(200);
+
+            expect(body.tokens.map((token) => token.tokenName)).toEqual([
+                'two-type-frontend',
+            ]);
+        } finally {
+            await authApp.destroy();
+        }
+    });
+
+    test.each([
+        ['without an operator', 'appName=configured-app'],
+        ['with an empty name', 'appName=IS:'],
+        ['with another operator', 'appName=IS_ANY_OF:configured-app'],
+        ['with a lowercase operator', 'appName=is:configured-app'],
+        ['with a name across lines', 'appName=IS:configured%0Aapp'],
+        [
+            'when repeated',
+            'appName=IS:configured-app&appName=IS:configured-app',
+        ],
+    ])('the application filter rejects a value %s', async (_, query) => {
+        await app.request.get(`/api/admin/api-tokens?${query}`).expect(400);
+    });
 
     test('association errors do not disclose application names or existence', async () => {
         const { body } = await app.request

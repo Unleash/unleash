@@ -28,6 +28,7 @@ import {
     isAdminSettingsPage,
 } from './sidebar/AdminSettingsNavigation.tsx';
 import { HelpAndResourcesMenu } from './sidebar/HelpAndResourcesMenu.tsx';
+import { appNavigationLinks } from './sidebar/appNavigationLinks.ts';
 import { SearchButton } from './sidebar/SearchButton.tsx';
 import { SettingsMenu } from './sidebar/SettingsMenu.tsx';
 import { SidebarLink } from './sidebar/SidebarLink.tsx';
@@ -161,15 +162,13 @@ const AppNavigation: FC = () => {
             </StyledSearchSlot>
             <SidebarList>
                 <SidebarLink
-                    to='/personal'
+                    {...appNavigationLinks.home}
                     icon={<HomeOutlinedIcon />}
-                    label='Home'
                 />
                 {isEnterprise() ? (
                     <SidebarLink
-                        to='/change-requests'
+                        {...appNavigationLinks.changeRequests}
                         icon={<ChangeRequestIcon />}
-                        label='Change requests'
                     />
                 ) : null}
             </SidebarList>
@@ -192,35 +191,29 @@ const WorkspaceSection: FC = () => {
     return (
         <SidebarSection title='Workspace'>
             <SidebarLink
-                to='/projects'
+                {...appNavigationLinks.projects}
                 icon={<GridViewOutlinedIcon />}
-                label='Projects'
-                end
             />
             <SidebarLink
-                to='/search'
+                {...appNavigationLinks.flagsOverview}
                 icon={<FlagOutlinedIcon />}
-                label='Flags overview'
             />
             {expanded ? (
                 <>
                     <SidebarLink
-                        to='/playground'
+                        {...appNavigationLinks.playground}
                         icon={<AutoFixNormalIcon />}
-                        label='Playground'
                     />
                     {!isOss() ? (
                         <SidebarLink
-                            to='/insights'
+                            {...appNavigationLinks.analytics}
                             icon={<InsightsIcon />}
-                            label='Analytics'
                         />
                     ) : null}
                     {!isOss() && impactViewsEnabled ? (
                         <SidebarLink
-                            to='/impact-views'
+                            {...appNavigationLinks.impactViews}
                             icon={<QueryStatsOutlinedIcon />}
-                            label='Impact views'
                         />
                     ) : null}
                 </>

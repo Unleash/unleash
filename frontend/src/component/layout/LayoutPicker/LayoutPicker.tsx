@@ -2,6 +2,7 @@ import type { FC, ReactNode } from 'react';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { MainLayout } from '../MainLayout/MainLayout.tsx';
 import { AppShell } from '../AppShell/AppShell.tsx';
+import { RecentlyVisitedRecorder } from 'component/commandBar/RecentlyVisitedRecorder';
 
 interface ILayoutPickerProps {
     children: ReactNode;
@@ -17,8 +18,14 @@ export const LayoutPicker: FC<ILayoutPickerProps> = ({
     if (isStandalone === true) {
         return children;
     }
-    if (improvedSidebarNavigation) {
-        return <AppShell>{children}</AppShell>;
-    }
-    return <MainLayout>{children}</MainLayout>;
+    return (
+        <>
+            <RecentlyVisitedRecorder />
+            {improvedSidebarNavigation ? (
+                <AppShell>{children}</AppShell>
+            ) : (
+                <MainLayout>{children}</MainLayout>
+            )}
+        </>
+    );
 };

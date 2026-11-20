@@ -31,7 +31,6 @@ import { useEventTracker } from 'hooks/useEventTracker';
 import { CommandQuickSuggestions } from './CommandQuickSuggestions.tsx';
 import { CommandSearchPages } from './CommandSearchPages.tsx';
 import { CommandBarFeedback } from './CommandBarFeedback.tsx';
-import { RecentlyVisitedRecorder } from './RecentlyVisitedRecorder.tsx';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { useCommandBarRoutes } from './useCommandBarRoutes.ts';
 
@@ -360,7 +359,6 @@ export const CommandBar = () => {
             active={showSuggestions}
             compact={isCompact}
         >
-            <RecentlyVisitedRecorder />
             <StyledSearch isOpen={showSuggestions}>
                 <SearchIcon
                     sx={{

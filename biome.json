@@ -144,7 +144,7 @@
         "frontend/src/component/admin/users/InactiveUsersList/InactiveUsersListBody.tsx",
         "frontend/src/component/application/ApplicationChart.tsx",
         "frontend/src/component/application/ApplicationOverview.tsx",
-        "frontend/src/component/commandBar/CommandBar.tsx",
+        "frontend/src/component/commandBar/CommandBarPanel.tsx",
         "frontend/src/component/context/ContextList/ContextList/ContextList.tsx",
         "frontend/src/component/context/hooks/useContextForm.ts",
         "frontend/src/component/counters/ExploreCounters/ExploreCounterChart.tsx",

@@ -21,7 +21,8 @@ export const useKeyboardShortcut = (
     const isAppleDevice = useIsAppleDevice();
     useEffect(() => {
         const onKeyDown = (event: KeyboardEvent) => {
-            if (key.toLowerCase() !== event.key.toLowerCase()) {
+            // Browser autofill dispatches keydown events without a key.
+            if (key.toLowerCase() !== event.key?.toLowerCase()) {
                 return;
             }
             if (

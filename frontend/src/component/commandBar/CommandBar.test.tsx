@@ -223,3 +223,75 @@ test('keeps Ctrl+K from reaching the browser', () => {
 
     expect(browserGetsKey).toBe(false);
 });
+
+const mockNoSearchResults = () => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        feedbackUriPath: '/api/feedback',
+    });
+    testServerRoute(server, '/api/admin/search/features', {
+        features: [],
+        total: 0,
+    });
+    testServerRoute(server, '/api/feedback', {}, 'post');
+};
+
+test('closes the search dialog after sending missing capability feedback', async () => {
+    mockNoSearchResults();
+    render(<CommandBar />);
+    await userEvent.click(
+        screen.getByRole('button', { name: /command menu/i }),
+    );
+    const dialog = within(await screen.findByRole('dialog'));
+    await userEvent.type(dialog.getByRole('textbox'), 'zzzz');
+    await userEvent.click(
+        await dialog.findByRole('button', { name: 'Suggest capability' }),
+    );
+    await userEvent.type(
+        dialog.getByRole('textbox', { name: 'Describe the capability' }),
+        'Please add zzzz',
+    );
+
+    await userEvent.click(
+        dialog.getByRole('button', { name: 'Send to Unleash' }),
+    );
+
+    await waitFor(() =>
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
+    );
+});
+
+test('hides the inline results but keeps the query after sending missing capability feedback', async () => {
+    mockNoSearchResults();
+    resizeScreen(DESKTOP);
+    render(<CommandBar />);
+    const input = screen.getAllByRole('textbox')[0];
+    await userEvent.type(input, 'zzzz');
+    await userEvent.click(
+        await screen.findByRole('button', { name: 'Suggest capability' }),
+    );
+    await userEvent.type(
+        screen.getByRole('textbox', { name: 'Describe the capability' }),
+        'Please add zzzz',
+    );
+
+    await userEvent.click(
+        screen.getByRole('button', { name: 'Send to Unleash' }),
+    );
+
+    await waitFor(() =>
+        expect(
+            screen.queryByRole('button', { name: 'Send to Unleash' }),
+        ).not.toBeInTheDocument(),
+    );
+    expect(input).toHaveValue('zzzz');
+});
+
+test('leaves the arrow keys to the page while the search dialog is closed', () => {
+    render(<CommandBar />);
+
+    const notPrevented = fireEvent.keyDown(document.body, {
+        key: 'ArrowDown',
+    });
+
+    expect(notPrevented).toBe(true);
+});

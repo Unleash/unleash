@@ -1,6 +1,6 @@
 import { Button, styled, TextField } from '@mui/material';
 import type React from 'react';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useUserFeedbackApi } from 'hooks/api/actions/useUserFeedbackApi/useUserFeedbackApi';
 import useToast from 'hooks/useToast';
@@ -31,6 +31,7 @@ export const CommandBarFeedback = ({ onSubmit }: ICommandBarFeedbackProps) => {
     const { setToastData } = useToast();
     const [suggesting, setSuggesting] = useState(false);
     const [feedback, setFeedback] = useState<string | undefined>(undefined);
+    const descriptionLabelId = useId();
 
     const changeFeedback = (event: React.ChangeEvent<HTMLInputElement>) => {
         setFeedback(event.target.value.trim());
@@ -54,11 +55,18 @@ export const CommandBarFeedback = ({ onSubmit }: ICommandBarFeedbackProps) => {
                 condition={suggesting}
                 show={
                     <>
-                        <StyledText>Describe the capability</StyledText>
+                        <StyledText id={descriptionLabelId}>
+                            Describe the capability
+                        </StyledText>
                         <TextField
                             multiline={true}
                             minRows={2}
                             onChange={changeFeedback}
+                            slotProps={{
+                                htmlInput: {
+                                    'aria-labelledby': descriptionLabelId,
+                                },
+                            }}
                         />
                         <StyledButton
                             type='submit'

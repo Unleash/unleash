@@ -164,6 +164,18 @@ test('with anchorRefs, invisible backdrops (e.g. an open menu) do not suppress t
     expect(callback).toHaveBeenCalledTimes(1);
 });
 
+test('ignores keydown events without a key, such as those fired by browser autofill', () => {
+    const errors: unknown[] = [];
+    const recordError = (event: ErrorEvent) => errors.push(event.error);
+    window.addEventListener('error', recordError);
+    renderHook(() => useKeyboardShortcut({ key: 'k' }, () => {}));
+
+    window.dispatchEvent(new Event('keydown'));
+    window.removeEventListener('error', recordError);
+
+    expect(errors).toEqual([]);
+});
+
 test('labels the shortcut with Ctrl outside Apple devices', () => {
     const { result } = renderHook(() =>
         useKeyboardShortcutLabel('k', ['ctrl', 'shift']),

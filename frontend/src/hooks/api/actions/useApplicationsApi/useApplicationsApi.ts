@@ -1,4 +1,5 @@
 import useAPI from '../useApi/useApi.js';
+import type { CreateApplicationRequestSchema } from 'openapi';
 
 const useApplicationsApi = () => {
     const { makeRequest, createRequest, errors, loading } = useAPI({
@@ -14,7 +15,19 @@ const useApplicationsApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    const createApplication = async (
+        application: CreateApplicationRequestSchema,
+    ) => {
+        const req = createRequest('api/admin/applications', {
+            method: 'POST',
+            body: JSON.stringify(application),
+        });
+
+        return makeRequest(req.caller, req.id);
+    };
+
     return {
+        createApplication,
         deleteApplication,
         errors,
         loading,

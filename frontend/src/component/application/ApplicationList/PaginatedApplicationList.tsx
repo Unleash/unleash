@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Avatar, Icon, Link, styled } from '@mui/material';
 import { styles as themeStyles } from 'component/common';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -23,6 +23,10 @@ import { usePersistentTableState } from 'hooks/usePersistentTableState';
 import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { useTableState } from 'hooks/useTableState';
 import useLoading from 'hooks/useLoading';
+import { useUiFlag } from 'hooks/useUiFlag';
+import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { UPDATE_APPLICATION } from 'component/providers/AccessProvider/permissions';
+import { CreateApplicationDialog } from './CreateApplicationDialog/CreateApplicationDialog.tsx';
 import mapValues from 'lodash.mapvalues';
 
 const InfoMessage = styled('div')(({ theme }) => ({
@@ -56,6 +60,8 @@ const renderNoMatchingSearch = (query: string) => (
 const columnHelper = createColumnHelper<ApplicationSchema>();
 
 export const PaginatedApplicationList = () => {
+    const applicationOverview = useUiFlag('applicationOverview');
+    const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const stateConfig = {
         offset: withDefault(NumberParam, 0),
         limit: withDefault(NumberParam, DEFAULT_PAGE_LIMIT),
@@ -151,10 +157,25 @@ export const PaginatedApplicationList = () => {
                     <PageHeader
                         title={`Applications (${total})`}
                         actions={
-                            <Search
-                                initialValue={query || ''}
-                                onChange={setSearchValue}
-                            />
+                            <>
+                                <Search
+                                    initialValue={query || ''}
+                                    onChange={setSearchValue}
+                                />
+                                {applicationOverview ? (
+                                    <>
+                                        <PageHeader.Divider />
+                                        <PermissionButton
+                                            permission={UPDATE_APPLICATION}
+                                            onClick={() =>
+                                                setCreateDialogOpen(true)
+                                            }
+                                        >
+                                            New application
+                                        </PermissionButton>
+                                    </>
+                                ) : null}
+                            </>
                         }
                     />
                 }
@@ -176,6 +197,11 @@ export const PaginatedApplicationList = () => {
                     />
                 </div>
             </PageContent>
+            {createDialogOpen ? (
+                <CreateApplicationDialog
+                    onClose={() => setCreateDialogOpen(false)}
+                />
+            ) : null}
         </>
     );
 };

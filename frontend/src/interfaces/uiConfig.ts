@@ -92,6 +92,7 @@ export type UiFlags = {
     signupDialog?: boolean;
     enterpriseEdgeTokensList?: boolean;
     impactMetricsFlagPage?: boolean;
+    applicationOverview?: boolean;
     uxTweakSurveys?: boolean;
     multiMetricChart?: boolean;
     logRocketEnabled?: boolean;

@@ -305,6 +305,21 @@ describe('application associations', () => {
         ]);
     });
 
+    test.each([
+        '%',
+        'configured-ap_',
+    ])('the application filter takes %s as a name, not as a pattern', async (appName) => {
+        await create({ tokenName: `not-matched-by-${appName}` });
+
+        const { body } = await app.request
+            .get(
+                `/api/admin/api-tokens?appName=IS:${encodeURIComponent(appName)}`,
+            )
+            .expect(200);
+
+        expect(body.tokens).toEqual([]);
+    });
+
     test('the application filter returns only the token types the user may read', async () => {
         await db.stores.clientApplicationsStore.upsert({
             appName: 'two-type-app',

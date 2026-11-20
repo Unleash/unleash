@@ -21,6 +21,7 @@ export type CustomEvents =
     | 'unknown-ui-error'
     | 'export-import'
     | 'api-tokens'
+    | 'applications'
     | 'project-stickiness-set'
     | 'notifications'
     | 'batch-operations'

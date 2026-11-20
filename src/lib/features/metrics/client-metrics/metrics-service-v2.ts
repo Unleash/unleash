@@ -252,6 +252,13 @@ export default class ClientMetricsServiceV2 {
         this.config.eventBus.emit(CLIENT_METRICS, siftedMetrics);
     }
 
+    defineImpactMetric(name: string, type: Metric['type']): void {
+        if (this.flagResolver.isEnabled('disableImpactMetrics')) {
+            return;
+        }
+        this.impactMetricsTranslator.defineMetric(name, type);
+    }
+
     async registerImpactMetrics(impactMetrics: Metric[]) {
         if (this.flagResolver.isEnabled('disableImpactMetrics')) {
             return;

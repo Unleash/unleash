@@ -250,6 +250,34 @@ export class MetricsTranslator {
         };
     }
 
+    defineMetric(name: string, type: Metric['type']): void {
+        if (this.registry.getSingleMetric(this.sanitizeName(name))) {
+            return;
+        }
+        this.translateMetric(this.placeholderMetric(name, type));
+    }
+
+    private placeholderMetric(name: string, type: Metric['type']): Metric {
+        const help = `Custom ${type} metric: ${name}`;
+        const labels = { origin: 'admin-api' };
+        if (type === 'histogram') {
+            return {
+                name,
+                help,
+                type,
+                samples: [
+                    {
+                        count: 0,
+                        sum: 0,
+                        buckets: [{ le: '+Inf', count: 0 }],
+                        labels,
+                    },
+                ],
+            };
+        }
+        return { name, help, type, samples: [{ value: 0, labels }] };
+    }
+
     serializeMetrics(): Promise<string> {
         return this.registry.metrics();
     }

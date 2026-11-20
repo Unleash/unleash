@@ -407,3 +407,40 @@ test('stores an impact metric at the size limits and drops the ones above them',
     ].filter((name) => Boolean(impactRegister.getSingleMetric(name)));
     expect(storedNames).toEqual([nameAtLimit]);
 });
+
+test('defining a histogram that SDKs already report to keeps what they reported', async () => {
+    const { flagResolver: defaultFlags } = createTestConfig();
+    const { clientMetricsService } = initClientMetrics(defaultFlags);
+    await clientMetricsService.registerImpactMetrics([
+        {
+            name: 'payment_duration',
+            help: 'payment duration',
+            type: 'histogram',
+            samples: [
+                {
+                    count: 3,
+                    sum: 1.2,
+                    buckets: [
+                        { le: 0.5, count: 2 },
+                        { le: '+Inf', count: 3 },
+                    ],
+                },
+            ],
+        },
+    ]);
+
+    clientMetricsService.defineImpactMetric('payment_duration', 'histogram');
+
+    const reported =
+        await impactRegister.getSingleMetricAsString('payment_duration');
+    expect(reported).toBe(
+        [
+            '# HELP payment_duration payment duration',
+            '# TYPE payment_duration histogram',
+            'payment_duration_bucket{metric_type="histogram",origin="sdk",le="0.5"} 2',
+            'payment_duration_bucket{metric_type="histogram",origin="sdk",le="+Inf"} 3',
+            'payment_duration_sum{metric_type="histogram",origin="sdk"} 1.2',
+            'payment_duration_count{metric_type="histogram",origin="sdk"} 3',
+        ].join('\n'),
+    );
+});

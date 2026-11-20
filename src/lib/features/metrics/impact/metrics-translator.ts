@@ -36,6 +36,8 @@ const LABEL_NAMES = ['origin', 'metric_type', ...SDK_LABEL_NAMES];
 const ORIGINS = ['sdk', 'admin-api', 'edge'];
 const MAX_LABEL_VALUE_LENGTH = 100;
 
+type FailedMetric = { name: string; reason: string };
+
 export class MetricsTranslator {
     private registry: Registry;
 
@@ -155,7 +157,7 @@ export class MetricsTranslator {
             const samples = this.withShortLabelValues(
                 metric.samples,
                 metric.type,
-            );
+            ).filter((sample) => sample.value >= 0);
             if (samples.length === 0) {
                 return null;
             }
@@ -225,14 +227,26 @@ export class MetricsTranslator {
         return null;
     }
 
-    translateMetrics(metrics: Metric[]): { evictedSeries: number } {
+    translateMetrics(metrics: Metric[]): {
+        evictedSeries: number;
+        failedMetrics: FailedMetric[];
+    } {
         const evictedBefore = this.seriesLimiter.evictedSeries;
+        const failedMetrics: FailedMetric[] = [];
         for (const metric of metrics) {
-            this.translateMetric(metric);
+            try {
+                this.translateMetric(metric);
+            } catch (e) {
+                failedMetrics.push({
+                    name: this.sanitizeName(metric.name),
+                    reason: e instanceof Error ? e.message : String(e),
+                });
+            }
         }
 
         return {
             evictedSeries: this.seriesLimiter.evictedSeries - evictedBefore,
+            failedMetrics,
         };
     }
 

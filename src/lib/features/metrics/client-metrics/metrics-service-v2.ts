@@ -259,11 +259,20 @@ export default class ClientMetricsServiceV2 {
         try {
             const value =
                 await impactMetricsSchema.validateAsync(impactMetrics);
-            const { evictedSeries } =
+            const { evictedSeries, failedMetrics } =
                 this.impactMetricsTranslator.translateMetrics(value);
             if (evictedSeries > 0) {
                 this.logger.warn(
                     `Impact metrics: evicted ${evictedSeries} series to stay within the series limit`,
+                );
+            }
+            if (failedMetrics.length > 0) {
+                const examples = failedMetrics
+                    .slice(0, 3)
+                    .map(({ name, reason }) => `${name}: ${reason}`)
+                    .join('; ');
+                this.logger.warn(
+                    `Impact metrics: skipped ${failedMetrics.length} metrics that could not be written, starting with ${examples}`,
                 );
             }
         } catch (e) {

@@ -434,30 +434,71 @@ describe('MetricsTranslator', () => {
             gauge('memory', web),
         ]);
 
-        expect(summary).toEqual({ evictedSeries: 2 });
+        expect(summary).toEqual({ evictedSeries: 2, failedMetrics: [] });
     });
 
-    it('an empty counter left by a refused negative sample is evicted like any other metric', async () => {
-        const limited = translatorWithRoomFor(1);
-        const refunds = {
-            name: 'refunds',
-            help: 'refunds',
-            type: 'counter' as const,
-            samples: [{ value: -1 }],
-        };
-        expect(() => limited.translateMetrics([refunds])).toThrow(
-            'It is not possible to decrease a counter',
+    it('a metric reported under another type than it already has is skipped, the rest of the request is kept', async () => {
+        const checkoutErrorsAsGauge = gauge('checkout_errors', web);
+        const checkoutErrorsAsCounter = counter('checkout_errors', web);
+        translator.translateMetrics([checkoutErrorsAsGauge]);
+
+        const summary = translator.translateMetrics([
+            checkoutErrorsAsCounter,
+            counter('page_views', web),
+        ]);
+        const result = await translator.serializeMetrics();
+
+        expect(summary).toEqual({
+            evictedSeries: 0,
+            failedMetrics: [
+                {
+                    name: 'checkout_errors',
+                    reason: 'A metric with the name checkout_errors has already been registered.',
+                },
+            ],
+        });
+        expect(result).toBe(
+            [
+                '# HELP checkout_errors checkout_errors',
+                '# TYPE checkout_errors gauge',
+                'checkout_errors{origin="sdk",metric_type="gauge",appName="web"} 5',
+                '',
+                '# HELP page_views page_views',
+                '# TYPE page_views counter',
+                'page_views{origin="sdk",metric_type="counter",appName="web"} 1',
+                '',
+            ].join('\n'),
         );
+    });
+
+    it('drops counter samples with a negative value before they take room in the series limit', async () => {
+        const limited = translatorWithRoomFor(2);
 
         const result = await limited.translateAndSerializeMetrics([
-            gauge('memory', web),
+            {
+                name: 'orders',
+                help: 'orders',
+                type: 'counter' as const,
+                samples: [
+                    { labels: web, value: 1 },
+                    { labels: ios, value: -1 },
+                    { labels: android, value: 3 },
+                ],
+            },
+            {
+                name: 'refunds',
+                help: 'refunds',
+                type: 'counter' as const,
+                samples: [{ labels: web, value: -1 }],
+            },
         ]);
 
         expect(result).toBe(
             [
-                '# HELP memory memory',
-                '# TYPE memory gauge',
-                'memory{origin="sdk",metric_type="gauge",appName="web"} 5',
+                '# HELP orders orders',
+                '# TYPE orders counter',
+                'orders{origin="sdk",metric_type="counter",appName="web"} 1',
+                'orders{origin="sdk",metric_type="counter",appName="android"} 3',
                 '',
             ].join('\n'),
         );

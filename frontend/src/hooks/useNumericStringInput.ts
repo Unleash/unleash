@@ -46,7 +46,7 @@ export const useNumericStringInput = (
 
         const numValue =
             parseMode === 'integer'
-                ? Number.parseInt(inputValue, 10)
+                ? Math.trunc(Number.parseFloat(inputValue))
                 : Number.parseFloat(inputValue);
 
         if (!Number.isNaN(numValue)) {

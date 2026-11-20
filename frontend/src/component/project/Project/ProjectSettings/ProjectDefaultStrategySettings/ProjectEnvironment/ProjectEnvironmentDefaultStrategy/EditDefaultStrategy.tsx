@@ -99,7 +99,7 @@ const EditDefaultStrategy = () => {
     );
 
     const onSubmit = async () => {
-        if (!(await formIsValid())) return;
+        if (singlePageStrategyForm && !(await formIsValid())) return;
 
         const path = `/projects/${projectId}/settings/default-strategy`;
         try {
@@ -145,7 +145,9 @@ const EditDefaultStrategy = () => {
                     errors={errors}
                     failedVariantsSubmit={failedVariantsSubmit}
                     clearFailedVariantsSubmit={clearFailedVariantsSubmit}
-                    validateParameter={validateParameter}
+                    validateParameter={
+                        singlePageStrategyForm ? validateParameter : undefined
+                    }
                     groupIdTooltip='Defaults to the feature flag name if not set.'
                     onSubmit={onSubmit}
                 >

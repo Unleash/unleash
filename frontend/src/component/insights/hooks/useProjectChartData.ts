@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import type { InstanceInsightsSchema } from 'openapi';
 import { useProjectColor } from './useProjectColor.js';
-import { useTheme } from '@mui/material';
 import type { GroupedDataByProject } from './useGroupedProjectTrends.js';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 
@@ -29,14 +28,12 @@ export const useProjectChartData = (
         | GroupedDataByProject<LifecycleTrends>
         | GroupedDataByProject<CreationArchiveTrends>,
 ) => {
-    const theme = useTheme();
     const getProjectColor = useProjectColor();
     const { projects } = useProjects();
-    const projectNames = new Map(
-        projects.map((project) => [project.id, project.name]),
-    );
-
     const data = useMemo(() => {
+        const projectNames = new Map(
+            projects.map((project) => [project.id, project.name]),
+        );
         const datasets = Object.entries(projectFlagTrends).map(
             ([project, trends]) => {
                 const color = getProjectColor(project);
@@ -51,7 +48,7 @@ export const useProjectChartData = (
         );
 
         return { datasets };
-    }, [theme, projectFlagTrends]);
+    }, [getProjectColor, projectFlagTrends, projects]);
 
     return data;
 };

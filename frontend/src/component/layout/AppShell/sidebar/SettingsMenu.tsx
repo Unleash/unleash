@@ -27,6 +27,7 @@ import { PRIVACY_POLICY_URL } from 'constants/links';
 import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequestsNotifications/PendingAccessRequestsIndicator';
 import { SidebarPendingAccessRequestsIndicator } from './SidebarItem.styles.ts';
 import { SidebarMenuButton } from './SidebarMenuButton.tsx';
+import { sidebarSectionLabels } from './sidebarSectionLabels.ts';
 
 const menuPaperSx = (theme: Theme) => ({
     padding: theme.spacing(0.75),
@@ -252,7 +253,7 @@ export const SettingsMenu: FC<{
                 ) : null}
                 <TwoLineMenuItem
                     icon={<DomainOutlinedIcon />}
-                    title='Configure workspace'
+                    title={sidebarSectionLabels.configureWorkspace}
                     description='Settings that apply to all projects'
                     onClick={() => {
                         close();
@@ -261,7 +262,7 @@ export const SettingsMenu: FC<{
                 />
                 <TwoLineMenuItem
                     icon={<AdminPanelSettingsOutlinedIcon />}
-                    title='Admin settings'
+                    title={sidebarSectionLabels.adminSettings}
                     badge={<PendingAccessRequestsIndicator />}
                     description='Users, access, API tokens, security and more'
                     onClick={() => {

@@ -16,6 +16,7 @@ import {
 } from './SidebarItem.styles.ts';
 import { SidebarList } from './SidebarList.tsx';
 import { SidebarSection } from './SidebarSection.tsx';
+import { sidebarSectionLabels } from './sidebarSectionLabels.ts';
 import { createPageMatcher, findCurrentRoute } from './createPageMatcher.ts';
 
 // Matches every admin path regardless of plan: the filtered list depends on
@@ -136,7 +137,7 @@ export const AdminSettingsNavigation: FC<{ onBack: () => void }> = ({
                 label='Back to app'
                 onClick={onBack}
             />
-            <SidebarSection title='Admin settings'>
+            <SidebarSection title={sidebarSectionLabels.adminSettings}>
                 {groupAdminRoutes(routes).map((entry) =>
                     entry.kind === 'group' ? (
                         <AdminNavGroup

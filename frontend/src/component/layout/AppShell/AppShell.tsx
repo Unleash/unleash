@@ -26,7 +26,6 @@ import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import InsightsIcon from '@mui/icons-material/Insights';
 import QueryStatsOutlinedIcon from '@mui/icons-material/QueryStatsOutlined';
 import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequestIcon';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import {
@@ -39,14 +38,17 @@ import {
 } from './sidebar/AdminSettingsNavigation.tsx';
 import { HelpAndResourcesMenu } from './sidebar/HelpAndResourcesMenu.tsx';
 import { appNavigationLinks } from './sidebar/appNavigationLinks.ts';
+import { useVisibleAppNavigationLinks } from './sidebar/useVisibleAppNavigationLinks.ts';
 import { SearchButton } from './sidebar/SearchButton.tsx';
 import { SettingsMenu } from './sidebar/SettingsMenu.tsx';
 import { SidebarLink } from './sidebar/SidebarLink.tsx';
 import { SidebarList } from './sidebar/SidebarList.tsx';
 import { SidebarMoreToggle } from './sidebar/SidebarMoreToggle.tsx';
 import { SidebarSection } from './sidebar/SidebarSection.tsx';
+import { sidebarSectionLabels } from './sidebar/sidebarSectionLabels.ts';
 import { MyProjectsSection } from './projects/MyProjectsSection.tsx';
 import { OpenedProjectSection } from './projects/OpenedProjectSection.tsx';
+import { PageHeaderRow } from './header/PageHeaderRow.tsx';
 
 const LazySearchDocsChat = lazy(() =>
     import('component/menu/Header/SearchDocs/SearchDocs.tsx').then(
@@ -175,7 +177,7 @@ const AppNavigation: FC<{ searchOpen: boolean; onSearch: () => void }> = ({
     searchOpen,
     onSearch,
 }) => {
-    const { isEnterprise } = useUiConfig();
+    const visibleLinks = useVisibleAppNavigationLinks();
 
     return (
         <>
@@ -193,7 +195,7 @@ const AppNavigation: FC<{ searchOpen: boolean; onSearch: () => void }> = ({
                     {...appNavigationLinks.home}
                     icon={<HomeOutlinedIcon />}
                 />
-                {isEnterprise() ? (
+                {visibleLinks.includes(appNavigationLinks.changeRequests) ? (
                     <SidebarLink
                         {...appNavigationLinks.changeRequests}
                         icon={<ChangeRequestIcon />}
@@ -208,8 +210,7 @@ const AppNavigation: FC<{ searchOpen: boolean; onSearch: () => void }> = ({
 };
 
 const WorkspaceSection: FC = () => {
-    const { isOss } = useUiConfig();
-    const impactViewsEnabled = useUiFlag('impactViews');
+    const visibleLinks = useVisibleAppNavigationLinks();
     const [moreState, setMoreState] = useLocalStorageState<'open' | 'closed'>(
         'app-shell:workspace-more',
         'closed',
@@ -217,7 +218,7 @@ const WorkspaceSection: FC = () => {
     const expanded = moreState === 'open';
 
     return (
-        <SidebarSection title='Workspace'>
+        <SidebarSection title={sidebarSectionLabels.workspace}>
             <SidebarLink
                 {...appNavigationLinks.projects}
                 icon={<GridViewOutlinedIcon />}
@@ -232,13 +233,13 @@ const WorkspaceSection: FC = () => {
                         {...appNavigationLinks.playground}
                         icon={<AutoFixNormalIcon />}
                     />
-                    {!isOss() ? (
+                    {visibleLinks.includes(appNavigationLinks.analytics) ? (
                         <SidebarLink
                             {...appNavigationLinks.analytics}
                             icon={<InsightsIcon />}
                         />
                     ) : null}
-                    {!isOss() && impactViewsEnabled ? (
+                    {visibleLinks.includes(appNavigationLinks.impactViews) ? (
                         <SidebarLink
                             {...appNavigationLinks.impactViews}
                             icon={<QueryStatsOutlinedIcon />}
@@ -275,6 +276,7 @@ export const AppShell: FC<{ children: ReactNode }> = ({ children }) => {
                         />
                         <StyledContent>
                             <SkipNavTarget />
+                            <PageHeaderRow />
                             {children}
                         </StyledContent>
                     </StyledRoot>

@@ -7,6 +7,7 @@ import { IconRenderer } from '../../MainLayout/NavigationSidebar/IconRenderer.ts
 import { SidebarButton } from './SidebarButton.tsx';
 import { SidebarLink } from './SidebarLink.tsx';
 import { SidebarSection } from './SidebarSection.tsx';
+import { sidebarSectionLabels } from './sidebarSectionLabels.ts';
 import { createPageMatcher } from './createPageMatcher.ts';
 
 // Matches every workspace path regardless of plan: the filtered list depends on
@@ -28,7 +29,7 @@ export const ConfigureWorkspaceNavigation: FC<{ onBack: () => void }> = ({
                 label='Back to app'
                 onClick={onBack}
             />
-            <SidebarSection title='Configure workspace'>
+            <SidebarSection title={sidebarSectionLabels.configureWorkspace}>
                 {routes.mainNavRoutes.map((route) => (
                     <SidebarLink
                         key={route.path}

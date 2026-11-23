@@ -174,7 +174,8 @@ test('marks the link of the current page as current', () => {
 test('marks a link as current on its nested pages', () => {
     render(<AppShell>content</AppShell>, { route: '/personal/some-tab' });
 
-    expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute(
+    const sidebar = within(screen.getByRole('navigation', { name: 'Main' }));
+    expect(sidebar.getByRole('link', { name: 'Home' })).toHaveAttribute(
         'aria-current',
         'page',
     );
@@ -458,14 +459,14 @@ test.each([
 ])('opens admin settings when landing on %s', async (route, currentPage) => {
     render(<AppShell>content</AppShell>, { route });
 
-    expect(
+    const adminSettings = within(
         screen.getByRole('region', { name: 'Admin settings' }),
-    ).toBeInTheDocument();
+    );
     expect(
         screen.queryByRole('link', { name: 'Home' }),
     ).not.toBeInTheDocument();
     expect(
-        await screen.findByRole('link', { name: currentPage }),
+        await adminSettings.findByRole('link', { name: currentPage }),
     ).toHaveAttribute('aria-current', 'page');
 });
 
@@ -710,4 +711,247 @@ test('reopens the docs chat from Help & resources after the chat was closed', as
     await openSearchDocsFromHelpMenu();
 
     expect(await screen.findByText('Docs chat')).toBeInTheDocument();
+});
+
+const breadcrumbs = () =>
+    within(screen.getByRole('navigation', { name: 'Breadcrumbs' }));
+
+const breadcrumbTrail = () =>
+    breadcrumbs()
+        .getAllByRole('listitem')
+        .map((item) => item.textContent);
+
+const mockDefaultProject = () =>
+    testServerRoute(server, '/api/admin/projects', {
+        projects: [{ id: 'default', name: 'Default' }],
+    });
+
+test('shows the sidebar item of a top-level page as its breadcrumb', () => {
+    render(<AppShell>content</AppShell>, { route: '/personal' });
+
+    expect(breadcrumbTrail()).toEqual(['Home']);
+    expect(
+        breadcrumbs().getByText('Home').closest('[aria-current="page"]'),
+    ).toBeInTheDocument();
+});
+
+test('shows Change requests as breadcrumb of the change requests page on enterprise', async () => {
+    mockEnterprise();
+    render(<AppShell>content</AppShell>, { route: '/change-requests' });
+
+    await screen.findByRole('navigation', { name: 'Breadcrumbs' });
+    expect(breadcrumbTrail()).toEqual(['Change requests']);
+});
+
+test('links the breadcrumb of a top-level sidebar item on a page below it', () => {
+    render(<AppShell>content</AppShell>, { route: '/personal/some-tab' });
+
+    expect(breadcrumbTrail()).toEqual(['Home']);
+    expect(breadcrumbs().getByRole('link', { name: 'Home' })).toHaveAttribute(
+        'href',
+        '/personal',
+    );
+});
+
+test.each([
+    ['/projects', 'Projects'],
+    ['/search', 'Flags overview'],
+    ['/playground', 'Playground'],
+])('shows the Workspace section before the sidebar item as breadcrumbs of %s', (route, item) => {
+    render(<AppShell>content</AppShell>, { route });
+
+    expect(breadcrumbTrail()).toEqual(['Workspace', item]);
+    expect(
+        breadcrumbs().getByRole('link', { name: 'Workspace' }),
+    ).toHaveAttribute('href', '/projects');
+});
+
+test.each([
+    ['/insights', 'Analytics'],
+    ['/impact-views', 'Impact views'],
+])('shows the Workspace section before the sidebar item as breadcrumbs of %s on enterprise', async (route, item) => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        versionInfo: { current: { enterprise: 'version' } },
+        environment: 'Enterprise',
+        flags: { impactViews: true },
+    });
+    render(<AppShell>content</AppShell>, { route });
+
+    await screen.findByRole('navigation', { name: 'Breadcrumbs' });
+    expect(breadcrumbTrail()).toEqual(['Workspace', item]);
+});
+
+test('shows the project and its sidebar item as breadcrumbs of a project page', async () => {
+    mockDefaultProject();
+    render(<AppShell>content</AppShell>, { route: '/projects/default/logs' });
+
+    await screen.findByRole('navigation', { name: 'Breadcrumbs' });
+    expect(breadcrumbTrail()).toEqual(['Default', 'Event log']);
+    expect(
+        breadcrumbs().getByRole('link', { name: 'Default' }),
+    ).toHaveAttribute('href', '/projects/default');
+    expect(
+        breadcrumbs().getByText('Event log').closest('[aria-current="page"]'),
+    ).toBeInTheDocument();
+});
+
+test('links the last breadcrumb to its sidebar item on a page below it', async () => {
+    mockDefaultProject();
+    render(<AppShell>content</AppShell>, {
+        route: '/projects/default/features/my-flag',
+    });
+
+    await screen.findByRole('navigation', { name: 'Breadcrumbs' });
+    expect(breadcrumbTrail()).toEqual(['Default', 'Flags']);
+    expect(breadcrumbs().getByRole('link', { name: 'Flags' })).toHaveAttribute(
+        'href',
+        '/projects/default',
+    );
+});
+
+test('marks only the sidebar item as the current page on the project root', async () => {
+    mockDefaultProject();
+    render(<AppShell>content</AppShell>, { route: '/projects/default' });
+
+    await screen.findByRole('navigation', { name: 'Breadcrumbs' });
+    expect(breadcrumbTrail()).toEqual(['Default', 'Flags']);
+    expect(
+        breadcrumbs().getByRole('link', { name: 'Default' }),
+    ).toHaveAttribute('href', '/projects/default');
+    expect(
+        breadcrumbs().getByText('Flags').closest('[aria-current="page"]'),
+    ).toBeInTheDocument();
+});
+
+test('shows only the project as breadcrumb of a project page without a sidebar item', async () => {
+    mockDefaultProject();
+    render(<AppShell>content</AppShell>, {
+        route: '/projects/default/applications',
+    });
+
+    await screen.findByRole('navigation', { name: 'Breadcrumbs' });
+    expect(breadcrumbTrail()).toEqual(['Default']);
+});
+
+test.each([
+    ['/admin/users', ['Admin settings', 'Users']],
+    ['/history', ['Admin settings', 'Event log']],
+])('shows the admin settings page without its group as breadcrumbs of %s', async (route, trail) => {
+    render(<AppShell>content</AppShell>, { route });
+
+    await screen.findByRole('navigation', { name: 'Breadcrumbs' });
+    expect(breadcrumbTrail()).toEqual(trail);
+    expect(
+        breadcrumbs().queryByRole('link', { name: 'Admin settings' }),
+    ).not.toBeInTheDocument();
+});
+
+test('shows the Workspace section before the workspace configuration item as breadcrumbs of a workspace page', async () => {
+    render(<AppShell>content</AppShell>, { route: '/context/create' });
+
+    await screen.findByRole('navigation', { name: 'Breadcrumbs' });
+    expect(
+        breadcrumbs().getByRole('link', { name: 'Context fields' }),
+    ).toHaveAttribute('href', '/context');
+    expect(breadcrumbTrail()).toEqual([
+        'Workspace',
+        'Configure workspace',
+        'Context fields',
+    ]);
+    expect(
+        breadcrumbs().getByRole('link', { name: 'Workspace' }),
+    ).toHaveAttribute('href', '/projects');
+    expect(
+        breadcrumbs().queryByRole('link', { name: 'Configure workspace' }),
+    ).not.toBeInTheDocument();
+});
+
+test('shows no breadcrumbs on a project page of a project that is not in the list', () => {
+    render(<AppShell>content</AppShell>, { route: '/projects/unknown/logs' });
+
+    expect(
+        screen.queryByRole('navigation', { name: 'Breadcrumbs' }),
+    ).not.toBeInTheDocument();
+});
+
+test.each([
+    '/admin/groups',
+    '/release-templates',
+    '/change-requests',
+    '/insights',
+    '/impact-views',
+])('shows no breadcrumbs on %s when the sidebar hides it on the current plan', async (route) => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        versionInfo: { current: { oss: 'version' } },
+    });
+    render(
+        <AppShell>
+            <UiConfigLoaded />
+        </AppShell>,
+        { route },
+    );
+
+    await screen.findByText('ui config loaded');
+    expect(
+        screen.queryByRole('navigation', { name: 'Breadcrumbs' }),
+    ).not.toBeInTheDocument();
+});
+
+test('shows no breadcrumbs on change requests on the Pro plan', async () => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        versionInfo: { current: { enterprise: 'version' } },
+        environment: 'Pro',
+    });
+    render(
+        <AppShell>
+            <UiConfigLoaded />
+        </AppShell>,
+        { route: '/change-requests' },
+    );
+
+    await screen.findByText('ui config loaded');
+    expect(
+        screen.queryByRole('navigation', { name: 'Breadcrumbs' }),
+    ).not.toBeInTheDocument();
+});
+
+test('shows no breadcrumbs on impact views when the impactViews flag is off', async () => {
+    mockEnterprise();
+    render(
+        <AppShell>
+            <UiConfigLoaded />
+        </AppShell>,
+        { route: '/impact-views' },
+    );
+
+    await screen.findByText('ui config loaded');
+    expect(
+        screen.queryByRole('navigation', { name: 'Breadcrumbs' }),
+    ).not.toBeInTheDocument();
+});
+
+test('shows no breadcrumbs on a page without a sidebar item', () => {
+    render(<AppShell>content</AppShell>, { route: '/profile' });
+
+    expect(
+        screen.queryByRole('navigation', { name: 'Breadcrumbs' }),
+    ).not.toBeInTheDocument();
+});
+
+const isBefore = (node: Node, other: Node) =>
+    Boolean(
+        node.compareDocumentPosition(other) & Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+
+test('starts the main content at the breadcrumbs', () => {
+    render(<AppShell>content</AppShell>, { route: '/search' });
+
+    const startOfMainContent = screen.getByRole('link', {
+        name: 'Start of main content',
+    });
+    const breadcrumbsNavigation = screen.getByRole('navigation', {
+        name: 'Breadcrumbs',
+    });
+
+    expect(isBefore(startOfMainContent, breadcrumbsNavigation)).toBe(true);
 });

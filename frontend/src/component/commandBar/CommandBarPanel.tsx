@@ -399,29 +399,22 @@ export const CommandBarPanel = ({
                                 setSearchLoading={setSearchLoading}
                             />
                         )}
+                        <CommandResultGroup
+                            groupName={'Projects'}
+                            icon={'flag'}
+                            onClick={clearSearchValue}
+                            items={searchedProjects}
+                        />
+                        <CommandSearchPages
+                            items={searchedPages}
+                            onClick={clearSearchValue}
+                        />
                         <ConditionallyRender
-                            condition={!searchLoading}
+                            condition={!searchLoading && hasNoResults}
                             show={
-                                <>
-                                    <CommandResultGroup
-                                        groupName={'Projects'}
-                                        icon={'flag'}
-                                        onClick={clearSearchValue}
-                                        items={searchedProjects}
-                                    />
-                                    <CommandSearchPages
-                                        items={searchedPages}
-                                        onClick={clearSearchValue}
-                                    />
-                                    <ConditionallyRender
-                                        condition={hasNoResults}
-                                        show={
-                                            <CommandBarFeedback
-                                                onSubmit={hideSuggestions}
-                                            />
-                                        }
-                                    />
-                                </>
+                                <CommandBarFeedback
+                                    onSubmit={hideSuggestions}
+                                />
                             }
                         />
                         {variant === 'dialog' ? (

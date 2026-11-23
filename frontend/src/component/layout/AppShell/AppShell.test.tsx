@@ -646,19 +646,6 @@ test('opens the command bar from the Search button with keyboard hints', async (
     expect(searchButton).toHaveAttribute('aria-haspopup', 'dialog');
 });
 
-test('keeps the keyboard hints while showing search results', async () => {
-    render(<AppShell>content</AppShell>);
-    await userEvent.click(screen.getByRole('button', { name: /^Search/ }));
-    const commandBar = within(await screen.findByRole('dialog'));
-
-    await userEvent.type(commandBar.getByRole('textbox'), 'segments');
-
-    expect(
-        await commandBar.findByRole('link', { name: 'Segments' }),
-    ).toBeVisible();
-    expect(commandBar.getByText('to navigate')).toBeVisible();
-});
-
 test('returns focus to the Search button when the command bar closes', async () => {
     render(<AppShell>content</AppShell>);
     const searchButton = screen.getByRole('button', { name: /^Search/ });

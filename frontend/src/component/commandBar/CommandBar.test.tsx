@@ -77,16 +77,43 @@ test('closes the search dialog and clears the search when a result is picked', a
     await userEvent.click(trigger);
     const dialog = within(await screen.findByRole('dialog'));
     await userEvent.type(dialog.getByRole('textbox'), 'segments');
-    // page results stay hidden until the flag search settles
-    await dialog.findByRole('link', { name: 'segments-flag' });
 
-    await userEvent.click(dialog.getByRole('link', { name: 'Segments' }));
+    await userEvent.click(
+        await dialog.findByRole('link', { name: 'Segments' }),
+    );
 
     await waitFor(() =>
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
     );
     await userEvent.click(trigger);
     expect(await screen.findByRole('textbox')).toHaveValue('');
+});
+
+test('keeps page results in place while flag results load', async () => {
+    render(<CommandBar />);
+    await userEvent.click(
+        screen.getByRole('button', { name: /command menu/i }),
+    );
+    const dialog = within(await screen.findByRole('dialog'));
+    await userEvent.type(dialog.getByRole('textbox'), 'segments');
+    const pageResult = await dialog.findByRole('link', { name: 'Segments' });
+
+    await dialog.findByRole('link', { name: 'segments-flag' });
+
+    expect(pageResult).toBeVisible();
+});
+
+test('shows keyboard hints alongside search results in the search dialog', async () => {
+    render(<CommandBar />);
+    await userEvent.click(
+        screen.getByRole('button', { name: /command menu/i }),
+    );
+    const dialog = within(await screen.findByRole('dialog'));
+
+    await userEvent.type(dialog.getByRole('textbox'), 'segments');
+
+    expect(await dialog.findByRole('link', { name: 'Segments' })).toBeVisible();
+    expect(dialog.getByText('to navigate')).toBeVisible();
 });
 
 test('moves through the results in the search dialog with the arrow keys', async () => {
@@ -183,10 +210,10 @@ test('hides the inline suggestions and clears the field when a result is picked'
     render(<CommandBar />);
     const input = screen.getByRole('textbox');
     await userEvent.type(input, 'segments');
-    // page results stay hidden until the flag search settles
-    await screen.findByRole('link', { name: 'segments-flag' });
 
-    await userEvent.click(screen.getByRole('link', { name: 'Segments' }));
+    await userEvent.click(
+        await screen.findByRole('link', { name: 'Segments' }),
+    );
 
     expect(screen.queryByText('Pages')).not.toBeInTheDocument();
     expect(input).toHaveValue('');

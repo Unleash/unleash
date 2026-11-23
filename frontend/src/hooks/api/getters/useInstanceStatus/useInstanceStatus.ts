@@ -2,6 +2,7 @@ import { type IInstanceStatus, InstancePlan } from 'interfaces/instance';
 import { useApiGetter } from 'hooks/api/getters/useApiGetter/useApiGetter';
 import { formatApiPath } from 'utils/formatPath';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { ResponseError } from 'utils/apiUtils';
 
 export interface IUseInstanceStatusOutput {
     instanceStatus?: IInstanceStatus;
@@ -21,6 +22,7 @@ export const useInstanceStatus = (): IUseInstanceStatusOutput => {
     const { data, refetch, loading, error } = useApiGetter(
         ['useInstanceStatus', UNLEASH_CLOUD],
         () => fetchInstanceStatus(UNLEASH_CLOUD),
+        { shouldRetryOnError: false },
     );
 
     const billingPlans = [
@@ -54,6 +56,10 @@ const fetchInstanceStatus = async (
     }
 
     const res = await fetch(formatApiPath('api/instance/status'));
+
+    if (res.status === 401) {
+        throw new ResponseError('Instance status', res.status, undefined);
+    }
 
     if (!res.ok) {
         return UNKNOWN_INSTANCE_STATUS;

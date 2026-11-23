@@ -33,6 +33,7 @@ We are in the process of defining ADRs for the back end. At the time of writing 
 * [Correct type dependencies](/contributing/ADRs/back-end/correct-type-dependencies)
 * [API Version Tracking and Stability Lifecycle](/contributing/ADRs/back-end/api-version-tracking)
 * [REST API Guidelines](/contributing/ADRs/back-end/rest-api-guidelines)
+* [Transactional writes](/contributing/ADRs/back-end/transactional-writes)
 
 ## Front-end ADRs
 

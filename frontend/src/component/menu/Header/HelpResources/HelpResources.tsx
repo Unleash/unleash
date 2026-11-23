@@ -1,4 +1,4 @@
-import { lazy, type ReactNode, Suspense, useContext, useState } from 'react';
+import { type ReactNode, useContext, useState } from 'react';
 import {
     Badge,
     Box,
@@ -44,13 +44,6 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { useVariant } from 'hooks/useVariant';
 import { useIntro } from 'component/onboarding/intro/IntroProvider.tsx';
 import { getLocalStorageItem, setLocalStorageItem } from 'utils/storage.ts';
-import { searchDocsTracking } from '../SearchDocs/searchDocsTracking.ts';
-
-const LazySearchDocsChat = lazy(() =>
-    import('../SearchDocs/SearchDocs.tsx').then((module) => ({
-        default: module.SearchDocsChat,
-    })),
-);
 
 const RELOCATION_DOT_SEEN_KEY = 'help-menu-relocation:menu-opened:v1';
 
@@ -216,11 +209,13 @@ const PLACEMENTS = {
 interface IHelpResourcesProps {
     variant?: keyof typeof PLACEMENTS;
     renderTrigger?: (props: HelpResourcesTriggerProps) => ReactNode;
+    onSearchDocs?: () => void;
 }
 
 export const HelpResources = ({
     variant = 'header',
     renderTrigger,
+    onSearchDocs,
 }: IHelpResourcesProps) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [buttonEl, setButtonEl] = useState<HTMLElement | null>(null);
@@ -231,9 +226,6 @@ export const HelpResources = ({
     );
     const { open: openIntro } = useIntro();
     const learningLabFlag = useUiFlag('learningLab');
-    const searchDocsWidget = useUiFlag('searchDocsWidget');
-    const showSearchDocs = variant === 'sidebar' && searchDocsWidget;
-    const [searchDocsOpen, setSearchDocsOpen] = useState(false);
     const learningLabVariant = useVariant<ILearningLabVariant>(
         learningLabFlag || undefined,
     );
@@ -302,7 +294,7 @@ export const HelpResources = ({
 
     const handleSearchDocs = () => {
         handleOptionClick('search-docs');
-        setSearchDocsOpen(true);
+        onSearchDocs?.();
     };
 
     const { openFeedback } = useFeedback('general', 'automatic');
@@ -382,7 +374,7 @@ export const HelpResources = ({
         </StyledMenuItem>
     );
 
-    const searchDocsItem = showSearchDocs ? (
+    const searchDocsItem = onSearchDocs ? (
         <StyledMenuItem key='search-docs' onClick={handleSearchDocs}>
             <AutoAwesomeIcon fontSize='small' />
             Search docs
@@ -534,15 +526,6 @@ export const HelpResources = ({
                           slackItem,
                       ]}
             </StyledMenu>
-            {showSearchDocs && (
-                <Suspense fallback={null}>
-                    <LazySearchDocsChat
-                        open={searchDocsOpen}
-                        onOpenChange={setSearchDocsOpen}
-                        tracking={searchDocsTracking('help-menu')}
-                    />
-                </Suspense>
-            )}
         </>
     );
 };

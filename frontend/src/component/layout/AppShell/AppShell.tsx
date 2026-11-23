@@ -1,4 +1,12 @@
-import { type FC, type ReactNode, useEffect, useRef, useState } from 'react';
+import {
+    type FC,
+    lazy,
+    type ReactNode,
+    Suspense,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
 import { styled } from '@mui/material';
 import { Link, useLocation } from 'react-router';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
@@ -8,6 +16,7 @@ import { FloatingOnboardingChecklistProvider } from 'component/onboarding/floati
 import { FloatingOnboardingChecklistVisibilityGate } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistVisibilityGate.tsx';
 import { HelpButtonHintProvider } from 'component/menu/Header/HelpResources/HelpButtonHintContext.tsx';
 import { CommandBarDialog } from 'component/commandBar/CommandBarDialog';
+import { searchDocsTracking } from 'component/menu/Header/SearchDocs/searchDocsTracking';
 import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
 import UnleashLogoWhite from 'assets/img/logoWithWhiteText.svg?react';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
@@ -38,6 +47,12 @@ import { SidebarMoreToggle } from './sidebar/SidebarMoreToggle.tsx';
 import { SidebarSection } from './sidebar/SidebarSection.tsx';
 import { MyProjectsSection } from './projects/MyProjectsSection.tsx';
 import { OpenedProjectSection } from './projects/OpenedProjectSection.tsx';
+
+const LazySearchDocsChat = lazy(() =>
+    import('component/menu/Header/SearchDocs/SearchDocs.tsx').then(
+        (module) => ({ default: module.SearchDocsChat }),
+    ),
+);
 
 const SIDEBAR_WIDTH = 240;
 
@@ -99,7 +114,11 @@ const getPageMode = (pathname: string): SidebarMode => {
     return 'app';
 };
 
-const Sidebar: FC = () => {
+const Sidebar: FC<{
+    searchOpen: boolean;
+    onSearch: () => void;
+    onSearchDocs?: () => void;
+}> = ({ searchOpen, onSearch, onSearchDocs }) => {
     const { pathname } = useLocation();
     // A manual switch lasts until the pathname changes, so sorting or searching
     // a table, which only changes the query string, keeps it. It is cleared
@@ -111,7 +130,6 @@ const Sidebar: FC = () => {
     const mode = choice ? choice.mode : getPageMode(pathname);
     const setMode = (next: SidebarMode) => setChoice({ mode: next, pathname });
     const panelRef = useRef<HTMLDivElement>(null);
-    const [searchOpen, setSearchOpen] = useState(false);
 
     // Only manual switches move focus, not navigation. This runs after the
     // Settings menu returns focus to its button, so it wins.
@@ -128,7 +146,7 @@ const Sidebar: FC = () => {
                 {mode === 'app' ? (
                     <AppNavigation
                         searchOpen={searchOpen}
-                        onSearch={() => setSearchOpen(true)}
+                        onSearch={onSearch}
                     />
                 ) : null}
                 {mode === 'workspace' ? (
@@ -142,14 +160,13 @@ const Sidebar: FC = () => {
             </StyledSidebarScrollArea>
             <StyledSidebarFooter>
                 <SidebarList>
-                    <HelpAndResourcesMenu />
+                    <HelpAndResourcesMenu onSearchDocs={onSearchDocs} />
                     <SettingsMenu
                         onConfigureWorkspace={() => setMode('workspace')}
                         onAdminSettings={() => setMode('admin')}
                     />
                 </SidebarList>
             </StyledSidebarFooter>
-            <CommandBarDialog open={searchOpen} onOpenChange={setSearchOpen} />
         </StyledSidebar>
     );
 };
@@ -237,19 +254,46 @@ const WorkspaceSection: FC = () => {
     );
 };
 
-export const AppShell: FC<{ children: ReactNode }> = ({ children }) => (
-    <HelpButtonHintProvider>
-        <FloatingOnboardingChecklistProvider>
-            <EventTimelineProvider>
-                <StyledRoot>
-                    <Sidebar />
-                    <StyledContent>
-                        <SkipNavTarget />
-                        {children}
-                    </StyledContent>
-                </StyledRoot>
-                <FloatingOnboardingChecklistVisibilityGate />
-            </EventTimelineProvider>
-        </FloatingOnboardingChecklistProvider>
-    </HelpButtonHintProvider>
-);
+export const AppShell: FC<{ children: ReactNode }> = ({ children }) => {
+    const searchDocsWidget = useUiFlag('searchDocsWidget');
+    const [searchOpen, setSearchOpen] = useState(false);
+    const [searchDocsOpen, setSearchDocsOpen] = useState(false);
+
+    return (
+        <HelpButtonHintProvider>
+            <FloatingOnboardingChecklistProvider>
+                <EventTimelineProvider>
+                    <StyledRoot>
+                        <Sidebar
+                            searchOpen={searchOpen}
+                            onSearch={() => setSearchOpen(true)}
+                            onSearchDocs={
+                                searchDocsWidget
+                                    ? () => setSearchDocsOpen(true)
+                                    : undefined
+                            }
+                        />
+                        <StyledContent>
+                            <SkipNavTarget />
+                            {children}
+                        </StyledContent>
+                    </StyledRoot>
+                    <FloatingOnboardingChecklistVisibilityGate />
+                    <CommandBarDialog
+                        open={searchOpen}
+                        onOpenChange={setSearchOpen}
+                    />
+                    {searchDocsWidget ? (
+                        <Suspense fallback={null}>
+                            <LazySearchDocsChat
+                                open={searchDocsOpen}
+                                onOpenChange={setSearchDocsOpen}
+                                tracking={searchDocsTracking('help-menu')}
+                            />
+                        </Suspense>
+                    ) : null}
+                </EventTimelineProvider>
+            </FloatingOnboardingChecklistProvider>
+        </HelpButtonHintProvider>
+    );
+};

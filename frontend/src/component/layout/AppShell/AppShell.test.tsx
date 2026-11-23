@@ -1,4 +1,4 @@
-import { beforeEach, expect, test } from 'vitest';
+import { beforeEach, expect, test, vi } from 'vitest';
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Link } from 'react-router';
@@ -13,6 +13,24 @@ import {
 } from 'component/onboarding/floatingChecklist/onboardingChecklistTestServer.ts';
 import { mockPendingAccessRequest } from 'component/admin/users/AccessRequestsNotifications/accessRequestsTestServer.ts';
 import { AppShell } from './AppShell.tsx';
+
+vi.mock('component/menu/Header/SearchDocs/SearchDocs.tsx', () => ({
+    SearchDocsChat: ({
+        open,
+        onOpenChange,
+    }: {
+        open: boolean;
+        onOpenChange: (open: boolean) => void;
+    }) =>
+        open ? (
+            <div>
+                Docs chat
+                <button type='button' onClick={() => onOpenChange(false)}>
+                    Close docs chat
+                </button>
+            </div>
+        ) : null,
+}));
 
 const server = testServerSetup();
 
@@ -666,4 +684,43 @@ test('toggles the command bar with Ctrl+K in Configure workspace mode, which has
     await waitFor(() =>
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
     );
+});
+
+const withSearchDocsWidget = () =>
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: { searchDocsWidget: true },
+    });
+
+const openSearchDocsFromHelpMenu = async () => {
+    await userEvent.click(
+        screen.getByRole('button', { name: 'Help & resources' }),
+    );
+    await userEvent.click(
+        await screen.findByRole('menuitem', { name: 'Search docs' }),
+    );
+};
+
+test('opens the docs chat from Search docs in Help & resources', async () => {
+    withSearchDocsWidget();
+    render(<AppShell>content</AppShell>);
+
+    await openSearchDocsFromHelpMenu();
+
+    expect(await screen.findByText('Docs chat')).toBeInTheDocument();
+});
+
+test('reopens the docs chat from Help & resources after the chat was closed', async () => {
+    withSearchDocsWidget();
+    render(<AppShell>content</AppShell>);
+    await openSearchDocsFromHelpMenu();
+    await userEvent.click(
+        await screen.findByRole('button', { name: 'Close docs chat' }),
+    );
+    await waitFor(() =>
+        expect(screen.queryByText('Docs chat')).not.toBeInTheDocument(),
+    );
+
+    await openSearchDocsFromHelpMenu();
+
+    expect(await screen.findByText('Docs chat')).toBeInTheDocument();
 });

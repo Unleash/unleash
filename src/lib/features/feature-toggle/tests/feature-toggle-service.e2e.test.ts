@@ -31,6 +31,8 @@ import {
 } from '../../index.js';
 import { insertLastSeenAt } from '../../../../test/e2e/helpers/test-helper.js';
 import type FeatureLinkService from '../../feature-links/feature-link-service.js';
+import { FEATURE_PAYLOAD_SCHEMA_UPDATED } from '../../../events/index.js';
+import { PayloadSchemaStore } from '../../payload-schema/payload-schema-store.js';
 import {
     afterAll,
     beforeAll,
@@ -56,8 +58,12 @@ const mockConstraints = (): IConstraint[] => {
 
 const irrelevantDate = new Date();
 
+const adminUser = { ...ADMIN_TOKEN_USER, permissions: [ADMIN] };
+
 beforeAll(async () => {
-    const config = createTestConfig();
+    const config = createTestConfig({
+        experimental: { flags: { payloadSchemas: true } },
+    });
 
     db = await dbInit(
         'feature_toggle_service_v2_service_serial',
@@ -293,7 +299,7 @@ test('cloning a feature flag copies variant environments correctly', async () =>
         'default',
         clonedFlagName,
         SYSTEM_USER_AUDIT,
-        { ...ADMIN_TOKEN_USER, permissions: [ADMIN], isAPI: true },
+        adminUser,
         true,
     );
 
@@ -311,6 +317,33 @@ test('cloning a feature flag copies variant environments correctly', async () =>
     expect(newEnv!!.variants).toHaveLength(1);
 });
 
+test('a cloned feature flag has the payload schema of the original, recorded in the event log', async () => {
+    const payloadSchemaStore = new PayloadSchemaStore(db.rawDatabase);
+    const schema = { type: 'object' };
+    await service.createFeatureToggle(
+        'default',
+        { name: 'typed-flag' },
+        TEST_AUDIT_USER,
+    );
+    await payloadSchemaStore.upsert('typed-flag', schema);
+
+    await service.cloneFeatureToggle(
+        'typed-flag',
+        'default',
+        'typed-flag-copy',
+        SYSTEM_USER_AUDIT,
+        adminUser,
+    );
+
+    const clonedSchema = await payloadSchemaStore.get('typed-flag-copy');
+    expect(clonedSchema).toEqual(schema);
+    const schemaEvents = await stores.eventStore.getAll({
+        type: FEATURE_PAYLOAD_SCHEMA_UPDATED,
+        feature_name: 'typed-flag-copy',
+    });
+    expect(schemaEvents).toMatchObject([{ data: { schema } }]);
+});
+
 test('cloning a feature flag not allowed for change requests enabled', async () => {
     await db.rawDatabase('change_request_settings').insert({
         project: 'default',
@@ -322,7 +355,7 @@ test('cloning a feature flag not allowed for change requests enabled', async () 
             'default',
             'clonedFlagName',
             SYSTEM_USER_AUDIT,
-            { ...ADMIN_TOKEN_USER, permissions: [ADMIN], isAPI: true },
+            adminUser,
             true,
         ),
     ).rejects.errorWithMessage(
@@ -384,7 +417,7 @@ test('Cloning a feature flag also clones segments correctly', async () => {
         'default',
         clonedFeatureName,
         TEST_AUDIT_USER,
-        { ...ADMIN_TOKEN_USER, permissions: [ADMIN], isAPI: true },
+        adminUser,
         true,
     );
 

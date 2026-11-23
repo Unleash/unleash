@@ -50,6 +50,7 @@ import {
 } from '../../types/index.js';
 import { addDays } from 'date-fns';
 import type { Logger } from '../../logger.js';
+import type { ClonePayloadSchemaService } from '../payload-schema/clone-payload-schema-service.js';
 import {
     ForbiddenError,
     FOREIGN_KEY_VIOLATION,
@@ -164,6 +165,7 @@ export type ServicesAndReadModels = {
     featureLinksReadModel: IFeatureLinksReadModel;
     resourceLimitsService: ResourceLimitsService;
     variantPayloadValidator: VariantPayloadValidator;
+    clonePayloadSchemaService: ClonePayloadSchemaService;
     strategyValidationService: StrategyValidationService;
 };
 
@@ -212,6 +214,8 @@ export class FeatureToggleService {
 
     private variantPayloadValidator: VariantPayloadValidator;
 
+    private clonePayloadSchemaService: ClonePayloadSchemaService;
+
     constructor(
         {
             featureStrategiesStore,
@@ -235,6 +239,7 @@ export class FeatureToggleService {
             featureLinkService,
             resourceLimitsService,
             variantPayloadValidator,
+            clonePayloadSchemaService,
             strategyValidationService,
         }: ServicesAndReadModels,
     ) {
@@ -245,6 +250,7 @@ export class FeatureToggleService {
         this.tagStore = featureTagStore;
         this.projectStore = projectStore;
         this.featureEnvironmentStore = featureEnvironmentStore;
+        this.clonePayloadSchemaService = clonePayloadSchemaService;
         this.strategyValidationService = strategyValidationService;
         this.segmentService = segmentService;
         this.accessService = accessService;
@@ -1331,6 +1337,15 @@ export class FeatureToggleService {
             newToggle,
             auditUser,
         );
+
+        if (this.flagResolver.isEnabled('payloadSchemas')) {
+            await this.clonePayloadSchemaService.clonePayloadSchema({
+                sourceFeatureName: featureName,
+                targetFeatureName: newFeatureName,
+                project: projectId,
+                auditUser,
+            });
+        }
 
         const variantTasks = newToggle.environments.map((e) => {
             return this.featureEnvironmentStore.addVariantsToFeatureEnvironment(

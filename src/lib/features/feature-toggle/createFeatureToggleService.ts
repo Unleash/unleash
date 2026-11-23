@@ -66,6 +66,10 @@ import { ConstraintValidator } from '../constraints/constraint-validator.js';
 import { VariantPayloadValidator } from '../payload-schema/variant-payload-validator.js';
 import { PayloadSchemaReadModel } from '../payload-schema/payload-schema-read-model.js';
 import { FakePayloadSchemaReadModel } from '../payload-schema/fake-payload-schema-read-model.js';
+import {
+    createClonePayloadSchemaService,
+    createFakeClonePayloadSchemaService,
+} from '../payload-schema/createClonePayloadSchemaService.js';
 import { StrategyValidationService } from './strategy-validation-service.js';
 
 export const createFeatureToggleService = (
@@ -144,6 +148,8 @@ export const createFeatureToggleService = (
     const variantPayloadValidator = new VariantPayloadValidator(
         new PayloadSchemaReadModel(db),
     );
+    const clonePayloadSchemaService =
+        createClonePayloadSchemaService(config)(db);
 
     const strategyValidationService = new StrategyValidationService({
         strategyStore,
@@ -176,6 +182,7 @@ export const createFeatureToggleService = (
             featureLinkService,
             resourceLimitsService,
             variantPayloadValidator,
+            clonePayloadSchemaService,
             strategyValidationService,
         },
     );
@@ -231,6 +238,8 @@ export const createFakeFeatureToggleService = (
     const variantPayloadValidator = new VariantPayloadValidator(
         payloadSchemaReadModel,
     );
+    const clonePayloadSchemaService =
+        createFakeClonePayloadSchemaService(config);
 
     const resourceLimitsService = new ResourceLimitsService(config);
 
@@ -269,6 +278,7 @@ export const createFakeFeatureToggleService = (
             featureLinkService,
             resourceLimitsService,
             variantPayloadValidator,
+            clonePayloadSchemaService,
             strategyValidationService,
         },
     );

@@ -54,6 +54,17 @@ test('a json payload has to be valid JSON even when the feature has no payload s
     );
 });
 
+test('a json payload may leave out an optional property named after a built-in object member', async () => {
+    const validator = validatorWithSchema('my-flag', {
+        type: 'object',
+        properties: { toString: { type: 'string' } },
+    });
+
+    await validator.validateVariants('my-flag', [
+        variant('empty', { type: 'json', value: '{}' }),
+    ]);
+});
+
 test('the payload schema only applies to json payloads', async () => {
     const validator = validatorWithSchema('my-flag', colorSchema);
 

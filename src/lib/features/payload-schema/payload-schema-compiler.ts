@@ -12,6 +12,7 @@ export const compilePayloadSchema = (
         //Turn off warning logs
         strictTypes: false,
         strictTuples: false,
+        ownProperties: true,
     });
     addFormats.default(ajv);
     const matchesSchema = ajv.compile(schema);

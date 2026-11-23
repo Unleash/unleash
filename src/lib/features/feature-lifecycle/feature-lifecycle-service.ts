@@ -90,7 +90,14 @@ export class FeatureLifecycleService {
 
     listen() {
         this.eventStore.on(FEATURE_CREATED, async (event) => {
-            await this.featureInitialized(event.featureName);
+            try {
+                await this.featureInitialized(event.featureName);
+            } catch (e) {
+                this.logger.warn(
+                    `Error handling ${event.type} for ${event.featureName}`,
+                    e,
+                );
+            }
         });
         this.eventBus.on(
             CLIENT_METRICS_ADDED,
@@ -120,10 +127,24 @@ export class FeatureLifecycleService {
             },
         );
         this.eventStore.on(FEATURE_ARCHIVED, async (event) => {
-            await this.featureArchived(event.featureName);
+            try {
+                await this.featureArchived(event.featureName);
+            } catch (e) {
+                this.logger.warn(
+                    `Error handling ${event.type} for ${event.featureName}`,
+                    e,
+                );
+            }
         });
         this.eventStore.on(FEATURE_REVIVED, async (event) => {
-            await this.featureRevived(event.featureName);
+            try {
+                await this.featureRevived(event.featureName);
+            } catch (e) {
+                this.logger.warn(
+                    `Error handling ${event.type} for ${event.featureName}`,
+                    e,
+                );
+            }
         });
     }
 

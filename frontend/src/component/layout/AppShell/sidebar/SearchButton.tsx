@@ -27,11 +27,18 @@ const StyledHotkey = styled('kbd')(({ theme }) => ({
     color: theme.palette.text.disabled,
 }));
 
-export const SearchButton: FC = () => {
+export const SearchButton: FC<{ expanded: boolean; onClick: () => void }> = ({
+    expanded,
+    onClick,
+}) => {
     const hotkey = useCommandBarHotkeyLabel();
 
     return (
-        <StyledSearchButton>
+        <StyledSearchButton
+            onClick={onClick}
+            aria-haspopup='dialog'
+            aria-expanded={expanded}
+        >
             <SearchIcon />
             Search
             <StyledHotkey>{hotkey}</StyledHotkey>

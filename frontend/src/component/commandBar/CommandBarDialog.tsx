@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Dialog, styled } from '@mui/material';
-import { CommandBarPanel } from './CommandBarPanel.tsx';
+import { COMMAND_BAR_LABEL_ID, CommandBarPanel } from './CommandBarPanel.tsx';
 import { useCommandBarHotkey } from './useCommandBarHotkey.ts';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -34,6 +34,7 @@ export const CommandBarDialog = ({
             onClose={() => onOpenChange(false)}
             fullWidth
             maxWidth='sm'
+            aria-labelledby={COMMAND_BAR_LABEL_ID}
         >
             <CommandBarPanel
                 variant='dialog'

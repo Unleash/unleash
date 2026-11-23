@@ -1,5 +1,5 @@
 import { beforeEach, expect, test } from 'vitest';
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Link } from 'react-router';
 import { render } from 'utils/testRenderer';
@@ -610,5 +610,60 @@ test('shows the command bar shortcut on the Search button', () => {
 
     expect(screen.getByRole('button', { name: /^Search/ })).toHaveTextContent(
         'Ctrl+K',
+    );
+});
+
+test('opens the command bar from the Search button with keyboard hints', async () => {
+    render(<AppShell>content</AppShell>);
+    const searchButton = screen.getByRole('button', { name: /^Search/ });
+
+    await userEvent.click(searchButton);
+
+    const commandBar = within(
+        await screen.findByRole('dialog', { name: /command menu/i }),
+    );
+    expect(commandBar.getByRole('textbox')).toHaveFocus();
+    expect(commandBar.getByText('to navigate')).toBeVisible();
+    expect(searchButton).toHaveAttribute('aria-expanded', 'true');
+    expect(searchButton).toHaveAttribute('aria-haspopup', 'dialog');
+});
+
+test('keeps the keyboard hints while showing search results', async () => {
+    render(<AppShell>content</AppShell>);
+    await userEvent.click(screen.getByRole('button', { name: /^Search/ }));
+    const commandBar = within(await screen.findByRole('dialog'));
+
+    await userEvent.type(commandBar.getByRole('textbox'), 'segments');
+
+    expect(
+        await commandBar.findByRole('link', { name: 'Segments' }),
+    ).toBeVisible();
+    expect(commandBar.getByText('to navigate')).toBeVisible();
+});
+
+test('returns focus to the Search button when the command bar closes', async () => {
+    render(<AppShell>content</AppShell>);
+    const searchButton = screen.getByRole('button', { name: /^Search/ });
+    await userEvent.click(searchButton);
+    await screen.findByRole('dialog');
+
+    await userEvent.keyboard('{Escape}');
+
+    await waitFor(() =>
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
+    );
+    expect(searchButton).toHaveFocus();
+    expect(searchButton).toHaveAttribute('aria-expanded', 'false');
+});
+
+test('toggles the command bar with Ctrl+K in Configure workspace mode, which has no Search button', async () => {
+    render(<AppShell>content</AppShell>, { route: '/context' });
+
+    await userEvent.keyboard('{Control>}k{/Control}');
+    expect(await screen.findByRole('dialog')).toBeVisible();
+
+    await userEvent.keyboard('{Control>}k{/Control}');
+    await waitFor(() =>
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument(),
     );
 });

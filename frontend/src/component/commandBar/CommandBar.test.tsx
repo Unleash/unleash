@@ -138,6 +138,7 @@ test('shows suggestions while the inline search field is focused', async () => {
     await userEvent.click(screen.getByRole('textbox'));
 
     expect(screen.getByText('Pages')).toBeVisible();
+    expect(screen.queryByText('to navigate')).not.toBeInTheDocument();
 });
 
 test('hides the inline suggestions on a click outside', async () => {

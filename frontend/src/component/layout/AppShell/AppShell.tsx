@@ -7,6 +7,7 @@ import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimel
 import { FloatingOnboardingChecklistProvider } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistContext.tsx';
 import { FloatingOnboardingChecklistVisibilityGate } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistVisibilityGate.tsx';
 import { HelpButtonHintProvider } from 'component/menu/Header/HelpResources/HelpButtonHintContext.tsx';
+import { CommandBarDialog } from 'component/commandBar/CommandBarDialog';
 import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
 import UnleashLogoWhite from 'assets/img/logoWithWhiteText.svg?react';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
@@ -110,6 +111,7 @@ const Sidebar: FC = () => {
     const mode = choice ? choice.mode : getPageMode(pathname);
     const setMode = (next: SidebarMode) => setChoice({ mode: next, pathname });
     const panelRef = useRef<HTMLDivElement>(null);
+    const [searchOpen, setSearchOpen] = useState(false);
 
     // Only manual switches move focus, not navigation. This runs after the
     // Settings menu returns focus to its button, so it wins.
@@ -123,7 +125,12 @@ const Sidebar: FC = () => {
     return (
         <StyledSidebar aria-label='Main'>
             <StyledSidebarScrollArea ref={panelRef}>
-                {mode === 'app' ? <AppNavigation /> : null}
+                {mode === 'app' ? (
+                    <AppNavigation
+                        searchOpen={searchOpen}
+                        onSearch={() => setSearchOpen(true)}
+                    />
+                ) : null}
                 {mode === 'workspace' ? (
                     <ConfigureWorkspaceNavigation
                         onBack={() => setMode('app')}
@@ -142,11 +149,15 @@ const Sidebar: FC = () => {
                     />
                 </SidebarList>
             </StyledSidebarFooter>
+            <CommandBarDialog open={searchOpen} onOpenChange={setSearchOpen} />
         </StyledSidebar>
     );
 };
 
-const AppNavigation: FC = () => {
+const AppNavigation: FC<{ searchOpen: boolean; onSearch: () => void }> = ({
+    searchOpen,
+    onSearch,
+}) => {
     const { isEnterprise } = useUiConfig();
 
     return (
@@ -158,7 +169,7 @@ const AppNavigation: FC = () => {
                 />
             </StyledLogoLink>
             <StyledSearchSlot>
-                <SearchButton />
+                <SearchButton expanded={searchOpen} onClick={onSearch} />
             </StyledSearchSlot>
             <SidebarList>
                 <SidebarLink

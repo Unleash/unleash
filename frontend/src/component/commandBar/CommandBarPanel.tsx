@@ -31,6 +31,7 @@ import { CommandBarFeedback } from './CommandBarFeedback.tsx';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { useCommandBarRoutes } from './useCommandBarRoutes.ts';
 import { useCommandBarPlaceholder } from './useCommandBarHotkey.ts';
+import { CommandBarKeyboardHints } from './CommandBarKeyboardHints.tsx';
 
 const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -54,6 +55,9 @@ const CommandResultsPaper = styled(Paper)(({ theme }) => ({
 }));
 
 type Variant = 'inline' | 'dialog';
+
+export const COMMAND_BAR_LABEL_ID = 'command-bar-label';
+const COMMAND_BAR_INPUT_ID = 'command-bar-input';
 
 const StyledContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'active' && prop !== 'variant',
@@ -333,10 +337,15 @@ export const CommandBarPanel = ({
                 />
 
                 <ScreenReaderOnly>
-                    <label htmlFor={'command-bar-input'}>{placeholder}</label>
+                    <label
+                        id={COMMAND_BAR_LABEL_ID}
+                        htmlFor={COMMAND_BAR_INPUT_ID}
+                    >
+                        {placeholder}
+                    </label>
                 </ScreenReaderOnly>
                 <StyledInputBase
-                    id='command-bar-input'
+                    id={COMMAND_BAR_INPUT_ID}
                     inputRef={searchInputRef}
                     placeholder={placeholder}
                     autoFocus={variant === 'dialog'}
@@ -415,6 +424,9 @@ export const CommandBarPanel = ({
                                 </>
                             }
                         />
+                        {variant === 'dialog' ? (
+                            <CommandBarKeyboardHints />
+                        ) : null}
                     </CommandResultsPaper>
                 }
                 elseShow={
@@ -428,6 +440,9 @@ export const CommandBarPanel = ({
                                 routes={allRoutes}
                                 onClick={clearSearchValue}
                             />
+                            {variant === 'dialog' ? (
+                                <CommandBarKeyboardHints />
+                            ) : null}
                         </CommandResultsPaper>
                     )
                 }

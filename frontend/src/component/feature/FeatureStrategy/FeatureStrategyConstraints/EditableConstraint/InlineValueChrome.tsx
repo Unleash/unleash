@@ -16,6 +16,7 @@ import {
     type FocusEvent,
     type FocusEventHandler,
     type KeyboardEvent,
+    type MouseEvent,
     type ReactNode,
     type Ref,
     type RefObject,
@@ -152,6 +153,16 @@ const useLockedFlipPlacement = (initialPlacement: LockablePlacement) => {
     );
 
     return { placement, popperOptions, modifiers };
+};
+
+const focusableSelector =
+    'input, textarea, select, button, a[href], [tabindex]';
+
+const keepFocusOnInertPress = (e: MouseEvent<HTMLDivElement>) => {
+    const focusable = (e.target as Element).closest(focusableSelector);
+    if (!focusable || !e.currentTarget.contains(focusable)) {
+        e.preventDefault();
+    }
 };
 
 const Container = styled('div')({
@@ -411,7 +422,7 @@ export const InlineValueChrome: FC<InlineValueChromeProps> = ({
                 popperOptions={popperOptions}
                 modifiers={modifiers}
             >
-                <FloatingPanel>
+                <FloatingPanel onMouseDown={keepFocusOnInertPress}>
                     <ValueDescriptionBody
                         error={error}
                         helpText={helpText}

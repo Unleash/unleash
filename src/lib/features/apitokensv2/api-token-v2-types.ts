@@ -49,7 +49,7 @@ export interface IApiTokenV2Store {
     ): Promise<ApiTokenV2 | undefined>;
     delete(selector: string): Promise<void>;
     deleteByEnvironment(environment: string): Promise<ApiTokenV2[]>;
-    markSeenAt(selector: string): Promise<void>;
+    markSeenAt(seenBySelector: ReadonlyMap<string, Date>): Promise<void>;
     countUserCreatedTokens(): Promise<number>;
     deleteSystemCreatedTokensNotSeen(
         minutesSinceLastSeen: number,

@@ -5,6 +5,7 @@ import {
 } from 'date-fns';
 import type { IUnleashConfig } from '../../types/index.js';
 import type { IUnleashServices } from '../../services/index.js';
+import { allSettledWithRejection } from '../../util/allSettledWithRejection.js';
 
 /**
  * Schedules service methods.
@@ -64,7 +65,11 @@ export const scheduleServices = (
     );
 
     schedulerService.schedule(
-        apiTokenService.updateLastSeen.bind(apiTokenService),
+        () =>
+            allSettledWithRejection([
+                apiTokenService.updateLastSeen(),
+                apiTokenV2Service.updateLastSeen(),
+            ]),
         minutesToMilliseconds(3),
         'updateLastSeen',
     );

@@ -18,7 +18,10 @@ import type {
 import type EventService from '../events/event-service.js';
 import { omitKeys } from '../../util/index.js';
 import { BadDataError, throwExceedsLimitError } from '../../error/index.js';
-import { FOREIGN_KEY_VIOLATION } from '../../error/db-error.js';
+import {
+    FOREIGN_KEY_VIOLATION,
+    isTransientDbError,
+} from '../../error/db-error.js';
 import {
     type IEnvironmentStore,
     type IUnleashConfig,
@@ -152,6 +155,7 @@ export const createFakeApiTokenV2Service = (
 };
 
 export interface ReadOnlyApiTokenV2Service {
+    updateLastSeen(): Promise<void>;
     getToken(identifier: ApiTokenV2Identifier): Promise<IApiToken | undefined>;
     getTokenWithCache(
         credential: ApiTokenV2Credential,
@@ -206,6 +210,7 @@ class ApiTokenV2Service
     private eventStore: IEventStore;
 
     private tokenRevision = 0;
+    private lastSeenBySelector = new Map<string, Date>();
     private timer: Function;
 
     constructor(
@@ -592,7 +597,7 @@ class ApiTokenV2Service
             return undefined;
         }
 
-        void this.apiTokenV2Store.markSeenAt(token.selector);
+        this.recordLastSeen(token.selector);
 
         const apiUser: IApiUser = new ApiUser({
             tokenName: token.tokenName,
@@ -604,6 +609,39 @@ class ApiTokenV2Service
             appName: token.appName,
         });
         return apiUser;
+    }
+
+    private recordLastSeen(selector: string, seenAt: Date = new Date()): void {
+        const previous = this.lastSeenBySelector.get(selector);
+        if (!previous || seenAt > previous) {
+            this.lastSeenBySelector.set(selector, seenAt);
+        }
+    }
+
+    async updateLastSeen(): Promise<void> {
+        const batch = this.lastSeenBySelector;
+        if (batch.size === 0) {
+            return;
+        }
+
+        this.lastSeenBySelector = new Map();
+        try {
+            await this.apiTokenV2Store.markSeenAt(batch);
+        } catch (error) {
+            const retryable = isTransientDbError(error);
+
+            if (retryable) {
+                for (const [selector, seenAt] of batch) {
+                    this.recordLastSeen(selector, seenAt);
+                }
+            }
+            this.logger.warn(
+                retryable
+                    ? 'Could not update v2 API token last-seen timestamps. Will retry on the next flush.'
+                    : 'Could not update v2 API token last-seen timestamps. Discarding the failed batch.',
+                error,
+            );
+        }
     }
 
     async deleteSystemCreatedTokensNotSeen(): Promise<

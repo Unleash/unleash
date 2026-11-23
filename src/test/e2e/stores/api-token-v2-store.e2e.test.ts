@@ -51,6 +51,32 @@ const remainingSelectors = async (): Promise<string[]> => {
     return rows.map((row) => row.selector);
 };
 
+test('batches last-seen timestamps without overwriting newer observations', async () => {
+    const earlier = subMinutes(new Date(), 10);
+    const later = subMinutes(new Date(), 5);
+    await insertToken({ selector: 'first', userCreated: false, seenAt: null });
+    await insertToken({ selector: 'second', userCreated: false, seenAt: null });
+    await insertToken({
+        selector: 'third',
+        userCreated: false,
+        seenAt: later,
+    });
+
+    await store.markSeenAt(
+        new Map([
+            ['first', later],
+            ['second', earlier],
+            ['third', earlier],
+        ]),
+    );
+
+    expect(await store.getBySelector('first')).toMatchObject({ seenAt: later });
+    expect(await store.getBySelector('second')).toMatchObject({
+        seenAt: earlier,
+    });
+    expect(await store.getBySelector('third')).toMatchObject({ seenAt: later });
+});
+
 describe('API TOKENS V2 store cleanup', () => {
     test('deletes unseen system tokens and keeps everything else', async () => {
         await insertToken({

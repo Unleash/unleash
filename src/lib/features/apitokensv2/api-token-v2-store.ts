@@ -174,10 +174,25 @@ export class ApiTokenV2Store implements IApiTokenV2Store {
         return tokens;
     }
 
-    async markSeenAt(selector: string): Promise<void> {
-        await this.db(TABLE)
-            .where({ selector })
-            .update({ seen_at: new Date() });
+    async markSeenAt(seenBySelector: ReadonlyMap<string, Date>): Promise<void> {
+        // Each pod buffers one timestamp per selector in memory. During a flush,
+        // unnest pairs the selector and timestamp at each array index into rows
+        // used by the UPDATE. The rows exist only for that single SQL statement.
+        const observations = this.db.raw(
+            'unnest(?::text[], ?::timestamptz[]) AS observed(selector, seen_at)',
+            [[...seenBySelector.keys()], [...seenBySelector.values()]],
+        );
+
+        const observedSeenAt = this.db.ref('observed.seen_at');
+        await this.db({ tokens: TABLE })
+            .update({ seen_at: observedSeenAt })
+            .updateFrom(observations)
+            .where('tokens.selector', this.db.ref('observed.selector'))
+            .where((query) =>
+                query
+                    .whereNull('tokens.seen_at')
+                    .orWhere('tokens.seen_at', '<', observedSeenAt),
+            );
     }
 
     /**

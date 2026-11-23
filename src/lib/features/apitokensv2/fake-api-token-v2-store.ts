@@ -98,10 +98,12 @@ export class FakeApiTokenV2Store implements IApiTokenV2Store {
         return deleted;
     }
 
-    async markSeenAt(selector: string): Promise<void> {
-        const token = this.tokens.get(selector);
-        if (token) {
-            token.seenAt = new Date();
+    async markSeenAt(seenBySelector: ReadonlyMap<string, Date>): Promise<void> {
+        for (const [selector, seenAt] of seenBySelector) {
+            const token = this.tokens.get(selector);
+            if (token && (!token.seenAt || token.seenAt < seenAt)) {
+                token.seenAt = seenAt;
+            }
         }
     }
 }

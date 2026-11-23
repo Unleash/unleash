@@ -25,7 +25,9 @@ import {
 
 class FakeApiTokenV2Store implements IApiTokenV2Store {
     stored?: ApiTokenV2WithVerifier;
-    markedSeen = false;
+    markSeenAt = vi.fn<(batch: ReadonlyMap<string, Date>) => Promise<void>>(
+        async () => {},
+    );
     getBySelectorCalls = 0;
 
     // when true, the cleanup reaps stored the way the real query would
@@ -99,10 +101,6 @@ class FakeApiTokenV2Store implements IApiTokenV2Store {
         return [token];
     }
 
-    async markSeenAt(): Promise<void> {
-        this.markedSeen = true;
-    }
-
     async deleteSystemCreatedTokensNotSeen(
         _minutesSinceLastSeen: number,
     ): Promise<Omit<ApiTokenV2, 'projects'>[]> {
@@ -142,6 +140,27 @@ const createService = (
             eventService,
         }),
     };
+};
+
+const createAuthenticationFixture = async () => {
+    const apiTokenV2Store = new FakeApiTokenV2Store();
+    const environmentStore = new FakeEnvironmentStore();
+    await environmentStore.create({
+        enabled: true,
+        protected: false,
+        sortOrder: 0,
+        type: 'production',
+        name: 'production',
+    });
+    const { service } = createService({ environmentStore, apiTokenV2Store });
+    const token = await service.create(tokenInput, SYSTEM_USER_AUDIT);
+    const credential: ApiTokenV2Credential = {
+        kind: AuthorizationTokenKind.API_TOKEN,
+        version: 'v2',
+        secret: token.secret,
+        selector: token.selector,
+    };
+    return { service, credential, markSeenAt: apiTokenV2Store.markSeenAt };
 };
 
 describe('ApiTokenV2Service', () => {
@@ -321,35 +340,71 @@ describe('ApiTokenV2Service', () => {
         ).resolves.toBeUndefined();
     });
 
-    test('authenticates with one selector lookup and a verifier comparison', async () => {
-        const apiTokenV2Store = new FakeApiTokenV2Store();
-        const environmentStore = new FakeEnvironmentStore();
-        await environmentStore.create({
-            enabled: true,
-            protected: false,
-            sortOrder: 0,
-            type: 'production',
-            name: 'production',
-        });
-        const { service } = createService({
-            environmentStore,
-            apiTokenV2Store,
-        });
-        const token = await service.create(tokenInput, SYSTEM_USER_AUDIT);
-        const user = await service.getUserForToken({
-            kind: AuthorizationTokenKind.API_TOKEN,
-            version: 'v2',
-            secret: token.secret,
-            selector: token.selector,
-        });
+    test('authenticates a valid credential as the configured API user', async () => {
+        const { service, credential } = await createAuthenticationFixture();
+        const user = await service.getUserForToken(credential);
 
         expect(user).toMatchObject({
             username: 'backend token',
             projects: ['default'],
             environment: 'production',
-            secret: token.selector,
+            secret: credential.selector,
         });
-        expect(apiTokenV2Store.markedSeen).toBe(true);
+    });
+
+    test('flushes only the latest use of a selector, including cached authentications', async () => {
+        const { service, credential, markSeenAt } =
+            await createAuthenticationFixture();
+        const firstSeen = new Date();
+        const latestSeen = new Date(firstSeen.getTime() + 1000);
+        vi.useFakeTimers({ toFake: ['Date'] });
+        try {
+            vi.setSystemTime(firstSeen);
+            await service.getUserForToken(credential);
+            vi.setSystemTime(latestSeen);
+            await service.getUserForToken(credential);
+        } finally {
+            vi.useRealTimers();
+        }
+
+        expect(markSeenAt).not.toHaveBeenCalled();
+        await service.updateLastSeen();
+        await service.updateLastSeen();
+
+        expect(markSeenAt).toHaveBeenCalledExactlyOnceWith(
+            new Map([[credential.selector, latestSeen]]),
+        );
+    });
+
+    test('retries the same observations after a temporary write failure', async () => {
+        const { service, credential, markSeenAt } =
+            await createAuthenticationFixture();
+        await service.getUserForToken(credential);
+        markSeenAt.mockRejectedValueOnce(
+            Object.assign(new Error('pool timeout'), {
+                name: 'KnexTimeoutError',
+            }),
+        );
+        await service.updateLastSeen();
+        await service.updateLastSeen();
+
+        expect(markSeenAt).toHaveBeenCalledTimes(2);
+        expect(markSeenAt).toHaveBeenLastCalledWith(
+            markSeenAt.mock.calls[0][0],
+        );
+    });
+
+    test('discards the batch after a non-retryable write failure', async () => {
+        const { service, credential, markSeenAt } =
+            await createAuthenticationFixture();
+        await service.getUserForToken(credential);
+        markSeenAt.mockRejectedValueOnce(
+            Object.assign(new Error('permission denied'), { code: '42501' }),
+        );
+        await service.updateLastSeen();
+        await service.updateLastSeen();
+
+        expect(markSeenAt).toHaveBeenCalledTimes(1);
     });
 
     test('rejects an altered credential without marking it as seen', async () => {
@@ -376,7 +431,8 @@ describe('ApiTokenV2Service', () => {
                 selector: token.selector,
             }),
         ).resolves.toBeUndefined();
-        expect(apiTokenV2Store.markedSeen).toBe(false);
+        await service.updateLastSeen();
+        expect(apiTokenV2Store.markSeenAt).not.toHaveBeenCalled();
     });
 
     test('rejects an altered credential in the token cache', async () => {

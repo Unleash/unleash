@@ -2,6 +2,7 @@ import BadDataError from './bad-data-error.js';
 import {
     UNIQUE_CONSTRAINT_VIOLATION,
     FOREIGN_KEY_VIOLATION,
+    isTransientDbError,
 } from './db-error.js';
 import DisabledError from './disabled-error.js';
 import FeatureHasTagError from './feature-has-tag-error.js';
@@ -33,6 +34,7 @@ export {
     BadGatewayError,
     UNIQUE_CONSTRAINT_VIOLATION,
     FOREIGN_KEY_VIOLATION,
+    isTransientDbError,
     NotFoundError,
     DisabledError,
     FeatureHasTagError,

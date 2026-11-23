@@ -26,6 +26,7 @@ const legacyProjectDefaultStrategyDocumentation = {
 type StrategyFormTemplateProps = {
     formatApiCode?: () => string;
     formContext?: StrategyFormContext;
+    loading?: boolean;
     children: ReactNode;
 };
 
@@ -51,6 +52,7 @@ const guidanceContent = (
 export const StrategyFormTemplate = ({
     formatApiCode,
     formContext,
+    loading,
     children,
 }: StrategyFormTemplateProps) => {
     const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
@@ -61,6 +63,7 @@ export const StrategyFormTemplate = ({
             fitContainerHeight={singlePageStrategyForm}
             disablePadding
             formatApiCode={formatApiCode}
+            loading={loading}
             {...guidanceContent(singlePageStrategyForm, formContext)}
         >
             {children}

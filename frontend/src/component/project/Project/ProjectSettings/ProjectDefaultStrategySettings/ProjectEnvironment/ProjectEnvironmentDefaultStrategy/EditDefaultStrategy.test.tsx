@@ -92,9 +92,27 @@ test('should render fallback default strategy with no project default stickiness
     await screen.findByText('default');
 });
 
-test('a failed save selects the unnamed variant, shows the error on its name field and focuses it', async () => {
+test('the form opens with the saved strategy, and a failed save selects the unnamed variant, shows the error on its name field and focuses it', async () => {
     setupEditFormEndpoints();
+    testServerRoute(server, '/api/admin/projects/default/overview', {
+        environments: [
+            {
+                environment: 'development',
+                defaultStrategy: {
+                    name: 'flexibleRollout',
+                    constraints: [],
+                    parameters: {
+                        rollout: '67',
+                        stickiness: 'default',
+                        groupId: '',
+                    },
+                },
+            },
+        ],
+    });
     renderEditForm();
+
+    expect(await screen.findByRole('spinbutton')).toHaveValue(67);
 
     fireEvent.click(await screen.findByRole('button', { name: /^Variants/ }));
     fireEvent.click(screen.getByTestId('ADD_STRATEGY_VARIANT_BUTTON'));

@@ -3,7 +3,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { Button } from '@mui/material';
 import type { IStrategy, StrategyFormState } from 'interfaces/strategy';
@@ -33,7 +33,7 @@ export const useDefaultStrategy = (
     projectId: string,
     environmentId: string,
 ) => {
-    const { project, refetch } = useProjectOverview(projectId);
+    const { project, loading, refetch } = useProjectOverview(projectId);
 
     const defaultStrategyFallback = {
         name: 'flexibleRollout',
@@ -49,7 +49,7 @@ export const useDefaultStrategy = (
         (env) => env.environment === environmentId,
     )?.defaultStrategy as StrategyFormState;
 
-    return { defaultStrategyFallback, strategy, refetch };
+    return { defaultStrategyFallback, strategy, loading, refetch };
 };
 
 const EditDefaultStrategy = () => {
@@ -60,12 +60,19 @@ const EditDefaultStrategy = () => {
     const {
         defaultStrategyFallback,
         strategy: savedStrategy,
+        loading: loadingSavedStrategy,
         refetch: refetchProject,
     } = useDefaultStrategy(projectId, environmentId);
 
     const [strategy, setStrategy] = useState<StrategyFormState>(
         (savedStrategy as StrategyFormState) || defaultStrategyFallback,
     );
+
+    useEffect(() => {
+        if (savedStrategy) {
+            setStrategy(savedStrategy);
+        }
+    }, [savedStrategy]);
 
     const { updateDefaultStrategy, loading } = useProjectApi();
     const { strategyDefinition } = useStrategy(strategy.name);
@@ -127,6 +134,7 @@ const EditDefaultStrategy = () => {
     return (
         <StrategyFormTemplate
             formContext='projectDefaultStrategy'
+            loading={loadingSavedStrategy}
             formatApiCode={() =>
                 formatUpdateStrategyApiCode(
                     projectId,

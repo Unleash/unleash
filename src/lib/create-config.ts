@@ -49,6 +49,7 @@ import {
     parseEnvVarNumbers,
     parseEnvVarStrings,
 } from './util/parseEnvVar.js';
+import { PROMETHEUS_RESPONSE_BYTES_LIMIT } from './util/constants.js';
 import {
     defaultExperimentalOptions,
     type IExperimentalOptions,
@@ -881,6 +882,14 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.externalPrometheusImpactMetricsApi ||
         process.env.EXTERNAL_PROMETHEUS_IMPACT_METRICS_API;
 
+    const externalPrometheusImpactMetricsResponseBytesLimit = Math.max(
+        PROMETHEUS_RESPONSE_BYTES_LIMIT,
+        parseEnvVarNumber(
+            process.env.EXTERNAL_PROMETHEUS_IMPACT_METRICS_RESPONSE_BYTES_LIMIT,
+            PROMETHEUS_RESPONSE_BYTES_LIMIT,
+        ),
+    );
+
     const checkDbOnReady =
         Boolean(options.checkDbOnReady) ??
         parseEnvVarBoolean(process.env.CHECK_DB_ON_READY, false);
@@ -922,6 +931,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         prometheusApi,
         prometheusImpactMetricsApi,
         externalPrometheusImpactMetricsApi,
+        externalPrometheusImpactMetricsResponseBytesLimit,
         publicFolder: options.publicFolder,
         disableScheduler: options.disableScheduler,
         isEnterprise: isEnterprise,

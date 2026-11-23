@@ -5,6 +5,8 @@ export const ALL_ENVS = '*';
 
 export const URL_SAFE_BASIC = /^[a-z0-9\-_]*$/;
 
+export const PROMETHEUS_RESPONSE_BYTES_LIMIT = 500_000;
+
 export const ROOT_PERMISSION_TYPE = 'root';
 export const ENVIRONMENT_PERMISSION_TYPE = 'environment';
 export const PROJECT_PERMISSION_TYPE = 'project';

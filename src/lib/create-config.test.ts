@@ -7,6 +7,7 @@ beforeEach(() => {
     delete process.env.INIT_ADMIN_API_TOKENS;
     delete process.env.INIT_CLIENT_API_TOKENS;
     delete process.env.ENABLED_ENVIRONMENTS;
+    delete process.env.EXTERNAL_PROMETHEUS_IMPACT_METRICS_RESPONSE_BYTES_LIMIT;
 });
 test('should create default config', async () => {
     const config = createConfig({
@@ -626,4 +627,26 @@ describe('session idle timeout', () => {
 
         expect(sessionOf().idleTimeoutMinutes).toBe(0);
     });
+});
+
+test('external prometheus response limit can be raised above the default', () => {
+    process.env.EXTERNAL_PROMETHEUS_IMPACT_METRICS_RESPONSE_BYTES_LIMIT =
+        '2000000';
+
+    const config = createConfig({});
+
+    expect(config.externalPrometheusImpactMetricsResponseBytesLimit).toBe(
+        2_000_000,
+    );
+});
+
+test('external prometheus response limit stays at the default when the configured value is lower', () => {
+    process.env.EXTERNAL_PROMETHEUS_IMPACT_METRICS_RESPONSE_BYTES_LIMIT =
+        '100000';
+
+    const config = createConfig({});
+
+    expect(config.externalPrometheusImpactMetricsResponseBytesLimit).toBe(
+        500_000,
+    );
 });

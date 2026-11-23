@@ -329,6 +329,7 @@ export interface IUnleashConfig {
     prometheusApi?: string;
     prometheusImpactMetricsApi?: string;
     externalPrometheusImpactMetricsApi?: string;
+    externalPrometheusImpactMetricsResponseBytesLimit?: number;
     publicFolder?: string;
     disableScheduler?: boolean;
     isEnterprise: boolean;

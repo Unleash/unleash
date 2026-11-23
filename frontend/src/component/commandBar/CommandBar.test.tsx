@@ -2,6 +2,7 @@ import { beforeEach, expect, test } from 'vitest';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { backdropClasses } from '@mui/material/Backdrop';
+import { Dialog } from '@mui/material';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { resizeScreen } from 'utils/resizeScreen';
@@ -294,4 +295,19 @@ test('leaves the arrow keys to the page while the search dialog is closed', () =
     });
 
     expect(notPrevented).toBe(true);
+});
+
+test('leaves Ctrl+K to another open dialog below the md breakpoint', async () => {
+    render(
+        <>
+            <CommandBar />
+            <Dialog open>
+                <p>other dialog</p>
+            </Dialog>
+        </>,
+    );
+
+    await userEvent.keyboard('{Control>}k{/Control}');
+
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
 });

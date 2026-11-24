@@ -130,12 +130,15 @@ Instead of `!!someVariable` prefer `Boolean(someVariable)`.
 - **Frontend**: Vitest + Testing Library
 - **E2E**: Cypress (`/frontend/cypress/`)
 
-Run tests with:
+From the repository root, run the frontend and backend suites separately:
+
 ```bash
-pnpm test          # All tests
-pnpm test:frontend # Frontend only
-pnpm test:backend  # Backend only
+pnpm --dir frontend test # Frontend Vitest suite
+pnpm test                # Backend unit and integration suites
 ```
+
+The backend suite needs PostgreSQL. See the
+[contributor guide's database setup](contributing/CONTRIBUTING.md#running-end-to-end-e2e-tests).
 
 ## Critical Files Reference
 

@@ -9,6 +9,25 @@ export const isObjectSchema = (
 
 export type SchemaMatcher = (schema: JsonSchemaProperty) => boolean;
 
+export const withoutNull = (
+    schema: JsonSchemaProperty,
+): { schema: JsonSchemaProperty; emptyValue: null | undefined } => {
+    const { type } = schema;
+    if (!Array.isArray(type) || type.length !== 2 || !type.includes('null')) {
+        return { schema, emptyValue: undefined };
+    }
+    return {
+        schema: {
+            ...schema,
+            type: type.find((t) => t !== 'null'),
+            ...(schema.enum && {
+                enum: schema.enum.filter((option) => option !== null),
+            }),
+        },
+        emptyValue: null,
+    };
+};
+
 export const isPlainStringOrNumberSchema: SchemaMatcher = (schema) =>
     !Array.isArray(schema.enum) &&
     !Array.isArray(schema.anyOf) &&
@@ -17,6 +36,10 @@ export const isPlainStringOrNumberSchema: SchemaMatcher = (schema) =>
         schema.type === 'string' ||
         schema.type === 'number' ||
         schema.type === 'integer');
+
+export const acceptsEmptyString: SchemaMatcher = (schema) =>
+    (schema.type === undefined || schema.type === 'string') &&
+    schema.format === undefined;
 
 export const isDateTimeSchema: SchemaMatcher = (schema) =>
     isPlainStringOrNumberSchema(schema) && schema.format === 'date-time';

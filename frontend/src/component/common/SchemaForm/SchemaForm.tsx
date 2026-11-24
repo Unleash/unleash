@@ -11,6 +11,7 @@ import Input from 'component/common/Input/Input';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import { parseDateValue, parseValidDate } from 'component/common/util.ts';
 import {
+    acceptsEmptyString,
     isArraySchema,
     isBooleanSchema,
     isDateTimeSchema,
@@ -19,6 +20,7 @@ import {
     isObjectWithPropertiesSchema,
     isPlainStringOrNumberSchema,
     type SchemaMatcher,
+    withoutNull,
 } from './schemaMatchers.ts';
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 import {
@@ -77,12 +79,13 @@ interface ISchemaFormFieldProps {
 
 export const SchemaFormField = ({
     name,
-    schema,
+    schema: declaredSchema,
     value,
     onChange,
     required,
     hideLabel,
 }: ISchemaFormFieldProps) => {
+    const { schema, emptyValue } = withoutNull(declaredSchema);
     const label = schema.title ?? name;
     const descriptionId = useId();
 
@@ -176,7 +179,11 @@ export const SchemaFormField = ({
                     type='datetime-local'
                     value={toDateTimeInputValue(value)}
                     onChange={(event) =>
-                        onChange(fromDateTimeInputValue(event.target.value))
+                        onChange(
+                            event.target.value
+                                ? fromDateTimeInputValue(event.target.value)
+                                : emptyValue,
+                        )
                     }
                     fullWidth
                 />
@@ -185,23 +192,24 @@ export const SchemaFormField = ({
         {
             matches: isEnumSchema,
             render: () => {
-                const enumOptions = (schema.enum ?? []).map((option) => ({
+                const enumValues = schema.enum ?? [];
+                const enumOptions = enumValues.map((option) => ({
                     key: String(option),
-                    label: String(option),
+                    label: String(option) || 'None',
                 }));
-                const options = required
-                    ? enumOptions
-                    : [{ key: '', label: 'None' }, ...enumOptions];
+                const noneValue = enumValues.includes('') ? '' : emptyValue;
+                const options =
+                    noneValue === '' || (required && emptyValue === undefined)
+                        ? enumOptions
+                        : [{ key: '', label: 'None' }, ...enumOptions];
                 return (
                     <GeneralSelect
                         label={label}
                         visuallyHideLabel={hideLabel}
                         description={schema.description}
                         options={options}
-                        value={value === undefined ? '' : String(value)}
-                        onChange={(key) =>
-                            onChange(key === '' ? undefined : key)
-                        }
+                        value={String(value ?? '')}
+                        onChange={(key) => onChange(key || noneValue)}
                         disabled={Boolean(schema.readOnly)}
                         fullWidth
                     />
@@ -219,7 +227,13 @@ export const SchemaFormField = ({
                     disabled={Boolean(schema.readOnly)}
                     type={htmlInputType(schema)}
                     value={(value as string | number) ?? ''}
-                    onChange={(event) => onChange(event.target.value)}
+                    onChange={(event) =>
+                        onChange(
+                            event.target.value || acceptsEmptyString(schema)
+                                ? event.target.value
+                                : emptyValue,
+                        )
+                    }
                     fullWidth
                     slotProps={{
                         htmlInput: {

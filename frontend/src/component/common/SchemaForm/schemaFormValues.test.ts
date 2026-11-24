@@ -172,3 +172,25 @@ test('defaultPayloadValue omits an optional object even when one of its own prop
 
     expect(defaultPayloadValue(schema)).toEqual({ name: 'Jane' });
 });
+
+test('defaultPayloadValue fills a required nullable property with null', () => {
+    const schema: JsonSchemaProperty = {
+        type: 'object',
+        required: ['until'],
+        properties: {
+            until: { type: ['string', 'null'], format: 'date-time' },
+        },
+    };
+
+    expect(defaultPayloadValue(schema)).toEqual({ until: null });
+});
+
+test('defaultPayloadValue leaves a required formatted string unset, since no empty string matches a format', () => {
+    const schema: JsonSchemaProperty = {
+        type: 'object',
+        required: ['contact'],
+        properties: { contact: { type: 'string', format: 'email' } },
+    };
+
+    expect(defaultPayloadValue(schema)).toEqual({});
+});

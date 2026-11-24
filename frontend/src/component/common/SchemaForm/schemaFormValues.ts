@@ -1,10 +1,12 @@
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 import {
+    acceptsEmptyString,
     isArraySchema,
     isBooleanSchema,
     isDictionarySchema,
     isEnumSchema,
     isObjectWithPropertiesSchema,
+    withoutNull,
 } from 'component/common/SchemaForm/schemaMatchers.ts';
 import { isPlainObject } from 'utils/plainObject';
 
@@ -18,13 +20,15 @@ const firstExample = (schema: JsonSchemaProperty): unknown => {
 const asRecord = (value: unknown): Record<string, unknown> =>
     isPlainObject(value) ? value : {};
 
-const emptyValueForProperty = (schema: JsonSchemaProperty): unknown => {
+const emptyValueForProperty = (declared: JsonSchemaProperty): unknown => {
+    const { schema, emptyValue } = withoutNull(declared);
+    if (emptyValue === null) return null;
     if (isArraySchema(schema)) return [];
     if (isBooleanSchema(schema)) return false;
     if (isDictionarySchema(schema)) return {};
     if (isEnumSchema(schema)) return schema.enum?.[0];
     if (schema.type === 'number' || schema.type === 'integer') return 0;
-    return '';
+    return acceptsEmptyString(schema) ? '' : undefined;
 };
 
 type FallbackProperty = {

@@ -73,3 +73,35 @@ test('sorts segment ids on strategies in delta read model', async () => {
     expect(result).toHaveLength(1);
     expect(result[0].strategies?.[0].segments).toEqual([1, 2, 3]);
 });
+
+test('treats _ and % in the name prefix as literal characters', async () => {
+    await db
+        .rawDatabase('features')
+        .insert([
+            { name: 'prefix_flag' },
+            { name: 'prefixxflag' },
+            { name: 'prefix-flag' },
+        ]);
+
+    const readModel = new ClientFeatureToggleDeltaReadModel(
+        db.rawDatabase,
+        new EventEmitter(),
+    );
+
+    const namesFor = async (namePrefix: string) => {
+        const features = await readModel.getAll({
+            environment: 'some-cool-new-test-env',
+            namePrefix,
+        });
+        return features.map(({ name }) => name).sort();
+    };
+
+    expect(await namesFor('prefix_')).toStrictEqual(['prefix_flag']);
+    expect(await namesFor('%')).toStrictEqual([]);
+    expect(await namesFor('_')).toStrictEqual([]);
+    expect(await namesFor('prefix')).toStrictEqual([
+        'prefix-flag',
+        'prefix_flag',
+        'prefixxflag',
+    ]);
+});

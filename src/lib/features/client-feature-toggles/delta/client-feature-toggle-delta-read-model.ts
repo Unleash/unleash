@@ -22,6 +22,7 @@ import {
 import metricsHelper from '../../../util/metrics-helper.js';
 import FeatureToggleStore from '../../feature-toggle/feature-toggle-store.js';
 import { sortStrategies } from '../../../util/sortStrategies.js';
+import { escapeLikePattern } from '../../../util/escape-like.js';
 
 export default class ClientFeatureToggleDeltaReadModel
     implements IClientFeatureToggleDeltaReadModel
@@ -123,7 +124,7 @@ export default class ClientFeatureToggleDeltaReadModel
                 query = query.where(
                     'features.name',
                     'like',
-                    `${featureQuery.namePrefix}%`,
+                    `${escapeLikePattern(featureQuery.namePrefix)}%`,
                 );
             }
         }

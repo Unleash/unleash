@@ -15,15 +15,30 @@ export const createLocalStorage = <T extends object | string>(
         return state;
     })();
 
-    const onUpdate = (newValue: T | ((prev: T) => T)): T => {
+    let lastWriteFailed = false;
+
+    const onUpdate = (newValue: T | ((prev: T) => T), fallbackValue?: T): T => {
         if (newValue instanceof Function) {
-            const previousValue = getLocalStorageItem<T>(internalKey);
-            const output = newValue(previousValue ?? initialValue);
-            setLocalStorageItem(internalKey, output, timeToLive);
+            const previousValue =
+                lastWriteFailed && fallbackValue !== undefined
+                    ? undefined
+                    : getLocalStorageItem<T>(internalKey);
+            const output = newValue(
+                previousValue ?? fallbackValue ?? initialValue,
+            );
+            lastWriteFailed = !setLocalStorageItem(
+                internalKey,
+                output,
+                timeToLive,
+            );
             return output;
         }
 
-        setLocalStorageItem(internalKey, newValue, timeToLive);
+        lastWriteFailed = !setLocalStorageItem(
+            internalKey,
+            newValue,
+            timeToLive,
+        );
         return newValue;
     };
 

@@ -7,6 +7,8 @@ import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { resizeScreen } from 'utils/resizeScreen';
 import { CommandBar } from './CommandBar.tsx';
+import { CommandBarDialog } from './CommandBarDialog.tsx';
+import { SEARCH_ESC_HINT } from 'utils/testIds';
 
 const server = testServerSetup();
 const BELOW_MD = 600;
@@ -132,6 +134,57 @@ test('moves through the results in the search dialog with the arrow keys', async
     expect(input).toHaveFocus();
 });
 
+const renderClosableSearchDialog = async () => {
+    let open = true;
+    render(
+        <CommandBarDialog
+            open={open}
+            onOpenChange={(next) => (open = next)}
+            inputAction='close'
+        />,
+    );
+    const dialog = within(await screen.findByRole('dialog'));
+    return { dialog, isOpen: () => open };
+};
+
+test('closes the search dialog with the close button in its input on small screens', async () => {
+    const { dialog, isOpen } = await renderClosableSearchDialog();
+    await userEvent.type(dialog.getByRole('textbox'), 'segments');
+
+    await userEvent.click(
+        dialog.getByRole('button', { name: 'Close command menu' }),
+    );
+
+    expect(isOpen()).toBe(false);
+});
+
+test('keeps the search results open when Tab moves focus to the close button', async () => {
+    const { dialog } = await renderClosableSearchDialog();
+    await userEvent.type(dialog.getByRole('textbox'), 'segments');
+    const pageResult = await dialog.findByRole('link', { name: 'Segments' });
+
+    await userEvent.tab();
+
+    expect(
+        dialog.getByRole('button', { name: 'Close command menu' }),
+    ).toHaveFocus();
+    expect(pageResult).toBeVisible();
+});
+
+test('keeps the esc hint in the search dialog input while typing on desktop', async () => {
+    resizeScreen(DESKTOP);
+    const { dialog } = await renderClosableSearchDialog();
+
+    await userEvent.type(dialog.getByRole('textbox'), 'segments');
+
+    expect(dialog.getByTestId(SEARCH_ESC_HINT)).toHaveTextContent('esc');
+    expect(
+        dialog.queryByRole('button', {
+            name: /clear search query|close command menu/i,
+        }),
+    ).not.toBeInTheDocument();
+});
+
 test('closes the search dialog on a click outside it', async () => {
     render(<CommandBar />);
     await userEvent.click(
@@ -217,6 +270,20 @@ test('hides the inline suggestions and clears the field when a result is picked'
 
     expect(screen.queryByText('Pages')).not.toBeInTheDocument();
     expect(input).toHaveValue('');
+});
+
+test('empties and refocuses the inline search field with the clear button', async () => {
+    resizeScreen(DESKTOP);
+    render(<CommandBar />);
+    const input = screen.getByRole('textbox');
+    await userEvent.type(input, 'segments');
+
+    await userEvent.click(
+        screen.getByRole('button', { name: 'Clear search query' }),
+    );
+
+    expect(input).toHaveValue('');
+    expect(input).toHaveFocus();
 });
 
 test('moves through the results with the arrow keys and wraps to the field', async () => {

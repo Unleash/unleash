@@ -75,6 +75,7 @@ export const AppShell: FC<{ children: ReactNode }> = ({ children }) => {
                     <CommandBarDialog
                         open={searchOpen}
                         onOpenChange={setSearchOpen}
+                        inputAction='close'
                     />
                     {searchDocsWidget ? (
                         <Suspense fallback={null}>

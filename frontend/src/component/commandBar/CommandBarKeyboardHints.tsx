@@ -20,7 +20,7 @@ const StyledHint = styled('span')(({ theme }) => ({
     gap: theme.spacing(0.5),
 }));
 
-const StyledKey = styled('kbd')(({ theme }) => ({
+export const StyledKey = styled('kbd')(({ theme }) => ({
     minWidth: theme.spacing(2.5),
     padding: theme.spacing(0, 0.5),
     border: `1px solid ${theme.palette.divider}`,
@@ -42,7 +42,7 @@ export const CommandBarKeyboardHints = () => (
             to open
         </StyledHint>
         <StyledHint>
-            <StyledKey>Esc</StyledKey>
+            <StyledKey>esc</StyledKey>
             to close
         </StyledHint>
     </StyledHints>

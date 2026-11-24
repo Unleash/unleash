@@ -29,7 +29,11 @@ const CompactCommandBar = () => {
                     <SearchIcon />
                 </StyledIconButton>
             </Tooltip>
-            <CommandBarDialog open={open} onOpenChange={setOpen} />
+            <CommandBarDialog
+                open={open}
+                onOpenChange={setOpen}
+                inputAction='clear'
+            />
         </>
     );
 };

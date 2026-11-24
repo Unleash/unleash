@@ -1,6 +1,10 @@
 import { useRef } from 'react';
 import { Dialog, styled } from '@mui/material';
-import { COMMAND_BAR_LABEL_ID, CommandBarPanel } from './CommandBarPanel.tsx';
+import {
+    COMMAND_BAR_LABEL_ID,
+    type CommandBarInputAction,
+    CommandBarPanel,
+} from './CommandBarPanel.tsx';
 import { useCommandBarHotkey } from './useCommandBarHotkey.ts';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -18,11 +22,13 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 interface ICommandBarDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    inputAction: CommandBarInputAction;
 }
 
 export const CommandBarDialog = ({
     open,
     onOpenChange,
+    inputAction,
 }: ICommandBarDialogProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -41,6 +47,7 @@ export const CommandBarDialog = ({
                 containerRef={containerRef}
                 inputRef={inputRef}
                 onDismiss={() => onOpenChange(false)}
+                inputAction={inputAction}
             />
         </StyledDialog>
     );

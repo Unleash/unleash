@@ -1,17 +1,18 @@
-import { type RefObject, useEffect, useState } from 'react';
+import { type ReactNode, type RefObject, useEffect, useState } from 'react';
 import {
-    Box,
     IconButton,
     InputBase,
     Paper,
     styled,
     Tooltip,
+    useMediaQuery,
+    useTheme,
 } from '@mui/material';
 import Close from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useKeyboardShortcut } from 'hooks/useKeyboardShortcut';
-import { SEARCH_INPUT } from 'utils/testIds';
+import { SEARCH_ESC_HINT, SEARCH_INPUT } from 'utils/testIds';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import {
     CommandResultGroup,
@@ -31,7 +32,10 @@ import { CommandBarFeedback } from './CommandBarFeedback.tsx';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { useCommandBarRoutes } from './useCommandBarRoutes.ts';
 import { useCommandBarPlaceholder } from './useCommandBarHotkey.ts';
-import { CommandBarKeyboardHints } from './CommandBarKeyboardHints.tsx';
+import {
+    CommandBarKeyboardHints,
+    StyledKey,
+} from './CommandBarKeyboardHints.tsx';
 
 const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -118,19 +122,39 @@ const StyledClose = styled(Close)(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,
 }));
 
+const StyledInputActions = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-end',
+    flexShrink: 0,
+    minWidth: theme.spacing(4),
+}));
+
+const StyledEscapeKey = styled(StyledKey)(({ theme }) => ({
+    marginRight: theme.spacing(0.5),
+    ...theme.typography.caption,
+    color: theme.palette.text.secondary,
+}));
+
 type CommandBarPanelProps = {
     containerRef: RefObject<HTMLDivElement | null>;
     inputRef: RefObject<HTMLInputElement | null>;
 } & (
-    | { variant: 'inline'; onDismiss?: never }
-    | { variant: 'dialog'; onDismiss: () => void }
+    | { variant: 'inline'; onDismiss?: never; inputAction?: never }
+    | {
+          variant: 'dialog';
+          onDismiss: () => void;
+          inputAction: CommandBarInputAction;
+      }
 );
+
+export type CommandBarInputAction = 'clear' | 'close';
 
 export const CommandBarPanel = ({
     variant,
     containerRef: searchContainerRef,
     inputRef: searchInputRef,
     onDismiss,
+    inputAction = 'clear',
 }: CommandBarPanelProps) => {
     const { trackEvent } = useEventTracker();
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -150,6 +174,8 @@ export const CommandBarPanel = ({
     const [value, setValue] = useState<string>('');
     const { allRoutes } = useCommandBarRoutes();
     const placeholder = useCommandBarPlaceholder();
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const hideSuggestions = () => {
         setShowSuggestions(false);
@@ -303,6 +329,8 @@ export const CommandBarPanel = ({
     );
 
     useKeyboardShortcut({ key: 'Tab' }, () => {
+        // The dialog traps focus, so Tab only moves between its own controls.
+        if (variant === 'dialog') return;
         setShowSuggestions(false);
     });
 
@@ -321,6 +349,42 @@ export const CommandBarPanel = ({
             searchInputRef.current?.focus();
         }
     };
+
+    let inputActionControl: ReactNode = null;
+    if (inputAction === 'close') {
+        // Small screens are mostly touch devices with no Escape key, so they get a close button instead.
+        inputActionControl = isSmallScreen ? (
+            <Tooltip title='Close command menu' arrow>
+                <IconButton
+                    size='small'
+                    onClick={() => onDismiss?.()}
+                    sx={{ padding: theme.spacing(1) }}
+                >
+                    <StyledClose />
+                </IconButton>
+            </Tooltip>
+        ) : (
+            <StyledEscapeKey aria-hidden data-testid={SEARCH_ESC_HINT}>
+                esc
+            </StyledEscapeKey>
+        );
+    } else if (value) {
+        inputActionControl = (
+            <Tooltip title='Clear search query' arrow>
+                <IconButton
+                    size='small'
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onSearchChange('');
+                        searchInputRef.current?.focus();
+                    }}
+                    sx={{ padding: theme.spacing(1) }}
+                >
+                    <StyledClose />
+                </IconButton>
+            </Tooltip>
+        );
+    }
 
     return (
         <StyledContainer
@@ -363,28 +427,7 @@ export const CommandBarPanel = ({
                     }}
                 />
 
-                <Box sx={{ width: (theme) => theme.spacing(4) }}>
-                    <ConditionallyRender
-                        condition={Boolean(value)}
-                        show={
-                            <Tooltip title='Clear search query' arrow>
-                                <IconButton
-                                    size='small'
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onSearchChange('');
-                                        searchInputRef.current?.focus();
-                                    }}
-                                    sx={{
-                                        padding: (theme) => theme.spacing(1),
-                                    }}
-                                >
-                                    <StyledClose />
-                                </IconButton>
-                            </Tooltip>
-                        }
-                    />
-                </Box>
+                <StyledInputActions>{inputActionControl}</StyledInputActions>
             </StyledSearch>
 
             <ConditionallyRender

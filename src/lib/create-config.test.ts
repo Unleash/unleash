@@ -629,6 +629,36 @@ describe('session idle timeout', () => {
     });
 });
 
+describe('impact metrics private network urls', () => {
+    afterEach(() => {
+        delete process.env.IMPACT_METRICS_DENY_PRIVATE_NETWORK_URLS;
+    });
+
+    test('allows private network urls by default', () => {
+        const config = createConfig({});
+
+        expect(config.impactMetricsDenyPrivateNetworkUrls).toBe(false);
+    });
+
+    test('denies private network urls when the env var is set', () => {
+        process.env.IMPACT_METRICS_DENY_PRIVATE_NETWORK_URLS = 'true';
+
+        const config = createConfig({});
+
+        expect(config.impactMetricsDenyPrivateNetworkUrls).toBe(true);
+    });
+
+    test('lets the option override the env var', () => {
+        process.env.IMPACT_METRICS_DENY_PRIVATE_NETWORK_URLS = 'true';
+
+        const config = createConfig({
+            impactMetricsDenyPrivateNetworkUrls: false,
+        });
+
+        expect(config.impactMetricsDenyPrivateNetworkUrls).toBe(false);
+    });
+});
+
 test('external prometheus response limit can be raised above the default', () => {
     process.env.EXTERNAL_PROMETHEUS_IMPACT_METRICS_RESPONSE_BYTES_LIMIT =
         '2000000';

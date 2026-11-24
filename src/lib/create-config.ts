@@ -882,6 +882,13 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.externalPrometheusImpactMetricsApi ||
         process.env.EXTERNAL_PROMETHEUS_IMPACT_METRICS_API;
 
+    const impactMetricsDenyPrivateNetworkUrls =
+        options.impactMetricsDenyPrivateNetworkUrls ??
+        parseEnvVarBoolean(
+            process.env.IMPACT_METRICS_DENY_PRIVATE_NETWORK_URLS,
+            false,
+        );
+
     const externalPrometheusImpactMetricsResponseBytesLimit = Math.max(
         PROMETHEUS_RESPONSE_BYTES_LIMIT,
         parseEnvVarNumber(
@@ -931,6 +938,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         prometheusApi,
         prometheusImpactMetricsApi,
         externalPrometheusImpactMetricsApi,
+        impactMetricsDenyPrivateNetworkUrls,
         externalPrometheusImpactMetricsResponseBytesLimit,
         publicFolder: options.publicFolder,
         disableScheduler: options.disableScheduler,

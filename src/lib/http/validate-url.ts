@@ -72,9 +72,18 @@ export type ValidatedUrl = {
     family: 4 | 6;
 };
 
-const defaultLookup = async (hostname: string) => {
+export class NonPublicAddressError extends ValidationError {
+    constructor(address: string, url: URL) {
+        super(`URL resolves to a non-public address: ${address}`, [], url);
+    }
+}
+
+export const resolveHostname = (hostname: string): Promise<LookupAddress[]> =>
+    dnsLookup(hostname, { all: true, order: 'ipv4first' });
+
+const defaultLookup = async (hostname: string): Promise<LookupAddress[]> => {
     try {
-        return await dnsLookup(hostname, { all: true, order: 'ipv4first' });
+        return await resolveHostname(hostname);
     } catch (error) {
         // old addon tests use nock-only hostnames; keep production DNS failures strict.
         if (process.env.NODE_ENV === 'test') {
@@ -101,10 +110,12 @@ export const validateUrl = async (
         throw new ValidationError(`Invalid protocol: ${url.protocol}`, [], url);
     }
     const hostname = url.hostname.toLowerCase();
-    const ipFamily = net.isIP(hostname);
+    // URL keeps the brackets around IPv6 literals (e.g. `[::1]`), which net.isIP does not accept.
+    const ipLiteral = hostname.replace(/^\[(.*)\]$/, '$1');
+    const ipFamily = net.isIP(ipLiteral);
     const resolved =
         ipFamily !== 0
-            ? [{ address: hostname, family: ipFamily as 4 | 6 }]
+            ? [{ address: ipLiteral, family: ipFamily as 4 | 6 }]
             : await (options.lookup ?? defaultLookup)(hostname);
     if (resolved.length === 0) {
         throw new ValidationError(
@@ -121,11 +132,7 @@ export const validateUrl = async (
     if (!allowPrivate) {
         const blocked = resolved.find(({ address }) => !isPublicIp(address));
         if (blocked) {
-            throw new ValidationError(
-                `URL resolves to a non-public address: ${blocked.address}`,
-                [],
-                url,
-            );
+            throw new NonPublicAddressError(blocked.address, url);
         }
     }
     const pinned = resolved[0];

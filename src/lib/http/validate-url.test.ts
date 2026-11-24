@@ -1,9 +1,13 @@
-// webhook-fetcher.test.ts
+import type { LookupAddress } from 'node:dns';
 import http from 'node:http';
 import { describe, expect, test, vi } from 'vitest';
-import { fetchPinned } from './addon.js';
-import type { ValidatedUrl } from './validate-url.js';
-import WebhookAddon from './webhook.js';
+import { fetchPinned } from './fetch.js';
+import {
+    NonPublicAddressError,
+    validateUrl,
+    type ValidatedUrl,
+} from './validate-url.js';
+import WebhookAddon from '../addons/webhook.js';
 import type { IAddonConfig, IFlagKey, IFlagResolver } from '../types/index.js';
 import noLogger from '../../test/fixtures/no-logger.js';
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service.js';
@@ -320,5 +324,34 @@ describe('Addon.fetchRetry SSRF protection', () => {
                 expect(response.status).toBe(200);
             },
         );
+    });
+});
+
+describe('validateUrl', () => {
+    const lookupNeverCalled = async (): Promise<LookupAddress[]> => {
+        throw new Error('IP literals must not be resolved through DNS');
+    };
+
+    test.each([
+        'http://[::1]',
+        'http://[fd00:ec2::254]',
+        'https://[fe80::1]:9090',
+        'http://[::ffff:169.254.169.254]',
+    ])('rejects bracketed private IPv6 literal %s without a DNS lookup', async (rawUrl) => {
+        await expect(
+            validateUrl(rawUrl, { lookup: lookupNeverCalled }),
+        ).rejects.toThrow(NonPublicAddressError);
+    });
+
+    test('pins the unbracketed address of an allowed IPv6 literal', async () => {
+        const validated = await validateUrl('http://[fd00:ec2::254]:9090', {
+            allowPrivateNetworkUrls: true,
+            lookup: async () => [{ address: '93.184.216.34', family: 4 }],
+        });
+
+        expect(validated).toMatchObject({
+            pinnedAddress: 'fd00:ec2::254',
+            family: 6,
+        });
     });
 });

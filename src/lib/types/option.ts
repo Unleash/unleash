@@ -188,6 +188,7 @@ export interface IUnleashOptions {
     prometheusApi?: string;
     prometheusImpactMetricsApi?: string;
     externalPrometheusImpactMetricsApi?: string;
+    impactMetricsDenyPrivateNetworkUrls?: boolean;
     publicFolder?: string;
     disableScheduler?: boolean;
     metricsRateLimiting?: Partial<IMetricsRateLimiting>;
@@ -330,6 +331,7 @@ export interface IUnleashConfig {
     prometheusImpactMetricsApi?: string;
     externalPrometheusImpactMetricsApi?: string;
     externalPrometheusImpactMetricsResponseBytesLimit?: number;
+    impactMetricsDenyPrivateNetworkUrls: boolean;
     publicFolder?: string;
     disableScheduler?: boolean;
     isEnterprise: boolean;

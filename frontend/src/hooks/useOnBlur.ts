@@ -12,10 +12,15 @@ export const useOnBlur = (
                 containerRef.current?.contains(event.target as Node) || false;
         };
 
+        const handleMouseUp = () => {
+            mouseDownInside = false;
+        };
+
         const handleBlur = (_event: FocusEvent) => {
+            const startedInside = mouseDownInside;
             setTimeout(() => {
                 if (
-                    !mouseDownInside &&
+                    !startedInside &&
                     containerRef.current &&
                     !containerRef.current.contains(document.activeElement)
                 ) {
@@ -27,6 +32,7 @@ export const useOnBlur = (
         };
 
         document.addEventListener('mousedown', handleMouseDown);
+        document.addEventListener('mouseup', handleMouseUp);
 
         const containerElement = containerRef.current;
         if (containerElement) {
@@ -35,6 +41,7 @@ export const useOnBlur = (
 
         return () => {
             document.removeEventListener('mousedown', handleMouseDown);
+            document.removeEventListener('mouseup', handleMouseUp);
             if (containerElement) {
                 containerElement.removeEventListener('blur', handleBlur, true);
             }

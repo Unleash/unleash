@@ -24,6 +24,7 @@ import useToast from 'hooks/useToast';
 import { useEventTracker } from 'hooks/useEventTracker';
 import { useTracking } from 'hooks/useTracking';
 import { formatDateYMDHMS } from 'utils/formatDate';
+import { TagFilterItemParam } from 'utils/serializeQueryParams';
 import type { RemoteData } from './RemoteData.ts';
 import {
     filterFlagsTracking,
@@ -119,9 +120,15 @@ export const RecentFlagsPanelView = ({
                 cell: createFeatureOverviewCell(
                     (tag) => {
                         trackFilterFlags('succeeded', { filterKey: 'tag' });
-                        navigate(
-                            `/search?tag=${encodeURIComponent(`INCLUDE:${tag}`)}`,
-                        );
+                        const filter = TagFilterItemParam.encode({
+                            operator: 'INCLUDE',
+                            values: [tag],
+                        });
+                        if (filter) {
+                            navigate(
+                                `/search?tag=${encodeURIComponent(filter)}`,
+                            );
+                        }
                     },
                     (type) => {
                         trackFilterFlags('succeeded', { filterKey: 'type' });

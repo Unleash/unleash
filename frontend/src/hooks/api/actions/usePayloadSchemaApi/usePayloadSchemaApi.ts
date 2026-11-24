@@ -1,3 +1,7 @@
+import type {
+    ValidateVariantPayloadsSchema,
+    VariantPayloadsValidationSchema,
+} from 'openapi';
 import useAPI from '../useApi/useApi.js';
 
 export const usePayloadSchemaApi = (projectId: string, featureId: string) => {
@@ -16,5 +20,20 @@ export const usePayloadSchemaApi = (projectId: string, featureId: string) => {
         await makeRequest(req.caller, req.id);
     };
 
-    return { upsertPayloadSchema };
+    const validateVariantPayloads = async (
+        payloads: ValidateVariantPayloadsSchema['payloads'],
+    ): Promise<VariantPayloadsValidationSchema['nonMatchingPayloads']> => {
+        const req = createRequest(
+            `/api/admin/projects/${projectId}/features/${featureId}/payload-schema/validate-payloads`,
+            {
+                method: 'POST',
+                body: JSON.stringify({ payloads }),
+            },
+        );
+        const res = await makeRequest(req.caller, req.id);
+        const result: VariantPayloadsValidationSchema = await res.json();
+        return result.nonMatchingPayloads;
+    };
+
+    return { upsertPayloadSchema, validateVariantPayloads };
 };

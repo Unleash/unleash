@@ -85,7 +85,7 @@ export const FeatureStrategyEdit = () => {
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
     const navigate = useNavigate();
-    const { addChange } = useChangeRequestApi();
+    const { addChange, loading: changeRequestLoading } = useChangeRequestApi();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { refetch: refetchChangeRequests, data: pendingChangeRequests } =
         usePendingChangeRequests(projectId);
@@ -291,7 +291,7 @@ export const FeatureStrategyEdit = () => {
                 setStrategy={setStrategy}
                 environmentId={environmentId}
                 onSubmit={onSubmit}
-                loading={loading}
+                loading={loading || changeRequestLoading}
                 permission={UPDATE_FEATURE_STRATEGY}
                 errors={errors}
                 changeRequestsEnabled={viaChangeRequest}

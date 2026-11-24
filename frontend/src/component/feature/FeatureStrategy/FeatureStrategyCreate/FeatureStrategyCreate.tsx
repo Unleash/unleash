@@ -65,7 +65,7 @@ export const FeatureStrategyCreate = () => {
     const errors = useFormErrors();
 
     const { addStrategyToFeature, loading } = useFeatureStrategyApi();
-    const { addChange } = useChangeRequestApi();
+    const { addChange, loading: changeRequestLoading } = useChangeRequestApi();
     const { setToastData, setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
     const { unleashUrl } = uiConfig;
@@ -191,7 +191,7 @@ export const FeatureStrategyCreate = () => {
                 environmentId={environmentId}
                 onSubmit={onSubmit}
                 tracking={tracking}
-                loading={loading}
+                loading={loading || changeRequestLoading}
                 permission={CREATE_FEATURE_STRATEGY}
                 errors={errors}
                 changeRequestsEnabled={isChangeRequestConfigured(environmentId)}

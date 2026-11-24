@@ -172,6 +172,8 @@ import {
     createFakeUserRecentFlagsService,
     createUserRecentFlagsService,
 } from '../features/user-recent-flags/createUserRecentFlagsService.js';
+import type { UserSettingsService } from '../features/user-settings/user-settings-service.js';
+import { createUserSettingsService } from '../features/user-settings/createUserSettingsService.js';
 import {
     createFakeProjectStatusService,
     createProjectStatusService,
@@ -568,6 +570,8 @@ export const createServices = (
               privateProjectChecker,
           );
 
+    const userSettingsService = createUserSettingsService();
+
     const transactionalUserSubscriptionsService = db
         ? withTransactional(createUserSubscriptionsService(config), db)
         : withFakeTransactional(createFakeUserSubscriptionsService(config));
@@ -656,6 +660,7 @@ export const createServices = (
         onboardingService,
         personalDashboardService,
         userRecentFlagsService,
+        userSettingsService,
         projectStatusService,
         transactionalUserSubscriptionsService,
         uniqueConnectionService,
@@ -806,6 +811,7 @@ export interface IUnleashServices {
     onboardingService: OnboardingService;
     personalDashboardService: PersonalDashboardService;
     userRecentFlagsService: UserRecentFlagsService;
+    userSettingsService: UserSettingsService;
     projectStatusService: ProjectStatusService;
     transactionalUserSubscriptionsService: WithTransactional<UserSubscriptionsService>;
     uniqueConnectionService: UniqueConnectionService;

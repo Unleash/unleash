@@ -12,13 +12,20 @@ import {
 import type { UserSettingsSchema } from '../../openapi/spec/user-settings-schema.js';
 import { ForbiddenError } from '../../error/index.js';
 import { requireFeatureEnabled } from '../../middleware/conditional-middleware.js';
+import type { UserSettingsService } from './user-settings-service.js';
 
 export default class UserSettingsController extends Controller {
+    private userSettingsService: UserSettingsService;
+
     constructor(
         config: IUnleashConfig,
-        { openApiService }: Pick<IUnleashServices, 'openApiService'>,
+        {
+            openApiService,
+            userSettingsService,
+        }: Pick<IUnleashServices, 'openApiService' | 'userSettingsService'>,
     ) {
         super(config);
+        this.userSettingsService = userSettingsService;
 
         this.route({
             method: 'put',
@@ -53,6 +60,10 @@ export default class UserSettingsController extends Controller {
                 'This endpoint requires an authenticated user.',
             );
         }
+        await this.userSettingsService.saveSettings(
+            req.user,
+            req.body.settings,
+        );
         res.status(204).end();
     }
 }

@@ -1,3 +1,4 @@
+import { onTestFinished, vi } from 'vitest';
 import dbInit, {
     type ITestDb,
 } from '../../../test/e2e/helpers/database-init.js';
@@ -97,26 +98,38 @@ test('answers 404 while userSettings is off', async () => {
 });
 
 describe('signed in', () => {
+    let signedInUserId: number;
+
     beforeAll(async () => {
-        await app.request
+        const { body } = await app.request
             .post('/auth/demo/login')
             .send({ email: 'settings@getunleash.io' })
             .expect(200);
+        signedInUserId = body.id;
     });
 
-    test('accepts a body with several keys', async () => {
-        await saveSettings({
-            settings: {
-                'unleash-theme': { value: 'dark' },
-                'environment-visibiilty': { value: ['production'] },
-                'flag-reminders:v1': { value: { 'my-flag': 1767225600000 } },
-                'feedback-module-survey-grace:v1': {
-                    value: true,
-                    expiresAt: '2026-12-01T12:00:00.000Z',
-                },
-                'navigation-mode:v1': { value: null },
+    test('saves the settings of the signed-in user', async () => {
+        const saveSettingsSpy = vi.spyOn(
+            app.services.userSettingsService,
+            'saveSettings',
+        );
+        onTestFinished(() => saveSettingsSpy.mockRestore());
+        const settings = {
+            'unleash-theme': { value: 'dark' },
+            'environment-visibiilty': { value: ['production'] },
+            'flag-reminders:v1': { value: { 'my-flag': 1767225600000 } },
+            'feedback-module-survey-grace:v1': {
+                value: true,
+                expiresAt: '2026-12-01T12:00:00.000Z',
             },
-        }).expect(204);
+            'navigation-mode:v1': { value: null },
+        };
+
+        await saveSettings({ settings }).expect(204);
+
+        expect(saveSettingsSpy.mock.calls).toMatchObject([
+            [{ id: signedInUserId }, settings],
+        ]);
     });
 
     test.each([

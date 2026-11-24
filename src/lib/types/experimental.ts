@@ -92,6 +92,7 @@ export type IFlagKey =
     | 'redactFeatureLabelInMetrics'
     | 'improvedSidebarNavigation'
     | 'applicationOverview'
+    | 'userSettings'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -416,6 +417,10 @@ const flags: IFlags = {
     ),
     applicationOverview: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_APPLICATION_OVERVIEW,
+        false,
+    ),
+    userSettings: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_USER_SETTINGS,
         false,
     ),
 };

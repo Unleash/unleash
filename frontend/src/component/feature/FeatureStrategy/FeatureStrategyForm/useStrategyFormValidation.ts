@@ -20,16 +20,23 @@ import {
 
 export type FailedVariantsSubmit = Record<string, never>;
 
+export type StrategyFormType =
+    | 'featureEnvironmentStrategy'
+    | 'projectDefaultStrategy'
+    | 'releaseTemplateStrategy';
+
 type UseStrategyFormValidationParams = {
     strategy: StrategyFormState;
     strategyDefinition?: IStrategy;
     errors: IFormErrors;
+    strategyFormType?: StrategyFormType;
 };
 
 export const useStrategyFormValidation = ({
     strategy,
     strategyDefinition,
     errors,
+    strategyFormType = 'featureEnvironmentStrategy',
 }: UseStrategyFormValidationParams) => {
     const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
     const [validatingConstraints, setValidatingConstraints] = useState(false);
@@ -42,7 +49,15 @@ export const useStrategyFormValidation = ({
         useState<FailedVariantsSubmit>();
     const { focusRegistry, focusFirst } = useFormFocus();
 
-    const parameterDefinitions = strategyDefinition?.parameters ?? [];
+    const groupIdIsOptional =
+        strategyDefinition?.name === 'flexibleRollout' &&
+        strategyFormType !== 'featureEnvironmentStrategy';
+    const fetchedParameters = strategyDefinition?.parameters ?? [];
+    const parameterDefinitions = fetchedParameters.map((parameter) =>
+        groupIdIsOptional && parameter.name === 'groupId'
+            ? { ...parameter, required: false }
+            : parameter,
+    );
 
     const validateParameter = (
         name: string,

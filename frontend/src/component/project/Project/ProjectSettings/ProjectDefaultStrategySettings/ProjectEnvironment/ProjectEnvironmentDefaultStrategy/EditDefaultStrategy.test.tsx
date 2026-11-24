@@ -23,14 +23,14 @@ const setupEditFormEndpoints = () => {
         parameters: [
             { name: 'rollout' },
             { name: 'stickiness' },
-            { name: 'groupId' },
+            { name: 'groupId', type: 'string', required: true },
         ],
     });
     testServerRoute(server, '/api/admin/segments', { segments: [] });
     testServerRoute(server, '/api/admin/context', []);
 };
 
-const renderEditForm = () =>
+const renderEditForm = () => {
     render(
         <Routes>
             <Route
@@ -43,6 +43,7 @@ const renderEditForm = () =>
             permissions: [{ permission: UPDATE_PROJECT, project: 'default' }],
         },
     );
+};
 
 const RenderStrategy = () => {
     const { strategy } = useDefaultStrategy('default', 'development');
@@ -127,4 +128,15 @@ test('the form opens with the saved strategy, and a failed save selects the unna
             screen.getByLabelText(/Variant name/),
         );
     });
+});
+
+test('an empty group ID is not reported as a missing required field', async () => {
+    setupEditFormEndpoints();
+    renderEditForm();
+    const groupIdInput = await screen.findByLabelText('Group ID');
+
+    fireEvent.change(groupIdInput, { target: { value: 'any-group' } });
+    fireEvent.change(groupIdInput, { target: { value: '' } });
+
+    expect(screen.queryByText('Field is required')).not.toBeInTheDocument();
 });

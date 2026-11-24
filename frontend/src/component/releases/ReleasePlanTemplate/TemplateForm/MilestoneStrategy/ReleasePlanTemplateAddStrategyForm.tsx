@@ -46,6 +46,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
         strategy: currentStrategy,
         strategyDefinition,
         errors,
+        strategyFormType: 'releaseTemplateStrategy',
     });
 
     if (!strategyDefinition) {

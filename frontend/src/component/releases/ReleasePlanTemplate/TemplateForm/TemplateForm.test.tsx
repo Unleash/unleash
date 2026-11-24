@@ -1,4 +1,4 @@
-import { renderHook, screen } from '@testing-library/react';
+import { renderHook, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
@@ -208,4 +208,46 @@ describe('milestone automations', () => {
             { id: 'milestone-1', transitionCondition: undefined },
         ]);
     });
+});
+
+test('a milestone rollout strategy can be submitted with an empty group ID', async () => {
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: { singlePageStrategyForm: true },
+    });
+    testServerRoute(server, '/api/admin/strategies/flexibleRollout', {
+        displayName: 'Gradual rollout',
+        name: 'flexibleRollout',
+        parameters: [
+            { name: 'rollout' },
+            { name: 'stickiness' },
+            { name: 'groupId', type: 'string', required: true },
+        ],
+    });
+    testServerRoute(server, '/api/admin/segments', { segments: [] });
+    testServerRoute(server, '/api/admin/context', []);
+    renderTemplateForm({
+        milestones: [
+            defaultMilestone({
+                strategies: [
+                    {
+                        id: 'strategy-1',
+                        name: 'flexibleRollout',
+                        constraints: [],
+                        parameters: {
+                            rollout: '100',
+                            stickiness: 'default',
+                            groupId: '',
+                        },
+                    },
+                ],
+            }),
+        ],
+    });
+
+    await userEvent.click(await screen.findByTitle('Edit strategy'));
+    await userEvent.click(await screen.findByText('Add changes'));
+
+    await waitFor(() =>
+        expect(screen.queryByText('Add changes')).not.toBeInTheDocument(),
+    );
 });

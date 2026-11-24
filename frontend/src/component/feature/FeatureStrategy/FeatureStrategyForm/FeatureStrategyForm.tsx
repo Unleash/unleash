@@ -86,6 +86,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
         strategy,
         strategyDefinition,
         errors,
+        strategyFormType: 'featureEnvironmentStrategy',
     });
 
     const foundEnvironment = feature.environments.find(

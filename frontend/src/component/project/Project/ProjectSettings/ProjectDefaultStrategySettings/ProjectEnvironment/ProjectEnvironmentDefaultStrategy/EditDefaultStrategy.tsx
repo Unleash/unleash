@@ -95,6 +95,7 @@ const EditDefaultStrategy = () => {
         strategy,
         strategyDefinition,
         errors,
+        strategyFormType: 'projectDefaultStrategy',
     });
 
     if (!strategyDefinition) return null;

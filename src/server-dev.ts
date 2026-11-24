@@ -73,6 +73,7 @@ process.nextTick(async () => {
                         redactFeatureLabelInMetrics: true,
                         applicationOverview: true,
                         improvedSidebarNavigation: false,
+                        userSettings: true,
                     },
                 },
                 authentication: {

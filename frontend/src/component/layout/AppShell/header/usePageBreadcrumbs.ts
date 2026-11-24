@@ -14,6 +14,7 @@ import {
     isWithinPath,
 } from '../sidebar/createPageMatcher.ts';
 import { sidebarSectionLabels } from '../sidebar/sidebarSectionLabels.ts';
+import { type EntityPage, useEntityName } from './entityPages.ts';
 import { useVisibleAppNavigationLinks } from '../sidebar/useVisibleAppNavigationLinks.ts';
 
 export type PageBreadcrumb = { label: string; to?: string };
@@ -89,8 +90,7 @@ const getAppBreadcrumbs = (
     ];
 };
 
-export const usePageBreadcrumbs = (): PageBreadcrumb[] => {
-    const { pathname } = useLocation();
+const useMenuBreadcrumbs = (pathname: string): PageBreadcrumb[] => {
     const { mainNavRoutes, adminRoutes } = useRoutes().routes;
     const visibleLinks = useVisibleAppNavigationLinks();
     const projectBreadcrumbs = useProjectBreadcrumbs(pathname);
@@ -102,4 +102,16 @@ export const usePageBreadcrumbs = (): PageBreadcrumb[] => {
         getAppBreadcrumbs(pathname, visibleLinks) ??
         []
     );
+};
+
+export const usePageBreadcrumbs = (
+    entityPage?: EntityPage,
+): PageBreadcrumb[] => {
+    const { pathname } = useLocation();
+    const menuBreadcrumbs = useMenuBreadcrumbs(pathname);
+    const entityName = useEntityName(entityPage);
+
+    return entityPage && entityName && menuBreadcrumbs.length > 0
+        ? [...menuBreadcrumbs, { label: entityName, to: entityPage.to }]
+        : menuBreadcrumbs;
 };

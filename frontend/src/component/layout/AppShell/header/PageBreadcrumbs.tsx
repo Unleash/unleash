@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import { Breadcrumbs, styled, type Theme } from '@mui/material';
 import { Link, useLocation } from 'react-router';
 import { Truncator } from 'component/common/Truncator/Truncator';
+import { type EntityPage, findEntityPage } from './entityPages.ts';
 import { usePageBreadcrumbs } from './usePageBreadcrumbs.ts';
 
 const StyledBreadcrumbs = styled(Breadcrumbs)(({ theme }) => ({
@@ -39,9 +40,9 @@ const StyledLink = styled(Link)(({ theme }) => breadcrumbStyles(theme));
 
 const StyledText = styled('span')(({ theme }) => breadcrumbStyles(theme));
 
-export const PageBreadcrumbs: FC = () => {
+const BreadcrumbTrail: FC<{ entityPage?: EntityPage }> = ({ entityPage }) => {
     const { pathname } = useLocation();
-    const breadcrumbs = usePageBreadcrumbs();
+    const breadcrumbs = usePageBreadcrumbs(entityPage);
 
     if (breadcrumbs.length === 0) {
         return null;
@@ -73,5 +74,16 @@ export const PageBreadcrumbs: FC = () => {
                 );
             })}
         </StyledBreadcrumbs>
+    );
+};
+
+export const PageBreadcrumbs: FC = () => {
+    const { pathname } = useLocation();
+    const entityPage = findEntityPage(pathname);
+
+    // Keyed by the entity page, because each one names its entity with its
+    // own hook.
+    return (
+        <BreadcrumbTrail key={entityPage?.pattern} entityPage={entityPage} />
     );
 };

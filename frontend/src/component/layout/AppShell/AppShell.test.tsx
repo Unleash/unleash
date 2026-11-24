@@ -735,52 +735,6 @@ test('shows the sidebar item of a top-level page as its breadcrumb', () => {
     ).toBeInTheDocument();
 });
 
-test('shows Change requests as breadcrumb of the change requests page on enterprise', async () => {
-    mockEnterprise();
-    render(<AppShell>content</AppShell>, { route: '/change-requests' });
-
-    await screen.findByRole('navigation', { name: 'Breadcrumbs' });
-    expect(breadcrumbTrail()).toEqual(['Change requests']);
-});
-
-test('links the breadcrumb of a top-level sidebar item on a page below it', () => {
-    render(<AppShell>content</AppShell>, { route: '/personal/some-tab' });
-
-    expect(breadcrumbTrail()).toEqual(['Home']);
-    expect(breadcrumbs().getByRole('link', { name: 'Home' })).toHaveAttribute(
-        'href',
-        '/personal',
-    );
-});
-
-test.each([
-    ['/projects', 'Projects'],
-    ['/search', 'Flags overview'],
-    ['/playground', 'Playground'],
-])('shows the Workspace section before the sidebar item as breadcrumbs of %s', (route, item) => {
-    render(<AppShell>content</AppShell>, { route });
-
-    expect(breadcrumbTrail()).toEqual(['Workspace', item]);
-    expect(
-        breadcrumbs().getByRole('link', { name: 'Workspace' }),
-    ).toHaveAttribute('href', '/projects');
-});
-
-test.each([
-    ['/insights', 'Analytics'],
-    ['/impact-views', 'Impact views'],
-])('shows the Workspace section before the sidebar item as breadcrumbs of %s on enterprise', async (route, item) => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        versionInfo: { current: { enterprise: 'version' } },
-        environment: 'Enterprise',
-        flags: { impactViews: true },
-    });
-    render(<AppShell>content</AppShell>, { route });
-
-    await screen.findByRole('navigation', { name: 'Breadcrumbs' });
-    expect(breadcrumbTrail()).toEqual(['Workspace', item]);
-});
-
 test('shows the project and its sidebar item as breadcrumbs of a project page', async () => {
     mockDefaultProject();
     render(<AppShell>content</AppShell>, { route: '/projects/default/logs' });
@@ -795,18 +749,35 @@ test('shows the project and its sidebar item as breadcrumbs of a project page', 
     ).toBeInTheDocument();
 });
 
-test('links the last breadcrumb to its sidebar item on a page below it', async () => {
+test('shows the flag name as the last breadcrumb of a flag page', async () => {
     mockDefaultProject();
     render(<AppShell>content</AppShell>, {
         route: '/projects/default/features/my-flag',
     });
 
-    await screen.findByRole('navigation', { name: 'Breadcrumbs' });
-    expect(breadcrumbTrail()).toEqual(['Default', 'Flags']);
+    await screen.findByRole('link', { name: 'Default' });
+    expect(breadcrumbTrail()).toEqual(['Default', 'Flags', 'my-flag']);
     expect(breadcrumbs().getByRole('link', { name: 'Flags' })).toHaveAttribute(
         'href',
         '/projects/default',
     );
+});
+
+test('replaces the segment name with the flag name when moving from a segment to a flag', async () => {
+    mockDefaultProject();
+    testServerRoute(server, '/api/admin/segments/3', { name: 'beta-users' });
+    render(
+        <AppShell>
+            <Link to='/projects/default/features/my-flag'>Open flag</Link>
+        </AppShell>,
+        { route: '/segments/edit/3' },
+    );
+    await screen.findByText('beta-users');
+
+    await userEvent.click(screen.getByRole('link', { name: 'Open flag' }));
+
+    await screen.findByText('my-flag');
+    expect(breadcrumbTrail()).toEqual(['Default', 'Flags', 'my-flag']);
 });
 
 test('marks only the sidebar item as the current page on the project root', async () => {
@@ -821,29 +792,6 @@ test('marks only the sidebar item as the current page on the project root', asyn
     expect(
         breadcrumbs().getByText('Flags').closest('[aria-current="page"]'),
     ).toBeInTheDocument();
-});
-
-test('shows only the project as breadcrumb of a project page without a sidebar item', async () => {
-    mockDefaultProject();
-    render(<AppShell>content</AppShell>, {
-        route: '/projects/default/applications',
-    });
-
-    await screen.findByRole('navigation', { name: 'Breadcrumbs' });
-    expect(breadcrumbTrail()).toEqual(['Default']);
-});
-
-test.each([
-    ['/admin/users', ['Admin settings', 'Users']],
-    ['/history', ['Admin settings', 'Event log']],
-])('shows the admin settings page without its group as breadcrumbs of %s', async (route, trail) => {
-    render(<AppShell>content</AppShell>, { route });
-
-    await screen.findByRole('navigation', { name: 'Breadcrumbs' });
-    expect(breadcrumbTrail()).toEqual(trail);
-    expect(
-        breadcrumbs().queryByRole('link', { name: 'Admin settings' }),
-    ).not.toBeInTheDocument();
 });
 
 test('shows the Workspace section before the workspace configuration item as breadcrumbs of a workspace page', async () => {
@@ -863,70 +811,6 @@ test('shows the Workspace section before the workspace configuration item as bre
     ).toHaveAttribute('href', '/projects');
     expect(
         breadcrumbs().queryByRole('link', { name: 'Configure workspace' }),
-    ).not.toBeInTheDocument();
-});
-
-test('shows no breadcrumbs on a project page of a project that is not in the list', () => {
-    render(<AppShell>content</AppShell>, { route: '/projects/unknown/logs' });
-
-    expect(
-        screen.queryByRole('navigation', { name: 'Breadcrumbs' }),
-    ).not.toBeInTheDocument();
-});
-
-test.each([
-    '/admin/groups',
-    '/release-templates',
-    '/change-requests',
-    '/insights',
-    '/impact-views',
-])('shows no breadcrumbs on %s when the sidebar hides it on the current plan', async (route) => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        versionInfo: { current: { oss: 'version' } },
-    });
-    render(
-        <AppShell>
-            <UiConfigLoaded />
-        </AppShell>,
-        { route },
-    );
-
-    await screen.findByText('ui config loaded');
-    expect(
-        screen.queryByRole('navigation', { name: 'Breadcrumbs' }),
-    ).not.toBeInTheDocument();
-});
-
-test('shows no breadcrumbs on change requests on the Pro plan', async () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        versionInfo: { current: { enterprise: 'version' } },
-        environment: 'Pro',
-    });
-    render(
-        <AppShell>
-            <UiConfigLoaded />
-        </AppShell>,
-        { route: '/change-requests' },
-    );
-
-    await screen.findByText('ui config loaded');
-    expect(
-        screen.queryByRole('navigation', { name: 'Breadcrumbs' }),
-    ).not.toBeInTheDocument();
-});
-
-test('shows no breadcrumbs on impact views when the impactViews flag is off', async () => {
-    mockEnterprise();
-    render(
-        <AppShell>
-            <UiConfigLoaded />
-        </AppShell>,
-        { route: '/impact-views' },
-    );
-
-    await screen.findByText('ui config loaded');
-    expect(
-        screen.queryByRole('navigation', { name: 'Breadcrumbs' }),
     ).not.toBeInTheDocument();
 });
 

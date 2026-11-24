@@ -6,7 +6,7 @@
 import type { PayloadSchemaValidationSchemaNonMatchingPayloadsItem } from './payloadSchemaValidationSchemaNonMatchingPayloadsItem.ts';
 
 /**
- * The result of checking a payload schema against the json variant payloads stored for a feature flag.
+ * The result of validating a payload schema you are about to set against the stored json variant payloads of a feature flag.
  */
 export interface PayloadSchemaValidationSchema {
     /** Every stored json variant payload that does not match the schema, with the reason and where the payload is stored. Empty when the schema can be saved. */

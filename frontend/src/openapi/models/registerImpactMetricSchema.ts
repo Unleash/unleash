@@ -11,6 +11,7 @@ import type { RegisterImpactMetricSchemaType } from './registerImpactMetricSchem
 export interface RegisterImpactMetricSchema {
     /**
      * The metric name. Must start with a letter or underscore and contain only alphanumerics, underscores or colons.
+     * @maxLength 200
      * @pattern ^[a-zA-Z_:][a-zA-Z0-9_:]*$
      */
     name: string;

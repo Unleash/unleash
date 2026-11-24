@@ -34,7 +34,7 @@ import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
 import { UserLimitWarning } from './UserLimitWarning/UserLimitWarning.tsx';
 import { RoleCell } from 'component/common/Table/cells/RoleCell/RoleCell';
-import { useSearch } from 'hooks/useSearch';
+import { searchInFilteredData } from 'hooks/useSearch';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
@@ -255,10 +255,15 @@ const UsersList = ({ searchValue }: IUsersListProps) => {
         };
     }, [isBillingUsers]);
 
-    const { data, getSearchText } = useSearch(
-        columns,
-        searchValue,
-        isBillingUsers ? planUsers : users,
+    const searchableUsers = isBillingUsers ? planUsers : users;
+    // Users have no advanced filters. Match their names and addresses literally,
+    // without interpreting apostrophes or commas as filter syntax.
+    const data = useMemo(
+        () =>
+            searchValue
+                ? searchInFilteredData(columns, searchValue, searchableUsers)
+                : searchableUsers,
+        [columns, searchValue, searchableUsers],
     );
 
     const table = useReactTable({
@@ -303,7 +308,7 @@ const UsersList = ({ searchValue }: IUsersListProps) => {
             <UserLimitWarning />
             <UsersHeader />
             <AccessRequestsTable />
-            <SearchHighlightProvider value={getSearchText(searchValue)}>
+            <SearchHighlightProvider value={searchValue}>
                 <VirtualizedTable tableInstance={table} />
             </SearchHighlightProvider>
 

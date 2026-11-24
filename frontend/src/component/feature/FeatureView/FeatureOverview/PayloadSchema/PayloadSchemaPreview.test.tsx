@@ -333,6 +333,7 @@ test('carries numeric and string constraints onto the input as native HTML attri
                 readOnly: true,
             },
             website: { type: 'string', title: 'Website', format: 'uri' },
+            contact: { type: 'string', title: 'Contact', format: 'email' },
         },
     };
 
@@ -355,6 +356,7 @@ test('carries numeric and string constraints onto the input as native HTML attri
     });
 
     expect(screen.getByLabelText('Website')).toHaveAttribute('type', 'url');
+    expect(screen.getByLabelText('Contact')).toHaveAttribute('type', 'email');
 });
 
 test("initializes the preview with the schema's first example instance, and resets it when the schema changes", () => {

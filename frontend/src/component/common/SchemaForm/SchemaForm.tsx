@@ -62,6 +62,7 @@ const fromDateTimeInputValue = (input: string): string =>
 const htmlInputType = (schema: JsonSchemaProperty): string => {
     if (schema.type === 'number' || schema.type === 'integer') return 'number';
     if (schema.format === 'uri') return 'url';
+    if (schema.format === 'email') return 'email';
     return 'text';
 };
 

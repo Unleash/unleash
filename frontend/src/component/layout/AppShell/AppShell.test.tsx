@@ -1,9 +1,11 @@
-import { beforeEach, expect, test, vi } from 'vitest';
-import { screen, waitFor, within } from '@testing-library/react';
+import { afterEach, beforeEach, expect, test, vi } from 'vitest';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { backdropClasses } from '@mui/material/Backdrop';
 import { Link } from 'react-router';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { resizeScreen } from 'utils/resizeScreen';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ADMIN } from 'component/providers/AccessProvider/permissions.ts';
 import {
@@ -33,9 +35,16 @@ vi.mock('component/menu/Header/SearchDocs/SearchDocs.tsx', () => ({
 }));
 
 const server = testServerSetup();
+const SMALL_SCREEN = 600;
+const DESKTOP = 1280;
+
+afterEach(() => {
+    vi.useRealTimers();
+});
 
 beforeEach(() => {
     localStorage.clear();
+    resizeScreen(DESKTOP);
 });
 
 // Before ui-config loads isEnterprise() is already false, so asserting an
@@ -838,4 +847,89 @@ test('starts the main content at the breadcrumbs', () => {
     });
 
     expect(isBefore(startOfMainContent, breadcrumbsNavigation)).toBe(true);
+});
+
+const mainNavigation = () => screen.queryByRole('navigation', { name: 'Main' });
+
+const openNavigationDrawer = async (route?: string) => {
+    resizeScreen(SMALL_SCREEN);
+    render(<AppShell>content</AppShell>, { route });
+    await userEvent.click(
+        screen.getByRole('button', { name: 'Open navigation' }),
+    );
+};
+
+// A closing drawer stays in the DOM until its exit transition ends, so
+// asserting that it stayed open has to run that transition out first.
+const finishDrawerExitTransition = () =>
+    act(() => vi.runOnlyPendingTimersAsync());
+
+test('hides the sidebar behind a menu button on small screens', () => {
+    resizeScreen(SMALL_SCREEN);
+
+    render(<AppShell>content</AppShell>);
+
+    expect(mainNavigation()).not.toBeInTheDocument();
+    expect(
+        screen.getByRole('button', { name: 'Open navigation' }),
+    ).toBeInTheDocument();
+});
+
+test('opens the sidebar in a drawer from the menu button on small screens', async () => {
+    await openNavigationDrawer();
+
+    expect(
+        within(mainNavigation()!).getByRole('link', { name: 'Home' }),
+    ).toBeVisible();
+});
+
+test('closes the navigation drawer when clicking outside it', async () => {
+    await openNavigationDrawer();
+
+    await userEvent.click(document.querySelector(`.${backdropClasses.root}`)!);
+
+    await waitFor(() => expect(mainNavigation()).not.toBeInTheDocument());
+});
+
+test('closes the navigation drawer after following a link in it', async () => {
+    await openNavigationDrawer();
+
+    await userEvent.click(
+        within(mainNavigation()!).getByRole('link', { name: 'Projects' }),
+    );
+
+    await waitFor(() => expect(mainNavigation()).not.toBeInTheDocument());
+});
+
+test('closes the navigation drawer after following a link to the current page', async () => {
+    await openNavigationDrawer('/projects');
+
+    await userEvent.click(
+        within(mainNavigation()!).getByRole('link', { name: 'Projects' }),
+    );
+
+    await waitFor(() => expect(mainNavigation()).not.toBeInTheDocument());
+});
+
+test('keeps the navigation drawer open when switching to the workspace configuration', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    await openNavigationDrawer();
+
+    await openConfigureWorkspace();
+    await finishDrawerExitTransition();
+
+    expect(
+        within(mainNavigation()!).getByRole('region', {
+            name: 'Configure workspace',
+        }),
+    ).toBeVisible();
+});
+
+test('shows the sidebar without a menu button on large screens', () => {
+    render(<AppShell>content</AppShell>);
+
+    expect(mainNavigation()).toBeInTheDocument();
+    expect(
+        screen.queryByRole('button', { name: 'Open navigation' }),
+    ).not.toBeInTheDocument();
 });

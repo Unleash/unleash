@@ -4,9 +4,9 @@ import type { FlatOption } from './useSelectListbox.ts';
 
 const StyledList = styled('ul')(({ theme }) => ({
     listStyle: 'none',
-    margin: 0,
+    margin: theme.spacing(1, 0),
     overflowY: 'auto',
-    padding: theme.spacing(1, 0),
+    padding: 0,
     '&:empty': {
         padding: 0,
     },
@@ -138,7 +138,7 @@ export const SelectOptionsList = <T extends string | number>({
                             {group.group}
                         </StyledListSubheader>
                     ) : null}
-                    <StyledList sx={{ padding: 0 }}>
+                    <StyledList sx={{ margin: 0 }}>
                         {group.options.map((option, idx) =>
                             renderRow(option, group.index + idx),
                         )}

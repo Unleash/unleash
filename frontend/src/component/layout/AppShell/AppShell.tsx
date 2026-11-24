@@ -39,6 +39,11 @@ const StyledContent = styled('main')(({ theme }) => ({
     maxWidth: 1512,
     margin: '0 auto',
     padding: theme.spacing(0, 3, 6),
+    // Pages use high z-indexes (e.g. theme.zIndex.sticky) for sticky headers.
+    // Isolating the <main> element into its own stacking context keeps those
+    // z-indexes inside the page content, so modals and drawers rendered at the
+    // end of the body still paint above the sticky headers.
+    isolation: 'isolate',
     [theme.breakpoints.down('md')]: {
         padding: theme.spacing(0, 1.5, 6),
     },

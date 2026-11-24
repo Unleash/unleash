@@ -121,16 +121,20 @@ const emptyPayload = (isNew: boolean, schema?: JsonSchemaProperty): IPayload =>
 
 enum ErrorField {
     NAME = 'name',
+    INVALID_WEIGHT = 'invalidWeight',
     PAYLOAD = 'payload',
 }
 
 interface IVariantFormErrors {
     [ErrorField.NAME]?: string;
+    [ErrorField.INVALID_WEIGHT]?: string;
     [ErrorField.PAYLOAD]?: string;
 }
 
 const takenNameMessage =
     'A variant with that name already exists for this environment.';
+
+const invalidWeightMessage = 'Enter a valid number';
 
 const payloadError = (payload: IPayload): string | undefined => {
     if (isValidPayload(payload)) return;
@@ -246,6 +250,17 @@ export const VariantForm = ({
         .reduce((sum, other) => sum + other.weight, 0);
     const maxPercentage = (TOTAL_WEIGHT - fixedWeightOfOtherVariants) / 10;
 
+    const onWeightChange = (input: HTMLInputElement) => {
+        clearError(ErrorField.INVALID_WEIGHT);
+        onSetPercentage(input.value);
+    };
+
+    const onWeightBlur = (input: HTMLInputElement) => {
+        if (input.validity.badInput) {
+            setError(ErrorField.INVALID_WEIGHT, invalidWeightMessage);
+        }
+    };
+
     const onSetPercentage = (typedPercentage: string) => {
         if (typedPercentage === '') {
             setPercentage('');
@@ -347,7 +362,9 @@ export const VariantForm = ({
         setAutoFocusPayloadEditor(true);
     }, [erroredFieldFocusRequest, failedVariantsSubmit, variant.id]);
 
-    const weightError = weightsError ? 'Total weight may not exceed 100%' : '';
+    const weightError = weightsError
+        ? 'Total weight may not exceed 100%'
+        : errors.invalidWeight;
 
     const weightInputId = `variant-weight-input-${variant.id}`;
     const weightExplanationId = `${weightInputId}-explanation`;
@@ -392,7 +409,8 @@ export const VariantForm = ({
                             error={Boolean(weightError)}
                             errorText={weightError}
                             value={percentage}
-                            onChange={(e) => onSetPercentage(e.target.value)}
+                            onChange={(e) => onWeightChange(e.target)}
+                            onBlur={(e) => onWeightBlur(e.target)}
                             slotProps={{
                                 input: {
                                     endAdornment: (

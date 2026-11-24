@@ -80,3 +80,39 @@ test('renders without crashing when stickiness/groupId is not provided', () => {
     const slider = screen.getByRole('slider', { name: /rollout/i });
     expect(slider).toBeInTheDocument();
 });
+
+test.each([
+    ['1e2', '100', 'blur'],
+    ['5e1', '50', 'enter'],
+    ['1e3', '20', 'blur'],
+    ['1e-1', '0', 'enter'],
+    ['25.9', '25', 'blur'],
+    ['-1e1', '20', 'blur'],
+])('commits numeric rollout %s as %s on %s', (input, expected, action) => {
+    const Wrapper = () => {
+        const [parameters, setParameters] = useState({ rollout: '20' });
+        return (
+            <FlexibleStrategy
+                parameters={parameters}
+                updateParameter={(field, value) =>
+                    setParameters((previous) => ({
+                        ...previous,
+                        [field]: value,
+                    }))
+                }
+            />
+        );
+    };
+    render(<Wrapper />);
+    const numberInput = screen.getByRole('spinbutton');
+    fireEvent.change(numberInput, { target: { value: input } });
+    expect(numberInput).toHaveValue(Number(input));
+    if (action === 'enter') {
+        fireEvent.keyDown(numberInput, { key: 'Enter' });
+    } else {
+        fireEvent.blur(numberInput);
+    }
+    expect(screen.getByRole('slider', { name: /rollout/i })).toHaveValue(
+        expected,
+    );
+});

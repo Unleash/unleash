@@ -39,6 +39,7 @@ import { UiObservabilityController } from '../../features/ui-observability-contr
 import { SearchApi } from './search/index.js';
 import PersonalDashboardController from '../../features/personal-dashboard/personal-dashboard-controller.js';
 import UserRecentFlagsController from '../../features/user-recent-flags/user-recent-flags-controller.js';
+import UserSettingsController from '../../features/user-settings/user-settings-controller.js';
 import FeatureLifecycleCountController from '../../features/feature-lifecycle/feature-lifecycle-count-controller.js';
 import type { IUnleashServices } from '../../services/index.js';
 import FlagCreatorsController from '../../features/project/flag-creators-controller.js';
@@ -98,6 +99,10 @@ export class AdminApi extends Controller {
         this.app.use(
             '/user/recent-flags',
             new UserRecentFlagsController(config, services).router,
+        );
+        this.app.use(
+            '/user/settings',
+            new UserSettingsController(config, services).router,
         );
 
         this.app.use(

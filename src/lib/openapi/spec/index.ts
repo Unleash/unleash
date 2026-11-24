@@ -245,6 +245,8 @@ export * from './user-access-overview-schema.js';
 export * from './user-recent-flag-schema.js';
 export * from './user-recent-flags-schema.js';
 export * from './user-schema.js';
+export * from './user-setting-schema.js';
+export * from './user-settings-schema.js';
 export * from './users-groups-base-schema.js';
 export * from './users-schema.js';
 export * from './users-search-schema.js';

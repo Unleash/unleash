@@ -1,6 +1,6 @@
 /* eslint react/no-multi-comp:off */
 import type React from 'react';
-import { useContext, useState } from 'react';
+import { type ReactNode, useContext, useState } from 'react';
 import {
     Box,
     IconButton,
@@ -30,12 +30,13 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import ApplicationOverview from './ApplicationOverview.tsx';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { CreateApplicationTokenButton } from './CreateApplicationTokenButton/CreateApplicationTokenButton.tsx';
-import { CreateTokenPanel } from './CreateTokenPanel/CreateTokenPanel.tsx';
+import { ApplicationApiTokens } from './ApplicationApiTokens/ApplicationApiTokens.tsx';
+import { ApplicationApiTokensTabLabel } from './ApplicationApiTokensTabLabel/ApplicationApiTokensTabLabel.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 type Tab = {
     title: string;
+    label?: ReactNode;
     path: string;
     name: string;
 };
@@ -84,7 +85,6 @@ export const Application = () => {
     const basePath = `/applications/${encodeURIComponent(name)}`;
 
     const [showDialog, setShowDialog] = useState(false);
-    const [createTokenOpen, setCreateTokenOpen] = useState(false);
 
     const toggleModal = () => {
         setShowDialog(!showDialog);
@@ -137,6 +137,16 @@ export const Application = () => {
             path: `${basePath}/instances`,
             name: 'instances',
         },
+        ...(applicationOverview
+            ? [
+                  {
+                      title: 'Tokens',
+                      label: <ApplicationApiTokensTabLabel />,
+                      path: `${basePath}/tokens`,
+                      name: 'tokens',
+                  },
+              ]
+            : []),
     ];
 
     const newActiveTab = tabs.find((tab) => tab.path === pathname);
@@ -163,13 +173,6 @@ export const Application = () => {
                                     }
                                 />
 
-                                {applicationOverview ? (
-                                    <CreateApplicationTokenButton
-                                        onClick={() => setCreateTokenOpen(true)}
-                                    >
-                                        Create token
-                                    </CreateApplicationTokenButton>
-                                ) : null}
                                 <PermissionIconButton
                                     tooltipProps={{
                                         title: 'Delete application',
@@ -202,7 +205,7 @@ export const Application = () => {
                             return (
                                 <StyledTab
                                     key={tab.title}
-                                    label={tab.title}
+                                    label={tab.label ?? tab.title}
                                     value={tab.path}
                                     onClick={() => navigate(tab.path)}
                                     data-testid={`TAB_${tab.title}`}
@@ -217,14 +220,14 @@ export const Application = () => {
                     condition={hasAccess(UPDATE_APPLICATION)}
                     show={<div>{renderModal()}</div>}
                 />
-                {createTokenOpen ? (
-                    <CreateTokenPanel
-                        appName={name}
-                        onClose={() => setCreateTokenOpen(false)}
-                    />
-                ) : null}
                 <Routes>
                     <Route path='instances' element={<ConnectedInstances />} />
+                    {applicationOverview ? (
+                        <Route
+                            path='tokens'
+                            element={<ApplicationApiTokens />}
+                        />
+                    ) : null}
                     <Route path='*' element={<ApplicationOverview />} />
                 </Routes>
             </PageContent>

@@ -12,6 +12,7 @@ import {
 } from 'component/common/ApiTokenTable/apiTokenTracking';
 import useApiTokensApi from 'hooks/api/actions/useApiTokensApi/useApiTokensApi';
 import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
+import { useApplicationApiTokens } from 'hooks/api/getters/useApplicationApiTokens/useApplicationApiTokens';
 import { useApiTokenLimit } from 'hooks/api/getters/useApiTokenLimit/useApiTokenLimit';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import useToast from 'hooks/useToast';
@@ -30,11 +31,13 @@ import { TokenCreated } from './TokenCreated/TokenCreated.tsx';
 
 interface ICreateTokenPanelProps {
     appName: string;
+    preferredEnvironment?: string;
     onClose: () => void;
 }
 
 export const CreateTokenPanel = ({
     appName,
+    preferredEnvironment,
     onClose,
 }: ICreateTokenPanelProps) => {
     const {
@@ -51,9 +54,11 @@ export const CreateTokenPanel = ({
         errors,
         clearErrors,
         apiTokenTypes,
-    } = useApiTokenForm();
+    } = useApiTokenForm(undefined, preferredEnvironment);
     const { environments } = useEnvironments();
     const { refetch } = useApiTokens();
+    const { refetch: refetchApplicationTokens } =
+        useApplicationApiTokens(appName);
     const { limit, currentValue, limitReached } = useApiTokenLimit();
     const { createToken, loading } = useApiTokensApi();
     const { setToastApiError } = useToast();
@@ -90,6 +95,7 @@ export const CreateTokenPanel = ({
             );
             setSecret(response.secret);
             refetch();
+            refetchApplicationTokens();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }

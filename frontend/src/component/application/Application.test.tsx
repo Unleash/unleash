@@ -1,6 +1,5 @@
 import { expect, test } from 'vitest';
-import { screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { screen } from '@testing-library/react';
 import { Route, Routes } from 'react-router';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
@@ -39,20 +38,18 @@ const renderApplication = (applicationOverview: boolean) => {
     );
 };
 
-test('without the flag, the page offers no token and can delete the application', async () => {
+test('without the flag, the page has no Tokens tab and can delete the application', async () => {
     renderApplication(false);
 
     await screen.findByRole('button', { name: 'Delete application' });
-    expect(screen.queryByRole('button', { name: 'Create token' })).toBeNull();
+    screen.getByRole('tab', { name: 'Overview' });
+    expect(screen.queryByRole('tab', { name: /Tokens/ })).toBeNull();
 });
 
-test('with the flag, the header opens the create token panel', async () => {
+test('with the flag, the page adds a Tokens tab with the token count', async () => {
     renderApplication(true);
 
-    const open = await screen.findByRole('button', { name: 'Create token' });
-    // Enabled once the token count is known (the token limit).
-    await waitFor(() => expect(open).not.toHaveAttribute('aria-disabled'));
-    await userEvent.click(open);
-
-    await screen.findByLabelText('Token name');
+    await screen.findByRole('tab', { name: 'Tokens 0' });
+    screen.getByRole('button', { name: 'Delete application' });
+    expect(screen.queryByRole('button', { name: 'Create token' })).toBeNull();
 });

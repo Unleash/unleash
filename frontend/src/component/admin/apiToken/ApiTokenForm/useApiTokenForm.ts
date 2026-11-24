@@ -11,9 +11,13 @@ import { useHasRootAccess } from 'hooks/useHasAccess';
 import type { SelectOption } from './TokenTypeSelector/TokenTypeSelector.jsx';
 
 export type ApiTokenFormErrorType = 'tokenName' | 'projects';
-export const useApiTokenForm = (project?: string) => {
+export const useApiTokenForm = (
+    project?: string,
+    preferredEnvironment?: string,
+) => {
     const { environments } = useEnvironments();
-    const initialEnvironment = environments?.find((e) => e.enabled)?.name;
+    const initialEnvironment =
+        preferredEnvironment ?? environments?.find((e) => e.enabled)?.name;
 
     const hasCreateProjectTokenPermission = useHasRootAccess(
         CREATE_PROJECT_API_TOKEN,

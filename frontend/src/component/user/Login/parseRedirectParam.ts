@@ -5,7 +5,7 @@ interface IRedirectParam {
 
 export const parseRedirectParam = (redirect: string): IRedirectParam => {
     const url = new URL(
-        decodeURIComponent(redirect),
+        redirect,
         `${window.location.protocol}//${window.location.host}`,
     );
 

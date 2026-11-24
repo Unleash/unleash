@@ -1,6 +1,9 @@
+import type { IPayloadSchemaReadModel } from './payload-schema-read-model-type.js';
 import type { IPayloadSchemaStore } from './payload-schema-store-type.js';
 
-export class FakePayloadSchemaStore implements IPayloadSchemaStore {
+export class FakePayloadSchemaStore
+    implements IPayloadSchemaStore, IPayloadSchemaReadModel
+{
     private schemas = new Map<string, Record<string, unknown>>();
 
     async upsert(
@@ -14,6 +17,12 @@ export class FakePayloadSchemaStore implements IPayloadSchemaStore {
         featureName: string,
     ): Promise<Record<string, unknown> | undefined> {
         return this.schemas.get(featureName);
+    }
+
+    async getPayloadSchema(
+        featureName: string,
+    ): Promise<Record<string, unknown> | undefined> {
+        return this.get(featureName);
     }
 
     async delete(featureName: string): Promise<void> {

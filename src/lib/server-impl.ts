@@ -197,7 +197,11 @@ import { PayloadSchemaStore } from './features/payload-schema/payload-schema-sto
 import { FakePayloadSchemaStore } from './features/payload-schema/fake-payload-schema-store.js';
 import { PayloadSchemaReadModel } from './features/payload-schema/payload-schema-read-model.js';
 import type { IPayloadSchemaStore } from './features/payload-schema/payload-schema-store-type.js';
-import { VariantPayloadValidator } from './features/payload-schema/variant-payload-validator.js';
+import {
+    type NonMatchingVariantPayload,
+    type VariantJsonPayload,
+    VariantPayloadValidator,
+} from './features/payload-schema/variant-payload-validator.js';
 import { FakePayloadSchemaReadModel } from './features/payload-schema/fake-payload-schema-read-model.js';
 import type { IPayloadSchemaReadModel } from './features/payload-schema/payload-schema-read-model-type.js';
 import { hasJsonPayload } from './features/feature-toggle/variant-json-payload.js';
@@ -704,6 +708,8 @@ export type {
     IClientInstance,
     IFeaturesReadModel,
     IPayloadSchemaReadModel,
+    VariantJsonPayload,
+    NonMatchingVariantPayload,
     IPayloadSchemaStore,
 };
 export * from './openapi/index.js';

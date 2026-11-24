@@ -705,7 +705,7 @@ export class FeatureToggleService {
         if (!this.flagResolver.isEnabled('payloadSchemas')) {
             return;
         }
-        await this.variantPayloadValidator.validateVariants(
+        await this.variantPayloadValidator.assertVariantsMatchPayloadSchema(
             featureName,
             variants ?? [],
         );

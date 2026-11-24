@@ -28,10 +28,10 @@ const validatorWithSchema = (
 test('a json payload has to match the payload schema of the feature', async () => {
     const validator = validatorWithSchema('my-flag', colorSchema);
 
-    await validator.validateVariants('my-flag', [
+    await validator.assertVariantsMatchPayloadSchema('my-flag', [
         variant('red', { type: 'json', value: '{"color":"red"}' }),
     ]);
-    const breaking = validator.validateVariants('my-flag', [
+    const breaking = validator.assertVariantsMatchPayloadSchema('my-flag', [
         variant('blue', { type: 'json', value: '{"colour":"blue"}' }),
     ]);
 
@@ -46,7 +46,7 @@ test('a json payload has to be valid JSON even when the feature has no payload s
     );
 
     await expect(
-        validator.validateVariants('untyped-flag', [
+        validator.assertVariantsMatchPayloadSchema('untyped-flag', [
             variant('red', { type: 'json', value: '{"color":' }),
         ]),
     ).rejects.toThrow(
@@ -60,7 +60,7 @@ test('a json payload may leave out an optional property named after a built-in o
         properties: { toString: { type: 'string' } },
     });
 
-    await validator.validateVariants('my-flag', [
+    await validator.assertVariantsMatchPayloadSchema('my-flag', [
         variant('empty', { type: 'json', value: '{}' }),
     ]);
 });
@@ -68,7 +68,7 @@ test('a json payload may leave out an optional property named after a built-in o
 test('the payload schema only applies to json payloads', async () => {
     const validator = validatorWithSchema('my-flag', colorSchema);
 
-    await validator.validateVariants('my-flag', [
+    await validator.assertVariantsMatchPayloadSchema('my-flag', [
         variant('text', { type: 'string', value: 'not an object' }),
         variant('amount', { type: 'number', value: '42' }),
         variant('list', { type: 'csv', value: 'a,b' }),
@@ -81,7 +81,30 @@ test('a feature without a payload schema accepts any json payload', async () => 
         new FakePayloadSchemaReadModel(),
     );
 
-    await validator.validateVariants('untyped-flag', [
+    await validator.assertVariantsMatchPayloadSchema('untyped-flag', [
         variant('anything', { type: 'json', value: '{"colour":"blue"}' }),
+    ]);
+});
+
+test('every payload that is not valid JSON or does not match the payload schema is listed with its reason', async () => {
+    const validator = validatorWithSchema('my-flag', colorSchema);
+
+    const nonMatching = await validator.validateVariantPayloads('my-flag', [
+        { variantName: 'blue', value: '{"color":"blue"}' },
+        { variantName: 'red', value: '{"color":1}' },
+        { variantName: 'broken', value: '{"color":' },
+    ]);
+
+    expect(nonMatching).toEqual([
+        {
+            variantName: 'red',
+            value: '{"color":1}',
+            error: 'data/color must be string',
+        },
+        {
+            variantName: 'broken',
+            value: '{"color":',
+            error: 'The payload is not valid JSON.',
+        },
     ]);
 });

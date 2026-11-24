@@ -117,7 +117,7 @@ export class ReleasePlanMilestoneStrategyService {
             strategy.variants &&
             this.flagResolver.isEnabled('payloadSchemas')
         ) {
-            await this.variantPayloadValidator.validateVariants(
+            await this.variantPayloadValidator.assertVariantsMatchPayloadSchema(
                 featureName,
                 strategy.variants,
             );

@@ -5,6 +5,7 @@ export interface IApiTokenCreate {
     type: string;
     environment?: string;
     projects: string[];
+    appName?: string;
 }
 
 const useApiTokensApi = () => {
@@ -19,7 +20,7 @@ const useApiTokensApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
-    // Tracking lives in CreateApiToken. EnvironmentCloneModal also calls this and we
+    // Tracking lives in the callers. EnvironmentCloneModal also calls this and we
     // don't want cloned tokens counted as created ones.
     const createToken = async (newToken: IApiTokenCreate) => {
         const path = `api/admin/api-tokens`;

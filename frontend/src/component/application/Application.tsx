@@ -30,6 +30,9 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import ApplicationOverview from './ApplicationOverview.tsx';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import { CreateApplicationTokenButton } from './CreateApplicationTokenButton/CreateApplicationTokenButton.tsx';
+import { CreateTokenPanel } from './CreateTokenPanel/CreateTokenPanel.tsx';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 type Tab = {
     title: string;
@@ -76,10 +79,12 @@ export const Application = () => {
     const { locationSettings } = useLocationSettings();
     const { setToastData, setToastApiError } = useToast();
     const { pathname } = useLocation();
+    const applicationOverview = useUiFlag('applicationOverview');
 
     const basePath = `/applications/${encodeURIComponent(name)}`;
 
     const [showDialog, setShowDialog] = useState(false);
+    const [createTokenOpen, setCreateTokenOpen] = useState(false);
 
     const toggleModal = () => {
         setShowDialog(!showDialog);
@@ -158,6 +163,13 @@ export const Application = () => {
                                     }
                                 />
 
+                                {applicationOverview ? (
+                                    <CreateApplicationTokenButton
+                                        onClick={() => setCreateTokenOpen(true)}
+                                    >
+                                        Create token
+                                    </CreateApplicationTokenButton>
+                                ) : null}
                                 <PermissionIconButton
                                     tooltipProps={{
                                         title: 'Delete application',
@@ -205,6 +217,12 @@ export const Application = () => {
                     condition={hasAccess(UPDATE_APPLICATION)}
                     show={<div>{renderModal()}</div>}
                 />
+                {createTokenOpen ? (
+                    <CreateTokenPanel
+                        appName={name}
+                        onClose={() => setCreateTokenOpen(false)}
+                    />
+                ) : null}
                 <Routes>
                     <Route path='instances' element={<ConnectedInstances />} />
                     <Route path='*' element={<ApplicationOverview />} />

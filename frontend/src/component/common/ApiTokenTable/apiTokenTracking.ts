@@ -14,14 +14,16 @@ const projectScope = (projects: string[] = []) => {
 export const apiTokenCreationProps = (newToken: {
     type: string;
     projects?: string[];
+    appName?: string;
 }) => ({
     tokenType: newToken.type.toLowerCase(),
     projectScope: projectScope(newToken.projects),
+    application: newToken.appName ? 'linked' : 'none',
 });
 
 export const copyApiTokenTracking = (
     token: { type: string },
-    method: 'confirm-dialog' | 'token-list',
+    method: 'confirm-dialog' | 'token-list' | 'create-panel',
 ): Tracking => ({
     event: 'api-tokens',
     type: 'copy-api-token',

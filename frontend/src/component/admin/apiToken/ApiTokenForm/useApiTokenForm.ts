@@ -54,8 +54,8 @@ export const useApiTokenForm = (project?: string) => {
     >({});
 
     useEffect(() => {
-        setEnvironment(type === 'ADMIN' ? '*' : initialEnvironment);
-    }, [type, initialEnvironment]);
+        setEnvironment(initialEnvironment);
+    }, [initialEnvironment]);
 
     const setTokenType = (value: TokenType) => {
         if (value === 'ADMIN') {
@@ -66,7 +66,6 @@ export const useApiTokenForm = (project?: string) => {
         } else {
             setType(value);
             setProjects(memorizedProjects);
-            setEnvironment(initialEnvironment);
         }
     };
 

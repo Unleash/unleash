@@ -16,6 +16,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { GO_BACK } from 'constants/navigate';
 import { useApiTokens } from 'hooks/api/getters/useApiTokens/useApiTokens';
+import { useApiTokenLimit } from 'hooks/api/getters/useApiTokenLimit/useApiTokenLimit';
 import { TokenInfo } from '../ApiTokenForm/TokenInfo/TokenInfo.tsx';
 import { TokenTypeSelector } from '../ApiTokenForm/TokenTypeSelector/TokenTypeSelector.tsx';
 import { ProjectSelector } from '../ApiTokenForm/ProjectSelector/ProjectSelector.tsx';
@@ -40,19 +41,6 @@ interface ICreateApiTokenProps {
 const StyledLimit = styled(Limit)(({ theme }) => ({
     margin: theme.spacing(2, 0, 4),
 }));
-
-const useApiTokenLimit = () => {
-    const { tokens, loading: loadingTokens } = useApiTokens();
-    const { uiConfig, loading: loadingConfig } = useUiConfig();
-    const apiTokensLimit = uiConfig.resourceLimits.apiTokens;
-
-    return {
-        limit: apiTokensLimit,
-        currentValue: tokens.length,
-        limitReached: tokens.length >= apiTokensLimit,
-        loading: loadingConfig || loadingTokens,
-    };
-};
 
 export const CreateApiToken = ({ layout }: ICreateApiTokenProps) => {
     const { setToastApiError } = useToast();

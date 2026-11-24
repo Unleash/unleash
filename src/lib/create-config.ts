@@ -342,6 +342,10 @@ const defaultSessionOption = (isEnterprise: boolean): ISessionOption => ({
 });
 
 const defaultServerOption: IServerOption = {
+    clientMetricsRequestBodyLimitKb: parseEnvVarNumber(
+        process.env.UNLEASH_EXPERIMENTAL_CLIENT_METRICS_REQUEST_BODY_LIMIT_KB,
+        100,
+    ),
     pipe: undefined,
     host: process.env.HTTP_HOST,
     port: parseEnvVarNumber(process.env.HTTP_PORT || process.env.PORT, 4242),

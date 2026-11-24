@@ -56,6 +56,17 @@ export default async function getApp(
     unleashSession?: RequestHandler,
     db?: Knex,
 ): Promise<Application> {
+    const metricsLimitKb = config.server.clientMetricsRequestBodyLimitKb;
+    if (
+        !Number.isInteger(metricsLimitKb) ||
+        metricsLimitKb < 100 ||
+        metricsLimitKb > 1024
+    ) {
+        throw new Error(
+            'UNLEASH_EXPERIMENTAL_CLIENT_METRICS_REQUEST_BODY_LIMIT_KB must be a whole number of KiB between 100 and 1024 (inclusive)',
+        );
+    }
+
     const app = express();
     const baseUriPath = config.server.baseUriPath || '';
     const publicFolder = config.publicFolder || findPublicFolder();
@@ -102,6 +113,14 @@ export default async function getApp(
     app.use(
         `${baseUriPath}/api/admin/features-batch`,
         express.json({ strict: false, limit: '500kB' }),
+    );
+    // Match only this POST route. The general parser skips an already parsed body.
+    app.post(
+        `${baseUriPath}/api/client/metrics`,
+        express.json({
+            strict: false,
+            limit: metricsLimitKb * 1024,
+        }),
     );
     app.use(
         unless(

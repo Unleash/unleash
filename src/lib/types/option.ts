@@ -126,6 +126,7 @@ export interface IServerOption {
     gracefulShutdownTimeout: number;
     secret: string;
     enableScheduledCreatedByMigration: boolean;
+    clientMetricsRequestBodyLimitKb: number;
 }
 
 export interface IClientCachingOption {

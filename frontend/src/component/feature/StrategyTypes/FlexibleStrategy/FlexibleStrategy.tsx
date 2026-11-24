@@ -31,7 +31,7 @@ import {
 } from '../../FeatureStrategy/FeatureStrategyForm/formFocus.tsx';
 
 const SliderArea = styled('div')(({ theme }) => ({
-    padding: theme.spacing(4, 3, 3),
+    padding: theme.spacing(1, 3, 3),
 }));
 
 const AdvancedSettingsAccordion = styled(Accordion)({

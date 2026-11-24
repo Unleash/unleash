@@ -44,6 +44,20 @@ test('manipulates the rollout slider', async () => {
 
     expect(slider).toHaveValue('50');
     expect(groupIdInput).toHaveValue('newGroupId');
+
+    const percentageInput = screen.getByRole('spinbutton');
+    fireEvent.change(percentageInput, { target: { value: '80' } });
+
+    expect(slider).toHaveValue('80');
+
+    fireEvent.change(percentageInput, { target: { value: '150' } });
+
+    expect(slider).toHaveValue('100');
+    expect(screen.getByText('Cannot exceed 100')).toBeInTheDocument();
+
+    fireEvent.blur(percentageInput);
+
+    expect(percentageInput).toHaveValue(100);
 });
 
 test('displays groupId error', async () => {

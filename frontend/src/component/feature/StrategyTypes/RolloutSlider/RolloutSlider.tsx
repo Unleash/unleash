@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { type ChangeEvent, type KeyboardEvent, useState } from 'react';
 import { withStyles } from 'tss-react/mui';
 import { Slider, Box, styled, TextField, InputAdornment } from '@mui/material';
 import { ROLLOUT_SLIDER_ID } from 'utils/testIds';
-import { useNumericStringInput } from 'hooks/useNumericStringInput';
 
 const StyledSlider = withStyles(Slider, (theme) => ({
     root: {
@@ -82,6 +81,25 @@ export interface IRolloutSliderProps {
     step?: number;
 }
 
+const isValidPercentage = (text: string): boolean => {
+    if (text === '') return false;
+
+    const value = Number(text);
+    return Number.isInteger(value) && value >= 0 && value <= 100;
+};
+
+const nearestWholePercentage = (number: number): number => {
+    const wholeNumber = Math.round(number);
+    return Math.min(100, Math.max(0, wholeNumber));
+};
+
+const percentageError = (text: string): string => {
+    const typedNumber = Number(text);
+    if (typedNumber > 100) return 'Cannot exceed 100';
+    if (typedNumber < 0) return 'Cannot be below 0';
+    return 'Must be a whole number';
+};
+
 export const RolloutSlider = ({
     name,
     value,
@@ -91,16 +109,32 @@ export const RolloutSlider = ({
 }: IRolloutSliderProps) => {
     const [dragValue, setDragValue] = useState<number | null>(null);
     const displayedValue = dragValue ?? value;
+    const [invalidText, setInvalidText] = useState<string | null>(null);
+    const inputText = invalidText ?? displayedValue.toString();
+    const inputError = invalidText ? percentageError(invalidText) : '';
 
     const commitValue = (numValue: number) => {
         const event = new Event('input', { bubbles: true });
         onChange(event, numValue);
     };
 
-    // Bounds validation stays in component - hook only handles parsing
-    const handleValueChange = (numValue: number) => {
-        if (numValue >= 0 && numValue <= 100) {
-            commitValue(numValue);
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const typedText = event.target.value;
+        const typedNumber = Number(typedText);
+        const typedTextIsNumber =
+            typedText !== '' && Number.isFinite(typedNumber);
+        if (typedTextIsNumber) {
+            commitValue(nearestWholePercentage(typedNumber));
+        }
+        setInvalidText(isValidPercentage(typedText) ? null : typedText);
+    };
+
+    const discardInvalidText = () => setInvalidText(null);
+
+    const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter' && invalidText !== null) {
+            event.preventDefault();
+            discardInvalidText();
         }
     };
 
@@ -115,11 +149,6 @@ export const RolloutSlider = ({
         setDragValue(null);
         commitValue(newValue as number);
     };
-
-    const { inputValue, handleInputChange, handleInputBlur, handleKeyDown } =
-        useNumericStringInput(displayedValue, handleValueChange, {
-            parseMode: 'integer',
-        });
 
     const valuetext = (value: number) => `${value}%`;
 
@@ -137,7 +166,6 @@ export const RolloutSlider = ({
                     marks={marks}
                     onChange={handleSliderDrag}
                     onChangeCommitted={handleSliderRelease}
-                    valueLabelDisplay='on'
                     disabled={disabled}
                 />
             </SliderContent>
@@ -146,12 +174,22 @@ export const RolloutSlider = ({
                     size='large'
                     aria-label={name}
                     type='number'
-                    value={inputValue}
+                    value={inputText}
                     onChange={handleInputChange}
-                    onBlur={handleInputBlur}
+                    onBlur={discardInvalidText}
                     onKeyDown={handleKeyDown}
+                    error={Boolean(inputError)}
+                    helperText={inputError}
                     disabled={disabled}
                     slotProps={{
+                        formHelperText: {
+                            sx: {
+                                position: 'absolute',
+                                top: '100%',
+                                right: 0,
+                                whiteSpace: 'nowrap',
+                            },
+                        },
                         htmlInput: {
                             min: 0,
                             max: 100,

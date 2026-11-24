@@ -93,6 +93,7 @@ export type IFlagKey =
     | 'improvedSidebarNavigation'
     | 'applicationOverview'
     | 'userSettings'
+    | 'accountTokenType'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -421,6 +422,10 @@ const flags: IFlags = {
     ),
     userSettings: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_USER_SETTINGS,
+        false,
+    ),
+    accountTokenType: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ACCOUNT_TOKEN_TYPE,
         false,
     ),
 };

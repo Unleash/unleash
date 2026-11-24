@@ -74,6 +74,7 @@ process.nextTick(async () => {
                         applicationOverview: true,
                         improvedSidebarNavigation: false,
                         userSettings: true,
+                        accountTokenType: true,
                     },
                 },
                 authentication: {

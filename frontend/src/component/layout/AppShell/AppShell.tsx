@@ -1,15 +1,5 @@
-import {
-    type FC,
-    lazy,
-    type ReactNode,
-    Suspense,
-    useEffect,
-    useRef,
-    useState,
-} from 'react';
+import { type FC, lazy, type ReactNode, Suspense, useState } from 'react';
 import { styled } from '@mui/material';
-import { Link, useLocation } from 'react-router';
-import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { SkipNavTarget } from 'component/common/SkipNavLink/SkipNavTarget';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
 import { FloatingOnboardingChecklistProvider } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistContext.tsx';
@@ -17,37 +7,8 @@ import { FloatingOnboardingChecklistVisibilityGate } from 'component/onboarding/
 import { HelpButtonHintProvider } from 'component/menu/Header/HelpResources/HelpButtonHintContext.tsx';
 import { CommandBarDialog } from 'component/commandBar/CommandBarDialog';
 import { searchDocsTracking } from 'component/menu/Header/SearchDocs/searchDocsTracking';
-import UnleashLogo from 'assets/img/logoDarkWithText.svg?react';
-import UnleashLogoWhite from 'assets/img/logoWithWhiteText.svg?react';
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
-import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
-import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
-import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
-import InsightsIcon from '@mui/icons-material/Insights';
-import QueryStatsOutlinedIcon from '@mui/icons-material/QueryStatsOutlined';
-import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequestIcon';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { useLocalStorageState } from 'hooks/useLocalStorageState';
-import {
-    ConfigureWorkspaceNavigation,
-    isConfigureWorkspacePage,
-} from './sidebar/ConfigureWorkspaceNavigation.tsx';
-import {
-    AdminSettingsNavigation,
-    isAdminSettingsPage,
-} from './sidebar/AdminSettingsNavigation.tsx';
-import { HelpAndResourcesMenu } from './sidebar/HelpAndResourcesMenu.tsx';
-import { appNavigationLinks } from './sidebar/appNavigationLinks.ts';
-import { useVisibleAppNavigationLinks } from './sidebar/useVisibleAppNavigationLinks.ts';
-import { SearchButton } from './sidebar/SearchButton.tsx';
-import { SettingsMenu } from './sidebar/SettingsMenu.tsx';
-import { SidebarLink } from './sidebar/SidebarLink.tsx';
-import { SidebarList } from './sidebar/SidebarList.tsx';
-import { SidebarMoreToggle } from './sidebar/SidebarMoreToggle.tsx';
-import { SidebarSection } from './sidebar/SidebarSection.tsx';
-import { sidebarSectionLabels } from './sidebar/sidebarSectionLabels.ts';
-import { MyProjectsSection } from './projects/MyProjectsSection.tsx';
-import { OpenedProjectSection } from './projects/OpenedProjectSection.tsx';
+import { SidebarContent } from './sidebar/SidebarContent.tsx';
 import { PageHeaderRow } from './header/PageHeaderRow.tsx';
 
 const LazySearchDocsChat = lazy(() =>
@@ -64,37 +25,13 @@ const StyledRoot = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.appShell.background,
 }));
 
-const StyledSidebar = styled('nav')(({ theme }) => ({
+const StyledDesktopSidebar = styled('div')({
     position: 'sticky',
     top: 0,
     height: '100vh',
     width: SIDEBAR_WIDTH,
     flex: 'none',
-    display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: theme.palette.appShell.sidebar,
-}));
-
-const StyledSidebarScrollArea = styled('div')(({ theme }) => ({
-    flex: 1,
-    overflowY: 'auto',
-    padding: theme.spacing(1.5),
-}));
-
-const StyledSidebarFooter = styled('div')(({ theme }) => ({
-    flex: 'none',
-    padding: theme.spacing(0, 1.5, 1.5),
-}));
-
-const StyledLogoLink = styled(Link)(({ theme }) => ({
-    display: 'inline-flex',
-    padding: theme.spacing(0.5),
-    '& svg': { width: 110, height: 'auto' },
-}));
-
-const StyledSearchSlot = styled('div')(({ theme }) => ({
-    margin: theme.spacing(1.5, 0, 2),
-}));
+});
 
 const StyledContent = styled('main')(({ theme }) => ({
     flex: 1,
@@ -107,154 +44,6 @@ const StyledContent = styled('main')(({ theme }) => ({
     },
 }));
 
-type SidebarMode = 'app' | 'workspace' | 'admin';
-type ManualChoice = { mode: SidebarMode; pathname: string };
-
-const getPageMode = (pathname: string): SidebarMode => {
-    if (isConfigureWorkspacePage(pathname)) return 'workspace';
-    if (isAdminSettingsPage(pathname)) return 'admin';
-    return 'app';
-};
-
-const Sidebar: FC<{
-    searchOpen: boolean;
-    onSearch: () => void;
-    onSearchDocs?: () => void;
-}> = ({ searchOpen, onSearch, onSearchDocs }) => {
-    const { pathname } = useLocation();
-    // A manual switch lasts until the pathname changes, so sorting or searching
-    // a table, which only changes the query string, keeps it. It is cleared
-    // rather than ignored so that coming back to the page does not revive it.
-    const [choice, setChoice] = useState<ManualChoice | null>(null);
-    if (choice && choice.pathname !== pathname) {
-        setChoice(null);
-    }
-    const mode = choice ? choice.mode : getPageMode(pathname);
-    const setMode = (next: SidebarMode) => setChoice({ mode: next, pathname });
-    const panelRef = useRef<HTMLDivElement>(null);
-
-    // Only manual switches move focus, not navigation. This runs after the
-    // Settings menu returns focus to its button, so it wins.
-    useEffect(() => {
-        if (!choice) return;
-        panelRef.current
-            ?.querySelector<HTMLElement>('a[href], button')
-            ?.focus();
-    }, [choice]);
-
-    return (
-        <StyledSidebar aria-label='Main'>
-            <StyledSidebarScrollArea ref={panelRef}>
-                {mode === 'app' ? (
-                    <AppNavigation
-                        searchOpen={searchOpen}
-                        onSearch={onSearch}
-                    />
-                ) : null}
-                {mode === 'workspace' ? (
-                    <ConfigureWorkspaceNavigation
-                        onBack={() => setMode('app')}
-                    />
-                ) : null}
-                {mode === 'admin' ? (
-                    <AdminSettingsNavigation onBack={() => setMode('app')} />
-                ) : null}
-            </StyledSidebarScrollArea>
-            <StyledSidebarFooter>
-                <SidebarList>
-                    <HelpAndResourcesMenu onSearchDocs={onSearchDocs} />
-                    <SettingsMenu
-                        onConfigureWorkspace={() => setMode('workspace')}
-                        onAdminSettings={() => setMode('admin')}
-                    />
-                </SidebarList>
-            </StyledSidebarFooter>
-        </StyledSidebar>
-    );
-};
-
-const AppNavigation: FC<{ searchOpen: boolean; onSearch: () => void }> = ({
-    searchOpen,
-    onSearch,
-}) => {
-    const visibleLinks = useVisibleAppNavigationLinks();
-
-    return (
-        <>
-            <StyledLogoLink to='/' aria-label='Unleash'>
-                <ThemeMode
-                    darkmode={<UnleashLogoWhite aria-label='Unleash logo' />}
-                    lightmode={<UnleashLogo aria-label='Unleash logo' />}
-                />
-            </StyledLogoLink>
-            <StyledSearchSlot>
-                <SearchButton expanded={searchOpen} onClick={onSearch} />
-            </StyledSearchSlot>
-            <SidebarList>
-                <SidebarLink
-                    {...appNavigationLinks.home}
-                    icon={<HomeOutlinedIcon />}
-                />
-                {visibleLinks.includes(appNavigationLinks.changeRequests) ? (
-                    <SidebarLink
-                        {...appNavigationLinks.changeRequests}
-                        icon={<ChangeRequestIcon />}
-                    />
-                ) : null}
-            </SidebarList>
-            <WorkspaceSection />
-            <OpenedProjectSection />
-            <MyProjectsSection />
-        </>
-    );
-};
-
-const WorkspaceSection: FC = () => {
-    const visibleLinks = useVisibleAppNavigationLinks();
-    const [moreState, setMoreState] = useLocalStorageState<'open' | 'closed'>(
-        'app-shell:workspace-more',
-        'closed',
-    );
-    const expanded = moreState === 'open';
-
-    return (
-        <SidebarSection title={sidebarSectionLabels.workspace}>
-            <SidebarLink
-                {...appNavigationLinks.projects}
-                icon={<GridViewOutlinedIcon />}
-            />
-            <SidebarLink
-                {...appNavigationLinks.flagsOverview}
-                icon={<FlagOutlinedIcon />}
-            />
-            {expanded ? (
-                <>
-                    <SidebarLink
-                        {...appNavigationLinks.playground}
-                        icon={<AutoFixNormalIcon />}
-                    />
-                    {visibleLinks.includes(appNavigationLinks.analytics) ? (
-                        <SidebarLink
-                            {...appNavigationLinks.analytics}
-                            icon={<InsightsIcon />}
-                        />
-                    ) : null}
-                    {visibleLinks.includes(appNavigationLinks.impactViews) ? (
-                        <SidebarLink
-                            {...appNavigationLinks.impactViews}
-                            icon={<QueryStatsOutlinedIcon />}
-                        />
-                    ) : null}
-                </>
-            ) : null}
-            <SidebarMoreToggle
-                expanded={expanded}
-                onToggle={() => setMoreState(expanded ? 'closed' : 'open')}
-            />
-        </SidebarSection>
-    );
-};
-
 export const AppShell: FC<{ children: ReactNode }> = ({ children }) => {
     const searchDocsWidget = useUiFlag('searchDocsWidget');
     const [searchOpen, setSearchOpen] = useState(false);
@@ -265,15 +54,17 @@ export const AppShell: FC<{ children: ReactNode }> = ({ children }) => {
             <FloatingOnboardingChecklistProvider>
                 <EventTimelineProvider>
                     <StyledRoot>
-                        <Sidebar
-                            searchOpen={searchOpen}
-                            onSearch={() => setSearchOpen(true)}
-                            onSearchDocs={
-                                searchDocsWidget
-                                    ? () => setSearchDocsOpen(true)
-                                    : undefined
-                            }
-                        />
+                        <StyledDesktopSidebar>
+                            <SidebarContent
+                                searchOpen={searchOpen}
+                                onSearch={() => setSearchOpen(true)}
+                                onSearchDocs={
+                                    searchDocsWidget
+                                        ? () => setSearchDocsOpen(true)
+                                        : undefined
+                                }
+                            />
+                        </StyledDesktopSidebar>
                         <StyledContent>
                             <SkipNavTarget />
                             <PageHeaderRow />

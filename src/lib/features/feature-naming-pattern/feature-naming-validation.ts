@@ -1,12 +1,31 @@
 import type { IFeatureNaming } from '../../types/model.js';
 
-const compileRegex = (pattern: string) => new RegExp(`^${pattern}$`);
+// The pattern has to match the whole name. It's wrapped in a group so that
+// the anchors apply to all of it, including every branch of a top-level
+// alternation such as `a-.+|b-.+`. Compiling the bare pattern first makes
+// sure that it's a valid regular expression on its own and can't break out
+// of that group.
+const compileRegex = (pattern: string) => {
+    new RegExp(pattern);
+    return new RegExp(`^(?:${pattern})$`);
+};
+
+const tryCompileRegex = (pattern: string): RegExp | undefined => {
+    try {
+        return compileRegex(pattern);
+    } catch {
+        return undefined;
+    }
+};
 
 const disallowedStrings = [' ', '\\t', '\\s', '\\n', '\\r', '\\f', '\\v'];
 
 // Helper functions for error messages
 const whitespaceError = (pattern: string) =>
     `Feature flag names cannot contain whitespace. You've provided a feature flag naming pattern that contains a whitespace character: "${pattern}". Remove any whitespace characters from your pattern.`;
+
+const invalidPatternError = (pattern: string) =>
+    `You've provided a feature flag naming pattern ("${pattern}") that isn't a valid regular expression.`;
 
 const exampleMismatchError = (example: string, pattern: string) =>
     `You've provided a feature flag naming example ("${example}") that doesn't match your feature flag naming pattern ("${pattern}").`;
@@ -24,8 +43,13 @@ export const checkFeatureNamingData = (
 
     if (disallowedStrings.some((str) => pattern?.includes(str))) {
         errors.push(whitespaceError(pattern as string));
-    } else if (pattern && example && !compileRegex(pattern).test(example)) {
-        errors.push(exampleMismatchError(example, pattern));
+    } else if (pattern) {
+        const regex = tryCompileRegex(pattern);
+        if (!regex) {
+            errors.push(invalidPatternError(pattern));
+        } else if (example && !regex.test(example)) {
+            errors.push(exampleMismatchError(example, pattern));
+        }
     }
 
     if (!pattern && example) {

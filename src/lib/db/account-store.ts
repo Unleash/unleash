@@ -53,7 +53,10 @@ const rowToUser = (row) => {
 
 const rowToTokenAccount = (row): User => {
     const account = rowToUser(row);
-    account.accountToken = { id: row.account_token_id };
+    account.accountToken = {
+        id: row.account_token_id,
+        type: emptify(row.account_token_type),
+    };
     return account;
 };
 
@@ -160,7 +163,10 @@ export class AccountStore implements IAccountStore {
     private getAccountByTokenQuery() {
         return this.activeAccounts()
             .select(USER_COLUMNS.map((column) => `${TABLE}.${column}`))
-            .select('personal_access_tokens.id as account_token_id')
+            .select(
+                'personal_access_tokens.id as account_token_id',
+                'personal_access_tokens.type as account_token_type',
+            )
             .leftJoin(
                 'personal_access_tokens',
                 'personal_access_tokens.user_id',

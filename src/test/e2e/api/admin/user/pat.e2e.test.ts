@@ -118,7 +118,10 @@ test('should create and authenticate a securely stored PAT by default', async ()
     const found = await db.stores.accountStore.getAccountByTokenSelector(
         storedToken.selector,
     );
-    expect(found?.account.accountToken?.id).toBe(body.id);
+    expect(found?.account.accountToken).toEqual({
+        id: body.id,
+        type: 'personal',
+    });
 
     const events = await db.stores.eventStore.getEvents();
     const event = events.find(
@@ -423,7 +426,7 @@ test('should authenticate and delete an existing legacy PAT', async () => {
 
     const account =
         await db.stores.accountStore.getAccountByPersonalAccessToken(secret);
-    expect(account?.accountToken?.id).toBe(token.id);
+    expect(account?.accountToken).toEqual({ id: token.id, type: undefined });
 
     await app.request
         .get('/api/admin/user')

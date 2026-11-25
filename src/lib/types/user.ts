@@ -2,8 +2,14 @@ import Joi from 'joi';
 const { ValidationError } = Joi;
 import { generateImageUrl } from '../util/generateImageUrl.js';
 import type { AccountTypes } from '../events/index.js';
+import type { AccountTokenType } from '../features/pat/pat-store-type.js';
 
 type AccountType = (typeof AccountTypes)[number];
+
+type AuthenticatedAccountToken = {
+    id: number;
+    type: AccountTokenType | undefined;
+};
 
 export const SeatTypes = ['Regular', 'ReadOnly'] as const;
 type SeatType = (typeof SeatTypes)[number];
@@ -37,7 +43,7 @@ export interface IUser {
     isAPI: boolean;
     imageUrl?: string;
     accountType?: AccountType;
-    accountToken?: { id: number };
+    accountToken?: AuthenticatedAccountToken;
     scimId?: string;
     seatType?: SeatType;
     companyRole?: string;
@@ -95,7 +101,7 @@ export class User implements IUser {
 
     accountType?: AccountType = 'User';
 
-    accountToken?: { id: number };
+    accountToken?: AuthenticatedAccountToken;
 
     scimId?: string;
 

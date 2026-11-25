@@ -11,21 +11,27 @@ import type { IUnleashConfig } from '../types/option.js';
 import type { ITagStore } from '../types/stores/tag-store.js';
 import type { ITag } from '../tags/index.js';
 import type EventService from '../features/events/event-service.js';
-import type { IAuditUser } from '../types/index.js';
+import type { IAuditUser, ITagTypeStore } from '../types/index.js';
+import BadDataError from '../error/bad-data-error.js';
 
 export default class TagService {
     private tagStore: ITagStore;
+    private tagTypeStore: ITagTypeStore;
 
     private eventService: EventService;
 
     private logger: Logger;
 
     constructor(
-        { tagStore }: Pick<IUnleashStores, 'tagStore'>,
+        {
+            tagStore,
+            tagTypeStore,
+        }: Pick<IUnleashStores, 'tagStore' | 'tagTypeStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         eventService: EventService,
     ) {
         this.tagStore = tagStore;
+        this.tagTypeStore = tagTypeStore;
         this.eventService = eventService;
         this.logger = getLogger('services/tag-service.js');
     }
@@ -51,8 +57,16 @@ export default class TagService {
         }
     }
 
+    async validateTypeExists(type: string): Promise<void> {
+        const exists = await this.tagTypeStore.exists(type);
+        if (!exists) {
+            throw new BadDataError(`Tag type '${type}' does not exist`);
+        }
+    }
+
     async validate(tag: ITag): Promise<ITag> {
         const data = (await tagSchema.validateAsync(tag)) as ITag;
+        await this.validateTypeExists(tag.type);
         await this.validateUnique(tag);
         return data;
     }

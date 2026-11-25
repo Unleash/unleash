@@ -1,9 +1,15 @@
 import type { Db } from '../db/db.js';
-import type { IUnleashConfig, ITagStore } from '../types/index.js';
+import type {
+    IUnleashConfig,
+    ITagStore,
+    ITagTypeStore,
+} from '../types/index.js';
 import type EventService from '../features/events/event-service.js';
 import TagService from './tag-service.js';
 import TagStore from '../db/tag-store.js';
 import FakeTagStore from '../../test/fixtures/fake-tag-store.js';
+import TagTypeStore from '../features/tag-type/tag-type-store.js';
+import FakeTagTypeStore from '../features/tag-type/fake-tag-type-store.js';
 import {
     createEventsService,
     createFakeEventsService,
@@ -14,18 +20,20 @@ export const createTagService =
     (db: Db): TagService => {
         const { getLogger, eventBus } = config;
         const tagStore = new TagStore(db, eventBus, getLogger);
+        const tagTypeStore = new TagTypeStore(db, eventBus, getLogger);
         const eventService = createEventsService(db, config);
-        return new TagService({ tagStore }, config, eventService);
+        return new TagService({ tagStore, tagTypeStore }, config, eventService);
     };
 
 export const createFakeTagService = (
     config: IUnleashConfig,
-    stores?: { tagStore?: ITagStore },
+    stores?: { tagStore?: ITagStore; tagTypeStore?: ITagTypeStore },
     eventService?: EventService,
 ): TagService => {
     const tagStore = stores?.tagStore || new FakeTagStore();
+    const tagTypeStore = stores?.tagTypeStore || new FakeTagTypeStore();
     return new TagService(
-        { tagStore },
+        { tagStore, tagTypeStore },
         config,
         eventService || createFakeEventsService(config),
     );

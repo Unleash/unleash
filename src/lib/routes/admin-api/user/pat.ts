@@ -1,7 +1,11 @@
 import type { Response } from 'express';
 import Controller from '../../controller.js';
 import type { Logger } from '../../../logger.js';
-import type { IFlagResolver, IUnleashConfig } from '../../../types/index.js';
+import type {
+    IFlagResolver,
+    IUnleashConfig,
+    IUser,
+} from '../../../types/index.js';
 import { createRequestSchema } from '../../../openapi/util/create-request-schema.js';
 import {
     createResponseSchema,
@@ -14,6 +18,7 @@ import {
 import type { OpenApiService } from '../../../services/openapi-service.js';
 
 import type PatService from '../../../features/pat/pat-service.js';
+import type { AccountTokenType } from '../../../features/pat/pat-store-type.js';
 import { NONE } from '../../../types/permissions.js';
 import type { IAuthRequest } from '../../unleash-types.js';
 import { serializeDates } from '../../../types/serialize-dates.js';
@@ -28,6 +33,11 @@ import {
 } from '../../../openapi/spec/create-pat-schema.js';
 import { ForbiddenError, NotFoundError } from '../../../error/index.js';
 import type { IUnleashServices } from '../../../services/index.js';
+
+const tokenTypeByAccountType = {
+    User: 'personal',
+    'Service Account': 'service-account',
+} satisfies Record<NonNullable<IUser['accountType']>, AccountTokenType>;
 
 export default class PatController extends Controller {
     private patService: PatService;
@@ -141,10 +151,14 @@ export default class PatController extends Controller {
             throw new ForbiddenError('PATs require an authenticated user.');
         }
 
-        const pat = req.body;
+        const { accountType } = req.user;
+        const tokenType = accountType
+            ? tokenTypeByAccountType[accountType]
+            : undefined;
         const createdPat = await this.patService.createPat(
-            pat,
+            req.body,
             req.user.id,
+            tokenType,
             req.audit,
         );
         this.openApiService.respondWithValidation(

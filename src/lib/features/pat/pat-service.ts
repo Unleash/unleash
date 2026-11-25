@@ -6,7 +6,11 @@ import {
     PatDeletedEvent,
 } from '../../types/index.js';
 import type { Logger } from '../../logger.js';
-import type { AccountTokenForAudit, IPatStore } from './pat-store-type.js';
+import type {
+    AccountTokenForAudit,
+    AccountTokenType,
+    IPatStore,
+} from './pat-store-type.js';
 import { getTokenExpiryWarning } from './token-expiry-warning.js';
 import BadDataError from '../../error/bad-data-error.js';
 import NameExistsError from '../../error/name-exists-error.js';
@@ -51,12 +55,14 @@ export default class PatService {
     async createPat(
         pat: CreatePatSchema,
         ownerId: number,
+        type: AccountTokenType | undefined,
         auditUser: IAuditUser,
         clockOverride: Date = new Date(),
     ): Promise<PatSchema> {
         const createdToken = await this.createAccountToken(
             pat,
             ownerId,
+            type,
             clockOverride,
         );
 
@@ -78,6 +84,7 @@ export default class PatService {
     async createAccountToken(
         token: CreatePatSchema,
         ownerId: number,
+        type: AccountTokenType | undefined,
         clockOverride: Date = new Date(),
     ): Promise<CreatedAccountToken> {
         await this.validatePat(token, ownerId, clockOverride);
@@ -85,10 +92,16 @@ export default class PatService {
         const { secret, selector, verifier } = createTokenV2Credential({
             kind: AuthorizationTokenKind.ACCOUNT_ACCESS,
         });
+        const recordedType = this.config.flagResolver.isEnabled(
+            'accountTokenType',
+        )
+            ? type
+            : undefined;
         const newPat = await this.patStore.create(
             token,
             { selector, verifier },
             ownerId,
+            recordedType,
         );
 
         return { ...newPat, secret, secure: true, selector };

@@ -17,6 +17,7 @@ describe('getAll', () => {
                 expiresAt: addDays(createdAt, 10).toISOString(),
             },
             1,
+            'personal',
             TEST_AUDIT_USER,
         );
 

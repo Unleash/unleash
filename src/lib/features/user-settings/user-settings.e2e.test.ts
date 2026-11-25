@@ -89,6 +89,7 @@ test('accepts a personal access token of a user', async () => {
             expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
         },
         user.id,
+        'personal',
         TEST_AUDIT_USER,
     );
 

@@ -29,11 +29,14 @@ export type LegacyAccountToken = PatForAudit & {
 
 export type AccountTokenForAudit = SecureAccountToken | LegacyAccountToken;
 
+export type AccountTokenType = 'personal' | 'service-account' | 'mcp';
+
 export interface IPatStore extends Store<PatSchema, number> {
     create(
         pat: CreatePatSchema,
         credential: PersistedAccountTokenCredential,
         userId: number,
+        type: AccountTokenType | undefined,
     ): Promise<PatSchema>;
     getAllByUser(userId: number): Promise<PatSchema[]>;
     deleteForUser(

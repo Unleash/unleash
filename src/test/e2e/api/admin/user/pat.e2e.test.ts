@@ -5,6 +5,8 @@ import {
 import dbInit, { type ITestDb } from '../../../helpers/database-init.js';
 import getLogger from '../../../../fixtures/no-logger.js';
 import type { IPatStore } from '../../../../../lib/features/pat/pat-store-type.js';
+import { createPatService } from '../../../../../lib/features/pat/createPatService.js';
+import { createTestConfig } from '../../../../config/test-config.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -25,6 +27,7 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     tokenExpiryNotifications: true,
+                    accountTokenType: true,
                 },
             },
         },
@@ -139,6 +142,48 @@ test('should create and authenticate a securely stored PAT by default', async ()
         });
 
     await app.request.delete(`/api/admin/user/tokens/${body.id}`).expect(200);
+});
+
+test('should store a PAT as personal when the request body asks for another type', async () => {
+    const { body } = await app.request
+        .post('/api/admin/user/tokens')
+        .send({ description: 'typed PAT', expiresAt: tomorrow, type: 'mcp' })
+        .set('Content-Type', 'application/json')
+        .expect(201);
+
+    const storedToken = await db
+        .rawDatabase('personal_access_tokens')
+        .where({ id: body.id })
+        .first();
+    expect(storedToken.type).toBe('personal');
+
+    await app.request.delete(`/api/admin/user/tokens/${body.id}`).expect(200);
+});
+
+test('should store no type while token types are switched off', async () => {
+    const patService = createPatService(
+        db.rawDatabase,
+        createTestConfig({
+            experimental: { flags: { accountTokenType: false } },
+        }),
+    );
+
+    const { id } = await patService.createAccountToken(
+        {
+            description: 'created with token types off',
+            expiresAt: tomorrow.toISOString(),
+        },
+        1,
+        'personal',
+    );
+
+    const storedToken = await db
+        .rawDatabase('personal_access_tokens')
+        .where({ id })
+        .first();
+    expect(storedToken.type).toBeNull();
+
+    await patStore.delete(id);
 });
 
 test('should delete the PAT', async () => {
@@ -373,6 +418,7 @@ test('should authenticate and delete an existing legacy PAT', async () => {
         },
         { secret },
         1,
+        undefined,
     );
 
     const account =
@@ -407,6 +453,7 @@ test('should not get user with expired token', async () => {
         },
         { secret },
         1,
+        undefined,
     );
 
     await app.request

@@ -3,6 +3,7 @@ import type {
     IPatStore,
     AccountTokenForAudit,
     PersistedAccountTokenCredential,
+    AccountTokenType,
 } from './pat-store-type.js';
 import NotFoundError from '../../error/notfound-error.js';
 import type { Db } from '../../db/db.js';
@@ -63,10 +64,12 @@ export default class PatStore implements IPatStore {
         pat: CreatePatSchema,
         credential: PersistedAccountTokenCredential,
         userId: number,
+        type: AccountTokenType | undefined,
     ): Promise<PatSchema> {
         const rows = await this.db(TABLE)
             .insert({
                 ...patToRow(pat),
+                ...(type ? { type } : {}),
                 ...credential,
                 user_id: userId,
             })

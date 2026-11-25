@@ -112,6 +112,7 @@ async function initialize({ app, db }: { app: IUnleashTest; db: ITestDb }) {
             expiresAt: new Date(Date.now() + 1000 * 60 * 60).toISOString(),
         },
         user.id,
+        'personal',
         TEST_AUDIT_USER,
     );
     adminPat = secret!;

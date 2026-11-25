@@ -20,6 +20,14 @@ export const usePayloadSchemaApi = (projectId: string, featureId: string) => {
         await makeRequest(req.caller, req.id);
     };
 
+    const deletePayloadSchema = async () => {
+        const req = createRequest(
+            `/api/admin/projects/${projectId}/features/${featureId}/payload-schema`,
+            { method: 'DELETE' },
+        );
+        await makeRequest(req.caller, req.id);
+    };
+
     const validateVariantPayloads = async (
         payloads: ValidateVariantPayloadsSchema['payloads'],
     ): Promise<VariantPayloadsValidationSchema['nonMatchingPayloads']> => {
@@ -35,5 +43,9 @@ export const usePayloadSchemaApi = (projectId: string, featureId: string) => {
         return result.nonMatchingPayloads;
     };
 
-    return { upsertPayloadSchema, validateVariantPayloads };
+    return {
+        upsertPayloadSchema,
+        deletePayloadSchema,
+        validateVariantPayloads,
+    };
 };

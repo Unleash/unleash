@@ -8,6 +8,7 @@ export const HelpAndResourcesMenu: FC<{ onSearchDocs?: () => void }> = ({
 }) => (
     <HelpResources
         variant='sidebar'
+        placement='top-start'
         onSearchDocs={onSearchDocs}
         renderTrigger={({ ref, open, onClick }) => (
             <SidebarMenuButton

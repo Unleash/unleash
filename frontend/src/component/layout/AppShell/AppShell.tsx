@@ -66,6 +66,7 @@ export const AppShell: FC<{ children: ReactNode }> = ({ children }) => {
 
     const sidebar = (
         <SidebarContent
+            layout={isSmallScreen ? 'drawer' : 'docked'}
             searchOpen={searchOpen}
             onSearch={() => setSearchOpen(true)}
             onSearchDocs={

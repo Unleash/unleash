@@ -44,6 +44,11 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { useVariant } from 'hooks/useVariant';
 import { useIntro } from 'component/onboarding/intro/IntroProvider.tsx';
 import { getLocalStorageItem, setLocalStorageItem } from 'utils/storage.ts';
+import {
+    type Placement,
+    placementToPopoverOrigins,
+} from 'utils/placementToPopoverOrigins.ts';
+import { SIDEBAR_MENU_MARGIN_THRESHOLD } from 'component/layout/AppShell/sidebar/SidebarItem.styles.ts';
 
 const RELOCATION_DOT_SEEN_KEY = 'help-menu-relocation:menu-opened:v1';
 
@@ -188,35 +193,16 @@ type HelpResourcesTriggerProps = {
     onClick: (event: React.MouseEvent<HTMLElement>) => void;
 };
 
-const PLACEMENTS = {
-    header: {
-        hint: 'bottom-end',
-        menu: {
-            anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
-            transformOrigin: { vertical: 'top', horizontal: 'right' },
-        },
-    },
-    sidebar: {
-        hint: 'right-end',
-        menu: {
-            anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
-            transformOrigin: { vertical: 'bottom', horizontal: 'left' },
-            marginThreshold: 8,
-        },
-    },
-} as const;
-
-interface IHelpResourcesProps {
-    variant?: keyof typeof PLACEMENTS;
+type HelpResourcesProps = {
     renderTrigger?: (props: HelpResourcesTriggerProps) => ReactNode;
     onSearchDocs?: () => void;
-}
+} & ({ variant?: 'header' } | { variant: 'sidebar'; placement: Placement });
 
-export const HelpResources = ({
-    variant = 'header',
-    renderTrigger,
-    onSearchDocs,
-}: IHelpResourcesProps) => {
+export const HelpResources = (props: HelpResourcesProps) => {
+    const { renderTrigger, onSearchDocs } = props;
+    const variant = props.variant ?? 'header';
+    const placement: Placement =
+        props.variant === 'sidebar' ? props.placement : 'bottom-end';
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [buttonEl, setButtonEl] = useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
@@ -479,7 +465,7 @@ export const HelpResources = ({
             <HelpMenuHint
                 open={activeHint === 'get-started'}
                 anchorEl={buttonEl}
-                placement={PLACEMENTS[variant].hint}
+                placement={placement}
                 onClose={dismissHelpButtonHint}
             >
                 You can reopen the Get started checklist from here anytime
@@ -487,7 +473,7 @@ export const HelpResources = ({
             <HelpMenuHint
                 open={activeHint === 'intro-closed'}
                 anchorEl={buttonEl}
-                placement={PLACEMENTS[variant].hint}
+                placement={placement}
                 onClose={dismissHelpButtonHint}
             >
                 You can restart the <IntroHintIcon /> Unleash Intro from here
@@ -497,7 +483,12 @@ export const HelpResources = ({
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
-                {...PLACEMENTS[variant].menu}
+                {...placementToPopoverOrigins(placement)}
+                marginThreshold={
+                    variant === 'sidebar'
+                        ? SIDEBAR_MENU_MARGIN_THRESHOLD
+                        : undefined
+                }
             >
                 {variant === 'sidebar'
                     ? [

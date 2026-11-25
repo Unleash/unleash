@@ -6,6 +6,10 @@ import Check from '@mui/icons-material/Check';
 import { useThemeMode } from 'hooks/useThemeMode';
 import type { themeMode } from 'contexts/UIContext';
 import { asSxArray } from 'utils/asSxArray';
+import {
+    type Placement,
+    placementToPopoverOrigins,
+} from 'utils/placementToPopoverOrigins.ts';
 
 const StyledChevron = styled(KeyboardArrowRight)(({ theme }) => ({
     marginLeft: 'auto',
@@ -42,6 +46,7 @@ interface IThemeSubmenuProps {
     paperSx?: SxProps<Theme>;
     trailing?: 'chevron' | 'current-mode';
     icon?: ReactNode;
+    placement?: Placement;
 }
 
 export const ThemeSubmenu = ({
@@ -50,6 +55,7 @@ export const ThemeSubmenu = ({
     paperSx,
     trailing = 'chevron',
     icon,
+    placement = 'right-start',
 }: IThemeSubmenuProps) => {
     const triggerRef = useRef<HTMLLIElement>(null);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -123,8 +129,7 @@ export const ThemeSubmenu = ({
                 anchorEl={anchorEl}
                 open={open}
                 onClose={closeSubmenu}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                {...placementToPopoverOrigins(placement)}
                 slotProps={{
                     root: { sx: { pointerEvents: 'none' } },
                     paper: {

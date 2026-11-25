@@ -4,6 +4,10 @@ import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequ
 
 export const SUB_ITEM_INDENT = 3.875;
 
+// The footer buttons sit 12px from the screen edge, inside MUI's default 16px
+// margin, which would push footer menus out of line with their buttons.
+export const SIDEBAR_MENU_MARGIN_THRESHOLD = 8;
+
 export const sidebarItemStyles = (theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',

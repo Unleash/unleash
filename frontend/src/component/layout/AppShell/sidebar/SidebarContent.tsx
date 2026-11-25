@@ -79,10 +79,11 @@ const getPageMode = (pathname: string): SidebarMode => {
 };
 
 export const SidebarContent: FC<{
+    layout: 'drawer' | 'docked';
     searchOpen: boolean;
     onSearch: () => void;
     onSearchDocs?: () => void;
-}> = ({ searchOpen, onSearch, onSearchDocs }) => {
+}> = ({ layout, searchOpen, onSearch, onSearchDocs }) => {
     const { pathname } = useLocation();
     // A manual switch lasts until the pathname changes, so sorting or searching
     // a table, which only changes the query string, keeps it. It is cleared
@@ -126,6 +127,7 @@ export const SidebarContent: FC<{
                 <SidebarList>
                     <HelpAndResourcesMenu onSearchDocs={onSearchDocs} />
                     <SettingsMenu
+                        layout={layout}
                         onConfigureWorkspace={() => setMode('workspace')}
                         onAdminSettings={() => setMode('admin')}
                     />

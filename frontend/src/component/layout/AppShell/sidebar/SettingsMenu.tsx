@@ -25,7 +25,10 @@ import { ThemeSubmenu } from 'component/user/UserProfile/ThemeSubmenu/ThemeSubme
 import { LogOutMenuItem } from 'component/user/UserProfile/LogOutMenuItem/LogOutMenuItem';
 import { PRIVACY_POLICY_URL } from 'constants/links';
 import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequestsNotifications/PendingAccessRequestsIndicator';
-import { SidebarPendingAccessRequestsIndicator } from './SidebarItem.styles.ts';
+import {
+    SIDEBAR_MENU_MARGIN_THRESHOLD,
+    SidebarPendingAccessRequestsIndicator,
+} from './SidebarItem.styles.ts';
 import { SidebarMenuButton } from './SidebarMenuButton.tsx';
 import { sidebarSectionLabels } from './sidebarSectionLabels.ts';
 
@@ -145,9 +148,10 @@ const TwoLineMenuItem: FC<{
 };
 
 export const SettingsMenu: FC<{
+    layout: 'drawer' | 'docked';
     onConfigureWorkspace: () => void;
     onAdminSettings: () => void;
-}> = ({ onConfigureWorkspace, onAdminSettings }) => {
+}> = ({ layout, onConfigureWorkspace, onAdminSettings }) => {
     const { user } = useAuthUser();
     const { isAdmin } = useContext(AccessContext);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -174,7 +178,7 @@ export const SettingsMenu: FC<{
                 onClose={close}
                 anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
                 transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                marginThreshold={8}
+                marginThreshold={SIDEBAR_MENU_MARGIN_THRESHOLD}
                 slotProps={{
                     paper: {
                         sx: [
@@ -221,6 +225,10 @@ export const SettingsMenu: FC<{
                     paperSx={menuPaperSx}
                     trailing='current-mode'
                     icon={<DarkModeOutlinedIcon />}
+                    // The drawer leaves no room to the right of this menu.
+                    placement={
+                        layout === 'drawer' ? 'bottom-end' : 'right-start'
+                    }
                 />
                 <MenuItem
                     component='a'

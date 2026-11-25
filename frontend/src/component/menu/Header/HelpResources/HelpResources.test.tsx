@@ -312,7 +312,13 @@ test('surfaces the intro-closed hint after the intro closes from the menu', asyn
 });
 
 test('groups the menu items for the new sidebar with Search docs among the docs resources', async () => {
-    render(<HelpResources variant='sidebar' onSearchDocs={() => {}} />);
+    render(
+        <HelpResources
+            variant='sidebar'
+            placement='top-start'
+            onSearchDocs={() => {}}
+        />,
+    );
 
     await userEvent.click(
         await screen.findByRole('button', { name: 'Help and resources' }),
@@ -339,7 +345,13 @@ test('groups the menu items for the new sidebar with Search docs among the docs 
 });
 
 test('closes the menu when choosing Search docs', async () => {
-    render(<HelpResources variant='sidebar' onSearchDocs={() => {}} />);
+    render(
+        <HelpResources
+            variant='sidebar'
+            placement='top-start'
+            onSearchDocs={() => {}}
+        />,
+    );
 
     await userEvent.click(
         await screen.findByRole('button', { name: 'Help and resources' }),

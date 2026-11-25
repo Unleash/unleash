@@ -22,6 +22,7 @@ beforeEach(() => {
 const renderSettingsMenu = (options?: Parameters<typeof render>[1]) =>
     render(
         <SettingsMenu
+            layout='docked'
             onConfigureWorkspace={() => {}}
             onAdminSettings={() => {}}
         />,

@@ -94,6 +94,7 @@ export type IFlagKey =
     | 'applicationOverview'
     | 'userSettings'
     | 'accountTokenType'
+    | 'sectionedIntegrationForm'
     | keyof IFlagKeyOverrides;
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -426,6 +427,10 @@ const flags: IFlags = {
     ),
     accountTokenType: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ACCOUNT_TOKEN_TYPE,
+        false,
+    ),
+    sectionedIntegrationForm: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SECTIONED_INTEGRATION_FORM,
         false,
     ),
 };

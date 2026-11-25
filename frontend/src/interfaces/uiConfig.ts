@@ -119,6 +119,7 @@ export type UiFlags = {
     improvedSidebarNavigation?: boolean;
     paygCredits?: boolean;
     userSettings?: boolean;
+    sectionedIntegrationForm?: boolean;
 };
 
 export interface IVersionInfo {

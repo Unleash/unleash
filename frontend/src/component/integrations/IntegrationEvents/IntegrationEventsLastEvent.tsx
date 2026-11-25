@@ -44,8 +44,9 @@ export const IntegrationEventsLastEvent = ({
     const integrationEvent = integrationEvents[0];
 
     return (
-        <Box onClick={(e) => e.preventDefault()} {...props}>
+        <Box component='span' onClick={(e) => e.preventDefault()} {...props}>
             <StyledTooltipLink
+                component='span'
                 tooltipProps={{
                     maxWidth: 500,
                     maxHeight: 600,

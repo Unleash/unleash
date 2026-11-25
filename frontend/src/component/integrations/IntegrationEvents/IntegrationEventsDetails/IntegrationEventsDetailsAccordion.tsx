@@ -33,7 +33,8 @@ export const IntegrationEventsDetailsAccordion = ({
     <StyledAccordion>
         <StyledAccordionSummary
             expandIcon={
-                <IconButton>
+                // biome-ignore lint/a11y/useValidAriaRole: remove button role - accordion already has it
+                <IconButton component='span' tabIndex={-1} role={undefined}>
                     <ExpandMore titleAccess='Toggle' />
                 </IconButton>
             }

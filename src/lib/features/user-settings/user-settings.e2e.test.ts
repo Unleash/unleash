@@ -9,6 +9,8 @@ import {
 import getLogger from '../../../test/fixtures/no-logger.js';
 import { ApiTokenType } from '../../types/model.js';
 import { RoleName, TEST_AUDIT_USER } from '../../types/index.js';
+import { validateSchema } from '../../openapi/validate.js';
+import { userSettingsSchema } from '../../openapi/spec/user-settings-schema.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -33,11 +35,17 @@ const saveSettings = (body: object) =>
         .set('Content-Type', 'application/json')
         .send(body);
 
+const loadSettings = () => app.request.get('/api/admin/user/settings');
+
 // Token tests run before any login, because the agent's session cookie would take precedence over the token.
 test('refuses a signed-out caller', async () => {
     await saveSettings({
         settings: { 'unleash-theme': { value: 'dark' } },
     }).expect(401);
+});
+
+test('refuses to load the settings of a signed-out caller', async () => {
+    await loadSettings().expect(401);
 });
 
 test('refuses an admin API token, which has no user', async () => {
@@ -54,6 +62,18 @@ test('refuses an admin API token, which has no user', async () => {
     })
         .set('Authorization', adminToken.secret)
         .expect(403);
+});
+
+test('refuses to load settings for an admin API token', async () => {
+    const adminToken =
+        await app.services.apiTokenService.createApiTokenWithProjects({
+            type: ApiTokenType.ADMIN,
+            projects: ['*'],
+            environment: '*',
+            tokenName: 'admin-load-token',
+        });
+
+    await loadSettings().set('Authorization', adminToken.secret).expect(403);
 });
 
 test('accepts a personal access token of a user', async () => {
@@ -77,6 +97,7 @@ test('accepts a personal access token of a user', async () => {
     })
         .set('Authorization', String(secret))
         .expect(204);
+    await loadSettings().set('Authorization', String(secret)).expect(200);
 });
 
 test('answers 404 while userSettings is off', async () => {
@@ -91,6 +112,7 @@ test('answers 404 while userSettings is off', async () => {
             .set('Content-Type', 'application/json')
             .send({ settings: { 'unleash-theme': { value: 'dark' } } })
             .expect(404);
+        await disabledApp.request.get('/api/admin/user/settings').expect(404);
     } finally {
         await disabledApp.destroy();
     }
@@ -105,6 +127,15 @@ describe('signed in', () => {
             .send({ email: 'settings@getunleash.io' })
             .expect(200);
         signedInUserId = body.id;
+    });
+
+    test('loads empty settings of the signed-in user', async () => {
+        const { body } = await loadSettings()
+            .expect(200)
+            .expect('Content-Type', /json/);
+
+        expect(body).toEqual({ settings: {} });
+        expect(validateSchema(userSettingsSchema.$id, body)).toBeUndefined();
     });
 
     test('saves the settings of the signed-in user', async () => {

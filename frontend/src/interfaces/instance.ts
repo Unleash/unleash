@@ -45,3 +45,16 @@ export enum InstancePlan {
     ENTERPRISE = 'Enterprise',
     UNKNOWN = 'Unknown',
 }
+
+export type InstanceCredit = {
+    source: 'campaign';
+    status: 'attached' | 'granted' | 'redeemed' | 'expired';
+    amountCents: number;
+    usedCents: number;
+    campaign: {
+        code: string;
+        name: string;
+        redeemableUntil: string;
+        offerStatus: 'active' | 'ended';
+    };
+};

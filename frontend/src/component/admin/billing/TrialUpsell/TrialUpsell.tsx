@@ -13,6 +13,14 @@ import LloydsLogo from 'assets/logos/lloyds.svg?react';
 import { trialHasExpired } from 'utils/instanceTrial';
 import { TrialUpsellDescription } from './TrialUpsellDescription';
 import { useEventTracker } from 'hooks/useEventTracker';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import { useInstanceCredits } from 'hooks/api/getters/useInstanceCredits/useInstanceCredits';
+import {
+    sumActiveOfferCents,
+    filterUnredeemedCredits,
+    TrialUpsellOfferView,
+} from './TrialUpsellOffer.tsx';
+import useLoading from 'hooks/useLoading';
 
 const StyledBillingInformation = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(2),
@@ -63,6 +71,12 @@ export const TrialUpsell = () => {
     const { instancePrices } = useInstancePrices();
     const { instanceStatus } = useInstanceStatus();
     const { trackEvent } = useEventTracker();
+    const { locationSettings } = useLocationSettings();
+    const isAdmin = hasAccess(ADMIN);
+    const { credits, loading: creditsLoading } = useInstanceCredits();
+    const loadingRef = useLoading(creditsLoading);
+    const offers = filterUnredeemedCredits(credits);
+    const activeCents = sumActiveOfferCents(offers);
 
     const onUpgrade = () => {
         trackEvent('upgrade-trial-billing-page', {
@@ -73,12 +87,11 @@ export const TrialUpsell = () => {
         window.location.assign(formatApiPath('api/admin/invoices/checkout'));
     };
 
-    const isAdmin = hasAccess(ADMIN);
     const seatPrice = instancePrices.payg.seat;
     const trialExpired = trialHasExpired(instanceStatus);
 
     return (
-        <>
+        <div ref={loadingRef} aria-busy={creditsLoading}>
             <Typography variant='h2' sx={{ mb: 1 }}>
                 {trialExpired
                     ? 'Upgrade to continue using Unleash'
@@ -86,25 +99,37 @@ export const TrialUpsell = () => {
             </Typography>
             <TrialUpsellDescription />
             {isAdmin ? (
-                <StyledBillingInformation>
-                    <StyledBillingInformationTextContainer>
-                        <Typography>
-                            <StyledPrice>${seatPrice}</StyledPrice> per user
-                            billed monthly
-                        </Typography>
-                        <StyledDetailListContainer>
-                            <StyledDetailList>
-                                <li>Pay by credit card</li>
-                                <li>Cancel anytime</li>
-                            </StyledDetailList>
-                        </StyledDetailListContainer>
-                    </StyledBillingInformationTextContainer>
-                    {onUpgrade && (
-                        <Button variant='contained' onClick={onUpgrade}>
-                            Upgrade now
-                        </Button>
+                <>
+                    {offers.length > 0 && (
+                        <TrialUpsellOfferView
+                            credits={offers}
+                            locale={locationSettings.locale}
+                        />
                     )}
-                </StyledBillingInformation>
+                    <StyledBillingInformation data-loading>
+                        <StyledBillingInformationTextContainer>
+                            <Typography>
+                                <StyledPrice>${seatPrice}</StyledPrice> per user
+                                billed monthly
+                            </Typography>
+                            <StyledDetailListContainer>
+                                <StyledDetailList>
+                                    <li>
+                                        {activeCents > 0
+                                            ? 'Pay by credit card to use your credit'
+                                            : 'Pay by credit card'}
+                                    </li>
+                                    <li>Cancel anytime</li>
+                                </StyledDetailList>
+                            </StyledDetailListContainer>
+                        </StyledBillingInformationTextContainer>
+                        {onUpgrade && (
+                            <Button variant='contained' onClick={onUpgrade}>
+                                Upgrade now
+                            </Button>
+                        )}
+                    </StyledBillingInformation>
+                </>
             ) : (
                 <Alert severity='info' sx={{ mt: 3, mb: 2 }}>
                     Contact your account admin to request an upgrade.
@@ -124,6 +149,6 @@ export const TrialUpsell = () => {
                 <SamsungLogo />
                 <LloydsLogo />
             </StyledLogoList>
-        </>
+        </div>
     );
 };

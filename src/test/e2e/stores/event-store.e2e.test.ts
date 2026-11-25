@@ -14,6 +14,7 @@ import {
     FeatureChangeProjectEvent,
     FeatureCreatedEvent,
     FeatureDeletedEvent,
+    FeaturesImportedEvent,
     FeatureTaggedEvent,
     FeatureUpdatedEvent,
 } from '../../../lib/types/index.js';
@@ -183,6 +184,45 @@ test.each([
     expect(await eventStore.getMaxRevisionId()).toBe(
         Math.max(...(await eventStore.getAll()).map((event) => event.id)),
     );
+});
+
+test('delta gets the flag changes of an import without its summary event', async () => {
+    await eventStore.store(
+        new FeatureUpdatedEvent({
+            project: 'default',
+            featureName: 'imported-feature',
+            auditUser: testAudit,
+            data: {},
+        }),
+    );
+    await eventStore.store(
+        new FeaturesImportedEvent({
+            project: 'default',
+            environment: 'development',
+            auditUser: testAudit,
+        }),
+    );
+
+    const changes = await eventStore.getRevisionRange(
+        0,
+        await eventStore.getMaxRevisionId(),
+    );
+
+    expect(changes).toMatchObject([{ type: FEATURE_UPDATED }]);
+});
+
+test('an import that changes no flag still advances the polling revision', async () => {
+    await eventStore.store(
+        new FeaturesImportedEvent({
+            project: 'default',
+            environment: 'development',
+            auditUser: testAudit,
+        }),
+    );
+
+    const [summaryEvent] = await eventStore.getAll();
+
+    expect(await eventStore.getMaxRevisionId()).toBe(summaryEvent.id);
 });
 
 test('Should include id and createdAt when saving', async () => {

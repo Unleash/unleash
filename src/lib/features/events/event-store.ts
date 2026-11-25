@@ -297,7 +297,6 @@ export class EventStore implements IEventStore {
                 .orWhereIn('type', [
                     SEGMENT_UPDATED,
                     FEATURE_IMPORT,
-                    FEATURES_IMPORTED,
                     ...(opts?.additionalTypes ?? []),
                 ]);
 
@@ -309,7 +308,12 @@ export class EventStore implements IEventStore {
         const stopTimer = this.metricTimer('getMaxRevisionId');
         const row = await this.db(TABLE)
             .max('id')
-            .where(this.eventTypeIsInteresting({ environment }))
+            .where(
+                this.eventTypeIsInteresting({
+                    environment,
+                    additionalTypes: [FEATURES_IMPORTED],
+                }),
+            )
             .andWhere('id', '>=', largerThan)
             .first();
 

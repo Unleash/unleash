@@ -83,7 +83,7 @@ test('keeps the row of a key whose value is null', async () => {
     ]);
 });
 
-test('stores an expiry', async () => {
+test('round-trips an expiry', async () => {
     const expiresAt = new Date('2026-12-01T12:00:00.000Z');
 
     await store.upsert(userId, [
@@ -91,6 +91,9 @@ test('stores an expiry', async () => {
     ]);
 
     expect(await getRows()).toEqual([
+        { key: 'feedback-module-survey-grace:v1', value: true, expiresAt },
+    ]);
+    expect(await store.getActiveSettingsForUser(userId)).toEqual([
         { key: 'feedback-module-survey-grace:v1', value: true, expiresAt },
     ]);
 });
@@ -160,10 +163,59 @@ test.each([
     ['null', null],
     ['an array', ['production', 'development']],
     ['an object', { 'my-flag': 1767225600000, nested: { list: [1, 'a'] } }],
-])('stores %s as it was given', async (_, value) => {
+])('round-trips %s as it was given', async (_, value) => {
     await store.upsert(userId, [{ key: 'setting', value, expiresAt: null }]);
 
     expect(await getRows()).toEqual([
         { key: 'setting', value, expiresAt: null },
+    ]);
+    expect(await store.getActiveSettingsForUser(userId)).toEqual([
+        { key: 'setting', value, expiresAt: null },
+    ]);
+});
+
+test('reads only the settings of the given user', async () => {
+    const otherUser = await db.stores.userStore.insert({
+        email: `other-${Date.now()}-${Math.random()}@getunleash.io`,
+    });
+    await store.upsert(otherUser.id, [
+        { key: 'navigation-mode:v1', value: 'compact', expiresAt: null },
+    ]);
+    await store.upsert(userId, [
+        { key: 'unleash-theme', value: 'light', expiresAt: null },
+    ]);
+
+    expect(await store.getActiveSettingsForUser(userId)).toEqual([
+        { key: 'unleash-theme', value: 'light', expiresAt: null },
+    ]);
+});
+
+test('leaves out an entry that expires now or earlier', async () => {
+    const aMillisecondEarlier = new Date(firstSaveTime.getTime() - 1);
+    const aMillisecondLater = new Date(firstSaveTime.getTime() + 1);
+    await store.upsert(userId, [
+        {
+            key: 'feedback-module-survey-grace:v1',
+            value: true,
+            expiresAt: aMillisecondEarlier,
+        },
+        { key: 'flag-reminders:v1', value: true, expiresAt: firstSaveTime },
+        {
+            key: 'onboarding-tour:v1',
+            value: true,
+            expiresAt: aMillisecondLater,
+        },
+        { key: 'unleash-theme', value: 'dark', expiresAt: null },
+    ]);
+
+    const rows = await store.getActiveSettingsForUser(userId);
+
+    expect(rows.toSorted((a, b) => a.key.localeCompare(b.key))).toEqual([
+        {
+            key: 'onboarding-tour:v1',
+            value: true,
+            expiresAt: aMillisecondLater,
+        },
+        { key: 'unleash-theme', value: 'dark', expiresAt: null },
     ]);
 });

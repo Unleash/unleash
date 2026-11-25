@@ -16,6 +16,16 @@ const toRows = (settings: UserSettingsSchema['settings']): UserSettingRow[] =>
         expiresAt: expiresAt ? new Date(expiresAt) : null,
     }));
 
+const toSettings = (rows: UserSettingRow[]): UserSettingsSchema['settings'] =>
+    Object.fromEntries(
+        rows.map(({ key, value, expiresAt }) => [
+            key,
+            expiresAt
+                ? { value, expiresAt: expiresAt.toISOString() }
+                : { value },
+        ]),
+    );
+
 export class UserSettingsService {
     private userSettingsStore: IUserSettingsStore;
 
@@ -31,5 +41,16 @@ export class UserSettingsService {
             return;
         }
         await this.userSettingsStore.upsert(user.id, toRows(settings));
+    }
+
+    async getSettings(
+        user: SettingsUser,
+    ): Promise<UserSettingsSchema['settings']> {
+        if (!hasUserRow(user)) {
+            return {};
+        }
+        return toSettings(
+            await this.userSettingsStore.getActiveSettingsForUser(user.id),
+        );
     }
 }

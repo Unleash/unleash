@@ -6,4 +6,5 @@ export type UserSettingRow = {
 
 export interface IUserSettingsStore {
     upsert(userId: number, rows: UserSettingRow[]): Promise<void>;
+    getActiveSettingsForUser(userId: number): Promise<UserSettingRow[]>;
 }

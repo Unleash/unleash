@@ -36,4 +36,20 @@ export class UserSettingsStore implements IUserSettingsStore {
             .onConflict(['user_id', 'key'])
             .merge(['value', 'expires_at', 'updated_at']);
     }
+
+    async getActiveSettingsForUser(userId: number): Promise<UserSettingRow[]> {
+        const rows = await this.db(TABLE)
+            .select('key', 'value', 'expires_at')
+            .where({ user_id: userId })
+            .andWhere((notExpired) =>
+                notExpired
+                    .whereNull('expires_at')
+                    .orWhere('expires_at', '>', this.now()),
+            );
+        return rows.map(({ key, value, expires_at }) => ({
+            key,
+            value,
+            expiresAt: expires_at,
+        }));
+    }
 }

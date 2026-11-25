@@ -4,9 +4,10 @@ import { FakeUserSettingsStore } from './fake-user-settings-store.js';
 import { UserSettingsService } from './user-settings-service.js';
 
 const user = { id: 7, isAPI: false };
+const now = new Date('2026-11-25T12:00:00.000Z');
 
 const setup = () => {
-    const userSettingsStore = new FakeUserSettingsStore();
+    const userSettingsStore = new FakeUserSettingsStore(() => now);
     const userSettingsService = new UserSettingsService(userSettingsStore);
     return { userSettingsStore, userSettingsService };
 };
@@ -77,4 +78,43 @@ test.each([
     });
 
     expect(userSettingsStore.getRows(caller.id)).toEqual([]);
+});
+
+test('loads the settings it saved', async () => {
+    const { userSettingsService } = setup();
+    const settings = {
+        'unleash-theme': { value: 'dark' },
+        'feedback-module-survey-grace:v1': {
+            value: true,
+            expiresAt: '2026-12-01T12:00:00.000Z',
+        },
+    };
+    await userSettingsService.saveSettings(user, settings);
+
+    expect(await userSettingsService.getSettings(user)).toEqual(settings);
+});
+
+test('loads an entry whose value is null', async () => {
+    const { userSettingsService } = setup();
+    await userSettingsService.saveSettings(user, {
+        'navigation-mode:v1': { value: null },
+    });
+
+    expect(await userSettingsService.getSettings(user)).toEqual({
+        'navigation-mode:v1': { value: null },
+    });
+});
+
+test.each([
+    ['the admin token user', ADMIN_TOKEN_USER],
+    ['none authentication', new NoAuthUser()],
+    ['the system user', SYSTEM_USER],
+    ['an API caller even if it carries a user id', { id: 7, isAPI: true }],
+])('loads empty settings for %s', async (_, caller) => {
+    const { userSettingsStore, userSettingsService } = setup();
+    await userSettingsStore.upsert(caller.id, [
+        { key: 'unleash-theme', value: 'dark', expiresAt: null },
+    ]);
+
+    expect(await userSettingsService.getSettings(caller)).toEqual({});
 });

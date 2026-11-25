@@ -166,6 +166,37 @@ describe('signed in', () => {
         ]);
     });
 
+    test('loads the unexpired settings the signed-in user saved', async () => {
+        await saveSettings({
+            settings: {
+                'unleash-theme': { value: 'light' },
+                'navigation-mode:v1': { value: null },
+                'onboarding-tour:v1': {
+                    value: ['done'],
+                    expiresAt: '2999-01-01T00:00:00.000Z',
+                },
+                'feedback-module-survey-grace:v1': {
+                    value: true,
+                    expiresAt: '2000-01-01T00:00:00.000Z',
+                },
+            },
+        }).expect(204);
+
+        const { body } = await loadSettings().expect(200);
+
+        expect(body).toEqual({
+            settings: {
+                'unleash-theme': { value: 'light' },
+                'navigation-mode:v1': { value: null },
+                'onboarding-tour:v1': {
+                    value: ['done'],
+                    expiresAt: '2999-01-01T00:00:00.000Z',
+                },
+            },
+        });
+        expect(validateSchema(userSettingsSchema.$id, body)).toBeUndefined();
+    });
+
     test.each([
         ['without settings', {}],
         ['with an unknown top-level field', { settings: {}, extra: true }],

@@ -90,11 +90,12 @@ export default class UserSettingsController extends Controller {
                 'This endpoint requires an authenticated user.',
             );
         }
+        const settings = await this.userSettingsService.getSettings(req.user);
         this.openApiService.respondWithValidation(
             200,
             res,
             userSettingsSchema.$id,
-            { settings: {} },
+            { settings },
         );
     }
 

@@ -334,6 +334,7 @@ const FormTemplate: React.FC<FormTemplateProps> = ({
 
     return (
         <StyledContainer
+            data-form-container
             data-layout={layout}
             data-fit-container-height={fitContainerHeight}
         >
@@ -429,7 +430,9 @@ const MobileGuidance = ({
 
     return (
         <>
-            <StyledMobileGuidanceContainer>
+            <StyledMobileGuidanceContainer
+                data-mobile-guidance-state={open ? 'expanded' : 'collapsed'}
+            >
                 <StyledMobileGuidanceBackground />
             </StyledMobileGuidanceContainer>
             <Tooltip title='Toggle help' arrow>

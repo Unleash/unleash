@@ -62,6 +62,15 @@ const StyledHeaderBox = styled(Box)(({ theme }) => ({
     paddingInline: 'var(--form-inset)',
     paddingBlock: theme.spacing(1),
     borderBottom: `1px solid ${theme.palette.divider}`,
+
+    // prevent mobile guidance info button from obscuring header content
+    '[data-form-container]:has([data-mobile-guidance-state="collapsed"]) &': {
+        marginInlineEnd: theme.spacing(2.5),
+    },
+    transition: theme.transitions.create('margin-inline-end', {
+        duration: 500,
+        easing: theme.transitions.easing.easeInOut,
+    }),
 }));
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({

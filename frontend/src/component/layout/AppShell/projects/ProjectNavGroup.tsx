@@ -9,6 +9,8 @@ import {
     sidebarItemStyles,
     SUB_ITEM_INDENT,
 } from '../sidebar/SidebarItem.styles.ts';
+import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
+import { SidebarCountBadge } from '../sidebar/SidebarCountBadge.tsx';
 import { SidebarList } from '../sidebar/SidebarList.tsx';
 import { SidebarMoreToggle } from '../sidebar/SidebarMoreToggle.tsx';
 import { SIDEBAR_ROW_ACTION_SIZE } from '../sidebar/SidebarRowAction.tsx';
@@ -90,6 +92,16 @@ const StyledSubLink = styled(Link)(({ theme }) => ({
     paddingLeft: theme.spacing(SUB_ITEM_INDENT),
 }));
 
+// Its own component so the count is only fetched while the project is expanded.
+const ActionableChangeRequestsBadge: FC<{ projectId: string }> = ({
+    projectId,
+}) => (
+    <SidebarCountBadge
+        count={useActionableChangeRequests(projectId).total}
+        description='you can act on'
+    />
+);
+
 export const ProjectNavGroup: FC<{
     project: Pick<ProjectSchema, 'id' | 'name'>;
     expansion?: ProjectNavExpansion;
@@ -161,6 +173,11 @@ export const ProjectNavGroup: FC<{
                             }
                         >
                             {label}
+                            {page === 'change-requests' ? (
+                                <ActionableChangeRequestsBadge
+                                    projectId={project.id}
+                                />
+                            ) : null}
                         </StyledSubLink>
                     ))}
                     <SidebarMoreToggle

@@ -298,6 +298,23 @@ test('keeps More open after the project is collapsed and reopened', async () => 
     ).toHaveAttribute('aria-expanded', 'true');
 });
 
+test('counts change requests I can act on in the project', async () => {
+    testServerRoute(
+        server,
+        '/api/admin/projects/alpha/change-requests/actionable',
+        { total: 2 },
+    );
+    await renderSection();
+
+    await userEvent.click(projectToggle('Alpha'));
+
+    expect(
+        await projectGroup('Alpha').findByRole('link', {
+            name: 'Change requests (2 you can act on)',
+        }),
+    ).toBeInTheDocument();
+});
+
 test('hides Change requests on oss', async () => {
     setupApi({ edition: 'oss' });
 

@@ -256,19 +256,14 @@ test('the new create flag form offers to create a tag that does not exist yet, a
     });
 });
 
-test('the new create flag form creates a tag with the first existing tag type when there is no simple tag type', async () => {
+test('the new create flag form does not offer to create a tag when there is no simple tag type', async () => {
     setupNewFormApi();
-    testServerRoute(server, '/api/admin/tags', { tags: [] });
+    testServerRoute(server, '/api/admin/tags', {
+        tags: [{ type: 'team', value: 'checkout-page' }],
+    });
     testServerRoute(server, '/api/admin/tag-types', {
         tagTypes: [{ name: 'team' }],
     });
-    const { requests: tagRequests } = testServerRoute(
-        server,
-        '/api/admin/tags',
-        {},
-        'post',
-        201,
-    );
 
     renderDialog();
 
@@ -276,22 +271,21 @@ test('the new create flag form creates a tag with the first existing tag type wh
         await screen.findByRole('button', { name: /Other optional settings/ }),
     );
     fireEvent.click(await screen.findByRole('button', { name: 'Add tag' }));
-    const search = await screen.findByPlaceholderText('Find or create a tag');
+    const search = await screen.findByPlaceholderText('Find a tag');
     fireEvent.change(search, { target: { value: 'checkout' } });
-    const createTag = await screen.findByRole('button', {
-        name: 'Create team:checkout',
-    });
-    fireEvent.blur(search);
-    fireEvent.click(createTag);
 
-    await waitFor(() =>
-        expect(tagRequests).toEqual([{ type: 'team', value: 'checkout' }]),
-    );
+    await screen.findByRole('option', { name: 'team:checkout-page' });
+    expect(
+        screen.queryByRole('button', { name: /^Create / }),
+    ).not.toBeInTheDocument();
 });
 
-test('the new create flag form hides tags when there are no tag types', async () => {
+test('the new create flag form hides tags section when there are no tags and no simple tag type', async () => {
     setupNewFormApi();
-    testServerRoute(server, '/api/admin/tag-types', { tagTypes: [] });
+    testServerRoute(server, '/api/admin/tags', { tags: [] });
+    testServerRoute(server, '/api/admin/tag-types', {
+        tagTypes: [{ name: 'team' }],
+    });
 
     renderDialog();
 

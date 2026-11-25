@@ -109,11 +109,53 @@ const CreateTagButton = styled(Button)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
 }));
 
+const NoTagsMessage = styled('p')(({ theme }) => ({
+    margin: 0,
+    padding: theme.spacing(1, 2, 2),
+    fontSize: theme.typography.body2.fontSize,
+    color: theme.palette.text.secondary,
+}));
+
 const ImpressionDataRow = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(0.5),
 }));
+
+type TagsEmptyStateProps = {
+    tags: ITag[];
+    searchText: string;
+    canCreateSimpleTags: boolean;
+};
+
+const TagsEmptyState = ({
+    tags,
+    searchText,
+    canCreateSimpleTags,
+}: TagsEmptyStateProps) => {
+    const hasTags = tags.length > 0;
+    if (!hasTags && !searchText) {
+        return (
+            <NoTagsMessage>
+                No tags exist yet. Type to create one.
+            </NoTagsMessage>
+        );
+    }
+
+    const hasMatchingTags = tags.some((tag) =>
+        formatTag(tag).toLowerCase().includes(searchText.toLowerCase()),
+    );
+    if (!canCreateSimpleTags && !hasMatchingTags) {
+        return (
+            <NoTagsMessage>
+                No tags match “{searchText}”. You can add new tags once the flag
+                is created.
+            </NoTagsMessage>
+        );
+    }
+
+    return null;
+};
 
 type OptionalSettingsFieldsetProps = {
     tags: Set<ITag>;
@@ -152,9 +194,11 @@ export const OptionalSettingsFieldset = ({
         onTagsChange(new Set(pickedTags));
     };
 
-    const simpleTagType = tagTypes.find((tagType) => tagType.name === 'simple');
-    const tagType = simpleTagType ?? tagTypes[0];
-    const tagTypeName = tagType?.name;
+    const hasTags = allTags.length > 0;
+    const canCreateSimpleTags = tagTypes.some(
+        (tagType) => tagType.name === 'simple',
+    );
+    const showTags = hasTags || canCreateSimpleTags;
 
     const createAndSelectTag = async (tag: ITag) => {
         try {
@@ -169,7 +213,7 @@ export const OptionalSettingsFieldset = ({
     const tagExists = (value: string) =>
         allTags.some(
             (tag) =>
-                tag.type === tagTypeName &&
+                tag.type === 'simple' &&
                 tag.value.toLowerCase() === value.toLowerCase(),
         );
 
@@ -199,7 +243,7 @@ export const OptionalSettingsFieldset = ({
                 </AccordionSummary>
                 <AccordionDetails>
                     <SettingsBody>
-                        {tagTypeName ? (
+                        {showTags ? (
                             <>
                                 <FieldLabel as='span' id={tagsLabelId}>
                                     Tags
@@ -244,24 +288,39 @@ export const OptionalSettingsFieldset = ({
                                         multiple
                                         selected={selectedTags.map(formatTag)}
                                         onChange={selectTags}
-                                        searchPlaceholderText='Find or create a tag'
-                                        listMaxHeight={theme.spacing(40)}
-                                        renderBelowOptions={(value) =>
-                                            value && !tagExists(value) ? (
-                                                <CreateTagButton
-                                                    fullWidth
-                                                    startIcon={<AddIcon />}
-                                                    onClick={() =>
-                                                        createAndSelectTag({
-                                                            type: tagTypeName,
-                                                            value,
-                                                        })
-                                                    }
-                                                >
-                                                    Create {tagTypeName}:{value}
-                                                </CreateTagButton>
-                                            ) : null
+                                        searchPlaceholderText={
+                                            canCreateSimpleTags
+                                                ? 'Find or create a tag'
+                                                : 'Find a tag'
                                         }
+                                        listMaxHeight={theme.spacing(40)}
+                                        renderBelowOptions={(value) => (
+                                            <>
+                                                <TagsEmptyState
+                                                    tags={allTags}
+                                                    searchText={value}
+                                                    canCreateSimpleTags={
+                                                        canCreateSimpleTags
+                                                    }
+                                                />
+                                                {canCreateSimpleTags &&
+                                                value &&
+                                                !tagExists(value) ? (
+                                                    <CreateTagButton
+                                                        fullWidth
+                                                        startIcon={<AddIcon />}
+                                                        onClick={() =>
+                                                            createAndSelectTag({
+                                                                type: 'simple',
+                                                                value,
+                                                            })
+                                                        }
+                                                    >
+                                                        Create simple:{value}
+                                                    </CreateTagButton>
+                                                ) : null}
+                                            </>
+                                        )}
                                     />
                                 </ChipRow>
                             </>

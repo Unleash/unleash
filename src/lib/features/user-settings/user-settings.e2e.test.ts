@@ -1,4 +1,3 @@
-import { onTestFinished, vi } from 'vitest';
 import dbInit, {
     type ITestDb,
 } from '../../../test/e2e/helpers/database-init.js';
@@ -109,26 +108,29 @@ describe('signed in', () => {
     });
 
     test('saves the settings of the signed-in user', async () => {
-        const saveSettingsSpy = vi.spyOn(
-            app.services.userSettingsService,
-            'saveSettings',
-        );
-        onTestFinished(() => saveSettingsSpy.mockRestore());
-        const settings = {
-            'unleash-theme': { value: 'dark' },
-            'environment-visibiilty': { value: ['production'] },
-            'flag-reminders:v1': { value: { 'my-flag': 1767225600000 } },
-            'feedback-module-survey-grace:v1': {
-                value: true,
-                expiresAt: '2026-12-01T12:00:00.000Z',
+        await saveSettings({
+            settings: {
+                'unleash-theme': { value: 'dark' },
+                'feedback-module-survey-grace:v1': {
+                    value: true,
+                    expiresAt: '2026-12-01T12:00:00.000Z',
+                },
             },
-            'navigation-mode:v1': { value: null },
-        };
+        }).expect(204);
 
-        await saveSettings({ settings }).expect(204);
-
-        expect(saveSettingsSpy.mock.calls).toMatchObject([
-            [{ id: signedInUserId }, settings],
+        expect(
+            await db
+                .rawDatabase('user_settings')
+                .where('user_id', signedInUserId)
+                .orderBy('key')
+                .select('key', 'value', 'expires_at as expiresAt'),
+        ).toEqual([
+            {
+                key: 'feedback-module-survey-grace:v1',
+                value: true,
+                expiresAt: new Date('2026-12-01T12:00:00.000Z'),
+            },
+            { key: 'unleash-theme', value: 'dark', expiresAt: null },
         ]);
     });
 

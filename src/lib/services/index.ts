@@ -173,7 +173,10 @@ import {
     createUserRecentFlagsService,
 } from '../features/user-recent-flags/createUserRecentFlagsService.js';
 import type { UserSettingsService } from '../features/user-settings/user-settings-service.js';
-import { createUserSettingsService } from '../features/user-settings/createUserSettingsService.js';
+import {
+    createFakeUserSettingsService,
+    createUserSettingsService,
+} from '../features/user-settings/createUserSettingsService.js';
 import {
     createFakeProjectStatusService,
     createProjectStatusService,
@@ -570,7 +573,9 @@ export const createServices = (
               privateProjectChecker,
           );
 
-    const userSettingsService = createUserSettingsService();
+    const userSettingsService = db
+        ? createUserSettingsService(db)
+        : createFakeUserSettingsService();
 
     const transactionalUserSubscriptionsService = db
         ? withTransactional(createUserSubscriptionsService(config), db)

@@ -111,7 +111,7 @@ test('reveals Playground, Analytics and Impact views under More', async () => {
         '/insights',
     );
     expect(
-        workspace.getByRole('link', { name: 'Impact views' }),
+        workspace.getByRole('link', { name: 'Impact views Internal' }),
     ).toHaveAttribute('href', '/impact-views');
 });
 
@@ -165,7 +165,7 @@ test('shows only Playground under More on oss', async () => {
         workspace.queryByRole('link', { name: 'Analytics' }),
     ).not.toBeInTheDocument();
     expect(
-        workspace.queryByRole('link', { name: 'Impact views' }),
+        workspace.queryByRole('link', { name: /Impact views/ }),
     ).not.toBeInTheDocument();
 });
 

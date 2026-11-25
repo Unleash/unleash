@@ -10,9 +10,11 @@ export const SidebarLink: FC<{
     icon: ReactNode;
     label: string;
     end?: boolean;
-}> = ({ to, icon, label, end }) => (
+    badge?: ReactNode;
+}> = ({ to, icon, label, end, badge }) => (
     <StyledLink to={to} end={end}>
         <SidebarItemIcon>{icon}</SidebarItemIcon>
         {label}
+        {badge}
     </StyledLink>
 );

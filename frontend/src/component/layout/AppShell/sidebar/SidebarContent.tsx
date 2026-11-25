@@ -11,6 +11,7 @@ import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import InsightsIcon from '@mui/icons-material/Insights';
 import QueryStatsOutlinedIcon from '@mui/icons-material/QueryStatsOutlined';
 import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequestIcon';
+import { Badge } from 'component/common/Badge/Badge';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import {
     ConfigureWorkspaceNavigation,
@@ -55,6 +56,13 @@ const StyledLogoLink = styled(Link)(({ theme }) => ({
     display: 'inline-flex',
     padding: theme.spacing(0.5),
     '& svg': { width: 110, height: 'auto' },
+}));
+
+const StyledNavBadge = styled(Badge)(({ theme }) => ({
+    fontSize: '10px',
+    padding: theme.spacing(0, 0.75),
+    lineHeight: 1.4,
+    whiteSpace: 'nowrap',
 }));
 
 const StyledSearchSlot = styled('div')(({ theme }) => ({
@@ -197,6 +205,11 @@ const WorkspaceSection: FC = () => {
                         <SidebarLink
                             {...appNavigationLinks.impactViews}
                             icon={<QueryStatsOutlinedIcon />}
+                            badge={
+                                <StyledNavBadge color='info'>
+                                    Internal
+                                </StyledNavBadge>
+                            }
                         />
                     ) : null}
                 </>

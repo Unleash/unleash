@@ -6,8 +6,10 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 import { changesCount } from 'component/changeRequest/changesCount';
 import { Sticky } from 'component/common/Sticky/Sticky';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 
-interface IDraftBannerProps {
+interface IPendingChangesBannerProps {
     project: string;
 }
 
@@ -87,7 +89,7 @@ const DraftBannerContent: FC<{
                 <Button
                     variant='contained'
                     onClick={onClick}
-                    sx={{ ml: 'auto' }}
+                    sx={{ ml: 'auto', flexShrink: 0 }}
                 >
                     View changes ({allChangesCount})
                 </Button>
@@ -103,7 +105,7 @@ const StickyBanner = styled(Sticky)(({ theme }) => ({
     zIndex: 250,
 }));
 
-export const DraftBanner: FC<IDraftBannerProps> = ({ project }) => {
+const PendingChangesBanner: FC<IPendingChangesBannerProps> = ({ project }) => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const { data, loading } = usePendingChangeRequests(project);
 
@@ -145,4 +147,17 @@ export const DraftBanner: FC<IDraftBannerProps> = ({ project }) => {
             />
         </StickyBanner>
     );
+};
+
+export const DraftBanner: FC = () => {
+    const projectId = useOptionalPathParam('projectId');
+    const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
+        projectId || '',
+    );
+
+    if (!projectId || !isChangeRequestConfiguredInAnyEnv()) {
+        return null;
+    }
+
+    return <PendingChangesBanner project={projectId} />;
 };

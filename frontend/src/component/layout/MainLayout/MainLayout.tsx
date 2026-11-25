@@ -7,10 +7,8 @@ import BreadcrumbNav from 'component/common/BreadcrumbNav/BreadcrumbNav';
 import textureImage from 'assets/img/texture.png';
 import { SkipNavTarget } from 'component/common/SkipNavLink/SkipNavTarget';
 import { formatAssetPath } from 'utils/formatPath';
-import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { DraftBanner } from './DraftBanner/DraftBanner.tsx';
+import { DraftBanner } from 'component/changeRequest/DraftBanner/DraftBanner.tsx';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar.tsx';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
@@ -121,10 +119,6 @@ const StyledMainLayoutContent = styled(MainLayoutContent)(() => ({
 
 export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
     ({ children }, ref) => {
-        const projectId = useOptionalPathParam('projectId');
-        const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
-            projectId || '',
-        );
         const theme = useTheme();
         const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
@@ -141,17 +135,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                     />
 
                                     <MainContentWrapper>
-                                        <ConditionallyRender
-                                            condition={Boolean(
-                                                projectId &&
-                                                    isChangeRequestConfiguredInAnyEnv(),
-                                            )}
-                                            show={
-                                                <DraftBanner
-                                                    project={projectId || ''}
-                                                />
-                                            }
-                                        />
+                                        <DraftBanner />
                                         <HeaderContentContainer>
                                             <Header />
 

@@ -9,6 +9,7 @@ import { HelpButtonHintProvider } from 'component/menu/Header/HelpResources/Help
 import { CommandBarDialog } from 'component/commandBar/CommandBarDialog';
 import { searchDocsTracking } from 'component/menu/Header/SearchDocs/searchDocsTracking';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { DraftBanner } from 'component/changeRequest/DraftBanner/DraftBanner.tsx';
 import { SidebarContent } from './sidebar/SidebarContent.tsx';
 import { PageHeaderRow } from './header/PageHeaderRow.tsx';
 
@@ -35,9 +36,16 @@ const StyledDesktopSidebar = styled('div')({
     flex: 'none',
 });
 
-const StyledContent = styled('main')(({ theme }) => ({
+const StyledMainColumn = styled('div')({
     flex: 1,
     minWidth: 0,
+    display: 'flex',
+    flexDirection: 'column',
+});
+
+const StyledContent = styled('main')(({ theme }) => ({
+    flex: 1,
+    width: '100%',
     maxWidth: 1512,
     margin: '0 auto',
     padding: theme.spacing(0, 3, 6),
@@ -102,17 +110,20 @@ export const AppShell: FC<{ children: ReactNode }> = ({ children }) => {
                                 {sidebar}
                             </StyledDesktopSidebar>
                         )}
-                        <StyledContent>
-                            <SkipNavTarget />
-                            <PageHeaderRow
-                                onOpenNavigation={
-                                    isSmallScreen
-                                        ? () => setDrawerOpenAt(locationKey)
-                                        : undefined
-                                }
-                            />
-                            {children}
-                        </StyledContent>
+                        <StyledMainColumn>
+                            <DraftBanner />
+                            <StyledContent>
+                                <SkipNavTarget />
+                                <PageHeaderRow
+                                    onOpenNavigation={
+                                        isSmallScreen
+                                            ? () => setDrawerOpenAt(locationKey)
+                                            : undefined
+                                    }
+                                />
+                                {children}
+                            </StyledContent>
+                        </StyledMainColumn>
                     </StyledRoot>
                     <FloatingOnboardingChecklistVisibilityGate />
                     <CommandBarDialog

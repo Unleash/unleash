@@ -2,7 +2,7 @@ import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { backdropClasses } from '@mui/material/Backdrop';
-import { Link } from 'react-router';
+import { Link, Route, Routes } from 'react-router';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { resizeScreen } from 'utils/resizeScreen';
@@ -14,6 +14,7 @@ import {
     mockUserWithSplash,
 } from 'component/onboarding/floatingChecklist/onboardingChecklistTestServer.ts';
 import { mockPendingAccessRequest } from 'component/admin/users/AccessRequestsNotifications/accessRequestsTestServer.ts';
+import { mockDraftInDefaultProject } from 'component/changeRequest/DraftBanner/draftBannerTestServer.ts';
 import { AppShell } from './AppShell.tsx';
 
 vi.mock('component/menu/Header/SearchDocs/SearchDocs.tsx', () => ({
@@ -223,6 +224,25 @@ test('hides change requests on oss', async () => {
     expect(
         screen.queryByRole('link', { name: 'Change requests' }),
     ).not.toBeInTheDocument();
+});
+
+test('shows the change request banner in a project with pending changes', async () => {
+    mockEnterprise();
+    mockDraftInDefaultProject(server, { changeRequestEnabled: true });
+
+    render(
+        <Routes>
+            <Route
+                path='/projects/:projectId/*'
+                element={<AppShell>content</AppShell>}
+            />
+        </Routes>,
+        { route: '/projects/default' },
+    );
+
+    expect(
+        await screen.findByRole('button', { name: 'View changes (1)' }),
+    ).toBeInTheDocument();
 });
 
 const openConfigureWorkspace = async () => {

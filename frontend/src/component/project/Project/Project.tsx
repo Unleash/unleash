@@ -1,226 +1,35 @@
-import { useNavigate } from 'react-router';
+import { useEffect, useState } from 'react';
+import { Navigate, Route, Routes, useNavigate } from 'react-router';
+import { Paper, Typography } from '@mui/material';
 import useLoading from 'hooks/useLoading';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import ProjectStatusSvg from 'assets/icons/projectStatus.svg?react';
-import {
-    StyledDiv,
-    StyledFavoriteIconButton,
-    StyledHeader,
-    StyledInnerContainer,
-    StyledName,
-    StyledProjectTitle,
-    StyledSeparator,
-    StyledTab,
-    StyledTabContainer,
-    StyledTopRow,
-} from './Project.styles';
-import {
-    Badge as CounterBadge,
-    Box,
-    Paper,
-    Tabs,
-    Typography,
-    styled,
-    Button,
-} from '@mui/material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
-import { useEffect, useState, type ReactNode } from 'react';
 import ProjectFlags from './ProjectFlags.tsx';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import {
-    Navigate,
-    Route,
-    Routes,
-    useLocation,
-    useSearchParams,
-} from 'react-router';
 import { DeleteProjectDialogue } from './DeleteProject/DeleteProjectDialogue.tsx';
 import { ProjectLog } from './ProjectLog/ProjectLog.tsx';
 import { ChangeRequestOverview } from 'component/changeRequest/ChangeRequestOverview/ChangeRequestOverview';
 import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests/ProjectChangeRequests.tsx';
 import { ProjectSettings } from './ProjectSettings/ProjectSettings.tsx';
-import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
 import { ImportModal } from './Import/ImportModal.tsx';
-import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
-import { Badge } from 'component/common/Badge/Badge';
-import type { UiFlags } from 'interfaces/uiConfig';
-import { HiddenProjectIconWithTooltip } from './HiddenProjectIconWithTooltip/HiddenProjectIconWithTooltip.tsx';
 import { ProjectApplications } from '../ProjectApplications/ProjectApplications.tsx';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectArchived } from './ArchiveProject/ProjectArchived.tsx';
-import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
-import {
-    ProjectStatusModal,
-    type ProjectStatusOpenedFrom,
-} from './ProjectStatus/ProjectStatusModal.tsx';
-import {
-    deleteProjectTracking,
-    selectProjectTabTracking,
-} from 'component/project/projectTracking';
-import { useTracking } from 'hooks/useTracking';
-
-const StyledBadge = styled(Badge)(({ theme }) => ({
-    position: 'absolute',
-    top: 5,
-    right: 20,
-    [theme.breakpoints.down('md')]: {
-        top: 2,
-    },
-}));
-
-interface ITab {
-    title: string;
-    path: string;
-    ossPath?: string;
-    name: string;
-    flag?: keyof UiFlags;
-    new?: boolean;
-    isEnterprise?: boolean;
-    labelOverride?: () => ReactNode;
-}
-
-const StyledCounterBadge = styled(CounterBadge)(({ theme }) => ({
-    '.MuiBadge-badge': {
-        backgroundColor: theme.palette.background.alternative,
-        right: '-4px',
-    },
-    [theme.breakpoints.down('md')]: {
-        right: '6px',
-    },
-    flex: 'auto',
-    justifyContent: 'center',
-    minHeight: '1.5em',
-    alignItems: 'center',
-}));
-
-const TabText = styled('span')(({ theme }) => ({
-    color: theme.palette.text.primary,
-}));
-
-const ChangeRequestsLabel = () => {
-    const projectId = useRequiredPathParam('projectId');
-    const { total } = useActionableChangeRequests(projectId);
-
-    return (
-        <StyledCounterBadge badgeContent={total ?? 0} color='primary'>
-            <TabText>Change requests</TabText>
-        </StyledCounterBadge>
-    );
-};
-
-const ProjectStatusButton = styled(Button)(({ theme }) => ({
-    color: theme.palette.text.primary,
-    fontSize: theme.typography.body1.fontSize,
-    fontWeight: 'bold',
-    'svg *': {
-        fill: theme.palette.primary.main,
-    },
-}));
-
-const ProjectStatusSvgWithMargin = styled(ProjectStatusSvg)(({ theme }) => ({
-    marginLeft: theme.spacing(0.5),
-}));
-
-const ProjectStatus = () => {
-    const [searchParams, setSearchParams] = useSearchParams();
-    const [projectStatusOpen, setProjectStatusOpen] = useState(
-        searchParams.has('project-status'),
-    );
-    const [openedFrom, setOpenedFrom] =
-        useState<ProjectStatusOpenedFrom>('deep-link');
-    const openStatusModal = () => {
-        searchParams.set('project-status', '');
-        setSearchParams(searchParams);
-        setOpenedFrom('project-header');
-        setProjectStatusOpen(true);
-    };
-    const closeStatusModal = () => {
-        searchParams.delete('project-status');
-        setSearchParams(searchParams);
-        setProjectStatusOpen(false);
-    };
-
-    return (
-        <>
-            <ProjectStatusButton
-                onClick={openStatusModal}
-                startIcon={<ProjectStatusSvgWithMargin />}
-                data-loading-project
-            >
-                Project status
-            </ProjectStatusButton>
-            <ProjectStatusModal
-                open={projectStatusOpen}
-                openedFrom={openedFrom}
-                onClose={closeStatusModal}
-                onFollowLink={() => setProjectStatusOpen(false)}
-            />
-        </>
-    );
-};
+import { deleteProjectTracking } from 'component/project/projectTracking';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ProjectHeader } from './ProjectHeader/ProjectHeader.tsx';
 
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
-    const trackSelectTab = useTracking(selectProjectTabTracking);
     const params = useQueryParams();
-    const { project, loading, error, refetch } = useProjectOverview(projectId);
+    const { project, loading, error } = useProjectOverview(projectId);
     const ref = useLoading(loading, '[data-loading-project=true]');
     const { setToastData } = useToast();
     const [modalOpen, setModalOpen] = useState(false);
     const navigate = useNavigate();
-    const { pathname } = useLocation();
-    const { isOss, uiConfig, isPro } = useUiConfig();
-    const basePath = `/projects/${projectId}`;
-    const projectName = project?.name || projectId;
-    const { favorite, unfavorite } = useFavoriteProjectsApi();
+    const improvedSidebarNavigation = useUiFlag('improvedSidebarNavigation');
 
     const [showDelDialog, setShowDelDialog] = useState(false);
-
-    const tabs: ITab[] = [
-        {
-            title: 'Overview',
-            path: basePath,
-            name: 'flags',
-        },
-        {
-            title: 'Change requests',
-            path: `${basePath}/change-requests`,
-            name: 'change-request',
-            isEnterprise: true,
-            labelOverride: ChangeRequestsLabel,
-        },
-        {
-            title: 'Applications',
-            path: `${basePath}/applications`,
-            name: 'applications',
-        },
-        {
-            title: 'Event log',
-            path: `${basePath}/logs`,
-            name: 'logs',
-        },
-        {
-            title: 'Settings',
-            path: `${basePath}/settings`,
-            ossPath: `${basePath}/settings/api-access`,
-            name: 'settings',
-        },
-    ];
-
-    const filteredTabs = tabs
-        .filter((tab) => {
-            if (tab.flag) {
-                return uiConfig.flags[tab.flag];
-            }
-            return true;
-        })
-        .filter((tab) => !(isOss() && tab.isEnterprise));
-
-    const activeTab = [...filteredTabs]
-        .reverse()
-        .find((tab) => pathname.startsWith(tab.path));
 
     useEffect(() => {
         const created = params.get('created');
@@ -247,122 +56,13 @@ export const Project = () => {
         );
     }
 
-    const onFavorite = async () => {
-        try {
-            if (project?.favorite) {
-                await unfavorite(projectId);
-            } else {
-                await favorite(projectId);
-            }
-        } catch {}
-        refetch();
-    };
-
-    const enterpriseIcon = (
-        <Box
-            sx={(theme) => ({
-                marginLeft: theme.spacing(1),
-                display: 'flex',
-            })}
-        >
-            <EnterpriseBadge />
-        </Box>
-    );
-
     if (project.archivedAt) {
         return <ProjectArchived name={project.name} />;
     }
 
     return (
         <div ref={ref}>
-            <StyledHeader>
-                <StyledInnerContainer>
-                    <StyledTopRow>
-                        <StyledDiv>
-                            <StyledProjectTitle>
-                                <ConditionallyRender
-                                    condition={project?.mode === 'private'}
-                                    show={<HiddenProjectIconWithTooltip />}
-                                />
-                                <StyledName data-loading-project>
-                                    {projectName}
-                                </StyledName>
-                                <StyledFavoriteIconButton
-                                    onClick={onFavorite}
-                                    isFavorite={project?.favorite || false}
-                                    size='medium'
-                                />
-                            </StyledProjectTitle>
-                        </StyledDiv>
-                        <StyledDiv>
-                            <ProjectStatus />
-                        </StyledDiv>
-                    </StyledTopRow>
-                </StyledInnerContainer>
-
-                <StyledSeparator />
-                <StyledTabContainer>
-                    <Tabs
-                        value={activeTab?.path}
-                        indicatorColor='primary'
-                        textColor='primary'
-                        variant='scrollable'
-                        allowScrollButtonsMobile
-                    >
-                        {filteredTabs.map((tab) => {
-                            return (
-                                <StyledTab
-                                    data-loading-project
-                                    key={tab.title}
-                                    label={
-                                        tab.labelOverride ? (
-                                            <tab.labelOverride />
-                                        ) : (
-                                            tab.title
-                                        )
-                                    }
-                                    value={tab.path}
-                                    onClick={() => {
-                                        if (tab.name !== 'flags') {
-                                            trackSelectTab('succeeded', {
-                                                tab: tab.name,
-                                            });
-                                        }
-                                        navigate(
-                                            isOss() && tab.ossPath
-                                                ? tab.ossPath
-                                                : tab.path,
-                                        );
-                                    }}
-                                    data-testid={`TAB_${tab.title}`}
-                                    iconPosition={
-                                        tab.isEnterprise ? 'end' : undefined
-                                    }
-                                    icon={
-                                        <div>
-                                            <ConditionallyRender
-                                                condition={Boolean(tab.new)}
-                                                show={
-                                                    // extra span to avoid badge getting color override from the overly specific parent component
-                                                    <span>
-                                                        <StyledBadge color='success'>
-                                                            Beta
-                                                        </StyledBadge>
-                                                    </span>
-                                                }
-                                            />
-                                            {(tab.isEnterprise &&
-                                                isPro() &&
-                                                enterpriseIcon) ||
-                                                undefined}
-                                        </div>
-                                    }
-                                />
-                            );
-                        })}
-                    </Tabs>
-                </StyledTabContainer>
-            </StyledHeader>
+            {!improvedSidebarNavigation && <ProjectHeader />}
             <DeleteProjectDialogue
                 projectId={projectId}
                 open={showDelDialog}

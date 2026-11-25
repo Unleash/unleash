@@ -173,6 +173,9 @@ test('the new create flag form attaches selected tags and impression data to the
     testServerRoute(server, '/api/admin/tags', {
         tags: [{ type: 'simple', value: 'v1:beta' }],
     });
+    testServerRoute(server, '/api/admin/tag-types', {
+        tagTypes: [{ name: 'simple' }],
+    });
 
     renderDialog();
 
@@ -203,6 +206,9 @@ test('the new create flag form offers to create a tag that does not exist yet, a
     const requests = setupNewFormApi();
     testServerRoute(server, '/api/admin/tags', {
         tags: [{ type: 'simple', value: 'billing' }],
+    });
+    testServerRoute(server, '/api/admin/tag-types', {
+        tagTypes: [{ name: 'simple' }],
     });
     const { requests: tagRequests } = testServerRoute(
         server,
@@ -248,6 +254,55 @@ test('the new create flag form offers to create a tag that does not exist yet, a
     expect(requests[0]).toMatchObject({
         tags: [{ type: 'simple', value: 'checkout' }],
     });
+});
+
+test('the new create flag form creates a tag with the first existing tag type when there is no simple tag type', async () => {
+    setupNewFormApi();
+    testServerRoute(server, '/api/admin/tags', { tags: [] });
+    testServerRoute(server, '/api/admin/tag-types', {
+        tagTypes: [{ name: 'team' }],
+    });
+    const { requests: tagRequests } = testServerRoute(
+        server,
+        '/api/admin/tags',
+        {},
+        'post',
+        201,
+    );
+
+    renderDialog();
+
+    fireEvent.click(
+        await screen.findByRole('button', { name: /Other optional settings/ }),
+    );
+    fireEvent.click(await screen.findByRole('button', { name: 'Add tag' }));
+    const search = await screen.findByPlaceholderText('Find or create a tag');
+    fireEvent.change(search, { target: { value: 'checkout' } });
+    const createTag = await screen.findByRole('button', {
+        name: 'Create team:checkout',
+    });
+    fireEvent.blur(search);
+    fireEvent.click(createTag);
+
+    await waitFor(() =>
+        expect(tagRequests).toEqual([{ type: 'team', value: 'checkout' }]),
+    );
+});
+
+test('the new create flag form hides tags when there are no tag types', async () => {
+    setupNewFormApi();
+    testServerRoute(server, '/api/admin/tag-types', { tagTypes: [] });
+
+    renderDialog();
+
+    fireEvent.click(
+        await screen.findByRole('button', { name: /Other optional settings/ }),
+    );
+
+    await screen.findByLabelText('Impression data');
+    expect(
+        screen.queryByRole('button', { name: 'Add tag' }),
+    ).not.toBeInTheDocument();
 });
 
 test('the new create flag form requires a flag type and applies its default lifetime', async () => {

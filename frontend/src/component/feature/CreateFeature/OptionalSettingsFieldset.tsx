@@ -16,6 +16,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { SelectPopover } from 'component/common/SelectPopover/SelectPopover.tsx';
 import useAllTags from 'hooks/api/getters/useAllTags/useAllTags';
+import useTagTypes from 'hooks/api/getters/useTagTypes/useTagTypes';
 import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -131,6 +132,7 @@ export const OptionalSettingsFieldset = ({
     const switchId = useId();
     const tagsLabelId = useId();
     const { tags: allTags, refetch: refetchAllTags } = useAllTags();
+    const { tagTypes } = useTagTypes();
     const { createTag } = useTagApi();
     const { setToastApiError } = useToast();
     const addTagButtonRef = useRef<HTMLButtonElement>(null);
@@ -150,8 +152,11 @@ export const OptionalSettingsFieldset = ({
         onTagsChange(new Set(pickedTags));
     };
 
-    const createAndSelectTag = async (value: string) => {
-        const tag = { type: 'simple', value };
+    const simpleTagType = tagTypes.find((tagType) => tagType.name === 'simple');
+    const tagType = simpleTagType ?? tagTypes[0];
+    const tagTypeName = tagType?.name;
+
+    const createAndSelectTag = async (tag: ITag) => {
         try {
             await createTag(tag);
             refetchAllTags();
@@ -164,7 +169,7 @@ export const OptionalSettingsFieldset = ({
     const tagExists = (value: string) =>
         allTags.some(
             (tag) =>
-                tag.type === 'simple' &&
+                tag.type === tagTypeName &&
                 tag.value.toLowerCase() === value.toLowerCase(),
         );
 
@@ -194,61 +199,73 @@ export const OptionalSettingsFieldset = ({
                 </AccordionSummary>
                 <AccordionDetails>
                     <SettingsBody>
-                        <FieldLabel as='span' id={tagsLabelId}>
-                            Tags
-                        </FieldLabel>
-                        <ChipRow role='group' aria-labelledby={tagsLabelId}>
-                            <Button
-                                ref={addTagButtonRef}
-                                variant='outlined'
-                                size='small'
-                                startIcon={<AddIcon />}
-                                onClick={() =>
-                                    setAddTagAnchor(addTagButtonRef.current)
-                                }
-                            >
-                                Add tag
-                            </Button>
-                            {selectedTags.map((tag) => (
-                                <TagChip
-                                    key={formatTag(tag)}
-                                    size='small'
-                                    label={formatTag(tag)}
-                                    deleteIcon={<TagDeleteIcon />}
-                                    onDelete={() => {
-                                        removeTag(tag);
-                                        addTagButtonRef.current?.focus();
-                                    }}
-                                />
-                            ))}
-                            <SelectPopover
-                                open={Boolean(addTagAnchor)}
-                                anchorEl={addTagAnchor}
-                                onClose={() => setAddTagAnchor(null)}
-                                options={allTags.map((tag) => ({
-                                    label: formatTag(tag),
-                                    value: formatTag(tag),
-                                }))}
-                                multiple
-                                selected={selectedTags.map(formatTag)}
-                                onChange={selectTags}
-                                searchPlaceholderText='Find or create a tag'
-                                listMaxHeight={theme.spacing(40)}
-                                renderBelowOptions={(value) =>
-                                    value && !tagExists(value) ? (
-                                        <CreateTagButton
-                                            fullWidth
-                                            startIcon={<AddIcon />}
-                                            onClick={() =>
-                                                createAndSelectTag(value)
-                                            }
-                                        >
-                                            Create simple:{value}
-                                        </CreateTagButton>
-                                    ) : null
-                                }
-                            />
-                        </ChipRow>
+                        {tagTypeName ? (
+                            <>
+                                <FieldLabel as='span' id={tagsLabelId}>
+                                    Tags
+                                </FieldLabel>
+                                <ChipRow
+                                    role='group'
+                                    aria-labelledby={tagsLabelId}
+                                >
+                                    <Button
+                                        ref={addTagButtonRef}
+                                        variant='outlined'
+                                        size='small'
+                                        startIcon={<AddIcon />}
+                                        onClick={() =>
+                                            setAddTagAnchor(
+                                                addTagButtonRef.current,
+                                            )
+                                        }
+                                    >
+                                        Add tag
+                                    </Button>
+                                    {selectedTags.map((tag) => (
+                                        <TagChip
+                                            key={formatTag(tag)}
+                                            size='small'
+                                            label={formatTag(tag)}
+                                            deleteIcon={<TagDeleteIcon />}
+                                            onDelete={() => {
+                                                removeTag(tag);
+                                                addTagButtonRef.current?.focus();
+                                            }}
+                                        />
+                                    ))}
+                                    <SelectPopover
+                                        open={Boolean(addTagAnchor)}
+                                        anchorEl={addTagAnchor}
+                                        onClose={() => setAddTagAnchor(null)}
+                                        options={allTags.map((tag) => ({
+                                            label: formatTag(tag),
+                                            value: formatTag(tag),
+                                        }))}
+                                        multiple
+                                        selected={selectedTags.map(formatTag)}
+                                        onChange={selectTags}
+                                        searchPlaceholderText='Find or create a tag'
+                                        listMaxHeight={theme.spacing(40)}
+                                        renderBelowOptions={(value) =>
+                                            value && !tagExists(value) ? (
+                                                <CreateTagButton
+                                                    fullWidth
+                                                    startIcon={<AddIcon />}
+                                                    onClick={() =>
+                                                        createAndSelectTag({
+                                                            type: tagTypeName,
+                                                            value,
+                                                        })
+                                                    }
+                                                >
+                                                    Create {tagTypeName}:{value}
+                                                </CreateTagButton>
+                                            ) : null
+                                        }
+                                    />
+                                </ChipRow>
+                            </>
+                        ) : null}
                         <FieldLabel htmlFor={switchId}>
                             Impression data
                         </FieldLabel>

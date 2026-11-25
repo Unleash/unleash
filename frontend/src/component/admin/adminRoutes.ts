@@ -13,7 +13,8 @@ export const adminRoutes: INavigationMenuItem[] = [
     {
         path: '/admin',
         title: 'Admin home',
-        menu: {},
+        menu: { adminSettings: true },
+        end: true,
     },
 
     // Users

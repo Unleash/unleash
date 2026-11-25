@@ -483,6 +483,7 @@ test('does not move focus when navigation changes the sidebar', async () => {
 });
 
 test.each([
+    ['/admin', 'Admin home'],
     ['/admin/users/1/edit', 'Users'],
     ['/history', 'Event log'],
 ])('opens admin settings when landing on %s', async (route, currentPage) => {
@@ -499,12 +500,15 @@ test.each([
     ).toHaveAttribute('aria-current', 'page');
 });
 
-test('opens admin settings when landing on an admin page outside the menu', () => {
-    render(<AppShell>content</AppShell>, { route: '/admin' });
+test('does not highlight Admin home on other admin pages', async () => {
+    render(<AppShell>content</AppShell>, { route: '/admin/create-user' });
 
-    expect(
+    const adminSettings = within(
         screen.getByRole('region', { name: 'Admin settings' }),
-    ).toBeInTheDocument();
+    );
+    expect(
+        await adminSettings.findByRole('link', { name: 'Admin home' }),
+    ).not.toHaveAttribute('aria-current');
 });
 
 test('links every admin setting on enterprise', async () => {
@@ -533,6 +537,7 @@ test('links every admin setting on enterprise', async () => {
             .getAllByRole('link')
             .map((link) => [link.textContent, link.getAttribute('href')]),
     ).toEqual([
+        ['Admin home', '/admin'],
         ['Service accounts', '/admin/service-accounts'],
         ['Enterprise Edge', '/admin/enterprise-edge'],
         ['Remote MCP server', '/admin/remote-mcp'],

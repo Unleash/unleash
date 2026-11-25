@@ -156,6 +156,7 @@ test('shows no breadcrumbs on a project page of a project that is not in the lis
 });
 
 test.each([
+    ['/admin', { label: 'Admin home', to: '/admin' }],
     ['/admin/users', { label: 'Users', to: '/admin/users' }],
     ['/admin/users/1/edit', { label: 'Users', to: '/admin/users' }],
     ['/history', { label: 'Event log', to: '/history' }],
@@ -182,6 +183,10 @@ test.each([
         configureWorkspace,
         item,
     ]);
+});
+
+test('shows no breadcrumbs on an admin page outside the admin settings menu', async () => {
+    expect(await loadPageBreadcrumbs('/admin/create-user')).toEqual([]);
 });
 
 test.each([

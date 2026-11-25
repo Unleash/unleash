@@ -7,10 +7,12 @@ export const createPageMatcher =
         paths.some((path) => isWithinPath(pathname, path));
 
 // The most specific match wins, so Project roles doesn't also match Root roles.
-export const findCurrentRoute = <Route extends { path: string }>(
+export const findCurrentRoute = <Route extends { path: string; end?: boolean }>(
     pathname: string,
     routes: Route[],
 ): Route | undefined =>
     routes
-        .filter(({ path }) => isWithinPath(pathname, path))
+        .filter(({ path, end }) =>
+            end ? pathname === path : isWithinPath(pathname, path),
+        )
         .sort((a, b) => b.path.length - a.path.length)[0];

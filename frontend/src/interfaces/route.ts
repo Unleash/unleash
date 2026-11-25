@@ -27,6 +27,8 @@ export interface INavigationMenuItem {
     group?: string;
     enterprise?: boolean;
     deployment?: 'cloud' | 'self-hosted';
+    // Matches only its own path, not the pages nested under it.
+    end?: boolean;
 }
 
 interface IRouteMenu {

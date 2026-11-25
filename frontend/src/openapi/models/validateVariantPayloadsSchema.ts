@@ -9,6 +9,9 @@ import type { ValidateVariantPayloadsSchemaPayloadsItem } from './validateVarian
  * The json variant payloads you are about to save to a feature flag.
  */
 export interface ValidateVariantPayloadsSchema {
-    /** The json variant payloads to validate. */
+    /**
+     * The json variant payloads to validate, at most 100 per request.
+     * @maxItems 100
+     */
     payloads: ValidateVariantPayloadsSchemaPayloadsItem[];
 }

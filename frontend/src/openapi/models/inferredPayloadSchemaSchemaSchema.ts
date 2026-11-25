@@ -3,8 +3,20 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { InferredPayloadSchemaSchemaSchemaExamplesItem } from './inferredPayloadSchemaSchemaSchemaExamplesItem.ts';
+import type { InferredPayloadSchemaSchemaSchemaProperties } from './inferredPayloadSchemaSchemaSchemaProperties.ts';
+import type { InferredPayloadSchemaSchemaSchemaType } from './inferredPayloadSchemaSchemaSchemaType.ts';
 
 /**
  * A JSON Schema document, draft 2020-12, that every stored json variant payload matches.
  */
-export type InferredPayloadSchemaSchemaSchema = { [key: string]: unknown };
+export type InferredPayloadSchemaSchemaSchema = {
+    /** Every distinct stored json variant payload. */
+    examples: InferredPayloadSchemaSchemaSchemaExamplesItem[];
+    /** The schemas of the properties of the payloads, by property name. Absent when the flag has no stored json variant payloads. */
+    properties?: InferredPayloadSchemaSchemaSchemaProperties;
+    /** The properties that every stored payload has with a non-null value. Absent when the flag has no stored json variant payloads. */
+    required?: string[];
+    /** Always `object`, since only JSON object payloads can be described. */
+    type: InferredPayloadSchemaSchemaSchemaType;
+};

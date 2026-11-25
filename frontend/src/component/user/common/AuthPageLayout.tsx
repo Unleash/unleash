@@ -14,8 +14,8 @@ const StyledPage = styled('div')(({ theme }) => ({
 const StyledBackground = styled('img')({
     position: 'absolute',
     right: 0,
-    width: '70%',
-    maxHeight: '100%',
+    maxWidth: '70%',
+    height: '100%',
     objectFit: 'contain',
     objectPosition: 'bottom right',
 });

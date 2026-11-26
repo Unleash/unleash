@@ -1,9 +1,7 @@
 import type React from 'react';
-import { type FC, useCallback, useEffect } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { type FC, useEffect } from 'react';
 import { Box } from '@mui/material';
-
-const formatJSON = (json: string) => JSON.stringify(JSON.parse(json), null, 4);
+import { useJsonFileUpload } from 'component/common/JsonFileUpload/useJsonFileUpload';
 
 interface IFileDropZoneProps {
     onSuccess: (message: string) => void;
@@ -11,22 +9,6 @@ interface IFileDropZoneProps {
     onDragStatusChange: (dragOn: boolean) => void;
     children?: React.ReactNode;
 }
-
-const onFileDropped =
-    ({ onSuccess, onError }: Omit<IFileDropZoneProps, 'onDragStatusChange'>) =>
-    (e: ProgressEvent<FileReader>) => {
-        const contents = e?.target?.result;
-        if (typeof contents === 'string') {
-            try {
-                const json = formatJSON(contents);
-                onSuccess(json);
-            } catch (_e) {
-                onError('Cannot format as valid JSON');
-            }
-        } else {
-            onError('Unsupported format');
-        }
-    };
 
 // This component has no styling on purpose
 export const FileDropZone: FC<IFileDropZoneProps> = ({
@@ -36,17 +18,9 @@ export const FileDropZone: FC<IFileDropZoneProps> = ({
     onDragStatusChange,
     ...props
 }) => {
-    const onDrop = useCallback(([file]: Array<Blob>) => {
-        const reader = new FileReader();
-        reader.onload = onFileDropped({ onSuccess, onError });
-        reader.readAsText(file);
-    }, []);
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
-        onDrop,
-        accept: {
-            'application/json': ['.json'],
-        },
-        maxFiles: 1,
+    const { getRootProps, getInputProps, isDragActive } = useJsonFileUpload({
+        onLoad: (json) => onSuccess(JSON.stringify(json, null, 4)),
+        onError,
     });
     useEffect(() => {
         onDragStatusChange(isDragActive);

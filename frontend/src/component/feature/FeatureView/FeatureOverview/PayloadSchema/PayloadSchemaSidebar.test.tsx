@@ -1,7 +1,8 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { HttpResponse, http } from 'msw';
 import { Route, Routes } from 'react-router';
-import { expect, test } from 'vitest';
+import { beforeEach, expect, test } from 'vitest';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
@@ -10,6 +11,13 @@ import { PayloadSchemaSidebar } from './PayloadSchemaSidebar.tsx';
 const server = testServerSetup();
 
 const flagPath = '/api/admin/projects/default/features/my-flag';
+const inferredPath = `${flagPath}/payload-schema/inferred`;
+
+beforeEach(() => {
+    testServerRoute(server, inferredPath, {
+        schema: { type: 'object', examples: [] },
+    });
+});
 
 const renderPayloadSchemaSidebar = () => {
     render(
@@ -28,12 +36,23 @@ const renderPayloadSchemaSidebar = () => {
 
 const applyButton = () =>
     screen.getByRole('button', { name: 'Use these fields' });
-const pickTemplate = async (name: RegExp) =>
-    userEvent.click(await screen.findByRole('button', { name }));
+const pickTemplate = async (name: RegExp) => {
+    await userEvent.click(
+        await screen.findByRole('tab', { name: 'Use a template' }),
+    );
+    await userEvent.click(await screen.findByRole('button', { name }));
+};
 
 const saveButton = () => screen.getByRole('button', { name: 'Save schema' });
 
-test('saves the payload schema shown in the editor once, even on a double-click', async () => {
+test('saves the payload schema shown in the editor once, even on a double-click, without inferring one', async () => {
+    let inferredRequests = 0;
+    server.use(
+        http.get(inferredPath, () => {
+            inferredRequests++;
+            return HttpResponse.json({});
+        }),
+    );
     testServerRoute(server, flagPath, { payloadSchema: { type: 'string' } });
     const { requests } = testServerRoute(
         server,
@@ -56,11 +75,15 @@ test('saves the payload schema shown in the editor once, even on a double-click'
         ).toBeNull(),
     );
     expect(requests).toEqual([{ schema: { type: 'string' } }]);
+    expect(inferredRequests).toBe(0);
 });
 
 test('a draft stays on its tab until it is used, and only the staged schema can be saved', async () => {
     testServerRoute(server, flagPath, {});
     renderPayloadSchemaSidebar();
+
+    await screen.findByText('This flag has no JSON variant payloads yet');
+    expect(applyButton()).toHaveAttribute('aria-disabled', 'true');
 
     await pickTemplate(/^Log level/);
     expect(await screen.findByLabelText('Level')).toBeInTheDocument();
@@ -88,7 +111,6 @@ test('a draft stays on its tab until it is used, and only the staged schema can 
     ).not.toBeInTheDocument();
     expect(saveButton()).not.toHaveAttribute('aria-disabled');
 
-    await userEvent.click(screen.getByRole('tab', { name: 'Use a template' }));
     await pickTemplate(/^Maintenance mode/);
     expect(await screen.findByLabelText('Message')).toBeInTheDocument();
     expect(saveButton()).toHaveAttribute('aria-disabled', 'true');
@@ -101,7 +123,6 @@ test('a draft stays on its tab until it is used, and only the staged schema can 
     expect(await screen.findByLabelText('Level')).toBeInTheDocument();
     expect(screen.queryByLabelText('Message')).toBeNull();
 
-    await userEvent.click(screen.getByRole('tab', { name: 'Use a template' }));
     await pickTemplate(/^Maintenance mode/);
     await userEvent.click(applyButton());
 
@@ -127,9 +148,59 @@ test('shows why the server refused a payload schema until the schema changes', a
     await screen.findByText('Invalid payload schema');
     expect(saveButton()).not.toHaveAttribute('aria-disabled');
 
-    await userEvent.click(screen.getByRole('tab', { name: 'Use a template' }));
     await pickTemplate(/^Maintenance mode/);
     await userEvent.click(applyButton());
 
     expect(screen.queryByText('Invalid payload schema')).toBeNull();
+});
+
+test('starts from a schema inferred from the payloads already stored in the flag', async () => {
+    const inferredSchema = {
+        type: 'object',
+        properties: { color: { type: 'string' } },
+        examples: [{ color: 'blue' }, { color: 'red' }],
+    };
+    testServerRoute(server, flagPath, {});
+    testServerRoute(server, inferredPath, { schema: inferredSchema });
+    const { requests } = testServerRoute(
+        server,
+        `${flagPath}/payload-schema`,
+        null,
+        'put',
+        204,
+    );
+    renderPayloadSchemaSidebar();
+
+    const examples = await screen.findByRole('region', {
+        name: 'JSON values your app already uses',
+    });
+    await within(examples).findByText('Example 2');
+    expect(await screen.findByLabelText(/color/i)).toBeInTheDocument();
+
+    await userEvent.click(applyButton());
+    await userEvent.click(saveButton());
+
+    await waitFor(() => expect(requests).toEqual([{ schema: inferredSchema }]));
+});
+
+test('nothing can be used from the stored payloads when they fail to load', async () => {
+    testServerRoute(server, flagPath, {});
+    testServerRoute(server, inferredPath, {}, 'get', 500);
+    renderPayloadSchemaSidebar();
+
+    await screen.findByText(
+        'An error occurred while trying to get Inferred payload schema.',
+    );
+    expect(applyButton()).toHaveAttribute('aria-disabled', 'true');
+});
+
+test('explains that nothing can be used from stored payloads that are not all JSON objects', async () => {
+    testServerRoute(server, flagPath, {});
+    testServerRoute(server, inferredPath, {}, 'get', 409);
+    renderPayloadSchemaSidebar();
+
+    await screen.findByText(
+        'Examples can only be shown when every JSON variant payload is an object',
+    );
+    expect(applyButton()).toHaveAttribute('aria-disabled', 'true');
 });

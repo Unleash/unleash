@@ -9,6 +9,10 @@ import { formatFeaturePath } from 'component/feature/FeatureStrategy/FeatureStra
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { usePayloadSchemaApi } from 'hooks/api/actions/usePayloadSchemaApi/usePayloadSchemaApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import {
+    type InferredPayloadSchemaState,
+    useInferredPayloadSchema,
+} from 'hooks/api/getters/useInferredPayloadSchema/useInferredPayloadSchema';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useToast from 'hooks/useToast';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
@@ -17,6 +21,7 @@ import { parseJsonObject } from 'utils/plainObject';
 import { PayloadSchemaPane } from './PayloadSchemaPane';
 import { PayloadSchemaTemplateList } from './PayloadSchemaTemplateList';
 import type { PayloadSchemaTemplate } from './payloadSchemaTemplates';
+import { PayloadSchemaVariantExamples } from './PayloadSchemaVariantExamples.tsx';
 import { usePayloadSchemaForm } from './usePayloadSchemaForm.ts';
 
 const LazyReactJSONEditor = React.lazy(
@@ -75,7 +80,7 @@ const StyledSplit = styled('div')(({ theme }) => ({
     },
 }));
 
-type SchemaSource = 'template' | 'import';
+type SchemaSource = 'examples' | 'template' | 'import';
 
 type Drafts = {
     template?: PayloadSchemaTemplate;
@@ -85,6 +90,7 @@ type Drafts = {
 type ActiveSource = { source: SchemaSource; drafts: Drafts };
 
 const paneTitles: Record<SchemaSource, string> = {
+    examples: 'JSON values your app already uses',
     template: 'Choose a template',
     import: 'Import JSON Schema',
 };
@@ -94,6 +100,7 @@ interface IPayloadSchemaFormProps {
     featureId: string;
     feature: IFeatureToggle;
     refetchFeature: () => void;
+    inferred?: InferredPayloadSchemaState;
 }
 
 const PayloadSchemaForm = ({
@@ -101,6 +108,7 @@ const PayloadSchemaForm = ({
     featureId,
     feature,
     refetchFeature,
+    inferred,
 }: IPayloadSchemaFormProps) => {
     const { upsertPayloadSchema } = usePayloadSchemaApi({
         project: projectId,
@@ -109,10 +117,10 @@ const PayloadSchemaForm = ({
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
     const staged = usePayloadSchemaForm(feature.payloadSchema);
-    const isCreateMode = !feature.payloadSchema;
+    const isCreateMode = inferred !== undefined;
     const [selection, setSelection] = useState<
         ActiveSource | { source: false }
-    >(isCreateMode ? { source: 'template', drafts: {} } : { source: false });
+    >(isCreateMode ? { source: 'examples', drafts: {} } : { source: false });
     const sourceId = useId();
     const tabId = (source: SchemaSource) => `${sourceId}-tab-${source}`;
     const sourcePanelId = `${sourceId}-panel`;
@@ -120,6 +128,10 @@ const PayloadSchemaForm = ({
     const draftSchemas = (
         drafts: Drafts,
     ): Record<SchemaSource, Record<string, unknown> | undefined> => ({
+        examples:
+            inferred?.status === 'ready' && inferred.schema.examples.length
+                ? inferred.schema
+                : undefined,
         template: drafts.template?.schema,
         import:
             drafts.import === undefined
@@ -165,6 +177,9 @@ const PayloadSchemaForm = ({
         source,
         drafts,
     }: ActiveSource): Record<SchemaSource, ReactNode> => ({
+        examples: inferred ? (
+            <PayloadSchemaVariantExamples inferred={inferred} />
+        ) : null,
         template: (
             <PayloadSchemaTemplateList
                 selectedKey={drafts.template?.key}
@@ -252,6 +267,12 @@ const PayloadSchemaForm = ({
                             }}
                         >
                             <Pill
+                                value='examples'
+                                label='Examples'
+                                id={tabId('examples')}
+                                aria-controls={sourcePanelId}
+                            />
+                            <Pill
                                 value='template'
                                 label='Use a template'
                                 id={tabId('template')}
@@ -327,6 +348,13 @@ const PayloadSchemaForm = ({
     );
 };
 
+const CreatePayloadSchemaForm = (
+    props: Omit<IPayloadSchemaFormProps, 'inferred'>,
+) => {
+    const inferred = useInferredPayloadSchema(props.projectId, props.featureId);
+    return <PayloadSchemaForm {...props} inferred={inferred} />;
+};
+
 export const PayloadSchemaSidebar = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -335,12 +363,14 @@ export const PayloadSchemaSidebar = () => {
         featureId,
     );
 
-    return !loading && !error ? (
-        <PayloadSchemaForm
-            projectId={projectId}
-            featureId={featureId}
-            feature={feature}
-            refetchFeature={refetchFeature}
-        />
-    ) : null;
+    if (loading || error) {
+        return null;
+    }
+
+    const formProps = { projectId, featureId, feature, refetchFeature };
+    return feature.payloadSchema ? (
+        <PayloadSchemaForm {...formProps} />
+    ) : (
+        <CreatePayloadSchemaForm {...formProps} />
+    );
 };

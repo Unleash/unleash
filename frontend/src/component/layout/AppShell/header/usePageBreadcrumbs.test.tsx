@@ -73,6 +73,11 @@ const loadPageBreadcrumbs = async (
 
 const workspace: PageBreadcrumb = { label: 'Workspace', to: '/projects' };
 const configureWorkspace: PageBreadcrumb = { label: 'Configure workspace' };
+const projectsList: PageBreadcrumb = { label: 'Projects', to: '/projects' };
+const defaultProject: PageBreadcrumb = {
+    label: 'Default',
+    to: '/projects/default',
+};
 const adminSettings: PageBreadcrumb = { label: 'Admin settings' };
 
 test.each([
@@ -133,22 +138,23 @@ test.each([
         '/projects/default/settings/environments',
         { label: 'Configure project', to: '/projects/default/settings' },
     ],
-])('shows the project before its sidebar item as breadcrumbs of %s', async (pathname, item) => {
+])('shows the Projects list and the project before its sidebar item as breadcrumbs of %s', async (pathname, item) => {
     mockUiConfig(enterprise);
     mockDefaultProject();
 
     expect(await loadPageBreadcrumbs(pathname)).toEqual([
-        { label: 'Default', to: '/projects/default' },
+        projectsList,
+        defaultProject,
         item,
     ]);
 });
 
-test('shows only the project breadcrumb on a project page that is not in the sidebar', async () => {
+test('shows only the Projects list and the project as breadcrumbs on a project page that is not in the sidebar', async () => {
     mockDefaultProject();
 
     expect(
         await loadPageBreadcrumbs('/projects/default/change-requests'),
-    ).toEqual([{ label: 'Default', to: '/projects/default' }]);
+    ).toEqual([projectsList, defaultProject]);
 });
 
 test('shows no breadcrumbs on a project page of a project that is not in the list', async () => {

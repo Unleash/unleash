@@ -24,6 +24,11 @@ const workspaceBreadcrumb: PageBreadcrumb = {
     to: appNavigationLinks.projects.to,
 };
 
+const projectsBreadcrumb: PageBreadcrumb = {
+    label: appNavigationLinks.projects.label,
+    to: appNavigationLinks.projects.to,
+};
+
 const useProjectBreadcrumbs = (
     pathname: string,
 ): PageBreadcrumb[] | undefined => {
@@ -39,6 +44,7 @@ const useProjectBreadcrumbs = (
     const item = [...primary, ...more].find(({ page }) => page === currentPage);
 
     return [
+        projectsBreadcrumb,
         { label: project.name, to: `/projects/${project.id}` },
         ...(item ? [{ label: item.label, to: item.to }] : []),
     ];

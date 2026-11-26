@@ -796,12 +796,12 @@ test('shows the sidebar item of a top-level page as its breadcrumb', () => {
     ).toBeInTheDocument();
 });
 
-test('shows the project and its sidebar item as breadcrumbs of a project page', async () => {
+test('shows the Projects list, the project and its sidebar item as breadcrumbs of a project page', async () => {
     mockDefaultProject();
     render(<AppShell>content</AppShell>, { route: '/projects/default/logs' });
 
     await screen.findByRole('navigation', { name: 'Breadcrumbs' });
-    expect(breadcrumbTrail()).toEqual(['Default', 'Event log']);
+    expect(breadcrumbTrail()).toEqual(['Projects', 'Default', 'Event log']);
     expect(
         breadcrumbs().getByRole('link', { name: 'Default' }),
     ).toHaveAttribute('href', '/projects/default');
@@ -817,7 +817,12 @@ test('shows the flag name as the last breadcrumb of a flag page', async () => {
     });
 
     await screen.findByRole('link', { name: 'Default' });
-    expect(breadcrumbTrail()).toEqual(['Default', 'Flags', 'my-flag']);
+    expect(breadcrumbTrail()).toEqual([
+        'Projects',
+        'Default',
+        'Flags',
+        'my-flag',
+    ]);
     expect(breadcrumbs().getByRole('link', { name: 'Flags' })).toHaveAttribute(
         'href',
         '/projects/default',
@@ -838,7 +843,12 @@ test('replaces the segment name with the flag name when moving from a segment to
     await userEvent.click(screen.getByRole('link', { name: 'Open flag' }));
 
     await screen.findByText('my-flag');
-    expect(breadcrumbTrail()).toEqual(['Default', 'Flags', 'my-flag']);
+    expect(breadcrumbTrail()).toEqual([
+        'Projects',
+        'Default',
+        'Flags',
+        'my-flag',
+    ]);
 });
 
 test('marks only the sidebar item as the current page on the project root', async () => {
@@ -846,7 +856,7 @@ test('marks only the sidebar item as the current page on the project root', asyn
     render(<AppShell>content</AppShell>, { route: '/projects/default' });
 
     await screen.findByRole('navigation', { name: 'Breadcrumbs' });
-    expect(breadcrumbTrail()).toEqual(['Default', 'Flags']);
+    expect(breadcrumbTrail()).toEqual(['Projects', 'Default', 'Flags']);
     expect(
         breadcrumbs().getByRole('link', { name: 'Default' }),
     ).toHaveAttribute('href', '/projects/default');

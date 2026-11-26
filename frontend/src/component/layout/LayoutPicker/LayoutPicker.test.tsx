@@ -1,5 +1,5 @@
 import { beforeEach, expect, test } from 'vitest';
-import { act, screen, waitFor } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
@@ -118,4 +118,66 @@ test('switches back to the classic navigation from the settings menu', async () 
             screen.queryByRole('region', { name: 'Workspace' }),
         ).not.toBeInTheDocument(),
     );
+});
+
+const newLayoutPopup = () =>
+    screen.findByRole('region', { name: 'New layout available' });
+
+test('switches to the new navigation from the new layout popup', async () => {
+    setupNewNavigationAvailable();
+    render(<LayoutPicker>content</LayoutPicker>);
+
+    await userEvent.click(
+        within(await newLayoutPopup()).getByRole('button', {
+            name: 'Try it now',
+        }),
+    );
+
+    expect(
+        await screen.findByRole('region', { name: 'Workspace' }),
+    ).toBeInTheDocument();
+});
+
+test('stops showing the new layout popup once the user has tried the new navigation', async () => {
+    setupNewNavigationAvailable();
+    render(<LayoutPicker>content</LayoutPicker>);
+    await newLayoutPopup();
+    await userEvent.click(await screen.findByTestId(HEADER_USER_AVATAR));
+    await userEvent.click(await newNavigationToggle());
+
+    await userEvent.click(
+        await screen.findByRole('button', { name: /Settings/ }),
+    );
+    await userEvent.click(await newNavigationToggle());
+    await screen.findByTestId(HEADER_USER_AVATAR);
+
+    expect(
+        screen.queryByRole('region', { name: 'New layout available' }),
+    ).not.toBeInTheDocument();
+});
+
+test('keeps the new layout popup closed after a reload once dismissed', async () => {
+    setupNewNavigationAvailable();
+    const { unmount } = render(<LayoutPicker>content</LayoutPicker>);
+    const popup = await newLayoutPopup();
+    await userEvent.click(
+        within(popup).getByRole('button', {
+            name: 'Dismiss new layout popup',
+        }),
+    );
+    expect(popup).not.toBeInTheDocument();
+
+    unmount();
+    render(<LayoutPicker>content</LayoutPicker>);
+
+    await userEvent.click(await screen.findByTestId(HEADER_USER_AVATAR));
+    await newNavigationToggle();
+    // Without `hidden`, the open menu would hide the popup from this query:
+    // the menu is modal, so it marks the rest of the page `aria-hidden`.
+    expect(
+        screen.queryByRole('region', {
+            name: 'New layout available',
+            hidden: true,
+        }),
+    ).not.toBeInTheDocument();
 });

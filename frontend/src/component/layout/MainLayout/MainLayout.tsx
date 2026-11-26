@@ -16,6 +16,7 @@ import { FloatingOnboardingChecklistVisibilityGate } from 'component/onboarding/
 import { FloatingOnboardingChecklistProvider } from 'component/onboarding/floatingChecklist/FloatingOnboardingChecklistContext.tsx';
 import { HelpButtonHintProvider } from 'component/menu/Header/HelpResources/HelpButtonHintContext.tsx';
 import { AccessRequestsNotifications } from 'component/admin/users/AccessRequestsNotifications/AccessRequestsNotifications';
+import { NewNavigationPopup } from './NewNavigationPopup/NewNavigationPopup.tsx';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -175,6 +176,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                             </MainLayoutContentWrapper>
                         </MainLayoutContainer>
                         <AccessRequestsNotifications />
+                        <NewNavigationPopup />
                     </EventTimelineProvider>
                 </FloatingOnboardingChecklistProvider>
             </HelpButtonHintProvider>

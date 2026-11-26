@@ -151,6 +151,15 @@ export default class PatController extends Controller {
             throw new ForbiddenError('PATs require an authenticated user.');
         }
 
+        if (
+            this.flagResolver.isEnabled('restrictMcpToken') &&
+            req.user.accountToken?.type === 'mcp'
+        ) {
+            throw new ForbiddenError(
+                'A token from MCP sign-in cannot create PATs. Sign in to Unleash and create one there.',
+            );
+        }
+
         const { accountType } = req.user;
         const tokenType = accountType
             ? tokenTypeByAccountType[accountType]

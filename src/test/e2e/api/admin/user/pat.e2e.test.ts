@@ -7,6 +7,7 @@ import getLogger from '../../../../fixtures/no-logger.js';
 import type { IPatStore } from '../../../../../lib/features/pat/pat-store-type.js';
 import { createPatService } from '../../../../../lib/features/pat/createPatService.js';
 import { createTestConfig } from '../../../../config/test-config.js';
+import { TEST_AUDIT_USER } from '../../../../../lib/types/index.js';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -28,6 +29,7 @@ beforeAll(async () => {
                 flags: {
                     tokenExpiryNotifications: true,
                     accountTokenType: true,
+                    restrictMcpToken: true,
                 },
             },
         },
@@ -412,7 +414,7 @@ test('should not get user with invalid token', async () => {
         .expect(401);
 });
 
-test('should authenticate and delete an existing legacy PAT', async () => {
+test('should let a token that is not an MCP token authenticate, create a PAT with the flag on and be deleted', async () => {
     const secret = 'user:existing-legacy-token';
     const token = await patStore.create(
         {
@@ -435,6 +437,12 @@ test('should authenticate and delete an existing legacy PAT', async () => {
         .expect((res) => {
             expect(res.body.user.id).toBe(1);
         });
+    const { body: createdPat } = await app.request
+        .post('/api/admin/user/tokens')
+        .set('Authorization', secret)
+        .send({ description: 'created by a legacy PAT', expiresAt: tomorrow })
+        .expect(201);
+    await patStore.delete(createdPat.id);
     await app.request
         .delete(`/api/admin/user/tokens/${token.id}`)
         .set('Authorization', firstSecret)
@@ -463,6 +471,38 @@ test('should not get user with expired token', async () => {
         .get('/api/admin/user')
         .set('Authorization', secret)
         .expect(401);
+});
+
+test('should refuse an MCP token creating a PAT', async () => {
+    const appWithoutSession = await setupAppWithAuth(
+        db.stores,
+        { experimental: { flags: { restrictMcpToken: true } } },
+        db.rawDatabase,
+    );
+    const mcpToken = await app.services.patService.createPat(
+        { description: 'MCP token', expiresAt: tomorrow.toISOString() },
+        1,
+        'mcp',
+        TEST_AUDIT_USER,
+    );
+
+    try {
+        const { body } = await appWithoutSession.request
+            .post('/api/admin/user/tokens')
+            .set('Authorization', mcpToken.secret!)
+            .send({
+                description: 'created by an MCP token',
+                expiresAt: tomorrow,
+            })
+            .expect(403);
+
+        expect(body.message).toBe(
+            'A token from MCP sign-in cannot create PATs. Sign in to Unleash and create one there.',
+        );
+    } finally {
+        await patStore.delete(mcpToken.id);
+        await appWithoutSession.destroy();
+    }
 });
 /** TODO: Make this run properly
 test('should fail creation of PAT when PAT limit has been reached', async () => {

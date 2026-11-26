@@ -75,6 +75,7 @@ process.nextTick(async () => {
                         improvedSidebarNavigation: false,
                         userSettings: true,
                         accountTokenType: true,
+                        restrictMcpToken: true,
                         sectionedIntegrationForm: true,
                     },
                 },

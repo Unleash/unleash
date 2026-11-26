@@ -95,6 +95,7 @@ export type IFlagKey =
     | 'applicationOverview'
     | 'userSettings'
     | 'accountTokenType'
+    | 'restrictMcpToken'
     | 'sectionedIntegrationForm'
     | keyof IFlagKeyOverrides;
 
@@ -432,6 +433,10 @@ const flags: IFlags = {
     ),
     accountTokenType: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ACCOUNT_TOKEN_TYPE,
+        false,
+    ),
+    restrictMcpToken: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_RESTRICT_MCP_TOKEN,
         false,
     ),
     sectionedIntegrationForm: parseEnvVarBoolean(

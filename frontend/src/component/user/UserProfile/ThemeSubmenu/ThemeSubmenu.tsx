@@ -129,6 +129,7 @@ export const ThemeSubmenu = ({
                 anchorEl={anchorEl}
                 open={open}
                 onClose={closeSubmenu}
+                disableScrollLock={true}
                 {...placementToPopoverOrigins(placement)}
                 slotProps={{
                     root: { sx: { pointerEvents: 'none' } },

@@ -156,3 +156,12 @@ test('shows a chevron instead of the current theme by default', () => {
     expect(trigger).not.toHaveTextContent('Light');
     expect(screen.getByTestId('KeyboardArrowRightIcon')).toBeInTheDocument();
 });
+
+test('keeps the page scrollable while the theme options are open', async () => {
+    const trigger = renderThemeSubmenu();
+
+    await userEvent.hover(trigger);
+    await findOption('Dark');
+
+    expect(document.body).not.toHaveStyle({ overflow: 'hidden' });
+});

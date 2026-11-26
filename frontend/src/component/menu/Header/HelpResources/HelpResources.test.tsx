@@ -145,6 +145,17 @@ test('give feedback calls openFeedback with the correct title and labels', async
     });
 });
 
+test('keeps the page scrollable while the help menu is open', async () => {
+    render(<HelpResources />);
+
+    await userEvent.click(
+        await screen.findByRole('button', { name: 'Help and resources' }),
+    );
+    await screen.findByRole('menuitem', { name: /What's new/ });
+
+    expect(document.body).not.toHaveStyle({ overflow: 'hidden' });
+});
+
 test("What's new item links to /whats-new", async () => {
     render(<HelpResources />);
 

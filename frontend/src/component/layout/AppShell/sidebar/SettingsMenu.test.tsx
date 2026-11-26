@@ -191,6 +191,15 @@ test('logs out by posting to the logout endpoint', async () => {
     expect(form).toHaveAttribute('method', 'POST');
 });
 
+test('keeps the page scrollable while the settings menu is open', async () => {
+    renderSettingsMenu();
+
+    await openSettings();
+    await screen.findByRole('menuitem', { name: 'Profile settings' });
+
+    expect(document.body).not.toHaveStyle({ overflow: 'hidden' });
+});
+
 const chooseTheme = async (label: string) => {
     await userEvent.click(screen.getByRole('menuitem', { name: /Theme/ }));
     await userEvent.click(await screen.findByRole('menuitem', { name: label }));

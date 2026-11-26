@@ -179,6 +179,7 @@ export const SettingsMenu: FC<{
                 anchorEl={anchorEl}
                 open={open}
                 onClose={close}
+                disableScrollLock={true}
                 anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
                 transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
                 marginThreshold={SIDEBAR_MENU_MARGIN_THRESHOLD}

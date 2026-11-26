@@ -483,6 +483,7 @@ export const HelpResources = (props: HelpResourcesProps) => {
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
+                disableScrollLock={true}
                 {...placementToPopoverOrigins(placement)}
                 marginThreshold={
                     variant === 'sidebar'

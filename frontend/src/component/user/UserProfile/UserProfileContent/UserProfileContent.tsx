@@ -63,6 +63,7 @@ export const UserProfileContent = ({
         anchorEl={anchorEl}
         open={Boolean(anchorEl)}
         onClose={onClose}
+        disableScrollLock={true}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         slotProps={{

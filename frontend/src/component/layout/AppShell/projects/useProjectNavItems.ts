@@ -20,6 +20,11 @@ export const useProjectNavItems = (projectId: string) => {
               ]),
     ];
     const more: ProjectNavItem[] = [
+        {
+            page: 'applications',
+            label: 'Applications',
+            to: `${base}/applications`,
+        },
         { page: 'logs', label: 'Event log', to: `${base}/logs` },
         {
             page: 'settings',

@@ -1,4 +1,9 @@
-export type ProjectPage = 'flags' | 'change-requests' | 'logs' | 'settings';
+export type ProjectPage =
+    | 'flags'
+    | 'change-requests'
+    | 'applications'
+    | 'logs'
+    | 'settings';
 
 export const isInProject = (pathname: string, projectId: string) => {
     const base = `/projects/${projectId}`;
@@ -15,11 +20,10 @@ export const getProjectPage = (
     const segment = pathname.split('/')[3];
     switch (segment) {
         case 'change-requests':
+        case 'applications':
         case 'logs':
         case 'settings':
             return segment;
-        case 'applications':
-            return undefined;
         default:
             // Project.tsx renders flags for any unmatched sub-route, e.g. features/:featureId
             return 'flags';

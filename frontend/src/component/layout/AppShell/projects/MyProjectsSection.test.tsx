@@ -134,12 +134,16 @@ test('expands a project to Flags and Change requests when clicked', async () => 
     ).not.toBeInTheDocument();
 });
 
-test('reveals Event log and Configure project under More', async () => {
+test('reveals Applications, Event log and Configure project under More', async () => {
     await renderSection('/projects/alpha');
     const group = projectGroup('Alpha');
 
     await userEvent.click(group.getByRole('button', { name: 'More' }));
 
+    expect(group.getByRole('link', { name: 'Applications' })).toHaveAttribute(
+        'href',
+        '/projects/alpha/applications',
+    );
     expect(group.getByRole('link', { name: 'Event log' })).toHaveAttribute(
         'href',
         '/projects/alpha/logs',
@@ -191,6 +195,7 @@ test('marks Flags as current on a flag page', async () => {
 });
 
 test.each([
+    ['/projects/alpha/applications', 'Applications'],
     ['/projects/alpha/logs', 'Event log'],
     ['/projects/alpha/settings/access', 'Configure project'],
 ])('opens More when the current page %s is in it', async (route, label) => {
@@ -207,8 +212,9 @@ test.each([
     );
 });
 
-test('marks only the project as current on a project page outside the sidebar', async () => {
-    await renderSection('/projects/alpha/applications');
+test('highlights just the project, not Flags, on a project page that is not in the sidebar', async () => {
+    setupApi({ edition: 'oss' });
+    await renderSection('/projects/alpha/change-requests');
 
     expect(projectToggle('Alpha')).toHaveAttribute('aria-current', 'location');
     expect(

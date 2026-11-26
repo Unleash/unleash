@@ -122,6 +122,10 @@ test.each([
         { label: 'Flags', to: '/projects/default' },
     ],
     [
+        '/projects/default/applications',
+        { label: 'Applications', to: '/projects/default/applications' },
+    ],
+    [
         '/projects/default/logs',
         { label: 'Event log', to: '/projects/default/logs' },
     ],
@@ -139,12 +143,12 @@ test.each([
     ]);
 });
 
-test('shows only the project as breadcrumb of a project page without a sidebar item', async () => {
+test('shows only the project breadcrumb on a project page that is not in the sidebar', async () => {
     mockDefaultProject();
 
-    expect(await loadPageBreadcrumbs('/projects/default/applications')).toEqual(
-        [{ label: 'Default', to: '/projects/default' }],
-    );
+    expect(
+        await loadPageBreadcrumbs('/projects/default/change-requests'),
+    ).toEqual([{ label: 'Default', to: '/projects/default' }]);
 });
 
 test('shows no breadcrumbs on a project page of a project that is not in the list', async () => {

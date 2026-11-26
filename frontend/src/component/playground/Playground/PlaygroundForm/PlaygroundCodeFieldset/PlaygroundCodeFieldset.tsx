@@ -120,6 +120,7 @@ export const PlaygroundCodeFieldset: FC<IPlaygroundCodeFieldsetProps> = ({
 
     useEffect(() => {
         debounceJsonParsing(context);
+        return () => debounceJsonParsing.clear();
     }, [debounceJsonParsing, context]);
 
     const onAddField = () => {

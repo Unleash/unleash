@@ -12,7 +12,11 @@ import {
     type IFlagResolver,
 } from '../types/index.js';
 import { ADDON_EVENTS_HANDLED } from '../metric-events.js';
-import { validateUrl, type ValidateUrlOptions } from '../http/validate-url.js';
+import {
+    validateUrl,
+    type ValidatedUrl,
+    type ValidateUrlOptions,
+} from '../http/validate-url.js';
 
 export type FetchRetryOptions = Omit<
     Options,
@@ -77,20 +81,30 @@ export default abstract class Addon {
         return this._definition;
     }
 
+    protected validateTargetUrl(
+        url: string,
+        overrides: ValidateUrlOptions = {},
+    ): Promise<ValidatedUrl> {
+        return validateUrl(url, {
+            allowPrivateNetworkUrls: this.allowPrivateUrls,
+            allowList: {
+                hosts: this.allowList,
+                suffixes: [],
+            },
+            ...overrides,
+        });
+    }
+
     async fetchRetry(
         url: string,
         options: FetchRetryOptions = {},
         retries: number = 1,
     ): Promise<Response> {
         try {
-            const validated = await validateUrl(url, {
-                allowPrivateNetworkUrls: this.allowPrivateUrls,
-                allowList: {
-                    hosts: this.allowList,
-                    suffixes: [],
-                },
-                ...options.validateUrlOptions,
-            });
+            const validated = await this.validateTargetUrl(
+                url,
+                options.validateUrlOptions,
+            );
             return await fetchPinned(validated, {
                 ...options,
                 retry: retries,

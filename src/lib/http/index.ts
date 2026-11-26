@@ -4,6 +4,7 @@ export {
     isPublicIp,
     resolveHostname,
     NonPublicAddressError,
+    urlWithPath,
     type ValidatedUrl,
     type ValidateUrlOptions,
     type UrlAllowList,

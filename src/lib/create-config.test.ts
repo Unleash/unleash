@@ -687,6 +687,34 @@ describe('oidc private network urls', () => {
     });
 });
 
+describe('servicenow private network urls', () => {
+    afterEach(() => {
+        delete process.env.UNLEASH_DENY_PRIVATE_URL_IN_SERVICENOW;
+    });
+
+    test('allows private network urls by default', () => {
+        const config = createConfig({});
+
+        expect(config.denyPrivateUrlInServiceNow).toBe(false);
+    });
+
+    test('denies private network urls when the env var is set', () => {
+        process.env.UNLEASH_DENY_PRIVATE_URL_IN_SERVICENOW = 'true';
+
+        const config = createConfig({});
+
+        expect(config.denyPrivateUrlInServiceNow).toBe(true);
+    });
+
+    test('lets the option override the env var', () => {
+        process.env.UNLEASH_DENY_PRIVATE_URL_IN_SERVICENOW = 'true';
+
+        const config = createConfig({ denyPrivateUrlInServiceNow: false });
+
+        expect(config.denyPrivateUrlInServiceNow).toBe(false);
+    });
+});
+
 test('external prometheus response limit can be raised above the default', () => {
     process.env.EXTERNAL_PROMETHEUS_IMPACT_METRICS_RESPONSE_BYTES_LIMIT =
         '2000000';

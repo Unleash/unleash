@@ -4,6 +4,7 @@ import { describe, expect, test, vi } from 'vitest';
 import { fetchPinned } from './fetch.js';
 import {
     NonPublicAddressError,
+    urlWithPath,
     validateUrl,
     type ValidatedUrl,
 } from './validate-url.js';
@@ -353,5 +354,30 @@ describe('validateUrl', () => {
             pinnedAddress: 'fd00:ec2::254',
             family: 6,
         });
+    });
+});
+
+describe('urlWithPath', () => {
+    const base = makeValidatedUrl('https://example.com/', '93.184.216.34');
+
+    test('keeps the pinned address for a path on the same origin', () => {
+        const derived = urlWithPath(base, '/api/things?limit=1');
+
+        expect(derived.url.href).toBe('https://example.com/api/things?limit=1');
+        expect(derived).toMatchObject({
+            hostname: 'example.com',
+            pinnedAddress: '93.184.216.34',
+            family: 4,
+        });
+    });
+
+    test.each([
+        ['another host', '//other.example/api'],
+        ['another scheme', 'http://example.com/api'],
+        ['another port', 'https://example.com:8443/api'],
+    ])('refuses a path that points at %s', (_, path) => {
+        expect(() => urlWithPath(base, path)).toThrow(
+            'Refusing to reuse pinned address',
+        );
     });
 });

@@ -143,3 +143,17 @@ export const validateUrl = async (
         family: pinned.family as 4 | 6,
     };
 };
+
+/**
+ * Derive a new ValidatedUrl on the same origin as `base` without
+ * re-running DNS. Throws if the resolved URL escapes the base origin.
+ */
+export const urlWithPath = (base: ValidatedUrl, path: string): ValidatedUrl => {
+    const url = new URL(path, base.url);
+    if (url.origin !== base.url.origin) {
+        throw new Error(
+            `Refusing to reuse pinned address: ${url.origin} !== ${base.url.origin}`,
+        );
+    }
+    return { ...base, url };
+};

@@ -3,6 +3,8 @@ import { Fragment } from 'react';
 import type { ISegment } from 'interfaces/segment';
 import { FeatureStrategySegmentChip } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentChip';
 import { Alert, styled } from '@mui/material';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { SegmentOperatorSelect } from './SegmentOperatorSelect.tsx';
 
 interface IFeatureStrategySegmentListProps {
     segments: ISegment[];
@@ -19,6 +21,8 @@ export const FeatureStrategySegmentList = ({
     segments,
     setSegments,
 }: IFeatureStrategySegmentListProps) => {
+    const canChooseOperator = useUiFlag('sdkProtocolV3');
+
     if (segments.length === 0) {
         return null;
     }
@@ -38,6 +42,9 @@ export const FeatureStrategySegmentList = ({
                     effect. Without other constraints, everyone will get this
                     flag.
                 </Alert>
+            ) : null}
+            {canChooseOperator && segments.length > 1 ? (
+                <SegmentOperatorSelect />
             ) : null}
             <StyledList>
                 {segments.map((segment) => (

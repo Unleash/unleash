@@ -5,6 +5,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { FeatureStrategySegmentChip } from 'component/feature/FeatureStrategy/FeatureStrategySegment/LegacyFeatureStrategySegmentChip.tsx';
 import { Alert, styled } from '@mui/material';
 import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { SegmentOperatorSelect } from './SegmentOperatorSelect.tsx';
 
 interface IFeatureStrategySegmentListProps {
     segments: ISegment[];
@@ -47,6 +49,7 @@ export const FeatureStrategySegmentList = ({
     segments,
     setSegments,
 }: IFeatureStrategySegmentListProps) => {
+    const canChooseOperator = useUiFlag('sdkProtocolV3');
     const [preview, setPreview] = useState<ISegment>();
     const lastSegmentIndex = segments.length - 1;
     const segmentDetailsId = useId();
@@ -81,6 +84,9 @@ export const FeatureStrategySegmentList = ({
                     </StyledWarningAlert>
                 }
             />
+            {canChooseOperator && segments.length > 1 ? (
+                <SegmentOperatorSelect />
+            ) : null}
             <StyledList>
                 {segments.map((segment, i) => (
                     <Fragment key={segment.id}>
@@ -92,7 +98,9 @@ export const FeatureStrategySegmentList = ({
                             aria-controls={segmentDetailsId}
                         />
                         <ConditionallyRender
-                            condition={i < lastSegmentIndex}
+                            condition={
+                                !canChooseOperator && i < lastSegmentIndex
+                            }
                             show={<StyledAnd>AND</StyledAnd>}
                         />
                     </Fragment>

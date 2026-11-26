@@ -109,6 +109,7 @@ export type UiFlags = {
     sessionTimeouts?: boolean;
     payloadSchemas?: boolean;
     singlePageStrategyForm?: boolean;
+    sdkProtocolV3?: boolean;
     feedbackModule?: boolean;
     feedbackModuleDisplaySurvey?: boolean;
     playgroundFeatureEvaluation?: boolean;

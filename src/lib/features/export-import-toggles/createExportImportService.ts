@@ -60,6 +60,8 @@ import {
     createFakeFeatureLinkService,
     createFeatureLinkService,
 } from '../feature-links/createFeatureLinkService.js';
+import { FakePayloadSchemaReadModel } from '../payload-schema/fake-payload-schema-read-model.js';
+import { PayloadSchemaReadModel } from '../payload-schema/payload-schema-read-model.js';
 
 export const createFakeExportImportTogglesService = (
     config: IUnleashConfig,
@@ -138,6 +140,7 @@ export const createFakeExportImportTogglesService = (
         dependentFeaturesReadModel,
         segmentReadModel,
         featureLinksReadModel,
+        new FakePayloadSchemaReadModel(),
     );
 };
 
@@ -237,6 +240,7 @@ export const deferredExportImportTogglesService = (
             dependentFeaturesReadModel,
             segmentReadModel,
             featureLinksReadModel,
+            new PayloadSchemaReadModel(db),
         );
     };
 };

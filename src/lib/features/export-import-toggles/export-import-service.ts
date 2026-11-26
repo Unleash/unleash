@@ -2,6 +2,7 @@ import type { Logger } from '../../logger.js';
 import type { IStrategy } from '../../types/stores/strategy-store.js';
 import type { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type.js';
 import type { IFeatureStrategiesStore } from '../feature-toggle/types/feature-toggle-strategies-store-type.js';
+import type { IPayloadSchemaReadModel } from '../payload-schema/payload-schema-read-model-type.js';
 import {
     FeaturesExportedEvent,
     FeaturesImportedEvent,
@@ -135,6 +136,8 @@ export default class ExportImportService
 
     private featureLinksReadModel: IFeatureLinksReadModel;
 
+    private payloadSchemaReadModel: IPayloadSchemaReadModel;
+
     private featureLinkService: FeatureLinkService;
 
     private privateProjectChecker: IPrivateProjectChecker;
@@ -181,6 +184,7 @@ export default class ExportImportService
         dependentFeaturesReadModel: IDependentFeaturesReadModel,
         segmentReadModel: ISegmentReadModel,
         featureLinksReadModel: IFeatureLinksReadModel,
+        payloadSchemaReadModel: IPayloadSchemaReadModel,
     ) {
         this.toggleStore = stores.featureToggleStore;
         this.importTogglesStore = stores.importTogglesStore;
@@ -209,6 +213,7 @@ export default class ExportImportService
         this.dependentFeaturesReadModel = dependentFeaturesReadModel;
         this.segmentReadModel = segmentReadModel;
         this.featureLinksReadModel = featureLinksReadModel;
+        this.payloadSchemaReadModel = payloadSchemaReadModel;
         this.logger = getLogger('services/state-service.js');
     }
 
@@ -952,6 +957,7 @@ export default class ExportImportService
             tagTypes,
             featureDependencies,
             featureLinks,
+            payloadSchemas,
         ] = await Promise.all([
             await this.featureEnvironmentStore.getAllByFeatures(
                 featureNames,
@@ -968,7 +974,15 @@ export default class ExportImportService
             this.tagTypeStore.getAll(),
             this.dependentFeaturesReadModel.getDependencies(featureNames),
             this.featureLinksReadModel.getLinks(...featureNames),
+            this.flagResolver.isEnabled('payloadSchemas')
+                ? this.payloadSchemaReadModel.getPayloadSchemas(featureNames)
+                : [],
         ]);
+        const payloadSchemaByFeature = new Map(
+            payloadSchemas.map(
+                ({ feature, schema }) => [feature, schema] as const,
+            ),
+        );
         this.addSegmentsToStrategies(featureStrategies, strategySegments);
         const filteredContextFields = contextFields
             .filter(
@@ -1031,7 +1045,8 @@ export default class ExportImportService
         const result = {
             features: features.map((item) => {
                 const { createdAt, archivedAt, ...rest } = item;
-                return rest;
+                const payloadSchema = payloadSchemaByFeature.get(item.name);
+                return payloadSchema ? { ...rest, payloadSchema } : rest;
             }),
             featureStrategies: featureStrategies.map((item) => {
                 const name = item.strategyName;

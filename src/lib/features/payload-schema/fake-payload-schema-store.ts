@@ -1,4 +1,7 @@
-import type { IPayloadSchemaReadModel } from './payload-schema-read-model-type.js';
+import type {
+    FeaturePayloadSchema,
+    IPayloadSchemaReadModel,
+} from './payload-schema-read-model-type.js';
 import type { IPayloadSchemaStore } from './payload-schema-store-type.js';
 
 export class FakePayloadSchemaStore
@@ -23,6 +26,15 @@ export class FakePayloadSchemaStore
         featureName: string,
     ): Promise<Record<string, unknown> | undefined> {
         return this.get(featureName);
+    }
+
+    async getPayloadSchemas(
+        featureNames: string[],
+    ): Promise<FeaturePayloadSchema[]> {
+        return featureNames.flatMap((feature) => {
+            const schema = this.schemas.get(feature);
+            return schema ? [{ feature, schema }] : [];
+        });
     }
 
     async delete(featureName: string): Promise<void> {

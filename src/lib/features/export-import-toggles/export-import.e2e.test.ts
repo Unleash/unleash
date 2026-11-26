@@ -31,6 +31,7 @@ import type {
 import type { IContextFieldDto } from '../context/context-field-store-type.js';
 import { createClientFeatureToggleDelta } from '../client-feature-toggles/delta/createClientFeatureToggleDelta.js';
 import { FEATURE_STRATEGY_REMOVE } from '../../events/index.js';
+import { PayloadSchemaStore } from '../payload-schema/payload-schema-store.js';
 import { createTestConfig } from '../../../test/config/test-config.js';
 import { create } from '../../server-impl.js';
 import { createServices } from '../../services/index.js';
@@ -131,6 +132,13 @@ const addLink = async (
     );
 };
 
+const setPayloadSchema = async (
+    feature: string,
+    schema: Record<string, unknown>,
+) => {
+    await new PayloadSchemaStore(db.rawDatabase).upsert(feature, schema);
+};
+
 const createProjects = async (
     projects: string[] = [DEFAULT_PROJECT],
     featureLimit = 2,
@@ -172,7 +180,7 @@ beforeAll(async () => {
     db = await dbInit('export_import_api_serial', getLogger);
     app = await setupAppWithCustomConfig(
         db.stores,
-        { experimental: { flags: { deltaApi: true } } },
+        { experimental: { flags: { deltaApi: true, payloadSchemas: true } } },
         db.rawDatabase,
     );
     eventStore = db.stores.eventStore;
@@ -320,6 +328,12 @@ test('exports features', async () => {
         url: 'http://example2.com',
         title: 'link title 2',
     });
+    const payloadSchema = {
+        type: 'object',
+        properties: { model: { type: 'string' } },
+        required: ['model'],
+    };
+    await setPayloadSchema(defaultFeatureName, payloadSchema);
 
     const { body } = await app.request
         .post('/api/admin/features-batch/export')
@@ -335,6 +349,7 @@ test('exports features', async () => {
         features: [
             {
                 name: defaultFeatureName,
+                payloadSchema,
             },
         ],
         featureStrategies: [resultStrategy],

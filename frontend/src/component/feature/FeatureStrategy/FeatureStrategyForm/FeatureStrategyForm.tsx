@@ -80,13 +80,16 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
         clearFailedVariantsSubmit,
         validateParameter,
         formIsValid,
-        validatingConstraints,
+        validatingOnServer,
         legacyFormHasBlockingErrors,
     } = useStrategyFormValidation({
         strategy,
         strategyDefinition,
         errors,
         strategyFormType: 'featureEnvironmentStrategy',
+        payloadSchemaTarget: feature.payloadSchema
+            ? { project: feature.project, feature: feature.name }
+            : undefined,
     });
 
     const foundEnvironment = feature.environments.find(
@@ -233,7 +236,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                     disabled={
                         disabled ||
                         loading ||
-                        validatingConstraints ||
+                        validatingOnServer ||
                         legacyFormHasBlockingErrors
                     }
                     data-testid={STRATEGY_FORM_SUBMIT_ID}

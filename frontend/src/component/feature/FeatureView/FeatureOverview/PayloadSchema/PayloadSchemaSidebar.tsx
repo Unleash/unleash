@@ -98,7 +98,10 @@ const PayloadSchemaForm = ({
     feature,
     refetchFeature,
 }: IPayloadSchemaFormProps) => {
-    const { upsertPayloadSchema } = usePayloadSchemaApi(projectId, featureId);
+    const { upsertPayloadSchema } = usePayloadSchemaApi({
+        project: projectId,
+        feature: featureId,
+    });
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
     const staged = usePayloadSchemaForm(feature.payloadSchema);

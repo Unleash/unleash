@@ -40,7 +40,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
         clearFailedVariantsSubmit,
         validateParameter,
         formIsValid,
-        validatingConstraints,
+        validatingOnServer,
         legacyFormHasBlockingErrors,
     } = useStrategyFormValidation({
         strategy: currentStrategy,
@@ -95,7 +95,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                         color='primary'
                         type='submit'
                         disabled={
-                            validatingConstraints || legacyFormHasBlockingErrors
+                            validatingOnServer || legacyFormHasBlockingErrors
                         }
                     >
                         {editMode ? 'Add changes' : 'Add strategy'}

@@ -42,7 +42,10 @@ const StyledCaptionText = styled('p')(({ theme }) => ({
 }));
 
 const useRemovePayloadSchema = (projectId: string, featureId: string) => {
-    const { deletePayloadSchema } = usePayloadSchemaApi(projectId, featureId);
+    const { deletePayloadSchema } = usePayloadSchemaApi({
+        project: projectId,
+        feature: featureId,
+    });
     const { refetchFeature } = useFeature(projectId, featureId);
     const { setToastData, setToastApiError } = useToast();
 

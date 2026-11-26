@@ -4,6 +4,10 @@ import type { IFormErrors } from 'hooks/useFormErrors';
 import type { ParametersSchema } from 'openapi/index.ts';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
+import {
+    type PayloadSchemaTarget,
+    usePayloadSchemaApi,
+} from 'hooks/api/actions/usePayloadSchemaApi/usePayloadSchemaApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import {
@@ -11,7 +15,10 @@ import {
     validateConstraints,
 } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import { validateParameterValue } from 'utils/validateParameterValue';
-import { strategyVariantsAreValid } from 'component/feature/StrategyTypes/strategyVariantsValidation';
+import {
+    hasJsonPayload,
+    strategyVariantsAreValid,
+} from 'component/feature/StrategyTypes/strategyVariantsValidation';
 import {
     parameterFocusKey,
     useFormFocus,
@@ -30,6 +37,7 @@ type UseStrategyFormValidationParams = {
     strategyDefinition?: IStrategy;
     errors: IFormErrors;
     strategyFormType?: StrategyFormType;
+    payloadSchemaTarget?: PayloadSchemaTarget;
 };
 
 export const useStrategyFormValidation = ({
@@ -37,9 +45,12 @@ export const useStrategyFormValidation = ({
     strategyDefinition,
     errors,
     strategyFormType = 'featureEnvironmentStrategy',
+    payloadSchemaTarget,
 }: UseStrategyFormValidationParams) => {
     const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
-    const [validatingConstraints, setValidatingConstraints] = useState(false);
+    const payloadSchemasEnabled = useUiFlag('payloadSchemas');
+    const payloadSchemaApi = usePayloadSchemaApi(payloadSchemaTarget);
+    const [validatingOnServer, setValidatingOnServer] = useState(false);
     const { validateConstraint } = useFeatureApi();
     const { setToastApiError } = useToast();
     const legacyFormHasValidConstraints = useConstraintsValidation(
@@ -105,21 +116,40 @@ export const useStrategyFormValidation = ({
         return variantsAreValid;
     };
 
-    const constraintsAreValidOnServer = async (): Promise<boolean> => {
+    const nonMatchingVariantPayloads = async () => {
+        if (!payloadSchemasEnabled || !payloadSchemaApi) return [];
+        const payloads = (strategy.variants ?? [])
+            .filter(hasJsonPayload)
+            .map((variant) => ({
+                variantName: variant.name,
+                value: variant.payload.value,
+            }));
+        if (payloads.length === 0) return [];
+        return payloadSchemaApi.validateVariantPayloads(payloads);
+    };
+
+    const serverChecksPass = async (): Promise<boolean> => {
         if (!singlePageStrategyForm) return true;
 
-        setValidatingConstraints(true);
+        setValidatingOnServer(true);
         try {
             await validateConstraints(
                 strategy.constraints ?? [],
                 validateConstraint,
             );
+            const [firstNonMatching] = await nonMatchingVariantPayloads();
+            if (firstNonMatching) {
+                setToastApiError(
+                    `Variant "${firstNonMatching.variantName}": ${firstNonMatching.error}`,
+                );
+                return false;
+            }
             return true;
         } catch (error) {
             setToastApiError(formatUnknownError(error));
             return false;
         } finally {
-            setValidatingConstraints(false);
+            setValidatingOnServer(false);
         }
     };
 
@@ -138,7 +168,7 @@ export const useStrategyFormValidation = ({
             return false;
         }
 
-        return constraintsAreValidOnServer();
+        return serverChecksPass();
     };
 
     const clearFailedVariantsSubmit = () => setFailedVariantsSubmit(undefined);
@@ -153,7 +183,7 @@ export const useStrategyFormValidation = ({
         clearFailedVariantsSubmit,
         validateParameter,
         formIsValid,
-        validatingConstraints,
+        validatingOnServer,
         legacyFormHasBlockingErrors,
     };
 };

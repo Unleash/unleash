@@ -7,6 +7,11 @@ type ValidatableVariant = {
     payload?: IPayload;
 };
 
+export const hasJsonPayload = <Variant extends { payload?: IPayload }>(
+    variant: Variant,
+): variant is Variant & { payload: IPayload & { type: 'json' } } =>
+    variant.payload?.type === 'json';
+
 export const isValidPayload = ({ type, value }: IPayload): boolean => {
     if (type === 'json') {
         if (value.trim() === '') {

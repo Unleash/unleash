@@ -89,7 +89,7 @@ const EditDefaultStrategy = () => {
         clearFailedVariantsSubmit,
         validateParameter,
         formIsValid,
-        validatingConstraints,
+        validatingOnServer,
         legacyFormHasBlockingErrors,
     } = useStrategyFormValidation({
         strategy,
@@ -185,7 +185,7 @@ const EditDefaultStrategy = () => {
                         type='submit'
                         disabled={
                             loading ||
-                            validatingConstraints ||
+                            validatingOnServer ||
                             legacyFormHasBlockingErrors
                         }
                         data-testid={STRATEGY_FORM_SUBMIT_ID}

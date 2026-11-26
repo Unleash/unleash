@@ -98,11 +98,23 @@ const accordionSummarySlotProps = (theme: Theme) => ({
     },
 });
 
-const StyledAccordionHeading = styled('h2')(({ theme }) => ({
+const AccordionTitle = styled('h2')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     fontSize: theme.typography.body2.fontSize,
     fontWeight: theme.typography.fontWeightBold,
+}));
+
+const AccordionHeader = styled('hgroup')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(0.25),
+}));
+
+const AccordionSubtitle = styled('p')(({ theme }) => ({
+    margin: 0,
+    fontSize: theme.typography.caption.fontSize,
+    color: theme.palette.text.secondary,
 }));
 
 const StyledAccordionHint = styled('span')(({ theme }) => ({
@@ -314,9 +326,12 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                             expandIcon={<ExpandMore />}
                             slotProps={accordionSummarySlotProps(theme)}
                         >
-                            <StyledAccordionHeading>
-                                Target audience
-                            </StyledAccordionHeading>
+                            <AccordionHeader>
+                                <AccordionTitle>Target audience</AccordionTitle>
+                                <AccordionSubtitle>
+                                    Who the strategy applies to
+                                </AccordionSubtitle>
+                            </AccordionHeader>
                             <StyledAccordionHint>
                                 {targetAudience === 'everyone'
                                     ? `Everyone in the selected environment`
@@ -345,12 +360,19 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                             expandIcon={<ExpandMore />}
                             slotProps={accordionSummarySlotProps(theme)}
                         >
-                            <StyledAccordionHeading>
-                                {isFlexibleRollout
-                                    ? 'Rollout percentage'
-                                    : strategyDefinition.displayName ||
-                                      'Parameters'}
-                            </StyledAccordionHeading>
+                            <AccordionHeader>
+                                <AccordionTitle>
+                                    {isFlexibleRollout
+                                        ? 'Rollout percentage'
+                                        : strategyDefinition.displayName ||
+                                          'Parameters'}
+                                </AccordionTitle>
+                                {isFlexibleRollout ? (
+                                    <AccordionSubtitle>
+                                        How much of that audience is exposed
+                                    </AccordionSubtitle>
+                                ) : null}
+                            </AccordionHeader>
                             <StyledAccordionHint>
                                 {rolloutHint}
                             </StyledAccordionHint>
@@ -379,9 +401,7 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                                 expandIcon={<ExpandMore />}
                                 slotProps={accordionSummarySlotProps(theme)}
                             >
-                                <StyledAccordionHeading>
-                                    Variants
-                                </StyledAccordionHeading>
+                                <AccordionTitle>Variants</AccordionTitle>
                                 <StyledAccordionHint>
                                     {strategy.variants?.length
                                         ? pluralize(

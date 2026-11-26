@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTheme } from '@mui/material';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 
@@ -20,10 +20,11 @@ export const useProjectColor = () => {
         [projects],
     );
 
-    const getProjectColor = (str: string): string => {
-        const index = projectsSortedByCreatedAt.indexOf(str);
-        return colors[index % colors.length];
-    };
-
-    return getProjectColor;
+    return useCallback(
+        (projectId: string): string => {
+            const index = projectsSortedByCreatedAt.indexOf(projectId);
+            return colors[index % colors.length];
+        },
+        [colors, projectsSortedByCreatedAt],
+    );
 };

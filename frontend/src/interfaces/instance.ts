@@ -27,6 +27,7 @@ export interface IInstanceStatus {
     emailDomain?: string;
     autoCreateDomainUsers?: boolean;
     name?: string;
+    subscriptionAccessEndsAt?: string;
 }
 
 export enum InstanceState {

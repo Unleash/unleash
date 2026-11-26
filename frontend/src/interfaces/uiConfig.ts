@@ -118,6 +118,7 @@ export type UiFlags = {
     changeRequestSubmitRedirect?: boolean;
     improvedSidebarNavigation?: boolean;
     paygCredits?: boolean;
+    subscriptionCancellation?: boolean;
     userSettings?: boolean;
     sectionedIntegrationForm?: boolean;
 };

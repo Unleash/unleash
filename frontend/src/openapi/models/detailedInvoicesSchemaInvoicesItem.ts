@@ -20,6 +20,10 @@ export type DetailedInvoicesSchemaInvoicesItem = {
     mainLines: DetailedInvoicesLineSchema[];
     /** Human-readable month label for the invoice period */
     monthText: string;
+    /** End of the billing period the invoice covers */
+    periodEnd?: string;
+    /** Start of the billing period the invoice covers */
+    periodStart?: string;
     /** The current status of the invoice */
     status: string;
     /** Subtotal amount for the invoice */

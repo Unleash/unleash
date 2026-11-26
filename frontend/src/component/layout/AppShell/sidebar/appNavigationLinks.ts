@@ -13,11 +13,3 @@ export const appNavigationLinks = {
     analytics: { to: '/insights', label: 'Analytics' },
     impactViews: { to: '/impact-views', label: 'Impact views' },
 } satisfies Record<string, AppNavigationLink>;
-
-export const workspaceSectionLinks: AppNavigationLink[] = [
-    appNavigationLinks.projects,
-    appNavigationLinks.flagsOverview,
-    appNavigationLinks.playground,
-    appNavigationLinks.analytics,
-    appNavigationLinks.impactViews,
-];

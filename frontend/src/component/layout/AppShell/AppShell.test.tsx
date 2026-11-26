@@ -61,13 +61,16 @@ const mockEnterprise = () =>
         environment: 'Enterprise',
     });
 
+const sidebarHomeLink = () =>
+    within(screen.getByRole('navigation', { name: 'Main' })).queryByRole(
+        'link',
+        { name: 'Home' },
+    );
+
 test('links Home to the personal dashboard', () => {
     render(<AppShell>content</AppShell>);
 
-    expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute(
-        'href',
-        '/personal',
-    );
+    expect(sidebarHomeLink()).toHaveAttribute('href', '/personal');
 });
 
 test('links the logo to the personal dashboard', () => {
@@ -185,9 +188,7 @@ test('marks the link of the current page as current', () => {
     expect(
         screen.getByRole('link', { name: 'Flags overview' }),
     ).toHaveAttribute('aria-current', 'page');
-    expect(screen.getByRole('link', { name: 'Home' })).not.toHaveAttribute(
-        'aria-current',
-    );
+    expect(sidebarHomeLink()).not.toHaveAttribute('aria-current');
 });
 
 test('marks a link as current on its nested pages', () => {
@@ -290,9 +291,7 @@ test('replaces the app navigation with the workspace configuration', async () =>
     expect(
         screen.queryByRole('link', { name: 'Unleash' }),
     ).not.toBeInTheDocument();
-    expect(
-        screen.queryByRole('link', { name: 'Home' }),
-    ).not.toBeInTheDocument();
+    expect(sidebarHomeLink()).not.toBeInTheDocument();
     expect(
         screen.queryByRole('region', { name: 'Workspace' }),
     ).not.toBeInTheDocument();
@@ -304,7 +303,7 @@ test('returns to the app navigation with Back to app', async () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Back to app' }));
 
-    expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
+    expect(sidebarHomeLink()).toBeInTheDocument();
     expect(
         screen.queryByRole('region', { name: 'Configure workspace' }),
     ).not.toBeInTheDocument();
@@ -316,9 +315,7 @@ test('opens the workspace configuration when landing on a workspace page', () =>
     expect(
         screen.getByRole('region', { name: 'Configure workspace' }),
     ).toBeInTheDocument();
-    expect(
-        screen.queryByRole('link', { name: 'Home' }),
-    ).not.toBeInTheDocument();
+    expect(sidebarHomeLink()).not.toBeInTheDocument();
 });
 
 test('lets Back to app leave the workspace configuration on a workspace page', async () => {
@@ -326,7 +323,7 @@ test('lets Back to app leave the workspace configuration on a workspace page', a
 
     await userEvent.click(screen.getByRole('button', { name: 'Back to app' }));
 
-    expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
+    expect(sidebarHomeLink()).toBeInTheDocument();
 });
 
 test('keeps the workspace configuration open when following its links', async () => {
@@ -351,7 +348,7 @@ test('returns to the app navigation when leaving the page it was opened on', asy
 
     await userEvent.click(screen.getByRole('link', { name: 'Go to search' }));
 
-    expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
+    expect(sidebarHomeLink()).toBeInTheDocument();
 });
 
 test('does not reopen the workspace configuration when coming back to the page it was opened on', async () => {
@@ -366,7 +363,7 @@ test('does not reopen the workspace configuration when coming back to the page i
 
     await userEvent.click(screen.getByRole('link', { name: 'Projects' }));
 
-    expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
+    expect(sidebarHomeLink()).toBeInTheDocument();
 });
 
 test('keeps the app navigation on a workspace page when only the query string changes', async () => {
@@ -380,7 +377,7 @@ test('keeps the app navigation on a workspace page when only the query string ch
 
     await userEvent.click(screen.getByRole('link', { name: 'Sort by name' }));
 
-    expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
+    expect(sidebarHomeLink()).toBeInTheDocument();
 });
 
 test('links every workspace setting on enterprise', async () => {
@@ -428,9 +425,7 @@ test('replaces the app navigation with admin settings', async () => {
     expect(
         screen.queryByRole('link', { name: 'Unleash' }),
     ).not.toBeInTheDocument();
-    expect(
-        screen.queryByRole('link', { name: 'Home' }),
-    ).not.toBeInTheDocument();
+    expect(sidebarHomeLink()).not.toBeInTheDocument();
     expect(
         screen.queryByRole('region', { name: 'Workspace' }),
     ).not.toBeInTheDocument();
@@ -442,7 +437,7 @@ test('returns from admin settings to the app navigation with Back to app', async
 
     await userEvent.click(screen.getByRole('button', { name: 'Back to app' }));
 
-    expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
+    expect(sidebarHomeLink()).toBeInTheDocument();
     expect(
         screen.queryByRole('region', { name: 'Admin settings' }),
     ).not.toBeInTheDocument();
@@ -519,9 +514,7 @@ test.each([
     const adminSettings = within(
         screen.getByRole('region', { name: 'Admin settings' }),
     );
-    expect(
-        screen.queryByRole('link', { name: 'Home' }),
-    ).not.toBeInTheDocument();
+    expect(sidebarHomeLink()).not.toBeInTheDocument();
     expect(
         await adminSettings.findByRole('link', { name: currentPage }),
     ).toHaveAttribute('aria-current', 'page');
@@ -780,28 +773,56 @@ const breadcrumbs = () =>
 const breadcrumbTrail = () =>
     breadcrumbs()
         .getAllByRole('listitem')
-        .map((item) => item.textContent);
+        .map(
+            (item) =>
+                item.textContent ||
+                within(item).getByRole('link').getAttribute('aria-label'),
+        );
 
 const mockDefaultProject = () =>
     testServerRoute(server, '/api/admin/projects', {
         projects: [{ id: 'default', name: 'Default' }],
     });
 
-test('shows the sidebar item of a top-level page as its breadcrumb', () => {
+test('shows the Home icon with its label as the current page on Home', () => {
     render(<AppShell>content</AppShell>, { route: '/personal' });
 
     expect(breadcrumbTrail()).toEqual(['Home']);
     expect(
         breadcrumbs().getByText('Home').closest('[aria-current="page"]'),
     ).toBeInTheDocument();
+    expect(breadcrumbs().getByTestId('HomeOutlinedIcon')).toBeInTheDocument();
 });
 
-test('shows the Projects list, the project and its sidebar item as breadcrumbs of a project page', async () => {
+test('links the Home icon breadcrumb to the personal dashboard', () => {
+    render(<AppShell>content</AppShell>, { route: '/search' });
+
+    const homeLink = breadcrumbs().getByRole('link', { name: 'Home' });
+    expect(homeLink).toHaveAttribute('href', '/personal');
+    expect(homeLink).not.toHaveTextContent('Home');
+});
+
+test('names the Home icon breadcrumb in a tooltip on hover', async () => {
+    render(<AppShell>content</AppShell>, { route: '/search' });
+
+    await userEvent.hover(breadcrumbs().getByRole('link', { name: 'Home' }));
+
+    expect(
+        await screen.findByRole('tooltip', { name: 'Home' }),
+    ).toBeInTheDocument();
+});
+
+test('shows Home, the Projects list, the project and its sidebar item as breadcrumbs of a project page', async () => {
     mockDefaultProject();
     render(<AppShell>content</AppShell>, { route: '/projects/default/logs' });
 
     await screen.findByRole('navigation', { name: 'Breadcrumbs' });
-    expect(breadcrumbTrail()).toEqual(['Projects', 'Default', 'Event log']);
+    expect(breadcrumbTrail()).toEqual([
+        'Home',
+        'Projects',
+        'Default',
+        'Event log',
+    ]);
     expect(
         breadcrumbs().getByRole('link', { name: 'Default' }),
     ).toHaveAttribute('href', '/projects/default');
@@ -818,6 +839,7 @@ test('shows the flag name as the last breadcrumb of a flag page', async () => {
 
     await screen.findByRole('link', { name: 'Default' });
     expect(breadcrumbTrail()).toEqual([
+        'Home',
         'Projects',
         'Default',
         'Flags',
@@ -844,6 +866,7 @@ test('replaces the segment name with the flag name when moving from a segment to
 
     await screen.findByText('my-flag');
     expect(breadcrumbTrail()).toEqual([
+        'Home',
         'Projects',
         'Default',
         'Flags',
@@ -856,7 +879,7 @@ test('marks only the sidebar item as the current page on the project root', asyn
     render(<AppShell>content</AppShell>, { route: '/projects/default' });
 
     await screen.findByRole('navigation', { name: 'Breadcrumbs' });
-    expect(breadcrumbTrail()).toEqual(['Projects', 'Default', 'Flags']);
+    expect(breadcrumbTrail()).toEqual(['Home', 'Projects', 'Default', 'Flags']);
     expect(
         breadcrumbs().getByRole('link', { name: 'Default' }),
     ).toHaveAttribute('href', '/projects/default');
@@ -865,7 +888,7 @@ test('marks only the sidebar item as the current page on the project root', asyn
     ).toBeInTheDocument();
 });
 
-test('shows the Workspace section before the workspace configuration item as breadcrumbs of a workspace page', async () => {
+test('shows Home and Configure workspace before the workspace configuration item as breadcrumbs of a workspace page', async () => {
     render(<AppShell>content</AppShell>, { route: '/context/create' });
 
     await screen.findByRole('navigation', { name: 'Breadcrumbs' });
@@ -873,13 +896,10 @@ test('shows the Workspace section before the workspace configuration item as bre
         breadcrumbs().getByRole('link', { name: 'Context fields' }),
     ).toHaveAttribute('href', '/context');
     expect(breadcrumbTrail()).toEqual([
-        'Workspace',
+        'Home',
         'Configure workspace',
         'Context fields',
     ]);
-    expect(
-        breadcrumbs().getByRole('link', { name: 'Workspace' }),
-    ).toHaveAttribute('href', '/projects');
     expect(
         breadcrumbs().queryByRole('link', { name: 'Configure workspace' }),
     ).not.toBeInTheDocument();

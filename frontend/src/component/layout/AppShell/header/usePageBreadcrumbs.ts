@@ -1,4 +1,7 @@
+import type { ComponentType } from 'react';
 import { matchPath, useLocation } from 'react-router';
+import type { SvgIconProps } from '@mui/material';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import type { INavigationMenuItem } from 'interfaces/route';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useRoutes } from '../../MainLayout/NavigationSidebar/useRoutes.ts';
@@ -7,7 +10,6 @@ import { useProjectNavItems } from '../projects/useProjectNavItems.ts';
 import {
     type AppNavigationLink,
     appNavigationLinks,
-    workspaceSectionLinks,
 } from '../sidebar/appNavigationLinks.ts';
 import {
     findCurrentRoute,
@@ -17,11 +19,16 @@ import { sidebarSectionLabels } from '../sidebar/sidebarSectionLabels.ts';
 import { type EntityPage, useEntityName } from './entityPages.ts';
 import { useVisibleAppNavigationLinks } from '../sidebar/useVisibleAppNavigationLinks.ts';
 
-export type PageBreadcrumb = { label: string; to?: string };
+export type PageBreadcrumb = {
+    label: string;
+    to?: string;
+    icon?: ComponentType<SvgIconProps>;
+};
 
-const workspaceBreadcrumb: PageBreadcrumb = {
-    label: sidebarSectionLabels.workspace,
-    to: appNavigationLinks.projects.to,
+const homeBreadcrumb: PageBreadcrumb = {
+    label: appNavigationLinks.home.label,
+    to: appNavigationLinks.home.to,
+    icon: HomeOutlinedIcon,
 };
 
 const projectsBreadcrumb: PageBreadcrumb = {
@@ -74,7 +81,6 @@ const getConfigureWorkspaceBreadcrumbs = (
     if (!route) return undefined;
 
     return [
-        workspaceBreadcrumb,
         { label: sidebarSectionLabels.configureWorkspace },
         { label: route.title, to: route.path },
     ];
@@ -90,10 +96,9 @@ const getAppBreadcrumbs = (
 
     if (!link) return undefined;
 
-    return [
-        ...(workspaceSectionLinks.includes(link) ? [workspaceBreadcrumb] : []),
-        { label: link.label, to: link.to },
-    ];
+    return link === appNavigationLinks.home
+        ? []
+        : [{ label: link.label, to: link.to }];
 };
 
 const useMenuBreadcrumbs = (pathname: string): PageBreadcrumb[] => {
@@ -101,13 +106,13 @@ const useMenuBreadcrumbs = (pathname: string): PageBreadcrumb[] => {
     const visibleLinks = useVisibleAppNavigationLinks();
     const projectBreadcrumbs = useProjectBreadcrumbs(pathname);
 
-    return (
+    const trailBelowHome =
         projectBreadcrumbs ??
         getAdminSettingsBreadcrumbs(pathname, adminRoutes) ??
         getConfigureWorkspaceBreadcrumbs(pathname, mainNavRoutes) ??
-        getAppBreadcrumbs(pathname, visibleLinks) ??
-        []
-    );
+        getAppBreadcrumbs(pathname, visibleLinks);
+
+    return trailBelowHome ? [homeBreadcrumb, ...trailBelowHome] : [];
 };
 
 export const usePageBreadcrumbs = (

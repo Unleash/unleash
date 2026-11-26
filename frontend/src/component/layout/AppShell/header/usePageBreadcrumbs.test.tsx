@@ -3,6 +3,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { SWRConfig } from 'swr';
 import { beforeEach, expect, test } from 'vitest';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -71,7 +72,11 @@ const loadPageBreadcrumbs = async (
     return result.current.breadcrumbs;
 };
 
-const workspace: PageBreadcrumb = { label: 'Workspace', to: '/projects' };
+const home: PageBreadcrumb = {
+    label: 'Home',
+    to: '/personal',
+    icon: HomeOutlinedIcon,
+};
 const configureWorkspace: PageBreadcrumb = { label: 'Configure workspace' };
 const projectsList: PageBreadcrumb = { label: 'Projects', to: '/projects' };
 const defaultProject: PageBreadcrumb = {
@@ -83,16 +88,15 @@ const adminSettings: PageBreadcrumb = { label: 'Admin settings' };
 test.each([
     '/personal',
     '/personal/some-tab',
-])('shows the top-level sidebar item as the only breadcrumb of %s', async (pathname) => {
-    expect(await loadPageBreadcrumbs(pathname)).toEqual([
-        { label: 'Home', to: '/personal' },
-    ]);
+])('shows Home as the only breadcrumb of %s', async (pathname) => {
+    expect(await loadPageBreadcrumbs(pathname)).toEqual([home]);
 });
 
-test('shows Change requests as the only breadcrumb of the change requests page on enterprise', async () => {
+test('shows Home before Change requests as breadcrumbs of the change requests page on enterprise', async () => {
     mockUiConfig(enterprise);
 
     expect(await loadPageBreadcrumbs('/change-requests')).toEqual([
+        home,
         { label: 'Change requests', to: '/change-requests' },
     ]);
 });
@@ -101,9 +105,9 @@ test.each([
     ['/projects', 'Projects'],
     ['/search', 'Flags overview'],
     ['/playground', 'Playground'],
-])('shows the Workspace section before the sidebar item as breadcrumbs of %s', async (pathname, label) => {
+])('shows Home before the workspace sidebar item as breadcrumbs of %s', async (pathname, label) => {
     expect(await loadPageBreadcrumbs(pathname)).toEqual([
-        workspace,
+        home,
         { label, to: pathname },
     ]);
 });
@@ -111,11 +115,11 @@ test.each([
 test.each([
     ['/insights', 'Analytics'],
     ['/impact-views', 'Impact views'],
-])('shows the Workspace section before the sidebar item as breadcrumbs of %s on enterprise', async (pathname, label) => {
+])('shows Home before the workspace sidebar item as breadcrumbs of %s on enterprise', async (pathname, label) => {
     mockUiConfig({ ...enterprise, flags: { impactViews: true } });
 
     expect(await loadPageBreadcrumbs(pathname)).toEqual([
-        workspace,
+        home,
         { label, to: pathname },
     ]);
 });
@@ -138,23 +142,24 @@ test.each([
         '/projects/default/settings/environments',
         { label: 'Configure project', to: '/projects/default/settings' },
     ],
-])('shows the Projects list and the project before its sidebar item as breadcrumbs of %s', async (pathname, item) => {
+])('shows Home, the Projects list and the project before its sidebar item as breadcrumbs of %s', async (pathname, item) => {
     mockUiConfig(enterprise);
     mockDefaultProject();
 
     expect(await loadPageBreadcrumbs(pathname)).toEqual([
+        home,
         projectsList,
         defaultProject,
         item,
     ]);
 });
 
-test('shows only the Projects list and the project as breadcrumbs on a project page that is not in the sidebar', async () => {
+test('shows only Home, the Projects list and the project as breadcrumbs on a project page that is not in the sidebar', async () => {
     mockDefaultProject();
 
     expect(
         await loadPageBreadcrumbs('/projects/default/change-requests'),
-    ).toEqual([projectsList, defaultProject]);
+    ).toEqual([home, projectsList, defaultProject]);
 });
 
 test('shows no breadcrumbs on a project page of a project that is not in the list', async () => {
@@ -171,13 +176,18 @@ test.each([
     ['/admin/users/1/edit', { label: 'Users', to: '/admin/users' }],
     ['/history', { label: 'Event log', to: '/history' }],
 ])('shows the admin settings page without its group as breadcrumbs of %s', async (pathname, page) => {
-    expect(await loadPageBreadcrumbs(pathname)).toEqual([adminSettings, page]);
+    expect(await loadPageBreadcrumbs(pathname)).toEqual([
+        home,
+        adminSettings,
+        page,
+    ]);
 });
 
 test('shows the most specific admin settings page as breadcrumb of a page nested in another', async () => {
     mockUiConfig(enterprise);
 
     expect(await loadPageBreadcrumbs('/admin/roles/project-roles')).toEqual([
+        home,
         adminSettings,
         { label: 'Project roles', to: '/admin/roles/project-roles' },
     ]);
@@ -187,9 +197,9 @@ test.each([
     ['/context', { label: 'Context fields', to: '/context' }],
     ['/context/create', { label: 'Context fields', to: '/context' }],
     ['/applications', { label: 'Applications', to: '/applications' }],
-])('shows the Workspace section before the workspace configuration item as breadcrumbs of %s', async (pathname, item) => {
+])('shows Home and Configure workspace before the workspace configuration item as breadcrumbs of %s', async (pathname, item) => {
     expect(await loadPageBreadcrumbs(pathname)).toEqual([
-        workspace,
+        home,
         configureWorkspace,
         item,
     ]);
@@ -235,7 +245,7 @@ const segmentPage = (name: string | undefined): EntityPage => ({
 });
 
 const segmentsBreadcrumbs: PageBreadcrumb[] = [
-    workspace,
+    home,
     configureWorkspace,
     { label: 'Segments', to: '/segments' },
 ];

@@ -58,13 +58,23 @@ test('saves the payload schema shown in the editor once, even on a double-click'
     expect(requests).toEqual([{ schema: { type: 'string' } }]);
 });
 
-test('a draft is staged only by using it, and only the staged schema can be saved', async () => {
+test('a draft stays on its tab until it is used, and only the staged schema can be saved', async () => {
     testServerRoute(server, flagPath, {});
     renderPayloadSchemaSidebar();
 
     await pickTemplate(/^Log level/);
     expect(await screen.findByLabelText('Level')).toBeInTheDocument();
     expect(saveButton()).toHaveAttribute('aria-disabled', 'true');
+
+    await userEvent.click(
+        screen.getByRole('tab', { name: 'Import JSON Schema' }),
+    );
+    expect(screen.queryByLabelText('Level')).toBeNull();
+    await userEvent.click(screen.getByRole('tab', { name: 'Use a template' }));
+    expect(
+        await screen.findByRole('button', { name: /^Log level/ }),
+    ).toHaveAttribute('aria-pressed', 'true');
+    expect(await screen.findByLabelText('Level')).toBeInTheDocument();
     expect(
         within(
             screen.getByRole('region', { name: 'Choose a template' }),

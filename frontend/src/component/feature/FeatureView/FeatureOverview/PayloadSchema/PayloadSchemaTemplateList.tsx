@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { ButtonBase, styled, Typography } from '@mui/material';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import { schemaFields } from './schemaFields.ts';
@@ -92,19 +91,14 @@ const TemplateOption = ({
 };
 
 interface IPayloadSchemaTemplateListProps {
+    selectedKey?: string;
     onSelect: (template: PayloadSchemaTemplate) => void;
 }
 
 export const PayloadSchemaTemplateList = ({
+    selectedKey,
     onSelect,
 }: IPayloadSchemaTemplateListProps) => {
-    const [selectedKey, setSelectedKey] = useState('');
-
-    const selectTemplate = (template: PayloadSchemaTemplate) => {
-        setSelectedKey(template.key);
-        onSelect(template);
-    };
-
     return (
         <StyledTemplateList role='group' aria-label='Choose a template'>
             {payloadSchemaTemplateGroups.map((group) => (
@@ -117,7 +111,7 @@ export const PayloadSchemaTemplateList = ({
                             key={template.key}
                             template={template}
                             selected={selectedKey === template.key}
-                            onSelect={selectTemplate}
+                            onSelect={onSelect}
                         />
                     ))}
                 </StyledTemplateGroup>

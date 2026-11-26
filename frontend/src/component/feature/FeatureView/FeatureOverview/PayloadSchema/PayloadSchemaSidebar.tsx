@@ -16,6 +16,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { parseJsonObject } from 'utils/plainObject';
 import { PayloadSchemaPane } from './PayloadSchemaPane';
 import { PayloadSchemaTemplateList } from './PayloadSchemaTemplateList';
+import type { PayloadSchemaTemplate } from './payloadSchemaTemplates';
 import { usePayloadSchemaForm } from './usePayloadSchemaForm.ts';
 
 const LazyReactJSONEditor = React.lazy(
@@ -76,9 +77,12 @@ const StyledSplit = styled('div')(({ theme }) => ({
 
 type SchemaSource = 'template' | 'import';
 
-type SourceSelection =
-    | { source: SchemaSource; draft: string }
-    | { source: false };
+type Drafts = {
+    template?: PayloadSchemaTemplate;
+    import?: string;
+};
+
+type ActiveSource = { source: SchemaSource; drafts: Drafts };
 
 const paneTitles: Record<SchemaSource, string> = {
     template: 'Choose a template',
@@ -106,25 +110,39 @@ const PayloadSchemaForm = ({
     const navigate = useNavigate();
     const staged = usePayloadSchemaForm(feature.payloadSchema);
     const isCreateMode = !feature.payloadSchema;
-    const [selection, setSelection] = useState<SourceSelection>(
-        isCreateMode ? { source: 'template', draft: '' } : { source: false },
-    );
+    const [selection, setSelection] = useState<
+        ActiveSource | { source: false }
+    >(isCreateMode ? { source: 'template', drafts: {} } : { source: false });
     const sourceId = useId();
     const tabId = (source: SchemaSource) => `${sourceId}-tab-${source}`;
     const sourcePanelId = `${sourceId}-panel`;
 
+    const draftSchemas = (
+        drafts: Drafts,
+    ): Record<SchemaSource, Record<string, unknown> | undefined> => ({
+        template: drafts.template?.schema,
+        import:
+            drafts.import === undefined
+                ? undefined
+                : parseJsonObject(drafts.import),
+    });
     const draftSchema = selection.source
-        ? parseJsonObject(selection.draft)
+        ? draftSchemas(selection.drafts)[selection.source]
         : undefined;
     const canApplyDraft =
         draftSchema !== undefined && !dequal(draftSchema, staged.parsedSchema);
 
-    const selectSource = (source: SourceSelection['source']) =>
-        setSelection(source ? { source, draft: '' } : { source: false });
+    const selectSource = (source: SchemaSource) =>
+        setSelection({
+            source,
+            drafts: selection.source ? selection.drafts : {},
+        });
+
+    const closeSource = () => setSelection({ source: false });
 
     const stageDraft = () => {
         staged.edit({ json: draftSchema });
-        selectSource(false);
+        closeSource();
     };
 
     const closeSidebar = () =>
@@ -143,29 +161,33 @@ const PayloadSchemaForm = ({
         }
     };
 
-    const sourcePanes: Record<SchemaSource, (draft: string) => ReactNode> = {
-        template: () => (
+    const sourcePanes = ({
+        source,
+        drafts,
+    }: ActiveSource): Record<SchemaSource, ReactNode> => ({
+        template: (
             <PayloadSchemaTemplateList
+                selectedKey={drafts.template?.key}
                 onSelect={(template) =>
-                    setSelection({
-                        source: 'template',
-                        draft: JSON.stringify(template.schema, undefined, 2),
-                    })
+                    setSelection({ source, drafts: { ...drafts, template } })
                 }
             />
         ),
-        import: (draft) => (
+        import: (
             <Suspense key='import' fallback={null}>
                 <LazyReactJSONEditor
-                    content={{ text: draft }}
+                    content={{ text: drafts.import ?? '' }}
                     onChange={(text) =>
-                        setSelection({ source: 'import', draft: text })
+                        setSelection({
+                            source,
+                            drafts: { ...drafts, import: text },
+                        })
                     }
                     editorStyle='fill'
                 />
             </Suspense>
         ),
-    };
+    });
 
     const stagedPane = (
         <Suspense key='staged' fallback={null}>
@@ -218,7 +240,9 @@ const PayloadSchemaForm = ({
                         <Typography variant='body2'>Start from</Typography>
                         <Tabs
                             value={selection.source}
-                            onChange={(_event, value) => selectSource(value)}
+                            onChange={(_event, value: SchemaSource) =>
+                                selectSource(value)
+                            }
                             aria-label='Start from'
                             sx={{ minHeight: 0, overflow: 'visible' }}
                             slotProps={{
@@ -256,10 +280,7 @@ const PayloadSchemaForm = ({
                         selection.source ? (
                             <>
                                 {!staged.isEmpty ? (
-                                    <Button
-                                        size='small'
-                                        onClick={() => selectSource(false)}
-                                    >
+                                    <Button size='small' onClick={closeSource}>
                                         Cancel
                                     </Button>
                                 ) : null}
@@ -277,7 +298,7 @@ const PayloadSchemaForm = ({
                     }
                 >
                     {selection.source
-                        ? sourcePanes[selection.source](selection.draft)
+                        ? sourcePanes(selection)[selection.source]
                         : stagedPane}
                 </PayloadSchemaPane>
                 <PayloadSchemaPane

@@ -5,6 +5,7 @@ import {
     Menu,
     MenuItem,
     styled,
+    SvgIcon,
     type Theme,
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router';
@@ -23,6 +24,8 @@ import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import { ThemeSubmenu } from 'component/user/UserProfile/ThemeSubmenu/ThemeSubmenu';
 import { LogOutMenuItem } from 'component/user/UserProfile/LogOutMenuItem/LogOutMenuItem';
+import { NewNavigationMenuItem } from 'component/user/UserProfile/NewNavigationMenuItem/NewNavigationMenuItem';
+import SideNavigationIcon from 'assets/icons/menu/side-navigation.svg?react';
 import { PRIVACY_POLICY_URL } from 'constants/links';
 import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequestsNotifications/PendingAccessRequestsIndicator';
 import {
@@ -229,6 +232,16 @@ export const SettingsMenu: FC<{
                     placement={
                         layout === 'drawer' ? 'bottom-end' : 'right-start'
                     }
+                />
+                <NewNavigationMenuItem
+                    itemSx={menuItemSx}
+                    icon={
+                        <SvgIcon
+                            component={SideNavigationIcon}
+                            inheritViewBox
+                        />
+                    }
+                    onClose={close}
                 />
                 <MenuItem
                     component='a'

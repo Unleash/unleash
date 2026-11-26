@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from 'react';
-import { useUiFlag } from 'hooks/useUiFlag';
+import { useNewNavigation } from 'hooks/useNewNavigation';
 import { MainLayout } from '../MainLayout/MainLayout.tsx';
 import { AppShell } from '../AppShell/AppShell.tsx';
 import { RecentlyVisitedRecorder } from 'component/commandBar/RecentlyVisitedRecorder';
@@ -13,7 +13,7 @@ export const LayoutPicker: FC<ILayoutPickerProps> = ({
     isStandalone,
     children,
 }) => {
-    const improvedSidebarNavigation = useUiFlag('improvedSidebarNavigation');
+    const newNavigation = useNewNavigation().navigation === 'new';
 
     if (isStandalone === true) {
         return children;
@@ -21,7 +21,7 @@ export const LayoutPicker: FC<ILayoutPickerProps> = ({
     return (
         <>
             <RecentlyVisitedRecorder />
-            {improvedSidebarNavigation ? (
+            {newNavigation ? (
                 <AppShell>{children}</AppShell>
             ) : (
                 <MainLayout>{children}</MainLayout>

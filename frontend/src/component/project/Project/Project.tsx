@@ -16,7 +16,7 @@ import { ProjectApplications } from '../ProjectApplications/ProjectApplications.
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectArchived } from './ArchiveProject/ProjectArchived.tsx';
 import { deleteProjectTracking } from 'component/project/projectTracking';
-import { useUiFlag } from 'hooks/useUiFlag';
+import { useNewNavigation } from 'hooks/useNewNavigation';
 import { ProjectHeader } from './ProjectHeader/ProjectHeader.tsx';
 
 export const Project = () => {
@@ -27,7 +27,7 @@ export const Project = () => {
     const { setToastData } = useToast();
     const [modalOpen, setModalOpen] = useState(false);
     const navigate = useNavigate();
-    const improvedSidebarNavigation = useUiFlag('improvedSidebarNavigation');
+    const newNavigation = useNewNavigation().navigation === 'new';
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
@@ -62,7 +62,7 @@ export const Project = () => {
 
     return (
         <div ref={ref}>
-            {!improvedSidebarNavigation && <ProjectHeader />}
+            {!newNavigation && <ProjectHeader />}
             <DeleteProjectDialogue
                 projectId={projectId}
                 open={showDelDialog}

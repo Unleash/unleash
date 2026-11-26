@@ -8,6 +8,7 @@ import type { IUser } from 'interfaces/user';
 import { PRIVACY_POLICY_URL } from 'constants/links';
 import { ThemeSubmenu } from '../ThemeSubmenu/ThemeSubmenu.tsx';
 import { LogOutMenuItem } from '../LogOutMenuItem/LogOutMenuItem.tsx';
+import { NewNavigationMenuItem } from '../NewNavigationMenuItem/NewNavigationMenuItem.tsx';
 
 const menuItemSx: SxProps<Theme> = {
     display: 'flex',
@@ -94,6 +95,8 @@ export const UserProfileContent = ({
         </MenuItem>
 
         <ThemeSubmenu onCloseAll={onClose} itemSx={menuItemSx} />
+
+        <NewNavigationMenuItem itemSx={menuItemSx} onClose={onClose} />
 
         <MenuItem
             component='a'

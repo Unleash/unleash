@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { styled } from '@mui/material';
 import { useTracking } from 'hooks/useTracking';
-import { useUiFlag } from 'hooks/useUiFlag';
+import { useNewNavigation } from 'hooks/useNewNavigation';
 import { useApprovalRequestedCount } from 'hooks/api/getters/useApprovalRequestedCount/useApprovalRequestedCount';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { filterChangeRequestListTracking } from 'component/changeRequest/changeRequestTracking';
@@ -58,7 +58,7 @@ export const UserFilterChips: FC<UserFilterChipsProps> = ({
 }) => {
     const userIdString = userId.toString();
     const trackFilterList = useTracking(filterChangeRequestListTracking);
-    const improvedSidebarNavigation = useUiFlag('improvedSidebarNavigation');
+    const newNavigation = useNewNavigation().navigation === 'new';
 
     const activeUserFilter: UserFilterType | undefined = getUserFilter(
         tableState,
@@ -100,7 +100,7 @@ export const UserFilterChips: FC<UserFilterChipsProps> = ({
             <StyledChip
                 label={'Approval Requested'}
                 icon={
-                    improvedSidebarNavigation &&
+                    newNavigation &&
                     activeUserFilter !== 'approval requested' ? (
                         <ApprovalRequestedDot />
                     ) : undefined

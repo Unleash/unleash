@@ -7,6 +7,7 @@ import type { TableState } from '../ChangeRequests.types';
 import { makeStyledChip } from './ChangeRequestFilters.styles';
 import { UserFilterChips } from './UserFilterChips.tsx';
 import { useApprovalRequestedCount } from 'hooks/api/getters/useApprovalRequestedCount/useApprovalRequestedCount';
+import { setNewNavigationEnabled } from 'hooks/useNewNavigation';
 
 const server = testServerSetup();
 const USER_ID = 7;
@@ -16,6 +17,7 @@ const setupApi = () => {
         versionInfo: { current: { enterprise: 'version' } },
         flags: { improvedSidebarNavigation: true },
     });
+    setNewNavigationEnabled(true);
     mockUserWithSplash(server, {}, USER_ID);
     testServerRoute(
         server,

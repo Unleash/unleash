@@ -4,6 +4,8 @@ import { Link, useLocation } from 'react-router';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import type { ProjectSchema } from 'openapi';
 import {
+    SIDEBAR_ITEM_GAP,
+    SIDEBAR_ITEM_PADDING_X,
     SidebarCaret,
     SidebarItemIcon,
     sidebarItemStyles,
@@ -52,13 +54,19 @@ const StyledRow = styled('div', {
               '&:hover [data-toggle]': {
                   backgroundColor: theme.palette.action.hover,
               },
-              '& [data-label]': {
-                  paddingRight: theme.spacing(SIDEBAR_ROW_ACTION_SIZE),
+              '& [data-toggle]': {
+                  paddingRight: theme.spacing(
+                      SIDEBAR_ITEM_PADDING_X +
+                          SIDEBAR_ROW_ACTION_SIZE +
+                          SIDEBAR_ITEM_GAP,
+                  ),
               },
               // Touch devices can't hover, so they always show the action.
               '@media (hover: hover)': {
                   '&:not(:hover):not(:focus-within)': {
-                      '& [data-label]': { paddingRight: 0 },
+                      '& [data-toggle]': {
+                          paddingRight: theme.spacing(SIDEBAR_ITEM_PADDING_X),
+                      },
                       '& [data-action]': { opacity: 0 },
                   },
               },
@@ -70,7 +78,7 @@ const StyledAction = styled('span')(({ theme }) => ({
     position: 'absolute',
     top: 0,
     bottom: 0,
-    right: theme.spacing(3),
+    right: theme.spacing(SIDEBAR_ITEM_PADDING_X),
     display: 'flex',
     alignItems: 'center',
     transition: theme.transitions.create('opacity', {
@@ -84,8 +92,6 @@ const StyledLabel = styled('span')({
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
 });
-
-const StyledTrailingCaret = styled(SidebarCaret)({ marginLeft: 'auto' });
 
 const StyledSubLink = styled(Link)(({ theme }) => ({
     ...sidebarItemStyles(theme),
@@ -156,8 +162,8 @@ export const ProjectNavGroup: FC<{
                     <SidebarItemIcon>
                         <FolderOutlinedIcon />
                     </SidebarItemIcon>
-                    <StyledLabel data-label>{project.name}</StyledLabel>
-                    <StyledTrailingCaret expanded={expanded} />
+                    <StyledLabel>{project.name}</StyledLabel>
+                    <SidebarCaret expanded={expanded} />
                 </StyledProjectToggle>
                 {action ? (
                     <StyledAction data-action>{action}</StyledAction>

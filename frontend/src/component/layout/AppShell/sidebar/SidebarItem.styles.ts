@@ -4,6 +4,10 @@ import { PendingAccessRequestsIndicator } from 'component/admin/users/AccessRequ
 
 export const SUB_ITEM_INDENT = 3.875;
 
+export const SIDEBAR_ITEM_PADDING_X = 0.5;
+
+export const SIDEBAR_ITEM_GAP = 0.875;
+
 // The footer buttons sit 12px from the screen edge, inside MUI's default 16px
 // margin, which would push footer menus out of line with their buttons.
 export const SIDEBAR_MENU_MARGIN_THRESHOLD = 8;
@@ -12,10 +16,10 @@ export const sidebarItemStyles = (theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    gap: theme.spacing(0.875),
+    gap: theme.spacing(SIDEBAR_ITEM_GAP),
     width: '100%',
     minHeight: 28,
-    padding: theme.spacing(0.25, 0.5),
+    padding: theme.spacing(0.25, SIDEBAR_ITEM_PADDING_X),
     borderRadius: theme.shape.borderRadius,
     color: theme.palette.text.primary,
     fontSize: theme.typography.body2.fontSize,

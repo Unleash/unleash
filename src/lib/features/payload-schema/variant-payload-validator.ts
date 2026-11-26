@@ -30,16 +30,13 @@ export class VariantPayloadValidator {
         this.payloadSchemaReadModel = payloadSchemaReadModel;
     }
 
-    async validateVariantPayloads(
-        featureName: string,
+    static validatePayloadsAgainstSchema(
+        schema: Record<string, unknown> | undefined,
         payloads: VariantJsonPayload[],
-    ): Promise<NonMatchingVariantPayload[]> {
+    ): NonMatchingVariantPayload[] {
         if (payloads.length === 0) {
             return [];
         }
-
-        const schema =
-            await this.payloadSchemaReadModel.getPayloadSchema(featureName);
         const payloadMismatch = schema
             ? compilePayloadSchema(schema)
             : () => undefined;
@@ -52,6 +49,22 @@ export class VariantPayloadValidator {
             const error = payloadMismatch(json.parsed);
             return error ? [{ ...payload, error }] : [];
         });
+    }
+
+    async validateVariantPayloads(
+        featureName: string,
+        payloads: VariantJsonPayload[],
+    ): Promise<NonMatchingVariantPayload[]> {
+        if (payloads.length === 0) {
+            return [];
+        }
+
+        const schema =
+            await this.payloadSchemaReadModel.getPayloadSchema(featureName);
+        return VariantPayloadValidator.validatePayloadsAgainstSchema(
+            schema,
+            payloads,
+        );
     }
 
     async assertVariantsMatchPayloadSchema(

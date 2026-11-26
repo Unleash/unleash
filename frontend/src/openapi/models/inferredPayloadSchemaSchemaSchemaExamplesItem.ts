@@ -3,7 +3,8 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { InferredPayloadSchemaSchemaSchemaExamplesItemOneOf } from './inferredPayloadSchemaSchemaSchemaExamplesItemOneOf.ts';
 
-export type InferredPayloadSchemaSchemaSchemaExamplesItem = {
-    [key: string]: unknown;
-};
+export type InferredPayloadSchemaSchemaSchemaExamplesItem =
+    | InferredPayloadSchemaSchemaSchemaExamplesItemOneOf
+    | unknown[];

@@ -5,11 +5,12 @@
  */
 
 /**
- * Always `object`, since only JSON object payloads can be described.
+ * The JSON type of the payloads. Absent when the flag has no stored json variant payloads, or some are objects and others are arrays, so any of them matches.
  */
 export type InferredPayloadSchemaSchemaSchemaType =
     (typeof InferredPayloadSchemaSchemaSchemaType)[keyof typeof InferredPayloadSchemaSchemaSchemaType];
 
 export const InferredPayloadSchemaSchemaSchemaType = {
     object: 'object',
+    array: 'array',
 } as const;

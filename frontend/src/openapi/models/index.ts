@@ -1206,6 +1206,7 @@ export * from './inferredPayloadSchemaPropertySchemaTypeOneOfItem.ts';
 export * from './inferredPayloadSchemaSchema.ts';
 export * from './inferredPayloadSchemaSchemaSchema.ts';
 export * from './inferredPayloadSchemaSchemaSchemaExamplesItem.ts';
+export * from './inferredPayloadSchemaSchemaSchemaExamplesItemOneOf.ts';
 export * from './inferredPayloadSchemaSchemaSchemaProperties.ts';
 export * from './inferredPayloadSchemaSchemaSchemaType.ts';
 export * from './instanceAdminStatsSchema.ts';

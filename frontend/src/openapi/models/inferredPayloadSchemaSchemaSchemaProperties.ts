@@ -6,7 +6,7 @@
 import type { InferredPayloadSchemaPropertySchema } from './inferredPayloadSchemaPropertySchema.ts';
 
 /**
- * The schemas of the properties of the payloads, by property name. Absent when the flag has no stored json variant payloads.
+ * The schemas of the properties of object payloads, by property name. Absent when the flag has no stored json object payloads.
  */
 export type InferredPayloadSchemaSchemaSchemaProperties = {
     [key: string]: InferredPayloadSchemaPropertySchema;

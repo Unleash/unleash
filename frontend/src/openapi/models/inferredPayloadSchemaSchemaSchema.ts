@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { InferredPayloadSchemaPropertySchema } from './inferredPayloadSchemaPropertySchema.ts';
 import type { InferredPayloadSchemaSchemaSchemaExamplesItem } from './inferredPayloadSchemaSchemaSchemaExamplesItem.ts';
 import type { InferredPayloadSchemaSchemaSchemaProperties } from './inferredPayloadSchemaSchemaSchemaProperties.ts';
 import type { InferredPayloadSchemaSchemaSchemaType } from './inferredPayloadSchemaSchemaSchemaType.ts';
@@ -13,10 +14,12 @@ import type { InferredPayloadSchemaSchemaSchemaType } from './inferredPayloadSch
 export type InferredPayloadSchemaSchemaSchema = {
     /** Every distinct stored json variant payload. */
     examples: InferredPayloadSchemaSchemaSchemaExamplesItem[];
-    /** The schemas of the properties of the payloads, by property name. Absent when the flag has no stored json variant payloads. */
+    /** The schema of the items of array payloads. Absent when the stored items are of different types, or there are none, so any item matches. */
+    items?: InferredPayloadSchemaPropertySchema;
+    /** The schemas of the properties of object payloads, by property name. Absent when the flag has no stored json object payloads. */
     properties?: InferredPayloadSchemaSchemaSchemaProperties;
-    /** The properties that every stored payload has with a non-null value. Absent when the flag has no stored json variant payloads. */
+    /** The properties that every stored object payload has with a non-null value. Absent when the flag has no stored json object payloads. */
     required?: string[];
-    /** Always `object`, since only JSON object payloads can be described. */
-    type: InferredPayloadSchemaSchemaSchemaType;
+    /** The JSON type of the payloads. Absent when the flag has no stored json variant payloads, or some are objects and others are arrays, so any of them matches. */
+    type?: InferredPayloadSchemaSchemaSchemaType;
 };

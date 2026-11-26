@@ -7,7 +7,7 @@ const environment = (
     observedProjects: string[] = [],
 ) => ({ name, linkedProjects, observedProjects });
 
-test('a project is linked per environment and observed for the whole application', () => {
+test('lists the all-projects row first, and which environments it covers', () => {
     const projects = buildApplicationProjects(
         [
             environment('development', []),
@@ -19,29 +19,47 @@ test('a project is linked per environment and observed for the whole application
 
     expect(projects).toEqual([
         {
+            name: '*',
+            linkedEnvironments: ['staging'],
+            coveredEnvironments: [],
+            observedEnvironments: [],
+            observed: false,
+        },
+        {
             name: 'dx',
-            linkedEnvironments: ['staging', 'production'],
+            linkedEnvironments: ['production'],
+            coveredEnvironments: ['staging'],
             observedEnvironments: [],
             observed: true,
         },
         {
             name: 'eg',
-            linkedEnvironments: ['staging', 'production'],
+            linkedEnvironments: ['production'],
+            coveredEnvironments: ['staging'],
             observedEnvironments: [],
             observed: false,
         },
         // only seen in metrics; the all-projects token still reads it
         {
             name: 'sa',
-            linkedEnvironments: ['staging'],
+            linkedEnvironments: [],
+            coveredEnvironments: ['staging'],
             observedEnvironments: [],
             observed: true,
         },
     ]);
 });
 
-test('an all-projects token alone lists no project', () => {
+test('covers nothing without an all-projects token', () => {
     expect(
-        buildApplicationProjects([environment('production', ['*'])], []),
-    ).toEqual([]);
+        buildApplicationProjects([environment('production', ['dx'])], []),
+    ).toEqual([
+        {
+            name: 'dx',
+            linkedEnvironments: ['production'],
+            coveredEnvironments: [],
+            observedEnvironments: [],
+            observed: false,
+        },
+    ]);
 });

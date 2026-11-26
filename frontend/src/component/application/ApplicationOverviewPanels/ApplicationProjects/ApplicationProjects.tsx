@@ -4,6 +4,7 @@ import {
     styled,
     Table,
     TableBody,
+    TableCell,
     TableHead,
     TableRow,
     Typography,
@@ -17,9 +18,9 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 import { Link as RouterLink } from 'react-router';
-import { TableCell } from 'component/common/Table';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
+import { isTokenExpired } from '../../isTokenExpired.ts';
 import { pluralize } from '../../pluralize.ts';
 import {
     ALL_PROJECTS,
@@ -88,7 +89,37 @@ const StyledEmptyNote = styled(Typography)(({ theme }) => ({
     marginTop: theme.spacing(1),
 }));
 
+const StyledCoveredCheck = styled(Check)(({ theme }) => ({
+    color: theme.palette.success.containerBorder,
+}));
+
+const StyledCell = styled(TableCell)(({ theme }) => ({
+    padding: theme.spacing(2),
+    '&.MuiTableCell-head': {
+        fontWeight: theme.typography.fontWeightBold,
+        color: theme.palette.text.secondary,
+    },
+    '&:first-of-type': {
+        paddingLeft: theme.spacing(3),
+    },
+    '&:last-of-type': {
+        paddingRight: theme.spacing(3),
+    },
+}));
+
+const StyledAllProjectsRow = styled(TableRow)(({ theme }) => ({
+    backgroundColor: theme.palette.background.elevation1,
+}));
+
+const StyledTokenNames = styled('span')(({ theme }) => ({
+    fontFamily: 'monospace',
+    fontSize: theme.fontSizes.smallBody,
+}));
+
+const listFormat = new Intl.ListFormat('en', { type: 'conjunction' });
+
 const linkedLabel = 'In a linked token';
+const coveredLabel = 'Covered by "All projects"';
 const observedLabel = 'Observed only';
 
 const columnHelper = createColumnHelper<IApplicationProject>();
@@ -116,19 +147,37 @@ export const ApplicationProjects = ({
         () => buildApplicationProjects(environments, observedProjects),
         [environments, observedProjects],
     );
+    const allProjectsTokens = useMemo(
+        () => [
+            ...new Set(
+                environments
+                    .flatMap((environment) => environment.tokens)
+                    .filter(
+                        (token) =>
+                            !isTokenExpired(token) &&
+                            token.projects.includes(ALL_PROJECTS),
+                    )
+                    .map((token) => token.tokenName),
+            ),
+        ],
+        [environments],
+    );
     const columns = useMemo(
         () => [
             columnHelper.accessor('name', {
                 header: 'Project',
-                cell: ({ getValue }) => (
-                    <StyledProjectLink
-                        component={RouterLink}
-                        to={`/projects/${getValue()}`}
-                        underline='hover'
-                    >
-                        {getValue()}
-                    </StyledProjectLink>
-                ),
+                cell: ({ getValue }) =>
+                    getValue() === ALL_PROJECTS ? (
+                        <strong>All projects</strong>
+                    ) : (
+                        <StyledProjectLink
+                            component={RouterLink}
+                            to={`/projects/${getValue()}`}
+                            underline='hover'
+                        >
+                            {getValue()}
+                        </StyledProjectLink>
+                    ),
             }),
             ...environments.map(({ name }) =>
                 columnHelper.display({
@@ -141,6 +190,14 @@ export const ApplicationProjects = ({
                                     color='success'
                                     fontSize='small'
                                     titleAccess={linkedLabel}
+                                />
+                            );
+                        }
+                        if (row.original.coveredEnvironments.includes(name)) {
+                            return (
+                                <StyledCoveredCheck
+                                    fontSize='small'
+                                    titleAccess={coveredLabel}
                                 />
                             );
                         }
@@ -166,13 +223,24 @@ export const ApplicationProjects = ({
             ),
             columnHelper.accessor('observed', {
                 header: 'Observed usage',
-                cell: ({ getValue }) =>
-                    getValue()
+                cell: ({ row, getValue }) => {
+                    if (row.original.name === ALL_PROJECTS) {
+                        return (
+                            <>
+                                From{' '}
+                                <StyledTokenNames>
+                                    {allProjectsTokens.join(', ')}
+                                </StyledTokenNames>
+                            </>
+                        );
+                    }
+                    return getValue()
                         ? 'Flags evaluated recently'
-                        : "No recent usage · not a signal it's safe to remove",
+                        : "No recent usage · not a signal it's safe to remove";
+                },
             }),
         ],
-        [environments],
+        [environments, allProjectsTokens],
     );
     const table = useReactTable({
         data: projects,
@@ -181,15 +249,25 @@ export const ApplicationProjects = ({
         getRowId: (project) => project.name,
     });
 
+    const projectCount = projects.filter(
+        (project) => project.name !== ALL_PROJECTS,
+    ).length;
     const observedCount = projects.filter((project) => project.observed).length;
     const allProjectsEnvironments = environments
         .filter((e) => e.linkedProjects.includes(ALL_PROJECTS))
         .map((e) => capitalizeFirst(e.name));
     const allProjectsNote =
         allProjectsEnvironments.length > 0
-            ? `${allProjectsEnvironments.join(', ')} tokens can read all projects, so only projects in use are listed.`
+            ? `${listFormat.format(allProjectsEnvironments)} tokens can read all projects, so only projects in use are listed.`
             : undefined;
-    const empty = projects.length === 0;
+    // the all-projects row alone lists nothing: the empty state says why
+    const empty = projectCount === 0;
+    const anyLinkedCell = projects.some(
+        (project) => project.linkedEnvironments.length > 0,
+    );
+    const anyObservedCell = projects.some(
+        (project) => project.observedEnvironments.length > 0,
+    );
 
     return (
         <StyledPanel aria-labelledby={titleId}>
@@ -201,73 +279,92 @@ export const ApplicationProjects = ({
                     <Typography variant='body2' color='text.secondary'>
                         {empty
                             ? "Projects this application's tokens can read, and projects its SDKs use."
-                            : `${pluralize(projects.length, 'project')} · ${observedCount} with observed usage`}
+                            : `${pluralize(projectCount, 'project')} · ${observedCount} with observed usage`}
                     </Typography>
                 </div>
                 {!empty && environments.length > 0 ? (
                     <StyledLegend aria-label='Legend'>
-                        <li>
-                            <Check color='success' fontSize='small' />
-                            {linkedLabel}
-                        </li>
-                        <li>
-                            <VisibilityOutlined
-                                color='action'
-                                fontSize='small'
-                            />
-                            {observedLabel}
-                        </li>
+                        {anyLinkedCell ? (
+                            <li>
+                                <Check color='success' fontSize='small' />
+                                {linkedLabel}
+                            </li>
+                        ) : null}
+                        {allProjectsNote ? (
+                            <li>
+                                <StyledCoveredCheck fontSize='small' />
+                                {coveredLabel}
+                            </li>
+                        ) : null}
+                        {anyObservedCell ? (
+                            <li>
+                                <VisibilityOutlined
+                                    color='action'
+                                    fontSize='small'
+                                />
+                                {observedLabel}
+                            </li>
+                        ) : null}
                     </StyledLegend>
                 ) : null}
             </StyledHeader>
-            {empty ? null : (
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            {table.getFlatHeaders().map((header) => (
-                                <TableCell key={header.id}>
-                                    {flexRender(
-                                        header.column.columnDef.header,
-                                        header.getContext(),
-                                    )}
-                                </TableCell>
-                            ))}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id}>
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>
-                                        {flexRender(
-                                            cell.column.columnDef.cell,
-                                            cell.getContext(),
-                                        )}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            )}
             {empty ? (
                 <StyledEmpty>
                     <StyledEmptyTitle>No projects yet</StyledEmptyTitle>
                     <Typography color='text.secondary'>
-                        Projects appear here when a token gives access to them
-                        or an SDK uses their flags.
+                        {allTokensVisible
+                            ? 'Projects appear here when a token gives access to them or an SDK uses their flags.'
+                            : 'Projects appear here when an SDK uses their flags.'}
                     </Typography>
-                    <StyledEmptyNote variant='body2' color='text.secondary'>
-                        {allProjectsNote ??
-                            'Development tokens can read all projects, so only projects in use are listed.'}
-                    </StyledEmptyNote>
+                    {allProjectsNote ? (
+                        <StyledEmptyNote variant='body2' color='text.secondary'>
+                            {allProjectsNote}
+                        </StyledEmptyNote>
+                    ) : null}
                 </StyledEmpty>
-            ) : null}
-            {!empty && allProjectsNote ? (
-                <StyledNote variant='body2' color='text.secondary'>
-                    {allProjectsNote}
-                </StyledNote>
-            ) : null}
+            ) : (
+                <>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                {table.getFlatHeaders().map((header) => (
+                                    <StyledCell key={header.id}>
+                                        {flexRender(
+                                            header.column.columnDef.header,
+                                            header.getContext(),
+                                        )}
+                                    </StyledCell>
+                                ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {table.getRowModel().rows.map((row) => {
+                                const Row =
+                                    row.original.name === ALL_PROJECTS
+                                        ? StyledAllProjectsRow
+                                        : TableRow;
+                                return (
+                                    <Row key={row.id}>
+                                        {row.getVisibleCells().map((cell) => (
+                                            <StyledCell key={cell.id}>
+                                                {flexRender(
+                                                    cell.column.columnDef.cell,
+                                                    cell.getContext(),
+                                                )}
+                                            </StyledCell>
+                                        ))}
+                                    </Row>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                    {allProjectsNote ? (
+                        <StyledNote variant='body2' color='text.secondary'>
+                            {allProjectsNote}
+                        </StyledNote>
+                    ) : null}
+                </>
+            )}
         </StyledPanel>
     );
 };

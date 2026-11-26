@@ -12,6 +12,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { DraftBanner } from 'component/changeRequest/DraftBanner/DraftBanner.tsx';
 import { SidebarContent } from './sidebar/SidebarContent.tsx';
 import { PageHeaderRow } from './header/PageHeaderRow.tsx';
+import { SwitchBackPopup } from './SwitchBackPopup.tsx';
 
 const LazySearchDocsChat = lazy(() =>
     import('component/menu/Header/SearchDocs/SearchDocs.tsx').then(
@@ -126,6 +127,7 @@ export const AppShell: FC<{ children: ReactNode }> = ({ children }) => {
                         </StyledMainColumn>
                     </StyledRoot>
                     <FloatingOnboardingChecklistVisibilityGate />
+                    <SwitchBackPopup />
                     <CommandBarDialog
                         open={searchOpen}
                         onOpenChange={setSearchOpen}

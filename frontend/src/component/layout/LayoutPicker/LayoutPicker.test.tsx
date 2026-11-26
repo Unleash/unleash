@@ -123,6 +123,9 @@ test('switches back to the classic navigation from the settings menu', async () 
 const newLayoutPopup = () =>
     screen.findByRole('region', { name: 'New layout available' });
 
+const switchBackPopup = () =>
+    screen.findByRole('region', { name: 'You are on the new layout' });
+
 test('switches to the new navigation from the new layout popup', async () => {
     setupNewNavigationAvailable();
     render(<LayoutPicker>content</LayoutPicker>);
@@ -136,6 +139,7 @@ test('switches to the new navigation from the new layout popup', async () => {
     expect(
         await screen.findByRole('region', { name: 'Workspace' }),
     ).toBeInTheDocument();
+    expect(await switchBackPopup()).toBeInTheDocument();
 });
 
 test('stops showing the new layout popup once the user has tried the new navigation', async () => {
@@ -179,5 +183,44 @@ test('keeps the new layout popup closed after a reload once dismissed', async ()
             name: 'New layout available',
             hidden: true,
         }),
+    ).not.toBeInTheDocument();
+});
+
+test('switches back to the classic navigation from the switch back popup', async () => {
+    setupNewNavigationAvailable();
+    setNewNavigationEnabled(true);
+    render(<LayoutPicker>content</LayoutPicker>);
+
+    await userEvent.click(
+        within(await switchBackPopup()).getByRole('button', {
+            name: 'Switch back',
+        }),
+    );
+
+    await waitFor(() =>
+        expect(
+            screen.queryByRole('region', { name: 'Workspace' }),
+        ).not.toBeInTheDocument(),
+    );
+});
+
+test('keeps the switch back popup closed after a reload once dismissed', async () => {
+    setupNewNavigationAvailable();
+    setNewNavigationEnabled(true);
+    const { unmount } = render(<LayoutPicker>content</LayoutPicker>);
+    const popup = await switchBackPopup();
+    await userEvent.click(
+        within(popup).getByRole('button', {
+            name: 'Dismiss switch back popup',
+        }),
+    );
+    expect(popup).not.toBeInTheDocument();
+
+    unmount();
+    render(<LayoutPicker>content</LayoutPicker>);
+
+    await screen.findByRole('region', { name: 'Workspace' });
+    expect(
+        screen.queryByRole('region', { name: 'You are on the new layout' }),
     ).not.toBeInTheDocument();
 });

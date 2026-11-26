@@ -3,8 +3,6 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { basePath } from 'utils/formatPath';
 import { getLocalStorageItem, setLocalStorageItem } from 'utils/storage';
 
-const optInKey = `${basePath}:unleash-newNavigation`;
-const popupDismissedKey = `${basePath}:unleash-newNavigationPopupDismissed`;
 const listeners = new Set<() => void>();
 
 const subscribe = (listener: () => void) => {
@@ -20,30 +18,47 @@ const notify = () => {
     }
 };
 
-const isOptedIn = () => getLocalStorageItem<boolean>(optInKey) === true;
+const storedFlag = (key: string) => ({
+    read: () => getLocalStorageItem<boolean>(key) === true,
+    set: (value: boolean) => {
+        setLocalStorageItem(key, value);
+        notify();
+    },
+});
 
-const isPopupDismissed = () =>
-    getLocalStorageItem<boolean>(popupDismissedKey) === true;
+type StoredFlag = ReturnType<typeof storedFlag>;
+
+const useStoredFlag = (flag: StoredFlag) =>
+    useSyncExternalStore(subscribe, flag.read);
+
+const storedOptIn = storedFlag(`${basePath}:unleash-newNavigation`);
+const storedOptInPopupDismissed = storedFlag(
+    `${basePath}:unleash-newNavigationPopupDismissed`,
+);
+const storedSwitchBackPopupDismissed = storedFlag(
+    `${basePath}:unleash-newNavigationSwitchBackPopupDismissed`,
+);
 
 export const setNewNavigationEnabled = (enabled: boolean) => {
-    setLocalStorageItem(optInKey, enabled);
     if (enabled) {
-        setLocalStorageItem(popupDismissedKey, true);
+        storedOptInPopupDismissed.set(true);
     }
-    notify();
+    storedOptIn.set(enabled);
 };
 
-const dismissPopup = () => {
-    setLocalStorageItem(popupDismissedKey, true);
-    notify();
-};
+const dismissOptInPopup = () => storedOptInPopupDismissed.set(true);
+
+const dismissSwitchBackPopup = () => storedSwitchBackPopupDismissed.set(true);
 
 type NewNavigationState = 'unavailable' | 'classic' | 'new';
 
 export const useNewNavigation = () => {
     const available = Boolean(useUiFlag('improvedSidebarNavigation'));
-    const optedIn = useSyncExternalStore(subscribe, isOptedIn);
-    const popupDismissed = useSyncExternalStore(subscribe, isPopupDismissed);
+    const optedIn = useStoredFlag(storedOptIn);
+    const optInPopupDismissed = useStoredFlag(storedOptInPopupDismissed);
+    const switchBackPopupDismissed = useStoredFlag(
+        storedSwitchBackPopupDismissed,
+    );
 
     const navigation: NewNavigationState = !available
         ? 'unavailable'
@@ -54,7 +69,9 @@ export const useNewNavigation = () => {
     return {
         navigation,
         setEnabled: setNewNavigationEnabled,
-        showPopup: navigation === 'classic' && !popupDismissed,
-        dismissPopup,
+        showOptInPopup: navigation === 'classic' && !optInPopupDismissed,
+        dismissOptInPopup,
+        showSwitchBackPopup: navigation === 'new' && !switchBackPopupDismissed,
+        dismissSwitchBackPopup,
     };
 };

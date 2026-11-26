@@ -35,6 +35,8 @@ import {
     DELETE_FRONTEND_API_TOKEN,
 } from '@server/types/permissions';
 import type { ApiTokenSchema } from 'openapi';
+import { pluralize } from '../pluralize.ts';
+import { isTokenExpired } from '../isTokenExpired.ts';
 import { CreateApplicationTokenButton } from './CreateApplicationTokenButton/CreateApplicationTokenButton.tsx';
 import { CreateTokenPanel } from './CreateTokenPanel/CreateTokenPanel.tsx';
 
@@ -77,12 +79,6 @@ const typeLabels: Record<string, string> = {
 const deletePermission = (type: string) =>
     type === 'frontend' ? DELETE_FRONTEND_API_TOKEN : DELETE_CLIENT_API_TOKEN;
 
-const isExpired = ({ expiresAt }: ApiTokenSchema) =>
-    expiresAt ? new Date(expiresAt) < new Date() : false;
-
-const count = (n: number, one: string, many: string) =>
-    `${n} ${n === 1 ? one : many}`;
-
 interface ITokensTableProps {
     tokens: ApiTokenSchema[];
     onDelete: (secret: string) => Promise<void>;
@@ -120,7 +116,7 @@ const TokensTable = ({ tokens, onDelete }: ITokensTableProps) => {
                 id: 'status',
                 header: 'Status',
                 cell: ({ row }) =>
-                    isExpired(row.original) ? (
+                    isTokenExpired(row.original) ? (
                         <Badge color='error'>Expired</Badge>
                     ) : (
                         <Badge color='success'>Active</Badge>
@@ -282,10 +278,9 @@ export const ApplicationApiTokens = () => {
                             <Typography variant='h3'>{label}</Typography>
                             <Typography variant='body2' color='text.secondary'>
                                 {environmentTokens.length > 0
-                                    ? count(
+                                    ? pluralize(
                                           environmentTokens.length,
                                           'token',
-                                          'tokens',
                                       )
                                     : 'No active tokens'}
                             </Typography>
@@ -299,7 +294,7 @@ export const ApplicationApiTokens = () => {
                             <StyledEmpty>
                                 <Typography>
                                     {instances > 0
-                                        ? `${count(instances, 'instance reports', 'instances report')} here without a linked token.`
+                                        ? `${pluralize(instances, 'instance reports', 'instances report')} here without a linked token.`
                                         : `No token for ${label} yet.`}
                                 </Typography>
                                 <CreateApplicationTokenButton

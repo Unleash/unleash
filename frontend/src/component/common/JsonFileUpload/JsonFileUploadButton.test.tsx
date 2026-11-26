@@ -7,7 +7,13 @@ import { JsonFileUploadButton } from './JsonFileUploadButton.tsx';
 test('opens the file picker, passes on the parsed JSON of an uploaded file and rejects a file that is not JSON', async () => {
     const onLoad = vi.fn();
     const onError = vi.fn();
-    render(<JsonFileUploadButton onLoad={onLoad} onError={onError} />);
+    render(
+        <JsonFileUploadButton
+            maxBytes={1024}
+            onLoad={onLoad}
+            onError={onError}
+        />,
+    );
     const fileInput = screen.getByTestId('json-file-input');
     let pickerOpened = false;
     fileInput.addEventListener('click', () => {
@@ -30,4 +36,37 @@ test('opens the file picker, passes on the parsed JSON of an uploaded file and r
     await waitFor(() =>
         expect(onLoad).toHaveBeenCalledWith({ type: 'string' }),
     );
+});
+
+test('rejects a file over the size limit, a file of another type and several files at once', async () => {
+    const onLoad = vi.fn();
+    const onError = vi.fn();
+    render(
+        <JsonFileUploadButton
+            maxBytes={1024}
+            onLoad={onLoad}
+            onError={onError}
+        />,
+    );
+    const fileInput = screen.getByTestId('json-file-input');
+    const user = userEvent.setup({ applyAccept: false });
+
+    await user.upload(fileInput, new File(['1'.repeat(1025)], 'big.json'));
+    await user.upload(
+        fileInput,
+        new File(['{}'], 'schema.yaml', { type: 'application/yaml' }),
+    );
+    await user.upload(fileInput, [
+        new File(['{}'], 'first.json'),
+        new File(['{}'], 'second.json'),
+    ]);
+
+    await waitFor(() =>
+        expect(onError.mock.calls).toEqual([
+            ['The file is larger than 1 kB'],
+            ['Only .json files can be uploaded'],
+            ['Upload one file at a time'],
+        ]),
+    );
+    expect(onLoad).not.toHaveBeenCalled();
 });

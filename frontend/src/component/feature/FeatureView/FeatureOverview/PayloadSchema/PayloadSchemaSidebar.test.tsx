@@ -204,3 +204,26 @@ test('explains that nothing can be used from stored payloads that are not all JS
     );
     expect(applyButton()).toHaveAttribute('aria-disabled', 'true');
 });
+
+test('an uploaded JSON Schema file becomes the import draft', async () => {
+    testServerRoute(server, flagPath, {});
+    renderPayloadSchemaSidebar();
+
+    await userEvent.click(
+        await screen.findByRole('tab', { name: 'Import JSON Schema' }),
+    );
+    await userEvent.upload(
+        screen.getByTestId('json-file-input'),
+        new File(
+            [
+                JSON.stringify({
+                    type: 'object',
+                    properties: { region: { type: 'string', title: 'Region' } },
+                }),
+            ],
+            'schema.json',
+        ),
+    );
+
+    expect(await screen.findByLabelText('Region')).toBeInTheDocument();
+});

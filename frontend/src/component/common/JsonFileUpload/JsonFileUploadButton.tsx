@@ -3,15 +3,21 @@ import FileUpload from '@mui/icons-material/FileUpload';
 import { useJsonFileUpload } from './useJsonFileUpload.ts';
 
 interface IJsonFileUploadButtonProps {
+    maxBytes: number;
     onLoad: (json: unknown) => void;
     onError: (message: string) => void;
 }
 
 export const JsonFileUploadButton = ({
+    maxBytes,
     onLoad,
     onError,
 }: IJsonFileUploadButtonProps) => {
-    const { getInputProps, open } = useJsonFileUpload({ onLoad, onError });
+    const { getInputProps, open } = useJsonFileUpload({
+        maxBytes,
+        onLoad,
+        onError,
+    });
 
     return (
         <>

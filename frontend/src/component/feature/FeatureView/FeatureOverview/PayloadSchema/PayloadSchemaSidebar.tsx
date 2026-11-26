@@ -4,6 +4,7 @@ import { tabClasses } from '@mui/material/Tab';
 import { useNavigate } from 'react-router';
 import { dequal } from 'dequal';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
+import { JsonFileUploadButton } from 'component/common/JsonFileUpload/JsonFileUploadButton';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { formatFeaturePath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
@@ -95,6 +96,24 @@ const paneTitles: Record<SchemaSource, string> = {
     import: 'Import JSON Schema',
 };
 
+const payloadSchemaMaxBytes = 100 * 1024;
+
+interface ISchemaFileUploadButtonProps {
+    onLoad: (text: string) => void;
+}
+
+const SchemaFileUploadButton = ({ onLoad }: ISchemaFileUploadButtonProps) => {
+    const { setToastData } = useToast();
+
+    return (
+        <JsonFileUploadButton
+            maxBytes={payloadSchemaMaxBytes}
+            onLoad={(json) => onLoad(JSON.stringify(json, undefined, 2))}
+            onError={(text) => setToastData({ type: 'error', text })}
+        />
+    );
+};
+
 interface IPayloadSchemaFormProps {
     projectId: string;
     featureId: string;
@@ -152,6 +171,12 @@ const PayloadSchemaForm = ({
 
     const closeSource = () => setSelection({ source: false });
 
+    const setImportDraft = (text: string) =>
+        setSelection((current) => ({
+            source: 'import',
+            drafts: { ...(current.source ? current.drafts : {}), import: text },
+        }));
+
     const stageDraft = () => {
         staged.edit({ json: draftSchema });
         closeSource();
@@ -192,12 +217,7 @@ const PayloadSchemaForm = ({
             <Suspense key='import' fallback={null}>
                 <LazyReactJSONEditor
                     content={{ text: drafts.import ?? '' }}
-                    onChange={(text) =>
-                        setSelection({
-                            source,
-                            drafts: { ...drafts, import: text },
-                        })
-                    }
+                    onChange={setImportDraft}
                     editorStyle='fill'
                 />
             </Suspense>
@@ -300,6 +320,11 @@ const PayloadSchemaForm = ({
                     aside={
                         selection.source ? (
                             <>
+                                {selection.source === 'import' ? (
+                                    <SchemaFileUploadButton
+                                        onLoad={setImportDraft}
+                                    />
+                                ) : null}
                                 {!staged.isEmpty ? (
                                     <Button size='small' onClick={closeSource}>
                                         Cancel

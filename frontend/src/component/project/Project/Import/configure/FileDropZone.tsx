@@ -19,6 +19,7 @@ export const FileDropZone: FC<IFileDropZoneProps> = ({
     ...props
 }) => {
     const { getRootProps, getInputProps, isDragActive } = useJsonFileUpload({
+        maxBytes: 500 * 1024,
         onLoad: (json) => onSuccess(JSON.stringify(json, null, 4)),
         onError,
     });

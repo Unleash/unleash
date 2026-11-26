@@ -1,7 +1,7 @@
 import { createTestConfig } from '../../../../test/config/test-config.js';
 import type { IAuditUser, IStrategyVariant } from '../../../types/index.js';
 import { DEFAULT_ENV } from '../../../util/index.js';
-import { FakePayloadSchemaReadModel } from '../../payload-schema/fake-payload-schema-read-model.js';
+import { FakePayloadSchemaStore } from '../../payload-schema/fake-payload-schema-store.js';
 import { createFakeFeatureToggleService } from '../createFeatureToggleService.js';
 
 const context = {
@@ -12,7 +12,7 @@ const context = {
 const auditUser = {} as IAuditUser;
 
 const createService = async ({ payloadSchemas } = { payloadSchemas: true }) => {
-    const payloadSchemaReadModel = new FakePayloadSchemaReadModel();
+    const payloadSchemaReadModel = new FakePayloadSchemaStore();
     const { featureToggleService, featureToggleStore } =
         createFakeFeatureToggleService(
             createTestConfig({ experimental: { flags: { payloadSchemas } } }),
@@ -43,7 +43,7 @@ const strategyWithJsonVariant = (value: string) => ({
 test("a strategy cannot be created with a variant payload that breaks the flag's payload schema", async () => {
     const { featureToggleService, payloadSchemaReadModel } =
         await createService();
-    payloadSchemaReadModel.setPayloadSchema('typed-flag', {
+    await payloadSchemaReadModel.upsert('typed-flag', {
         type: 'object',
         properties: { color: { type: 'string' } },
     });
@@ -62,7 +62,7 @@ test("a strategy cannot be created with a variant payload that breaks the flag's
 test("a strategy cannot be changed to a variant payload that breaks the flag's payload schema", async () => {
     const { featureToggleService, payloadSchemaReadModel } =
         await createService();
-    payloadSchemaReadModel.setPayloadSchema('typed-flag', {
+    await payloadSchemaReadModel.upsert('typed-flag', {
         type: 'object',
         properties: { color: { type: 'string' } },
     });
@@ -87,7 +87,7 @@ test("a strategy cannot be changed to a variant payload that breaks the flag's p
 test('payload schemas are not enforced while the payloadSchemas flag is off', async () => {
     const { featureToggleService, payloadSchemaReadModel } =
         await createService({ payloadSchemas: false });
-    payloadSchemaReadModel.setPayloadSchema('typed-flag', {
+    await payloadSchemaReadModel.upsert('typed-flag', {
         type: 'object',
         properties: { color: { type: 'string' } },
     });

@@ -202,7 +202,6 @@ import {
     type VariantJsonPayload,
     VariantPayloadValidator,
 } from './features/payload-schema/variant-payload-validator.js';
-import { FakePayloadSchemaReadModel } from './features/payload-schema/fake-payload-schema-read-model.js';
 import type { IPayloadSchemaReadModel } from './features/payload-schema/payload-schema-read-model-type.js';
 import { hasJsonPayload } from './features/feature-toggle/variant-json-payload.js';
 import { FakeFeaturesReadModel } from './features/feature-toggle/fakes/fake-features-read-model.js';
@@ -598,7 +597,6 @@ export {
     FakePayloadSchemaStore,
     PayloadSchemaReadModel,
     VariantPayloadValidator,
-    FakePayloadSchemaReadModel,
     FakeFeatureStrategiesReadModel,
     FeatureStrategiesReadModel,
     hasJsonPayload,

@@ -13,7 +13,8 @@ import {
 } from '../change-request-access-service/createChangeRequestAccessReadModel.js';
 import { VariantPayloadValidator } from '../payload-schema/variant-payload-validator.js';
 import { PayloadSchemaReadModel } from '../payload-schema/payload-schema-read-model.js';
-import { FakePayloadSchemaReadModel } from '../payload-schema/fake-payload-schema-read-model.js';
+import { FakePayloadSchemaStore } from '../payload-schema/fake-payload-schema-store.js';
+import type { IPayloadSchemaReadModel } from '../payload-schema/payload-schema-read-model-type.js';
 
 export const createReleasePlanMilestoneStrategyService = (
     db: Db,
@@ -41,8 +42,8 @@ export const createReleasePlanMilestoneStrategyService = (
 export const createFakeReleasePlanMilestoneStrategyService = (
     config: IUnleashConfig,
     {
-        payloadSchemaReadModel = new FakePayloadSchemaReadModel(),
-    }: { payloadSchemaReadModel?: FakePayloadSchemaReadModel } = {},
+        payloadSchemaReadModel = new FakePayloadSchemaStore(),
+    }: { payloadSchemaReadModel?: IPayloadSchemaReadModel } = {},
 ) => {
     const milestoneStrategyStore = new FakeReleasePlanMilestoneStrategyStore();
     const { featureToggleService, featureStrategiesStore } =

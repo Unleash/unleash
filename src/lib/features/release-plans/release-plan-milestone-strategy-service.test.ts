@@ -10,7 +10,7 @@ import {
     SKIP_CHANGE_REQUEST,
 } from '../../server-impl.js';
 import type FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store.js';
-import { FakePayloadSchemaReadModel } from '../payload-schema/fake-payload-schema-read-model.js';
+import { FakePayloadSchemaStore } from '../payload-schema/fake-payload-schema-store.js';
 import { VariantPayloadValidator } from '../payload-schema/variant-payload-validator.js';
 
 const defaultContext = {
@@ -85,7 +85,7 @@ test('throws PermissionError when user cannot bypass change requests', async () 
         { releasePlanMilestoneStrategyStore: milestoneStrategyStore },
         { featureToggleService },
         new FakeChangeRequestAccessReadModel(false),
-        new VariantPayloadValidator(new FakePayloadSchemaReadModel()),
+        new VariantPayloadValidator(new FakePayloadSchemaStore()),
         config,
     );
 
@@ -105,7 +105,7 @@ test('throws PermissionError when user cannot bypass change requests', async () 
 });
 
 const createServiceWithPayloadSchemas = () => {
-    const payloadSchemaReadModel = new FakePayloadSchemaReadModel();
+    const payloadSchemaReadModel = new FakePayloadSchemaStore();
     const service = createFakeReleasePlanMilestoneStrategyService(
         createTestConfig({ experimental: { flags: { payloadSchemas: true } } }),
         { payloadSchemaReadModel },
@@ -139,7 +139,7 @@ test("a milestone strategy cannot be changed to a variant payload that breaks th
         releasePlanMilestoneStrategyService,
         payloadSchemaReadModel,
     } = createServiceWithPayloadSchemas();
-    payloadSchemaReadModel.setPayloadSchema(defaultContext.featureName, {
+    await payloadSchemaReadModel.upsert(defaultContext.featureName, {
         type: 'object',
         properties: { color: { type: 'string' } },
     });

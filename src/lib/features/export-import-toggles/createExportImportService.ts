@@ -60,7 +60,7 @@ import {
     createFakeFeatureLinkService,
     createFeatureLinkService,
 } from '../feature-links/createFeatureLinkService.js';
-import { FakePayloadSchemaReadModel } from '../payload-schema/fake-payload-schema-read-model.js';
+import { FakePayloadSchemaStore } from '../payload-schema/fake-payload-schema-store.js';
 import { PayloadSchemaReadModel } from '../payload-schema/payload-schema-read-model.js';
 
 export const createFakeExportImportTogglesService = (
@@ -140,7 +140,7 @@ export const createFakeExportImportTogglesService = (
         dependentFeaturesReadModel,
         segmentReadModel,
         featureLinksReadModel,
-        new FakePayloadSchemaReadModel(),
+        new FakePayloadSchemaStore(),
     );
 };
 

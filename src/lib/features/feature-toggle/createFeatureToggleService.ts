@@ -65,7 +65,8 @@ import { ResourceLimitsService } from '../resource-limits/resource-limits-servic
 import { ConstraintValidator } from '../constraints/constraint-validator.js';
 import { VariantPayloadValidator } from '../payload-schema/variant-payload-validator.js';
 import { PayloadSchemaReadModel } from '../payload-schema/payload-schema-read-model.js';
-import { FakePayloadSchemaReadModel } from '../payload-schema/fake-payload-schema-read-model.js';
+import { FakePayloadSchemaStore } from '../payload-schema/fake-payload-schema-store.js';
+import type { IPayloadSchemaReadModel } from '../payload-schema/payload-schema-read-model-type.js';
 import {
     createClonePayloadSchemaService,
     createFakeClonePayloadSchemaService,
@@ -192,8 +193,8 @@ export const createFeatureToggleService = (
 export const createFakeFeatureToggleService = (
     config: IUnleashConfig,
     {
-        payloadSchemaReadModel = new FakePayloadSchemaReadModel(),
-    }: { payloadSchemaReadModel?: FakePayloadSchemaReadModel } = {},
+        payloadSchemaReadModel = new FakePayloadSchemaStore(),
+    }: { payloadSchemaReadModel?: IPayloadSchemaReadModel } = {},
 ) => {
     const { getLogger, flagResolver } = config;
     const eventBus = new EventEmitter();

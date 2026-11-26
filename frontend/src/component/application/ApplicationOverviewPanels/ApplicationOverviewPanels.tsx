@@ -8,6 +8,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import type { ApplicationOverviewSchema } from 'openapi';
 import { CreateTokenPanel } from '../ApplicationApiTokens/CreateTokenPanel/CreateTokenPanel.tsx';
 import { ApplicationEnvironments } from './ApplicationEnvironments/ApplicationEnvironments.tsx';
+import { ApplicationProjects } from './ApplicationProjects/ApplicationProjects.tsx';
 import { buildApplicationEnvironments } from './buildApplicationEnvironments.ts';
 
 const hiddenTokensNotice = (hiddenTokenTypes: string[], forbidden: boolean) => {
@@ -57,6 +58,11 @@ export const ApplicationOverviewPanels = ({
                 allTokensVisible={allTokensVisible}
                 tokensPath={`/applications/${encodeURIComponent(name)}/tokens`}
                 onCreateToken={setCreateTokenIn}
+            />
+            <ApplicationProjects
+                environments={applicationEnvironments}
+                observedProjects={overview.projects}
+                allTokensVisible={allTokensVisible}
             />
             {createTokenIn ? (
                 <CreateTokenPanel

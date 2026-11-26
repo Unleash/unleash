@@ -86,6 +86,7 @@ test('shows a card per environment and creates a token from one', async () => {
     renderPanels({ environments: [activity('development', 3)], projects: [] });
 
     within(await region('Production')).getByText('checkout-production');
+    within(await region('Projects')).getByRole('link', { name: 'dx' });
     within(await region('Development')).getByText('3 instances', {
         exact: false,
     });

@@ -205,6 +205,7 @@ export interface IUnleashOptions {
     edgeClientSecret?: string;
     allowPrivateUrlInIntegration?: boolean;
     allowListIntegration?: string[];
+    denyPrivateUrlInOidc?: boolean;
 }
 
 export interface IEmailOption {
@@ -349,4 +350,5 @@ export interface IUnleashConfig {
     edgeClientSecret?: string;
     allowPrivateUrlInIntegration?: boolean;
     allowListIntegration?: string[];
+    denyPrivateUrlInOidc: boolean;
 }

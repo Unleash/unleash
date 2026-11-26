@@ -1,6 +1,7 @@
 export { createPinnedLookup, fetchPinned } from './fetch.js';
 export {
     validateUrl,
+    isPublicIp,
     resolveHostname,
     NonPublicAddressError,
     type ValidatedUrl,

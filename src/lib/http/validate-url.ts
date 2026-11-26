@@ -43,7 +43,7 @@ const isLocalIpv6: (ip: Address6) => boolean = (ip) => {
     );
 };
 
-const isPublicIp: (address: string) => boolean = (address) => {
+export const isPublicIp: (address: string) => boolean = (address) => {
     if (Address4.isValid(address)) {
         const ip = new Address4(address);
         return !isLocalIpv4(ip);

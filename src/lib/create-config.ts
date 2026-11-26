@@ -665,6 +665,10 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
             parseEnvVarStrings(process.env.UNLEASH_ALLOW_LIST_INTEGRATION, []),
     };
 
+    const denyPrivateUrlInOidc =
+        options.denyPrivateUrlInOidc ??
+        parseEnvVarBoolean(process.env.UNLEASH_DENY_PRIVATE_URL_IN_OIDC, false);
+
     const customStrategySettings = options.customStrategySettings ?? {
         disableCreation: parseEnvVarBoolean(
             process.env.UNLEASH_DISABLE_CUSTOM_STRATEGY_CREATION,
@@ -961,5 +965,6 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         edgeMasterKey,
         edgeClientSecret,
         ...integrationConfig,
+        denyPrivateUrlInOidc,
     };
 }

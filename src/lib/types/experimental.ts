@@ -50,6 +50,7 @@ export type IFlagKey =
     | 'showUserDeviceCount'
     | 'memorizeStats'
     | 'deltaApi'
+    | 'sdkProtocolV3'
     | 'cacheFeatureSerialization'
     | 'uniqueSdkTracking'
     | 'consumptionModel'
@@ -250,6 +251,10 @@ const flags: IFlags = {
     ),
     deltaApi: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DELTA_API,
+        false,
+    ),
+    sdkProtocolV3: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SDK_PROTOCOL_V3,
         false,
     ),
     cacheFeatureSerialization: parseEnvVarBoolean(

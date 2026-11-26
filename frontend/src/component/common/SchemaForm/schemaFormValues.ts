@@ -125,11 +125,14 @@ export const valueFromInput = (
 ): unknown => {
     const { schema, emptyValue } = withoutNull(declaredSchema);
     if (isEnumSchema(schema)) {
-        return input || enumNoneValue(declaredSchema);
+        return input
+            ? schema.enum?.find((option) => String(option) === input)
+            : enumNoneValue(declaredSchema);
     }
     if (!input) return acceptsEmptyString(schema) ? '' : emptyValue;
     if (isDateTimeSchema(schema)) {
         return parseValidDate(input)?.toISOString() ?? input;
     }
+    if (isNumericSchema(schema)) return Number(input);
     return input;
 };

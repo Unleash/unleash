@@ -120,3 +120,42 @@ test('clearing a field stores an empty string where the schema accepts one, null
         'true',
     );
 });
+
+test('each field stores its value in the type its schema declares', async () => {
+    let saved: Record<string, unknown> = {};
+    render(
+        <SchemaForm
+            schema={{
+                type: 'object',
+                properties: {
+                    count: { type: 'integer', title: 'Count' },
+                    level: { type: 'integer', title: 'Level', enum: [1, 2] },
+                    until: {
+                        type: 'string',
+                        title: 'Until',
+                        format: 'date-time',
+                    },
+                },
+            }}
+            value={{}}
+            onChange={(next) => {
+                saved = { ...saved, ...next };
+            }}
+        />,
+    );
+
+    fireEvent.change(screen.getByLabelText('Count'), {
+        target: { value: '42' },
+    });
+    await userEvent.click(screen.getByLabelText('Level'));
+    await userEvent.click(screen.getByRole('option', { name: '2' }));
+    fireEvent.change(screen.getByLabelText('Until'), {
+        target: { value: '2026-10-09T04:00' },
+    });
+
+    expect(saved).toEqual({
+        count: 42,
+        level: 2,
+        until: '2026-10-09T04:00:00.000Z',
+    });
+});

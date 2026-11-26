@@ -147,7 +147,10 @@ const AppNavigation: FC<{ searchOpen: boolean; onSearch: () => void }> = ({
 
     return (
         <>
-            <StyledLogoLink to='/' aria-label='Unleash'>
+            <StyledLogoLink
+                to={appNavigationLinks.home.to}
+                aria-label='Unleash'
+            >
                 <ThemeMode
                     darkmode={<UnleashLogoWhite aria-label='Unleash logo' />}
                     lightmode={<UnleashLogo aria-label='Unleash logo' />}

@@ -70,6 +70,15 @@ test('links Home to the personal dashboard', () => {
     );
 });
 
+test('links the logo to the personal dashboard', () => {
+    render(<AppShell>content</AppShell>);
+
+    expect(screen.getByRole('link', { name: 'Unleash' })).toHaveAttribute(
+        'href',
+        '/personal',
+    );
+});
+
 test('links Projects and Flags overview in the Workspace section', () => {
     render(<AppShell>content</AppShell>);
 

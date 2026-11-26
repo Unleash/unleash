@@ -169,11 +169,7 @@ export default class SlackAppAddon extends Addon {
             const failedRequests = results.filter(
                 ({ status }) => status === 'rejected',
             );
-            const errors = this.getUniqueArray(
-                failedRequests.map(({ reason }: PromiseRejectedResult) =>
-                    this.parseError(reason),
-                ),
-            ).join(' ');
+            const errors = this.getFailureMessages(results, channels).join(' ');
 
             if (failedRequests.length === 0) {
                 const successMessage = `All (${results.length}) Slack client calls were successful.`;
@@ -247,6 +243,33 @@ export default class SlackAppAddon extends Addon {
             return defaultChannels.split(',').map((c) => c.trim());
         }
         return [];
+    }
+
+    private getFailureMessages(
+        results: PromiseSettledResult<unknown>[],
+        channels: string[],
+    ): string[] {
+        const channelsNotFound: string[] = [];
+        const otherErrors: string[] = [];
+
+        for (const [index, result] of results.entries()) {
+            if (result.status !== 'rejected') {
+                continue;
+            }
+            if (result.reason?.data?.error === 'channel_not_found') {
+                channelsNotFound.push(`"${channels[index]}"`);
+            } else {
+                otherErrors.push(this.parseError(result.reason));
+            }
+        }
+
+        const messages: string[] = [];
+        if (channelsNotFound.length > 0) {
+            messages.push(
+                `Slack could not find the channel${channelsNotFound.length === 1 ? '' : 's'} ${channelsNotFound.join(', ')}. Check the spelling. A private channel needs the app invited to it in Slack.`,
+            );
+        }
+        return messages.concat(this.getUniqueArray(otherErrors));
     }
 
     parseError(error: Error | CodedError): string {

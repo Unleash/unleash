@@ -228,6 +228,108 @@ describe('SlackAppAddon', () => {
         );
     });
 
+    it('should say which channel Slack could not find', async () => {
+        postMessage = vi.fn().mockRejectedValueOnce({
+            code: ErrorCode.PlatformError,
+            data: { ok: false, error: 'channel_not_found' },
+        });
+
+        await addon.handleEvent(
+            event,
+            {
+                accessToken,
+                defaultChannels: 'team-rollouts',
+            },
+            INTEGRATION_ID,
+        );
+
+        expect(registerEventMock.mock.calls[0][0]).toMatchObject({
+            state: 'failed',
+            stateDetails:
+                'All (1) Slack client calls failed with the following errors: Slack could not find the channel "team-rollouts". Check the spelling. A private channel needs the app invited to it in Slack.',
+        });
+    });
+
+    it('should name only the channel that failed when another channel received the message', async () => {
+        postMessage = vi
+            .fn()
+            .mockResolvedValueOnce({ ok: true })
+            .mockRejectedValueOnce({
+                code: ErrorCode.PlatformError,
+                data: { ok: false, error: 'channel_not_found' },
+            });
+
+        await addon.handleEvent(
+            event,
+            {
+                accessToken,
+                defaultChannels: 'general, team-rollouts',
+            },
+            INTEGRATION_ID,
+        );
+
+        expect(registerEventMock.mock.calls[0][0]).toMatchObject({
+            state: 'successWithErrors',
+            stateDetails:
+                'Some (1 of 2) Slack client calls failed. Errors: Slack could not find the channel "team-rollouts". Check the spelling. A private channel needs the app invited to it in Slack.',
+        });
+    });
+
+    it('should list every channel Slack could not find in one sentence', async () => {
+        const channelNotFound = {
+            code: ErrorCode.PlatformError,
+            data: { ok: false, error: 'channel_not_found' },
+        };
+        postMessage = vi
+            .fn()
+            .mockRejectedValueOnce(channelNotFound)
+            .mockRejectedValueOnce(channelNotFound)
+            .mockRejectedValueOnce(channelNotFound);
+
+        await addon.handleEvent(
+            event,
+            {
+                accessToken,
+                defaultChannels: 'team-a, team-b, team-c',
+            },
+            INTEGRATION_ID,
+        );
+
+        expect(registerEventMock.mock.calls[0][0]).toMatchObject({
+            state: 'failed',
+            stateDetails:
+                'All (3) Slack client calls failed with the following errors: Slack could not find the channels "team-a", "team-b", "team-c". Check the spelling. A private channel needs the app invited to it in Slack.',
+        });
+    });
+
+    it('should report a channel Slack could not find together with other failures', async () => {
+        const channelIsArchived = { ok: false, error: 'is_archived' };
+        postMessage = vi
+            .fn()
+            .mockRejectedValueOnce({
+                code: ErrorCode.PlatformError,
+                data: channelIsArchived,
+            })
+            .mockRejectedValueOnce({
+                code: ErrorCode.PlatformError,
+                data: { ok: false, error: 'channel_not_found' },
+            });
+
+        await addon.handleEvent(
+            event,
+            {
+                accessToken,
+                defaultChannels: 'old-channel, team-rollouts',
+            },
+            INTEGRATION_ID,
+        );
+
+        expect(registerEventMock.mock.calls[0][0]).toMatchObject({
+            state: 'failed',
+            stateDetails: `All (2) Slack client calls failed with the following errors: Slack could not find the channel "team-rollouts". Check the spelling. A private channel needs the app invited to it in Slack. A platform error occurred: ${JSON.stringify(channelIsArchived)}`,
+        });
+    });
+
     test('Should call registerEvent', async () => {
         const eventWith2Tags: IEvent = {
             ...event,

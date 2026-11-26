@@ -436,7 +436,7 @@ test('Should send password reset email if user exists', async () => {
     });
 
     const unknownUser = service.createResetPasswordEmail('unknown@example.com');
-    expect(unknownUser).rejects.toThrowError('Could not find user');
+    await expect(unknownUser).rejects.toThrow('Could not find user');
 
     await userStore.insert({
         id: 123,

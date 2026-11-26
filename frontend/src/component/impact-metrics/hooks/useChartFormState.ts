@@ -2,12 +2,9 @@ import { useState, useEffect } from 'react';
 import { useImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsLabels';
 import type { AggregationMode, ChartConfig, MetricSource } from '../types.ts';
 import type { ImpactMetricsLabels } from 'hooks/api/getters/useImpactMetricsData/useImpactMetricsData';
+import type { RemoteData } from 'hooks/api/RemoteData';
 import type { MetricSelection } from '../ImpactMetricModal/ImpactMetricsControls/SeriesSelector/MetricSelector.tsx';
 
-export type AvailableLabels =
-    | { status: 'loading' }
-    | { status: 'error' }
-    | { status: 'ready'; labels: ImpactMetricsLabels };
 import {
     getDefaultAggregation,
     getMetricType,
@@ -41,7 +38,7 @@ export type ChartFormState = {
         getConfigToSave: () => Omit<ChartConfig, 'id'>;
     };
     isValid: boolean;
-    currentAvailableLabels: AvailableLabels;
+    currentAvailableLabels: RemoteData<ImpactMetricsLabels>;
 };
 
 export const useChartFormState = ({
@@ -125,12 +122,12 @@ export const useChartFormState = ({
     const isValid = metricName.length > 0;
     const metricType = getMetricType(metricName, fetchedLabels?.metric_type);
     const hasFetchedLabels = Object.keys(fetchedLabels).length > 0;
-    const currentAvailableLabels: AvailableLabels =
+    const currentAvailableLabels: RemoteData<ImpactMetricsLabels> =
         labelsFetchError && !hasFetchedLabels
-            ? { status: 'error' }
+            ? { state: 'error', error: labelsFetchError }
             : fetchingLabels
-              ? { status: 'loading' }
-              : { status: 'ready', labels: fetchedLabels };
+              ? { state: 'loading' }
+              : { state: 'success', data: fetchedLabels };
 
     useEffect(() => {
         if (

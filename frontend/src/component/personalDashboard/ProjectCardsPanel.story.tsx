@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { SWRConfig, type Middleware } from 'swr';
 import type { Story, StoryMeta } from 'component/stories/types';
 import type { ProjectSchema } from 'openapi';
-import type { RemoteData } from './RemoteData.ts';
+import type { RemoteData } from 'hooks/api/RemoteData';
 import { AccessProviderMock } from 'component/providers/AccessProvider/AccessProviderMock';
 import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import { formatApiPath } from 'utils/formatPath';

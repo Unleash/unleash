@@ -139,15 +139,15 @@ export const ImpactMetricModal: FC<ImpactMetricModalProps> = ({
     };
 
     const labelsFilter =
-        currentAvailableLabels.status === 'loading' ? (
+        currentAvailableLabels.state === 'loading' ? (
             <LabelDiscoveryLoading />
-        ) : currentAvailableLabels.status === 'error' ? (
+        ) : currentAvailableLabels.state === 'error' ? (
             <LabelDiscoveryError />
         ) : (
             <LabelsFilter
                 labelSelectors={formData.labelSelectors}
                 onChange={actions.setLabelSelectors}
-                availableLabels={currentAvailableLabels.labels}
+                availableLabels={currentAvailableLabels.data}
             />
         );
 

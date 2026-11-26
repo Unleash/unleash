@@ -5,7 +5,7 @@ import type {
     FeatureSearchEnvironmentSchema,
     UserRecentFlagSchema,
 } from 'openapi';
-import type { RemoteData } from './RemoteData.ts';
+import type { RemoteData } from 'hooks/api/RemoteData';
 import { formatApiPath } from 'utils/formatPath';
 import { RecentFlagsPanelView } from './RecentFlagsPanel';
 

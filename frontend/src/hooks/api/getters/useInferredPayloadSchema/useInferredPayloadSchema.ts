@@ -1,11 +1,11 @@
 import type { InferredPayloadSchemaSchema } from 'openapi';
 import { formatApiPath } from 'utils/formatPath';
+import type { RemoteData } from 'hooks/api/RemoteData';
 import { fetcher, useApiGetter } from '../useApiGetter/useApiGetter.js';
 
-export type InferredPayloadSchemaState =
-    | { status: 'loading' }
-    | { status: 'error'; error: Error }
-    | { status: 'ready'; schema: InferredPayloadSchemaSchema['schema'] };
+export type InferredPayloadSchemaState = RemoteData<
+    InferredPayloadSchemaSchema['schema']
+>;
 
 export const useInferredPayloadSchema = (
     projectId: string,
@@ -20,10 +20,10 @@ export const useInferredPayloadSchema = (
     );
 
     if (error) {
-        return { status: 'error', error };
+        return { state: 'error', error };
     }
     if (!data) {
-        return { status: 'loading' };
+        return { state: 'loading' };
     }
-    return { status: 'ready', schema: data.schema };
+    return { state: 'success', data: data.schema };
 };

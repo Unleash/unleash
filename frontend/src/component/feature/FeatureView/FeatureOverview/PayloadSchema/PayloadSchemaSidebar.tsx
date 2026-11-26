@@ -148,8 +148,8 @@ const PayloadSchemaForm = ({
         drafts: Drafts,
     ): Record<SchemaSource, Record<string, unknown> | undefined> => ({
         examples:
-            inferred?.status === 'ready' && inferred.schema.examples.length
-                ? inferred.schema
+            inferred?.state === 'success' && inferred.data.examples.length
+                ? inferred.data
                 : undefined,
         template: drafts.template?.schema,
         import:

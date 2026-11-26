@@ -2,14 +2,12 @@ import useSWR from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler.js';
+import type { RemoteData } from 'hooks/api/RemoteData';
 import type { MeteredRequestsSchema } from 'openapi';
 
 export type MeteredRequestsResponse = {
     refetch: () => void;
-    result:
-        | { state: 'success'; data: MeteredRequestsSchema }
-        | { state: 'error'; error: Error }
-        | { state: 'loading' };
+    result: RemoteData<MeteredRequestsSchema>;
 };
 
 export const useRequestsConsumption = (

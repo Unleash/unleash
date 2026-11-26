@@ -13,7 +13,7 @@ import { loadingData } from 'component/project/ProjectList/loadingData';
 import { useMyProjects } from 'component/project/ProjectList/hooks/useMyProjects';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { TablePlaceholder } from 'component/common/Table/TablePlaceholder/TablePlaceholder';
-import type { RemoteData } from './RemoteData.ts';
+import type { RemoteData } from 'hooks/api/RemoteData';
 import { openFullListTracking } from './personalDashboardTracking.ts';
 
 const Panel = styled('section')(({ theme }) => ({

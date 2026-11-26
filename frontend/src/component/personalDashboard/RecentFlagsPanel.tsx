@@ -24,7 +24,7 @@ import useToast from 'hooks/useToast';
 import { useEventTracker } from 'hooks/useEventTracker';
 import { useTracking } from 'hooks/useTracking';
 import { formatDateYMDHMS } from 'utils/formatDate';
-import type { RemoteData } from './RemoteData.ts';
+import type { RemoteData } from 'hooks/api/RemoteData';
 import {
     filterFlagsTracking,
     openFullListTracking,

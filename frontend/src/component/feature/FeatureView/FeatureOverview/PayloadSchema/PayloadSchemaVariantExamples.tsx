@@ -37,28 +37,28 @@ interface IPayloadSchemaVariantExamplesProps {
 export const PayloadSchemaVariantExamples = ({
     inferred,
 }: IPayloadSchemaVariantExamplesProps) => {
-    if (inferred.status === 'loading') {
+    if (inferred.state === 'loading') {
         return null;
     }
 
     return (
         <StyledExamples>
-            {inferred.status === 'error' &&
+            {inferred.state === 'error' &&
             hasNonObjectPayloads(inferred.error) ? (
                 <Alert severity='info'>
                     Examples can only be shown when every JSON variant payload
                     is an object
                 </Alert>
-            ) : inferred.status === 'error' ? (
+            ) : inferred.state === 'error' ? (
                 <Alert severity='error'>
                     {formatUnknownError(inferred.error)}
                 </Alert>
-            ) : !inferred.schema.examples.length ? (
+            ) : !inferred.data.examples.length ? (
                 <Typography variant='body2'>
                     This flag has no JSON variant payloads yet
                 </Typography>
             ) : (
-                inferred.schema.examples.map((example, index) => (
+                inferred.data.examples.map((example, index) => (
                     <StyledExample key={JSON.stringify(example)}>
                         <Typography variant='body2' sx={{ fontWeight: 'bold' }}>
                             Example {index + 1}

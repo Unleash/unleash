@@ -16,6 +16,7 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import { useProjectFeatureSearch } from '../../PaginatedProjectFeatureToggles/useProjectFeatureSearch.ts';
 import { useTracking } from 'hooks/useTracking';
 import type { Tracking } from 'utils/trackingEvents';
+import type { RemoteData } from 'hooks/api/RemoteData';
 
 export const ImportStatusArea = styled(Box)(({ theme }) => ({
     padding: theme.spacing(4, 2, 2, 2),
@@ -46,18 +47,14 @@ const InfoContainer = styled(Box)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
 
-type ApiStatus =
-    | { status: 'success' }
-    | { status: 'error'; errors: Record<string, string> }
-    | { status: 'loading' };
-
 const toApiStatus = (
     loading: boolean,
     errors: Record<string, string>,
-): ApiStatus => {
-    if (loading) return { status: 'loading' };
-    if (Object.keys(errors).length > 0) return { status: 'error', errors };
-    return { status: 'success' };
+): RemoteData<undefined, Record<string, string>> => {
+    if (loading) return { state: 'loading' };
+    if (Object.keys(errors).length > 0)
+        return { state: 'error', error: errors };
+    return { state: 'success', data: undefined };
 };
 
 export const ImportStage: FC<{
@@ -97,13 +94,13 @@ export const ImportStage: FC<{
 
     const showChangeRequestInfo =
         isChangeRequestConfigured(environment) &&
-        importStatus.status === 'success';
+        importStatus.state === 'success';
 
     return (
         <ImportLayoutContainer>
             <ImportStatusArea>
                 <ConditionallyRender
-                    condition={importStatus.status === 'loading'}
+                    condition={importStatus.state === 'loading'}
                     show={
                         <PulsingAvatar
                             sx={{ width: 80, height: 80 }}
@@ -114,7 +111,7 @@ export const ImportStage: FC<{
                     }
                 />
                 <ConditionallyRender
-                    condition={importStatus.status === 'success'}
+                    condition={importStatus.state === 'success'}
                     show={
                         <SuccessAvatar sx={{ width: 80, height: 80 }}>
                             <Check fontSize='large' />
@@ -122,7 +119,7 @@ export const ImportStage: FC<{
                     }
                 />
                 <ConditionallyRender
-                    condition={importStatus.status === 'error'}
+                    condition={importStatus.state === 'error'}
                     show={
                         <ErrorAvatar sx={{ width: 80, height: 80 }}>
                             <ErrorIcon fontSize='large' />
@@ -131,15 +128,15 @@ export const ImportStage: FC<{
                 />
                 <ImportMessage>
                     <ConditionallyRender
-                        condition={importStatus.status === 'loading'}
+                        condition={importStatus.state === 'loading'}
                         show={'Importing...'}
                     />
                     <ConditionallyRender
-                        condition={importStatus.status === 'success'}
+                        condition={importStatus.state === 'success'}
                         show={'Import completed'}
                     />
                     <ConditionallyRender
-                        condition={importStatus.status === 'error'}
+                        condition={importStatus.state === 'error'}
                         show={'Import failed'}
                     />
                 </ImportMessage>

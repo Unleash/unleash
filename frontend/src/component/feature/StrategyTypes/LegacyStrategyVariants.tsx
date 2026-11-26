@@ -3,7 +3,7 @@ import { LegacyVariantForm } from '../FeatureView/FeatureVariants/FeatureEnviron
 import { updateWeightEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/variantWeights.ts';
 import type React from 'react';
 import { useEffect, useState } from 'react';
-import type { IFeatureVariantEdit } from 'component/feature/variantEdit';
+import type { IFeatureVariantEdit } from '../FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/variantEdit.ts';
 import { WeightType } from '../../../constants/variantTypes.ts';
 import {
     Box,

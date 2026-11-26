@@ -19,7 +19,7 @@ import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from 'component/providers/AccessP
 import { WeightType } from 'constants/variantTypes';
 import { useAssignableUnleashContext } from 'hooks/api/getters/useUnleashContext/useAssignableUnleashContext';
 import { updateWeightEdit } from './variantWeights.ts';
-import type { IFeatureVariantEdit } from 'component/feature/variantEdit';
+import type { IFeatureVariantEdit } from './variantEdit.ts';
 import { StickinessSelect } from 'component/feature/StrategyTypes/FlexibleStrategy/StickinessSelect/StickinessSelect';
 import { useDefaultProjectSettings } from 'hooks/useDefaultProjectSettings';
 import Loader from 'component/common/Loader/Loader';

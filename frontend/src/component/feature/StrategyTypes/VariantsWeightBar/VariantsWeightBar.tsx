@@ -1,6 +1,6 @@
 import { type KeyboardEvent, memo, type PointerEvent, useRef } from 'react';
-import type { IFeatureVariantEdit } from 'component/feature/variantEdit.ts';
 import { alpha, styled, Tooltip } from '@mui/material';
+import type { StrategyVariantEdit } from '../strategyVariantEdit.ts';
 import DragIndicator from '@mui/icons-material/DragIndicator';
 import { focusOutline } from 'themes/themeStyles';
 import {
@@ -72,7 +72,7 @@ const Handle = styled('span')(({ theme }) => ({
     },
 }));
 
-type BarVariant = Pick<IFeatureVariantEdit, 'id' | 'name' | 'weight'> & {
+type BarVariant = Pick<StrategyVariantEdit, 'id' | 'name' | 'weight'> & {
     color: string;
     hasFixedWeight: boolean;
 };

@@ -14,7 +14,7 @@ import {
 import { calculateVariantWeight } from 'component/common/util.ts';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon.tsx';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly.tsx';
-import type { IFeatureVariantEdit } from 'component/feature/variantEdit.ts';
+import type { StrategyVariantEdit } from '../strategyVariantEdit.ts';
 import type { FailedVariantsSubmit } from '../../FeatureStrategy/FeatureStrategyForm/useStrategyFormValidation.ts';
 import Delete from '@mui/icons-material/Delete';
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema.ts';
@@ -162,9 +162,9 @@ const submitAttemptErrors = ({
 });
 
 interface IVariantFormProps {
-    variant: IFeatureVariantEdit;
-    variants: IFeatureVariantEdit[];
-    updateVariant: (updatedVariant: IFeatureVariantEdit) => void;
+    variant: StrategyVariantEdit;
+    variants: StrategyVariantEdit[];
+    updateVariant: (updatedVariant: StrategyVariantEdit) => void;
     changeWeight: (weight: number) => void;
     removeVariant: (variantId: string) => void;
     decorationColor?: string;
@@ -218,7 +218,7 @@ export const VariantForm = ({
                 id !== variant.id && weightType === WeightType.VARIABLE,
         ).length > 0;
 
-    const isProtectedVariant = (variant: IFeatureVariantEdit): boolean => {
+    const isProtectedVariant = (variant: StrategyVariantEdit): boolean => {
         const isVariable = variant.weightType === WeightType.VARIABLE;
 
         const atLeastOneFixedVariant = variants.some((variant) => {
@@ -295,7 +295,7 @@ export const VariantForm = ({
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: needs follow-up
     useEffect(() => {
-        const newVariant: IFeatureVariantEdit = {
+        const newVariant: StrategyVariantEdit = {
             ...variant,
             name,
             weight: variant.weight,

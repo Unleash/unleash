@@ -1,5 +1,5 @@
 import { weightTypes } from 'constants/weightTypes';
-import type { IFeatureVariantEdit } from 'component/feature/variantEdit';
+import type { IFeatureVariantEdit } from './variantEdit.ts';
 
 export function updateWeightEdit(
     variants: IFeatureVariantEdit[],

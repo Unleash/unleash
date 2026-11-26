@@ -5,7 +5,7 @@ import { render } from 'utils/testRenderer.tsx';
 import { testServerRoute, testServerSetup } from 'utils/testServer.ts';
 import { expect, test } from 'vitest';
 import { WeightType } from 'constants/variantTypes.ts';
-import type { IFeatureVariantEdit } from 'component/feature/variantEdit.ts';
+import type { StrategyVariantEdit } from '../strategyVariantEdit.ts';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 import { VariantForm } from './VariantForm.tsx';
 
@@ -17,7 +17,7 @@ const enablePayloadSchemas = () =>
         flags: { payloadSchemas: true },
     });
 
-const defaultVariant: IFeatureVariantEdit = {
+const defaultVariant: StrategyVariantEdit = {
     id: 'default',
     name: 'default',
     weight: 1000,
@@ -40,7 +40,7 @@ const GatedVariantForm = (props: ComponentProps<typeof VariantForm>) => {
 };
 
 test('includes the typed payload value in the variant update', async () => {
-    let updatedVariant: IFeatureVariantEdit | undefined;
+    let updatedVariant: StrategyVariantEdit | undefined;
     render(
         <VariantForm
             variant={defaultVariant}
@@ -66,7 +66,7 @@ test('includes the typed payload value in the variant update', async () => {
 
 test("initializes a new variant's JSON payload from the schema's default values", async () => {
     enablePayloadSchemas();
-    let updatedVariant: IFeatureVariantEdit | undefined;
+    let updatedVariant: StrategyVariantEdit | undefined;
     render(
         <GatedVariantForm
             variant={defaultVariant}
@@ -90,7 +90,7 @@ test("initializes a new variant's JSON payload from the schema's default values"
 test("keeps an existing variant's missing payload as a plain string when a payload schema is active", async () => {
     enablePayloadSchemas();
     const variant = { ...defaultVariant, new: false };
-    let updatedVariant: IFeatureVariantEdit | undefined;
+    let updatedVariant: StrategyVariantEdit | undefined;
     render(
         <GatedVariantForm
             variant={variant}

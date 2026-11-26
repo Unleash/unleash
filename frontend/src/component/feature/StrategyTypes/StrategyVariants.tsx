@@ -2,7 +2,7 @@ import { createUuid } from 'utils/createUuid';
 import { VariantForm, variantNameInputId } from './VariantForm/VariantForm.tsx';
 import type React from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { IFeatureVariantEdit } from 'component/feature/variantEdit';
+import type { StrategyVariantEdit } from './strategyVariantEdit.ts';
 import { WeightType } from '../../../constants/variantTypes.ts';
 import { styled, useTheme, Button, Tabs } from '@mui/material';
 import type { StrategyFormState } from 'interfaces/strategy';
@@ -49,7 +49,7 @@ interface StrategyVariantsProps<T extends StrategyFormState> {
 }
 
 const indicesToFixAroundHandle = (
-    variants: IFeatureVariantEdit[],
+    variants: StrategyVariantEdit[],
     draggedHandleIndex: number,
 ): number[] => {
     const leftIndex = draggedHandleIndex;
@@ -85,11 +85,10 @@ export const StrategyVariants = <T extends StrategyFormState>({
             new: canRenamePreexistingVariants || false,
             isValid: isValidVariant(variant, allVariants),
             id: createUuid(),
-            overrides: [],
         }),
     );
     const [variantsEdit, setVariantsEdit] =
-        useState<IFeatureVariantEdit[]>(initialVariants);
+        useState<StrategyVariantEdit[]>(initialVariants);
     const [selectedVariantId, setSelectedVariantId] = useState(
         initialVariants[0]?.id,
     );
@@ -141,7 +140,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
         }));
     }, [stickiness, JSON.stringify(variantsEdit)]);
 
-    const updateVariant = (updatedVariant: IFeatureVariantEdit, id: string) => {
+    const updateVariant = (updatedVariant: StrategyVariantEdit, id: string) => {
         setVariantsEdit((prevVariants) =>
             prevVariants.map((prevVariant) =>
                 prevVariant.id === id

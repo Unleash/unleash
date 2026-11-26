@@ -1,5 +1,5 @@
 import { WeightType } from '../../../constants/variantTypes.ts';
-import type { IFeatureVariantEdit } from 'component/feature/variantEdit';
+import type { StrategyVariantEdit } from './strategyVariantEdit.ts';
 
 export const TOTAL_WEIGHT = 1000;
 
@@ -110,8 +110,8 @@ const distributeWholeParts = (total: number, count: number): number[] => {
 };
 
 export const splitWeightsEvenly = (
-    variants: IFeatureVariantEdit[],
-): IFeatureVariantEdit[] => {
+    variants: StrategyVariantEdit[],
+): StrategyVariantEdit[] => {
     const fixedVariants = variants.filter(
         (variant) => variant.weightType === WeightType.FIX,
     );

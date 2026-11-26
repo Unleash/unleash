@@ -4,7 +4,13 @@ import { render } from 'utils/testRenderer';
 import { SidebarCountBadge } from './SidebarCountBadge.tsx';
 
 const renderBadge = (count: number) =>
-    render(<SidebarCountBadge count={count} description='to review' />);
+    render(
+        <SidebarCountBadge
+            color='neutral'
+            count={count}
+            description='to review'
+        />,
+    );
 
 test('shows nothing when there is nothing to count', () => {
     renderBadge(0);

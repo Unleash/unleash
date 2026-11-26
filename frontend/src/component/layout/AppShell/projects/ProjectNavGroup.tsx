@@ -97,6 +97,7 @@ const ActionableChangeRequestsBadge: FC<{ projectId: string }> = ({
     projectId,
 }) => (
     <SidebarCountBadge
+        color='neutral'
         count={useActionableChangeRequests(projectId).total}
         description='you can act on'
     />

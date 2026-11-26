@@ -209,6 +209,24 @@ test('shows change requests on enterprise', async () => {
     ).toHaveAttribute('href', '/change-requests');
 });
 
+test('counts open change requests requesting my approval on Change requests', async () => {
+    mockEnterprise();
+    mockUserWithSplash(server, {}, 7);
+    testServerRoute(
+        server,
+        '/api/admin/search/change-requests',
+        { changeRequests: [], total: 3 },
+        'get',
+        200,
+        { requestedApproverId: 'IS:7', state: 'IS:open' },
+    );
+
+    render(<AppShell>content</AppShell>);
+
+    const link = await screen.findByRole('link', { name: /Change requests/ });
+    expect(await within(link).findByText('3')).toBeInTheDocument();
+});
+
 test('hides change requests on oss', async () => {
     testServerRoute(server, '/api/admin/ui-config', {
         versionInfo: { current: { oss: 'version' } },

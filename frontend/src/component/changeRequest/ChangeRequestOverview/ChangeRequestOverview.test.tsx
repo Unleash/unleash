@@ -12,6 +12,8 @@ import {
     APPLY_CHANGE_REQUEST,
 } from 'component/providers/AccessProvider/permissions';
 import { Route, Routes } from 'react-router';
+import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
+import { useApprovalRequestedCount } from 'hooks/api/getters/useApprovalRequestedCount/useApprovalRequestedCount';
 
 const server = testServerSetup();
 const mockChangeRequest = (
@@ -353,4 +355,73 @@ test('should show a reject dialog when change request is scheduled and Reject Ch
     await screen.findByRole('dialog', {
         name: 'Reject changes',
     });
+});
+
+const countsWaitingOnMe = ({
+    actionable,
+    approvalRequested,
+}: {
+    actionable: number;
+    approvalRequested: number;
+}) => {
+    testServerRoute(
+        server,
+        '/api/admin/projects/default/change-requests/actionable',
+        { total: actionable },
+    );
+    testServerRoute(
+        server,
+        '/api/admin/search/change-requests',
+        { changeRequests: [], total: approvalRequested },
+        'get',
+        200,
+        { requestedApproverId: 'IS:17', state: 'IS:open' },
+    );
+};
+
+const CountsWaitingOnMe = () =>
+    `actionable: ${useActionableChangeRequests('default').total}, approval requested: ${useApprovalRequestedCount().total}`;
+
+test('refreshes the counts of change requests waiting on me after applying changes', async () => {
+    setupChangeRequest(featureName, 'Approved');
+    testServerRoute(
+        server,
+        '/api/admin/projects/default/change-requests/1/state',
+        {},
+        'put',
+    );
+    countsWaitingOnMe({ actionable: 2, approvalRequested: 3 });
+    render(
+        <>
+            <Component />
+            <CountsWaitingOnMe />
+        </>,
+        {
+            route: '/projects/default/change-requests/1',
+            permissions: [
+                {
+                    permission: APPLY_CHANGE_REQUEST,
+                    project: 'default',
+                    environment: 'production',
+                },
+            ],
+        },
+    );
+    await screen.findByText('actionable: 2, approval requested: 3');
+    const applyOrScheduleButton = await screen.findByText(
+        'Apply or schedule changes',
+    );
+    await waitFor(() => expect(applyOrScheduleButton).toBeEnabled(), {
+        timeout: 3000,
+    });
+    countsWaitingOnMe({ actionable: 1, approvalRequested: 2 });
+
+    fireEvent.click(applyOrScheduleButton);
+    fireEvent.click(
+        await screen.findByRole('menuitem', { name: 'Apply changes' }),
+    );
+
+    expect(
+        await screen.findByText('actionable: 1, approval requested: 2'),
+    ).toBeInTheDocument();
 });

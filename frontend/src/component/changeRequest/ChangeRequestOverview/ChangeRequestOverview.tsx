@@ -42,6 +42,7 @@ import {
 } from '../changeRequest.types';
 import { useNavigate } from 'react-router';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
+import { useApprovalRequestedCount } from 'hooks/api/getters/useApprovalRequestedCount/useApprovalRequestedCount';
 import { ChangeRequestRequestedApprovers } from './ChangeRequestRequestedApprovers/ChangeRequestRequestedApprovers.tsx';
 import { ChangeRequestIcon } from 'component/common/ChangeRequestIcon/ChangeRequestIcon.tsx';
 import { useTracking } from 'hooks/useTracking';
@@ -157,6 +158,8 @@ export const ChangeRequestOverview: FC = () => {
     const [commentText, setCommentText] = useState('');
     const { refetch: refetchActionableChangeRequests } =
         useActionableChangeRequests(projectId);
+    const { refetch: refetchApprovalRequestedCount } =
+        useApprovalRequestedCount();
 
     const id = useRequiredPathParam('id');
     const { data: changeRequest, refetchChangeRequest } = useChangeRequest(
@@ -188,6 +191,12 @@ export const ChangeRequestOverview: FC = () => {
         changeRequest.environment,
     );
 
+    const refetchCounts = () => {
+        refetchChangeRequestOpen();
+        refetchActionableChangeRequests();
+        refetchApprovalRequestedCount();
+    };
+
     const onRequestError = (error: unknown) =>
         setToastApiError(formatUnknownError(error));
 
@@ -199,8 +208,7 @@ export const ChangeRequestOverview: FC = () => {
             );
             setShowApplyScheduledDialog(false);
             await refetchChangeRequest();
-            refetchChangeRequestOpen();
-            refetchActionableChangeRequests();
+            refetchCounts();
             setToastData({
                 type: 'success',
                 text: 'Changes applied',
@@ -223,8 +231,7 @@ export const ChangeRequestOverview: FC = () => {
             );
             setShowScheduleChangeDialog(false);
             refetchChangeRequest();
-            refetchChangeRequestOpen();
-            refetchActionableChangeRequests();
+            refetchCounts();
             setToastData({
                 type: 'success',
                 text: 'Changes scheduled',
@@ -259,8 +266,7 @@ export const ChangeRequestOverview: FC = () => {
             await changeState(projectId, Number(id), { state: 'Cancelled' });
             setShowCancelDialog(false);
             refetchChangeRequest();
-            refetchChangeRequestOpen();
-            refetchActionableChangeRequests();
+            refetchCounts();
             setToastData({
                 type: 'success',
                 text: 'Changes cancelled',
@@ -284,8 +290,7 @@ export const ChangeRequestOverview: FC = () => {
                 type: 'success',
                 text: 'Changes rejected',
             });
-            refetchChangeRequestOpen();
-            refetchActionableChangeRequests();
+            refetchCounts();
         } finally {
             setDisabled(false);
         }
@@ -298,8 +303,7 @@ export const ChangeRequestOverview: FC = () => {
                 changeState(projectId, Number(id), { state: 'Approved' }),
             );
             await refetchChangeRequest();
-            refetchActionableChangeRequests();
-            refetchChangeRequestOpen();
+            refetchCounts();
             setToastData({
                 type: 'success',
                 text: 'Changes approved',

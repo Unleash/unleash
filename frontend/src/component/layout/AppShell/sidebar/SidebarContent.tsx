@@ -26,7 +26,9 @@ import { appNavigationLinks } from './appNavigationLinks.ts';
 import { useVisibleAppNavigationLinks } from './useVisibleAppNavigationLinks.ts';
 import { SearchButton } from './SearchButton.tsx';
 import { SettingsMenu } from './SettingsMenu.tsx';
+import { SidebarCountBadge } from './SidebarCountBadge.tsx';
 import { SidebarLink } from './SidebarLink.tsx';
+import { useApprovalRequestedCount } from 'hooks/api/getters/useApprovalRequestedCount/useApprovalRequestedCount';
 import { SidebarList } from './SidebarList.tsx';
 import { SidebarMoreToggle } from './SidebarMoreToggle.tsx';
 import { SidebarSection } from './SidebarSection.tsx';
@@ -163,6 +165,7 @@ const AppNavigation: FC<{ searchOpen: boolean; onSearch: () => void }> = ({
                     <SidebarLink
                         {...appNavigationLinks.changeRequests}
                         icon={<ChangeRequestIcon />}
+                        badge={<ApprovalRequestedBadge />}
                     />
                 ) : null}
             </SidebarList>
@@ -172,6 +175,15 @@ const AppNavigation: FC<{ searchOpen: boolean; onSearch: () => void }> = ({
         </>
     );
 };
+
+// Its own component so the count is only fetched when the link is shown.
+const ApprovalRequestedBadge: FC = () => (
+    <SidebarCountBadge
+        color='primary'
+        count={useApprovalRequestedCount().total}
+        description='requesting your approval'
+    />
+);
 
 const WorkspaceSection: FC = () => {
     const visibleLinks = useVisibleAppNavigationLinks();

@@ -1,5 +1,9 @@
 import type { FC } from 'react';
+import { styled } from '@mui/material';
 import { useTracking } from 'hooks/useTracking';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { useApprovalRequestedCount } from 'hooks/api/getters/useApprovalRequestedCount/useApprovalRequestedCount';
+import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { filterChangeRequestListTracking } from 'component/changeRequest/changeRequestTracking';
 import type { TableState } from '../ChangeRequests.types';
 import { StyledContainer } from './ChangeRequestFilters.styles';
@@ -29,6 +33,23 @@ const getUserFilter = (
     }
 };
 
+const StyledDot = styled('span')(({ theme }) => ({
+    width: theme.spacing(0.875),
+    height: theme.spacing(0.875),
+    flexShrink: 0,
+    borderRadius: '50%',
+    backgroundColor: theme.palette.primary.main,
+}));
+
+const ApprovalRequestedDot: FC<{ className?: string }> = ({ className }) =>
+    useApprovalRequestedCount().total ? (
+        <StyledDot className={className}>
+            <ScreenReaderOnly as='span'>
+                Has open change requests:
+            </ScreenReaderOnly>
+        </StyledDot>
+    ) : null;
+
 export const UserFilterChips: FC<UserFilterChipsProps> = ({
     tableState,
     setTableState,
@@ -37,6 +58,7 @@ export const UserFilterChips: FC<UserFilterChipsProps> = ({
 }) => {
     const userIdString = userId.toString();
     const trackFilterList = useTracking(filterChangeRequestListTracking);
+    const improvedSidebarNavigation = useUiFlag('improvedSidebarNavigation');
 
     const activeUserFilter: UserFilterType | undefined = getUserFilter(
         tableState,
@@ -77,6 +99,12 @@ export const UserFilterChips: FC<UserFilterChipsProps> = ({
             />
             <StyledChip
                 label={'Approval Requested'}
+                icon={
+                    improvedSidebarNavigation &&
+                    activeUserFilter !== 'approval requested' ? (
+                        <ApprovalRequestedDot />
+                    ) : undefined
+                }
                 data-selected={activeUserFilter === 'approval requested'}
                 onClick={handleUserFilterChange('approval requested')}
                 title={'Show change requests requesting your approval'}

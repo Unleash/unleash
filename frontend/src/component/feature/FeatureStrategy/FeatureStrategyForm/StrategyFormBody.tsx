@@ -28,6 +28,9 @@ import { parseParameterNumber } from 'utils/parseParameter.ts';
 import { PlainTextDescription } from './PlainTextDescription/PlainTextDescription.tsx';
 import { ActiveStateSelector } from './ActiveStateSelector.tsx';
 import { parameterFocusKey, useFocusSection } from './formFocus.tsx';
+import { Badge } from 'component/common/Badge/Badge';
+import { formatStrategyName } from 'utils/strategyNames';
+import { Truncator } from 'component/common/Truncator/Truncator';
 
 export interface StrategyFormBodyProps<T extends StrategyFormState> {
     strategy: T;
@@ -71,6 +74,12 @@ const StyledHeaderBox = styled(Box)(({ theme }) => ({
         duration: 500,
         easing: theme.transitions.easing.easeInOut,
     }),
+}));
+
+const TitleGroup = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1.5),
 }));
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
@@ -279,6 +288,8 @@ export const StrategyFormBody = <T extends StrategyFormState>({
         validateParameter?.(name, value);
     };
 
+    const strategyTypeName = formatStrategyName(strategyDefinition.name);
+
     const handleTitleChange = (title: string) => {
         setStrategy((prev) => ({
             ...prev,
@@ -297,9 +308,19 @@ export const StrategyFormBody = <T extends StrategyFormState>({
         >
             <FormScrollArea>
                 <StyledHeaderBox>
-                    <Typography variant='h3' component='h1'>
-                        Configure strategy
-                    </Typography>
+                    <TitleGroup>
+                        <Typography variant='h3' component='h1'>
+                            Configure strategy
+                        </Typography>
+                        <Badge color='disabled'>
+                            <Truncator
+                                title={strategyTypeName}
+                                sx={{ maxWidth: 200 }}
+                            >
+                                {strategyTypeName}
+                            </Truncator>
+                        </Badge>
+                    </TitleGroup>
                     {allowEnableDisable ? (
                         <ActiveStateSelector
                             currentState={

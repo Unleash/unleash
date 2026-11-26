@@ -3,6 +3,8 @@ import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 import {
     defaultPayloadValue,
     formValueWithExamplesAsDefaults,
+    toDateTimeInputValue,
+    valueFromInput,
 } from './schemaFormValues';
 
 test('resolves each property from its own default, then the root default, then its own example, then the root example', () => {
@@ -193,4 +195,61 @@ test('defaultPayloadValue leaves a required formatted string unset, since no emp
     };
 
     expect(defaultPayloadValue(schema)).toEqual({});
+});
+
+test('a cleared field stores an empty string where its schema accepts one', () => {
+    expect(valueFromInput({ type: 'string' }, '')).toBe('');
+    expect(valueFromInput({ type: 'string', enum: ['', 's'] }, '')).toBe('');
+});
+
+test('a cleared field stores null where its schema allows null', () => {
+    expect(
+        valueFromInput({ type: ['string', 'null'], format: 'date-time' }, ''),
+    ).toBeNull();
+    expect(
+        valueFromInput(
+            { type: ['string', 'null'], enum: ['eu', 'us', null] },
+            '',
+        ),
+    ).toBeNull();
+});
+
+test('a cleared field that accepts neither an empty string nor null is left out', () => {
+    expect(valueFromInput({ type: 'string', format: 'email' }, '')).toBe(
+        undefined,
+    );
+    expect(valueFromInput({ type: 'integer' }, '')).toBe(undefined);
+    expect(valueFromInput({ type: 'string', enum: ['eu', 'us'] }, '')).toBe(
+        undefined,
+    );
+});
+
+test('numeric input is stored as a number', () => {
+    expect(valueFromInput({ type: 'integer' }, '42')).toBe(42);
+    expect(valueFromInput({ type: 'number' }, '0.5')).toBe(0.5);
+});
+
+test('a picked enum option keeps the type it is declared with', () => {
+    expect(valueFromInput({ type: 'integer', enum: [1, 2] }, '2')).toBe(2);
+});
+
+test('date-time input is stored as an ISO timestamp', () => {
+    expect(
+        valueFromInput(
+            { type: 'string', format: 'date-time' },
+            '2026-10-09T04:00',
+        ),
+    ).toBe('2026-10-09T04:00:00.000Z');
+});
+
+test('a stored timestamp is shown in the date-time input format', () => {
+    expect(toDateTimeInputValue('2026-10-09T02:00:00.000Z')).toBe(
+        '2026-10-09T02:00',
+    );
+});
+
+test('a missing or unparseable timestamp shows an empty date-time input', () => {
+    expect(toDateTimeInputValue(undefined)).toBe('');
+    expect(toDateTimeInputValue(null)).toBe('');
+    expect(toDateTimeInputValue('not a date')).toBe('');
 });

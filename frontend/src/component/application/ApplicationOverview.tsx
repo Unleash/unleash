@@ -19,6 +19,8 @@ import { useEventTracker } from 'hooks/useEventTracker';
 import { useEffect } from 'react';
 import { useFeedback } from '../feedbackNew/useFeedback.tsx';
 import ReviewsOutlined from '@mui/icons-material/ReviewsOutlined';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ApplicationOverviewPanels } from './ApplicationOverviewPanels/ApplicationOverviewPanels.tsx';
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
     marginTop: theme.spacing(2),
@@ -53,6 +55,12 @@ const StyledBadgeLink = styled(Link)(({ theme }) => ({
     },
 }));
 
+const StyledLinkedOverview = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
+}));
+
 const ApplicationHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
@@ -76,6 +84,7 @@ const ApplicationOverview = () => {
     const applicationName = useRequiredPathParam('name');
     const _navigate = useNavigate();
     const { data, loading } = useApplicationOverview(applicationName);
+    const linkedOverview = useUiFlag('applicationOverview');
 
     const { openFeedback } = useFeedback('applicationOverview', 'automatic');
 
@@ -95,6 +104,16 @@ const ApplicationOverview = () => {
                 <p>Loading...</p>
                 <LinearProgress />
             </div>
+        );
+    }
+
+    if (linkedOverview) {
+        // an application can have linked tokens before any SDK reports
+        return (
+            <StyledLinkedOverview>
+                <ApplicationIssues application={data} />
+                <ApplicationOverviewPanels overview={data} />
+            </StyledLinkedOverview>
         );
     }
 

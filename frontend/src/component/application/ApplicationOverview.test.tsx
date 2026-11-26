@@ -1,9 +1,10 @@
-import { test } from 'vitest';
+import { expect, test } from 'vitest';
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { Route, Routes } from 'react-router';
 import type { ApplicationOverviewSchema } from 'openapi';
+import { ADMIN } from '@server/types/permissions';
 import ApplicationOverview from './ApplicationOverview.tsx';
 
 const server = testServerSetup();
@@ -57,6 +58,9 @@ test('Display application overview with environments', async () => {
     await screen.findByText('999');
     await screen.findByText('unleash-client-node:5.5.0-beta.0');
     await screen.findByText('< 1 minute ago');
+    expect(
+        screen.queryByRole('region', { name: 'Development' }),
+    ).not.toBeInTheDocument();
 });
 
 test('Display application overview without environments', async () => {
@@ -125,4 +129,44 @@ test('Display application with issues', async () => {
     );
     await screen.findByText('feature1');
     await screen.findByText('strategy1');
+});
+
+test('with applicationOverview on, shows the issues and the environment cards, not the chart', async () => {
+    setupApi({
+        environments: [
+            {
+                name: 'development',
+                instanceCount: 999,
+                lastSeen: new Date().toISOString(),
+                sdks: [],
+                frontendSdks: [],
+                backendSdks: [],
+                issues: { missingFeatures: [], outdatedSdks: [] },
+            },
+        ],
+        issues: { missingStrategies: ['strategy1'] },
+        featureCount: 1,
+        projects: [],
+    });
+    testServerRoute(server, '/api/admin/ui-config', {
+        flags: { applicationOverview: true },
+        resourceLimits: { apiTokens: 10 },
+    });
+    testServerRoute(server, '/api/admin/environments', { environments: [] });
+    testServerRoute(server, '/api/admin/api-tokens', { tokens: [] });
+    render(
+        <Routes>
+            <Route
+                path={'/applications/:name'}
+                element={<ApplicationOverview />}
+            />
+        </Routes>,
+        { route: '/applications/my-app', permissions: [{ permission: ADMIN }] },
+    );
+
+    await screen.findByRole('region', { name: 'Development' });
+    screen.getByText('strategy1');
+    expect(
+        screen.queryByText('development environment'),
+    ).not.toBeInTheDocument();
 });

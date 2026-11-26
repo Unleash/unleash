@@ -9,14 +9,13 @@ import {
 import { visuallyHidden } from '@mui/utils';
 import Input from 'component/common/Input/Input';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import { parseDateValue, parseValidDate } from 'component/common/util.ts';
 import {
-    acceptsEmptyString,
     isArraySchema,
     isBooleanSchema,
     isDateTimeSchema,
     isDictionarySchema,
     isEnumSchema,
+    isNumericSchema,
     isObjectWithPropertiesSchema,
     isPlainStringOrNumberSchema,
     type SchemaMatcher,
@@ -28,6 +27,11 @@ import {
     SchemaFormDictionaryField,
 } from './SchemaFormCollectionField.tsx';
 import { SchemaFieldDescription } from './SchemaFieldDescription.tsx';
+import {
+    enumNoneValue,
+    toDateTimeInputValue,
+    valueFromInput,
+} from './schemaFormValues.ts';
 
 const StyledUnsupported = styled('div')(({ theme }) => ({
     padding: theme.spacing(1.5),
@@ -53,16 +57,8 @@ const StyledGroup = styled('fieldset')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const toDateTimeInputValue = (value: unknown): string =>
-    typeof value === 'string' && parseValidDate(value)
-        ? parseDateValue(value)
-        : '';
-
-const fromDateTimeInputValue = (input: string): string =>
-    parseValidDate(input)?.toISOString() ?? input;
-
 const htmlInputType = (schema: JsonSchemaProperty): string => {
-    if (schema.type === 'number' || schema.type === 'integer') return 'number';
+    if (isNumericSchema(schema)) return 'number';
     if (schema.format === 'uri') return 'url';
     if (schema.format === 'email') return 'email';
     return 'text';
@@ -88,6 +84,8 @@ export const SchemaFormField = ({
     const { schema, emptyValue } = withoutNull(declaredSchema);
     const label = schema.title ?? name;
     const descriptionId = useId();
+    const onInputChange = (input: string) =>
+        onChange(valueFromInput(declaredSchema, input));
 
     const renderers: {
         matches: SchemaMatcher;
@@ -178,13 +176,7 @@ export const SchemaFormField = ({
                     disabled={Boolean(schema.readOnly)}
                     type='datetime-local'
                     value={toDateTimeInputValue(value)}
-                    onChange={(event) =>
-                        onChange(
-                            event.target.value
-                                ? fromDateTimeInputValue(event.target.value)
-                                : emptyValue,
-                        )
-                    }
+                    onChange={(event) => onInputChange(event.target.value)}
                     fullWidth
                 />
             ),
@@ -197,7 +189,7 @@ export const SchemaFormField = ({
                     key: String(option),
                     label: String(option) || 'None',
                 }));
-                const noneValue = enumValues.includes('') ? '' : emptyValue;
+                const noneValue = enumNoneValue(declaredSchema);
                 const options =
                     noneValue === '' || (required && emptyValue === undefined)
                         ? enumOptions
@@ -209,7 +201,7 @@ export const SchemaFormField = ({
                         description={schema.description}
                         options={options}
                         value={String(value ?? '')}
-                        onChange={(key) => onChange(key || noneValue)}
+                        onChange={onInputChange}
                         disabled={Boolean(schema.readOnly)}
                         fullWidth
                     />
@@ -227,13 +219,7 @@ export const SchemaFormField = ({
                     disabled={Boolean(schema.readOnly)}
                     type={htmlInputType(schema)}
                     value={(value as string | number) ?? ''}
-                    onChange={(event) =>
-                        onChange(
-                            event.target.value || acceptsEmptyString(schema)
-                                ? event.target.value
-                                : emptyValue,
-                        )
-                    }
+                    onChange={(event) => onInputChange(event.target.value)}
                     fullWidth
                     slotProps={{
                         htmlInput: {

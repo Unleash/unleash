@@ -37,6 +37,9 @@ export const isPlainStringOrNumberSchema: SchemaMatcher = (schema) =>
         schema.type === 'number' ||
         schema.type === 'integer');
 
+export const isNumericSchema: SchemaMatcher = (schema) =>
+    schema.type === 'number' || schema.type === 'integer';
+
 export const acceptsEmptyString: SchemaMatcher = (schema) =>
     (schema.type === undefined || schema.type === 'string') &&
     schema.format === undefined;

@@ -4,11 +4,14 @@ import {
     isArraySchema,
     isBooleanSchema,
     isDictionarySchema,
+    isDateTimeSchema,
     isEnumSchema,
+    isNumericSchema,
     isObjectWithPropertiesSchema,
     withoutNull,
 } from 'component/common/SchemaForm/schemaMatchers.ts';
 import { isPlainObject } from 'utils/plainObject';
+import { parseDateValue, parseValidDate } from 'component/common/util.ts';
 
 const firstExample = (schema: JsonSchemaProperty): unknown => {
     const { examples } = schema;
@@ -27,7 +30,7 @@ const emptyValueForProperty = (declared: JsonSchemaProperty): unknown => {
     if (isBooleanSchema(schema)) return false;
     if (isDictionarySchema(schema)) return {};
     if (isEnumSchema(schema)) return schema.enum?.[0];
-    if (schema.type === 'number' || schema.type === 'integer') return 0;
+    if (isNumericSchema(schema)) return 0;
     return acceptsEmptyString(schema) ? '' : undefined;
 };
 
@@ -103,3 +106,30 @@ export const defaultPayloadValue = (
     resolvedFormValue(schema, ({ propSchema, required }) =>
         required ? emptyValueForProperty(propSchema) : undefined,
     );
+
+export const toDateTimeInputValue = (value: unknown): string =>
+    typeof value === 'string' && parseValidDate(value)
+        ? parseDateValue(value)
+        : '';
+
+export const enumNoneValue = (
+    declaredSchema: JsonSchemaProperty,
+): '' | null | undefined => {
+    const { schema, emptyValue } = withoutNull(declaredSchema);
+    return schema.enum?.includes('') ? '' : emptyValue;
+};
+
+export const valueFromInput = (
+    declaredSchema: JsonSchemaProperty,
+    input: string,
+): unknown => {
+    const { schema, emptyValue } = withoutNull(declaredSchema);
+    if (isEnumSchema(schema)) {
+        return input || enumNoneValue(declaredSchema);
+    }
+    if (!input) return acceptsEmptyString(schema) ? '' : emptyValue;
+    if (isDateTimeSchema(schema)) {
+        return parseValidDate(input)?.toISOString() ?? input;
+    }
+    return input;
+};

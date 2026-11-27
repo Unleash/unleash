@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, onTestFinished } from 'vitest';
 import { act, screen, waitFor } from '@testing-library/react';
+import { HttpResponse, http } from 'msw';
 import { type ScopedMutator, useSWRConfig } from 'swr';
 import FlagProvider from '@unleash/proxy-client-react';
 import { render, settleProviders } from 'utils/testRenderer';
@@ -8,6 +9,7 @@ import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { testUnleashClient } from 'utils/testUnleashClient';
 import { WelcomeDialogProvider } from './personalDashboard/WelcomeDialogProvider.tsx';
 import { App } from './App';
+import { UserSettingsProvider } from './userSettings/UserSettingsProvider.tsx';
 import { USER_ENDPOINT_PATH } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 // Preload the lazy uxtweak chunk so the anonymous test's absence assertion
 // can't pass by racing React.lazy — with the module already in the cache,
@@ -189,5 +191,85 @@ describe('App research widget gating', () => {
         await settleProviders();
         await settleProviders();
         expect(screen.queryByText('Quick feedback')).not.toBeInTheDocument();
+    });
+});
+
+describe('App while user settings load', () => {
+    const setupSettingsFlagOn = () => {
+        testServerRoute(server, '/api/admin/ui-config', {
+            flags: { userSettings: true },
+            unleashContext: { userId: '1' },
+        });
+        testServerRoute(server, '/api/admin/projects', { projects: [] });
+    };
+
+    const renderAppWithUserSettings = (route: string) =>
+        render(
+            <FlagProvider
+                unleashClient={testUnleashClient([])}
+                startClient={false}
+            >
+                <WelcomeDialogProvider>
+                    <UserSettingsProvider>
+                        <App />
+                    </UserSettingsProvider>
+                </WelcomeDialogProvider>
+            </FlagProvider>,
+            { route },
+        );
+
+    it('keeps the loader up until the signed-in user settings load', async () => {
+        setupSettingsFlagOn();
+        setupLoggedIn();
+        let release: () => void = () => {};
+        const released = new Promise<void>((resolve) => {
+            release = resolve;
+        });
+        let settingsRequested = false;
+        server.use(
+            http.get('/api/admin/user/settings', async () => {
+                settingsRequested = true;
+                await released;
+                return HttpResponse.json({ settings: {} });
+            }),
+        );
+
+        renderAppWithUserSettings('/projects');
+        await waitFor(() => expect(settingsRequested).toBe(true));
+        await settleProviders();
+
+        expect(screen.getByLabelText('Loading')).toBeInTheDocument();
+        expect(
+            screen.queryByRole('heading', { name: /^Projects/ }),
+        ).not.toBeInTheDocument();
+
+        release();
+
+        expect(
+            await screen.findByRole('heading', { name: 'Projects (0)' }),
+        ).toBeInTheDocument();
+    });
+
+    it('opens the app when loading the user settings fails', async () => {
+        setupSettingsFlagOn();
+        setupLoggedIn();
+        testServerRoute(server, '/api/admin/user/settings', null, 'get', 403);
+
+        renderAppWithUserSettings('/projects');
+
+        expect(
+            await screen.findByRole('heading', { name: 'Projects (0)' }),
+        ).toBeInTheDocument();
+    });
+
+    it('shows the login page to a signed-out user without waiting for settings', async () => {
+        setupSettingsFlagOn();
+        setupLoggedOut();
+
+        renderAppWithUserSettings('/projects');
+
+        expect(
+            await screen.findByText('Sign in to your instance'),
+        ).toBeInTheDocument();
     });
 });

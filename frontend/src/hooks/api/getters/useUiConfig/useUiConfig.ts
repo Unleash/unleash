@@ -9,7 +9,7 @@ interface IUseUIConfigOutput {
     uiConfig: IUiConfig;
     loading: boolean;
     error?: Error;
-    refetch: () => void;
+    refetch: () => Promise<IUiConfig | undefined>;
     isOss: () => boolean;
     isPro: () => boolean;
     isEnterprise: () => boolean;

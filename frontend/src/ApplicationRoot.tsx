@@ -22,6 +22,7 @@ import { useRecordUIErrorApi } from 'hooks/api/actions/useRecordUIErrorApi/useRe
 import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';
 import { UnleashFlagProvider } from 'component/providers/UnleashFlagProvider/UnleashFlagProvider';
 import { WelcomeDialogProvider } from 'component/personalDashboard/WelcomeDialogProvider.tsx';
+import { UserSettingsProvider } from 'component/userSettings/UserSettingsProvider.tsx';
 
 export const ApplicationRoot = () => {
     const { recordUiError } = useRecordUIErrorApi();
@@ -45,42 +46,44 @@ export const ApplicationRoot = () => {
             <AccessProvider>
                 <BrowserRouter basename={basePath}>
                     <QueryParamProvider adapter={ReactRouter7Adapter}>
-                        <ThemeProvider>
-                            <AnnouncerProvider>
-                                <LogRocketProvider>
-                                    <HubSpotChatLoader />
-                                    <FlightRecorderProvider
-                                        hostname={window.location.hostname}
-                                    >
-                                        <EventTrackerProvider>
-                                            <UnleashFlagProvider>
-                                                <ErrorBoundary
-                                                    FallbackComponent={
-                                                        LayoutError
-                                                    }
-                                                    onError={sendErrorToApi}
-                                                >
-                                                    <FeedbackProvider>
-                                                        <FeedbackCESProvider>
-                                                            <StickyProvider>
-                                                                <HighlightProvider>
-                                                                    <WelcomeDialogProvider>
-                                                                        <InstanceStatus>
-                                                                            <ScrollTop />
-                                                                            <App />
-                                                                        </InstanceStatus>
-                                                                    </WelcomeDialogProvider>
-                                                                </HighlightProvider>
-                                                            </StickyProvider>
-                                                        </FeedbackCESProvider>
-                                                    </FeedbackProvider>
-                                                </ErrorBoundary>
-                                            </UnleashFlagProvider>
-                                        </EventTrackerProvider>
-                                    </FlightRecorderProvider>
-                                </LogRocketProvider>
-                            </AnnouncerProvider>
-                        </ThemeProvider>
+                        <UserSettingsProvider>
+                            <ThemeProvider>
+                                <AnnouncerProvider>
+                                    <LogRocketProvider>
+                                        <HubSpotChatLoader />
+                                        <FlightRecorderProvider
+                                            hostname={window.location.hostname}
+                                        >
+                                            <EventTrackerProvider>
+                                                <UnleashFlagProvider>
+                                                    <ErrorBoundary
+                                                        FallbackComponent={
+                                                            LayoutError
+                                                        }
+                                                        onError={sendErrorToApi}
+                                                    >
+                                                        <FeedbackProvider>
+                                                            <FeedbackCESProvider>
+                                                                <StickyProvider>
+                                                                    <HighlightProvider>
+                                                                        <WelcomeDialogProvider>
+                                                                            <InstanceStatus>
+                                                                                <ScrollTop />
+                                                                                <App />
+                                                                            </InstanceStatus>
+                                                                        </WelcomeDialogProvider>
+                                                                    </HighlightProvider>
+                                                                </StickyProvider>
+                                                            </FeedbackCESProvider>
+                                                        </FeedbackProvider>
+                                                    </ErrorBoundary>
+                                                </UnleashFlagProvider>
+                                            </EventTrackerProvider>
+                                        </FlightRecorderProvider>
+                                    </LogRocketProvider>
+                                </AnnouncerProvider>
+                            </ThemeProvider>
+                        </UserSettingsProvider>
                     </QueryParamProvider>
                 </BrowserRouter>
             </AccessProvider>

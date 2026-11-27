@@ -31,6 +31,7 @@ import { SkipNavLink } from './common/SkipNavLink/SkipNavLink.tsx';
 import { IntroProvider } from './onboarding/intro/IntroProvider.tsx';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { UxTweakWidgets } from './uxtweak/UxTweakWidgets.tsx';
+import { useUserSettingsStatus } from './userSettings/UserSettingsProvider.tsx';
 
 const FeedbackModule = lazy(
     () => import('./feedbackModule/delivery/FeedbackModule.tsx'),
@@ -61,6 +62,9 @@ export const App = () => {
     }, [user, hasFetchedAuth, refetchUiConfig]);
 
     const isLoggedIn = Boolean(user?.id);
+    const userSettingsStatus = useUserSettingsStatus();
+    const isLoadingUserSettings =
+        isLoggedIn && userSettingsStatus === 'pending';
     const uxTweakSurveysEnabled = useUiFlag('uxTweakSurveys');
     const displaySurveyEnabled = useUiFlag('feedbackModuleDisplaySurvey');
 
@@ -72,7 +76,7 @@ export const App = () => {
         <SWRProvider>
             <Suspense fallback={<Loader type='fullscreen' />}>
                 <ConditionallyRender
-                    condition={!hasFetchedAuth}
+                    condition={!hasFetchedAuth || isLoadingUserSettings}
                     show={<Loader type='fullscreen' />}
                     elseShow={
                         <Demo>

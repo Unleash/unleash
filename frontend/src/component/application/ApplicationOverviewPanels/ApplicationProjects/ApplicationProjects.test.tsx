@@ -82,7 +82,9 @@ test('shows where each project is linked, covered or observed', () => {
         ['dx', 'sa', 'dx'],
     );
 
-    within(panel).getByText('3 projects · 2 with observed usage');
+    within(panel).getByText(
+        'All projects available in Staging · 3 listed · 2 with observed usage',
+    );
     expect(headers(panel)).toEqual([
         'Project',
         'Production',
@@ -186,8 +188,22 @@ test('says only SDK usage adds projects when not every token is visible', () => 
         false,
     );
 
+    within(panel).getByText("Projects this application's SDKs use.");
     within(panel).getByText('No projects yet');
     within(panel).getByText(
         'Projects appear here when an SDK uses their flags.',
     );
+});
+
+test('shows no legend when the table uses no mark', () => {
+    // two environments report, so the observed project can't be placed
+    const panel = renderProjects(
+        [environment('production', []), environment('staging', [])],
+        ['search'],
+    );
+
+    within(panel).getByRole('link', { name: 'search' });
+    expect(
+        within(panel).queryByRole('list', { name: 'Legend' }),
+    ).not.toBeInTheDocument();
 });

@@ -1,6 +1,7 @@
 import { useId } from 'react';
 import { Link, styled, Typography } from '@mui/material';
 import { Link as RouterLink } from 'react-router';
+import type { ApiTokenSchema } from 'openapi';
 import { Badge } from 'component/common/Badge/Badge';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
@@ -12,6 +13,10 @@ import {
     ALL_PROJECTS,
     type IApplicationEnvironment,
 } from '../buildApplicationEnvironments.ts';
+
+const MAX_TOKENS_SHOWN = 5;
+
+const listFormat = new Intl.ListFormat('en', { type: 'conjunction' });
 
 const StyledGrid = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -108,6 +113,11 @@ const StyledTokenName = styled('span')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
 }));
 
+const StyledProjectsNote = styled(Typography)(({ theme }) => ({
+    marginTop: theme.spacing(1),
+    overflowWrap: 'anywhere',
+}));
+
 interface ISectionTitleProps {
     children: string;
 }
@@ -124,11 +134,15 @@ const SectionTitle = ({ children }: ISectionTitleProps) => (
 );
 
 type IEnvironmentTokensProps = Pick<IApplicationEnvironment, 'tokens'> &
-    Pick<IEnvironmentCardProps, 'allTokensVisible'>;
+    Pick<IEnvironmentCardProps, 'allTokensVisible' | 'tokensPath'> & {
+        label: string;
+    };
 
 const EnvironmentTokens = ({
     tokens,
     allTokensVisible,
+    tokensPath,
+    label,
 }: IEnvironmentTokensProps) => {
     if (tokens.length === 0) {
         return (
@@ -138,9 +152,15 @@ const EnvironmentTokens = ({
         );
     }
 
+    const shownTokens = [
+        ...tokens.filter((token) => !isTokenExpired(token)),
+        ...tokens.filter(isTokenExpired),
+    ].slice(0, MAX_TOKENS_SHOWN);
+    const hiddenCount = tokens.length - shownTokens.length;
+
     return (
         <StyledTokens>
-            {tokens.map((token, index) => (
+            {shownTokens.map((token, index) => (
                 <StyledToken
                     // a viewer who can't see secrets may get two tokens with one name
                     key={token.secret ?? `${token.tokenName}-${index}`}
@@ -164,18 +184,59 @@ const EnvironmentTokens = ({
                     </Typography>
                 </StyledToken>
             ))}
+            {hiddenCount > 0 ? (
+                <li>
+                    <Link component={RouterLink} to={tokensPath}>
+                        +{hiddenCount} more
+                        <ScreenReaderOnly as='span'>
+                            {' '}
+                            tokens in {label}
+                        </ScreenReaderOnly>
+                    </Link>
+                </li>
+            ) : null}
         </StyledTokens>
     );
 };
 
+const allProjectsNote = (
+    tokens: ApiTokenSchema[],
+    label: string,
+    allTokensVisible: boolean,
+) => {
+    const workingTokens = tokens.filter((token) => !isTokenExpired(token));
+    const namingTokens = workingTokens.filter(
+        (token) => !token.projects.includes(ALL_PROJECTS),
+    );
+    const readingAll = workingTokens.length - namingTokens.length;
+    if (!allTokensVisible || namingTokens.length === 0 || readingAll === 0) {
+        return `All projects available in ${label}`;
+    }
+    const namedProjects = [
+        ...new Set(namingTokens.flatMap((token) => token.projects)),
+    ].sort((a, b) => a.localeCompare(b));
+
+    return `${
+        namingTokens.length === 1
+            ? 'One token reads'
+            : `${namingTokens.length} tokens read`
+    } ${listFormat.format(namedProjects)}, ${
+        readingAll === 1 ? 'another reads' : `${readingAll} others read`
+    } all projects, so the card shows “All projects”.`;
+};
+
 type IEnvironmentProjectsProps = Pick<
     IApplicationEnvironment,
-    'linkedProjects' | 'observedProjects'
->;
+    'tokens' | 'linkedProjects' | 'observedProjects'
+> &
+    Pick<IEnvironmentCardProps, 'allTokensVisible'> & { label: string };
 
 const EnvironmentProjects = ({
+    tokens,
     linkedProjects,
     observedProjects,
+    label,
+    allTokensVisible,
 }: IEnvironmentProjectsProps) => {
     if (linkedProjects.length + observedProjects.length === 0) {
         return (
@@ -186,21 +247,28 @@ const EnvironmentProjects = ({
         );
     }
 
+    if (linkedProjects.includes(ALL_PROJECTS)) {
+        return (
+            <>
+                <Badge color='secondary'>All projects</Badge>
+                <StyledProjectsNote variant='body2' color='text.secondary'>
+                    {allProjectsNote(tokens, label, allTokensVisible)}
+                </StyledProjectsNote>
+            </>
+        );
+    }
+
     return (
         <StyledList>
             {linkedProjects.map((project) => (
                 <li key={project}>
-                    {project === ALL_PROJECTS ? (
-                        <Badge color='secondary'>All projects</Badge>
-                    ) : (
-                        <Link
-                            component={RouterLink}
-                            to={`/projects/${project}`}
-                            underline='none'
-                        >
-                            <Badge color='secondary'>{project}</Badge>
-                        </Link>
-                    )}
+                    <Link
+                        component={RouterLink}
+                        to={`/projects/${project}`}
+                        underline='none'
+                    >
+                        <Badge color='secondary'>{project}</Badge>
+                    </Link>
                 </li>
             ))}
             {observedProjects.map((project) => (
@@ -314,11 +382,16 @@ const EnvironmentCard = ({
                 <EnvironmentTokens
                     tokens={tokens}
                     allTokensVisible={allTokensVisible}
+                    tokensPath={tokensPath}
+                    label={label}
                 />
             </StyledSection>
             <StyledSection>
                 <SectionTitle>Projects</SectionTitle>
                 <EnvironmentProjects
+                    tokens={tokens}
+                    label={label}
+                    allTokensVisible={allTokensVisible}
                     linkedProjects={linkedProjects}
                     observedProjects={observedProjects}
                 />

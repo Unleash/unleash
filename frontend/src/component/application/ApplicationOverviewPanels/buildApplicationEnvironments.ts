@@ -32,7 +32,7 @@ const mergeProjects = (tokens: ApiTokenSchema[]) => {
         : [...projects].sort((a, b) => a.localeCompare(b));
 };
 
-export const canReadProject = (
+const canReadProject = (
     { linkedProjects }: Pick<IApplicationEnvironment, 'linkedProjects'>,
     project: string,
 ) => linkedProjects.includes(ALL_PROJECTS) || linkedProjects.includes(project);

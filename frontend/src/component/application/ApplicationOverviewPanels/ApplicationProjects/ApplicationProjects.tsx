@@ -249,19 +249,29 @@ export const ApplicationProjects = ({
         getRowId: (project) => project.name,
     });
 
-    const projectCount = projects.filter(
+    const listedCount = projects.filter(
         (project) => project.name !== ALL_PROJECTS,
     ).length;
     const observedCount = projects.filter((project) => project.observed).length;
-    const allProjectsEnvironments = environments
-        .filter((e) => e.linkedProjects.includes(ALL_PROJECTS))
-        .map((e) => capitalizeFirst(e.name));
+    // the all-projects row already knows where a token reads everything
+    const allProjectsEnvironments = (
+        projects.find((project) => project.name === ALL_PROJECTS)
+            ?.linkedEnvironments ?? []
+    ).map(capitalizeFirst);
     const allProjectsNote =
         allProjectsEnvironments.length > 0
             ? `${listFormat.format(allProjectsEnvironments)} tokens can read all projects, so only projects in use are listed.`
             : undefined;
-    // the all-projects row alone lists nothing: the empty state says why
-    const empty = projectCount === 0;
+
+    const empty = listedCount === 0;
+    const summary =
+        allProjectsEnvironments.length > 0
+            ? `All projects available in ${listFormat.format(allProjectsEnvironments)} · ${listedCount} listed · ${observedCount} with observed usage`
+            : `${pluralize(listedCount, 'project')} · ${observedCount} with observed usage`;
+    // nothing is said about tokens the viewer can't see
+    const emptySubtitle = allTokensVisible
+        ? "Projects this application's tokens can read, and projects its SDKs use."
+        : "Projects this application's SDKs use.";
     const anyLinkedCell = projects.some(
         (project) => project.linkedEnvironments.length > 0,
     );
@@ -277,12 +287,11 @@ export const ApplicationProjects = ({
                         Projects
                     </Typography>
                     <Typography variant='body2' color='text.secondary'>
-                        {empty
-                            ? "Projects this application's tokens can read, and projects its SDKs use."
-                            : `${pluralize(projectCount, 'project')} · ${observedCount} with observed usage`}
+                        {empty ? emptySubtitle : summary}
                     </Typography>
                 </div>
-                {!empty && environments.length > 0 ? (
+                {!empty &&
+                (anyLinkedCell || allProjectsNote || anyObservedCell) ? (
                     <StyledLegend aria-label='Legend'>
                         {anyLinkedCell ? (
                             <li>

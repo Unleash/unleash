@@ -136,3 +136,103 @@ test('claims nothing about tokens when not all of them are visible', () => {
         within(production).queryByText(/without a linked token/),
     ).not.toBeInTheDocument();
 });
+
+test('lists up to five tokens, working ones first, and links to the rest', () => {
+    renderEnvironments([
+        environment('development', {
+            tokens: [
+                token('old', { expiresAt: '2020-01-01T00:00:00.000Z' }),
+                ...[1, 2, 3, 4, 5, 6].map((n) => token(`checkout-${n}`)),
+            ],
+            linked: true,
+            linkedProjects: ['dx'],
+        }),
+    ]);
+
+    const development = card('Development');
+    expect(within(development).getAllByText(/^checkout-\d$/)).toHaveLength(5);
+    expect(within(development).queryByText('old')).not.toBeInTheDocument();
+    expect(
+        within(development).getByRole('link', {
+            name: '+2 more tokens in Development',
+        }),
+    ).toHaveAttribute('href', '/applications/checkout/tokens');
+});
+
+test('says why a card shows all projects', () => {
+    const all = { projects: ['*'] };
+    renderEnvironments([
+        environment('development', {
+            tokens: [token('a', all), token('b', all)],
+            linked: true,
+            linkedProjects: ['*'],
+        }),
+        environment('staging', {
+            tokens: [
+                token('named', { projects: ['eg', 'dx'] }),
+                token('all', all),
+                // expired: its projects no longer count
+                token('old', {
+                    projects: ['sa'],
+                    expiresAt: '2020-01-01T00:00:00.000Z',
+                }),
+            ],
+            linked: true,
+            linkedProjects: ['*'],
+        }),
+        environment('production', {
+            tokens: [
+                token('one', { projects: ['dx'] }),
+                token('two', { projects: ['eg'] }),
+                token('a', all),
+                token('b', all),
+            ],
+            linked: true,
+            linkedProjects: ['*'],
+        }),
+    ]);
+
+    within(card('Development')).getByText(
+        'All projects available in Development',
+    );
+    within(card('Staging')).getByText(
+        'One token reads dx and eg, another reads all projects, so the card shows “All projects”.',
+    );
+    within(card('Production')).getByText(
+        '2 tokens read dx and eg, 2 others read all projects, so the card shows “All projects”.',
+    );
+});
+
+test('lists five tokens without a link to more', () => {
+    renderEnvironments([
+        environment('development', {
+            tokens: [1, 2, 3, 4, 5].map((n) => token(`checkout-${n}`)),
+            linked: true,
+            linkedProjects: ['dx'],
+        }),
+    ]);
+
+    const development = card('Development');
+    expect(within(development).getAllByText(/^checkout-\d$/)).toHaveLength(5);
+    expect(
+        within(development).queryByRole('link', { name: /more/ }),
+    ).not.toBeInTheDocument();
+});
+
+test('does not count tokens in the all-projects note when some are hidden', () => {
+    renderEnvironments(
+        [
+            environment('staging', {
+                tokens: [
+                    token('named', { projects: ['dx'] }),
+                    token('all', { projects: ['*'] }),
+                ],
+                linked: true,
+                linkedProjects: ['*'],
+            }),
+        ],
+        false,
+    );
+
+    within(card('Staging')).getByText('All projects available in Staging');
+});

@@ -1,4 +1,4 @@
-import { basePath } from './formatPath.js';
+import { toLocalStorageName } from './localStorageName.js';
 import { getLocalStorageItem, setLocalStorageItem } from './storage.js';
 
 export const createLocalStorage = <T extends object | string>(
@@ -6,7 +6,7 @@ export const createLocalStorage = <T extends object | string>(
     initialValue: T,
     timeToLive?: number,
 ) => {
-    const internalKey = `${basePath}:${key}:localStorage:v2`;
+    const internalKey = toLocalStorageName(key);
     const value = (() => {
         const state = getLocalStorageItem<T>(internalKey);
         if (state === undefined) {

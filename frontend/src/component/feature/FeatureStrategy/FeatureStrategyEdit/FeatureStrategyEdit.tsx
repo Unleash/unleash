@@ -20,6 +20,8 @@ import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { sortStrategyParameters } from 'utils/sortStrategyParameters';
 import { useCollaborateData } from 'hooks/useCollaborateData';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { SuggestPayloadSchema } from './SuggestPayloadSchema.tsx';
+import { formatPayloadSchemaPath } from 'component/feature/FeatureView/FeatureOverview/PayloadSchema/payloadSchemaPaths';
 import type {
     IFeatureEnvironment,
     IFeatureToggle,
@@ -270,6 +272,15 @@ export const FeatureStrategyEdit = () => {
 
     if (!data) return null;
 
+    const variantsNotice =
+        previousStrategyState && !data.payloadSchema ? (
+            <SuggestPayloadSchema
+                projectId={projectId}
+                variants={previousStrategyState.variants ?? []}
+                createSchemaPath={formatPayloadSchemaPath(projectId, featureId)}
+            />
+        ) : undefined;
+
     return (
         <StrategyFormTemplate
             formatApiCode={() =>
@@ -296,6 +307,7 @@ export const FeatureStrategyEdit = () => {
                 errors={errors}
                 changeRequestsEnabled={viaChangeRequest}
                 tracking={editStrategyTracking}
+                variantsNotice={variantsNotice}
             />
             {staleDataNotification}
         </StrategyFormTemplate>

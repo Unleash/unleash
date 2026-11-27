@@ -1,7 +1,14 @@
 import { createUuid } from 'utils/createUuid';
 import { VariantForm, variantNameInputId } from './VariantForm/VariantForm.tsx';
 import type React from 'react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+    type ReactNode,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 import type { StrategyVariantEdit } from './strategyVariantEdit.ts';
 import { WeightType } from '../../../constants/variantTypes.ts';
 import { styled, useTheme, Button, Tabs } from '@mui/material';
@@ -46,6 +53,7 @@ interface StrategyVariantsProps<T extends StrategyFormState> {
     clearFailedVariantsSubmit?: () => void;
     canRenamePreexistingVariants?: boolean;
     payloadSchema?: JsonSchemaProperty;
+    variantsNotice?: ReactNode;
 }
 
 const indicesToFixAroundHandle = (
@@ -77,6 +85,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
     clearFailedVariantsSubmit,
     canRenamePreexistingVariants,
     payloadSchema,
+    variantsNotice,
 }: StrategyVariantsProps<T>) => {
     const { trackEvent } = useEventTracker();
     const initialVariants = (strategy.variants || []).map(
@@ -307,6 +316,7 @@ export const StrategyVariants = <T extends StrategyFormState>({
 
     return (
         <>
+            {variantsNotice}
             <VariantsWeightBar
                 variants={barVariants}
                 weightsError={variantWeightsError}

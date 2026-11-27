@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { expect, test } from 'vitest';
 import { fireEvent, screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
@@ -31,8 +31,10 @@ const variant = (
 
 const VariantsEditor = ({
     variants = [],
+    variantsNotice,
 }: {
     variants?: StrategyVariantSchema[];
+    variantsNotice?: ReactNode;
 }) => {
     const [strategy, setStrategy] = useState<StrategyFormState>({
         name: 'flexibleRollout',
@@ -44,6 +46,7 @@ const VariantsEditor = ({
             strategy={strategy}
             setStrategy={setStrategy}
             canRenamePreexistingVariants
+            variantsNotice={variantsNotice}
         />
     );
 };
@@ -262,4 +265,16 @@ test('strategyVariantsAreValid accepts an empty list and rejects duplicate names
     expect(
         strategyVariantsAreValid([variant('a', 500), variant('b', 400)]),
     ).toBe(false);
+});
+
+test('a notice passed to the variants is shown with them', async () => {
+    setupContextApi();
+    render(
+        <VariantsEditor
+            variants={[variant('blue', 1000)]}
+            variantsNotice={<p>Mind the variants</p>}
+        />,
+    );
+
+    expect(await screen.findByText('Mind the variants')).toBeInTheDocument();
 });

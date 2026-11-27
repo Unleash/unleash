@@ -43,6 +43,7 @@ export interface StrategyFormBodyProps<T extends StrategyFormState> {
     validateParameter?: (name: string, value: ParametersSchema[string]) => void;
     canRenamePreexistingVariants?: boolean;
     payloadSchema?: JsonSchemaProperty;
+    variantsNotice?: React.ReactNode;
 
     alertContent?: React.ReactNode;
     allowEnableDisable?: boolean;
@@ -186,6 +187,7 @@ export const StrategyFormBody = <T extends StrategyFormState>({
     validateParameter,
     canRenamePreexistingVariants,
     payloadSchema,
+    variantsNotice,
     alertContent, // todo: rename to changeRequestAlert when deleting the singlePageStrategyForm flag
     allowEnableDisable,
     statusContent: environmentDisabledText, // todo: consider renaming prop when deleting singlePageStrategyForm flag
@@ -444,6 +446,7 @@ export const StrategyFormBody = <T extends StrategyFormState>({
                                         canRenamePreexistingVariants
                                     }
                                     payloadSchema={payloadSchema}
+                                    variantsNotice={variantsNotice}
                                 />
                             </AccordionDetails>
                         </StyledAccordion>

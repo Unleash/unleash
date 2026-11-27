@@ -42,6 +42,7 @@ export interface IFeatureStrategyFormProps<T extends StrategyFormState> {
     Limit?: JSX.Element;
     disabled?: boolean;
     tracking?: Tracking;
+    variantsNotice?: React.ReactNode;
 }
 
 const StyledAlertBox = styled(Box)(({ theme }) => ({
@@ -68,6 +69,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
     Limit,
     disabled,
     tracking,
+    variantsNotice,
 }: IFeatureStrategyFormProps<T>) => {
     const trackStrategyForm = useTracking(tracking);
     const singlePageStrategyForm = useUiFlag('singlePageStrategyForm');
@@ -194,6 +196,7 @@ export const FeatureStrategyForm = <T extends StrategyFormState>({
                 validateParameter={validateParameter}
                 canRenamePreexistingVariants={canRenamePreexistingVariants}
                 payloadSchema={feature.payloadSchema}
+                variantsNotice={variantsNotice}
                 alertContent={alertContent()}
                 allowEnableDisable
                 statusContent={statusContent()}

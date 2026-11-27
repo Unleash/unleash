@@ -21,7 +21,12 @@ const setupApi = ({
     memberOf = ['beta'],
     edition = 'enterprise',
 }: {
-    projects?: { id: string; name: string; favorite?: boolean }[];
+    projects?: {
+        id: string;
+        name: string;
+        favorite?: boolean;
+        mode?: string;
+    }[];
     memberOf?: string[];
     edition?: 'enterprise' | 'oss';
 } = {}) => {
@@ -112,6 +117,30 @@ test.each([
     expect(
         screen.queryByRole('region', { name: 'My projects' }),
     ).not.toBeInTheDocument();
+});
+
+test('marks private and protected projects with their mode', async () => {
+    setupApi({
+        projects: [
+            { id: 'alpha', name: 'Alpha', favorite: true, mode: 'private' },
+            { id: 'beta', name: 'Beta', favorite: true, mode: 'protected' },
+            { id: 'gamma', name: 'Gamma', favorite: true, mode: 'open' },
+        ],
+    });
+
+    await renderSection();
+
+    expect(
+        within(projectToggle('Alpha Private project')).getByRole('img', {
+            name: 'Private project',
+        }),
+    ).toBeInTheDocument();
+    expect(
+        within(projectToggle('Beta Protected project')).getByRole('img', {
+            name: 'Protected project',
+        }),
+    ).toBeInTheDocument();
+    expect(projectToggle('Gamma')).toBeInTheDocument();
 });
 
 test('expands a project to Flags and Change requests when clicked', async () => {

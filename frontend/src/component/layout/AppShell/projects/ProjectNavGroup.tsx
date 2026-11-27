@@ -17,6 +17,10 @@ import { SidebarList } from '../sidebar/SidebarList.tsx';
 import { SidebarMoreToggle } from '../sidebar/SidebarMoreToggle.tsx';
 import { SIDEBAR_ROW_ACTION_SIZE } from '../sidebar/SidebarRowAction.tsx';
 import { getProjectPage, isInProject } from './getProjectPage.ts';
+import {
+    PrivateProjectIcon,
+    ProtectedProjectIcon,
+} from './ProjectModeIcons.tsx';
 import { useProjectNavItems } from './useProjectNavItems.ts';
 
 type ExpansionState = 'open' | 'closed';
@@ -110,7 +114,7 @@ const ActionableChangeRequestsBadge: FC<{ projectId: string }> = ({
 );
 
 export const ProjectNavGroup: FC<{
-    project: Pick<ProjectSchema, 'id' | 'name'>;
+    project: Pick<ProjectSchema, 'id' | 'name' | 'mode'>;
     expansion?: ProjectNavExpansion;
     onExpansionChange: (change: ProjectNavExpansion) => void;
     muteWhenNotCurrent?: boolean;
@@ -163,6 +167,10 @@ export const ProjectNavGroup: FC<{
                         <FolderOutlinedIcon />
                     </SidebarItemIcon>
                     <StyledLabel>{project.name}</StyledLabel>
+                    {project.mode === 'private' ? <PrivateProjectIcon /> : null}
+                    {project.mode === 'protected' ? (
+                        <ProtectedProjectIcon />
+                    ) : null}
                     <SidebarCaret expanded={expanded} />
                 </StyledProjectToggle>
                 {action ? (

@@ -53,14 +53,22 @@ const StyledIconLabel = styled('span')(({ theme }) => ({
 
 type BreadcrumbIcon = NonNullable<PageBreadcrumb['icon']>;
 
+type BreadcrumbBadge = NonNullable<PageBreadcrumb['badge']>;
+
+type BreadcrumbLabelProps = {
+    label: string;
+    icon?: BreadcrumbIcon;
+    badge?: BreadcrumbBadge;
+};
+
 type BreadcrumbView =
     | { kind: 'iconLink'; label: string; to: string; icon: BreadcrumbIcon }
-    | { kind: 'link'; label: string; to: string; icon?: BreadcrumbIcon }
-    | { kind: 'current'; label: string; icon?: BreadcrumbIcon }
-    | { kind: 'plain'; label: string; icon?: BreadcrumbIcon };
+    | ({ kind: 'link'; to: string } & BreadcrumbLabelProps)
+    | ({ kind: 'current' } & BreadcrumbLabelProps)
+    | ({ kind: 'plain' } & BreadcrumbLabelProps);
 
 const toBreadcrumbView = (
-    { label, to, icon }: PageBreadcrumb,
+    { label, to, icon, badge }: PageBreadcrumb,
     isLastInTrail: boolean,
     pathname: string,
 ): BreadcrumbView => {
@@ -68,20 +76,21 @@ const toBreadcrumbView = (
     const isCurrentPage = isLastInTrail && to === pathname;
 
     if (to === undefined) {
-        return { kind: 'plain', label, icon };
+        return { kind: 'plain', label, icon, badge };
     }
     if (isCollapsedToIcon) {
         return { kind: 'iconLink', label, to, icon };
     }
     if (isCurrentPage) {
-        return { kind: 'current', label, icon };
+        return { kind: 'current', label, icon, badge };
     }
-    return { kind: 'link', label, to, icon };
+    return { kind: 'link', label, to, icon, badge };
 };
 
-const BreadcrumbLabel: FC<{ label: string; icon?: BreadcrumbIcon }> = ({
+const BreadcrumbLabel: FC<BreadcrumbLabelProps> = ({
     label,
     icon: Icon,
+    badge: Badge,
 }) => {
     const text = (
         <Truncator title={label} arrow>
@@ -89,14 +98,15 @@ const BreadcrumbLabel: FC<{ label: string; icon?: BreadcrumbIcon }> = ({
         </Truncator>
     );
 
-    if (!Icon) {
+    if (!Icon && !Badge) {
         return text;
     }
 
     return (
         <StyledIconLabel>
-            <Icon fontSize='small' />
+            {Icon ? <Icon fontSize='small' /> : null}
             {text}
+            {Badge ? <Badge /> : null}
         </StyledIconLabel>
     );
 };

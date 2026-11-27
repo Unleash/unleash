@@ -7,6 +7,10 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import {
+    PrivateProjectIcon,
+    ProtectedProjectIcon,
+} from '../projects/ProjectModeIcons.tsx';
 import type { EntityPage } from './entityPages.ts';
 import {
     type PageBreadcrumb,
@@ -27,8 +31,9 @@ const pro = { ...enterprise, environment: 'Pro' };
 const mockUiConfig = (uiConfig: object) =>
     testServerRoute(server, '/api/admin/ui-config', uiConfig);
 
-const mockProjects = (projects: { id: string; name: string }[]) =>
-    testServerRoute(server, '/api/admin/projects', { projects });
+const mockProjects = (
+    projects: { id: string; name: string; mode?: string }[],
+) => testServerRoute(server, '/api/admin/projects', { projects });
 
 const mockDefaultProject = () =>
     mockProjects([{ id: 'default', name: 'Default' }]);
@@ -160,6 +165,28 @@ test('shows only Home, the Projects list and the project as breadcrumbs on a pro
     expect(
         await loadPageBreadcrumbs('/projects/default/change-requests'),
     ).toEqual([home, projectsList, defaultProject]);
+});
+
+test('adds no badge to the project breadcrumb of an open project', async () => {
+    mockProjects([{ id: 'default', name: 'Default', mode: 'open' }]);
+
+    expect(
+        await loadPageBreadcrumbs('/projects/default/change-requests'),
+    ).toEqual([home, projectsList, defaultProject]);
+});
+
+test.each([
+    { mode: 'private', badge: PrivateProjectIcon },
+    { mode: 'protected', badge: ProtectedProjectIcon },
+])('marks the project breadcrumb of a $mode project with its mode badge', async ({
+    mode,
+    badge,
+}) => {
+    mockProjects([{ id: 'default', name: 'Default', mode }]);
+
+    expect(
+        await loadPageBreadcrumbs('/projects/default/change-requests'),
+    ).toEqual([home, projectsList, { ...defaultProject, badge }]);
 });
 
 test('shows no breadcrumbs on a project page of a project that is not in the list', async () => {

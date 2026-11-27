@@ -1,6 +1,7 @@
 import { Box, styled, Typography } from '@mui/material';
 import type { FC } from 'react';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import { collaborationModeDescriptions } from './collaborationModeDescriptions.ts';
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
@@ -20,21 +21,19 @@ export const CollaborationModeTooltip: FC = () => {
                     <Box>
                         <StyledTitle>open: </StyledTitle>
                         <StyledDescription>
-                            Everyone can submit change requests
+                            {collaborationModeDescriptions.open}
                         </StyledDescription>
                     </Box>
                     <Box sx={{ mt: 2 }}>
                         <StyledTitle>protected: </StyledTitle>
                         <StyledDescription>
-                            Only admins and project members can submit change
-                            requests
+                            {collaborationModeDescriptions.protected}
                         </StyledDescription>
                     </Box>
                     <Box sx={{ mt: 2 }}>
                         <StyledTitle>private: </StyledTitle>
                         <StyledDescription>
-                            Only admins, editors and project members can see and
-                            access the project and associated feature flags
+                            {collaborationModeDescriptions.private}
                         </StyledDescription>
                     </Box>
                 </>

@@ -177,6 +177,9 @@ export const createBarChartOptions = (
                 ticks: {
                     ...(scales?.y?.ticks ?? {}),
                     color: theme.palette.text.secondary,
+                    // evaluation counts are whole numbers; fractional ticks
+                    // would be truncated by formatTickValue into duplicate labels
+                    precision: 0,
                     callback: formatTickValue,
                     display: true,
                 },

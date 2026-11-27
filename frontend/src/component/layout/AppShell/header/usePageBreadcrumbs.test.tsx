@@ -84,7 +84,10 @@ const defaultProject: PageBreadcrumb = {
     label: 'Default',
     to: '/projects/default',
 };
-const adminSettings: PageBreadcrumb = { label: 'Admin settings' };
+const adminSettings: PageBreadcrumb = {
+    label: 'Admin settings',
+    to: '/admin',
+};
 
 test.each([
     '/personal',
@@ -183,8 +186,11 @@ test('shows no breadcrumbs on a project page of a project that is not in the lis
     ).toEqual([]);
 });
 
+test('shows only Home and Admin settings as breadcrumbs of the admin home page', async () => {
+    expect(await loadPageBreadcrumbs('/admin')).toEqual([home, adminSettings]);
+});
+
 test.each([
-    ['/admin', { label: 'Admin home', to: '/admin' }],
     ['/admin/users', { label: 'Users', to: '/admin/users' }],
     ['/admin/users/1/edit', { label: 'Users', to: '/admin/users' }],
     ['/history', { label: 'Event log', to: '/history' }],

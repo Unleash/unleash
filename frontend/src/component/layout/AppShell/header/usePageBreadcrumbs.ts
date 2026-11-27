@@ -73,10 +73,14 @@ const getAdminSettingsBreadcrumbs = (
     const route = findCurrentRoute(pathname, adminSettingsRoutes);
     if (!route) return undefined;
 
-    return [
-        { label: sidebarSectionLabels.adminSettings },
-        { label: route.title, to: route.path },
-    ];
+    const adminSettings = {
+        label: sidebarSectionLabels.adminSettings,
+        to: '/admin',
+    };
+
+    return route.path === adminSettings.to
+        ? [adminSettings]
+        : [adminSettings, { label: route.title, to: route.path }];
 };
 
 const getConfigureWorkspaceBreadcrumbs = (

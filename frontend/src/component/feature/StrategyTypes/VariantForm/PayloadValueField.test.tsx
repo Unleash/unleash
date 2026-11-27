@@ -133,6 +133,31 @@ test('shows the raw JSON editor for an existing payload that is valid JSON but n
     expect(screen.queryByLabelText('CTA')).not.toBeInTheDocument();
 });
 
+test('under a root array schema, only an array payload can be edited as a form', () => {
+    const arraySchema = { type: 'array', items: { type: 'string' } };
+    const { rerender } = render(
+        <PayloadValueField
+            {...defaultProps}
+            payloadSchema={arraySchema}
+            value={{ type: 'json', value: '["eu"]' }}
+            onChange={() => {}}
+        />,
+    );
+
+    expect(screen.getByLabelText('Items 1')).toHaveValue('eu');
+
+    rerender(
+        <PayloadValueField
+            {...defaultProps}
+            payloadSchema={arraySchema}
+            value={{ type: 'json', value: '{"cta":"Go"}' }}
+            onChange={() => {}}
+        />,
+    );
+
+    expect(screen.getByRole('button', { name: 'Form' })).toBeDisabled();
+});
+
 test('shows the raw JSON editor instead of the toggle when no schema is given', () => {
     render(
         <PayloadValueField

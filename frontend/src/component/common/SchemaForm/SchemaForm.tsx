@@ -28,6 +28,7 @@ import {
 } from './SchemaFormCollectionField.tsx';
 import { SchemaFieldDescription } from './SchemaFieldDescription.tsx';
 import {
+    asRecord,
     enumNoneValue,
     toDateTimeInputValue,
     valueFromInput,
@@ -99,9 +100,9 @@ export const SchemaFormField = ({
                         {label}
                     </Typography>
                     <SchemaFieldDescription description={schema.description} />
-                    <SchemaForm
+                    <SchemaFormFields
                         schema={schema}
-                        value={(value as Record<string, unknown>) ?? {}}
+                        value={asRecord(value)}
                         onChange={onChange}
                     />
                 </StyledGroup>
@@ -255,27 +256,47 @@ interface ISchemaFormFieldsProps {
     onChange: (value: Record<string, unknown>) => void;
 }
 
-export const SchemaForm = ({
+export const SchemaFormFields = ({
     schema,
     value,
     onChange,
-}: ISchemaFormFieldsProps) => {
-    return (
-        <StyledSchemaFormFields>
-            {Object.entries(schema.properties ?? {}).map(
-                ([propName, propSchema]) => (
-                    <SchemaFormField
-                        key={propName}
-                        name={propName}
-                        schema={propSchema}
-                        value={value[propName]}
-                        required={schema.required?.includes(propName)}
-                        onChange={(next) =>
-                            onChange({ ...value, [propName]: next })
-                        }
-                    />
-                ),
-            )}
-        </StyledSchemaFormFields>
+}: ISchemaFormFieldsProps) => (
+    <StyledSchemaFormFields>
+        {Object.entries(schema.properties ?? {}).map(
+            ([propName, propSchema]) => (
+                <SchemaFormField
+                    key={propName}
+                    name={propName}
+                    schema={propSchema}
+                    value={value[propName]}
+                    required={schema.required?.includes(propName)}
+                    onChange={(next) =>
+                        onChange({ ...value, [propName]: next })
+                    }
+                />
+            ),
+        )}
+    </StyledSchemaFormFields>
+);
+
+interface ISchemaFormProps {
+    schema: JsonSchemaProperty;
+    value: unknown;
+    onChange: (value: unknown) => void;
+}
+
+export const SchemaForm = ({ schema, value, onChange }: ISchemaFormProps) =>
+    schema.type === 'array' ? (
+        <SchemaFormField
+            name='Items'
+            schema={schema}
+            value={value}
+            onChange={onChange}
+        />
+    ) : (
+        <SchemaFormFields
+            schema={schema}
+            value={asRecord(value)}
+            onChange={onChange}
+        />
     );
-};

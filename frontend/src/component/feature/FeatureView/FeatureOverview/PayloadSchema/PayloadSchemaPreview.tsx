@@ -4,9 +4,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 import { SchemaForm } from 'component/common/SchemaForm/SchemaForm.tsx';
 import { formValueWithExamplesAsDefaults } from 'component/common/SchemaForm/schemaFormValues.ts';
-import { isObjectSchema } from 'component/common/SchemaForm/schemaMatchers.ts';
-
-type ObjectSchema = JsonSchemaProperty & { type: 'object' };
+import { isStructuredSchema } from 'component/common/SchemaForm/schemaMatchers.ts';
 
 const StyledPreview = styled('div')(({ theme }) => ({
     height: '100%',
@@ -29,8 +27,8 @@ const PreviewFallback = ({ message }: { message: string }) => (
     </StyledPreview>
 );
 
-const SchemaPreviewForm = ({ schema }: { schema: ObjectSchema }) => {
-    const [value, setValue] = useState<Record<string, unknown>>(() =>
+const SchemaPreviewForm = ({ schema }: { schema: JsonSchemaProperty }) => {
+    const [value, setValue] = useState<unknown>(() =>
         formValueWithExamplesAsDefaults(schema),
     );
 
@@ -44,7 +42,7 @@ const SchemaPreviewForm = ({ schema }: { schema: ObjectSchema }) => {
 export const PayloadSchemaPreview = ({
     schema,
 }: IPayloadSchemaPreviewProps) => {
-    if (!isObjectSchema(schema)) {
+    if (!isStructuredSchema(schema)) {
         return (
             <PreviewFallback message='Write a valid JSON Schema to see a preview of the resulting form.' />
         );

@@ -27,7 +27,7 @@ const StyledExample = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
 }));
 
-const hasNonObjectPayloads = (error: Error) =>
+const hasPrimitivePayloads = (error: Error) =>
     error instanceof ResponseError && error.status === 409;
 
 interface IPayloadSchemaVariantExamplesProps {
@@ -44,10 +44,10 @@ export const PayloadSchemaVariantExamples = ({
     return (
         <StyledExamples>
             {inferred.state === 'error' &&
-            hasNonObjectPayloads(inferred.error) ? (
+            hasPrimitivePayloads(inferred.error) ? (
                 <Alert severity='info'>
                     Examples can only be shown when every JSON variant payload
-                    is an object
+                    is an object or an array
                 </Alert>
             ) : inferred.state === 'error' ? (
                 <Alert severity='error'>

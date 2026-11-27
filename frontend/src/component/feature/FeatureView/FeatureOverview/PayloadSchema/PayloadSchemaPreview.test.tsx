@@ -307,7 +307,22 @@ test('renders a select for an enum property, with not-set option only when not r
     expect(screen.getByLabelText('Size')).not.toHaveTextContent('m');
 });
 
-test('shows a placeholder when the schema is not an object yet', () => {
+test('previews a root array schema as a list seeded with its first example', () => {
+    render(
+        <PayloadSchemaPreview
+            schema={{
+                type: 'array',
+                items: { type: 'string' },
+                examples: [['eu', 'us']],
+            }}
+        />,
+    );
+
+    expect(screen.getByLabelText('Items 1')).toHaveValue('eu');
+    expect(screen.getByLabelText('Items 2')).toHaveValue('us');
+});
+
+test('shows a placeholder when the schema is not an object or array yet', () => {
     render(<PayloadSchemaPreview schema={undefined} />);
 
     expect(screen.getByText(/write a valid json schema/i)).toBeInTheDocument();

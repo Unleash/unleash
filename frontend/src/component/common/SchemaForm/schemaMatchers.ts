@@ -1,11 +1,12 @@
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 
-export const isObjectSchema = (
+export const isStructuredSchema = (
     schema: unknown,
-): schema is JsonSchemaProperty & { type: 'object' } =>
-    typeof schema === 'object' &&
-    schema !== null &&
-    (schema as { type?: unknown }).type === 'object';
+): schema is JsonSchemaProperty & { type: 'object' | 'array' } => {
+    if (typeof schema !== 'object' || schema === null) return false;
+    const { type } = schema as { type?: unknown };
+    return type === 'object' || type === 'array';
+};
 
 export type SchemaMatcher = (schema: JsonSchemaProperty) => boolean;
 

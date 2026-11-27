@@ -197,6 +197,44 @@ test('defaultPayloadValue leaves a required formatted string unset, since no emp
     expect(defaultPayloadValue(schema)).toEqual({});
 });
 
+test('a root array starts from its default, then its first example, then no items', () => {
+    const items = { type: 'string' };
+
+    expect(
+        formValueWithExamplesAsDefaults({
+            type: 'array',
+            items,
+            default: ['default'],
+            examples: [['example']],
+        }),
+    ).toEqual(['default']);
+    expect(
+        formValueWithExamplesAsDefaults({
+            type: 'array',
+            items,
+            examples: [['example']],
+        }),
+    ).toEqual(['example']);
+    expect(formValueWithExamplesAsDefaults({ type: 'array', items })).toEqual(
+        [],
+    );
+});
+
+test('defaultPayloadValue starts a root array from its default, ignoring examples', () => {
+    const items = { type: 'string' };
+
+    expect(
+        defaultPayloadValue({
+            type: 'array',
+            items,
+            default: ['default'],
+        }),
+    ).toEqual(['default']);
+    expect(
+        defaultPayloadValue({ type: 'array', items, examples: [['example']] }),
+    ).toEqual([]);
+});
+
 test('a cleared field stores an empty string where its schema accepts one', () => {
     expect(valueFromInput({ type: 'string' }, '')).toBe('');
     expect(valueFromInput({ type: 'string', enum: ['', 's'] }, '')).toBe('');

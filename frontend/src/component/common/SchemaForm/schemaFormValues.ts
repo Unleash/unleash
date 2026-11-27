@@ -20,7 +20,7 @@ const firstExample = (schema: JsonSchemaProperty): unknown => {
         : undefined;
 };
 
-const asRecord = (value: unknown): Record<string, unknown> =>
+export const asRecord = (value: unknown): Record<string, unknown> =>
     isPlainObject(value) ? value : {};
 
 const emptyValueForProperty = (declared: JsonSchemaProperty): unknown => {
@@ -91,21 +91,26 @@ const resolvedFormValue = (
     );
 };
 
+const firstArray = (...candidates: unknown[]): unknown[] =>
+    candidates.find(Array.isArray) ?? [];
+
 export const formValueWithExamplesAsDefaults = (
     schema: JsonSchemaProperty,
-): Record<string, unknown> =>
-    resolvedFormValue(
-        schema,
-        ({ propSchema, key, rootExample }) =>
-            firstExample(propSchema) ?? rootExample[key],
-    );
+): unknown =>
+    schema.type === 'array'
+        ? firstArray(schema.default, firstExample(schema))
+        : resolvedFormValue(
+              schema,
+              ({ propSchema, key, rootExample }) =>
+                  firstExample(propSchema) ?? rootExample[key],
+          );
 
-export const defaultPayloadValue = (
-    schema: JsonSchemaProperty,
-): Record<string, unknown> =>
-    resolvedFormValue(schema, ({ propSchema, required }) =>
-        required ? emptyValueForProperty(propSchema) : undefined,
-    );
+export const defaultPayloadValue = (schema: JsonSchemaProperty): unknown =>
+    schema.type === 'array'
+        ? firstArray(schema.default)
+        : resolvedFormValue(schema, ({ propSchema, required }) =>
+              required ? emptyValueForProperty(propSchema) : undefined,
+          );
 
 export const toDateTimeInputValue = (value: unknown): string =>
     typeof value === 'string' && parseValidDate(value)

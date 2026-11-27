@@ -6,9 +6,9 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import Input from 'component/common/Input/Input';
 import { isObjectWithPropertiesSchema } from './schemaMatchers.ts';
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
-import { SchemaForm, SchemaFormField } from './SchemaForm.tsx';
+import { SchemaFormField, SchemaFormFields } from './SchemaForm.tsx';
 import { SchemaFieldDescription } from './SchemaFieldDescription.tsx';
-import { isPlainObject } from 'utils/plainObject';
+import { asRecord } from './schemaFormValues.ts';
 
 const StyledArrayGroup = styled('fieldset')(({ theme }) => ({
     border: 'none',
@@ -198,9 +198,9 @@ const SchemaFormArrayItem = ({
                         >
                             {itemLabel}
                         </Typography>
-                        <SchemaForm
+                        <SchemaFormFields
                             schema={itemSchema}
-                            value={(itemValue as Record<string, unknown>) ?? {}}
+                            value={asRecord(itemValue)}
                             onChange={onChange}
                         />
                     </StyledArrayItemContent>
@@ -351,7 +351,7 @@ export const SchemaFormDictionaryField = ({
         removeItem,
         addItem: appendItem,
     } = useKeyedItems<ISchemaFormDictionaryItem>(
-        Object.entries(isPlainObject(value) ? value : {}).map(([key, val]) => ({
+        Object.entries(asRecord(value)).map(([key, val]) => ({
             key,
             value: val,
         })),

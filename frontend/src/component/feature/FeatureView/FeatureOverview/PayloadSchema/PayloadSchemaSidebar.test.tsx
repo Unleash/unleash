@@ -200,7 +200,7 @@ test('explains that nothing can be used from stored payloads that are not all JS
     renderPayloadSchemaSidebar();
 
     await screen.findByText(
-        'Examples can only be shown when every JSON variant payload is an object',
+        'Examples can only be shown when every JSON variant payload is an object or an array',
     );
     expect(applyButton()).toHaveAttribute('aria-disabled', 'true');
 });

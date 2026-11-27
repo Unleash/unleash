@@ -11,7 +11,7 @@ import {
 import Input from 'component/common/Input/Input.tsx';
 import type { EditorStyle } from 'component/common/ReactJSONEditor/ReactJSONEditor.tsx';
 import { SchemaForm } from 'component/common/SchemaForm/SchemaForm.tsx';
-import { parseJsonObject } from 'utils/plainObject';
+import { isPlainObject } from 'utils/plainObject';
 import type { IPayload } from 'interfaces/featureToggle.ts';
 import type { JsonSchemaProperty } from 'interfaces/jsonSchema.ts';
 
@@ -92,12 +92,35 @@ const CompactToggleButton = styled(ToggleButton)(({ theme }) => ({
     lineHeight: 1.5,
 }));
 
+type RootJsonType = 'object' | 'array';
+
+const rootJsonTypeOf = (schema?: JsonSchemaProperty): RootJsonType =>
+    schema?.type === 'array' ? 'array' : 'object';
+
+const rootJsonTypes: Record<
+    RootJsonType,
+    { empty: string; matches: (value: unknown) => boolean }
+> = {
+    object: { empty: '{}', matches: isPlainObject },
+    array: { empty: '[]', matches: Array.isArray },
+};
+
+const parsedJson = (json: string): unknown => {
+    try {
+        return JSON.parse(json);
+    } catch {
+        return undefined;
+    }
+};
+
 const jsonFormValueFor = (
     payload: IPayload,
-): Record<string, unknown> | undefined => {
+    rootJsonType: RootJsonType,
+): unknown => {
     if (payload.type !== 'json') return undefined;
-    if (!payload.value.trim()) return {};
-    return parseJsonObject(payload.value);
+    const { empty, matches } = rootJsonTypes[rootJsonType];
+    const value = parsedJson(payload.value.trim() || empty);
+    return matches(value) ? value : undefined;
 };
 
 type JsonEditMode = 'form' | 'json';
@@ -105,13 +128,13 @@ type JsonEditMode = 'form' | 'json';
 interface JsonEditModeToggleProps {
     value: JsonEditMode;
     onChange: (value: JsonEditMode) => void;
-    formOptionDisabled?: boolean;
+    formOptionDisabledReason?: string;
 }
 
 const JsonEditModeToggle = ({
     value,
     onChange,
-    formOptionDisabled,
+    formOptionDisabledReason,
 }: JsonEditModeToggleProps) => (
     <ToggleButtonGroup
         size='small'
@@ -124,16 +147,12 @@ const JsonEditModeToggle = ({
             }
         }}
     >
-        <Tooltip
-            arrow
-            title={
-                formOptionDisabled
-                    ? 'The value must be a valid JSON object to edit it as a form'
-                    : ''
-            }
-        >
+        <Tooltip arrow title={formOptionDisabledReason ?? ''}>
             <span>
-                <CompactToggleButton value='form' disabled={formOptionDisabled}>
+                <CompactToggleButton
+                    value='form'
+                    disabled={Boolean(formOptionDisabledReason)}
+                >
                     Form
                 </CompactToggleButton>
             </span>
@@ -205,7 +224,8 @@ export const PayloadValueField = ({
     onBlur,
 }: PayloadValueFieldProps) => {
     const schemaActive = Boolean(payloadSchema);
-    const jsonFormValue = jsonFormValueFor(value);
+    const rootJsonType = rootJsonTypeOf(payloadSchema);
+    const jsonFormValue = jsonFormValueFor(value, rootJsonType);
 
     const [jsonEditMode, setJsonEditMode] = useState<JsonEditMode>(
         schemaActive ? 'form' : 'json',
@@ -262,7 +282,11 @@ export const PayloadValueField = ({
                         <JsonEditModeToggle
                             value='json'
                             onChange={setJsonEditMode}
-                            formOptionDisabled={jsonFormValue === undefined}
+                            formOptionDisabledReason={
+                                jsonFormValue === undefined
+                                    ? `The value must be a valid JSON ${rootJsonType} to edit it as a form`
+                                    : undefined
+                            }
                         />
                     </>
                 }

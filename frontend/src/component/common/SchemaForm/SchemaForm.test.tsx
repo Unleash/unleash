@@ -32,9 +32,9 @@ const schema = {
 const StatefulSchemaForm = ({
     onSave,
 }: {
-    onSave?: (value: Record<string, unknown>) => void;
+    onSave?: (value: unknown) => void;
 }) => {
-    const [value, setValue] = useState<Record<string, unknown>>({
+    const [value, setValue] = useState<unknown>({
         address: { city: 'Oslo' },
         size: 's',
         region: 'eu',
@@ -64,7 +64,7 @@ test('editing one field keeps the value of every other field, including fields n
 });
 
 test('each field stores and shows its input as its schema declares, offering a single None option for an enum that can be empty or null', async () => {
-    let saved: Record<string, unknown> = {};
+    let saved: unknown;
     render(
         <StatefulSchemaForm
             onSave={(value) => {
@@ -99,4 +99,23 @@ test('each field stores and shows its input as its schema declares, offering a s
         'aria-selected',
         'true',
     );
+});
+
+test('a root array schema is edited as a list of items', async () => {
+    let saved: unknown;
+    render(
+        <SchemaForm
+            schema={{ type: 'array', items: { type: 'string' } }}
+            value={['eu']}
+            onChange={(next) => {
+                saved = next;
+            }}
+        />,
+    );
+
+    expect(screen.getByLabelText('Items 1')).toHaveValue('eu');
+    await userEvent.click(screen.getByRole('button', { name: 'Add item' }));
+    await userEvent.type(screen.getByLabelText('Items 2'), 'u');
+
+    expect(saved).toEqual(['eu', 'u']);
 });

@@ -23,6 +23,7 @@ import { HighlightProvider } from 'component/common/Highlight/HighlightProvider'
 import { UnleashFlagProvider } from 'component/providers/UnleashFlagProvider/UnleashFlagProvider';
 import { WelcomeDialogProvider } from 'component/personalDashboard/WelcomeDialogProvider.tsx';
 import { UserSettingsProvider } from 'component/userSettings/UserSettingsProvider.tsx';
+import { serverBackedKeys } from 'component/userSettings/serverBackedKeys.ts';
 
 export const ApplicationRoot = () => {
     const { recordUiError } = useRecordUIErrorApi();
@@ -46,7 +47,7 @@ export const ApplicationRoot = () => {
             <AccessProvider>
                 <BrowserRouter basename={basePath}>
                     <QueryParamProvider adapter={ReactRouter7Adapter}>
-                        <UserSettingsProvider>
+                        <UserSettingsProvider keys={serverBackedKeys}>
                             <ThemeProvider>
                                 <AnnouncerProvider>
                                     <LogRocketProvider>

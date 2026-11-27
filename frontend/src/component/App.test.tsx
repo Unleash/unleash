@@ -10,6 +10,7 @@ import { testUnleashClient } from 'utils/testUnleashClient';
 import { WelcomeDialogProvider } from './personalDashboard/WelcomeDialogProvider.tsx';
 import { App } from './App';
 import { UserSettingsProvider } from './userSettings/UserSettingsProvider.tsx';
+import { serverBackedKeys } from './userSettings/serverBackedKeys.ts';
 import { USER_ENDPOINT_PATH } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 // Preload the lazy uxtweak chunk so the anonymous test's absence assertion
 // can't pass by racing React.lazy — with the module already in the cache,
@@ -210,7 +211,7 @@ describe('App while user settings load', () => {
                 startClient={false}
             >
                 <WelcomeDialogProvider>
-                    <UserSettingsProvider>
+                    <UserSettingsProvider keys={serverBackedKeys}>
                         <App />
                     </UserSettingsProvider>
                 </WelcomeDialogProvider>

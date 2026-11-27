@@ -9,6 +9,8 @@ import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
 import type { IUiConfig } from 'interfaces/uiConfig';
+import { applyServerSettings } from './applyServerSettings.ts';
+import type { ServerBackedKey } from './serverBackedKeys.ts';
 import { type LoadSettingsResult, loadSettings } from './userSettingsClient.ts';
 
 export type UserSettingsStatus = 'pending' | LoadSettingsResult['status'];
@@ -43,7 +45,22 @@ const useAreUserFlagsReady = (userId: number | undefined): boolean => {
     return areForUser || (isSignedIn && isRefetchSettled);
 };
 
-export const UserSettingsProvider = ({ children }: { children: ReactNode }) => {
+const applyLoadedSettings = (
+    result: LoadSettingsResult,
+    keys: ServerBackedKey[],
+) => {
+    if (result.status === 'loaded') {
+        applyServerSettings(result.settings, keys);
+    }
+};
+
+export const UserSettingsProvider = ({
+    keys,
+    children,
+}: {
+    keys: ServerBackedKey[];
+    children: ReactNode;
+}) => {
     const { user } = useAuthUser();
     const areFlagsReady = useAreUserFlagsReady(user?.id);
     const isEnabled = useUiFlag('userSettings');
@@ -61,13 +78,14 @@ export const UserSettingsProvider = ({ children }: { children: ReactNode }) => {
         let isCurrent = true;
         loadSettings().then((result) => {
             if (isCurrent) {
+                applyLoadedSettings(result, keys);
                 setStatus(result.status);
             }
         });
         return () => {
             isCurrent = false;
         };
-    }, [areFlagsReady, isEnabled]);
+    }, [areFlagsReady, isEnabled, keys]);
 
     return (
         <UserSettingsStatusContext.Provider value={status}>

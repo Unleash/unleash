@@ -73,6 +73,16 @@ export function setLocalStorageItem<T>(
     }
 }
 
+// Remove an item from localStorage.
+// Does nothing if the browser denies access.
+export function removeLocalStorageItem(key: string) {
+    try {
+        window.localStorage.removeItem(key);
+    } catch (err: unknown) {
+        console.warn(err);
+    }
+}
+
 // Store an item in sessionStorage with optional TTL
 export function setSessionStorageItem<T>(
     key: string,

@@ -78,6 +78,7 @@ export type CustomEvents =
     | 'release-management-splash'
     | 'upgrade-trial-dialog'
     | 'upgrade-trial-billing-page'
+    | 'billing'
     | 'flagpage-impact-metrics'
     | 'signup-dialog'
     | 'signup-dialog-error'

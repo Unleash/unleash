@@ -10,6 +10,10 @@ import { BillingHistory } from './BillingHistory/BillingHistory.tsx';
 import useInvoices from 'hooks/api/getters/useInvoices/useInvoices';
 import { BillingInvoices } from './BillingInvoices/BillingInvoices.tsx';
 import { BillingInfo } from './BillingInfo/BillingInfo.tsx';
+import {
+    CancelledSubscriptionNotice,
+    CancelSubscription,
+} from './SubscriptionCancellation/SubscriptionCancellation.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig.ts';
 import { TrialUpsell } from './TrialUpsell/TrialUpsell.tsx';
 import { isTrialInstance } from 'utils/instanceTrial';
@@ -33,6 +37,12 @@ const StyledDetailedBillingContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(4),
+}));
+
+const StyledSideColumn = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
 }));
 
 const StyledTrialUpsellPaper = styled(Paper)(({ theme }) => ({
@@ -85,9 +95,11 @@ export const Billing = () => {
                 <StyledHeader>Usage and invoices</StyledHeader>
                 <StyledPageGrid>
                     <BillingInvoices />
-                    <div>
+                    <StyledSideColumn>
+                        <CancelledSubscriptionNotice />
                         <BillingInfo />
-                    </div>
+                        <CancelSubscription />
+                    </StyledSideColumn>
                 </StyledPageGrid>
             </StyledDetailedBillingContainer>
         );

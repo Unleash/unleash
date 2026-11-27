@@ -39,8 +39,33 @@ const useInstanceStatusApi = () => {
         await makeRequest(req.caller, req.id);
     };
 
+    const cancelSubscription = async (reason: string): Promise<void> => {
+        const path = 'api/instance/subscription/cancel';
+        const req = createRequest(
+            path,
+            {
+                method: 'POST',
+                body: JSON.stringify({ reason }),
+            },
+            'cancelSubscription',
+        );
+        await makeRequest(req.caller, req.id);
+    };
+
+    const resumeSubscription = async (): Promise<void> => {
+        const path = 'api/instance/subscription/resume';
+        const req = createRequest(
+            path,
+            { method: 'POST' },
+            'resumeSubscription',
+        );
+        await makeRequest(req.caller, req.id);
+    };
+
     return {
         extendTrial,
+        cancelSubscription,
+        resumeSubscription,
         setAutoCreateDomainUsers,
         setInstanceName,
         loading,

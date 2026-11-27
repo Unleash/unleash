@@ -118,12 +118,11 @@ test('shows a card per enabled environment, with the right message', async () =>
     ).toEqual(['Production', 'Staging', 'Development']);
 
     const production = await card('Production');
-    within(production).getByText('No active tokens');
     within(production).getByText(
         '4 instances report here without a linked token.',
     );
     within(production).getByRole('button', {
-        name: 'Create Production token',
+        name: 'Create token in Production',
     });
     within(await card('Staging')).getByText(
         '1 instance reports here without a linked token.',
@@ -146,6 +145,7 @@ test('lists the linked tokens in their environment card', async () => {
     within(await card('Old')).getByText('checkout-legacy');
 
     const production = await card('Production');
+    screen.getByRole('heading', { name: 'Tokens (3)' });
     within(production).getByText('2 tokens');
     const [header, web, old] = within(production).getAllByRole('row');
     expect(
@@ -155,6 +155,7 @@ test('lists the linked tokens in their environment card', async () => {
     ).toEqual(['Name', 'Type', 'Projects', 'Last used', 'Status', 'Actions']);
     within(web).getByText('checkout-web');
     within(web).getByText('Frontend');
+    within(web).getByText('All');
     within(web).getByText('Never');
     within(web).getByText('Active');
     within(old).getByText('Backend');
@@ -166,9 +167,14 @@ test('refreshes the list and the tab count while the new secret is shown', async
     const { requests } = setup();
     renderTab();
 
-    await openCreatePanel('Create Staging token');
+    await openCreatePanel('Create token in Staging');
     await screen.findByRole('radio', { name: 'staging', checked: true });
     linkedTokens([token('checkout-staging', 'staging')]);
+    await userEvent.click(
+        screen.getByRole('checkbox', {
+            name: /All current and future projects/,
+        }),
+    );
     await userEvent.click(screen.getByRole('button', { name: 'Create token' }));
 
     await screen.findByText('1 token');
@@ -186,11 +192,16 @@ test('keeps the new secret on screen when the list fails to refresh', async () =
     await openCreatePanel('Create token');
     await screen.findByRole('radio', { name: 'production', checked: true });
     linkedTokens([], 500);
+    await userEvent.click(
+        screen.getByRole('checkbox', {
+            name: /All current and future projects/,
+        }),
+    );
     await userEvent.click(screen.getByRole('button', { name: 'Create token' }));
 
     await screen.findByText('new-secret');
     await userEvent.click(screen.getByRole('button', { name: 'Done' }));
-    within(await card('Production')).getByText('No active tokens');
+    within(await card('Production')).getByText('No token for Production yet.');
     expect(screen.queryByText(/Could not load the API tokens/)).toBeNull();
 });
 
@@ -221,7 +232,9 @@ test.each([
     linkedTokens([]);
     await userEvent.click(screen.getByRole('button', { name: /Yes/ }));
 
-    await within(await card('Production')).findByText('No active tokens');
+    await within(await card('Production')).findByText(
+        'No token for Production yet.',
+    );
     expect(deleted).toEqual(['*:production.checkout-api']);
 });
 
@@ -250,11 +263,15 @@ test('says when the tokens could not be loaded', async () => {
     expect(tabLabel()).toHaveTextContent(/^Tokens$/);
 });
 
-test('names the token types the user may not read', async () => {
+test('names the token types the user may not read, and claims nothing about them', async () => {
     setup([token('checkout-web', 'production', { type: 'frontend' })]);
     renderTab([{ permission: READ_FRONTEND_API_TOKEN }]);
 
     await screen.findByText(
         "Backend tokens are not listed: you don't have permission to read them.",
+    );
+    screen.getByRole('heading', { name: 'Tokens' });
+    within(await card('Development')).getByText(
+        'No token you can see for Development.',
     );
 });

@@ -14,6 +14,7 @@ export type ApiTokenFormErrorType = 'tokenName' | 'projects';
 export const useApiTokenForm = (
     project?: string,
     preferredEnvironment?: string,
+    initialProjects: string[] = [project ?? '*'],
 ) => {
     const { environments } = useEnvironments();
     const initialEnvironment =
@@ -47,9 +48,7 @@ export const useApiTokenForm = (
 
     const [tokenName, setTokenName] = useState('');
     const [type, setType] = useState(firstAccessibleType || TokenType.CLIENT);
-    const [projects, setProjects] = useState<string[]>([
-        project ? project : '*',
-    ]);
+    const [projects, setProjects] = useState<string[]>(initialProjects);
     const [memorizedProjects, setMemorizedProjects] =
         useState<string[]>(projects);
     const [environment, setEnvironment] = useState<string>();

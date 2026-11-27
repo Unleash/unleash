@@ -48,6 +48,11 @@ test('suggests a name, links the token and shows its secret until Done', async (
     await userEvent.click(screen.getByRole('radio', { name: 'development' }));
     expect(name).toHaveValue('checkout-development');
 
+    await userEvent.click(
+        screen.getByRole('checkbox', {
+            name: /All current and future projects/,
+        }),
+    );
     await userEvent.click(screen.getByRole('button', { name: 'Create token' }));
 
     await screen.findByText('Token created');
@@ -68,6 +73,106 @@ test('suggests a name, links the token and shows its secret until Done', async (
     await userEvent.click(screen.getByRole('button', { name: 'Done' }));
 
     expect(onClose).toHaveBeenCalledOnce();
+});
+
+test('asks for a project instead of defaulting to all projects', async () => {
+    const { requests } = setup();
+    await open();
+
+    expect(
+        screen.getByRole('checkbox', {
+            name: /All current and future projects/,
+        }),
+    ).not.toBeChecked();
+    await userEvent.click(screen.getByRole('button', { name: 'Create token' }));
+
+    await screen.findByText('At least one project is required');
+    expect(requests).toEqual([]);
+});
+
+test("preselects the projects the application's other tokens name", async () => {
+    const { requests } = setup();
+    testServerRoute(server, '/api/admin/projects', {
+        projects: [
+            { id: 'dx', name: 'DX' },
+            { id: 'eg', name: 'EG' },
+            { id: 'sa', name: 'SA' },
+        ],
+    });
+    const linked = (tokenName: string, projects: string[], extra = {}) => ({
+        tokenName,
+        type: 'backend',
+        environment: 'production',
+        projects,
+        createdAt: '2026-11-17T10:00:00.000Z',
+        ...extra,
+    });
+    testServerRoute(server, '/api/admin/api-tokens', {
+        tokens: [
+            linked('one', ['dx']),
+            linked('two', ['eg', 'dx']),
+            linked('old', ['sa'], { expiresAt: '2020-01-01T00:00:00.000Z' }),
+        ],
+    });
+    await open();
+
+    await screen.findByText(
+        "Pre-selected from this application's other tokens.",
+    );
+    screen.getByRole('button', { name: 'DX' });
+    screen.getByRole('button', { name: 'EG' });
+    expect(screen.queryByRole('button', { name: 'SA' })).toBeNull();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Create token' }));
+
+    await screen.findByText('Token created');
+    expect(requests).toMatchObject([{ projects: ['dx', 'eg'] }]);
+});
+
+test('brings the picked projects back when all projects is unticked', async () => {
+    setup();
+    testServerRoute(server, '/api/admin/projects', {
+        projects: [{ id: 'dx', name: 'DX' }],
+    });
+    testServerRoute(server, '/api/admin/api-tokens', {
+        tokens: [
+            {
+                tokenName: 'one',
+                type: 'backend',
+                environment: 'production',
+                projects: ['dx'],
+                createdAt: '2026-11-17T10:00:00.000Z',
+            },
+        ],
+    });
+    await open();
+    const all = screen.getByRole('checkbox', {
+        name: /All current and future projects/,
+    });
+
+    await screen.findByRole('button', { name: 'DX' });
+    await userEvent.click(all);
+    expect(screen.queryByRole('button', { name: 'DX' })).toBeNull();
+    expect(screen.getByRole('combobox')).toBeDisabled();
+    await userEvent.click(all);
+
+    screen.getByRole('button', { name: 'DX' });
+});
+
+test('keeps the chosen projects when the token type changes', async () => {
+    const { requests } = setup();
+    await open();
+
+    await userEvent.click(
+        screen.getByRole('checkbox', {
+            name: /All current and future projects/,
+        }),
+    );
+    await userEvent.click(screen.getByRole('radio', { name: /Frontend SDK/ }));
+    await userEvent.click(screen.getByRole('button', { name: 'Create token' }));
+
+    await screen.findByText('Token created');
+    expect(requests).toMatchObject([{ type: 'FRONTEND', projects: ['*'] }]);
 });
 
 test('keeps a name the user typed when the environment changes', async () => {
@@ -107,6 +212,11 @@ test('stays open while the token is being created, so its secret is not lost', a
     );
     const onClose = vi.fn();
     await open(onClose);
+    await userEvent.click(
+        screen.getByRole('checkbox', {
+            name: /All current and future projects/,
+        }),
+    );
     await userEvent.click(screen.getByRole('button', { name: 'Create token' }));
     await userEvent.click(screen.getByTestId('CloseIcon'));
 

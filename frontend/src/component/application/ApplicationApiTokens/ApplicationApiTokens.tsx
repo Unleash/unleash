@@ -5,6 +5,7 @@ import {
     styled,
     Table,
     TableBody,
+    TableCell,
     TableHead,
     TableRow,
     Typography,
@@ -16,9 +17,8 @@ import {
     getCoreRowModel,
     useReactTable,
 } from '@tanstack/react-table';
-import { TableCell } from 'component/common/Table';
-import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
-import { ProjectsList } from 'component/admin/apiToken/ProjectsList/ProjectsList';
+import { PageContent } from 'component/common/PageContent/PageContent';
+import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { RemoveApiTokenButton } from 'component/common/ApiTokenTable/RemoveApiTokenButton/RemoveApiTokenButton';
 import { Badge } from 'component/common/Badge/Badge';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
@@ -36,25 +36,34 @@ import {
 } from '@server/types/permissions';
 import type { ApiTokenSchema } from 'openapi';
 import { pluralize } from '../pluralize.ts';
+import { ALL_PROJECTS } from '../ApplicationOverviewPanels/buildApplicationEnvironments.ts';
 import { isTokenExpired } from '../isTokenExpired.ts';
 import { CreateApplicationTokenButton } from './CreateApplicationTokenButton/CreateApplicationTokenButton.tsx';
 import { CreateTokenPanel } from './CreateTokenPanel/CreateTokenPanel.tsx';
 
-const StyledRow = styled('div')(({ theme }) => ({
+const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
     gap: theme.spacing(2),
+    padding: theme.spacing(1, 0),
 }));
 
-const StyledIntro = styled(StyledRow)(({ theme }) => ({
-    marginBottom: theme.spacing(3),
+const StyledHeaderText = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1),
+}));
+
+const StyledCards = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
 }));
 
 const StyledCard = styled('section')(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusLarge,
-    marginBottom: theme.spacing(3),
     overflowX: 'auto',
 }));
 
@@ -66,8 +75,37 @@ const StyledCardHeader = styled('div')(({ theme }) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
-const StyledEmpty = styled(StyledRow)(({ theme }) => ({
+// the text and its button sit together, so they read as one group
+const StyledEmpty = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: theme.spacing(2),
     padding: theme.spacing(2, 3),
+}));
+
+const StyledTable = styled(Table)({
+    '& tbody tr:last-of-type td': {
+        borderBottom: 0,
+    },
+});
+
+const StyledCell = styled(TableCell)(({ theme }) => ({
+    height: theme.spacing(6),
+    padding: theme.spacing(0, 2),
+    '&:first-of-type': {
+        paddingLeft: theme.spacing(3),
+    },
+    '&:last-of-type': {
+        paddingRight: theme.spacing(3),
+    },
+    '&&.MuiTableCell-head': {
+        height: theme.spacing(6),
+        borderRadius: 0,
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        backgroundColor: 'transparent',
+        color: theme.palette.text.secondary,
+    },
 }));
 
 const typeLabels: Record<string, string> = {
@@ -98,19 +136,18 @@ const TokensTable = ({ tokens, onDelete }: ITokensTableProps) => {
                 header: 'Type',
                 cell: ({ getValue }) => typeLabels[getValue()] ?? getValue(),
             }),
-            columnHelper.display({
-                id: 'projects',
+            columnHelper.accessor('projects', {
                 header: 'Projects',
-                cell: ({ row }) => (
-                    <ProjectsList
-                        project={row.original.project}
-                        projects={row.original.projects}
-                    />
-                ),
+                cell: ({ getValue }) =>
+                    getValue().includes(ALL_PROJECTS)
+                        ? 'All'
+                        : getValue().join(', '),
             }),
             columnHelper.accessor('seenAt', {
                 header: 'Last used',
-                cell: ({ getValue }) => <TimeAgoCell value={getValue()} />,
+                cell: ({ getValue }) => (
+                    <TimeAgo date={getValue()} fallback='Never' />
+                ),
             }),
             columnHelper.display({
                 id: 'status',
@@ -149,16 +186,16 @@ const TokensTable = ({ tokens, onDelete }: ITokensTableProps) => {
     });
 
     return (
-        <Table>
+        <StyledTable>
             <TableHead>
                 <TableRow>
                     {table.getFlatHeaders().map((header) => (
-                        <TableCell key={header.id}>
+                        <StyledCell key={header.id}>
                             {flexRender(
                                 header.column.columnDef.header,
                                 header.getContext(),
                             )}
-                        </TableCell>
+                        </StyledCell>
                     ))}
                 </TableRow>
             </TableHead>
@@ -166,7 +203,7 @@ const TokensTable = ({ tokens, onDelete }: ITokensTableProps) => {
                 {table.getRowModel().rows.map((row) => (
                     <TableRow key={row.id}>
                         {row.getVisibleCells().map((cell) => (
-                            <TableCell
+                            <StyledCell
                                 key={cell.id}
                                 align={cell.column.columnDef.meta?.align}
                             >
@@ -174,12 +211,12 @@ const TokensTable = ({ tokens, onDelete }: ITokensTableProps) => {
                                     cell.column.columnDef.cell,
                                     cell.getContext(),
                                 )}
-                            </TableCell>
+                            </StyledCell>
                         ))}
                     </TableRow>
                 ))}
             </TableBody>
-        </Table>
+        </StyledTable>
     );
 };
 
@@ -207,24 +244,68 @@ export const ApplicationApiTokens = () => {
         }
     };
 
-    if (loading || environmentsLoading || overviewLoading) {
-        return <LinearProgress />;
+    const isLoading = loading || environmentsLoading || overviewLoading;
+    const allTokensVisible = hiddenTokenTypes.length === 0;
+    // no count while it could be wrong: loading, or tokens the viewer can't see
+    const title =
+        isLoading || forbidden || error || !allTokensVisible
+            ? 'Tokens'
+            : `Tokens (${tokens.length})`;
+    const header = (
+        <StyledHeader>
+            <StyledHeaderText>
+                <Typography variant='h2'>{title}</Typography>
+                <Typography color='text.secondary'>
+                    Tokens created here belong to {name}. They work like any
+                    other API token: scope is set per token, and changing it
+                    means rotating.
+                </Typography>
+            </StyledHeaderText>
+            <CreateApplicationTokenButton
+                startIcon={<Add />}
+                onClick={() => setCreatePanel({})}
+            >
+                Create token
+            </CreateApplicationTokenButton>
+        </StyledHeader>
+    );
+    const createTokenPanel = createPanel ? (
+        <CreateTokenPanel
+            appName={name}
+            preferredEnvironment={createPanel.environment}
+            onClose={() => setCreatePanel(undefined)}
+        />
+    ) : null;
+
+    if (isLoading) {
+        return (
+            <PageContent header={header}>
+                <LinearProgress />
+                {createTokenPanel}
+            </PageContent>
+        );
     }
 
     if (forbidden) {
         return (
-            <Alert severity='info'>
-                You need permission to read API tokens to see the tokens linked
-                to this application.
-            </Alert>
+            <PageContent header={header}>
+                <Alert severity='info'>
+                    You need permission to read API tokens to see the tokens
+                    linked to this application.
+                </Alert>
+                {createTokenPanel}
+            </PageContent>
         );
     }
 
     if (error) {
         return (
-            <Alert severity='error'>
-                Could not load the API tokens: {formatUnknownError(error)}
-            </Alert>
+            <PageContent header={header}>
+                <Alert severity='error'>
+                    Could not load the API tokens: {formatUnknownError(error)}
+                </Alert>
+                {createTokenPanel}
+            </PageContent>
         );
     }
 
@@ -241,82 +322,78 @@ export const ApplicationApiTokens = () => {
     const instanceCount = (environment: string) =>
         overview.environments.find((e) => e.name === environment)
             ?.instanceCount ?? 0;
+    const emptyText = (label: string, instances: number) => {
+        if (!allTokensVisible) {
+            return `No token you can see for ${label}.`;
+        }
+        return instances > 0
+            ? `${pluralize(instances, 'instance reports', 'instances report')} here without a linked token.`
+            : `No token for ${label} yet.`;
+    };
 
     return (
-        <>
-            <StyledIntro>
-                <Typography>
-                    Tokens created here belong to {name}. They work like any
-                    other API token: scope is set per token, and changing it
-                    means rotating.
-                </Typography>
-                <CreateApplicationTokenButton
-                    startIcon={<Add />}
-                    onClick={() => setCreatePanel({})}
-                >
-                    Create token
-                </CreateApplicationTokenButton>
-            </StyledIntro>
-            {hiddenTokenTypes.length > 0 ? (
-                <Alert severity='info' sx={{ mb: 3 }}>
-                    {hiddenTokenTypes
-                        .map((type) => typeLabels[type])
-                        .join(' and ')}{' '}
-                    tokens are not listed: you don't have permission to read
-                    them.
-                </Alert>
-            ) : null}
-            {cardEnvironments.map((environment) => {
-                const environmentTokens =
-                    tokensByEnvironment.get(environment) ?? [];
-                const instances = instanceCount(environment);
-                const label = capitalizeFirst(environment);
+        <PageContent header={header}>
+            <StyledCards>
+                {allTokensVisible ? null : (
+                    <Alert severity='info'>
+                        {hiddenTokenTypes
+                            .map((type) => typeLabels[type])
+                            .join(' and ')}{' '}
+                        tokens are not listed: you don't have permission to read
+                        them.
+                    </Alert>
+                )}
+                {cardEnvironments.map((environment) => {
+                    const environmentTokens =
+                        tokensByEnvironment.get(environment) ?? [];
+                    const instances = instanceCount(environment);
+                    const label = capitalizeFirst(environment);
 
-                return (
-                    <StyledCard key={environment} aria-label={label}>
-                        <StyledCardHeader>
-                            <Typography variant='h3'>{label}</Typography>
-                            <Typography variant='body2' color='text.secondary'>
-                                {environmentTokens.length > 0
-                                    ? pluralize(
-                                          environmentTokens.length,
-                                          'token',
-                                      )
-                                    : 'No active tokens'}
-                            </Typography>
-                        </StyledCardHeader>
-                        {environmentTokens.length > 0 ? (
-                            <TokensTable
-                                tokens={environmentTokens}
-                                onDelete={onDelete}
-                            />
-                        ) : (
-                            <StyledEmpty>
-                                <Typography>
-                                    {instances > 0
-                                        ? `${pluralize(instances, 'instance reports', 'instances report')} here without a linked token.`
-                                        : `No token for ${label} yet.`}
-                                </Typography>
-                                <CreateApplicationTokenButton
-                                    variant='outlined'
-                                    onClick={() =>
-                                        setCreatePanel({ environment })
-                                    }
-                                >
-                                    Create {label} token
-                                </CreateApplicationTokenButton>
-                            </StyledEmpty>
-                        )}
-                    </StyledCard>
-                );
-            })}
-            {createPanel ? (
-                <CreateTokenPanel
-                    appName={name}
-                    preferredEnvironment={createPanel.environment}
-                    onClose={() => setCreatePanel(undefined)}
-                />
-            ) : null}
-        </>
+                    return (
+                        <StyledCard key={environment} aria-label={label}>
+                            <StyledCardHeader>
+                                <Typography variant='h3'>{label}</Typography>
+                                {environmentTokens.length > 0 ? (
+                                    <Typography
+                                        variant='body2'
+                                        color='text.secondary'
+                                    >
+                                        {pluralize(
+                                            environmentTokens.length,
+                                            'token',
+                                        )}
+                                    </Typography>
+                                ) : null}
+                            </StyledCardHeader>
+                            {environmentTokens.length > 0 ? (
+                                <TokensTable
+                                    tokens={environmentTokens}
+                                    onDelete={onDelete}
+                                />
+                            ) : (
+                                <StyledEmpty>
+                                    <Typography>
+                                        {emptyText(label, instances)}
+                                    </Typography>
+                                    <CreateApplicationTokenButton
+                                        variant='outlined'
+                                        onClick={() =>
+                                            setCreatePanel({ environment })
+                                        }
+                                    >
+                                        Create token
+                                        <ScreenReaderOnly as='span'>
+                                            {' '}
+                                            in {label}
+                                        </ScreenReaderOnly>
+                                    </CreateApplicationTokenButton>
+                                </StyledEmpty>
+                            )}
+                        </StyledCard>
+                    );
+                })}
+            </StyledCards>
+            {createTokenPanel}
+        </PageContent>
     );
 };

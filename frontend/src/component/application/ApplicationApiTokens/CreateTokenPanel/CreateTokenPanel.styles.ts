@@ -35,19 +35,31 @@ export const StyledFooter = styled('div')(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
+export const StyledAppName = styled('span')({
+    fontFamily: 'monospace',
+});
+
 export const StyledEnvironments = styled(RadioGroup)(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
+    gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
     gap: theme.spacing(1.5),
+    [theme.breakpoints.down('sm')]: {
+        gridTemplateColumns: 'minmax(0, 1fr)',
+    },
 }));
 
 export const StyledEnvironment = styled(FormControlLabel)(({ theme }) => ({
     margin: 0,
+    padding: theme.spacing(0.5, 1),
     border: `1px solid ${theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: theme.shape.borderRadiusMedium,
+    overflowWrap: 'anywhere',
     '&:has(input:checked)': {
-        borderColor: theme.palette.primary.main,
-        backgroundColor: theme.palette.secondary.light,
+        borderColor: theme.palette.primary.containerBorder,
+        backgroundColor: theme.palette.primary.container,
+        '& .MuiFormControlLabel-label': {
+            fontWeight: theme.typography.fontWeightBold,
+        },
     },
     '&:has(input:focus-visible)': {
         outline: `2px solid ${theme.palette.primary.main}`,
@@ -62,4 +74,23 @@ export const StyledCode = styled('pre')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     backgroundColor: theme.palette.text.primary,
     color: theme.palette.background.paper,
+}));
+
+export const StyledOption = styled(FormControlLabel)(({ theme }) => ({
+    alignItems: 'flex-start',
+    marginRight: 0,
+    '& .MuiFormControlLabel-label': {
+        paddingTop: theme.spacing(1),
+    },
+}));
+
+export const StyledOptionTitle = styled('span')(({ theme }) => ({
+    display: 'block',
+    fontWeight: theme.typography.fontWeightBold,
+}));
+
+export const StyledOptionDescription = styled('span')(({ theme }) => ({
+    display: 'block',
+    fontSize: theme.typography.body2.fontSize,
+    color: theme.palette.text.secondary,
 }));

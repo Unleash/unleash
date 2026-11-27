@@ -1,6 +1,6 @@
 /* eslint react/no-multi-comp:off */
 import type React from 'react';
-import { type ReactNode, useContext, useState } from 'react';
+import { Fragment, type ReactNode, useContext, useState } from 'react';
 import {
     Box,
     IconButton,
@@ -45,6 +45,17 @@ const StyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadiusLarge,
     marginBottom: theme.spacing(3),
+}));
+
+const StyledTitle = styled('div')(({ theme }) => ({
+    '& h1': {
+        display: 'inline-block',
+    },
+    '& small': {
+        marginLeft: theme.spacing(1.5),
+        fontSize: theme.typography.body2.fontSize,
+        color: theme.palette.text.secondary,
+    },
 }));
 
 const TabContainer = styled('div')(({ theme }) => ({
@@ -150,49 +161,58 @@ export const Application = () => {
     ];
 
     const newActiveTab = tabs.find((tab) => tab.path === pathname);
+    const Title = applicationOverview ? StyledTitle : Fragment;
 
     return (
         <>
             <StyledHeader>
                 <PageContent>
-                    <PageHeader
-                        title={appName}
-                        actions={
-                            <>
-                                <ConditionallyRender
-                                    condition={Boolean(url)}
-                                    show={
-                                        <IconButton
-                                            component={Link}
-                                            nativeButton={false}
-                                            href={url}
-                                            size='large'
-                                        >
-                                            <LinkIcon titleAccess={url} />
-                                        </IconButton>
-                                    }
-                                />
+                    <Title>
+                        <PageHeader
+                            title={appName}
+                            subtitle={
+                                applicationOverview
+                                    ? `Created ${formatDate(createdAt)}`
+                                    : undefined
+                            }
+                            actions={
+                                <>
+                                    <ConditionallyRender
+                                        condition={Boolean(url)}
+                                        show={
+                                            <IconButton
+                                                component={Link}
+                                                nativeButton={false}
+                                                href={url}
+                                                size='large'
+                                            >
+                                                <LinkIcon titleAccess={url} />
+                                            </IconButton>
+                                        }
+                                    />
 
-                                <PermissionIconButton
-                                    tooltipProps={{
-                                        title: 'Delete application',
-                                    }}
-                                    onClick={toggleModal}
-                                    permission={UPDATE_APPLICATION}
-                                >
-                                    <Delete />
-                                </PermissionIconButton>
-                            </>
-                        }
-                    />
-
-                    <Box sx={(theme) => ({ marginTop: theme.spacing(1) })}>
-                        <Typography variant='body2'>
-                            Created: {formatDate(createdAt)}
-                        </Typography>
-                    </Box>
+                                    <PermissionIconButton
+                                        tooltipProps={{
+                                            title: 'Delete application',
+                                        }}
+                                        onClick={toggleModal}
+                                        permission={UPDATE_APPLICATION}
+                                    >
+                                        <Delete />
+                                    </PermissionIconButton>
+                                </>
+                            }
+                        />
+                    </Title>
+                    {applicationOverview ? null : (
+                        <Box sx={(theme) => ({ marginTop: theme.spacing(1) })}>
+                            <Typography variant='body2'>
+                                Created: {formatDate(createdAt)}
+                            </Typography>
+                        </Box>
+                    )}
                 </PageContent>
-                <Separator />
+                {applicationOverview ? null : <Separator />}
                 <TabContainer>
                     <Tabs
                         value={newActiveTab?.path}
@@ -215,22 +235,32 @@ export const Application = () => {
                     </Tabs>
                 </TabContainer>
             </StyledHeader>
-            <PageContent>
-                <ConditionallyRender
-                    condition={hasAccess(UPDATE_APPLICATION)}
-                    show={<div>{renderModal()}</div>}
+            <ConditionallyRender
+                condition={hasAccess(UPDATE_APPLICATION)}
+                show={<div>{renderModal()}</div>}
+            />
+            <Routes>
+                <Route
+                    path='instances'
+                    element={
+                        <PageContent>
+                            <ConnectedInstances />
+                        </PageContent>
+                    }
                 />
-                <Routes>
-                    <Route path='instances' element={<ConnectedInstances />} />
-                    {applicationOverview ? (
-                        <Route
-                            path='tokens'
-                            element={<ApplicationApiTokens />}
-                        />
-                    ) : null}
-                    <Route path='*' element={<ApplicationOverview />} />
-                </Routes>
-            </PageContent>
+                {applicationOverview ? (
+                    // brings its own page content, with a header
+                    <Route path='tokens' element={<ApplicationApiTokens />} />
+                ) : null}
+                <Route
+                    path='*'
+                    element={
+                        <PageContent>
+                            <ApplicationOverview />
+                        </PageContent>
+                    }
+                />
+            </Routes>
         </>
     );
 };

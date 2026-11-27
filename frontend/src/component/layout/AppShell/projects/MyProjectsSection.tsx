@@ -10,6 +10,7 @@ import {
     ProjectNavGroup,
     type ProjectNavExpansion,
 } from './ProjectNavGroup.tsx';
+import { ProjectFavoriteAction } from './ProjectFavoriteAction.tsx';
 
 const StyledEmptyLink = styled(Link)(({ theme }) => ({
     ...sidebarItemStyles(theme),
@@ -39,6 +40,7 @@ export const MyProjectsSection: FC = () => {
                     <ProjectNavGroup
                         key={project.id}
                         project={project}
+                        action={<ProjectFavoriteAction project={project} />}
                         expansion={expansion[project.id]}
                         onExpansionChange={(change) =>
                             setExpansion((previous) => ({

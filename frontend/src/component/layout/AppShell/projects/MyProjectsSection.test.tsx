@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
 import { beforeEach, expect, test } from 'vitest';
 import { Link } from 'react-router';
-import { screen, within } from '@testing-library/react';
+import { http } from 'msw';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
@@ -9,6 +10,7 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { MyProjectsSection } from './MyProjectsSection.tsx';
+import { OpenedProjectSection } from './OpenedProjectSection.tsx';
 
 const server = testServerSetup();
 
@@ -70,6 +72,7 @@ const projectGroup = (name: string) =>
 
 beforeEach(() => {
     localStorage.clear();
+    sessionStorage.clear();
     setupApi();
 });
 
@@ -370,4 +373,96 @@ test('links Configure project to API access on oss', async () => {
     expect(
         group.getByRole('link', { name: 'Configure project' }),
     ).toHaveAttribute('href', '/projects/alpha/settings/api-access');
+});
+
+// The server answers a favorite change with the project list it would then
+// return, like the real API does on the refetch that follows.
+const onFavoriteChange = (
+    method: 'post' | 'delete',
+    projectId: string,
+    projectsAfter: { id: string; name: string; favorite?: boolean }[],
+) =>
+    server.use(
+        http[method](`/api/admin/projects/${projectId}/favorites`, () => {
+            testServerRoute(server, '/api/admin/projects', {
+                projects: projectsAfter,
+            });
+            return new Response(null, { status: 200 });
+        }),
+    );
+
+const myProjects = () =>
+    within(screen.getByRole('region', { name: 'My projects' }));
+
+test('removes a project I only favorited once it is unfavorited', async () => {
+    onFavoriteChange('delete', 'alpha', [
+        { id: 'alpha', name: 'Alpha' },
+        { id: 'beta', name: 'Beta' },
+    ]);
+    await renderSection();
+
+    await userEvent.click(
+        screen.getByRole('button', { name: 'Remove Alpha from favorites' }),
+    );
+
+    await waitFor(() =>
+        expect(
+            myProjects().queryByRole('button', { name: 'Alpha' }),
+        ).not.toBeInTheDocument(),
+    );
+});
+
+test('keeps a project I am a member of once it is unfavorited', async () => {
+    setupApi({ projects: [{ id: 'beta', name: 'Beta', favorite: true }] });
+    onFavoriteChange('delete', 'beta', [{ id: 'beta', name: 'Beta' }]);
+    await renderSection();
+
+    await userEvent.click(
+        screen.getByRole('button', { name: 'Remove Beta from favorites' }),
+    );
+
+    expect(
+        await screen.findByRole('button', { name: 'Add Beta to favorites' }),
+    ).toBeInTheDocument();
+    expect(
+        myProjects().getByRole('button', { name: 'Beta' }),
+    ).toBeInTheDocument();
+});
+
+test('favorites a project I am a member of', async () => {
+    setupApi({ projects: [{ id: 'beta', name: 'Beta' }] });
+    onFavoriteChange('post', 'beta', [
+        { id: 'beta', name: 'Beta', favorite: true },
+    ]);
+    await renderSection();
+
+    await userEvent.click(
+        screen.getByRole('button', { name: 'Add Beta to favorites' }),
+    );
+
+    expect(
+        await screen.findByRole('button', {
+            name: 'Remove Beta from favorites',
+        }),
+    ).toBeInTheDocument();
+});
+
+test('moves the current project to Opened once it is unfavorited', async () => {
+    onFavoriteChange('delete', 'alpha', [
+        { id: 'alpha', name: 'Alpha' },
+        { id: 'beta', name: 'Beta' },
+    ]);
+    await renderSection('/projects/alpha', <OpenedProjectSection />);
+
+    await userEvent.click(
+        screen.getByRole('button', { name: 'Remove Alpha from favorites' }),
+    );
+
+    const opened = within(
+        await screen.findByRole('region', { name: 'Opened projects' }),
+    );
+    expect(opened.getByRole('button', { name: 'Alpha' })).toBeInTheDocument();
+    expect(
+        myProjects().queryByRole('button', { name: 'Alpha' }),
+    ).not.toBeInTheDocument();
 });

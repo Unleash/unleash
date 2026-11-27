@@ -7,10 +7,6 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import type { ProjectSchemaMode } from 'openapi';
 import { useRoutes } from '../../MainLayout/NavigationSidebar/useRoutes.ts';
 import { getProjectPage } from '../projects/getProjectPage.ts';
-import {
-    PrivateProjectIcon,
-    ProtectedProjectIcon,
-} from '../projects/ProjectModeIcons.tsx';
 import { useProjectNavItems } from '../projects/useProjectNavItems.ts';
 import {
     type AppNavigationLink,
@@ -28,18 +24,13 @@ export type PageBreadcrumb = {
     label: string;
     to?: string;
     icon?: ComponentType<SvgIconProps>;
-    badge?: ComponentType;
+    projectMode?: ProjectSchemaMode;
 };
 
 const homeBreadcrumb: PageBreadcrumb = {
     label: appNavigationLinks.home.label,
     to: appNavigationLinks.home.to,
     icon: HomeOutlinedIcon,
-};
-
-const projectModeBadges: Partial<Record<ProjectSchemaMode, ComponentType>> = {
-    private: PrivateProjectIcon,
-    protected: ProtectedProjectIcon,
 };
 
 const projectsBreadcrumb: PageBreadcrumb = {
@@ -66,7 +57,7 @@ const useProjectBreadcrumbs = (
         {
             label: project.name,
             to: `/projects/${project.id}`,
-            badge: project.mode && projectModeBadges[project.mode],
+            projectMode: project.mode,
         },
         ...(item ? [{ label: item.label, to: item.to }] : []),
     ];

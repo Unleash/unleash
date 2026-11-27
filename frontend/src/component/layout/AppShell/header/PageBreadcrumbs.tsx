@@ -2,6 +2,7 @@ import type { FC } from 'react';
 import { Breadcrumbs, styled, type Theme, Tooltip } from '@mui/material';
 import { Link, useLocation } from 'react-router';
 import { Truncator } from 'component/common/Truncator/Truncator';
+import { ProjectModeBadge } from 'component/project/ProjectModeBadge/ProjectModeBadge';
 import { type EntityPage, findEntityPage } from './entityPages.ts';
 import {
     type PageBreadcrumb,
@@ -53,12 +54,10 @@ const StyledIconLabel = styled('span')(({ theme }) => ({
 
 type BreadcrumbIcon = NonNullable<PageBreadcrumb['icon']>;
 
-type BreadcrumbBadge = NonNullable<PageBreadcrumb['badge']>;
-
 type BreadcrumbLabelProps = {
     label: string;
     icon?: BreadcrumbIcon;
-    badge?: BreadcrumbBadge;
+    projectMode?: PageBreadcrumb['projectMode'];
 };
 
 type BreadcrumbView =
@@ -68,7 +67,7 @@ type BreadcrumbView =
     | ({ kind: 'plain' } & BreadcrumbLabelProps);
 
 const toBreadcrumbView = (
-    { label, to, icon, badge }: PageBreadcrumb,
+    { label, to, icon, projectMode }: PageBreadcrumb,
     isLastInTrail: boolean,
     pathname: string,
 ): BreadcrumbView => {
@@ -76,21 +75,21 @@ const toBreadcrumbView = (
     const isCurrentPage = isLastInTrail && to === pathname;
 
     if (to === undefined) {
-        return { kind: 'plain', label, icon, badge };
+        return { kind: 'plain', label, icon, projectMode };
     }
     if (isCollapsedToIcon) {
         return { kind: 'iconLink', label, to, icon };
     }
     if (isCurrentPage) {
-        return { kind: 'current', label, icon, badge };
+        return { kind: 'current', label, icon, projectMode };
     }
-    return { kind: 'link', label, to, icon, badge };
+    return { kind: 'link', label, to, icon, projectMode };
 };
 
 const BreadcrumbLabel: FC<BreadcrumbLabelProps> = ({
     label,
     icon: Icon,
-    badge: Badge,
+    projectMode,
 }) => {
     const text = (
         <Truncator title={label} arrow>
@@ -98,15 +97,11 @@ const BreadcrumbLabel: FC<BreadcrumbLabelProps> = ({
         </Truncator>
     );
 
-    if (!Icon && !Badge) {
-        return text;
-    }
-
     return (
         <StyledIconLabel>
             {Icon ? <Icon fontSize='small' /> : null}
             {text}
-            {Badge ? <Badge /> : null}
+            <ProjectModeBadge mode={projectMode} variant='nav' />
         </StyledIconLabel>
     );
 };

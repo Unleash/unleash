@@ -4,7 +4,7 @@ import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Truncator } from 'component/common/Truncator/Truncator';
 import { OnboardingStatusBadge } from 'component/project/ProjectCard/OnboardingStatusBadge/OnboardingStatusBadge';
-import { ProjectModeBadge } from 'component/project/ProjectCard/ProjectModeBadge/ProjectModeBadge';
+import { ProjectModeBadge } from 'component/project/ProjectModeBadge/ProjectModeBadge';
 import type { ProjectSchema } from 'openapi';
 import { QuietLink } from 'component/common/QuietLink';
 

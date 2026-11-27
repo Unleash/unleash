@@ -1,7 +1,7 @@
 import { Box, styled, Typography } from '@mui/material';
 import type { FC } from 'react';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
-import { collaborationModeDescriptions } from './collaborationModeDescriptions.ts';
+import { collaborationModeDescriptions } from 'component/project/collaborationModeDescriptions';
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,

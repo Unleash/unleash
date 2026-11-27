@@ -8,7 +8,7 @@ import {
     StyledSubtitle,
 } from './ProjectCard.styles';
 import { ProjectCardFooter } from './ProjectCardFooter.tsx';
-import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge.tsx';
+import { ProjectModeBadge } from 'component/project/ProjectModeBadge/ProjectModeBadge';
 import { FavoriteAction } from './FavoriteAction/FavoriteAction.tsx';
 import { styled } from '@mui/material';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';

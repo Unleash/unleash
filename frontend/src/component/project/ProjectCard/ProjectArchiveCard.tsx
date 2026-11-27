@@ -8,7 +8,7 @@ import {
     StyledProjectCardTitleContainer,
     StyledProjectCardFooter,
 } from './ProjectCard.styles';
-import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge.tsx';
+import { ProjectModeBadge } from 'component/project/ProjectModeBadge/ProjectModeBadge';
 import { formatDateYMDHM } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { parseISO } from 'date-fns';

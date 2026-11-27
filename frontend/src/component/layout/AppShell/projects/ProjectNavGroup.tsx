@@ -3,6 +3,7 @@ import { ButtonBase, styled } from '@mui/material';
 import { Link, useLocation } from 'react-router';
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import type { ProjectSchema } from 'openapi';
+import { ProjectModeBadge } from 'component/project/ProjectModeBadge/ProjectModeBadge';
 import {
     SIDEBAR_ITEM_GAP,
     SIDEBAR_ITEM_PADDING_X,
@@ -17,10 +18,6 @@ import { SidebarList } from '../sidebar/SidebarList.tsx';
 import { SidebarMoreToggle } from '../sidebar/SidebarMoreToggle.tsx';
 import { SIDEBAR_ROW_ACTION_SIZE } from '../sidebar/SidebarRowAction.tsx';
 import { getProjectPage, isInProject } from './getProjectPage.ts';
-import {
-    PrivateProjectIcon,
-    ProtectedProjectIcon,
-} from './ProjectModeIcons.tsx';
 import { useProjectNavItems } from './useProjectNavItems.ts';
 
 type ExpansionState = 'open' | 'closed';
@@ -167,10 +164,7 @@ export const ProjectNavGroup: FC<{
                         <FolderOutlinedIcon />
                     </SidebarItemIcon>
                     <StyledLabel>{project.name}</StyledLabel>
-                    {project.mode === 'private' ? <PrivateProjectIcon /> : null}
-                    {project.mode === 'protected' ? (
-                        <ProtectedProjectIcon />
-                    ) : null}
+                    <ProjectModeBadge mode={project.mode} variant='nav' />
                     <SidebarCaret expanded={expanded} />
                 </StyledProjectToggle>
                 {action ? (

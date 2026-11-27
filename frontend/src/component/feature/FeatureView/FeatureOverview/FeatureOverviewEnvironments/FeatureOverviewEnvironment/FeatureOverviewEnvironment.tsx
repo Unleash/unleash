@@ -15,10 +15,7 @@ import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { UpgradeChangeRequests } from './UpgradeChangeRequests/UpgradeChangeRequests.tsx';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import {
-    environmentAccordionSummaryClassName,
-    EnvironmentHeader,
-} from './EnvironmentHeader/EnvironmentHeader.tsx';
+import { EnvironmentHeader } from './EnvironmentHeader/EnvironmentHeader.tsx';
 import FeatureOverviewEnvironmentMetrics from './EnvironmentHeader/FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics.tsx';
 import { FeatureOverviewEnvironmentToggle } from './EnvironmentHeader/FeatureOverviewEnvironmentToggle/FeatureOverviewEnvironmentToggle.tsx';
 import type { IReleasePlan } from 'interfaces/releasePlans';
@@ -38,10 +35,6 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     boxShadow: 'none',
     background: 'none',
     borderRadius: theme.shape.borderRadiusLarge,
-
-    [`&:has(.${environmentAccordionSummaryClassName}:focus-visible)`]: {
-        background: theme.palette.table.headerHover,
-    },
 }));
 
 const NewStyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({

@@ -1,6 +1,7 @@
 import { useId, useMemo, type FC, type PropsWithChildren } from 'react';
 import {
     AccordionSummary,
+    accordionSummaryClasses,
     type AccordionSummaryProps,
     styled,
 } from '@mui/material';
@@ -27,20 +28,20 @@ const StyledAccordionSummary = styled(AccordionSummary, {
     '&&&': {
         cursor: expandable ? 'pointer' : 'default',
     },
-
-    ':focus-within': {
+    [`&.${accordionSummaryClasses.focusVisible}`]: {
         background: 'none',
+        '&:not(:focus-visible)': { outline: 'none' },
     },
     ...(empty && {
         padding: 0,
         alignItems: 'normal',
-        '.MuiAccordionSummary-content': {
+        [`& .${accordionSummaryClasses.content}`]: {
             marginBottom: '0px',
             paddingBottom: '0px',
             flexDirection: 'column',
         },
 
-        '.MuiAccordionSummary-expandIconWrapper': {
+        [`& .${accordionSummaryClasses.expandIconWrapper}`]: {
             width: '0px',
         },
     }),
@@ -150,9 +151,6 @@ const DEFAULT_STRATEGY: Omit<IFeatureStrategy, 'id'> = {
     },
 };
 
-export const environmentAccordionSummaryClassName =
-    'environment-accordion-summary';
-
 export const EnvironmentHeader: FC<
     PropsWithChildren<EnvironmentHeaderProps>
 > = ({
@@ -198,7 +196,6 @@ export const EnvironmentHeader: FC<
             aria-controls={`environment-accordion-${id}-content`}
             expandable={expandable}
             tabIndex={expandable ? 0 : -1}
-            className={environmentAccordionSummaryClassName}
             empty={!hasActivations}
         >
             <StyledHeader empty={!hasActivations} data-loading>

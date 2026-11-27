@@ -28,6 +28,7 @@ import type {
 } from '../../../openapi/index.js';
 import { ForbiddenError } from '../../../error/index.js';
 import { beforeAll, afterEach, afterAll, test, describe, expect } from 'vitest';
+import { validateSchema } from '../../../openapi/validate.js';
 let app: IUnleashTest;
 let db: ITestDb;
 let defaultToken: IApiToken;
@@ -1382,6 +1383,12 @@ test('Can get strategies for feature and environment', async () => {
         .expect((res) => {
             expect(res.body).toHaveLength(1);
             expect(res.body[0].parameters.userId).toBe('string');
+            expect(
+                validateSchema(
+                    '#/components/schemas/featureStrategiesSchema',
+                    res.body,
+                ),
+            ).toBeUndefined();
         });
 });
 

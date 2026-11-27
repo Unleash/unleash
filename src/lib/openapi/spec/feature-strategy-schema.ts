@@ -44,6 +44,13 @@ export const featureStrategySchema = {
             description: 'The order of the strategy in the list',
             example: 9999,
         },
+        milestoneId: {
+            type: 'string',
+            description:
+                'The ID of the release plan milestone this strategy belongs to, or null if it is not part of a release plan',
+            example: '01JB9GGTGQYEQ9D40R17T3YVW1',
+            nullable: true,
+        },
         segments: {
             type: 'array',
             description: 'A list of segment ids attached to the strategy',

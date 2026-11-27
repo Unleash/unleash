@@ -114,18 +114,6 @@ export const StrategyVariants = <T extends StrategyFormState>({
             ? String(strategy.parameters.stickiness)
             : 'default';
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: keyed on the serialized variants on purpose; variantsEdit is a new array on every edit and setStrategy is a stable setter
-    useEffect(() => {
-        return () => {
-            setStrategy((prev: T) => ({
-                ...prev,
-                variants: variantsEdit.filter((variant) =>
-                    Boolean(variant.name),
-                ),
-            }));
-        };
-    }, [JSON.stringify(variantsEdit)]);
-
     // biome-ignore lint/correctness/useExhaustiveDependencies: keyed on stickiness and the serialized variants on purpose; variantsEdit is a new array on every edit and setStrategy is a stable setter
     useEffect(() => {
         setStrategy((prev: T) => ({

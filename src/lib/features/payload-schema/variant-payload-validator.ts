@@ -15,6 +15,12 @@ export type NonMatchingVariantPayload = VariantJsonPayload & { error: string };
 
 const INVALID_JSON = 'The payload is not valid JSON.';
 
+const jsonPayloads = (variants: VariantPayload[]): VariantJsonPayload[] =>
+    variants.filter(hasJsonPayload).map((variant) => ({
+        variantName: variant.name,
+        value: variant.payload.value,
+    }));
+
 const parseJson = (value: string): { parsed: unknown } | undefined => {
     try {
         return { parsed: JSON.parse(value) };
@@ -28,6 +34,16 @@ export class VariantPayloadValidator {
 
     constructor(payloadSchemaReadModel: IPayloadSchemaReadModel) {
         this.payloadSchemaReadModel = payloadSchemaReadModel;
+    }
+
+    static validateVariantsAgainstSchema(
+        schema: Record<string, unknown> | undefined,
+        variants: VariantPayload[],
+    ): NonMatchingVariantPayload[] {
+        return VariantPayloadValidator.validatePayloadsAgainstSchema(
+            schema,
+            jsonPayloads(variants),
+        );
     }
 
     static validatePayloadsAgainstSchema(
@@ -51,42 +67,42 @@ export class VariantPayloadValidator {
         });
     }
 
-    async validateVariantPayloads(
+    static describeNonMatchingPayload(
         featureName: string,
-        payloads: VariantJsonPayload[],
-    ): Promise<NonMatchingVariantPayload[]> {
-        if (payloads.length === 0) {
-            return [];
-        }
-
-        const schema =
-            await this.payloadSchemaReadModel.getPayloadSchema(featureName);
-        return VariantPayloadValidator.validatePayloadsAgainstSchema(
-            schema,
-            payloads,
-        );
+        {
+            variantName,
+            error,
+        }: Pick<NonMatchingVariantPayload, 'variantName' | 'error'>,
+    ): string {
+        return error === INVALID_JSON
+            ? `The json payload of variant "${variantName}" is not valid JSON.`
+            : `The json payload of variant "${variantName}" does not match the payload schema of feature "${featureName}": ${error}`;
     }
 
     async assertVariantsMatchPayloadSchema(
         featureName: string,
         variants: VariantPayload[],
     ): Promise<void> {
-        const payloads = variants.filter(hasJsonPayload).map((variant) => ({
-            variantName: variant.name,
-            value: variant.payload.value,
-        }));
-        const [firstNonMatching] = await this.validateVariantPayloads(
-            featureName,
-            payloads,
-        );
+        const payloads = jsonPayloads(variants);
+        if (payloads.length === 0) {
+            return;
+        }
+
+        const schema =
+            await this.payloadSchemaReadModel.getPayloadSchema(featureName);
+        const [firstNonMatching] =
+            VariantPayloadValidator.validatePayloadsAgainstSchema(
+                schema,
+                payloads,
+            );
         if (!firstNonMatching) {
             return;
         }
-        const { variantName, error } = firstNonMatching;
         throw new BadDataError(
-            error === INVALID_JSON
-                ? `The json payload of variant "${variantName}" is not valid JSON.`
-                : `The json payload of variant "${variantName}" does not match the payload schema of feature "${featureName}": ${error}`,
+            VariantPayloadValidator.describeNonMatchingPayload(
+                featureName,
+                firstNonMatching,
+            ),
         );
     }
 }

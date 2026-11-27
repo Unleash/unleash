@@ -83,13 +83,14 @@ test('a feature without a payload schema accepts any json payload', async () => 
 });
 
 test('every payload that is not valid JSON or does not match the payload schema is listed with its reason', async () => {
-    const validator = await validatorWithSchema('my-flag', colorSchema);
-
-    const nonMatching = await validator.validateVariantPayloads('my-flag', [
-        { variantName: 'blue', value: '{"color":"blue"}' },
-        { variantName: 'red', value: '{"color":1}' },
-        { variantName: 'broken', value: '{"color":' },
-    ]);
+    const nonMatching = VariantPayloadValidator.validatePayloadsAgainstSchema(
+        colorSchema,
+        [
+            { variantName: 'blue', value: '{"color":"blue"}' },
+            { variantName: 'red', value: '{"color":1}' },
+            { variantName: 'broken', value: '{"color":' },
+        ],
+    );
 
     expect(nonMatching).toEqual([
         {

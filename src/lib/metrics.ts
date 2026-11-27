@@ -124,6 +124,10 @@ export function registerPrometheusMetrics(
         flagResolver.isEnabled('redactFeatureLabelInMetrics')
             ? 'redacted'
             : feature;
+    const projectLabel = (project: string): string =>
+        flagResolver.isEnabled('redactProjectLabelInMetrics')
+            ? 'redacted'
+            : project;
 
     const cachedEnvironments: () => Promise<IEnvironment[]> = memoizee(
         async () => environmentStore.getAll(),
@@ -183,6 +187,21 @@ export function registerPrometheusMetrics(
             'action',
         ],
     });
+    // Flag and project names are customer data. Cloud redacts them, but keeps
+    // the labels so existing dashboards and queries keep working.
+    const countFeatureFlagUpdate = (labels: {
+        toggle: string;
+        project: string;
+        environment: string;
+        environmentType: string;
+        action: string;
+    }): void => {
+        featureFlagUpdateTotal.increment({
+            ...labels,
+            toggle: featureLabel(labels.toggle),
+            project: projectLabel(labels.project),
+        });
+    };
     const featureFlagUsageTotal = createCounter({
         name: 'feature_toggle_usage_total',
         help: 'Number of times a feature flag has been used',
@@ -949,7 +968,7 @@ export function registerPrometheusMetrics(
     );
 
     eventStore.on(FEATURE_CREATED, ({ featureName, project }) => {
-        featureFlagUpdateTotal.increment({
+        countFeatureFlagUpdate({
             toggle: featureName,
             project,
             environment: 'n/a',
@@ -958,7 +977,7 @@ export function registerPrometheusMetrics(
         });
     });
     eventStore.on(FEATURE_VARIANTS_UPDATED, ({ featureName, project }) => {
-        featureFlagUpdateTotal.increment({
+        countFeatureFlagUpdate({
             toggle: featureName,
             project,
             environment: 'n/a',
@@ -967,7 +986,7 @@ export function registerPrometheusMetrics(
         });
     });
     eventStore.on(FEATURE_METADATA_UPDATED, ({ featureName, project }) => {
-        featureFlagUpdateTotal.increment({
+        countFeatureFlagUpdate({
             toggle: featureName,
             project,
             environment: 'n/a',
@@ -976,7 +995,7 @@ export function registerPrometheusMetrics(
         });
     });
     eventStore.on(FEATURE_UPDATED, ({ featureName, project }) => {
-        featureFlagUpdateTotal.increment({
+        countFeatureFlagUpdate({
             toggle: featureName,
             project,
             environment: 'n/a',
@@ -991,7 +1010,7 @@ export function registerPrometheusMetrics(
                 environment,
                 cachedEnvironments,
             );
-            featureFlagUpdateTotal.increment({
+            countFeatureFlagUpdate({
                 toggle: featureName,
                 project,
                 environment,
@@ -1007,7 +1026,7 @@ export function registerPrometheusMetrics(
                 environment,
                 cachedEnvironments,
             );
-            featureFlagUpdateTotal.increment({
+            countFeatureFlagUpdate({
                 toggle: featureName,
                 project,
                 environment,
@@ -1023,7 +1042,7 @@ export function registerPrometheusMetrics(
                 environment,
                 cachedEnvironments,
             );
-            featureFlagUpdateTotal.increment({
+            countFeatureFlagUpdate({
                 toggle: featureName,
                 project,
                 environment,
@@ -1039,7 +1058,7 @@ export function registerPrometheusMetrics(
                 environment,
                 cachedEnvironments,
             );
-            featureFlagUpdateTotal.increment({
+            countFeatureFlagUpdate({
                 toggle: featureName,
                 project,
                 environment,
@@ -1055,7 +1074,7 @@ export function registerPrometheusMetrics(
                 environment,
                 cachedEnvironments,
             );
-            featureFlagUpdateTotal.increment({
+            countFeatureFlagUpdate({
                 toggle: featureName,
                 project,
                 environment,
@@ -1065,7 +1084,7 @@ export function registerPrometheusMetrics(
         },
     );
     eventStore.on(FEATURE_ARCHIVED, ({ featureName, project }) => {
-        featureFlagUpdateTotal.increment({
+        countFeatureFlagUpdate({
             toggle: featureName,
             project,
             environment: 'n/a',
@@ -1074,7 +1093,7 @@ export function registerPrometheusMetrics(
         });
     });
     eventStore.on(FEATURE_REVIVED, ({ featureName, project }) => {
-        featureFlagUpdateTotal.increment({
+        countFeatureFlagUpdate({
             toggle: featureName,
             project,
             environment: 'n/a',
@@ -1090,7 +1109,7 @@ export function registerPrometheusMetrics(
                 environment,
                 cachedEnvironments,
             );
-            featureFlagUpdateTotal.increment({
+            countFeatureFlagUpdate({
                 toggle: featureName,
                 project,
                 environment,
@@ -1107,7 +1126,7 @@ export function registerPrometheusMetrics(
                 environment,
                 cachedEnvironments,
             );
-            featureFlagUpdateTotal.increment({
+            countFeatureFlagUpdate({
                 toggle: featureName,
                 project,
                 environment,
@@ -1124,7 +1143,7 @@ export function registerPrometheusMetrics(
                 environment,
                 cachedEnvironments,
             );
-            featureFlagUpdateTotal.increment({
+            countFeatureFlagUpdate({
                 toggle: featureName,
                 project,
                 environment,
@@ -1151,9 +1170,10 @@ export function registerPrometheusMetrics(
     eventBus.on(CLIENT_METRICS, (metrics: IClientMetricsEnv[]) => {
         try {
             for (const metric of metrics) {
+                const toggle = featureLabel(metric.featureName);
                 featureFlagUsageTotal.increment(
                     {
-                        toggle: metric.featureName,
+                        toggle,
                         active: 'true',
                         appName: metric.appName,
                     },
@@ -1161,7 +1181,7 @@ export function registerPrometheusMetrics(
                 );
                 featureFlagUsageTotal.increment(
                     {
-                        toggle: metric.featureName,
+                        toggle,
                         active: 'false',
                         appName: metric.appName,
                     },

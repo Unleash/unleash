@@ -200,6 +200,42 @@ test('should set environmentType when toggle is flipped', async () => {
     );
 });
 
+test('redacts toggle on flag updates when redactFeatureLabelInMetrics is enabled', async () => {
+    const isEnabled = vi
+        .spyOn(config.flagResolver, 'isEnabled')
+        .mockImplementation((flag) => flag === 'redactFeatureLabelInMetrics');
+    stores.eventStore.emit(FEATURE_UPDATED, {
+        featureName: 'secretUpdatedFlag',
+        project: 'visibleProject',
+        data: { name: 'secretUpdatedFlag' },
+    });
+    isEnabled.mockRestore();
+
+    const metrics = await prometheusRegister.metrics();
+    expect(metrics).not.toMatch(/secretUpdatedFlag/);
+    expect(metrics).toMatch(
+        /feature_toggle_update_total\{toggle="redacted",project="visibleProject",environment="n\/a",environmentType="n\/a",action="updated"\} 1/,
+    );
+});
+
+test('redacts project on flag updates when redactProjectLabelInMetrics is enabled', async () => {
+    const isEnabled = vi
+        .spyOn(config.flagResolver, 'isEnabled')
+        .mockImplementation((flag) => flag === 'redactProjectLabelInMetrics');
+    stores.eventStore.emit(FEATURE_UPDATED, {
+        featureName: 'visibleUpdatedFlag',
+        project: 'secretProject',
+        data: { name: 'visibleUpdatedFlag' },
+    });
+    isEnabled.mockRestore();
+
+    const metrics = await prometheusRegister.metrics();
+    expect(metrics).not.toMatch(/secretProject/);
+    expect(metrics).toMatch(
+        /feature_toggle_update_total\{toggle="visibleUpdatedFlag",project="redacted",environment="n\/a",environmentType="n\/a",action="updated"\} 1/,
+    );
+});
+
 test('should collect metrics for client metric reports', async () => {
     eventBus.emit(CLIENT_METRICS, [
         {
@@ -212,6 +248,27 @@ test('should collect metrics for client metric reports', async () => {
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
         /feature_toggle_usage_total\{toggle="TestToggle",active="true",appName="undefined"\} 10\nfeature_toggle_usage_total\{toggle="TestToggle",active="false",appName="undefined"\} 5/,
+    );
+});
+
+test('redacts toggle on client metric reports when redactFeatureLabelInMetrics is enabled', async () => {
+    const isEnabled = vi
+        .spyOn(config.flagResolver, 'isEnabled')
+        .mockImplementation((flag) => flag === 'redactFeatureLabelInMetrics');
+    eventBus.emit(CLIENT_METRICS, [
+        {
+            featureName: 'secretUsedFlag',
+            appName: 'redactionTestApp',
+            yes: 3,
+            no: 2,
+        },
+    ]);
+    isEnabled.mockRestore();
+
+    const metrics = await prometheusRegister.metrics();
+    expect(metrics).not.toMatch(/secretUsedFlag/);
+    expect(metrics).toMatch(
+        /feature_toggle_usage_total\{toggle="redacted",active="true",appName="redactionTestApp"\} 3\nfeature_toggle_usage_total\{toggle="redacted",active="false",appName="redactionTestApp"\} 2/,
     );
 });
 

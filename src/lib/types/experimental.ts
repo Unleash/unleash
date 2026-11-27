@@ -91,6 +91,7 @@ export type IFlagKey =
     | 'dashboardV2Widgets'
     | 'slackAppAuthV2'
     | 'redactFeatureLabelInMetrics'
+    | 'redactProjectLabelInMetrics'
     | 'improvedSidebarNavigation'
     | 'applicationOverview'
     | 'userSettings'
@@ -377,6 +378,10 @@ const flags: IFlags = {
     ),
     redactFeatureLabelInMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REDACT_FEATURE_LABEL_IN_METRICS,
+        false,
+    ),
+    redactProjectLabelInMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_REDACT_PROJECT_LABEL_IN_METRICS,
         false,
     ),
     integrationParamKvpEditor: parseEnvVarBoolean(

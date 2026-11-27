@@ -24,7 +24,11 @@ test('renders an input for each supported property type, with a fallback', () =>
         },
     };
 
-    render(<PayloadSchemaPreview schema={schema} />);
+    render(
+        <PayloadSchemaPreview
+            parseResult={{ state: 'parsed', value: schema }}
+        />,
+    );
 
     const labels = [
         ...new Set(
@@ -59,7 +63,11 @@ test('renders an array property as a list of groups, with add/remove controls', 
         examples: [{ tags: ['first'] }],
     };
 
-    render(<PayloadSchemaPreview schema={schema} />);
+    render(
+        <PayloadSchemaPreview
+            parseResult={{ state: 'parsed', value: schema }}
+        />,
+    );
 
     expect(screen.getByLabelText('Tags 1')).toHaveValue('first');
     expect(screen.getByText('Tags')).toBeInTheDocument(); // group heading
@@ -113,7 +121,11 @@ test('renders an array of objects as a list of nested-object groups', async () =
         ],
     };
 
-    render(<PayloadSchemaPreview schema={schema} />);
+    render(
+        <PayloadSchemaPreview
+            parseResult={{ state: 'parsed', value: schema }}
+        />,
+    );
 
     await userEvent.click(
         screen.getAllByRole('button', { name: /Remove Contacts/ })[1],
@@ -169,7 +181,11 @@ test('renders a dictionary (additionalProperties) property as a list of key/valu
         ],
     };
 
-    render(<PayloadSchemaPreview schema={schema} />);
+    render(
+        <PayloadSchemaPreview
+            parseResult={{ state: 'parsed', value: schema }}
+        />,
+    );
 
     const loggers = within(
         screen.getByRole('group', { name: 'Per-logger overrides' }),
@@ -220,7 +236,11 @@ test('disables adding a dictionary entry once maxProperties is reached, and re-e
         examples: [{ loggers: { api: 'debug' } }],
     };
 
-    render(<PayloadSchemaPreview schema={schema} />);
+    render(
+        <PayloadSchemaPreview
+            parseResult={{ state: 'parsed', value: schema }}
+        />,
+    );
 
     expect(screen.getByText('1 of 1')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Add entry' })).toBeDisabled();
@@ -248,7 +268,11 @@ test('falls back to "not supported" for a tuple-form array (items as a list of p
         examples: [{ coordinate: [59.9, 10.7] }],
     };
 
-    render(<PayloadSchemaPreview schema={schema} />);
+    render(
+        <PayloadSchemaPreview
+            parseResult={{ state: 'parsed', value: schema }}
+        />,
+    );
 
     expect(
         screen.getByText(/not supported in a form view/),
@@ -269,7 +293,11 @@ test('renders a checkbox for a boolean property', async () => {
         examples: [{ enabled: true }],
     };
 
-    render(<PayloadSchemaPreview schema={schema} />);
+    render(
+        <PayloadSchemaPreview
+            parseResult={{ state: 'parsed', value: schema }}
+        />,
+    );
 
     const enabled = screen.getByLabelText('Enabled');
     expect(enabled).toMatchObject({ checked: true, disabled: false });
@@ -292,7 +320,11 @@ test('renders a select for an enum property, with not-set option only when not r
         examples: [{ color: 'green', size: 'm' }],
     };
 
-    render(<PayloadSchemaPreview schema={schema} />);
+    render(
+        <PayloadSchemaPreview
+            parseResult={{ state: 'parsed', value: schema }}
+        />,
+    );
 
     await userEvent.click(screen.getByLabelText('Color'));
     expect(
@@ -310,10 +342,13 @@ test('renders a select for an enum property, with not-set option only when not r
 test('previews a root array schema as a list seeded with its first example', () => {
     render(
         <PayloadSchemaPreview
-            schema={{
-                type: 'array',
-                items: { type: 'string' },
-                examples: [['eu', 'us']],
+            parseResult={{
+                state: 'parsed',
+                value: {
+                    type: 'array',
+                    items: { type: 'string' },
+                    examples: [['eu', 'us']],
+                },
             }}
         />,
     );
@@ -322,10 +357,23 @@ test('previews a root array schema as a list seeded with its first example', () 
     expect(screen.getByLabelText('Items 2')).toHaveValue('us');
 });
 
-test('shows a placeholder when the schema is not an object or array yet', () => {
-    render(<PayloadSchemaPreview schema={undefined} />);
+test('explains the missing preview differently for an empty schema, broken JSON and a schema that is neither an object nor an array', () => {
+    const { rerender } = render(
+        <PayloadSchemaPreview parseResult={{ state: 'empty' }} />,
+    );
+    expect(screen.getByText(/write a json schema/i)).toBeInTheDocument();
 
-    expect(screen.getByText(/write a valid json schema/i)).toBeInTheDocument();
+    rerender(<PayloadSchemaPreview parseResult={{ state: 'unparsable' }} />);
+    expect(screen.getByText(/fix the json syntax errors/i)).toBeInTheDocument();
+
+    rerender(
+        <PayloadSchemaPreview
+            parseResult={{ state: 'parsed', value: { type: 'string' } }}
+        />,
+    );
+    expect(
+        screen.getByText(/can't be rendered as a form yet/i),
+    ).toBeInTheDocument();
 });
 
 test('carries numeric and string constraints onto the input as native HTML attributes, and disables readOnly properties', () => {
@@ -352,7 +400,11 @@ test('carries numeric and string constraints onto the input as native HTML attri
         },
     };
 
-    render(<PayloadSchemaPreview schema={schema} />);
+    render(
+        <PayloadSchemaPreview
+            parseResult={{ state: 'parsed', value: schema }}
+        />,
+    );
 
     expect(screen.getByLabelText('Max tokens')).toMatchObject({
         type: 'number',
@@ -383,15 +435,19 @@ test("initializes the preview with the schema's first example instance, and rese
         },
     };
 
-    const { rerender } = render(<PayloadSchemaPreview schema={schema} />);
+    const { rerender } = render(
+        <PayloadSchemaPreview
+            parseResult={{ state: 'parsed', value: schema }}
+        />,
+    );
 
     expect(screen.getByLabelText('Name')).toHaveValue('Ada');
 
     rerender(
         <PayloadSchemaPreview
-            schema={{
-                ...schema,
-                examples: [{ name: 'Grace' }],
+            parseResult={{
+                state: 'parsed',
+                value: { ...schema, examples: [{ name: 'Grace' }] },
             }}
         />,
     );
@@ -408,7 +464,11 @@ test('renders a datetime-local input for a date-time format, converting the stor
         },
     };
 
-    render(<PayloadSchemaPreview schema={schema} />);
+    render(
+        <PayloadSchemaPreview
+            parseResult={{ state: 'parsed', value: schema }}
+        />,
+    );
 
     const until = screen.getByLabelText('Until');
     expect(until).toMatchObject({
@@ -437,7 +497,11 @@ test('renders a nested object property as its own group, with fields bound to th
         },
     };
 
-    render(<PayloadSchemaPreview schema={schema} />);
+    render(
+        <PayloadSchemaPreview
+            parseResult={{ state: 'parsed', value: schema }}
+        />,
+    );
 
     expect(screen.getByRole('group', { name: 'Address' })).toBeInTheDocument();
     expect(screen.getByText('Where to ship the order.')).toBeInTheDocument();

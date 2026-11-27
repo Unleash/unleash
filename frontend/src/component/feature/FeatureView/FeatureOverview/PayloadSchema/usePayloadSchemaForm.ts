@@ -2,25 +2,13 @@ import { useMemo, useState } from 'react';
 import type { JSONContent } from 'component/common/ReactJSONEditor/ReactJSONEditor';
 import { BadRequestError } from 'utils/apiUtils';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { parseJson } from './schemaParseResult.ts';
 
 type FormState =
     | { status: 'editing'; content: JSONContent }
     | { status: 'saving'; content: JSONContent }
     | { status: 'saved'; content: JSONContent }
     | { status: 'rejected'; content: JSONContent; error: string };
-
-type ParsedJson = { valid: true; value: unknown } | { valid: false };
-
-const parseJson = (content: JSONContent): ParsedJson => {
-    if ('json' in content) {
-        return { valid: true, value: content.json };
-    }
-    try {
-        return { valid: true, value: JSON.parse(content.text) };
-    } catch (_e) {
-        return { valid: false };
-    }
-};
 
 const isEditable = (state: FormState) =>
     state.status === 'editing' || state.status === 'rejected';
@@ -36,7 +24,7 @@ export const usePayloadSchemaForm = (savedSchema?: Record<string, unknown>) => {
     const save = async (
         send: (schema: unknown) => Promise<void>,
     ): Promise<FormState> => {
-        if (!json.valid) return state;
+        if (json.state !== 'parsed') return state;
         const { content } = state;
         setState({ status: 'saving', content });
         try {
@@ -62,9 +50,9 @@ export const usePayloadSchemaForm = (savedSchema?: Record<string, unknown>) => {
     return {
         state,
         editable: isEditable(state),
-        canSave: isEditable(state) && json.valid,
-        parsedSchema: json.valid ? json.value : undefined,
-        isEmpty: 'text' in state.content && state.content.text === '',
+        canSave: isEditable(state) && json.state === 'parsed',
+        parseResult: json,
+        parsedSchema: json.state === 'parsed' ? json.value : undefined,
         edit: (content: JSONContent) =>
             setState((s) =>
                 isEditable(s) ? { status: 'editing', content } : s,

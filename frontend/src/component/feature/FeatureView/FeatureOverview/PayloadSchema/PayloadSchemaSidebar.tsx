@@ -18,11 +18,11 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useToast from 'hooks/useToast';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { parseJsonObject } from 'utils/plainObject';
 import { PayloadSchemaPane } from './PayloadSchemaPane';
 import { PayloadSchemaTemplateList } from './PayloadSchemaTemplateList';
 import type { PayloadSchemaTemplate } from './payloadSchemaTemplates';
 import { PayloadSchemaVariantExamples } from './PayloadSchemaVariantExamples.tsx';
+import { parseJson, type SchemaParseResult } from './schemaParseResult.ts';
 import { usePayloadSchemaForm } from './usePayloadSchemaForm.ts';
 
 const LazyReactJSONEditor = React.lazy(
@@ -136,7 +136,7 @@ const PayloadSchemaForm = ({
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
     const staged = usePayloadSchemaForm(feature.payloadSchema);
-    const isCreateMode = inferred !== undefined;
+    const isCreateMode = !feature.payloadSchema;
     const [selection, setSelection] = useState<
         ActiveSource | { source: false }
     >(isCreateMode ? { source: 'examples', drafts: {} } : { source: false });
@@ -144,22 +144,29 @@ const PayloadSchemaForm = ({
     const tabId = (source: SchemaSource) => `${sourceId}-tab-${source}`;
     const sourcePanelId = `${sourceId}-panel`;
 
-    const draftSchemas = (
+    const draftParseResults = (
         drafts: Drafts,
-    ): Record<SchemaSource, Record<string, unknown> | undefined> => ({
+    ): Record<SchemaSource, SchemaParseResult> => ({
         examples:
             inferred?.state === 'success' && inferred.data.examples.length
-                ? inferred.data
-                : undefined,
-        template: drafts.template?.schema,
-        import:
-            drafts.import === undefined
-                ? undefined
-                : parseJsonObject(drafts.import),
+                ? { state: 'parsed', value: inferred.data }
+                : { state: 'empty' },
+        template: drafts.template
+            ? { state: 'parsed', value: drafts.template.schema }
+            : { state: 'empty' },
+        import: parseJson({ text: drafts.import ?? '' }),
     });
-    const draftSchema = selection.source
-        ? draftSchemas(selection.drafts)[selection.source]
+
+    const draftParseResult = selection.source
+        ? draftParseResults(selection.drafts)[selection.source]
         : undefined;
+
+    const draftSchema =
+        draftParseResult?.state === 'parsed'
+            ? draftParseResult.value
+            : undefined;
+
+    const previewParseResult = draftParseResult ?? staged.parseResult;
     const canApplyDraft =
         draftSchema !== undefined && !dequal(draftSchema, staged.parsedSchema);
 
@@ -325,7 +332,7 @@ const PayloadSchemaForm = ({
                                         onLoad={setImportDraft}
                                     />
                                 ) : null}
-                                {!staged.isEmpty ? (
+                                {staged.parseResult.state !== 'empty' ? (
                                     <Button size='small' onClick={closeSource}>
                                         Cancel
                                     </Button>
@@ -360,11 +367,7 @@ const PayloadSchemaForm = ({
                 >
                     <Suspense fallback={null}>
                         <LazyPayloadSchemaPreview
-                            schema={
-                                selection.source
-                                    ? draftSchema
-                                    : staged.parsedSchema
-                            }
+                            parseResult={previewParseResult}
                         />
                     </Suspense>
                 </PayloadSchemaPane>

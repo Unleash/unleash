@@ -5,6 +5,7 @@ import type { JsonSchemaProperty } from 'interfaces/jsonSchema';
 import { SchemaForm } from 'component/common/SchemaForm/SchemaForm.tsx';
 import { formValueWithExamplesAsDefaults } from 'component/common/SchemaForm/schemaFormValues.ts';
 import { isStructuredSchema } from 'component/common/SchemaForm/schemaMatchers.ts';
+import type { SchemaParseResult } from './schemaParseResult.ts';
 
 const StyledPreview = styled('div')(({ theme }) => ({
     height: '100%',
@@ -18,13 +19,17 @@ const StyledEmpty = styled(Typography)(({ theme }) => ({
 }));
 
 interface IPayloadSchemaPreviewProps {
-    schema: unknown;
+    parseResult: SchemaParseResult;
 }
 
 const PreviewFallback = ({ message }: { message: string }) => (
     <StyledPreview>
         <StyledEmpty>{message}</StyledEmpty>
     </StyledPreview>
+);
+
+const UnsupportedSchemaFallback = () => (
+    <PreviewFallback message="This schema can't be rendered as a form yet." />
 );
 
 const SchemaPreviewForm = ({ schema }: { schema: JsonSchemaProperty }) => {
@@ -40,20 +45,29 @@ const SchemaPreviewForm = ({ schema }: { schema: JsonSchemaProperty }) => {
 };
 
 export const PayloadSchemaPreview = ({
-    schema,
+    parseResult,
 }: IPayloadSchemaPreviewProps) => {
-    if (!isStructuredSchema(schema)) {
+    if (parseResult.state === 'empty') {
         return (
-            <PreviewFallback message='Write a valid JSON Schema to see a preview of the resulting form.' />
+            <PreviewFallback message='Write a JSON Schema to see a preview of the resulting form.' />
         );
+    }
+
+    if (parseResult.state === 'unparsable') {
+        return (
+            <PreviewFallback message='Fix the JSON syntax errors to see a preview of the resulting form.' />
+        );
+    }
+
+    const schema = parseResult.value;
+    if (!isStructuredSchema(schema)) {
+        return <UnsupportedSchemaFallback />;
     }
 
     return (
         <ErrorBoundary
             resetKeys={[schema]}
-            fallbackRender={() => (
-                <PreviewFallback message="This schema can't be rendered as a form yet." />
-            )}
+            fallbackRender={UnsupportedSchemaFallback}
         >
             <SchemaPreviewForm key={JSON.stringify(schema)} schema={schema} />
         </ErrorBoundary>

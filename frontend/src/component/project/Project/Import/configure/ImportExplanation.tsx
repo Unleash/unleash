@@ -1,6 +1,8 @@
 import type { FC } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
+import { useUiFlag } from 'hooks/useUiFlag';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const ImportExplanationContainer = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation2,
@@ -21,6 +23,8 @@ const ImportExplanationDescription = styled(Box)(({ theme }) => ({
 export const ImportExplanation: FC = () => {
     const { templates } = useReleasePlanTemplates();
     const hasReleaseTemplates = Boolean(templates.length);
+    const { isEnterprise } = useUiConfig();
+    const payloadSchemasEnabled = useUiFlag('payloadSchemas') && isEnterprise();
     return (
         <ImportExplanationContainer>
             <ImportExplanationHeader>
@@ -32,6 +36,11 @@ export const ImportExplanation: FC = () => {
                     <li>strategies</li>
                     <li>context fields</li>
                     <li>variants</li>
+                    {payloadSchemasEnabled && (
+                        <li>
+                            payload schemas (skipped for existing feature flags)
+                        </li>
+                    )}
                     <li>tags</li>
                     <li>feature flag status</li>
                     <li>feature dependencies</li>
